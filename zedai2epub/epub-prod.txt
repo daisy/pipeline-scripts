@@ -1,0 +1,75 @@
+= Creates an OPS publication (EPUB) from an XHTML or DTBook input =
+
+== Prepare Input ==
+
+ * get a list of html or dtbook content documents
+ * for each check type allowed by OPS
+   * peek into XML and check it is either XHTML 1.1 or DTBook 2005-2
+   * if other DTBook or other XHTML, convert it
+ * parse filesets of the original documents
+
+== Prepare the output filesets, extract meta and generate ID ==
+
+ * create output directory
+ * copy all satellite files to the output directory
+ * for each (possibly converted) input document, prepare a fileset to the output directory
+   * copy over the doc to the output dir (the copied docs satellite files are expected to already there)
+   * ensure that manifest member has IDs on NCX target positions
+   * add CSS if missing (from xml-stylesheet prolog or link/@rel=stylesheet)
+
+== Prepare the metadata ==
+
+ * collect metadata from the first input document
+ * At the time of writing, supported metadata is 
+   * dc:title (OPS required)
+   * dc:creator
+   * dc:publisher
+   * dc:date event=publication
+   * dc:date event=creation (auto-generated)
+   * dc:identifier (OPS required)
+   * dc:language (OPS required)
+
+== Build the package file ==
+
+ * from the "output" filesets and the metadata
+ * create metadata section
+   * copy the previously collected metadata
+   * add a generator section
+ * create manifest section
+   * for each output fileset manifest > for each local reference > create item with @href+@id+@media-type
+   * add an item for the NCX
+ * create spine section
+   * create a spine/@toc='ncx'
+   * add itemref for each output fileset manifest (get the ID generated in the manifest section)
+ * write to output
+
+== Build the NCX ==
+
+ * from the "output" filesets and the metadata, and the NCX config
+ * get the NCX config from parameter or default
+   * note: navMap, navList, navListLabel sections
+   * Build the mNavMapIncludeFilter and mNavListIncludeFilter sets
+ * extract the list of elements to be included (NPS)
+   * for each fileset manifest
+     * fetch the list of elements to include in the navMap and navList sections
+     * record playOrder (incremental), file, label, XPath
+     * the label is retrieved from the xpath in the config template @label or else from the text value of the element
+ * build head
+   * include meta[@name="generator"], doctitle, docauthor
+ * build navmap
+   * build hierarchical tree from NPS list
+   * navpoint gets new ID, playOrder from NPS, class from NPS local name
+   * navlabel gets text from NPS label
+   * content/@src get path from NPS fileref + '#' + NPS elem ID
+ * build navlist
+
+= Creates an OCF archive from multiple input documents. =
+
+ * identify publications from the input file set
+ * generate XML container file
+ * create and compress the ZIP archive
+
+
+= Annex: media types =
+
+OPS core media types: http://www.idpf.org/2007/ops/OPS_2.0_final_spec.html#Section1.3.7
