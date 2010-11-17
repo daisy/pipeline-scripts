@@ -5,7 +5,6 @@
   <p:output port="result"/>
   
   <p:option name="href" select="'file:///Users/Romain/Documents/Work/zednext/test/z3986a/book/valid/alice.xml'"/>
-<!--  <p:option name="href" select="'http://tests.xproc.org/service/fixed-xml'"/>-->
   <p:option name="output" select="'output'"/>
   
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -34,6 +33,40 @@
   </p:load>
   
 <!--=========================================================================-->
+  
+  <!-- Get the list of satelite files -->
+
+<!--=========================================================================-->
+  
+  <!-- Download the satellite files -->
+  
+<!--=========================================================================-->
+  
+  <!-- Normalize the source document -->
+  
+<!--=========================================================================-->
+  
+  <!-- Identify NCX items -->
+  
+<!--=========================================================================-->
+  
+  <!-- Identify Chunks -->
+  
+<!--=========================================================================-->
+  
+  <!-- Replace document links to local paths -->
+  
+<!--=========================================================================-->
+  
+  <!-- Create NCX -->
+  
+<!--=========================================================================-->
+  
+  <!-- Create OPF -->
+  
+<!--=========================================================================-->
+  
+  <!-- Create chunks -->
   
   
 </p:declare-step>
