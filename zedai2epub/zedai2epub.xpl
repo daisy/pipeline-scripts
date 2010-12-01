@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://pipeline.daisy.org/ns/" version="1.0">
+  xmlns:c="http://www.w3.org/ns/xproc-step"
+  xmlns:px="http://pipeline.daisy.org/ns/"
+  version="1.0">
   
-  <p:output port="result"/>
+<!--  <p:output port="result"/>-->
   
   <p:option name="href" required="true"/>
   <p:option name="output" select="'output'"/>
