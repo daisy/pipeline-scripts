@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0">
+  xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://pipeline.daisy.org/ns/" version="1.0">
   
   <p:output port="result"/>
   
-  <p:option name="href" select="'file:///Users/Romain/Documents/Work/zednext/test/z3986a/book/valid/alice.xml'"/>
+  <p:option name="href" required="true"/>
   <p:option name="output" select="'output'"/>
   
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  <p:import href="get-zedai-refs.xpl"/>
   
 
 <!--=========================================================================-->
@@ -35,10 +36,14 @@
 <!--=========================================================================-->
   
   <!-- Get the list of satelite files -->
+  <px:get-refs>
+    <p:with-option name="base" select="$href"/>
+  </px:get-refs>
 
 <!--=========================================================================-->
   
-  <!-- Download the satellite files -->
+  <!-- Download/Move the satellite files -->
+  <!-- we need a procesor specific step for downloads -->
   
 <!--=========================================================================-->
   
