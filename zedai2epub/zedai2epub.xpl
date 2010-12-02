@@ -33,7 +33,7 @@
   <p:unescape-markup encoding="base64" charset="utf8"/>-->
   
   <p:load>
-    <p:with-option name="href" select="$href"></p:with-option>
+    <p:with-option name="href" select="$href"/>
   </p:load>
   
 <!--=========================================================================-->
@@ -43,8 +43,8 @@
 
 <!--=========================================================================-->
   
-  <!-- Download/Move the satellite files -->
-  <!-- FIXME we need a procesor specific step for downloads -->
+  <!-- Move the satellite files -->
+  <!-- FIXME we need a procesor specific step for remote downloads -->
   <px:handle-refs>
     <p:with-option name="output" select="$output"/>
   </px:handle-refs>
