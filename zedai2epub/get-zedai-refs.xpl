@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:z="http://www.daisy.org/ns/z3986/authoring/" xmlns:px="http://pipeline.daisy.org/ns/"
-  version="1.0" type="px:get-refs" exclude-inline-prefixes="z px">
+  version="1.0" name="main" type="px:get-refs" exclude-inline-prefixes="z px">
 
   <p:input port="source"/>
-  <p:option name="base" required="true"/>
   <p:output port="result"/>
 
   <p:documentation>
@@ -44,7 +43,7 @@
 
   <p:declare-step type="px:make-file-entry">
     <p:option name="uri" required="true"/>
-    <p:option name="base" select="$base"/>
+    <p:option name="base-uri"/>
     <p:output port="result"/>
     <p:string-replace match="/file/text()">
       <p:input port="source">
@@ -52,8 +51,11 @@
           <file>@@</file>
         </p:inline>
       </p:input>
-      <p:with-option name="replace" select="concat('&quot;',resolve-uri($uri, $base),'&quot;')"/>
+      <p:with-option name="replace" select="concat('&quot;',$uri,'&quot;')"/>
     </p:string-replace>
+    <p:add-attribute attribute-name="xml:base" match="/*">
+      <p:with-option name="attribute-value" select="$base-uri"/>
+    </p:add-attribute>
   </p:declare-step>
 
   <p:for-each name="links">
@@ -61,6 +63,7 @@
     <p:output port="result"/>
     <px:make-file-entry>
       <p:with-option name="uri" select="/z:object/@src"/>
+      <p:with-option name="base-uri" select="base-uri(/z:object)"/>
     </px:make-file-entry>
   </p:for-each>
 
@@ -69,5 +72,12 @@
       <p:pipe step="links" port="result"/>
     </p:input>
   </p:wrap-sequence>
+  
+  <p:add-attribute attribute-name="xml:base" match="/files">
+    <p:with-option name="attribute-value" select="base-uri()">
+      <p:pipe port="source" step="main"/>
+    </p:with-option>
+  </p:add-attribute>
+  <p:add-xml-base/>
 
 </p:declare-step>
