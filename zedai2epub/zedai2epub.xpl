@@ -11,6 +11,7 @@
   
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="get-zedai-refs.xpl"/>
+  <p:import href="handle-zedai-refs.xpl"/>
   
 
 <!--=========================================================================-->
@@ -38,14 +39,15 @@
 <!--=========================================================================-->
   
   <!-- Get the list of satelite files -->
-  <px:get-refs>
-    <p:with-option name="base" select="$href"/>
-  </px:get-refs>
+  <px:get-refs/>
 
 <!--=========================================================================-->
   
   <!-- Download/Move the satellite files -->
-  <!-- we need a procesor specific step for downloads -->
+  <!-- FIXME we need a procesor specific step for downloads -->
+  <px:handle-refs>
+    <p:with-option name="output" select="$output"/>
+  </px:handle-refs>
   
 <!--=========================================================================-->
   
