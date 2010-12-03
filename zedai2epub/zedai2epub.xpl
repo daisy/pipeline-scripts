@@ -48,6 +48,7 @@
   <px:handle-refs>
     <p:with-option name="output" select="$output"/>
   </px:handle-refs>
+  <!-- TODO output result manifest -->
   
 <!--=========================================================================-->
   
@@ -56,6 +57,14 @@
 <!--=========================================================================-->
   
   <!-- Identify NCX items -->
+<!--
+Phase 1:
+  * prune toc div
+  * annotate divs with @toc (ID) and @chunk (boolean) attributes
+  * resolve link|a/@href, img/@src, object/@data to base URI
+  * add @id for each @name, clean unwanted HTML attributes
+  * store to tmp file
+-->
   
 <!--=========================================================================-->
   
