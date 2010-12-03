@@ -4,7 +4,7 @@
   xmlns:px="http://pipeline.daisy.org/ns/"
   version="1.0">
   
-<!--  <p:output port="result"/>-->
+  <p:output port="result"/>
   
   <p:option name="href" required="true"/>
   <p:option name="output" select="'output'"/>
@@ -32,7 +32,7 @@
   
   <p:unescape-markup encoding="base64" charset="utf8"/>-->
   
-  <p:load>
+  <p:load name="load">
     <p:with-option name="href" select="$href"/>
   </p:load>
   
@@ -57,18 +57,21 @@
 <!--=========================================================================-->
   
   <!-- Identify NCX items -->
-<!--
-Phase 1:
-  * prune toc div
-  * annotate divs with @toc (ID) and @chunk (boolean) attributes
-  * resolve link|a/@href, img/@src, object/@data to base URI
-  * add @id for each @name, clean unwanted HTML attributes
-  * store to tmp file
--->
   
 <!--=========================================================================-->
   
   <!-- Identify Chunks -->
+  <p:xslt name="chunking">
+    <p:input port="source">
+      <p:pipe port="result" step="load"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="chunker.xsl"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+  </p:xslt>
   
 <!--=========================================================================-->
   
