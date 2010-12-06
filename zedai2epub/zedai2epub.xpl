@@ -58,6 +58,7 @@
       <p:pipe port="result" step="load"/>
     </p:input>
   </p:identity>
+  <p:add-xml-base/>
   
 <!--=========================================================================-->
   
@@ -74,9 +75,17 @@
 <!--=========================================================================-->
   
   <!-- Identify Chunks -->
-  <p:xslt name="chunking">
+  <p:xslt name="chunk-marker">
     <p:input port="stylesheet">
-      <p:document href="chunker.xsl"/>
+      <p:document href="chunk-marker.xsl"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+  </p:xslt>
+  <p:xslt name="chunk-path-creator">
+    <p:input port="stylesheet">
+      <p:document href="chunk-path-creator.xsl"/>
     </p:input>
     <p:input port="parameters">
       <p:empty/>
