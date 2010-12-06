@@ -83,6 +83,7 @@
       <p:empty/>
     </p:input>
   </p:xslt>
+  <!-- Generate paths of chunks -->
   <p:xslt name="chunk-path-creator">
     <p:input port="stylesheet">
       <p:document href="chunk-path-creator.xsl"/>
@@ -95,6 +96,14 @@
 <!--=========================================================================-->
   
   <!-- Replace document links to local paths -->
+  <p:xslt name="links-to-chunks">
+    <p:input port="stylesheet">
+      <p:document href="links-to-chunks.xsl"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+  </p:xslt>
   
 <!--=========================================================================-->
   
