@@ -18,8 +18,8 @@
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="ncx-type" select="'pageTarget'"/>
-      <!--FIXME set the target ID either form @value or @xml:id-->
       <xsl:attribute name="ncx-id" select="if(@xml:id) then @xml:id else concat('p',@value)"/>
+      <xsl:attribute name="xml:id" select="if(@xml:id) then @xml:id else concat('p',@value)"/>
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
