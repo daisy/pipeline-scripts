@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="../../../../src/schema/z3986a-book.rng" type="xml"?>
+<?oxygen RNGSchema="../../../../../zednext/src/schema/z3986a-book.rng" type="xml"?>
 <document xmlns="http://www.daisy.org/ns/z3986/authoring/"
     xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
     xmlns:dcterms="http://purl.org/dc/terms/" xml:lang="en">
