@@ -53,18 +53,28 @@
 <!--=========================================================================-->
   
   <!-- Normalize the source document -->
+  <p:identity>
+    <p:input port="source">
+      <p:pipe port="result" step="load"/>
+    </p:input>
+  </p:identity>
   
 <!--=========================================================================-->
   
   <!-- Identify NCX items -->
+  <p:xslt name="ncx-items-marker">
+    <p:input port="stylesheet">
+      <p:document href="ncx-items-marker.xsl"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+  </p:xslt>
   
 <!--=========================================================================-->
   
   <!-- Identify Chunks -->
   <p:xslt name="chunking">
-    <p:input port="source">
-      <p:pipe port="result" step="load"/>
-    </p:input>
     <p:input port="stylesheet">
       <p:document href="chunker.xsl"/>
     </p:input>
