@@ -14,18 +14,15 @@
 
   <xsl:template match="z:frontmatter">
     <xsl:copy>
-      <xsl:for-each select="@*">
-        <xsl:copy/>
-      </xsl:for-each>
+      <xsl:copy-of select="@*"/>
       <xsl:attribute name="chunk" select="'true'"/>
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
+  
   <xsl:template match="z:backmatter">
     <xsl:copy>
-      <xsl:for-each select="@*">
-        <xsl:copy/>
-      </xsl:for-each>
+      <xsl:copy-of select="@*"/>
       <xsl:attribute name="chunk" select="'true'"/>
       <xsl:apply-templates/>
     </xsl:copy>
@@ -33,9 +30,7 @@
 
   <xsl:template match="z:bodymatter/z:section">
     <xsl:copy>
-      <xsl:for-each select="@*">
-        <xsl:copy/>
-      </xsl:for-each>
+      <xsl:copy-of select="@*"/>
       <xsl:attribute name="chunk" select="'true'"/>
       <xsl:apply-templates/>
     </xsl:copy>
