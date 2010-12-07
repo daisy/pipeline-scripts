@@ -18,9 +18,9 @@
     <line>
         <line>/line[2]/line</line>
     </line>
-    <line title="/line[3]/@attr">
-        <linegroup title="/line[3]/linegroup/@attr">
-            <p title="/line[3]/linegroup/p/@attr">/line[3]/linegroup/p</p>
+    <line title="/line[3]/@title">
+        <linegroup title="/line[3]/linegroup/@title">
+            <p title="/line[3]/linegroup/p/@title">/line[3]/linegroup/p</p>
         </linegroup>
     </line>
     <line>
