@@ -20,13 +20,11 @@
     
     <!-- normalize dtbook -->
     <!-- TODO: it would be nice to encapsulate all of the normalization steps -->
-    <!--<p:xslt>
+    <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="./normalize/dtbook-linegroup-flatten.xsl"/>
+            <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
         </p:input>
     </p:xslt>
-    -->    
-   
     
     <!-- transform dtbook to zedai -->
     <p:xslt name="transform_dtbook2zedai_xsl">      

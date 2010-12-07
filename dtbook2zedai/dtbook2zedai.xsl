@@ -6,6 +6,7 @@
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" 
     xmlns="http://www.daisy.org/ns/z3986/authoring/">
+    
     <xd:doc scope="stylesheet">
         <xd:desc>
             <xd:p><xd:b>Created on:</xd:b> Aug 16, 2010</xd:p>
@@ -29,8 +30,10 @@
 
     <xsl:template match="dtb:dtbook">
         <!-- convenience: use the same dublin core namespace as dtbook documents use -->
-        <document xmlns:decl="http://www.daisy.org/z3986/2011/vocab/decl/#"
-            xmlns:dc="http://purl.org/dc/terms/">
+        <document 
+            xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"           
+            xmlns:dc="http://purl.org/dc/terms/"
+            profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </document>
@@ -64,7 +67,7 @@
             <xsl:call-template name="attrs"/>
             
             <!-- TODO: is it ok to hard-code the zedai 'book' profile for dtbook transformation? -->
-            <meta rel="decl:profile"
+            <meta rel="z3986:profile"
                 resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.7/"/>
 
             <!-- TODO: import namespaces for non-DC metadata items -->

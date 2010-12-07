@@ -688,6 +688,7 @@
     </meta>
     <projectTree name="dtbook2zedai.xpr">
         <folder path="dtbook_samples/"/>
+        <folder path="normalize-linegroup/"/>
         <folder path="schema/"/>
         <file name="dtbook2zedai.xpl"/>
         <file name="dtbook2zedai.xsl"/>
