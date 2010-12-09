@@ -20,25 +20,13 @@
 
     <xsl:template match="/">
         <!-- just for testing: insert the oxygen stylesheet -->
-        <!-- this way, the oxygen editor validates.  however, this doesn't mean much until you save the document, because it's a relative path.
+        <!-- this way, the oxygen editor validates.  however, this doesn't do anything useful until you save the document, because it's a relative path.
             so, when the main xproc's p:store step gets sorted out, then this will be meaningful -->
         <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="./schema/zedai_bookprofile_v0.7/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
         <xsl:apply-templates/>
     </xsl:template>
-
-    <xsl:template match="dtb:dtbook">
-        <!-- convenience: use the same dublin core namespace as dtbook documents use -->
-        <document 
-            xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"           
-            xmlns:dc="http://purl.org/dc/terms/"
-            profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </document>
-    </xsl:template>
-
 
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
@@ -60,6 +48,17 @@
         
         <!-- TODO: @title: defined as a core attribute in dtbook; does not exist in zedai -->
         
+    </xsl:template>
+    
+    <xsl:template match="dtb:dtbook">
+        <!-- convenience: use the same dublin core namespace as dtbook documents use -->
+        <document 
+            xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"           
+            xmlns:dc="http://purl.org/dc/terms/"
+            profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </document>
     </xsl:template>
 
     <xsl:template match="dtb:head">
@@ -94,7 +93,8 @@
                 <xsl:apply-templates select="dtb:covertitle"/>
                 <xsl:apply-templates select="dtb:docauthor"/>
             </section>
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="dtb:level"/>
+            <xsl:apply-templates select="dtb:level1"/>
         </frontmatter>
     </xsl:template>
 
@@ -106,10 +106,10 @@
     </xsl:template>
 
     <xsl:template match="dtb:doctitle">
-        <h property="dc:title">
+        <p property="dc:title">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </h>
+        </p>
     </xsl:template>
 
     <xsl:template
@@ -120,6 +120,7 @@
         </section>
     </xsl:template>
 
+<!-- left off here checking content models -->
 
     <xsl:template match="dtb:h1|dtb:h2|dtb:h3|dtb:h4|dtb:h5|dtb:h6">
         <h>
@@ -152,7 +153,7 @@
 
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@depth"/>
-
+            <!-- TODO: @start @enum -->
             <xsl:if test="@enum = '1'">
                 <xsl:attribute name="rend:prefix">decimal</xsl:attribute>
             </xsl:if>
@@ -191,42 +192,50 @@
     </xsl:template>
 
     <xsl:template match="dtb:img">
-        <object>
+       
+        <!-- postponing image/description processing -->
+        <!-- TODO:  @height, @width; not found in ZedAI -->
+        <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
+        <!-- zedai does not currently have a description equivalent to @alt/@longdesc, so this 'short' value is made-up
+            however, it's an issue under consideration in the zedai group -->
+        
+        <!--<object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
-            <!-- TODO:  @height, @width; not found in ZedAI -->
-            <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
-            <!-- zedai does not currently have a description equivalent to @alt/@longdesc, so this 'short' value is made-up
-                 however, it's an issue under consideration in the zedai group -->
             <description role="short">
                 <xsl:value-of select="@alt"/>
             </description>
         </object>
+        -->
     </xsl:template>
 
     <xsl:template match="dtb:imggroup">
-        <block>
+        <!-- postponing image/description processing -->
+        <!--<block>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </block>
+        </block>-->
     </xsl:template>
 
     <xsl:template match="dtb:caption">
         <xsl:choose>
             <xsl:when test="@imgref">
-                <caption ref="{@imgref}">
+                <!-- postponing image/description processing -->
+                <!--<caption ref="{@imgref}">
                     <xsl:call-template name="attrs"/>
                     <xsl:apply-templates/>
-                </caption>
+                </caption>-->
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
+                        
                         <!-- get the id of the image in the imggroup and use it as a ref -->
-                        <caption ref="{../dtb:img/@id}">
+                        <!-- postponing image/description processing -->
+                        <!--<caption ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
-                        </caption>
+                        </caption>-->
                     </xsl:when>
 
                     <xsl:otherwise>
@@ -253,19 +262,24 @@
         <!-- TODO: translate attribute @render = required | optional -->
         <xsl:choose>
             <xsl:when test="@imgref">
-                <annotation by="republisher" ref="{@imgref}">
+                <!-- postponing image/description processing -->
+               <!-- <annotation by="republisher" ref="{@imgref}">
                     <xsl:call-template name="attrs"/>
                     <xsl:apply-templates/>
                 </annotation>
+                -->
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
                         <!-- get the id of the image in the imggroup and use it as a ref -->
-                        <annotation by="republisher" ref="{../dtb:img/@id}">
+                        
+                        <!-- postponing image/description processing -->                        
+                        <!--<annotation by="republisher" ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
-                        </annotation>
+                            </annotation>-->
+                        
                     </xsl:when>
                     
                     <xsl:otherwise>
@@ -313,6 +327,7 @@
     <xsl:template match="dtb:code">
         <code>
             <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
         </code>
     </xsl:template>
 
@@ -333,6 +348,7 @@
 
 
     <xsl:template match="dtb:blockquote|dtb:q">
+        <!-- TODO: @cite, which can exist on both blockquote and q, and is a URI -->
         <quote>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -442,7 +458,6 @@
     </xsl:template>
     
     <xsl:template match="dtb:epigraph">
-        <!-- TODO: check attrs -->
         <block role="epigraph">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -450,10 +465,10 @@
     </xsl:template>
     
     <xsl:template match="dtb:dateline">
-        <ln>
+        <p>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </ln>
+        </p>
     </xsl:template>
     
     <xsl:template match="dtb:br">
@@ -468,6 +483,7 @@
                     <xsl:value-of select="./title"/>
                 </span>
             </xsl:if>
+            <xsl:apply-templates/>
         </citation>
     </xsl:template>
     
@@ -549,5 +565,16 @@
     </xsl:template>
     <!-- end of elements that follow the same form -->
     
-    
+    <xsl:template match="dtb:linegroup">
+        <lngroup>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </lngroup>
+    </xsl:template>
+    <xsl:template match="dtb:line">
+        <ln>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </ln>
+    </xsl:template>
 </xsl:stylesheet>

@@ -20,6 +20,15 @@
     
     <!-- normalize dtbook -->
     <!-- TODO: it would be nice to encapsulate all of the normalization steps -->
+    <!-- Ideas for normalization:
+       
+        * Flatten nested linegroups
+        * Insert required frontmatter/bodymatter if not present
+        * Organize images, image groups, image-related prodnotes, image-related captions
+        * Move <imggroup>s out of inline contexts.  They will be <block>s in zedai, which cannot live inline.
+        * Move <br>s out of inline contexts.  They will be <separator>s in zedai, which cannot live inline.        
+        
+    -->
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
