@@ -4,10 +4,11 @@
   xmlns:px="http://pipeline.daisy.org/ns/" version="1.0" type="px:handle-refs"
   exclude-inline-prefixes="px">
 
-  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="fileutils-library.xpl"/>
   <p:input port="source"/>
   <p:option name="output" select="'output/'"/>
+  
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  <p:import href="fileutils-library.xpl"/>
 
   <!-- TODO use a path util function to enforce the trailing slash -->
   <p:variable name="output-ok"
