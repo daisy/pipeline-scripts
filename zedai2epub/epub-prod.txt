@@ -1,0 +1,129 @@
+= Pipeline 1 Workflow =
+
+== Prepare Input ==
+
+ * get a list of html or dtbook content documents
+ * for each check type allowed by OPS
+   * peek into XML and check it is either XHTML 1.1 or DTBook 2005-2
+   * if other DTBook or other XHTML, convert it
+ * parse filesets of the original documents
+
+== Prepare the output filesets, extract meta and generate ID ==
+
+ * create output directory
+ * copy all satellite files to the output directory
+ * for each (possibly converted) input document, prepare a fileset to the output directory
+   * copy over the doc to the output dir (the copied docs satellite files are expected to already there)
+   * ensure that manifest member has IDs on NCX target positions
+   * add CSS if missing (from xml-stylesheet prolog or link/@rel=stylesheet)
+
+== Prepare the metadata ==
+
+ * collect metadata from the first input document
+ * At the time of writing, supported metadata is 
+   * dc:title (OPS required)
+   * dc:creator
+   * dc:publisher
+   * dc:date event=publication
+   * dc:date event=creation (auto-generated)
+   * dc:identifier (OPS required)
+   * dc:language (OPS required)
+
+== Build the package file ==
+
+ * from the "output" filesets and the metadata
+ * create metadata section
+   * copy the previously collected metadata
+   * add a generator section
+ * create manifest section
+   * for each output fileset manifest > for each local reference > create item with @href+@id+@media-type
+   * add an item for the NCX
+ * create spine section
+   * create a spine/@toc='ncx'
+   * add itemref for each output fileset manifest (get the ID generated in the manifest section)
+ * write to output
+
+== Build the NCX ==
+
+ * from the "output" filesets and the metadata, and the NCX config
+ * get the NCX config from parameter or default
+   * note: navMap, navList, navListLabel sections
+   * Build the mNavMapIncludeFilter and mNavListIncludeFilter sets
+ * extract the list of elements to be included (NPS)
+   * for each fileset manifest
+     * fetch the list of elements to include in the navMap and navList sections
+     * record playOrder (incremental), file, label, XPath
+     * the label is retrieved from the xpath in the config template @label or else from the text value of the element
+ * build head
+   * include meta[@name="generator"], doctitle, docauthor
+ * build navmap
+   * build hierarchical tree from NPS list
+   * navpoint gets new ID, playOrder from NPS, class from NPS local name
+   * navlabel gets text from NPS label
+   * content/@src get path from NPS fileref + '#' + NPS elem ID
+ * build navlist
+
+== Creates an OCF archive from multiple input documents. ==
+
+ * identify publications from the input file set
+ * generate XML container file
+ * create and compress the ZIP archive
+
+= Norm Walsh Workflow =
+
+ * load the HTML, normalize it, makes it XHTML
+ * in step "links", create a sequence of <file/> containing URLs to stylesheets (h:link[@rel='stylesheet'])
+ * in step "images", create a sequence of <file/> containing URLs to images (h:img)
+ * in step "objects", create a sequence of <file/> containing URLs to objects (h:object[@data])
+ * exec getfiles.pl
+   * takes the string value of the file lists (i.e. lines or URLs)
+   * downloads the files to the 'output' directory and retrieve the mime from Content-Type
+   * builds a manifest entry with mime, URI and local relative path
+   * add the URL as the base URI for the manifest
+
+ * wrap the manifest and the xhtml in a 'doc' element
+ * execute the spec2epub.xsl on it
+   * phase 0:
+     * normalize @id, h:a/@name, @href, @lang
+     * store to tmp file
+   * phase 1:
+     * prune toc div
+     * annotate divs with @toc (ID) and @chunk (boolean) attributes
+     * resolve link|a/@href, img/@src, object/@data to base URI
+     * add @id for each @name, clean unwanted HTML attributes
+     * store to tmp file
+   * phase 2:
+     * for each div[@toc], add a @playOrder in document order
+     * for each div[@chunk], set @chunk to a generated path (resolved to the base URI)
+     * suppress duplicate ID on h:a (using a previously generated ID key)
+     * store to tmp file
+   * phase 3:
+     * replace URIs (href, src, data) from values of the file manifest
+     * replace intra-document links with equivalent targeting chunks
+     * store to tmp file
+   * apply mode 'ncxtoc' to phase 3 result and store to toc.ncx
+     * create an NCX stub
+     * for div[@toc], create a navPoint, getting content links from @chunk of ancestor or self
+   * apply mode 'package' to phase 3 result and store to content.opf
+     * create a OPF package stub
+     * add metadata from HTML content
+     * add ncx and cover path to manifest
+     * add a manifest entry for each file of the input manifest
+     * add a manifest entry for each chunk by matching div[@chunk]
+   * apply mode 'chunks' to phase 3
+     * for each matched div[@chunk] create a result-document with its content
+
+ * sink the primary output and iterate the secondary documents to store them (method is HTML or XML depending on the base URI extension)
+
+ * create the container manifest from inline input, setting the rootfile/@full-path to the path of content.opf
+ * p:store the container
+
+ * create a cover
+
+ * create the mimetype file from inline input
+
+
+= Annex: media types =
+
+OPS core media types: http://www.idpf.org/2007/ops/OPS_2.0_final_spec.html#Section1.3.7
+
