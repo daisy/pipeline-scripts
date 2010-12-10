@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.daisy.org/ns/z3986/authoring/"
-  xmlns:f="http://www.daisy.org/ns/functions" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:f="http://www.daisy.org/ns/functions" xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f xs z" version="2.0">
 
   <xsl:key name="id" match="*" use="@xml:id"/>
@@ -35,8 +36,8 @@
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
-  
-  <xsl:template match="*[@ncx-id]">
+
+  <xsl:template match="*[@ncx:id]">
     <xsl:variable name="chunk-uri" select="ancestor::z:*[@chunk][1]/@chunk"/>
     <xsl:copy>
       <xsl:copy-of select="@*"/>
