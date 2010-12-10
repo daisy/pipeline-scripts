@@ -19,3 +19,6 @@ syntax: regexp
 
 # ignore all output/ directories
 (^|/)output/
+
+# ignore all temp/ directories
+(^|/)temp/
