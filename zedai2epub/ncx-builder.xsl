@@ -11,8 +11,8 @@
       <head>
         <meta name="dtb:uid"
           content="{z:document/z:head/z:meta[@property='dcterms:identifier']/@content}"/>
-        <meta name="dtb:depth" content="-1"/>
-        <!--TODO: calculate depth-->
+        <meta name="dtb:depth" 
+          content="{max(for $n in //*[@ncx:type='navMap'] return count($n/ancestor-or-self::*[@ncx:type='navMap']))}"/>
         <meta name="dtb:generator" content="DAISY Pipeline 2"/>
         <!--TODO function to get the Pipeline version ?-->
         <meta name="dtb:totalPageCount" content="{f:page-count(/)}"/>
@@ -76,7 +76,6 @@
 
   <xsl:template match="z:pagebreak" mode="pageList">
 
-    <!--TODO use "string(number($value)) != 'NaN'" instead of "castable as" ?-->
     <pageTarget id="{generate-id(.)}" playOrder="{@playOrder}">
       <xsl:if test="@class">
         <xsl:attribute name="class" select="@class"/>
