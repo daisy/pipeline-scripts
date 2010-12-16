@@ -19,9 +19,18 @@
         <dc:title><xsl:value-of select="f:doc-title(/)"/></dc:title>
         <!--Optional Metadata-->
         <dc:creator><xsl:value-of select="f:doc-author(/)"/></dc:creator>
+        <!--<dc:subject>TBD</dc:subject>--><!--TODO get subject-->
+        <!--<dc:description>TBD</dc:description>--><!--TODO get description-->
         <!--<dc:publisher>TBD</dc:publisher>--><!--TODO get publisher-->
+        <!--<dc:contributor>TBD</dc:contributor>--><!--TODO get contributor(s)-->
         <!--<dc:date opf:event="publication">TBD</dc:date>--><!--TODO get publication date-->
         <!--<dc:date opf:event="creation">TBD</dc:date>--><!--TODO get creation date-->
+        <!--<dc:type>TBD</dc:type>--><!--TODO get type?-->
+        <!--<dc:format>TBD</dc:format>--><!--TODO get format?-->
+        <!--<dc:source>TBD</dc:source>--><!--TODO get source?-->
+        <!--<dc:relation>TBD</dc:relation>--><!--TODO get relation?-->
+        <!--<dc:coverage>TBD</dc:coverage>--><!--TODO get coverage?-->
+        <!--<dc:rights>TBD</dc:rights>--><!--TODO get rights-->
         <meta name="generator" content="DAISY Pipeline 2" />
       </metadata>
       <manifest>
@@ -29,6 +38,7 @@
         <xsl:for-each select="$chunks">
           <itemref id="{generate-id()}" href="{@chunk}" media-type="application/xhtml+xml"/>
         </xsl:for-each>
+        <!--TODO fallbacks?-->
       </manifest>
       <spine toc="ncx">
         <xsl:for-each select="$chunks">
@@ -37,6 +47,11 @@
       </spine>
       <!--<guide>
         <!-\-TODO create the OPF guide-\->
+        <!-\-ToC
+        Illustrations
+        Glossary
+        Bibliography
+        etc...-\->
       </guide>-->
     </package>
   </xsl:template>
