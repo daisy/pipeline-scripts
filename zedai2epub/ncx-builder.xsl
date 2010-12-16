@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns="http://www.daisy.org/z3986/2005/ncx/"
   xmlns:f="http://www.daisy.org/ns/functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="xs z" version="2.0">
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f ncx xs z" version="2.0">
 
   <xsl:output method="xml" indent="yes"/>
 

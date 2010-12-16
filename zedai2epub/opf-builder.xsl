@@ -4,7 +4,7 @@
   xmlns:opf="http://www.idpf.org/2007/opf" 
   xmlns:f="http://www.daisy.org/ns/functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f xs z" version="2.0">
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f opf xs z" version="2.0">
 
   <xsl:output method="xml" indent="yes"/>
   
