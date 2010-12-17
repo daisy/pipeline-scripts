@@ -3,9 +3,9 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://pipeline.daisy.org/ns/"
     version="1.0" exclude-inline-prefixes="c cx px">
 
-    <p:output port="result">
+    <!--<p:output port="result">
         <p:pipe port="result" step="opf-creation"/>
-    </p:output>
+    </p:output>-->
 
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
