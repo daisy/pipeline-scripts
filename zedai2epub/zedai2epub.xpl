@@ -24,7 +24,6 @@
 
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="get-zedai-refs.xpl"/>
     <p:import href="handle-zedai-refs.xpl"/>
 
 

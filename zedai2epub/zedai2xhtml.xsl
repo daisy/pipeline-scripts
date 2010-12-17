@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://www.daisy.org/ns/functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f xs z" version="2.0">
+  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f xlink xs z"
+  version="2.0">
 
   <xsl:output method="xhtml" indent="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN"
     doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"/>
 
-  <xsl:param name="base" select="'file:///Users/Romain/Desktop/'"/>
+  <xsl:param name="base" select="base-uri()"/>
 
   <xsl:template match="/">
     <xsl:variable name="chunks" select="//*[@chunk]"/>
@@ -151,19 +153,19 @@
   </xsl:template>
 
   <xsl:template match="z:ref">
-    <a href="{concat('#',@ref)}">
+    <a href="{if (@ref) then concat('#',@ref) else @xlink:href}">
       <xsl:call-template name="attrs"/>
       <xsl:apply-templates/>
     </a>
   </xsl:template>
-  
+
   <xsl:template match="z:section">
     <div class="section">
       <xsl:call-template name="attrs"/>
       <xsl:apply-templates/>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="z:separator">
     <hr>
       <xsl:call-template name="attrs"/>
