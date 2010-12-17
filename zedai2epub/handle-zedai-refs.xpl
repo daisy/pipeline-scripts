@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+  xmlns:cx="http://xmlcalabash.com/ns/extensions"
   xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
   xmlns:px="http://pipeline.daisy.org/ns/" version="1.0" type="px:handle-refs"
   exclude-inline-prefixes="px">
 
   <p:input port="source"/>
   <p:option name="output" select="'output/'"/>
-  
+
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="fileutils-library.xpl"/>
 
-  <!-- TODO use a path util function to enforce the trailing slash -->
-  <p:variable name="output-ok"
-    select="if ($output='') then 'output/' 
+  <!-- TODO move this to XPath utils ? -->
+  <p:variable name="output-dir"
+    select="resolve-uri(
+    if ($output='') then 'output/' 
     else if (ends-with($output,'/')) then $output 
-    else concat($output,'/')"/>
+    else concat($output,'/'),
+    base-uri())">
+    <p:inline>
+      <irrelevant/>
+    </p:inline>
+  </p:variable>
 
   <p:for-each>
-    <p:iteration-source select="/files/file"/>
-    <p:variable name="href" select="resolve-uri(/file, base-uri(/file))"/>
-    <p:variable name="target" select="resolve-uri(/file, $output-ok)"/>
+    <p:iteration-source select="/c:manifest/c:entry"/>
+    <p:variable name="href" select="resolve-uri(*/@href, base-uri())"/>
+    <p:variable name="target" select="resolve-uri(*/@href, $output-dir)"/>
     <cxf:mkdir name="mkdir">
       <p:with-option name="href" select="replace($target,'[^/]+$','')"/>
     </cxf:mkdir>

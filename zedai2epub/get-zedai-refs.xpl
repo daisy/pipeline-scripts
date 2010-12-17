@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"  xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:z="http://www.daisy.org/ns/z3986/authoring/" xmlns:px="http://pipeline.daisy.org/ns/"
   version="1.0" name="main" type="px:get-refs" exclude-inline-prefixes="z px">
 
@@ -45,14 +45,14 @@
     <p:option name="uri" required="true"/>
     <p:option name="base-uri"/>
     <p:output port="result"/>
-    <p:string-replace match="/file/text()">
+    <p:add-attribute match="*" attribute-name="href">
       <p:input port="source">
         <p:inline>
-          <file>@@</file>
+          <c:entry/>
         </p:inline>
       </p:input>
-      <p:with-option name="replace" select="concat('&quot;',$uri,'&quot;')"/>
-    </p:string-replace>
+      <p:with-option name="attribute-value" select="$uri"/>
+    </p:add-attribute>
     <p:add-attribute attribute-name="xml:base" match="/*">
       <p:with-option name="attribute-value" select="$base-uri"/>
     </p:add-attribute>
@@ -63,18 +63,18 @@
     <p:output port="result"/>
     <px:make-file-entry>
       <p:with-option name="uri" select="/z:object/@src"/>
-      <p:with-option name="base-uri" select="base-uri(/z:object)"/>
+      <p:with-option name="base-uri" select="replace(base-uri(/z:object),'[^/]+$','')"/>
     </px:make-file-entry>
   </p:for-each>
 
-  <p:wrap-sequence wrapper="files">
+  <p:wrap-sequence wrapper="c:manifest">
     <p:input port="source">
       <p:pipe step="links" port="result"/>
     </p:input>
   </p:wrap-sequence>
   
-  <p:add-attribute attribute-name="xml:base" match="/files">
-    <p:with-option name="attribute-value" select="base-uri()">
+  <p:add-attribute attribute-name="xml:base" match="/c:manifest">
+    <p:with-option name="attribute-value" select="replace(base-uri(),'[^/]+$','')">
       <p:pipe port="source" step="main"/>
     </p:with-option>
   </p:add-attribute>
