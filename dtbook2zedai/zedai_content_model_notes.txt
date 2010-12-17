@@ -1,0 +1,70 @@
+zed ai content models
+=== 
+a common one .. 
+annotation, caption
+
+either one or more of:
+	annotation
+	aside
+	block
+	caption
+	citation
+	code
+	description
+	hd
+	list
+	m:math
+	note
+	object
+	p
+	pagebreak
+	quote
+	sel:select
+	separator
+	ssml:break
+	table
+	verse
+	xforms:group
+	xforms:repeat
+
+or one or more of
+	text
+	abbr
+	annoref
+	annotation
+	char
+	citation
+	code
+	d
+	definition
+	emph
+	expansion
+	its:ruby
+	ln
+	m:math
+	name
+	noteref
+	num
+	object
+	pagebreak
+	quote
+	ref
+	s
+	sel:select
+	span
+	ssml:break
+	ssml:phoneme
+	ssml:prosody
+	ssml:say-as
+	ssml:sub
+	ssml:token
+	sub
+	sup
+	term
+	time
+	w
+	xforms:input
+	xforms:secret
+	xforms:select
+	xforms:select1
+	xforms:textarea

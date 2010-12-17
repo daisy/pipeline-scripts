@@ -1624,7 +1624,8 @@
 							<prodnote render="optional">
 								<poem>
 									<line>linegroup[1]/line</line>
-									<img alt="linegroup[1]/line[3]/prodnote/poem/img/@alt" src="http://www.daisy.org/images/logos/daisy-shadow.jpg"/>
+									<img alt="linegroup[1]/line[3]/prodnote/poem/img/@alt"
+										src="http://www.daisy.org/images/logos/daisy-shadow.jpg"/>
 									<linegroup>
 										<line>linegroup[1]/line[3]/poem/linegroup/line</line>
 										<p>linegroup[1]/line[3]/poem/linegroup/p</p>
@@ -1638,6 +1639,12 @@
 						<p>linegroup[2]/p</p>
 					</linegroup>
 				</div>
+			</level1>
+			<level1>
+				<h1>horrible captions</h1>
+				<imggroup>
+					<caption>here is some text <p>oh wow a paragraph!</p> i am not allowed in zedai!</caption>
+				</imggroup>
 			</level1>
 		</bodymatter>
 	</book>

@@ -1,0 +1,293 @@
+DTBOOK ELEMENTS
+
+p
+	inline
+	list
+	dl
+
+h[1-6]
+	inline
+
+div
+	docblockorinline
+
+level
+	h1
+	docblockorinline
+	//
+	docblockorinline
+	level
+	//
+	h1
+	docblockorinline
+	level
+
+MAJOR GROUPINGS
+
+docblockorinline
+	doctitle
+	docauthor
+	covertitle
+	bridgehead
+	block
+	inlineinblock
+
+block
+	p
+	list
+	dl
+	div
+	blockquote
+	img
+	imggroup
+	poem
+	linegroup
+	byline
+	dateline
+	epigraph
+	table
+	address
+	line
+	dtbookblocknoimggroup
+
+block (expanded)
+	p
+	list
+	dl
+	div
+	blockquote
+	img
+	imggroup
+	poem
+	linegroup
+	byline
+	dateline
+	epigraph
+	table
+	address
+	line
+	author
+	prodnote
+	sidebar
+	note
+	annotation
+	
+	
+inlineinblock
+	a
+	cite
+	samp
+	kbd
+	pagenum
+
+dtbookblocknoimggroup
+	author
+	prodnote
+	sidebar
+	note
+	annotation
+
+phrase
+	em
+	strong
+	dfn
+	code
+	samp
+	kbd
+	cite
+	abbr
+	acronym
+	
+special
+	a
+	img
+	imggroup
+	br
+	q
+	sub
+	sup
+	span
+	bdo
+	
+inline (expanded)
+	text
+	em
+	strong
+	dfn
+	code
+	samp
+	kbd
+	cite
+	abbr
+	acronym
+	a
+	img
+	imggroup
+	br
+	q
+	sub
+	sup
+	span
+	bdo
+	sent
+	w
+	pagenum
+	prodnote
+	annoref
+	noteref
+
+dtbookinline
+	sent
+	w
+	pagenum
+	prodnote
+	annoref
+	noteref
+
+flow
+	inlinenoprodnote
+	blocknoimggroup
+
+flow (expanded)
+		text
+		em
+		strong
+		dfn
+		code
+		samp
+		kbd
+		cite
+		abbr
+		acronym
+		a
+		img
+		imggroup
+		br
+		q
+		sub
+		sup
+		span
+		bdo
+		sent
+		w
+		pagenum
+		annoref
+		noteref
+		p
+		list
+		dl
+		div
+		blockquote
+		img
+		poem
+		linegroup
+		byline
+		dateline
+		epigraph
+		table
+		address
+		line
+		author
+		prodnote
+		sidebar
+		note
+		annotation
+	
+	
+	
+LEVEL EXPANDED
+
+level
+	h
+	doctitle
+	docauthor
+	covertitle
+	bridgehead
+	p
+	list
+	dl
+	div
+	blockquote
+	img
+	imggroup
+	poem
+	linegroup
+	byline
+	dateline
+	epigraph
+	table
+	address
+	line
+	author
+	prodnote
+	sidebar
+	note
+	annotation
+	a
+	cite
+	samp
+	kbd
+	pagenum
+	//
+	doctitle
+	docauthor
+	covertitle
+	bridgehead
+	p
+	list
+	dl
+	div
+	blockquote
+	img
+	imggroup
+	poem
+	linegroup
+	byline
+	dateline
+	epigraph
+	table
+	address
+	line
+	author
+	prodnote
+	sidebar
+	note
+	annotation
+	a
+	cite
+	samp
+	kbd
+	pagenum
+	level
+	//
+	h
+	doctitle
+	docauthor
+	covertitle
+	bridgehead
+	p
+	list
+	dl
+	div
+	blockquote
+	img
+	imggroup
+	poem
+	linegroup
+	byline
+	dateline
+	epigraph
+	table
+	address
+	line
+	author
+	prodnote
+	sidebar
+	note
+	annotation
+	a
+	cite
+	samp
+	kbd
+	pagenum
+	level

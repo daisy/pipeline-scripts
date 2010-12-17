@@ -120,7 +120,6 @@
         </section>
     </xsl:template>
 
-<!-- left off here checking content models -->
 
     <xsl:template match="dtb:h1|dtb:h2|dtb:h3|dtb:h4|dtb:h5|dtb:h6">
         <h>
@@ -184,6 +183,7 @@
         </list>
     </xsl:template>
 
+    <!-- TODO: lots.  the content models for dtbook:li and zedai:item are very different -->
     <xsl:template match="dtb:li">
         <item>
             <xsl:call-template name="attrs"/>
@@ -239,6 +239,7 @@
                     </xsl:when>
 
                     <xsl:otherwise>
+                        <!-- TODO: sort out caption content model -->
                         <caption>
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -252,6 +253,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:annotation">
+        <!-- TODO: sort out content model; same problem as captions -->
         <annotation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -284,6 +286,8 @@
                     
                     <xsl:otherwise>
                         <annotation by="republisher">
+                            <!-- similar content model problem to regular annotations; however, dtb:prodnote has a slightly different
+                                content model than dtb:annotation -->
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </annotation>
@@ -296,12 +300,14 @@
 
     <xsl:template match="dtb:sidebar">
         <aside role="sidebar">
+            <!-- TODO: content model problem, recurring issue, same as annotation/caption -->
             <!-- TODO: translate attribute @render = required | optional -->
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </aside>
     </xsl:template>
 
+<!-- left off here with the content model stuff -->
     <xsl:template match="dtb:note">
         <note>
             <xsl:call-template name="attrs"/>
@@ -345,6 +351,8 @@
             <xsl:value-of select="."/>
         </noteref>
     </xsl:template>
+    
+    <!-- TODO: break into separate annoref / noteref -->
 
 
     <xsl:template match="dtb:blockquote|dtb:q">
