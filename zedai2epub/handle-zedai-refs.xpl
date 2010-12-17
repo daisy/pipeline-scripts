@@ -3,9 +3,10 @@
   xmlns:cx="http://xmlcalabash.com/ns/extensions"
   xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
   xmlns:px="http://pipeline.daisy.org/ns/" version="1.0" type="px:handle-refs"
-  exclude-inline-prefixes="px">
+  exclude-inline-prefixes="px" name="main">
 
   <p:input port="source"/>
+  <p:output port="result"/>
   <p:option name="output" select="'output/'"/>
 
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -38,5 +39,12 @@
       <p:with-option name="target" select="$target"/>
     </cxf:copy>
   </p:for-each>
+  
+  <p:add-attribute attribute-name="xml:base" match="/*">
+    <p:input port="source">
+      <p:pipe port="source" step="main"/>
+    </p:input>
+    <p:with-option name="attribute-value" select="$output-dir"/>
+  </p:add-attribute>
 
 </p:declare-step>

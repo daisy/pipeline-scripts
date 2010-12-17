@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.idpf.org/2007/opf"
+  xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:opf="http://www.idpf.org/2007/opf" 
   xmlns:f="http://www.daisy.org/ns/functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f opf xs z" version="2.0">
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="c f opf xs z" version="2.0">
 
   <xsl:output method="xml" indent="yes"/>
   
+  <!-- ============================================================ -->
+  <!-- ====           manifest+doc collection splitter         ==== -->
+  <!-- ============================================================ -->
+  
+  <xsl:variable name="manifest" select="/c:collection/c:manifest"/>
+  
+  <xsl:template match="/" mode="split">
+    <xsl:variable name="zedai">
+      <xsl:copy-of select="/c:collection/z:document"/>
+    </xsl:variable>
+    
+    <xsl:apply-templates select="$zedai"/>
+  </xsl:template>
+  
+  <!-- ============================================================ -->
   
   <xsl:template match="/">
     <xsl:variable name="chunks" select="//*[@chunk]"/>
@@ -37,6 +53,9 @@
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
         <xsl:for-each select="$chunks">
           <item id="{generate-id()}" href="{@chunk}" media-type="application/xhtml+xml"/>
+        </xsl:for-each>
+        <xsl:for-each select="$manifest//c:entry">
+          <item id="{generate-id()}" href="{@href}" media-type="{@media-type}"/>
         </xsl:for-each>
         <!--TODO fallbacks?-->
       </manifest>

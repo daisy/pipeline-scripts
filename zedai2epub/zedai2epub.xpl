@@ -3,9 +3,9 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://pipeline.daisy.org/ns/"
     version="1.0" exclude-inline-prefixes="c cx px">
 
-    <!--<p:output port="result">
-        <p:pipe port="result" step="ncx-creation"/>
-    </p:output>-->
+    <p:output port="result">
+        <p:pipe port="result" step="opf-creation"/>
+    </p:output>
 
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
@@ -58,7 +58,7 @@
 
     <p:group name="files-collection">
         <p:output port="result" primary="false">
-            <p:pipe port="result" step="get-refs"/>
+            <p:pipe port="result" step="handle-refs"/>
         </p:output>
 
         <!-- Get the list of satelite files -->
@@ -67,7 +67,7 @@
         <!-- Move the satellite files -->
         <!-- FIXME we need a procesor specific step for remote downloads -->
         <!-- TODO output result manifest -->
-        <px:handle-refs>
+        <px:handle-refs name="handle-refs">
             <p:with-option name="output" select="concat($output-dir,$content-dir-name,'/')"/>
         </px:handle-refs>
 
@@ -160,13 +160,21 @@
 
     <p:group name="opf-creation">
         <p:output port="result">
-            <p:pipe port="result" step="opf-creation.identity"/>
+            <p:pipe port="result" step="opf-creation.collection"/>
+<!--            <p:pipe port="result" step="opf-creation.identity"/>-->
         </p:output>
 
         <p:identity name="opf-creation.identity"/>
+        
+        <p:wrap-sequence name="opf-creation.collection" wrapper="c:collection">
+            <p:input port="source">
+                <p:pipe step="files-collection" port="result"/>
+                <p:pipe step="opf-creation.identity" port="result"/>
+            </p:input>
+        </p:wrap-sequence>
 
         <!-- Create OPF -->
-        <p:xslt name="opf-builder">
+        <p:xslt name="opf-builder" version="2.0" initial-mode="split">
             <p:input port="stylesheet">
                 <p:document href="opf-builder.xsl"/>
             </p:input>
@@ -178,8 +186,7 @@
         <!-- Store the result OPF -->
         <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8"
             omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/package.opf')"
-            />
+            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/package.opf')"/>
         </p:store>
 
     </p:group>
