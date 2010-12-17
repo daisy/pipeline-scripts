@@ -62,7 +62,14 @@
         </p:output>
 
         <!-- Get the list of satelite files -->
-        <px:get-refs name="get-refs"/>
+        <p:xslt name="get-refs" version="2.0">
+            <p:input port="stylesheet">
+                <p:document href="get-zedai-refs.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
 
         <!-- Move the satellite files -->
         <!-- FIXME we need a procesor specific step for remote downloads -->
@@ -161,11 +168,11 @@
     <p:group name="opf-creation">
         <p:output port="result">
             <p:pipe port="result" step="opf-creation.collection"/>
-<!--            <p:pipe port="result" step="opf-creation.identity"/>-->
+            <!--            <p:pipe port="result" step="opf-creation.identity"/>-->
         </p:output>
 
         <p:identity name="opf-creation.identity"/>
-        
+
         <p:wrap-sequence name="opf-creation.collection" wrapper="c:collection">
             <p:input port="source">
                 <p:pipe step="files-collection" port="result"/>
@@ -186,7 +193,8 @@
         <!-- Store the result OPF -->
         <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8"
             omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/package.opf')"/>
+            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/package.opf')"
+            />
         </p:store>
 
     </p:group>
@@ -255,9 +263,8 @@
         <!-- Create mimetype -->
         <p:store method="text">
             <p:input port="source">
-                <p:inline>
-                    <doc>application/epub+zip</doc>
-                </p:inline>
+                <!--FIXME: make sure this is not indented (mimetype must not have trailing space)-->
+                <p:inline><doc>application/epub+zip</doc></p:inline>
             </p:input>
             <p:with-option name="href" select="concat($output-dir,'mimetype')"/>
         </p:store>
