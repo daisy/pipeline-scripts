@@ -36,7 +36,7 @@
       <manifest>
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
         <xsl:for-each select="$chunks">
-          <itemref id="{generate-id()}" href="{@chunk}" media-type="application/xhtml+xml"/>
+          <item id="{generate-id()}" href="{@chunk}" media-type="application/xhtml+xml"/>
         </xsl:for-each>
         <!--TODO fallbacks?-->
       </manifest>
