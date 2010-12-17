@@ -37,15 +37,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="*[@ncx:id]">
-    <xsl:variable name="chunk-uri" select="ancestor::z:*[@chunk][1]/@chunk"/>
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:attribute name="ncx-id" select="concat($chunk-uri,'#',@ncx-id)"/>
-      <xsl:apply-templates/>
-    </xsl:copy>
-  </xsl:template>
-
   <xsl:template match="*">
     <xsl:copy>
       <xsl:copy-of select="@*"/>

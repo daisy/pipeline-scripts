@@ -3,9 +3,9 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://pipeline.daisy.org/ns/"
     version="1.0" exclude-inline-prefixes="c cx px">
 
-    <p:output port="result">
-        <p:pipe port="result" step="files-collection"/>
-    </p:output>
+    <!--<p:output port="result">
+        <p:pipe port="result" step="ncx-creation"/>
+    </p:output>-->
 
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
@@ -60,7 +60,7 @@
         <p:output port="result" primary="false">
             <p:pipe port="result" step="get-refs"/>
         </p:output>
-        
+
         <!-- Get the list of satelite files -->
         <px:get-refs name="get-refs"/>
 
@@ -70,7 +70,7 @@
         <px:handle-refs>
             <p:with-option name="output" select="concat($output-dir,$content-dir-name,'/')"/>
         </px:handle-refs>
-        
+
     </p:group>
 
 
@@ -129,9 +129,6 @@
 
         <!-- Identify NCX items -->
         <p:xslt name="ncx-items-marker">
-            <p:input port="source">
-                <p:pipe port="result" step="chunks-preparation"/>
-            </p:input>
             <p:input port="stylesheet">
                 <p:document href="ncx-items-marker.xsl"/>
             </p:input>
@@ -191,16 +188,16 @@
 
     <!-- Transform into HTML -->
     <p:group name="zedai2html">
-        
+
         <p:xslt name="zedai2html.xslt">
             <p:input port="stylesheet">
                 <p:document href="zedai2xhtml.xsl"/>
             </p:input>
             <p:with-param name="base" select="concat($output-dir,$content-dir-name,'/')"/>
         </p:xslt>
-        
+
         <p:sink/>
-        
+
         <p:for-each>
             <p:iteration-source>
                 <p:pipe step="zedai2html.xslt" port="secondary"/>

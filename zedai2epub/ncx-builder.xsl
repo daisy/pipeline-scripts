@@ -51,7 +51,7 @@
 
   <xsl:template match="z:*[@ncx:type='navMap']" mode="navMap">
 
-    <navPoint id="{generate-id(.)}" playOrder="{@playOrder}">
+    <navPoint id="{generate-id(.)}" playOrder="{@ncx:playOrder}">
       <xsl:if test="@class">
         <xsl:attribute name="class" select="@class"/>
       </xsl:if>
@@ -76,7 +76,7 @@
 
   <xsl:template match="z:pagebreak" mode="pageList">
 
-    <pageTarget id="{generate-id(.)}" playOrder="{@playOrder}">
+    <pageTarget id="{generate-id(.)}" playOrder="{@ncx:playOrder}">
       <xsl:if test="@class">
         <xsl:attribute name="class" select="@class"/>
       </xsl:if>

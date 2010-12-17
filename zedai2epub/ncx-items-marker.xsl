@@ -7,12 +7,12 @@
 
 
   <xsl:template match="/">
-    <xsl:copy>
+    <xsl:variable name="marked">
       <xsl:apply-templates/>
-    </xsl:copy>
+    </xsl:variable>
+    <xsl:apply-templates select="$marked" mode="playOrder"/>
   </xsl:template>
-
-  <!--TODO record playorder-->
+  
 
   <xsl:template match="z:pagebreak">
     <xsl:call-template name="annotate-ncx-item">
@@ -60,17 +60,50 @@
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="ncx:type" select="$type"/>
       <xsl:attribute name="ncx:label" select="$label"/>
-      <xsl:choose>
-        <xsl:when test="@xml:id">
-          <xsl:attribute name="ncx:id" select="@xml:id"/>
-        </xsl:when>
-        <xsl:otherwise>
+      <!--generate ID and + resolve against chunk -->
+      <xsl:variable name="chunk-uri" select="ancestor-or-self::z:*[@chunk][1]/@chunk"/>
+      <xsl:variable name="ncx-id" select="if(@xml:id) then  @xml:id else generate-id()"/>
+      <xsl:attribute name="ncx:id" select="if($chunk-uri) then concat($chunk-uri,'#',$ncx-id) else $ncx-id"/>
+      <xsl:if test="not(@xml:id)">
           <xsl:attribute name="xml:id" select="generate-id()"/>
-          <xsl:attribute name="ncx:id" select="generate-id()"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      </xsl:if>
       <xsl:apply-templates/>
     </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="*[@ncx:id]">
+    <xsl:variable name="chunk-uri" select="ancestor::z:*[@chunk][1]/@chunk"/>
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:attribute name="ncx-id" select="concat($chunk-uri,'#',@ncx-id)"/>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:template>
+  
+  <!--=============================================================================-->
+  <!--====                  mode 'playOrder'                                   ====-->
+  <!--=============================================================================-->
+  
+  <xsl:template match="*[@ncx:type]" mode="playOrder">
+    <xsl:copy>
+      <xsl:attribute name="ncx:playOrder">
+        <xsl:number count="*[@ncx:type]" level="any"/>
+      </xsl:attribute>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates mode="playOrder"/>
+    </xsl:copy>
+  </xsl:template>
+  
+  
+  <xsl:template match="*"  mode="playOrder">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates mode="playOrder"/>
+    </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="comment()|processing-instruction()|text()"  mode="playOrder">
+    <xsl:copy/>
   </xsl:template>
 
 </xsl:stylesheet>
