@@ -1646,6 +1646,11 @@
 					<caption>here is some text <p>oh wow a paragraph!</p> i am not allowed in zedai!</caption>
 				</imggroup>
 			</level1>
+			
+			<level1>
+				<h1>horrible em</h1>
+				<div><em></em></div>
+			</level1>
 		</bodymatter>
 	</book>
 </dtbook>
