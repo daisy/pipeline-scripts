@@ -140,7 +140,7 @@
     
 
 
-    <!-- Just a note --
+    <!-- Just a note
         dtb:covertitle and dtb:samp also have a dtbook:inline content model, but they map to zedai:block, which has a more flexible 
             content model than the zedai:"inline" model described above 
             for these elements, no content model transformation is required
