@@ -3,9 +3,9 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://pipeline.daisy.org/ns/"
     version="1.0" exclude-inline-prefixes="c cx px">
 
-    <!--<p:output port="result">
-        <p:pipe port="result" step="opf-creation"/>
-    </p:output>-->
+    <p:output port="result">
+        <!--        <p:pipe port="result" step="opf-creation"/>-->
+    </p:output>
 
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
@@ -24,6 +24,8 @@
 
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="fileset-library.xpl"/>
+    <p:import href="zip-library.xpl"/>
     <p:import href="handle-zedai-refs.xpl"/>
 
 
@@ -223,20 +225,8 @@
     </p:group>
 
     <!--=========================================================================-->
-    <!--<p:group name="ocf-finalization">
-        <p:insert position="first-child">
-            <p:input port="source">
-                <p:pipe port="result" step="files-collection"/>
-            </p:input>
-            <p:input port="insertion">
-                <p:inline>
-                    <c:entry href="package.opf"/>
-                </p:inline>
-            </p:input>
-        </p:insert>
-    </p:group>-->
 
-    <!-- Create OCF -->
+    <!-- OCF finalization -->
     <p:group name="ocf-finalization">
 
         <!-- Create container descriptor -->
@@ -263,31 +253,55 @@
         <p:store method="text">
             <p:input port="source">
                 <!--FIXME: make sure this is not indented (mimetype must not have trailing space)-->
-                <p:inline><doc>application/epub+zip</doc></p:inline>
+                <p:inline>
+                    <doc>application/epub+zip</doc>
+                </p:inline>
             </p:input>
             <p:with-option name="href" select="concat($output-dir,'mimetype')"/>
         </p:store>
 
-        <!-- Create ZIP -->
-        <!--<cx:zip command="create" compression-method="stored" compression-level="default">
+    </p:group>
+
+    <!--=========================================================================-->
+    
+    <p:group name="fileset">
+        <p:output port="result"/>
+
+        <px:create-manifest>
+            <p:with-option name="base" select="$output-dir"/>
+        </px:create-manifest>
+        <px:add-manifest-entry href="mimetype"/>
+        <px:add-manifest-entry href="META-INF/container.xml"/>
+        <px:add-manifest-entry href="Content/package.opf" media-type="application/oebps-package+xml"/>
+        <px:add-manifest-entry href="Content/toc.ncx" media-type="application/x-dtbncx+xml"/>
+    </p:group>
+    
+    <!--=========================================================================-->
+    
+    <!-- Create ZIP -->
+    <p:group name="zip">
+        <p:xslt name="zip.create-zip-manifest" version="2.0">
+            <p:input port="source">
+                <p:pipe port="result" step="fileset"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="manifest2zip.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:add-attribute match="//c:entry[1]" attribute-name="compression-method" attribute-value="stored"/>
+        <cx:zip>
             <p:input port="source">
                 <p:empty/>
             </p:input>
             <p:input port="manifest">
-                <p:inline>
-                    <c:zip-manifest>
-                        <c:entry name="new.xpl" href="pipe.xpl" comment="Hi mom"
-                            compression-method="stored" compression-level="default"/>
-                        <c:entry name="new.xpl" href="h6.xml" compression-method="deflated"
-                            compression-level="smallest"/>
-                    </c:zip-manifest>
-                </p:inline>
+                <p:pipe port="result" step="zip.create-zip-manifest"/>
             </p:input>
-            <p:with-option name="href" select="file:///Users/Romain/Desktop/test.epub"/>
-        </cx:zip>-->
-
+            <p:with-option name="href" select="'/Users/Romain/Desktop/test.epub'"/>
+        </cx:zip>
     </p:group>
-
 
 
 </p:declare-step>
