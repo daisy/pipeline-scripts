@@ -1,0 +1,209 @@
+"dtbook"
+
+"head"
+
+"link"
+
+"meta"
+
+"book"
+
+"frontmatter"
+
+"bodymatter"
+
+"rearmatter"
+
+"level 1-5"
+hd + (docblockorinline, level)
+
+
+"level6"
+(docblockorinline, level)
+
+"br"
+empty
+
+"line"
+inline, linenum
+
+
+"linenum"
+text
+
+"address"
+inline, line
+
+"div"
+docblockorinline
+
+"title"
+inline
+
+"author"
+inline
+
+"prodnote"
+flow
+
+"sidebar"
+flow, hd
+
+"note"
+block, inlineinblock
+
+"annotation"
+block, inlineinblock
+
+"epigraph"
+flow
+
+"byline"
+inline
+
+"dateline"
+inline
+
+"linegroup"
+bunch of stuff
+
+"poem"
+bunch of stuff
+
+"a"
+inlinenoa
+
+"em"
+inline
+
+"strong"
+inline
+
+"dfn"
+inline
+
+"kbd"
+inline
+
+"code"
+inline
+
+"samp"
+inline
+
+"cite"
+inline, title, author
+
+"abbr"
+inline
+
+"acronym"
+inline
+
+"sub"
+inline
+
+"sup"
+inline
+
+"span"
+inline
+
+"bdo"
+inline
+
+"sent"
+inlines
+
+"w"
+inlinew
+
+"pagenum"
+text
+
+"noteref"
+text
+
+"annoref"
+text
+
+"q"
+inline
+
+"img"
+empty
+
+"imggroup"
+prodnote, img, caption, pagenum
+
+"p"
+inline, list, dl
+
+"doctitle"
+inline
+
+"docauthor"
+inline
+
+"covertitle"
+inline
+
+"h1-6"
+inline
+
+"bridgehead"
+inline
+
+"hd"
+inline
+
+"blockquote"
+pagenum, block
+
+"dl"
+dd, dt, pagenum
+
+"dt"
+inline
+
+"dd"
+flow
+
+"list"
+hd, prodnote, li, pagenum
+
+"li"
+flow, lic
+
+"lic"
+inline
+
+"table"
+table stuff
+
+"caption"
+flow
+
+"thead"
+tr
+
+"tfoot"
+tr
+
+"tbody"
+tr, pagenum
+
+"colgroup"
+col
+
+"col"
+empty
+
+"tr"
+th, td
+
+"th"
+flownopagenum
+
+"td"
+flownopagenum

@@ -1,0 +1,121 @@
+a choice of
+either one or more of
+any of the 22 elements: annotation, aside, block, caption, citation, code, description, hd, list, m:math, note, object, p, pagebreak, quote, sel:select, separator, ssml:break, table, verse, xforms:group and xforms:repeat
+or one or more of
+a choice of
+either one of the 44 elements: abbr, annoref, annotation, char, citation, code, d, definition, emph, emph, expansion, its:ruby, ln, m:math, name, noteref, num, object, object, pagebreak, quote, ref, s, sel:select, span, span, ssml:break, ssml:phoneme, ssml:prosody, ssml:say-as, ssml:sub, ssml:token, sub, sup, term, time, w, w, xforms:input, xforms:range, xforms:secret, xforms:select, xforms:select1 or xforms:textarea
+or text
+end of choice
+end of choice
+
+annotation-block
+aside-aside
+aside-toc
+block-block
+caption
+entry-index
+entry-bibliography
+entry-glossary
+item
+note
+object-block
+th
+
+===============================
+
+a choice of
+one or more of
+a choice of
+either one of the 44 elements: abbr, annoref, annotation, char, citation, code, d, definition, emph, emph, expansion, its:ruby, ln, m:math, name, noteref, num, object, object, pagebreak, quote, ref, s, sel:select, span, span, ssml:break, ssml:phoneme, ssml:prosody, ssml:say-as, ssml:sub, ssml:token, sub, sup, term, time, w, w, xforms:input, xforms:range, xforms:secret, xforms:select, xforms:select1 or xforms:textarea
+or text
+end of choice
+end of choice
+
+annoref
+annotation-phrase
+citation-phrase
+citation-block
+d
+definition
+emph-phrase
+entry-toc
+expansion
+hd
+hpart
+meta
+noteref
+object-phrase
+p
+quote-phrase
+ref
+s
+span-phrase
+time
+
+===============================
+empty
+
+col
+pagebreak
+separator
+
+===============================
+something else
+
+abbr (12)
+backcover (21)
+backmatter
+bibliography (7s)
+block-toc (6)
+body
+bodymatter
+char
+code-block (3, 6)
+code-phrase (7)
+colgroup
+cover
+description-block (16, 28)
+description-phrase (28)
+description-text (7)
+document
+emph-text (7)
+flaps (21)
+frontcover (21)
+frontmatter
+glossary-section (7s)
+glossary-block
+h (44 + hpart)
+head
+index (7s)
+list
+ln-code (lnum, 7)
+ln-ln (44 + lnum)
+lngroup-code
+lngroup-lngroup
+lnum (7)
+name (11)
+num (7)
+object-text (7)
+quote-block (22 + ln, lngroup, 44)
+section-section
+section-verse
+section-toc
+section-index (7s)
+section-bibliography (7s)
+section-glossary (7s)
+span-text (7)
+spine (21, 43 == each like above minus pagebreak)
+sub (7)
+sup (7)
+table
+tbody
+td (22 + ln, 44)
+term (12)
+tfoot
+thead
+toc-section
+toc-block
+tr
+verse
+w (7, sth else)
+wpart (7, sth else)

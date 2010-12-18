@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0" name="dtbook2zedai">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0" name="dtbook2zedai">
     
     <!-- 
         
@@ -9,7 +9,10 @@
         Note that the wiki page lists more steps than what you'll find here.  That's because this script isn't complete yet.
     -->
     
-    
+    <p:input port="source" primary="true"/>
+    <p:output port="result" primary="true">
+        <p:pipe step="transform_dtbook2zedai_xsl" port="result"/>
+    </p:output>
     
     <!-- validate dtbook -->
     <p:validate-with-relax-ng assert-valid="true">
@@ -30,6 +33,7 @@
         
     -->
     <p:xslt>
+        <p:input port="source"/>
         <p:input port="stylesheet">
             <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
         </p:input>
@@ -52,11 +56,8 @@
     </p:validate-with-relax-ng>
     -->
     
-    <!-- TODO: how to hook up p:store without getting errors? I either get an error that the pipeline has no output, or
-    , if i give it explicit output, that there is null input -->
-    <!--    
-        <p:store href="out.xml"/>
+    <!-- TODO: fix this 
+        <p:store href="out.xml"/> 
     -->
     
-    
-</p:pipeline>
+</p:declare-step>

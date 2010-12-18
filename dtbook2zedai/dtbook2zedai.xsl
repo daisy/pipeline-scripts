@@ -14,9 +14,8 @@
             <xd:p>Take as input a dtbook 2005-3 document and produce zedai</xd:p>
         </xd:desc>
     </xd:doc>
-
     
-    <xsl:output method="xml"/>
+    <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
         <!-- just for testing: insert the oxygen stylesheet -->
@@ -30,24 +29,18 @@
 
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
-        <xsl:copy-of select="@name"/>
-        <xsl:copy-of select="@dir"/>
         <xsl:if test="@id">
-            <xsl:attribute name="xml:id">
-                <xsl:value-of select="@id"/>
-            </xsl:attribute>
+            <xsl:attribute name="xml:id" select="@id"/>
         </xsl:if>
         <xsl:copy-of select="@xml:space"/>
         <xsl:copy-of select="@class"/>
         <xsl:copy-of select="@xml:lang"/>
         <xsl:if test="@dir">
-            <xsl:attribute name="its:dir">
-                <xsl:value-of select="@dir"/>
-            </xsl:attribute>
+            <xsl:attribute name="its:dir" select="@dir"/>
         </xsl:if>
         
         <!-- TODO: @title: defined as a core attribute in dtbook; does not exist in zedai -->
-        
+        <!-- TODO: @name, does not exist in zedai -->
     </xsl:template>
     
     <xsl:template match="dtb:dtbook">
@@ -65,11 +58,11 @@
         <head>
             <xsl:call-template name="attrs"/>
             
-            <!-- TODO: is it ok to hard-code the zedai 'book' profile for dtbook transformation? -->
+            <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
             <meta rel="z3986:profile"
                 resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.7/"/>
 
-            <!-- TODO: import namespaces for non-DC metadata items -->
+            <!-- TODO: look at each metadata and draw comparisons to zedai metadata -->
             <xsl:for-each select="dtb:meta">
                 <meta property="{@name}" content="{@content}"/>
             </xsl:for-each>
@@ -99,14 +92,14 @@
     </xsl:template>
 
     <xsl:template match="dtb:docauthor">
-        <p property="dc:author">
+        <p role="author">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </p>
     </xsl:template>
 
     <xsl:template match="dtb:doctitle">
-        <p property="dc:title">
+        <p role="title">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </p>
@@ -152,7 +145,7 @@
 
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@depth"/>
-            <!-- TODO: @start @enum -->
+            
             <xsl:if test="@enum = '1'">
                 <xsl:attribute name="rend:prefix">decimal</xsl:attribute>
             </xsl:if>
@@ -194,7 +187,8 @@
     <xsl:template match="dtb:img">
        
         <!-- postponing image/description processing -->
-        <!-- TODO:  @height, @width; not found in ZedAI -->
+        <!-- TODO:  @height, @width belong in CSS -->
+        
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, so this 'short' value is made-up
             however, it's an issue under consideration in the zedai group -->
@@ -239,7 +233,7 @@
                     </xsl:when>
 
                     <xsl:otherwise>
-                        <!-- TODO: sort out caption content model -->
+                        <!-- TODO: 22/44 content model issue -->
                         <caption>
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -253,7 +247,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:annotation">
-        <!-- TODO: sort out content model; same problem as captions -->
+        <!-- TODO: 22/44 content model issue -->
         <annotation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -286,8 +280,7 @@
                     
                     <xsl:otherwise>
                         <annotation by="republisher">
-                            <!-- similar content model problem to regular annotations; however, dtb:prodnote has a slightly different
-                                content model than dtb:annotation -->
+                            <!-- TODO: 22/44 content model issue -->
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </annotation>
@@ -300,22 +293,20 @@
 
     <xsl:template match="dtb:sidebar">
         <aside role="sidebar">
-            <!-- TODO: content model problem, recurring issue, same as annotation/caption -->
+            <!-- TODO: 22/44 content model issue -->
             <!-- TODO: translate attribute @render = required | optional -->
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </aside>
     </xsl:template>
 
-<!-- left off here with the content model stuff -->
     <xsl:template match="dtb:note">
+        <!-- TODO: 22/44 content model issue -->
         <note>
             <xsl:call-template name="attrs"/>
             <xsl:choose>
                 <xsl:when test="@class = 'footnote' or @class = 'endnote'">
-                    <xsl:attribute name="role">
-                        <xsl:value-of select="@class"/>
-                    </xsl:attribute>
+                    <xsl:attribute name="role" select="@class"/>
                     <xsl:apply-templates/>
                 </xsl:when>
             </xsl:choose>
@@ -340,11 +331,10 @@
     <xsl:template match="dtb:pagenum">
         <pagebreak value="{.}">
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @page: normal | front | special -->
         </pagebreak>
     </xsl:template>
 
-    <xsl:template match="dtb:noteref|dtb:annoref">
+    <xsl:template match="dtb:noteref">
         <noteref ref="{@idref}">
             <!-- TODO: @type -->
             <xsl:call-template name="attrs"/>
@@ -352,9 +342,14 @@
         </noteref>
     </xsl:template>
     
-    <!-- TODO: break into separate annoref / noteref -->
-
-
+    <xsl:template match="dtb:annoref">
+        <noteref ref="{@idref}">
+            <!-- TODO: @type -->
+            <xsl:call-template name="attrs"/>
+            <xsl:value-of select="."/>
+        </noteref>
+    </xsl:template>
+    
     <xsl:template match="dtb:blockquote|dtb:q">
         <!-- TODO: @cite, which can exist on both blockquote and q, and is a URI -->
         <quote>
@@ -443,10 +438,12 @@
     </xsl:template>
 
     <xsl:template match="dtb:byline">
-        <p role="other-credits">
+        <!-- for most book (non-article) use cases, byline can be citation. the exception would be anthologies, for which we can call upon the periodicals vocab
+            and actually use "role = byline".  for now, we will use just 1 vocabulary in this converter -->
+        <citation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </p>
+        </citation>
     </xsl:template>
 
     <xsl:template match="dtb:sent">
@@ -458,8 +455,8 @@
    
     <xsl:template match="dtb:address">
         <!-- TODO: deal with dtb:address/dtb:line -->
-        <!-- TODO: no "address" role in ZedAI -->
-        <block role="address">
+        <!-- TODO: needs an appropriate role, work ongoing in zedai -->
+        <block>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </block>
@@ -473,7 +470,7 @@
     </xsl:template>
     
     <xsl:template match="dtb:dateline">
-        <p>
+        <p role="time">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </p>
@@ -484,14 +481,51 @@
     </xsl:template>
     
     <xsl:template match="dtb:cite">
+        <!-- generate an ID, we might need it -->
+        <xsl:variable name="citeID" select="generate-id()"/>    
+        
         <citation>
             <xsl:call-template name="attrs"/>
+            
+            <!-- if no ID, then give a new ID -->
+            <xsl:choose>
+                <xsl:when test="@id"/>
+                <xsl:otherwise>
+                    <xsl:attribute name="id"><xsl:value-of select="$citeID"/></xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
+            
             <xsl:if test="./title">
-                <span role="title">
-                    <xsl:value-of select="./title"/>
-                </span>
+                <p property="title">
+                    <xsl:attribute name="about">
+                        <xsl:choose>
+                            <xsl:when test="@id">
+                                <xsl:value-of select="@id"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$citeID"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                </p>
             </xsl:if>
-            <xsl:apply-templates/>
+            <xsl:if test="./author">
+                <p property="author">
+                    <xsl:attribute name="about">
+                        <xsl:choose>
+                            <xsl:when test="@id">
+                                <xsl:value-of select="@id"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$citeID"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                </p>
+            </xsl:if>
+            
         </citation>
     </xsl:template>
     
@@ -502,16 +536,24 @@
         </block>
     </xsl:template>
     
-    <xsl:template match="bdo">
-        <span its:dir="@dir">
+    <xsl:template match="dtb:bdo">
+        <span its:dir="{@dir}">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </span>
     </xsl:template>
     
-    <xsl:template match="acronym">
-        <abbr type="acronym">
-            <!-- TODO: @pronounce -->
+    <xsl:template match="dtb:acronym">
+        <abbr>
+            <!-- making an assumption: @pronounce has a default value of 'no' -->
+            <xsl:choose>
+                <xsl:when test="@pronounce = 'yes'">
+                    <xsl:attribute name="type">acronym</xsl:attribute>    
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="type">initialism</xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </abbr>
@@ -538,7 +580,7 @@
 
 
     <xsl:template match="dtb:abbr">
-        <abbr>
+        <abbr type="truncation">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </abbr>
@@ -585,4 +627,85 @@
             <xsl:apply-templates/>
         </ln>
     </xsl:template>
+    
+    <xsl:template match="dtb:kbd">
+        <code>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </code>    
+    </xsl:template>
+    
+    <xsl:template match="dtb:samp">
+        <block role="example">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </block>
+    </xsl:template>
+    
+    <xsl:template match="dtb:dfn">
+        <term>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </term>
+    </xsl:template>
+    
+    <xsl:template match="dtb:poem">
+        <!-- TODO -->
+    </xsl:template>
+    
+    <xsl:template match="dtb:a">
+        <ref>
+            <xsl:if test="@href">
+                <xsl:attribute name="ref" select="@href"/>
+            </xsl:if>
+        </ref>
+        <!-- TODO: deal with these dtbook:a attributes
+            note that tabindex, accesskey only appear on this element in all of dtbook
+        @type
+        @hreflang
+        @rel
+        @rev
+        @accesskey
+        @tabindex
+        -->
+    </xsl:template>
+    
+    <xsl:template match="dtb:dl">
+        <!-- TODO: is this ordered or unordered? @type is required... -->
+        <list type="unordered">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </list>
+    </xsl:template>
+    
+    <xsl:template match="dtb:dt">
+        <term>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </term>
+    </xsl:template>
+    
+    <xsl:template match="dtb:dd">
+        <definition>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </definition>
+    </xsl:template>
+    
+    <xsl:template match="dtb:lic">
+        <!-- TODO -->
+    </xsl:template>
+    
+    <xsl:template match="dtb:linenum">
+        <lnum>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </lnum>
+    </xsl:template>
+    
+    <!-- big TODOs:
+        Math
+        TOC (see references to zedai toc module in the zedai online docs)
+    -->
+    
 </xsl:stylesheet>
