@@ -1649,7 +1649,14 @@
 			
 			<level1>
 				<h1>horrible em</h1>
-				<div><em></em></div>
+				<div><p><em>
+					hi
+					<imggroup>
+						<img src="hi" alt="hi"/>
+					</imggroup>
+					<span>yo</span>
+				</em></p>
+				</div>
 			</level1>
 		</bodymatter>
 	</book>

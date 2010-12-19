@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0" name="dtbook2zedai">
-    
     <!-- 
         
         This XProc script is the main entry point for the DTBook2ZedAI module.
@@ -10,54 +9,49 @@
     -->
     
     <p:input port="source" primary="true"/>
-    <p:output port="result" primary="true">
-        <p:pipe step="transform_dtbook2zedai_xsl" port="result"/>
-    </p:output>
+    <p:input port="parameters" kind="parameter" />
     
-    <!-- validate dtbook -->
-    <p:validate-with-relax-ng assert-valid="true">
+    
+    <!-- Validate DTBook Input-->
+    <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
         <p:input port="schema">
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
     
+    
     <!-- normalize dtbook -->
-    <!-- TODO: it would be nice to encapsulate all of the normalization steps -->
-    <!-- Ideas for normalization:
+   <p:group name="normalize-dtbook">
+       <!--<p:xslt name="normalize-inline">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-inline.xsl"/>
+           </p:input>
+       </p:xslt>-->
        
-        * Flatten nested linegroups
-        * Insert required frontmatter/bodymatter if not present
-        * Organize images, image groups, image-related prodnotes, image-related captions
-        * Move <imggroup>s out of inline contexts.  They will be <block>s in zedai, which cannot live inline.
-        * Move <br>s out of inline contexts.  They will be <separator>s in zedai, which cannot live inline.        
+        <p:xslt name="normalize-linegroups">
+            <p:input port="stylesheet">
+                <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
+            </p:input>
+        </p:xslt>
         
-    -->
-    <p:xslt>
-        <p:input port="source"/>
-        <p:input port="stylesheet">
-            <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
-        </p:input>
-    </p:xslt>
+    </p:group>
     
     <!-- transform dtbook to zedai -->
-    <p:xslt name="transform_dtbook2zedai_xsl">      
+    <p:xslt name="translate-dtbook2zedai"> 
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>
     </p:xslt>
     
     
-    <!-- validate final zedai -->
-    <!--
-    <p:validate-with-relax-ng assert-valid="true">
+    <!-- Validate the ZedAI output -->
+    <p:validate-with-relax-ng assert-valid="false" name="validate-zedai">
         <p:input port="schema">
             <p:document href="./schema/zedai_bookprofile_v0.7/z3986a-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-    -->
     
-    <!-- TODO: fix this 
-        <p:store href="out.xml"/> 
-    -->
+    
+    <p:store href="out.xml"/>
     
 </p:declare-step>
