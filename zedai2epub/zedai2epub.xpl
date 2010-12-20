@@ -28,21 +28,6 @@
     <!--=========================================================================-->
 
     <!-- Get the input document from the href option-->
-
-    <!-- TODO: extract to utils-->
-    <!--<p:add-attribute match="/c:request" attribute-name="href">
-    <p:input port="source">
-      <p:inline>
-        <c:request method="get"  detailed="false"/>
-      </p:inline>
-    </p:input>
-    <p:with-option name="attribute-value" select="$href"/>
-  </p:add-attribute>
-  
-  <p:http-request/>
-  
-  <p:unescape-markup encoding="base64" charset="utf8"/>-->
-
     <p:group name="initialization">
         <p:output port="result"/>
         <p:load name="load">
@@ -70,7 +55,6 @@
 
         <!-- Move the satellite files -->
         <!-- FIXME we need a procesor specific step for remote downloads -->
-        <!-- TODO output result manifest -->
         <px:handle-refs name="handle-refs">
             <p:with-option name="output" select="concat($output-dir,$content-dir-name,'/')"/>
         </px:handle-refs>
