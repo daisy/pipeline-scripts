@@ -260,13 +260,15 @@
         </p:store>
 
         <!-- Create mimetype -->
-        <p:store method="text">
+        <p:string-replace match="doc/text()" replace="'application/epub+zip'">
             <p:input port="source">
-                <!--FIXME: make sure this is not indented (mimetype must not have trailing space)-->
                 <p:inline>
-                    <doc>application/epub+zip</doc>
+                    <doc>@@</doc>
                 </p:inline>
             </p:input>
+        </p:string-replace>
+        <p:string-replace match="/text()" replace="''"/>
+        <p:store method="text">
             <p:with-option name="href" select="concat($output-dir,'mimetype')"/>
         </p:store>
 
