@@ -6,17 +6,21 @@
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
 
-    <p:variable name="output-dir"
+    <p:variable name="epub-file"
         select="resolve-uri(
-        if ($output='') then 'output/' 
-        else if (ends-with($output,'/')) then $output 
-        else concat($output,'/'),
+        if ($output='') then concat(
+        if (matches($href,'[^/]+\..+$'))
+        then replace(tokenize($href,'/')[last()],'\..+$','')
+        else tokenize($href,'/')[last()],'.epub')
+        else if (ends-with($output,'.epub')) then $output 
+        else concat($output,'.epub'),
         base-uri())">
         <p:inline>
             <irrelevant/>
         </p:inline>
     </p:variable>
-    <p:variable name="content-dir-name" select="'Content'"/>
+    <p:variable name="epub-dir" select="resolve-uri('epub/',$epub-file)"/>
+    <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -56,7 +60,7 @@
         <!-- Move the satellite files -->
         <!-- FIXME we need a procesor specific step for remote downloads -->
         <px:handle-refs name="handle-refs">
-            <p:with-option name="output" select="concat($output-dir,$content-dir-name,'/')"/>
+            <p:with-option name="output" select="$content-dir"/>
         </px:handle-refs>
 
     </p:group>
@@ -139,7 +143,7 @@
         <p:store media-type="application/x-dtbncx+xml" doctype-public="-//NISO//DTD ncx 2005-1//EN"
             doctype-system="http://www.daisy.org/z3986/2005/ncx-2005-1.dtd" indent="true"
             encoding="utf-8" omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/toc.ncx')"/>
+            <p:with-option name="href" select="concat($content-dir,'toc.ncx')"/>
         </p:store>
 
     </p:group>
@@ -174,7 +178,7 @@
         <!-- Store the result OPF -->
         <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8"
             omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($output-dir,$content-dir-name,'/package.opf')"
+            <p:with-option name="href" select="concat($content-dir,'package.opf')"
             />
         </p:store>
 
@@ -192,7 +196,7 @@
             <p:input port="stylesheet">
                 <p:document href="zedai2xhtml.xsl"/>
             </p:input>
-            <p:with-param name="base" select="concat($output-dir,$content-dir-name,'/')"/>
+            <p:with-param name="base" select="$content-dir"/>
         </p:xslt>
         <p:sink/>
 
@@ -235,12 +239,12 @@
                     </container>
                 </p:inline>
             </p:input>
-            <p:with-option name="attribute-value" select="concat($content-dir-name,'/package.opf')"
+            <p:with-option name="attribute-value" select="concat(substring-after($content-dir,$epub-dir),'package.opf')"
             />
         </p:add-attribute>
         <!-- Store container descriptor -->
         <p:store indent="true" encoding="utf-8" omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($output-dir,'META-INF/container.xml')"/>
+            <p:with-option name="href" select="concat($epub-dir,'META-INF/container.xml')"/>
         </p:store>
 
         <!-- Create mimetype -->
@@ -253,7 +257,7 @@
         </p:string-replace>
         <p:string-replace match="/text()" replace="''"/>
         <p:store method="text">
-            <p:with-option name="href" select="concat($output-dir,'mimetype')"/>
+            <p:with-option name="href" select="concat($epub-dir,'mimetype')"/>
         </p:store>
 
     </p:group>
@@ -265,7 +269,7 @@
         <p:group name="fileset.core">
             <p:output port="result"/>
             <px:create-manifest>
-                <p:with-option name="base" select="$output-dir"/>
+                <p:with-option name="base" select="$epub-dir"/>
             </px:create-manifest>
             <px:add-manifest-entry href="mimetype"/>
             <px:add-manifest-entry href="META-INF/container.xml"/>
@@ -300,10 +304,11 @@
             <p:input port="manifest">
                 <p:pipe port="result" step="zip.manifest"/>
             </p:input>
-            <p:with-option name="href" select="'/Users/Romain/Desktop/test.epub'"/>
+            <p:with-option name="href" select="substring-after($epub-file,'file:')"/>
         </cx:zip>
         <p:sink/>
     </p:group>
+    
 
 
 </p:declare-step>
