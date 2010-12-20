@@ -3,10 +3,6 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://pipeline.daisy.org/ns/"
     version="1.0" exclude-inline-prefixes="c cx px">
 
-    <p:output port="result">
-        <!--        <p:pipe port="result" step="opf-creation"/>-->
-    </p:output>
-
     <p:option name="href" required="true"/>
     <p:option name="output" select="'output'"/>
 
@@ -204,6 +200,9 @@
 
     <!-- Transform into HTML -->
     <p:group name="zedai2html">
+        <p:output port="result" primary="false">
+            <p:pipe port="result" step="zedai2html.manifest"/>
+        </p:output>
 
         <p:xslt name="zedai2html.xslt">
             <p:input port="stylesheet">
@@ -211,17 +210,28 @@
             </p:input>
             <p:with-param name="base" select="concat($output-dir,$content-dir-name,'/')"/>
         </p:xslt>
-
         <p:sink/>
 
-        <p:for-each>
+        <p:for-each name="zedai2html.store">
             <p:iteration-source>
                 <p:pipe step="zedai2html.xslt" port="secondary"/>
             </p:iteration-source>
             <p:store method="xhtml" indent="false">
                 <p:with-option name="href" select="base-uri(/)"/>
             </p:store>
+            <p:add-attribute attribute-name="href" match="*">
+                <p:input port="source">
+                    <p:inline>
+                        <c:entry/>
+                    </p:inline>
+                </p:input>
+                <p:with-option name="attribute-value" select="base-uri(/)">
+                    <p:pipe port="current" step="zedai2html.store"/>
+                </p:with-option>
+            </p:add-attribute>
         </p:for-each>
+        <p:wrap-sequence name="zedai2html.manifest" wrapper="c:manifest"/>
+
     </p:group>
 
     <!--=========================================================================-->
@@ -263,44 +273,50 @@
     </p:group>
 
     <!--=========================================================================-->
-    
+
     <p:group name="fileset">
         <p:output port="result"/>
-
-        <px:create-manifest>
-            <p:with-option name="base" select="$output-dir"/>
-        </px:create-manifest>
-        <px:add-manifest-entry href="mimetype"/>
-        <px:add-manifest-entry href="META-INF/container.xml"/>
-        <px:add-manifest-entry href="Content/package.opf" media-type="application/oebps-package+xml"/>
-        <px:add-manifest-entry href="Content/toc.ncx" media-type="application/x-dtbncx+xml"/>
+        <p:group name="fileset.core">
+            <p:output port="result"/>
+            <px:create-manifest>
+                <p:with-option name="base" select="$output-dir"/>
+            </px:create-manifest>
+            <px:add-manifest-entry href="mimetype"/>
+            <px:add-manifest-entry href="META-INF/container.xml"/>
+            <px:add-manifest-entry href="Content/package.opf"
+                media-type="application/oebps-package+xml"/>
+            <px:add-manifest-entry href="Content/toc.ncx" media-type="application/x-dtbncx+xml"/>
+        </p:group>
+        <px:join-manifests>
+            <p:input port="source">
+                <p:pipe port="result" step="fileset.core"/>
+                <p:pipe port="result" step="zedai2html"/>
+                <p:pipe port="result" step="files-collection"/>
+            </p:input>
+        </px:join-manifests>
     </p:group>
-    
+
     <!--=========================================================================-->
-    
+
     <!-- Create ZIP -->
     <p:group name="zip">
-        <p:xslt name="zip.create-zip-manifest" version="2.0">
+        <px:to-zip-manifest>
             <p:input port="source">
                 <p:pipe port="result" step="fileset"/>
             </p:input>
-            <p:input port="stylesheet">
-                <p:document href="manifest2zip.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        <p:add-attribute match="//c:entry[1]" attribute-name="compression-method" attribute-value="stored"/>
+        </px:to-zip-manifest>
+        <p:add-attribute name="zip.manifest" match="c:entry[@name='mimetype']"
+            attribute-name="compression-method" attribute-value="stored"/>
         <cx:zip>
             <p:input port="source">
                 <p:empty/>
             </p:input>
             <p:input port="manifest">
-                <p:pipe port="result" step="zip.create-zip-manifest"/>
+                <p:pipe port="result" step="zip.manifest"/>
             </p:input>
             <p:with-option name="href" select="'/Users/Romain/Desktop/test.epub'"/>
         </cx:zip>
+        <p:sink/>
     </p:group>
 
 
