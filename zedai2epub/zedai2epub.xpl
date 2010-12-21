@@ -4,7 +4,7 @@
     version="1.0" exclude-inline-prefixes="c cx px">
 
     <p:option name="href" required="true"/>
-    <p:option name="output" select="'output'"/>
+    <p:option name="output" select="''"/>
 
     <p:variable name="epub-file"
         select="resolve-uri(
