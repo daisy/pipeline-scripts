@@ -83,6 +83,7 @@
         </xsl:copy>
 
     </xsl:template>
+    
     <xsl:template name="blockize">
         <!-- TODO: also need to wrap text() in para elements.  how do i iterate through all node children AND text? -->
         <xsl:for-each select="child::node()">

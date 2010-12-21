@@ -1,3 +1,18 @@
+== ideas
+remove list, dl from dtb:p
+dtb:p => zedai:p (44)
+
+remove linegroup from dtb:block elements
+
+remove from a:
+img
+imggroup
+samp
+br
+
+
+= elements
+
 "line"
 inline, linenum
 
