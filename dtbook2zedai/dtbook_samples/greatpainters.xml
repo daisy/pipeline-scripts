@@ -1648,15 +1648,21 @@
 			</level1>
 			
 			<level1>
-				<h1>horrible em</h1>
-				<div><p><em>
-					hi
+				<h1>
+					<abbr>HELLO</abbr>
+					<acronym>HI</acronym>
 					<imggroup>
-						<img src="hi" alt="hi"/>
+						<img src="icannotbeempty" alt="meneither"/>
 					</imggroup>
-					<span>yo</span>
-				</em></p>
-				</div>
+					<em>
+						<span>SPAN</span>
+						<imggroup><img src="icannotbeempty" alt="meneither"/></imggroup>
+					</em>
+					<span>ANOTHER SPAN</span>
+					some text
+				</h1>
+				
+				<div><p>I'm a div</p></div>
 			</level1>
 		</bodymatter>
 	</book>

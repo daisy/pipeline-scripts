@@ -685,6 +685,7 @@
         <file name="dtbook_element_contentmodel_notes.txt"/>
         <file name="dtbook2zedai.xpl"/>
         <file name="dtbook2zedai.xsl"/>
+        <file name="normalize-block-inline.xsl"/>
         <file name="normalize-inline.xsl"/>
         <file name="zedai_content_model_notes.txt"/>
     </projectTree>

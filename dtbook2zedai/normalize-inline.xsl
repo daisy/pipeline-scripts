@@ -83,17 +83,47 @@
         </xsl:copy>
     </xsl:template>
     
+    <!-- TODO: there are many dtbook elements whose content model is x + inline.  could process them here too. -->
     
-    <!-- all of these elements have a dtbook:inline content model.  we need to move some child nodes to make it compatible with content model of the elements' zedai representation -->
     <xsl:template match="dtb:title | dtb:author | dtb:byline | dtb:dateline | dtb:em | dtb:strong | dtb:bdo | dtb:span | dtb:q | 
-        dtb:doctitle | dtb:docauthor | dtb:h1 | dtb:h2 | dtb:h3 | dtb:h4 | dtb:h5 | dtb:h6 | dtb:bridgehead | dtb:hd">
+    dtb:doctitle | dtb:docauthor | dtb:h1 | dtb:h2 | dtb:h3 | dtb:h4 | dtb:h5 | dtb:h6 | dtb:bridgehead | dtb:hd">
+        <xsl:call-template name="normalize-inline"/>
+    </xsl:template>
+    
+   
+    <!-- all of these elements have a dtbook:inline content model.  we need to move some child nodes to make it compatible with content model of the elements' zedai representation -->
+    <xsl:template name="normalize-inline">
         
-        <xsl:for-each select="child::node()">
-            <!-- extract what is not allowed in zedai:"inline": 
+        <!-- extract what is not allowed in zedai:"inline": 
             samp, imggroup, br 
-            -->
+            move to the first parent that can have it as a child
             
-        </xsl:for-each>
+            question: how to reassign parent in xslt?
+            
+            question: do we split the original parent of samp|imggroup|br or move samp|imggroup|br before/after?
+        -->
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    
+                    <xsl:when test="name() = 'samp' or name() = 'imggroup' or name() = 'br'">
+                        <!-- TODO: move these elements somewhere correct instead of discarding them -->
+                        <!-- how do i save this element for later?  variables are local -->
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates/>
+                        </xsl:copy>
+                    </xsl:otherwise>
+                </xsl:choose>
+                
+                
+            </xsl:for-each>
+            
+        </xsl:copy>
+       
         
     </xsl:template>
 
@@ -117,13 +147,23 @@
         
         <imggroup>..</imggroup>
         
+        <div>
+            <span>..</span>
+            some text
+        </div>
+        
+        Or this:
+        
         <dtb:h1>
+            <abbr>...</abbr>
+            <acronym>..</acronym>
             <span>..</span>
             some text
         </dtb:h1>
         
+        <imggroup>..</imggroup>
         
-        In the main transformation:
+        In the main dtbook2zedai transformation:
             dtbook:h1 will become zedai:h
         
         And:

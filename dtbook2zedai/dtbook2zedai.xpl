@@ -22,13 +22,20 @@
     
     <!-- normalize dtbook -->
    <p:group name="normalize-dtbook">
-       <!--<p:xslt name="normalize-inline">
+       
+       <p:xslt name="normalize-inline">
            <p:input port="stylesheet">
                <p:document href="./normalize-inline.xsl"/>
            </p:input>
-       </p:xslt>-->
+       </p:xslt>
        
-        <p:xslt name="normalize-linegroups">
+       <p:xslt name="normalize-block-inline">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-block-inline.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <p:xslt name="normalize-linegroups">
             <p:input port="stylesheet">
                 <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
             </p:input>

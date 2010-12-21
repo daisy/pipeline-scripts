@@ -233,7 +233,7 @@
                     </xsl:when>
 
                     <xsl:otherwise>
-                        <!-- TODO: 22/44 content model issue -->
+                        
                         <caption>
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -247,7 +247,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:annotation">
-        <!-- TODO: 22/44 content model issue -->
+        
         <annotation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -255,7 +255,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:prodnote">
-        <!-- TODO: translate attribute @render = required | optional -->
+        
         <xsl:choose>
             <xsl:when test="@imgref">
                 <!-- postponing image/description processing -->
@@ -280,7 +280,7 @@
                     
                     <xsl:otherwise>
                         <annotation by="republisher">
-                            <!-- TODO: 22/44 content model issue -->
+                            
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </annotation>
@@ -293,15 +293,13 @@
 
     <xsl:template match="dtb:sidebar">
         <aside role="sidebar">
-            <!-- TODO: 22/44 content model issue -->
-            <!-- TODO: translate attribute @render = required | optional -->
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </aside>
     </xsl:template>
 
     <xsl:template match="dtb:note">
-        <!-- TODO: 22/44 content model issue -->
+        
         <note>
             <xsl:call-template name="attrs"/>
             <xsl:choose>
@@ -559,7 +557,7 @@
         </abbr>
     </xsl:template>
    
-    <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway -->
+    <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway) -->
     <xsl:template match="dtb:link"/>
     
     <!-- these are all of the same form: copy the dtbook element name and copy the translated attributes -->
@@ -656,6 +654,7 @@
     <xsl:template match="dtb:a">
         <ref>
             <xsl:if test="@href">
+                <!-- TODO: remove "#" from href value -->
                 <xsl:attribute name="ref" select="@href"/>
             </xsl:if>
         </ref>

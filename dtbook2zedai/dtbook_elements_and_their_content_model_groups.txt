@@ -1,68 +1,8 @@
-"dtbook"
-
-"head"
-
-"link"
-
-"meta"
-
-"book"
-
-"frontmatter"
-
-"bodymatter"
-
-"rearmatter"
-
-"level 1-5"
-hd + (docblockorinline, level)
-
-
-"level6"
-(docblockorinline, level)
-
-"br"
-empty
-
 "line"
 inline, linenum
 
-
 "linenum"
 text
-
-"address"
-inline, line
-
-"div"
-docblockorinline
-
-"title"
-inline
-
-"author"
-inline
-
-"prodnote"
-flow
-
-"sidebar"
-flow, hd
-
-"note"
-block, inlineinblock
-
-"annotation"
-block, inlineinblock
-
-"epigraph"
-flow
-
-"byline"
-inline
-
-"dateline"
-inline
 
 "linegroup"
 bunch of stuff
@@ -73,44 +13,11 @@ bunch of stuff
 "a"
 inlinenoa
 
-"em"
-inline
-
-"strong"
-inline
-
-"dfn"
-inline
-
-"kbd"
-inline
-
-"code"
-inline
-
-"samp"
+"lic"
 inline
 
 "cite"
 inline, title, author
-
-"abbr"
-inline
-
-"acronym"
-inline
-
-"sub"
-inline
-
-"sup"
-inline
-
-"span"
-inline
-
-"bdo"
-inline
 
 "sent"
 inlines
@@ -127,35 +34,10 @@ text
 "annoref"
 text
 
-"q"
-inline
-
-"img"
-empty
-
-"imggroup"
-prodnote, img, caption, pagenum
 
 "p"
 inline, list, dl
 
-"doctitle"
-inline
-
-"docauthor"
-inline
-
-"covertitle"
-inline
-
-"h1-6"
-inline
-
-"bridgehead"
-inline
-
-"hd"
-inline
 
 "blockquote"
 pagenum, block
@@ -172,17 +54,9 @@ flow
 "list"
 hd, prodnote, li, pagenum
 
-"li"
-flow, lic
-
-"lic"
-inline
 
 "table"
 table stuff
-
-"caption"
-flow
 
 "thead"
 tr
@@ -202,8 +76,153 @@ empty
 "tr"
 th, td
 
+"td"
+flownopagenum
+
+
+"rearmatter"
+
+
+"dfn"
+inline
+
+"kbd"
+inline
+
+"code"
+inline
+
+
+"abbr"
+inline
+
+"acronym"
+inline
+
+"sub"
+inline
+
+"sup"
+inline
+
+
+
+
+
+=============
+Dealt with:
+===============
+dtb:title | dtb:author | dtb:byline | dtb:dateline | dtb:em | dtb:strong | dtb:bdo | dtb:span | dtb:q | 
+    dtb:doctitle | dtb:docauthor | dtb:h1 | dtb:h2 | dtb:h3 | dtb:h4 | dtb:h5 | dtb:h6 | dtb:bridgehead | dtb:hd"
+
+dtb:annotation | dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | dtb:th | dtb:caption | dtb:sidebar |
+	        dtb:address | dtb:covertitle | dtb:samp
+	
+"address"
+inline, line
+
+"caption"
+flow
+
 "th"
 flownopagenum
 
-"td"
-flownopagenum
+"li"
+flow, lic
+
+"epigraph"
+flow
+
+"div"
+docblockorinline
+
+"prodnote"
+flow
+
+"sidebar"
+flow, hd
+
+"note"
+block, inlineinblock
+
+"annotation"
+block, inlineinblock
+
+"covertitle"
+inline
+
+"h1-6"
+inline
+
+"bridgehead"
+inline
+
+"em"
+inline
+
+"strong"
+inline
+
+
+"br"
+empty
+
+"title"
+inline
+
+"author"
+inline
+
+"byline"
+inline
+
+"dateline"
+inline
+
+"dtbook"
+
+"head"
+
+"link"
+
+"meta"
+
+"book"
+
+"frontmatter"
+
+"bodymatter"
+
+"bdo"
+inline
+
+"span"
+inline
+
+"q"
+inline
+
+"doctitle"
+inline
+
+"docauthor"
+inline
+
+"hd"
+inline
+
+"samp"
+inline
+
+"img"
+empty
+
+"imggroup"
+prodnote, img, caption, pagenum
+
+"level 1-5"
+hd + (docblockorinline, level)
+
+
+"level6"
+(docblockorinline, level)
