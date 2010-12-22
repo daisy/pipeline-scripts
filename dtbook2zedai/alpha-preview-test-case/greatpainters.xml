@@ -1089,8 +1089,7 @@
 					</note>
 				</level2>
 				<level2>
-					<pagenum page="normal" smilref="speechgen0005.smil#tcp349" id="page19"
-						>19</pagenum>
+					<pagenum page="normal" smilref="speechgen0005.smil#tcp349" id="page19">19</pagenum>
 					<h2><sent id="dtb331" smilref="speechgen0006.smil#tcp350"> THE FIGHTING
 							TÉMÉRAIRE TUGGED TO HER LAST BERTH TO BE BROKEN UP, 1838 (TURNER)
 						</sent></h2>
@@ -1102,6 +1101,7 @@
 						<p><sent smilref="speechgen0006.smil#tcp353" id="dtb335">No longer owns
 								her."</sent></p>
 					</blockquote>
+					
 					<p><sent smilref="speechgen0006.smil#tcp354" id="dtb336">Exhibited at the
 							Academy in 1839, with the above lines cited in the Catalogue.
 							</sent><sent id="dtb337" smilref="speechgen0006.smil#tcp355">Of all
@@ -1570,99 +1570,6 @@
 								<em>Chefs-d'œuvre; Peinture, Sculpture, Architecture</em> (Paris,
 							1895-97). </sent></p>
 				</level2>
-			</level1>
-			<level1>
-				<h1>Some horrible linegroups</h1>
-				<div>
-					<p>/p</p>
-					<div title="/div/@attr">
-						<p>div/p[1]</p>
-						<p>div/p[2]</p>
-						<linegroup>
-							<line>div/linegroup/line</line>
-						</linegroup>
-						<div>
-							<linegroup>
-								<line>div/p[2]/linegroup/line</line>
-							</linegroup>
-						</div>
-						<p>div/p[4]</p>
-					</div>
-					<line title="line[1]/@attr">line[1]</line>
-					<line>
-						<prodnote render="optional">
-							<line>line[2]/prodnote/line</line>
-						</prodnote>
-					</line>
-					<line title="line[3]/@attr">
-						<prodnote render="optional">
-							<linegroup title="line[3]/linegroup/@attr">
-								<p title="line[3]/linegroup/p/@attr">line[3]/linegroup/p</p>
-							</linegroup>
-						</prodnote>
-					</line>
-					<line>
-						<prodnote render="optional">
-							<line>
-								<prodnote render="optional">
-									<linegroup>
-										<line>line[4]/line/linegroup/line</line>
-									</linegroup>
-								</prodnote>
-							</line>
-						</prodnote>
-					</line>
-					<linegroup>
-						<line>linegroup[1]/line[1]</line>
-						<p>/linegroup[1]/p</p>
-						<line>/linegroup/line[2]/text()<![CDATA[/linegroup[1]/line[2]/CDATA]]></line>
-						<linegroup>
-							<line>linegroup[1]/linegroup[1]/line</line>
-						</linegroup>
-						<pagenum page="normal" id="page-2" title="linegroup[1]/pagenum">2</pagenum>
-						<line>
-							<prodnote render="optional">
-								<poem>
-									<line>linegroup[1]/line</line>
-									<img alt="linegroup[1]/line[3]/prodnote/poem/img/@alt"
-										src="http://www.daisy.org/images/logos/daisy-shadow.jpg"/>
-									<linegroup>
-										<line>linegroup[1]/line[3]/poem/linegroup/line</line>
-										<p>linegroup[1]/line[3]/poem/linegroup/p</p>
-									</linegroup>
-								</poem>
-							</prodnote>
-						</line>
-						<line>linegroup[1]/line[4]</line>
-					</linegroup>
-					<linegroup>
-						<p>linegroup[2]/p</p>
-					</linegroup>
-				</div>
-			</level1>
-			<level1>
-				<h1>horrible captions</h1>
-				<imggroup>
-					<caption>here is some text <p>oh wow a paragraph!</p> i am not allowed in zedai!</caption>
-				</imggroup>
-			</level1>
-			
-			<level1>
-				<h1>
-					<abbr>HELLO</abbr>
-					<acronym>HI</acronym>
-					<imggroup>
-						<img src="icannotbeempty" alt="meneither"/>
-					</imggroup>
-					<em>
-						<span>SPAN</span>
-						<imggroup><img src="icannotbeempty" alt="meneither"/></imggroup>
-					</em>
-					<span>ANOTHER SPAN</span>
-					some text
-				</h1>
-				
-				<div><p>I'm a div</p></div>
 			</level1>
 		</bodymatter>
 	</book>
