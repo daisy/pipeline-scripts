@@ -186,50 +186,46 @@
 
     <xsl:template match="dtb:img">
        
-        <!-- postponing image/description processing -->
         <!-- TODO:  @height, @width belong in CSS -->
         
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
-        <!-- zedai does not currently have a description equivalent to @alt/@longdesc, so this 'short' value is made-up
+        <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
         
-        <!--<object>
+        <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
-            <description role="short">
+            <description>
                 <xsl:value-of select="@alt"/>
             </description>
         </object>
-        -->
+        
     </xsl:template>
 
     <xsl:template match="dtb:imggroup">
-        <!-- postponing image/description processing -->
-        <!--<block>
+        <block>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </block>-->
+        </block>
     </xsl:template>
 
     <xsl:template match="dtb:caption">
         <xsl:choose>
             <xsl:when test="@imgref">
-                <!-- postponing image/description processing -->
-                <!--<caption ref="{@imgref}">
+                <caption ref="{replace(@imgref, '#', '')}">
                     <xsl:call-template name="attrs"/>
                     <xsl:apply-templates/>
-                </caption>-->
+                </caption>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
                         
                         <!-- get the id of the image in the imggroup and use it as a ref -->
-                        <!-- postponing image/description processing -->
-                        <!--<caption ref="{../dtb:img/@id}">
+                        <caption ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
-                        </caption>-->
+                        </caption>
                     </xsl:when>
 
                     <xsl:otherwise>
@@ -258,20 +254,17 @@
         
         <xsl:choose>
             <xsl:when test="@imgref">
-                <!-- postponing image/description processing -->
-               <!-- <annotation by="republisher" ref="{@imgref}">
+               <annotation by="republisher" ref="{replace(@imgref, '#', '')}">
                     <xsl:call-template name="attrs"/>
                     <xsl:apply-templates/>
                 </annotation>
-                -->
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
                         <!-- get the id of the image in the imggroup and use it as a ref -->
                         
-                        <!-- postponing image/description processing -->                        
-                        <!--<annotation by="republisher" ref="{../dtb:img/@id}">
+                        <annotation by="republisher" ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                             </annotation>-->
@@ -333,7 +326,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:noteref">
-        <noteref ref="{@idref}">
+        <noteref ref="{replace(@idref, '#', '')}">
             <!-- TODO: @type -->
             <xsl:call-template name="attrs"/>
             <xsl:value-of select="."/>
@@ -341,7 +334,7 @@
     </xsl:template>
     
     <xsl:template match="dtb:annoref">
-        <noteref ref="{@idref}">
+        <noteref ref="{replace(@idref, '#', '')}">
             <!-- TODO: @type -->
             <xsl:call-template name="attrs"/>
             <xsl:value-of select="."/>
@@ -654,8 +647,7 @@
     <xsl:template match="dtb:a">
         <ref>
             <xsl:if test="@href">
-                <!-- TODO: remove "#" from href value -->
-                <xsl:attribute name="ref" select="@href"/>
+                <xsl:attribute name="ref" select="replace(@href, '#', '')"/>                
             </xsl:if>
         </ref>
         <!-- TODO: deal with these dtbook:a attributes

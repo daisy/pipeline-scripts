@@ -27,7 +27,8 @@
 
     <xsl:template
         match="dtb:annotation | dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | dtb:th | dtb:caption | dtb:sidebar |
-        dtb:address | dtb:covertitle | dtb:samp">
+        dtb:address | dtb:covertitle | dtb:samp"
+         >
 
         <xsl:copy>
 
@@ -35,8 +36,8 @@
 
             <!-- these tests represent a superset of inline and block elements of the elements that this template matches -->
             <xsl:variable name="hasInline"
-                select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:blockquote or ./dtb:dfn or
-            ./dtb:em or ./dtb:line or ./dtb:noteref or ./dtb:q or ./dtb:sent or ./dtb:span or ./dtb:strong or ./dtb:sub or 
+                select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:dfn or
+            ./dtb:em or ./dtb:line or ./dtb:noteref or ./dtb:sent or ./dtb:span or ./dtb:strong or ./dtb:sub or 
             ./dtb:sub or ./dtb:w or ./text()"/>
 
             <xsl:variable name="hasBlock"
@@ -67,9 +68,9 @@
 
 
             <xsl:variable name="hasInline"
-                select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:blockquote or ./dtb:dfn or
-            ./dtb:em or ./dtb:line or ./dtb:noteref or ./dtb:q or ./dtb:sent or ./dtb:span or ./dtb:strong or ./dtb:sub or 
-            ./dtb:sub or ./dtb:w or ./text()"/>
+                select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:dfn or
+            ./dtb:em or ./dtb:line or ./dtb:noteref or ./dtb:sent or ./dtb:span or ./dtb:strong or ./dtb:sub or 
+            ./dtb:sub or ./dtb:w"/>
 
             <xsl:choose>
                 <xsl:when test="$hasInline">
@@ -85,26 +86,28 @@
     </xsl:template>
     
     <xsl:template name="blockize">
-        <!-- TODO: also need to wrap text() in para elements.  how do i iterate through all node children AND text? -->
-        <xsl:for-each select="child::node()">
-
+        <!-- TODO: also need to wrap text() in para elements. -->
+        <xsl:for-each select="child::node()|text()">
             <xsl:choose>
                 <xsl:when
                     test="name() = 'a' or name() = 'abbr' or name() = 'acronym' or name() = 'annoref' or name() = 'bdo' or 
                     name() = 'blockquote' or name() = 'dfn' or name() = 'em' or name() = 'line' or name() = 'noteref' or name() = 'q' or 
                     name() = 'sent' or name() = 'span' or name() = 'strong' or name() = 'sub' or name() = 'sub' or name() = 'w'">
 
-                    <dtb:p>
+                    <p>
                         <xsl:copy>
                             <xsl:apply-templates select="@*"/>
                             <xsl:apply-templates/>
                         </xsl:copy>
-                    </dtb:p>
+                    </p>
 
 
                 </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates/>
+                </xsl:otherwise>
             </xsl:choose>
-
+           
         </xsl:for-each>
     </xsl:template>
     <!-- 

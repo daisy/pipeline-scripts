@@ -4,7 +4,7 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0">
     
     <xd:doc>
-        <xd:desc>This stylesheet maps elements with dtbook:inline content model to something that will translate easily into zedai.</xd:desc>
+        <xd:desc>This stylesheet maps some elements with dtbook:inline content model to something that will translate easily into zedai.</xd:desc>
     </xd:doc>
     
     
@@ -90,93 +90,71 @@
         <xsl:call-template name="normalize-inline"/>
     </xsl:template>
     
+    <!-- TODO: double check that dtb:p makes sense here -->
+    <xsl:template match="dtb:p">
+        <xsl:call-template name="normalize-inline"/>
+    </xsl:template>
+    
    
     <!-- all of these elements have a dtbook:inline content model.  we need to move some child nodes to make it compatible with content model of the elements' zedai representation -->
-    <xsl:template name="normalize-inline">
-        
-        <!-- extract what is not allowed in zedai:"inline": 
-            samp, imggroup, br 
-            move to the first parent that can have it as a child
-            
-            question: how to reassign parent in xslt?
-            
-            question: do we split the original parent of samp|imggroup|br or move samp|imggroup|br before/after?
-        -->
-        <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <xsl:for-each select="child::node()">
-                <xsl:choose>
-                    
-                    <xsl:when test="name() = 'samp' or name() = 'imggroup' or name() = 'br'">
-                        <!-- TODO: move these elements somewhere correct instead of discarding them -->
-                        <!-- how do i save this element for later?  variables are local -->
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:copy>
-                            <xsl:apply-templates select="@*"/>
-                            <xsl:apply-templates/>
-                        </xsl:copy>
-                    </xsl:otherwise>
-                </xsl:choose>
-                
-                
-            </xsl:for-each>
-            
-        </xsl:copy>
-       
-        
-    </xsl:template>
-
-    <!-- e.g. 
-        
-        This:
-        
-        <dtb:h1>
-            <abbr>..</abbr>
-            <acronym>..</acronym>
-            <imggroup>..</imggroup>
-            <span>..</span>
-            some text
-        </dtb:h1>
-        
-        Becomes this:
-        <dtb:h1>
-            <abbr>...</abbr>
-            <acronym>..</acronym>
-        </dtb:h1>
-        
-        <imggroup>..</imggroup>
-        
-        <div>
-            <span>..</span>
-            some text
-        </div>
-        
-        Or this:
-        
-        <dtb:h1>
-            <abbr>...</abbr>
-            <acronym>..</acronym>
-            <span>..</span>
-            some text
-        </dtb:h1>
-        
-        <imggroup>..</imggroup>
-        
-        In the main dtbook2zedai transformation:
-            dtbook:h1 will become zedai:h
-        
-        And:
-            dtbook:samp will become zedai:block
-            dtbook:imggroup will become zedai:block
-            dtbook:br will become zedai:separator
-        
+    <!--        
         The question is, though, can all possible parents of zedai:h have zedai:block and zedai:separator as children too?
         
         For zedai:h the answer is: yes, if we deal separately with poetry (section-verse and verse elements)
         
-        Now just to check for all the others ... 
+        TODO: Now just to check for all the others ... 
+        
+        TODO: the element-splitting won't work for all cases.  for example, h1 should not be split into many h1s because only one at a time is allowed.
     -->
+    
+    <xsl:template name="normalize-inline">
+        
+        <!-- save the parent element -->
+        <xsl:variable name="elem" select="."/>
+        
+            <xsl:choose>
+                <xsl:when test="./dtb:imggroup">
+                    
+                    <!-- move imggroup -->
+                    <xsl:for-each-group select="*|text()[normalize-space()]" group-adjacent="boolean(self::dtb:imggroup)">
+                        <xsl:choose>
+                            <xsl:when test="current-grouping-key()">
+                                <xsl:element name="imggroup" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                    <xsl:apply-templates select="@*"/>
+                                    <xsl:apply-templates/>
+                                </xsl:element>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <!-- split the parent element -->
+                                <xsl:element name="{name($elem)}" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                    <xsl:apply-templates select="$elem/@*"/>
+                                    <xsl:apply-templates select="current-group()"/>
+                                </xsl:element>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        
+                        
+                    </xsl:for-each-group>
+                    
+                </xsl:when>
+                <xsl:when test="./dtb:samp">
+                    
+                </xsl:when>
+                <xsl:when test="./dtb:br">
+                    
+                </xsl:when>
+                <xsl:otherwise>
+                    
+                    <xsl:element name="{name($elem)}" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:apply-templates select="@*"/>
+                        <xsl:apply-templates/>                        
+                    </xsl:element>
+                    
+                </xsl:otherwise>
+            </xsl:choose>
+            
+        
+    </xsl:template>
     
 
 

@@ -5,12 +5,10 @@
         This XProc script is the main entry point for the DTBook2ZedAI module.
         The module's homepage is here: http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI
         
-        Note that the wiki page lists more steps than what you'll find here.  That's because this script isn't complete yet.
     -->
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter" />
-    
     
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
@@ -20,22 +18,22 @@
     </p:validate-with-relax-ng>
     
     
-    <!-- normalize dtbook -->
+    <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
        
-       <p:xslt name="normalize-inline">
+       <p:xslt name="normalize-inline" use-when="1">
            <p:input port="stylesheet">
                <p:document href="./normalize-inline.xsl"/>
            </p:input>
        </p:xslt>
        
-       <p:xslt name="normalize-block-inline">
+       <p:xslt name="normalize-block-inline" use-when="0">
            <p:input port="stylesheet">
                <p:document href="./normalize-block-inline.xsl"/>
            </p:input>
        </p:xslt>
        
-       <p:xslt name="normalize-linegroups">
+       <p:xslt name="normalize-linegroups" use-when="0">
             <p:input port="stylesheet">
                 <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
             </p:input>
@@ -43,7 +41,7 @@
         
     </p:group>
     
-    <!-- transform dtbook to zedai -->
+    <!-- Translate element and attribute names from DTBook to ZedAI -->
     <p:xslt name="translate-dtbook2zedai"> 
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
@@ -58,7 +56,6 @@
         </p:input>
     </p:validate-with-relax-ng>
     
-    
-    <p:store href="out.xml"/>
+    <p:store href="zedai.xml"/>
     
 </p:declare-step>
