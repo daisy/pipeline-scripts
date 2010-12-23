@@ -10,18 +10,6 @@
     <p:input port="source" primary="true"/>
     <p:output primary="true" port="result"/>
     <p:input port="parameters" kind="parameter" />
-
-    <p:option name="output" select="''"/>
-    <p:variable name="zedai-file"
-        select="resolve-uri(
-                    if ($output='') then concat(
-                        if (matches(base-uri(/),'[^/]+\..+$'))
-                        then replace(tokenize(base-uri(/),'/')[last()],'\..+$','')
-                        else tokenize(base-uri(/),'/')[last()],'-zedai.xml')
-                    else if (ends-with($output,'.xml')) then $output 
-                    else concat($output,'.xml'))">
-            <p:pipe step="dtbook2zedai" port="source"/>
-    </p:variable>
     
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
