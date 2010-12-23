@@ -4,17 +4,21 @@
     version="1.0" exclude-inline-prefixes="c cx px">
 
     <p:option name="href" required="true"/>
-    <p:option name="output" select="'output'"/>
+    <p:option name="output" select="''"/>
+
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="fileset-library.xpl"/>
+    <p:import href="zip-library.xpl"/>
+    <p:import href="handle-zedai-refs.xpl"/>
 
     <p:variable name="epub-file"
         select="resolve-uri(
-        if ($output='') then concat(
-        if (matches($href,'[^/]+\..+$'))
-        then replace(tokenize($href,'/')[last()],'\..+$','')
-        else tokenize($href,'/')[last()],'.epub')
-        else if (ends-with($output,'.epub')) then $output 
-        else concat($output,'.epub'),
-        base-uri())">
+                    if ($output='') then concat(
+                        if (matches($href,'[^/]+\..+$'))
+                        then replace(tokenize($href,'/')[last()],'\..+$','')
+                        else tokenize($href,'/')[last()],'.epub')
+                    else if (ends-with($output,'.epub')) then $output 
+                    else concat($output,'.epub'))">
         <p:inline>
             <irrelevant/>
         </p:inline>
@@ -22,20 +26,13 @@
     <p:variable name="epub-dir" select="resolve-uri('epub/',$epub-file)"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
-
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="fileset-library.xpl"/>
-    <p:import href="zip-library.xpl"/>
-    <p:import href="handle-zedai-refs.xpl"/>
-
-
     <!--=========================================================================-->
 
     <!-- Get the input document from the href option-->
     <p:group name="initialization">
         <p:output port="result"/>
         <p:load name="load">
-            <p:with-option name="href" select="$href"/>
+            <p:with-option name="href" select="resolve-uri($href)"/>
         </p:load>
         <p:add-xml-base/>
     </p:group>
@@ -50,7 +47,7 @@
         <!-- Get the list of satelite files -->
         <p:xslt name="get-refs" version="2.0">
             <p:input port="stylesheet">
-                <p:document href="get-zedai-refs.xsl"/>
+                <p:document href="../xslt/get-zedai-refs.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -83,7 +80,7 @@
         <!-- Identify Chunks -->
         <p:xslt name="chunk-marker">
             <p:input port="stylesheet">
-                <p:document href="chunk-marker.xsl"/>
+                <p:document href="../xslt/chunk-marker.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -93,7 +90,7 @@
         <!-- Generate paths of chunks -->
         <p:xslt name="chunk-path-creator">
             <p:input port="stylesheet">
-                <p:document href="chunk-path-creator.xsl"/>
+                <p:document href="../xslt/chunk-path-creator.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -103,7 +100,7 @@
         <!-- Replace document links to local paths -->
         <p:xslt name="links-to-chunks">
             <p:input port="stylesheet">
-                <p:document href="links-to-chunks.xsl"/>
+                <p:document href="../xslt/links-to-chunks.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -122,7 +119,7 @@
         <!-- Identify NCX items -->
         <p:xslt name="ncx-items-marker">
             <p:input port="stylesheet">
-                <p:document href="ncx-items-marker.xsl"/>
+                <p:document href="../xslt/ncx-items-marker.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -132,7 +129,7 @@
         <!-- Create NCX -->
         <p:xslt name="ncx-builder">
             <p:input port="stylesheet">
-                <p:document href="ncx-builder.xsl"/>
+                <p:document href="../xslt/ncx-builder.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -168,7 +165,7 @@
         <!-- Create OPF -->
         <p:xslt name="opf-builder" version="2.0" initial-mode="split">
             <p:input port="stylesheet">
-                <p:document href="opf-builder.xsl"/>
+                <p:document href="../xslt/opf-builder.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -178,8 +175,7 @@
         <!-- Store the result OPF -->
         <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8"
             omit-xml-declaration="false">
-            <p:with-option name="href" select="concat($content-dir,'package.opf')"
-            />
+            <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
         </p:store>
 
     </p:group>
@@ -194,7 +190,7 @@
 
         <p:xslt name="zedai2html.xslt">
             <p:input port="stylesheet">
-                <p:document href="zedai2xhtml.xsl"/>
+                <p:document href="../xslt/zedai2xhtml.xsl"/>
             </p:input>
             <p:with-param name="base" select="$content-dir"/>
         </p:xslt>
@@ -239,8 +235,8 @@
                     </container>
                 </p:inline>
             </p:input>
-            <p:with-option name="attribute-value" select="concat(substring-after($content-dir,$epub-dir),'package.opf')"
-            />
+            <p:with-option name="attribute-value"
+                select="concat(substring-after($content-dir,$epub-dir),'package.opf')"/>
         </p:add-attribute>
         <!-- Store container descriptor -->
         <p:store indent="true" encoding="utf-8" omit-xml-declaration="false">
@@ -308,7 +304,7 @@
         </cx:zip>
         <p:sink/>
     </p:group>
-    
+
 
 
 </p:declare-step>
