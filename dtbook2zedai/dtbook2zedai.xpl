@@ -8,6 +8,7 @@
     -->
     
     <p:input port="source" primary="true"/>
+    <p:output primary="true" port="result"/>
     <p:input port="parameters" kind="parameter" />
     
     <!-- Validate DTBook Input-->
@@ -16,7 +17,6 @@
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-    
     
     <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
@@ -46,8 +46,8 @@
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>
+        
     </p:xslt>
-    
     
     <!-- Validate the ZedAI output -->
     <p:validate-with-relax-ng assert-valid="false" name="validate-zedai">
@@ -55,7 +55,5 @@
             <p:document href="./schema/zedai_bookprofile_v0.7/z3986a-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-    
-    <p:store href="zedai.xml"/>
     
 </p:declare-step>

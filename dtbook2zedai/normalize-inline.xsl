@@ -8,8 +8,8 @@
     </xd:doc>
     
     
-    <!-- All of the elements processed here have dtbook:inline as their content model, and all of the elements' zedai equivalents have zedai:inline as 
-        their content model (see below) 
+    <!-- All of the elements processed here have dtbook:inline as their content model, and all of the elements' 
+        zedai equivalents have zedai:inline as their content model (see below) 
         
         dtbook:inline
         =========
@@ -72,6 +72,10 @@
         time
         w, w
         xforms:input, xforms:range, xforms:secret, xforms:select, xforms:select1 or xforms:textarea
+        
+        Just a note:
+        dtb:covertitle and dtb:samp also have a dtbook:inline content model, but they map to zedai:block, which has a more flexible 
+        content model than the zedai:"inline" model described above. no content model transformation is required.
     -->
     
     <xsl:output indent="yes" method="xml"/>
@@ -96,7 +100,6 @@
     </xsl:template>
     
    
-    <!-- all of these elements have a dtbook:inline content model.  we need to move some child nodes to make it compatible with content model of the elements' zedai representation -->
     <!--        
         The question is, though, can all possible parents of zedai:h have zedai:block and zedai:separator as children too?
         
@@ -106,7 +109,6 @@
         
         TODO: the element-splitting won't work for all cases.  for example, h1 should not be split into many h1s because only one at a time is allowed.
     -->
-    
     <xsl:template name="normalize-inline">
         
         <!-- save the parent element -->
@@ -138,10 +140,10 @@
                     
                 </xsl:when>
                 <xsl:when test="./dtb:samp">
-                    
+                    <!-- TODO -->
                 </xsl:when>
                 <xsl:when test="./dtb:br">
-                    
+                    <!-- TODO -->
                 </xsl:when>
                 <xsl:otherwise>
                     
@@ -155,14 +157,5 @@
             
         
     </xsl:template>
-    
-
-
-    <!-- Just a note
-        dtb:covertitle and dtb:samp also have a dtbook:inline content model, but they map to zedai:block, which has a more flexible 
-            content model than the zedai:"inline" model described above 
-            for these elements, no content model transformation is required
-    -->
-    
     
 </xsl:stylesheet>

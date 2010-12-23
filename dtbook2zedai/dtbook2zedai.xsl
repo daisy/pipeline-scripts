@@ -19,8 +19,7 @@
 
     <xsl:template match="/">
         <!-- just for testing: insert the oxygen stylesheet -->
-        <!-- this way, the oxygen editor validates.  however, this doesn't do anything useful until you save the document, because it's a relative path.
-            so, when the main xproc's p:store step gets sorted out, then this will be meaningful -->
+        <!-- this way, the oxygen editor validates. -->
         <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="./schema/zedai_bookprofile_v0.7/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
@@ -39,8 +38,6 @@
             <xsl:attribute name="its:dir" select="@dir"/>
         </xsl:if>
         
-        <!-- TODO: @title: defined as a core attribute in dtbook; does not exist in zedai -->
-        <!-- TODO: @name, does not exist in zedai -->
     </xsl:template>
     
     <xsl:template match="dtb:dtbook">
@@ -58,11 +55,9 @@
         <head>
             <xsl:call-template name="attrs"/>
             
-            <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
             <meta rel="z3986:profile"
                 resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.7/"/>
 
-            <!-- TODO: look at each metadata and draw comparisons to zedai metadata -->
             <xsl:for-each select="dtb:meta">
                 <meta property="{@name}" content="{@content}"/>
             </xsl:for-each>
@@ -176,7 +171,6 @@
         </list>
     </xsl:template>
 
-    <!-- TODO: lots.  the content models for dtbook:li and zedai:item are very different -->
     <xsl:template match="dtb:li">
         <item>
             <xsl:call-template name="attrs"/>
@@ -187,11 +181,7 @@
     <xsl:template match="dtb:img">
        
         <!-- TODO:  @height, @width belong in CSS -->
-        
-        <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
-        <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
-            however, it's an issue under consideration in the zedai group -->
-        
+        <!-- TODO: @alt, @longdesc, pending zedai decision -->        
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
@@ -220,7 +210,6 @@
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
-                        
                         <!-- get the id of the image in the imggroup and use it as a ref -->
                         <caption ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
@@ -263,7 +252,6 @@
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
                         <!-- get the id of the image in the imggroup and use it as a ref -->
-                        
                         <annotation by="republisher" ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -429,8 +417,6 @@
     </xsl:template>
 
     <xsl:template match="dtb:byline">
-        <!-- for most book (non-article) use cases, byline can be citation. the exception would be anthologies, for which we can call upon the periodicals vocab
-            and actually use "role = byline".  for now, we will use just 1 vocabulary in this converter -->
         <citation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -445,8 +431,6 @@
     </xsl:template>
    
     <xsl:template match="dtb:address">
-        <!-- TODO: deal with dtb:address/dtb:line -->
-        <!-- TODO: needs an appropriate role, work ongoing in zedai -->
         <block>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -550,7 +534,7 @@
         </abbr>
     </xsl:template>
    
-    <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway) -->
+    <!-- discard link elements -->
     <xsl:template match="dtb:link"/>
     
     <!-- these are all of the same form: copy the dtbook element name and copy the translated attributes -->
@@ -662,7 +646,7 @@
     </xsl:template>
     
     <xsl:template match="dtb:dl">
-        <!-- TODO: is this ordered or unordered? @type is required... -->
+        <!-- TODO: is this ordered or unordered?  zedai:@type is required... -->
         <list type="unordered">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -693,10 +677,5 @@
             <xsl:apply-templates/>
         </lnum>
     </xsl:template>
-    
-    <!-- big TODOs:
-        Math
-        TOC (see references to zedai toc module in the zedai online docs)
-    -->
     
 </xsl:stylesheet>
