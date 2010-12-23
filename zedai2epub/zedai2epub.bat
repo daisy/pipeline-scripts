@@ -1,8 +1,9 @@
 @echo off
+SETLOCAL ENABLEDELAYEDEXPANSION
+
 rem This is the path to Java. Edit this variable to suite your needs.
 set JAVA=java
 
-SETLOCAL ENABLEDELAYEDEXPANSION  
 
 set CMD=%~n0
 set MODULE_DIR=%~dp0
@@ -45,34 +46,48 @@ GOTO:EOF
 :Continue
 
 set IN_FILE=%1
+
+set URI_SPACE=%%20
+
+:: Remove quotes in IN_FILE
+SET IN_FILE=###%IN_FILE%###
+set IN_FILE=%IN_FILE:\=/%
+set IN_FILE=%IN_FILE: =!URI_SPACE!%
+SET IN_FILE=%IN_FILE:"###=%
+SET IN_FILE=%IN_FILE:###"=%
+SET IN_FILE=%IN_FILE:###=%
+
+:: Copy the original option and remove quotes in OUT_FILE
+SET ORIG_OUT_FILE=###%OUT_FILE%###
+SET ORIG_OUT_FILE=%ORIG_OUT_FILE:"###=%
+SET ORIG_OUT_FILE=%ORIG_OUT_FILE:###"=%
+SET ORIG_OUT_FILE=%ORIG_OUT_FILE:###=%
+
+:: Remove quotes in OUT_FILE
+SET OUT_FILE=###%OUT_FILE%###
+set OUT_FILE=%OUT_FILE:\=/%
+set OUT_FILE=%OUT_FILE: =!URI_SPACE!%
+SET OUT_FILE=%OUT_FILE:"###=%
+SET OUT_FILE=%OUT_FILE:###"=%
+SET OUT_FILE=%OUT_FILE:###=%
+
+set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
+set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
+
+
 IF "%IN_FILE%"=="" (
 	ECHO The input ZedAI document must be set
 	ECHO.
 	GOTO Usage
 )
 
-set URI_SPACE=%%20
-
-set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
-set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
-
-set IN_FILE="%IN_FILE:\=/%"
-set IN_FILE=%IN_FILE: =!URI_SPACE!%
-
-IF "%OUT_FILE%"=="" (
-	set OUT_FILE=
-) ELSE (
-	set OUT_FILE="%OUT_FILE:\=/%"
-	set OUT_FILE=%OUT_FILE: =!URI_SPACE!%
-)
-
 set CP=
 for %%f IN ("%LIB_DIR%\*.jar") do set CP=!CP!;"%%f"
 
-%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% "%MODULE_DIR%\xproc\zedai2epub.xpl" href=%IN_FILE output=%OUT_FILE%
+%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% "%MODULE_DIR%\xproc\zedai2epub.xpl" href="%IN_FILE%" output="%OUT_FILE%"
 
-IF "%OUT_FILE%"=="" (
+IF "%ORIG_OUT_FILE%"=="" (
 	RD /S /Q epub
 ) ELSE (
-	FOR %%A IN ("%OUT_FILE%") DO RD /S /Q %%~dpA\epub
+	FOR %%A IN ("%ORIG_OUT_FILE%") DO RD /S /Q "%%~dpA\epub"
 )
