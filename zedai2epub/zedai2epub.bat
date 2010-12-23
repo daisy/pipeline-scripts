@@ -51,10 +51,19 @@ IF "%IN_FILE%"=="" (
 	GOTO Usage
 )
 
-set CP=
-for %%f IN (%LIB_DIR%\*.jar) do set CP=!CP!;%%f
+IF "%OUT_FILE%"=="" (
+	set OUT_FILE=
+) ELSE (
+	set OUT_FILE=%OUT_FILE:\=/%
+)
 
-%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c file:///%CONF_DIR:\=/%/calabash-config.xml %MODULE_DIR%\xproc\zedai2epub.xpl href=%IN_FILE:\=/% output=%OUT_FILE:\=/%
+set CP=
+for %%f IN ("%LIB_DIR%\*.jar") do set CP=!CP!;"%%f"
+
+set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
+set URI_SPACE=%%20
+set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
+%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% "%MODULE_DIR%\xproc\zedai2epub.xpl" href="%IN_FILE:\=/%" output="%OUT_FILE:\=/%"
 
 IF "%OUT_FILE%"=="" (
 	RD /S /Q epub

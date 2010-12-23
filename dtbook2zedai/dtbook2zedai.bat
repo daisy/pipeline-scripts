@@ -58,6 +58,9 @@ IF "%OUT_FILE%"=="" (
 )
 
 set CP=
-for %%f IN (%LIB_DIR%\*.jar) do set CP=!CP!;%%f
+for %%f IN ("%LIB_DIR%\*.jar") do set CP=!CP!;"%%f"
 
-%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c file:///%CONF_DIR:\=/%/calabash-config.xml -i source=%IN_FILE:\=/% %MODULE_DIR%\src\dtbook2zedai.xpl output=%OUT_FILE%
+set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
+set URI_SPACE=%%20
+set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
+%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% -i source="%IN_FILE:\=/%" "%MODULE_DIR%\src\dtbook2zedai.xpl" output="%OUT_FILE%"
