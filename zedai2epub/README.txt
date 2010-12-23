@@ -7,7 +7,9 @@
 About the ZedAI to EPUB module
 -------------------------------------------------------------------------------
 
-The 'ZedAI to EPUB' module  converts a single ZedAI document into an EPUB file set. It only supports a subset of the ZedAI book profile, and creates an EPUB 2.0 publication.
+The 'ZedAI to EPUB' module converts a single ZedAI document into an EPUB file
+set. It only supports a subset of the ZedAI book profile, and creates an EPUB
+2.0 publication.
 
 For more information on the ongoing development, see:
  - the ZedAI to EPUB wiki page:
