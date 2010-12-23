@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 MODULE_DIR=`dirname "$0"`
 COMMON_DIR=$MODULE_DIR/../common
