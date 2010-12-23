@@ -51,16 +51,22 @@ IF "%IN_FILE%"=="" (
 	GOTO Usage
 )
 
+set URI_SPACE=%%20
+
+set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
+set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
+
+set IN_FILE="%IN_FILE:\=/%"
+set IN_FILE=%IN_FILE: =!URI_SPACE!%
+
 IF "%OUT_FILE%"=="" (
 	set OUT_FILE=
 ) ELSE (
-	set OUT_FILE=%OUT_FILE:\=/%
+	set OUT_FILE="%OUT_FILE:\=/%"
+	set OUT_FILE=%OUT_FILE: =!URI_SPACE!%
 )
 
 set CP=
 for %%f IN ("%LIB_DIR%\*.jar") do set CP=!CP!;"%%f"
 
-set CONF_CALABASH="file:///%CONF_DIR:\=/%/calabash-config.xml"
-set URI_SPACE=%%20
-set CONF_CALABASH=%CONF_CALABASH: =!URI_SPACE!%
-%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% -i source="%IN_FILE:\=/%" "%MODULE_DIR%\src\dtbook2zedai.xpl" output="%OUT_FILE%"
+%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% -i source=%IN_FILE% "%MODULE_DIR%\src\dtbook2zedai.xpl" output=%OUT_FILE%
