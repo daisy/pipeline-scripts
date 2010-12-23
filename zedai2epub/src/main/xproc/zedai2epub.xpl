@@ -300,11 +300,9 @@
             <p:input port="manifest">
                 <p:pipe port="result" step="zip.manifest"/>
             </p:input>
-            <p:with-option name="href" select="substring-after($epub-file,'file:')"/>
+            <p:with-option name="href" select="$epub-file"/>
         </cx:zip>
         <p:sink/>
     </p:group>
-
-
 
 </p:declare-step>
