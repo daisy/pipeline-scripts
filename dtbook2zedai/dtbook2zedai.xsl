@@ -22,7 +22,7 @@
         <!-- this way, the oxygen editor validates.  however, this doesn't do anything useful until you save the document, because it's a relative path.
             so, when the main xproc's p:store step gets sorted out, then this will be meaningful -->
         <xsl:processing-instruction name="oxygen">
-            <xsl:text>RNGSchema="./schema/zedai_bookprofile_v0.7/z3986a-book.rng" type="xml"</xsl:text>
+            <xsl:text>RNGSchema="./schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
         <xsl:apply-templates/>
     </xsl:template>

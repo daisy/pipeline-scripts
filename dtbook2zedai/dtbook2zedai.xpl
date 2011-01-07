@@ -64,7 +64,7 @@
     <!-- Validate the ZedAI output -->
     <p:validate-with-relax-ng assert-valid="false" name="validate-zedai">
         <p:input port="schema">
-            <p:document href="./schema/zedai_bookprofile_v0.7/z3986a-book.rng"/>
+            <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
     

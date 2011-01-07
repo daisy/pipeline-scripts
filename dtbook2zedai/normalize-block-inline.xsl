@@ -4,8 +4,7 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0">
 
     <xd:doc>
-        <xd:desc>This stylesheet maps elements with dtbook:TODO content model to something that will
-            translate easily into zedai.</xd:desc>
+        <xd:desc>This stylesheet maps elements with a common dtbook content model to another common zedai content model.</xd:desc>
     </xd:doc>
 
 
