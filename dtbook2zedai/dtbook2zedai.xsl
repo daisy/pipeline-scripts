@@ -40,7 +40,7 @@
         </xsl:if>
         
         <!-- TODO: @title: defined as a core attribute in dtbook; does not exist in zedai -->
-        <!-- TODO: @name, does not exist in zedai -->
+        
     </xsl:template>
     
     <xsl:template match="dtb:dtbook">
@@ -267,7 +267,7 @@
                         <annotation by="republisher" ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
-                            </annotation>-->
+                        </annotation>
                         
                     </xsl:when>
                     
@@ -468,7 +468,8 @@
     </xsl:template>
     
     <xsl:template match="dtb:br">
-        <separator/>
+        <!-- TODO: what is the equivalent for br? -->
+       <xsl:comment><xsl:text>dtbook:br</xsl:text></xsl:comment>
     </xsl:template>
     
     <xsl:template match="dtb:cite">
@@ -626,11 +627,17 @@
         </code>    
     </xsl:template>
     
-    <xsl:template match="dtb:samp">
+    <xsl:template match="dtb:samp" mode="block">
         <block role="example">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </block>
+    </xsl:template>
+    <xsl:template match="dtb:samp" mode="inline">
+        <span role="example">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </span>
     </xsl:template>
     
     <xsl:template match="dtb:dfn">
@@ -694,9 +701,15 @@
         </lnum>
     </xsl:template>
     
-    <!-- big TODOs:
-        Math
-        TOC (see references to zedai toc module in the zedai online docs)
-    -->
-    
+    <xsl:template match="*[br]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:for-each-group select="node()" group-ending-with="br">
+                <ln>
+                    <xsl:apply-templates select="current-group()[not(self::br)]"/>
+                </ln>
+            </xsl:for-each-group>
+            
+        </xsl:copy>
+    </xsl:template>
 </xsl:stylesheet>

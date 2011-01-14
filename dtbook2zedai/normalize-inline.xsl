@@ -8,72 +8,6 @@
     </xd:doc>
     
     
-    <!-- All of the elements processed here have dtbook:inline as their content model, and all of the elements' zedai equivalents have zedai:inline as 
-        their content model (see below) 
-        
-        dtbook:inline
-        =========
-        text
-        em
-        strong
-        dfn
-        code
-        samp
-        kbd
-        cite
-        abbr
-        acronym
-        a
-        img
-        imggroup
-        br
-        q
-        sub
-        sup
-        span
-        bdo
-        sent
-        w
-        pagenum
-        prodnote
-        annoref
-        noteref
-        
-        
-        zedai:"inline" (there is no such named group, but we will refer to this set of 44 elements as such):
-        =======
-        abbr
-        annoref
-        annotation
-        char
-        citation
-        code
-        d
-        definition
-        emph, emph
-        expansion
-        its:ruby
-        ln
-        m:math
-        name
-        noteref
-        num
-        object, object
-        pagebreak
-        quote
-        ref
-        s
-        sel:select
-        span, span
-        ssml:break, ssml:phoneme, ssml:prosody, ssml:say-as, ssml:sub, ssml:token
-        sub
-        sup
-        term
-        time
-        w, w
-        xforms:input, xforms:range, xforms:secret, xforms:select, xforms:select1 or xforms:textarea
-    -->
-    
     <xsl:output indent="yes" method="xml"/>
     
     <!-- identity template -->
@@ -155,14 +89,6 @@
             
         
     </xsl:template>
-    
-
-
-    <!-- Just a note
-        dtb:covertitle and dtb:samp also have a dtbook:inline content model, but they map to zedai:block, which has a more flexible 
-            content model than the zedai:"inline" model described above 
-            for these elements, no content model transformation is required
-    -->
     
     
 </xsl:stylesheet>

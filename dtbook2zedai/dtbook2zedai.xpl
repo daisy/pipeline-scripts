@@ -33,23 +33,33 @@
     <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
        
-       <p:xslt name="normalize-inline" use-when="1">
+       <!-- sort out the linegroup content model -->
+       <p:xslt name="normalize-linegroups">
            <p:input port="stylesheet">
-               <p:document href="./normalize-inline.xsl"/>
+               <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
            </p:input>
        </p:xslt>
        
-       <p:xslt name="normalize-block-inline" use-when="0">
+       <!-- move linegroups out from elements which must not contain them once converted to zedai -->
+       <p:xslt name="move-out-linegroup" use-when="0">
+           <p:input port="stylesheet">
+               <p:document href="./move-out-linegroup.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <!-- move imggroups out from elements which must not contain them once converted to zedai -->
+       <p:xslt name="move-out-imggroup">
+           <p:input port="stylesheet">
+               <p:document href="./move-out-imggroup.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <!-- normalize mixed block/inline content models -->
+       <p:xslt name="normalize-block-inline">
            <p:input port="stylesheet">
                <p:document href="./normalize-block-inline.xsl"/>
            </p:input>
        </p:xslt>
-       
-       <p:xslt name="normalize-linegroups" use-when="0">
-            <p:input port="stylesheet">
-                <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
-            </p:input>
-        </p:xslt>
         
     </p:group>
     
@@ -68,8 +78,10 @@
         </p:input>
     </p:validate-with-relax-ng>
     
+    
     <p:store>
-        <p:with-option name="href" select="$zedai-file"/>
+        <!--<p:with-option name="href" select="$zedai-file"/>-->
+            <p:with-option name="href" select="./out.xml"/>
     </p:store>
     
 </p:declare-step>

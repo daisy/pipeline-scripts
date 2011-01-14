@@ -15,7 +15,7 @@
         
     -->
 
-    <xsl:output indent="yes" method="xml"/>
+    <xsl:output indent="yes" method="xml"/> 
 
     <!-- identity template -->
     <xsl:template match="@*|node()">
