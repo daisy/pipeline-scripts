@@ -22,7 +22,7 @@
 		<bodymatter id="bodymatter_0001">
 			<level1>
 				<pagenum smilref="speechgen0001.smil#tcp3" page="normal" id="page1">1</pagenum>
-				<h1><sent id="dtb3" smilref="speechgen0002.smil#tcp4"> Selections from “Great
+				<h1><sent id="dtb3" smilref="speechgen0002.smil#tcp4"> <br/> Selections from <br/> “Great
 						Pictures, as Seen and Described by Famous Writers” </sent></h1>
 				<p><sent id="dtb4" smilref="speechgen0002.smil#tcp5">The selections here have been
 						taken from “<em>Great Pictures, as Seen and Described by Famous
@@ -64,6 +64,7 @@
 							easily recognized there!</sent></p>
 					<pagenum smilref="speechgen0003.smil#tcp21" page="normal" id="page2">2</pagenum>
 					<p>
+						<span>Testing</span>
 						<imggroup>
 							<img alt="The Last Judgement by Michaelangelo"
 								src="greatpainters-last_judgement.jpg" id="rId81"/>

@@ -9,8 +9,9 @@
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter" />
-
-    <p:option name="output" select="''"/>
+    
+    
+    <p:option name="output" required="true"/>
     <p:variable name="zedai-file"
         select="resolve-uri(
                     if ($output='') then concat(
@@ -34,10 +35,11 @@
    <p:group name="normalize-dtbook">
        
        <!-- sort out the linegroup content model -->
-       <p:xslt name="normalize-linegroups">
+       <p:xslt name="normalize-linegroups" use-when="0">
            <p:input port="stylesheet">
                <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
            </p:input>
+           
        </p:xslt>
        
        <!-- move linegroups out from elements which must not contain them once converted to zedai -->
@@ -46,7 +48,7 @@
                <p:document href="./move-out-linegroup.xsl"/>
            </p:input>
        </p:xslt>
-       
+        
        <!-- move imggroups out from elements which must not contain them once converted to zedai -->
        <p:xslt name="move-out-imggroup">
            <p:input port="stylesheet">
@@ -60,7 +62,13 @@
                <p:document href="./normalize-block-inline.xsl"/>
            </p:input>
        </p:xslt>
-        
+       
+       <!-- convert br to ln -->
+       <p:xslt name="convert-br-to-ln">
+           <p:input port="stylesheet">
+               <p:document href="./convert-br-to-ln.xsl"/>
+           </p:input>
+       </p:xslt>
     </p:group>
     
     <!-- Translate element and attribute names from DTBook to ZedAI -->
@@ -72,7 +80,7 @@
     
     
     <!-- Validate the ZedAI output -->
-    <p:validate-with-relax-ng assert-valid="false" name="validate-zedai">
+    <p:validate-with-relax-ng assert-valid="false" name="validate-zedai" use-when="0">
         <p:input port="schema">
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>
@@ -80,8 +88,7 @@
     
     
     <p:store>
-        <!--<p:with-option name="href" select="$zedai-file"/>-->
-            <p:with-option name="href" select="./out.xml"/>
+        <p:with-option name="href" select="$zedai-file"/>
     </p:store>
     
 </p:declare-step>

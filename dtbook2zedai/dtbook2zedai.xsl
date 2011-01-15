@@ -467,11 +467,10 @@
         </p>
     </xsl:template>
     
-    <xsl:template match="dtb:br">
-        <!-- TODO: what is the equivalent for br? -->
+    <!--<xsl:template match="dtb:br">
        <xsl:comment><xsl:text>dtbook:br</xsl:text></xsl:comment>
     </xsl:template>
-    
+    -->
     <xsl:template match="dtb:cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>    
@@ -700,16 +699,5 @@
             <xsl:apply-templates/>
         </lnum>
     </xsl:template>
-    
-    <xsl:template match="*[br]">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:for-each-group select="node()" group-ending-with="br">
-                <ln>
-                    <xsl:apply-templates select="current-group()[not(self::br)]"/>
-                </ln>
-            </xsl:for-each-group>
-            
-        </xsl:copy>
-    </xsl:template>
+
 </xsl:stylesheet>
