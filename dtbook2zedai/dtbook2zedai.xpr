@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="12.0">
+<project version="12.1">
     <meta>
         <filters directoryPatterns="" filePatterns=""
             positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="12.0">
+            <serialized version="12.1">
                 <map>
                     <entry>
                         <String xml:space="preserve">key.xproc.engines.option.pane</String>
@@ -33,17 +33,6 @@
                                 </field>
                                 <field name="url">
                                     <String xml:space="preserve">dtbook2zedai.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook2zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -143,6 +132,17 @@
                                 </field>
                                 <field name="url">
                                     <String xml:space="preserve">dtbook_samples/greatpainters.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook2zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                         </scenarioAssociation-array>
@@ -632,6 +632,7 @@
         <folder path="dtbook_samples/"/>
         <folder path="normalize-linegroup/"/>
         <folder path="schema/"/>
+        <file name="convert-br-to-ln.xsl"/>
         <file name="dtbook2zedai.xpl"/>
         <file name="dtbook2zedai.xsl"/>
         <file name="move-out-imggroup.xsl"/>

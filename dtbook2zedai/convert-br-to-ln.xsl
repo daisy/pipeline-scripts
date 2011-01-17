@@ -4,19 +4,24 @@
     exclude-result-prefixes="xs" version="2.0">
 
     <xsl:output indent="yes" method="xml"/>
-    
+
     <xsl:template match="/">
         <xsl:apply-templates/>
     </xsl:template>
-    
+
     <xsl:template match="*[dtb:br]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <!-- this doesn't quite work, see greatpainters.xml#dtb3 for a use case -->
-            <xsl:for-each-group select="node()" group-ending-with="br">
-                <xsl:element name="ln" namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                    <xsl:apply-templates select="current-group()[not(self::br)]"/>
-                </xsl:element>
+
+            <xsl:for-each-group select="node()" group-ending-with="dtb:br">
+                <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
+
+                    <xsl:element name="ln" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
+
+                    </xsl:element>
+                </xsl:if>
+
             </xsl:for-each-group>
 
         </xsl:copy>

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0" name="dtbook2zedai">
+
+<p:declare-step version="1.0" name="dtbook2zedai"  
+        xmlns:p="http://www.w3.org/ns/xproc"
+        xmlns:c="http://www.w3.org/ns/xproc-step"
+        xmlns:cx="http://xmlcalabash.com/ns/extensions"
+        xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
+        exclude-inline-prefixes="cx">
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <!-- 
         
         This XProc script is the main entry point for the DTBook2ZedAI module.
@@ -11,7 +18,8 @@
     <p:input port="parameters" kind="parameter" />
     
     
-    <p:option name="output" required="true"/>
+    <p:option name="output" select="''"/>
+    
     <p:variable name="zedai-file"
         select="resolve-uri(
                     if ($output='') then concat(
@@ -21,7 +29,11 @@
                     else if (ends-with($output,'.xml')) then $output 
                     else concat($output,'.xml'))">
             <p:pipe step="dtbook2zedai" port="source"/>
-    </p:variable>
+            </p:variable>
+    
+    <cx:message>
+        <p:with-option name="message" select="$zedai-file"/>
+    </cx:message>
     
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
@@ -29,6 +41,7 @@
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
+    
     
     
     <!-- Normalize DTBook content model -->
