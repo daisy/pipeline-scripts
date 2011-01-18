@@ -23,7 +23,13 @@
 			<level1>
 				<pagenum smilref="speechgen0001.smil#tcp3" page="normal" id="page1">1</pagenum>
 				<h1><sent id="dtb3" smilref="speechgen0002.smil#tcp4"> <br/> Selections from <br/> “Great
-						Pictures, as Seen and Described by Famous Writers” </sent></h1>
+				Pictures, as Seen and Described by Famous Writers” </sent>
+				<imggroup>
+					<caption>The Caption in The Heading!</caption>
+					<img src="pic.jpg" alt="hi"/>
+				</imggroup>
+				<sent>Some other text</sent>
+				</h1>
 				<p><sent id="dtb4" smilref="speechgen0002.smil#tcp5">The selections here have been
 						taken from “<em>Great Pictures, as Seen and Described by Famous
 						Writers</em>, Edited and Translated By Esther Singleton, 1899”</sent></p>
@@ -63,6 +69,7 @@
 							smilref="speechgen0003.smil#tcp20" id="dtb19">The newly-elected Pope was
 							easily recognized there!</sent></p>
 					<pagenum smilref="speechgen0003.smil#tcp21" page="normal" id="page2">2</pagenum>
+					
 					<p>
 						<span>Testing</span>
 						<imggroup>
@@ -70,6 +77,13 @@
 								src="greatpainters-last_judgement.jpg" id="rId81"/>
 							<caption imgref="rId81"><sent smilref="speechgen0003.smil#tcp22"
 									id="dtb20">The Last Judgment.Michael Angelo.</sent></caption>
+						</imggroup>
+						<span>Testing again!</span>
+						<imggroup>
+							<img alt="The Other Last Judgement by Michaelangelo"
+								src="greatpainters-last_judgement.jpg" id="rId81test"/>
+							<caption imgref="rId81test"><sent smilref="speechgen0003.smil#tcp22"
+								id="dtb20test">The Other Last Judgment.Michael Angelo.</sent></caption>
 						</imggroup>
 					</p>
 					<p><sent smilref="speechgen0003.smil#tcp23" id="dtb21">"Ah!" </sent><sent

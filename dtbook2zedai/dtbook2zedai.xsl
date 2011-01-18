@@ -467,10 +467,16 @@
         </p>
     </xsl:template>
     
-    <!--<xsl:template match="dtb:br">
-       <xsl:comment><xsl:text>dtbook:br</xsl:text></xsl:comment>
+    <xsl:template match="dtb:ln">
+       <ln>
+           <xsl:apply-templates/>
+       </ln>
     </xsl:template>
-    -->
+    
+    <xsl:template match="dtb:br">
+        <!-- discard any br elements left after running convert-br-to-ln.xsl -->
+    </xsl:template>
+    
     <xsl:template match="dtb:cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>    

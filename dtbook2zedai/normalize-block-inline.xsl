@@ -26,7 +26,7 @@
 
     <xsl:template
         match="dtb:annotation | dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | dtb:th | dtb:caption | dtb:sidebar |
-        dtb:address | dtb:covertitle | dtb:samp"
+        dtb:address | dtb:covertitle | dtb:samp | dtb:td"
          >
 
         <xsl:copy>
@@ -37,10 +37,10 @@
             <xsl:variable name="hasInline"
                 select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:dfn or
             ./dtb:em or ./dtb:line or ./dtb:noteref or ./dtb:sent or ./dtb:span or ./dtb:strong or ./dtb:sub or 
-            ./dtb:sub or ./dtb:w or ./text()"/>
+            ./dtb:sub or ./dtb:w or ./dtb:br or ./text()"/>
 
             <xsl:variable name="hasBlock"
-                select="./dtb:code or ./dtb:samp or ./dtb:kbd or ./dtb:cite or ./dtb:img or ./dtb:imggroup or ./dtb:br or ./dtb:pagenum or
+                select="./dtb:code or ./dtb:samp or ./dtb:kbd or ./dtb:cite or ./dtb:img or ./dtb:imggroup or ./dtb:pagenum or
             dtb:prodnote or ./dtb:p or ./dtb:list or ./dtb:dl or ./dtb:div or ./dtb:linegroup or ./dtb:byline or ./dtb:dateline or ./dtb:epigraph or
             dtb:table or ./dtb:address or ./dtb:author or ./dtb:prodnote or ./dtb:sidebar or ./dtb:note or ./dtb:annotation or ./dtb:doctitle or ./dtb:docauthor or
             dtb:covertitle or ./dtb:bridgehead"/>
@@ -90,7 +90,7 @@
             <xsl:choose>
                 <xsl:when
                     test="name() = 'a' or name() = 'abbr' or name() = 'acronym' or name() = 'annoref' or name() = 'bdo' or 
-                    name() = 'blockquote' or name() = 'dfn' or name() = 'em' or name() = 'line' or name() = 'noteref' or name() = 'q' or 
+                    name() = 'blockquote' or name() = 'br' or name() = 'dfn' or name() = 'em' or name() = 'line' or name() = 'noteref' or name() = 'q' or 
                     name() = 'sent' or name() = 'span' or name() = 'strong' or name() = 'sub' or name() = 'sub' or name() = 'w'">
 
                     <p>

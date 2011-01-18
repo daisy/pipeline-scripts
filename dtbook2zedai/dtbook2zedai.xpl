@@ -56,6 +56,7 @@
        </p:xslt>
        
        <!-- move linegroups out from elements which must not contain them once converted to zedai -->
+       <!-- This XSL needs to be written; will base it on move-out-imggroup when that's working -->
        <p:xslt name="move-out-linegroup" use-when="0">
            <p:input port="stylesheet">
                <p:document href="./move-out-linegroup.xsl"/>
@@ -82,7 +83,9 @@
                <p:document href="./convert-br-to-ln.xsl"/>
            </p:input>
        </p:xslt>
+       
     </p:group>
+   
     
     <!-- Translate element and attribute names from DTBook to ZedAI -->
     <p:xslt name="translate-dtbook2zedai"> 
@@ -90,6 +93,7 @@
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>
     </p:xslt>
+    
     
     
     <!-- Validate the ZedAI output -->

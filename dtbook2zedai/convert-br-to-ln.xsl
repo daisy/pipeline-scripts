@@ -9,7 +9,14 @@
         <xsl:apply-templates/>
     </xsl:template>
 
-    <xsl:template match="*[dtb:br]">
+    <!-- instead of br line delimiters, wrap lines with the ln element.  these elements' zedai content models are the same or a subset of
+        zedai:ln's own content model, so it's safe to wrap their contents in ln.
+        we use dtbook:ln (a made-up element) and later convert to zedai:ln
+    -->
+    <xsl:template match="dtb:a[dtb:br] | dtb:author[dtb:br] | dtb:bdo[dtb:br] | dtb:bridgehead[dtb:br] | dtb:byline[dtb:br] | 
+        dtb:cite[dtb:br] | dtb:dateline[dtb:br] | dtb:dd[dtb:br] | dtb:dfn[dtb:br] | dtb:docauthor[dtb:br] | dtb:doctitle[dtb:br] | 
+        dtb:dt[dtb:br] | dtb:em[dtb:br] | dtb:h1[dtb:br] | dtb:h2[dtb:br] | dtb:h3[dtb:br] | dtb:h4[dtb:br] | dtb:h5[dtb:br] | 
+        dtb:h6[dtb:br] | dtb:hd[dtb:br] | dtb:p[dtb:br] | dtb:sent[dtb:br] | dtb:span[dtb:br] | dtb:strong[dtb:br] | dtb:title[dtb:br]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
 

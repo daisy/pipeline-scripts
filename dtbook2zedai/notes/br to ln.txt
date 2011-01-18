@@ -1,0 +1,49 @@
+dtbook		  | 		   zedai		  |	ln as a child                  | ln content model same as or subset of zedai elem's   | 'mode'
+================================================================================================================================================
+a             |            ref            | ok                             | ok                                                   | [dtb:br]
+abbr          |            abbr           | x                              | ok but n/a                                           | discard br
+acronym       |            abbr           | x                              | ok but n/a                                           | discard br
+address       |            block          | inline only                    | inline only                                          | processed by normalize block inline
+author        |            p              | ok                             | ok                                                   | [dtb:br]
+bdo           |            span           | ok                             | ok                                                   | [dtb:br]
+bridgehead    |            hd             | ok                             | ok                                                   | [dtb:br]
+byline        |            citation       | ok                             | ok                                                   | [dtb:br]
+caption       |            caption        | inline only                    | inline only                                          | processed by normalize block inline
+cite          |            citation       | ok                             | ok                                                   | [dtb:br]
+code          |            code           | ok                             | messy                                                | TODO
+covertitle    |            block          | inline only                    | inline only                                          | processed by normalize block inline
+dateline      |            p              | ok                             | ok                                                   | [dtb:br]
+dd            |            definition     | ok                             | ok                                                   | [dtb:br]
+dfn           |            term           | ok                             | ok                                                   | [dtb:br]
+docauthor     |            p              | ok                             | ok                                                   | [dtb:br]
+doctitle      |            p              | ok                             | ok                                                   | [dtb:br]
+dt            |            term           | ok                             | ok                                                   | [dtb:br]
+em            |            emph           | ok                             | ok                                                   | [dtb:br]
+epigraph      |            block          | inline only                    | inline only                                          | processed by normalize block inline
+h1            |            h              | ok                             | ok                                                   | [dtb:br]
+h2            |            h              | ok                             | ok                                                   | [dtb:br]
+h3            |            h              | ok                             | ok                                                   | [dtb:br]
+h4            |            h              | ok                             | ok                                                   | [dtb:br]
+h5            |            h              | ok                             | ok                                                   | [dtb:br]
+h6            |            h              | ok                             | ok                                                   | [dtb:br]
+hd            |            hd             | ok                             | ok                                                   | [dtb:br]
+kbd           |            code           | ok                             | messy                                                | TODO
+li            |            item           | inline only                    | inline only                                          | processed by normalize block inline
+lic           |            lic???         | ???                            | ???                                                  | TODO
+line          |            ln             | ln variant, not code variant   | ok                                                   | TODO
+p             |            p              | ok                             | ok                                                   | [dtb:br]
+prodnote      |            annotation     | inline only                    | inline only                                          | processed by normalize block inline
+q             |            quote          | block: inline only; phrase: ok | block: inline only; phrase: ok                       | processed by normalize block inline
+samp          |            block          | inline only                    | inline only                                          | processed by normalize block inline
+sent          |            s              | ok                             | ok                                                   | [dtb:br]
+sidebar       |            aside          | inline only                    | inline only                                          | processed by normalize block inline
+span          |            span           | ok                             | ok                                                   | [dtb:br]
+strong        |            emph           | ok                             | ok                                                   | [dtb:br]
+sub           |            sub            | x                              | ok but n/a                                           | discard br
+sup           |            sup            | x                              | ok but n/a                                           | discard br
+td            |            td             | ok                             | inline only                                          | processed by normalize block inline
+th            |            th             | inline only                    | inline only                                          | processed by normalize block inline
+title         |            p              | ok                             | ok                                                   | [dtb:br]
+w             |            w              | x                              | ok but n/a                                           | discard br
+                           
+                              
