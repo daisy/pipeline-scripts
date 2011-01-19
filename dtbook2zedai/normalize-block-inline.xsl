@@ -4,18 +4,10 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0">
 
     <xd:doc>
-        <xd:desc>This stylesheet maps elements with a common dtbook content model to another common zedai content model.</xd:desc>
+        <xd:desc>Normalizes mixed block/inline content models.</xd:desc>
     </xd:doc>
 
-
-    <!-- 
-        
-        Note: linegroup is a potential child element of some of the elements here.  It will have to be moved out, but since that's such a common case, 
-        it might be handled separately.  It is not handled here.
-        
-    -->
-
-    <xsl:output indent="yes" method="xml"/> 
+    <xsl:output indent="yes" method="xml"/>
 
     <!-- identity template -->
     <xsl:template match="@*|node()">
@@ -24,10 +16,10 @@
         </xsl:copy>
     </xsl:template>
 
+
     <xsl:template
         match="dtb:annotation | dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | dtb:th | dtb:caption | dtb:sidebar |
-        dtb:address | dtb:covertitle | dtb:samp | dtb:td"
-         >
+        dtb:address | dtb:covertitle | dtb:samp | dtb:td">
 
         <xsl:copy>
 
@@ -42,7 +34,8 @@
             <xsl:variable name="hasBlock"
                 select="./dtb:code or ./dtb:samp or ./dtb:kbd or ./dtb:cite or ./dtb:img or ./dtb:imggroup or ./dtb:pagenum or
             dtb:prodnote or ./dtb:p or ./dtb:list or ./dtb:dl or ./dtb:div or ./dtb:linegroup or ./dtb:byline or ./dtb:dateline or ./dtb:epigraph or
-            dtb:table or ./dtb:address or ./dtb:author or ./dtb:prodnote or ./dtb:sidebar or ./dtb:note or ./dtb:annotation or ./dtb:doctitle or ./dtb:docauthor or
+            dtb:table or ./dtb:address or ./dtb:author or ./dtb:prodnote or ./dtb:sidebar or ./dtb:note or ./dtb:annotation or ./dtb:doctitle or 
+            ./dtb:docauthor or
             dtb:covertitle or ./dtb:bridgehead"/>
 
             <xsl:choose>
@@ -56,15 +49,17 @@
             </xsl:choose>
 
         </xsl:copy>
+
     </xsl:template>
 
+
+    <!-- zedai section elements must contain all block element children, so transform any inlines into blocks -->
     <xsl:template
         match="dtb:level1 | dtb:level2 | dtb:level3 | dtb:level4 | dtb:level5 | dtb:level6">
 
         <xsl:copy>
 
             <xsl:apply-templates select="@*"/>
-
 
             <xsl:variable name="hasInline"
                 select="./dtb:a or ./dtb:abbr or ./dtb:acronym or ./dtb:annoref or ./dtb:bdo or ./dtb:dfn or
@@ -83,38 +78,53 @@
         </xsl:copy>
 
     </xsl:template>
-    
+
+    <!-- take the context element's children and wrap any inlines in p elements -->
     <xsl:template name="blockize">
-        <!-- TODO: also need to wrap text() in para elements. -->
-        <xsl:for-each select="child::node()|text()">
+
+        <xsl:for-each select="node()">
             <xsl:choose>
+
+                <!-- inline elements get wrapped in a p element-->
                 <xsl:when
-                    test="name() = 'a' or name() = 'abbr' or name() = 'acronym' or name() = 'annoref' or name() = 'bdo' or 
-                    name() = 'blockquote' or name() = 'br' or name() = 'dfn' or name() = 'em' or name() = 'line' or name() = 'noteref' or name() = 'q' or 
-                    name() = 'sent' or name() = 'span' or name() = 'strong' or name() = 'sub' or name() = 'sub' or name() = 'w'">
+                    test="local-name() = 'a' or local-name() = 'abbr' or local-name() = 'acronym' or 
+                    local-name() = 'annoref' or local-name() = 'bdo' or 
+                    local-name() = 'blockquote' or local-name() = 'br' or local-name() = 'dfn' or 
+                    local-name() = 'em' or local-name() = 'line' or local-name() = 'noteref' or local-name() = 'q' or 
+                    local-name() = 'sent' or local-name() = 'span' or local-name() = 'strong' or local-name() = 'sub' or 
+                    local-name() = 'sub' or local-name() = 'w'">
 
-                    <p>
+                    <xsl:element name="p" namespace="http://www.daisy.org/z3986/2005/dtbook/">
                         <xsl:copy>
-                            <xsl:apply-templates select="@*"/>
-                            <xsl:apply-templates/>
+                            <xsl:apply-templates select="@*|node()"/>
                         </xsl:copy>
-                    </p>
-
+                    </xsl:element>
 
                 </xsl:when>
+
+                <!-- trim text and wrap in a p element -->
+                <xsl:when
+                    test="self::text() and string-length(self::text()[normalize-space()]) &gt; 0">
+                    <xsl:element name="p" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:copy/>
+                        <!-- TODO: should we trim the text here? -->
+                    </xsl:element>
+                </xsl:when>
+
+                <!-- whitespace -->
+                <xsl:when test="self::text() and string-length(self::text()[normalize-space()]) = 0">
+                    <!-- TODO: ok to discard whitespace?-->
+                </xsl:when>
+
+                <!-- all other elements must be block, so just copy them -->
                 <xsl:otherwise>
-                    <xsl:apply-templates/>
+                    <xsl:copy>
+                        <xsl:apply-templates select="@*|node()"/>
+                    </xsl:copy>
                 </xsl:otherwise>
             </xsl:choose>
-           
         </xsl:for-each>
+
     </xsl:template>
-    <!-- 
-No adjustments required for these elements, although they fall into the same content model:
-
-dtbook:img (empty) ==> object-block
-dtbook:imggroup (prodnote, img, caption, pagenum) ==> block
-
--->
 
 </xsl:stylesheet>

@@ -27,9 +27,11 @@
                         then replace(tokenize(base-uri(/),'/')[last()],'\..+$','')
                         else tokenize(base-uri(/),'/')[last()],'-zedai.xml')
                     else if (ends-with($output,'.xml')) then $output 
-                    else concat($output,'.xml'))">
+                    else concat($output,'.xml'), base-uri(/))">
             <p:pipe step="dtbook2zedai" port="source"/>
-            </p:variable>
+             
+    </p:variable>
+    
     
     <cx:message>
         <p:with-option name="message" select="$zedai-file"/>
@@ -67,6 +69,13 @@
        <p:xslt name="move-out-imggroup">
            <p:input port="stylesheet">
                <p:document href="./move-out-imggroup.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <!-- normalize nested samps -->
+       <p:xslt name="normalize-samp">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-samp.xsl"/>
            </p:input>
        </p:xslt>
        

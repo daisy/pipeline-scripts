@@ -28,8 +28,17 @@
 					<caption>The Caption in The Heading!</caption>
 					<img src="pic.jpg" alt="hi"/>
 				</imggroup>
+				
 				<sent>Some other text</sent>
 				</h1>
+				<prodnote render="optional">
+					<p>hello i am p</p>
+					<sent>hello i am s</sent>
+					i am just some text
+				</prodnote>
+				<samp>I am an example</samp>
+				<samp><span>hello span</span><samp>I am a nested example</samp></samp>
+				<p><a href="dtb4"><samp>I am a samp inside a link</samp></a></p>
 				<p><sent id="dtb4" smilref="speechgen0002.smil#tcp5">The selections here have been
 						taken from “<em>Great Pictures, as Seen and Described by Famous
 						Writers</em>, Edited and Translated By Esther Singleton, 1899”</sent></p>

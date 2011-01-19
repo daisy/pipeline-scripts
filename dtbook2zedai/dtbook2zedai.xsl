@@ -4,9 +4,8 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:its="http://www.w3.org/2005/11/its" 
-    xmlns="http://www.daisy.org/ns/z3986/authoring/">
-    
+    xmlns:its="http://www.w3.org/2005/11/its" xmlns="http://www.daisy.org/ns/z3986/authoring/">
+
     <xd:doc scope="stylesheet">
         <xd:desc>
             <xd:p><xd:b>Created on:</xd:b> Aug 16, 2010</xd:p>
@@ -14,7 +13,7 @@
             <xd:p>Take as input a dtbook 2005-3 document and produce zedai</xd:p>
         </xd:desc>
     </xd:doc>
-    
+
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
@@ -22,7 +21,7 @@
         <!-- this way, the oxygen editor validates.  however, this doesn't do anything useful until you save the document, because it's a relative path.
             so, when the main xproc's p:store step gets sorted out, then this will be meaningful -->
         <xsl:processing-instruction name="oxygen">
-            <xsl:text>RNGSchema="./schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
+            <xsl:text>RNGSchema="../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
         <xsl:apply-templates/>
     </xsl:template>
@@ -38,15 +37,14 @@
         <xsl:if test="@dir">
             <xsl:attribute name="its:dir" select="@dir"/>
         </xsl:if>
-        
+
         <!-- TODO: @title: defined as a core attribute in dtbook; does not exist in zedai -->
-        
+
     </xsl:template>
-    
+
     <xsl:template match="dtb:dtbook">
         <!-- convenience: use the same dublin core namespace as dtbook documents use -->
-        <document 
-            xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"           
+        <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
             xmlns:dc="http://purl.org/dc/terms/"
             profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
             <xsl:call-template name="attrs"/>
@@ -57,7 +55,7 @@
     <xsl:template match="dtb:head">
         <head>
             <xsl:call-template name="attrs"/>
-            
+
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
             <meta rel="z3986:profile"
                 resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.7/"/>
@@ -145,7 +143,7 @@
 
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@depth"/>
-            
+
             <xsl:if test="@enum = '1'">
                 <xsl:attribute name="rend:prefix">decimal</xsl:attribute>
             </xsl:if>
@@ -185,13 +183,13 @@
     </xsl:template>
 
     <xsl:template match="dtb:img">
-       
+
         <!-- TODO:  @height, @width belong in CSS -->
-        
+
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
-        
+
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
@@ -199,7 +197,7 @@
                 <xsl:value-of select="@alt"/>
             </description>
         </object>
-        
+
     </xsl:template>
 
     <xsl:template match="dtb:imggroup">
@@ -220,7 +218,7 @@
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
-                        
+
                         <!-- get the id of the image in the imggroup and use it as a ref -->
                         <caption ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
@@ -229,7 +227,7 @@
                     </xsl:when>
 
                     <xsl:otherwise>
-                        
+
                         <caption>
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -243,7 +241,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:annotation">
-        
+
         <annotation>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -251,10 +249,10 @@
     </xsl:template>
 
     <xsl:template match="dtb:prodnote">
-        
+
         <xsl:choose>
             <xsl:when test="@imgref">
-               <annotation by="republisher" ref="{replace(@imgref, '#', '')}">
+                <annotation by="republisher" ref="{replace(@imgref, '#', '')}">
                     <xsl:call-template name="attrs"/>
                     <xsl:apply-templates/>
                 </annotation>
@@ -263,22 +261,22 @@
                 <xsl:choose>
                     <xsl:when test="parent::imggroup">
                         <!-- get the id of the image in the imggroup and use it as a ref -->
-                        
+
                         <annotation by="republisher" ref="{../dtb:img/@id}">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </annotation>
-                        
+
                     </xsl:when>
-                    
+
                     <xsl:otherwise>
                         <annotation by="republisher">
-                            
+
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </annotation>
                     </xsl:otherwise>
-                    
+
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
@@ -292,7 +290,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:note">
-        
+
         <note>
             <xsl:call-template name="attrs"/>
             <xsl:choose>
@@ -332,7 +330,7 @@
             <xsl:value-of select="."/>
         </noteref>
     </xsl:template>
-    
+
     <xsl:template match="dtb:annoref">
         <noteref ref="{replace(@idref, '#', '')}">
             <!-- TODO: @type -->
@@ -340,7 +338,7 @@
             <xsl:value-of select="."/>
         </noteref>
     </xsl:template>
-    
+
     <xsl:template match="dtb:blockquote|dtb:q">
         <!-- TODO: @cite, which can exist on both blockquote and q, and is a URI -->
         <quote>
@@ -443,7 +441,7 @@
             <xsl:apply-templates/>
         </s>
     </xsl:template>
-   
+
     <xsl:template match="dtb:address">
         <!-- TODO: deal with dtb:address/dtb:line -->
         <!-- TODO: needs an appropriate role, work ongoing in zedai -->
@@ -452,46 +450,48 @@
             <xsl:apply-templates/>
         </block>
     </xsl:template>
-    
+
     <xsl:template match="dtb:epigraph">
         <block role="epigraph">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </block>
     </xsl:template>
-    
+
     <xsl:template match="dtb:dateline">
         <p role="time">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </p>
     </xsl:template>
-    
+
     <xsl:template match="dtb:ln">
-       <ln>
-           <xsl:apply-templates/>
-       </ln>
+        <ln>
+            <xsl:apply-templates/>
+        </ln>
     </xsl:template>
-    
+
     <xsl:template match="dtb:br">
         <!-- discard any br elements left after running convert-br-to-ln.xsl -->
     </xsl:template>
-    
+
     <xsl:template match="dtb:cite">
         <!-- generate an ID, we might need it -->
-        <xsl:variable name="citeID" select="generate-id()"/>    
-        
+        <xsl:variable name="citeID" select="generate-id()"/>
+
         <citation>
             <xsl:call-template name="attrs"/>
-            
+
             <!-- if no ID, then give a new ID -->
             <xsl:choose>
                 <xsl:when test="@id"/>
                 <xsl:otherwise>
-                    <xsl:attribute name="id"><xsl:value-of select="$citeID"/></xsl:attribute>
+                    <xsl:attribute name="id">
+                        <xsl:value-of select="$citeID"/>
+                    </xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
-            
+
             <xsl:if test="./title">
                 <p property="title">
                     <xsl:attribute name="about">
@@ -522,30 +522,30 @@
                     <xsl:apply-templates/>
                 </p>
             </xsl:if>
-            
+
         </citation>
     </xsl:template>
-    
+
     <xsl:template match="dtb:covertitle">
         <block role="covertitle">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </block>
     </xsl:template>
-    
+
     <xsl:template match="dtb:bdo">
         <span its:dir="{@dir}">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </span>
     </xsl:template>
-    
+
     <xsl:template match="dtb:acronym">
         <abbr>
             <!-- making an assumption: @pronounce has a default value of 'no' -->
             <xsl:choose>
                 <xsl:when test="@pronounce = 'yes'">
-                    <xsl:attribute name="type">acronym</xsl:attribute>    
+                    <xsl:attribute name="type">acronym</xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:attribute name="type">initialism</xsl:attribute>
@@ -555,10 +555,10 @@
             <xsl:apply-templates/>
         </abbr>
     </xsl:template>
-   
+
     <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway) -->
     <xsl:template match="dtb:link"/>
-    
+
     <!-- these are all of the same form: copy the dtbook element name and copy the translated attributes -->
     <!-- they could probably be condensed in the future but I'm leaving them like this for now -->
     <xsl:template match="dtb:bodymatter">
@@ -600,6 +600,10 @@
     <xsl:template match="dtb:span">
         <span>
             <xsl:call-template name="attrs"/>
+            <!-- normalize-samp.xsl might have put role='example' on some spans -->
+            <xsl:if test="@role">
+                <xsl:copy-of select="@role"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </span>
     </xsl:template>
@@ -611,7 +615,7 @@
         </w>
     </xsl:template>
     <!-- end of elements that follow the same form -->
-    
+
     <xsl:template match="dtb:linegroup">
         <lngroup>
             <xsl:call-template name="attrs"/>
@@ -624,43 +628,58 @@
             <xsl:apply-templates/>
         </ln>
     </xsl:template>
-    
+
     <xsl:template match="dtb:kbd">
         <code>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </code>    
+        </code>
     </xsl:template>
-    
-    <xsl:template match="dtb:samp" mode="block">
-        <block role="example">
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </block>
+
+    <xsl:template match="dtb:samp">
+        <xsl:variable name="parentname" select="local-name(parent::node())"/>
+        <xsl:choose>
+            <!-- parents of samp which require samp to be an inline example -->
+            <xsl:when test="$parentname = 'a' or $parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'author' or
+                $parentname = 'bdo' or $parentname = 'bridgehead' or $parentname = 'byline' or $parentname = 'cite' or
+                $parentname = 'dateline' or $parentname = 'dd' or $parentname = 'dfn' or $parentname = 'docauthor' or 
+                $parentname = 'doctitle' or $parentname = 'em' or $parentname = 'h1' or $parentname = 'h2' or $parentname = 'h3' or
+                $parentname = 'h4' or $parentname = 'h5' or $parentname = 'h6' or $parentname = 'hd' or $parentname = 'line' or
+                $parentname = 'p' or $parentname = 'q' or $parentname = 'samp' or $parentname = 'sent' or $parentname = 'span' or 
+                $parentname = 'strong' or $parentname = 'sub' or $parentname = 'sup' or $parentname = 'title' or $parentname = 'w'">
+                <span role="example">
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <!-- else the parent allows block children -->
+            <xsl:otherwise>
+                <block role="example">
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </block>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
-    <xsl:template match="dtb:samp" mode="inline">
-        <span role="example">
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </span>
-    </xsl:template>
-    
+
     <xsl:template match="dtb:dfn">
         <term>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </term>
     </xsl:template>
-    
+
     <xsl:template match="dtb:poem">
         <!-- TODO -->
     </xsl:template>
-    
+
     <xsl:template match="dtb:a">
         <ref>
             <xsl:if test="@href">
-                <xsl:attribute name="ref" select="replace(@href, '#', '')"/>                
+                <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
             </xsl:if>
+            <xsl:apply-templates/>
         </ref>
         <!-- TODO: deal with these dtbook:a attributes
             note that tabindex, accesskey only appear on this element in all of dtbook
@@ -672,7 +691,7 @@
         @tabindex
         -->
     </xsl:template>
-    
+
     <xsl:template match="dtb:dl">
         <!-- TODO: is this ordered or unordered? @type is required... -->
         <list type="unordered">
@@ -680,25 +699,25 @@
             <xsl:apply-templates/>
         </list>
     </xsl:template>
-    
+
     <xsl:template match="dtb:dt">
         <term>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </term>
     </xsl:template>
-    
+
     <xsl:template match="dtb:dd">
         <definition>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </definition>
     </xsl:template>
-    
+
     <xsl:template match="dtb:lic">
         <!-- TODO -->
     </xsl:template>
-    
+
     <xsl:template match="dtb:linenum">
         <lnum>
             <xsl:call-template name="attrs"/>

@@ -32,7 +32,7 @@
         dtb:w[dtb:imggroup]">
         <xsl:call-template name="move-elem-out">
             <xsl:with-param name="elem-name">imggroup</xsl:with-param>
-            <xsl:with-param name="split-into-elem" select="name()"/>
+            <xsl:with-param name="split-into-elem" select="local-name()"/>
         </xsl:call-template>
     </xsl:template>
 
@@ -55,16 +55,15 @@
 
         <!-- the element to split out: boolean(self::dtb:$elem-name) -->
         <!-- want to use this param in group-adjacent -->
-        <xsl:variable name="group-name"
-            select="QName('http://www.daisy.org/z3986/2005/dtbook/','imggroup')"/>
+        <xsl:variable name="group-name">imggroup</xsl:variable>
 
         <!-- save the parent element -->
         <xsl:variable name="elem" select="."/>
 
-
+<!-- boolean(self::dtb:imggroup) -->
         <!-- move imggroup -->
         <xsl:for-each-group select="*|text()[normalize-space()]"
-            group-adjacent="boolean(self::dtb:imggroup)">
+            group-adjacent="local-name() = $group-name">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
                     <xsl:copy-of select="current-group()"/>
