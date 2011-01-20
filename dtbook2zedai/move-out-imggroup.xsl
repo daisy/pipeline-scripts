@@ -31,7 +31,7 @@
         dtb:span[dtb:imggroup] | dtb:strong[dtb:imggroup] | dtb:sub[dtb:imggroup] | dtb:sup[dtb:imggroup] | dtb:title[dtb:imggroup] |
         dtb:w[dtb:imggroup]">
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name">imggroup</xsl:with-param>
+            <xsl:with-param name="elem-name-to-move">imggroup</xsl:with-param>
             <xsl:with-param name="split-into-elem" select="local-name()"/>
         </xsl:call-template>
     </xsl:template>
@@ -44,55 +44,57 @@
         dtb:h3[dtb:imggroup] | dtb:h4[dtb:imggroup] | dtb:h5[dtb:imggroup] | dtb:h6[dtb:imggroup] | 
         dtb:hd[dtb:imggroup]">
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name">imggroup</xsl:with-param>
+            <xsl:with-param name="elem-name-to-move">imggroup</xsl:with-param>
             <xsl:with-param name="split-into-elem" select="'p'"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="move-elem-out">
-        <xsl:param name="elem-name"/>
+        <xsl:param name="elem-name-to-move"/>
         <xsl:param name="split-into-elem"/>
-
-        <!-- the element to split out: boolean(self::dtb:$elem-name) -->
-        <!-- want to use this param in group-adjacent -->
-        <xsl:variable name="group-name">imggroup</xsl:variable>
 
         <!-- save the parent element -->
         <xsl:variable name="elem" select="."/>
-
-<!-- boolean(self::dtb:imggroup) -->
-        <!-- move imggroup -->
+        <xsl:variable name="first-child" select="child::node()[1]"/>
+        <!-- move the element out a level -->
         <xsl:for-each-group select="*|text()[normalize-space()]"
-            group-adjacent="local-name() = $group-name">
+            group-adjacent="local-name() = $elem-name-to-move">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
                     <xsl:copy-of select="current-group()"/>
-                    <!--
-                            <xsl:element name="imggroup"
-                                namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                                <xsl:apply-templates select="@*"/>
-                                <xsl:apply-templates/>
-                            </xsl:element>-->
                 </xsl:when>
                 <xsl:otherwise>
                     <!-- split the parent element -->
-                    <!-- TODO: fix this so that we get:
-                                h1
-                                imggroup
-                                $split-into-elem
-                                
-                                not
-                                
-                                $split-into-elem
-                                imggroup
-                                $split-into-elem
-                               
-                            -->
-                    <xsl:element name="{$split-into-elem}"
-                        namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                        <xsl:apply-templates select="$elem/@*"/>
-                        <xsl:apply-templates select="current-group()"/>
-                    </xsl:element>
+                    <xsl:choose>
+                        <!-- split into many of the same element -->
+                        <xsl:when test="local-name($elem) = $split-into-elem">
+                            <xsl:element name="{local-name($elem)}"
+                                namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                <xsl:apply-templates select="$elem/@*"/>
+                                <xsl:apply-templates select="current-group()"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <!-- split into a different element type than the original -->
+                        <xsl:otherwise>
+                            <xsl:choose>
+                                <!-- for the first group, use the original element name -->
+                                <xsl:when test="position() = 1 or local-name($first-child) = $elem-name-to-move">
+                                    <xsl:element name="{local-name($elem)}"
+                                        namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                        <xsl:apply-templates select="$elem/@*"/>
+                                        <xsl:apply-templates select="current-group()"/>
+                                    </xsl:element>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:element name="{$split-into-elem}"
+                                        namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                        <xsl:apply-templates select="$elem/@*"/>
+                                        <xsl:apply-templates select="current-group()"/>
+                                    </xsl:element>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:for-each-group>

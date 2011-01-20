@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='utf-8'?><!DOCTYPE dtbook PUBLIC "-//NISO//DTD dtbook 2005-3//EN" "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd"><?xml-stylesheet href="dtbookbasic.css" type="text/css"?>
+<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-3" xml:lang="en-US">
+    <head>
+        <meta content="AUTO-UID-5059463624137734586" name="dtb:uid"/>
+        <meta content="2.0.0.0 Beta" name="dt:version"/>
+        <meta content="imggroups" name="dc:Title"/>
+        <meta name="dc:Creator" content="Marisa DeMeglio"/>
+        <meta content="2009-02-07" name="dc:Date"/>
+        <meta name="dc:Publisher" content="Marisa DeMeglio"/>
+        <meta content="AUTO-UID-5059463624137734586-imggroup" name="dc:Identifier"/>
+        <meta content="en-US" name="dc:Language"/>
+    </head>
+    <book showin="blp">
+        <frontmatter>
+            <doctitle><sent smilref="speechgen0001.smil#tcp1" id="dtb1">There are only imggroups in
+                    this file</sent></doctitle>
+            <docauthor><sent smilref="speechgen0001.smil#tcp2" id="dtb2">an imggroup
+                lover</sent></docauthor>
+        </frontmatter>
+        <bodymatter id="bodymatter_0001">
+            <level1>
+                <h1>test 1 of imggroup inside h1, text before <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                </imggroup> text after
+                </h1>
+
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            
+            <level1>
+                <h1>test 2 of imggroup inside h1, text before <span>span before</span> <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup></h1>
+                
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            
+            <level1>
+                <h1><imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup>test 3 of imggroup inside h1, text after</h1>
+                
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            <level1>
+                <h1>test of imggroup in the middle</h1>
+                <p> Para text before <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup> Para text after </p>
+
+                <p>Para text before <a href="ref.html">
+                        <span>a/span[1] before</span>
+                        <imggroup>
+                            <img src="abc.jpg" alt="abc"/>
+                            <caption>i am a caption</caption>
+                        </imggroup>
+                        <span>a/span[2] after</span>
+                    </a> Para text after</p>
+
+            </level1>
+
+            <level1>
+                <h1>test of imggroup appearing first</h1>
+                <p>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup> Para text after</p>
+
+                <p>Para text before <a href="ref.html">
+                        <imggroup>
+                            <img src="abc.jpg" alt="abc"/>
+                            <caption>i am a caption</caption>
+                        </imggroup>
+                        <span>a/span[1] after</span>
+                    </a> Para text after </p>
+            </level1>
+
+            <level1>
+                <h1>test of imggroup appearing last</h1>
+                <p> Para text before <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                </p>
+
+                <p>Para text before <a href="ref.html">
+                        <span>a/span[1] before</span>
+                        <imggroup>
+                            <img src="abc.jpg" alt="abc"/>
+                            <caption>i am a caption</caption>
+                        </imggroup>
+                    </a>Para text after</p>
+
+            </level1>
+
+            <level1>
+                <h1>test of just imggroup</h1>
+                <p>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                </p>
+
+                <p> Para text before <a href="ref.html">
+                        <imggroup>
+                            <img src="abc.jpg" alt="abc"/>
+                            <caption>i am a caption</caption>
+                        </imggroup>
+                    </a>Para text after</p>
+
+            </level1>
+            
+            
+            <level1>
+                <h1>many imggroups: test 1 of imggroup inside h1, text before <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup> text in the middle
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    text after
+                </h1>
+                
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            
+            <level1>
+                <h1>many imggroups: test 2 of imggroup inside h1, text before <span>span before</span> <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup></h1>
+                <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup>
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            
+            <level1>
+                <h1><imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup><imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup>
+                    many imggroups: test 3 of imggroup inside h1, text after</h1>
+                
+                <p>ignore me</p>
+                
+                
+                
+            </level1>
+            <level1>
+                <h1>many imggroups: test of imggroups in the middle</h1>
+                <p> Para text before <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup><imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup> Para text after </p>
+                
+                <p>Para text before <a href="ref.html">
+                    <span>a/span[1] before</span>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    <span>a/span[2] in the middle</span>
+                        <imggroup>
+                            <img src="abc.jpg" alt="abc"/>
+                            <caption>i am a caption</caption>
+                        </imggroup>
+                    <span>a/span[3] after</span>
+                </a> Para text after</p>
+                
+            </level1>
+            
+            <level1>
+                <h1>many imggroups: test of imggroup appearing first</h1>
+                <p>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup> Para text after<imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>More para text after</p>
+                
+                <p>Para text before <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup>
+                    <a href="ref.html">
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    <span>a/span[1] after</span>
+                </a> Para text after </p>
+            </level1>
+            
+            <level1>
+                <h1>test of imggroup appearing last</h1>
+                <p> Para text before <imggroup>
+                    <img src="abc.jpg" alt="abc"/>
+                    <caption>i am a caption</caption>
+                </imggroup>
+                </p>
+                
+                <p>Para text before <a href="ref.html">
+                    <span>a/span[1] before</span>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                </a>Para text after</p>
+                
+            </level1>
+            
+            <level1>
+                <h1>test of just imggroup</h1>
+                <p>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                </p>
+                
+                <p> Para text before <a href="ref.html">
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                    <imggroup>
+                        <img src="abc.jpg" alt="abc"/>
+                        <caption>i am a caption</caption>
+                    </imggroup>
+                </a>Para text after</p>
+                
+            </level1>
+            
+            
+        </bodymatter>
+    </book>
+</dtbook>
