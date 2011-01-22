@@ -57,6 +57,13 @@
            
        </p:xslt>
        
+       <!-- normalize nested samps -->
+       <p:xslt name="normalize-samp">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-samp.xsl"/>
+           </p:input>
+       </p:xslt>
+       
        <!-- move linegroups out from elements which must not contain them once converted to zedai -->
        <!-- This XSL needs to be written; will base it on move-out-imggroup when that's working -->
        <p:xslt name="move-out-linegroup" use-when="0">
@@ -72,12 +79,6 @@
            </p:input>
        </p:xslt>
        
-       <!-- normalize nested samps -->
-       <p:xslt name="normalize-samp">
-           <p:input port="stylesheet">
-               <p:document href="./normalize-samp.xsl"/>
-           </p:input>
-       </p:xslt>
        
        <!-- normalize mixed block/inline content models -->
        <p:xslt name="normalize-block-inline">
