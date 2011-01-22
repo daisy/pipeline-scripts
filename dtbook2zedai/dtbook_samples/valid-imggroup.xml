@@ -1,0 +1,38 @@
+<?xml-stylesheet href="dtbookbasic.css" type="text/css"?>
+<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" id="d1e2" version="2005-3" xml:lang="en-US">
+    <head id="d1e4">
+        <meta id="d1e6" content="AUTO-UID-5059463624137734586" name="dtb:uid"/>
+        <meta id="d1e8" content="2.0.0.0 Beta" name="dt:version"/>
+        <meta id="d1e10" content="imggroups" name="dc:Title"/>
+        <meta id="d1e12" name="dc:Creator" content="Marisa DeMeglio"/>
+        <meta id="d1e14" content="2009-02-07" name="dc:Date"/>
+        <meta id="d1e17" name="dc:Publisher" content="Marisa DeMeglio"/>
+        <meta id="d1e19" content="AUTO-UID-5059463624137734586-imggroup" name="dc:Identifier"/>
+        <meta id="d1e21" content="en-US" name="dc:Language"/>
+    </head>
+    <book id="d1e24" showin="blp">
+        <frontmatter id="d1e26">
+            <doctitle id="d1e28"><sent id="dtb1" smilref="speechgen0001.smil#tcp1">There are only imggroups in
+                this file</sent></doctitle>
+            <docauthor id="d1e32"><sent id="dtb2" smilref="speechgen0001.smil#tcp2">an imggroup
+                lover</sent></docauthor>
+        </frontmatter>
+        <bodymatter id="bodymatter_0001">
+            <level1 id="d1e39">
+                <imggroup id="d1e43">
+                    <img id="d1e45" src="abc.jpg" alt="abc"/>
+                    <caption id="d1e47">i am a caption</caption>
+                </imggroup>
+                <h1 id="d1e41">test 1 of imggroup inside h1, text before  text after
+                </h1>
+                
+                <p id="d1e52">ignore me</p>
+                
+                
+                
+            </level1>
+            
+            
+        </bodymatter>
+    </book>
+</dtbook>
