@@ -4,7 +4,8 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:its="http://www.w3.org/2005/11/its" xmlns="http://www.daisy.org/ns/z3986/authoring/">
+    xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.daisy.org/ns/z3986/authoring/">
 
     <xd:doc scope="stylesheet">
         <xd:desc>
@@ -311,10 +312,23 @@
     </xsl:template>
 
     <xsl:template match="dtb:code">
-        <code>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </code>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when
+                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
+                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
+                <span>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <code>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </code>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:pagenum">
@@ -355,17 +369,72 @@
     </xsl:template>
 
     <xsl:template match="dtb:table">
+        <!-- generate an ID in case we need it -->
+        <xsl:variable name="tableID" select="generate-id()"/>
+        
+        <!-- in ZedAI, captions don't live inside tables as in DTBook -->
+        <xsl:if test="./dtb:caption">
+            <xsl:choose>
+                <xsl:when test="@id">
+                    <caption ref="@id">
+                        <xsl:for-each select="./dtb:caption/*">
+                            <xsl:apply-templates/>
+                        </xsl:for-each>
+                    </caption>
+                </xsl:when>
+                <xsl:otherwise>
+                    <caption ref="$tableID">
+                        <xsl:for-each select="./dtb:caption/*">
+                            <xsl:apply-templates/>
+                        </xsl:for-each>
+                    </caption>        
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+        
         <table>
-            <!-- TODO: @summary, @width, @border, @frame, @rules, @cellspacing, @cellpadding -->
+            <!-- TODO: @summary, @frame, @rules -->
+
+            <!-- These will be put into CSS by a future XSL step -->
+            <xsl:copy-of select="@width"/>
+            <xsl:copy-of select="@border"/>
+            <xsl:copy-of select="@cellspacing"/>
+            <xsl:copy-of select="@cellpadding"/>
+
             <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="$tableID"/>
+            </xsl:if>
+            
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    <xsl:when test="name() = 'dtb:col'">
+                        <!-- This creates a colgroup for each col; would it be better to merge them into one? -->
+                        <colgroup>
+                            <xsl:apply-templates/>
+                        </colgroup>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <!-- we already processed the caption -->
+                        <xsl:if test="name() != 'dtb:caption'">
+                            <xsl:apply-templates/>
+                        </xsl:if>                  
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
         </table>
     </xsl:template>
 
     <xsl:template match="dtb:col">
         <col>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign, @span, @width -->
+            <xsl:copy-of select="@span"/>
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+            <xsl:copy-of select="@width"/>
+
             <xsl:apply-templates/>
         </col>
     </xsl:template>
@@ -373,7 +442,17 @@
     <xsl:template match="dtb:colgroup">
         <colgroup>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign, @span, @width -->
+            
+            <!-- ignore @span if there are any col children (this is what the DTBook DTD states, and it also maps nicely to ZedAI) -->
+            <xsl:if test="not(./col)">
+                <xsl:copy-of select="@span"/>
+            </xsl:if>
+            
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+            <xsl:copy-of select="@width"/>
+
             <xsl:apply-templates/>
         </colgroup>
     </xsl:template>
@@ -381,7 +460,11 @@
     <xsl:template match="dtb:thead">
         <thead>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign -->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
             <xsl:apply-templates/>
         </thead>
     </xsl:template>
@@ -389,7 +472,11 @@
     <xsl:template match="dtb:tfoot">
         <tfoot>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign -->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
             <xsl:apply-templates/>
         </tfoot>
     </xsl:template>
@@ -397,7 +484,11 @@
     <xsl:template match="dtb:tbody">
         <tbody>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign -->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
             <xsl:apply-templates/>
         </tbody>
     </xsl:template>
@@ -405,7 +496,11 @@
     <xsl:template match="dtb:tr">
         <tr>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign -->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
             <xsl:apply-templates/>
         </tr>
     </xsl:template>
@@ -413,7 +508,24 @@
     <xsl:template match="dtb:th">
         <th>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign, @abbr, @axis, @headers, @scope, @rowspan, @colspan -->
+            <xsl:copy-of select="@abbr"/>
+            <xsl:copy-of select="@headers"/>
+            <xsl:copy-of select="@colspan"/>
+            <xsl:copy-of select="@rowspan"/>
+            <xsl:copy-of select="@scope"/>
+
+            <!-- TODO: @axis 
+                
+                "axis" is used to place cells into conceptual categories in order to
+                provide improved access to information.
+                
+                -->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
+
             <xsl:apply-templates/>
         </th>
     </xsl:template>
@@ -421,7 +533,18 @@
     <xsl:template match="dtb:td">
         <td>
             <xsl:call-template name="attrs"/>
-            <!-- TODO: @align, @valign, @abbr, @axis, @headers, @scope, @rowspan, @colspan -->
+
+            <xsl:copy-of select="@headers"/>
+            <xsl:copy-of select="@colspan"/>
+            <xsl:copy-of select="@rowspan"/>
+            <xsl:copy-of select="@scope"/>
+
+            <!-- TODO: @abbr, @axis-->
+
+            <!-- these will be put into a CSS file by a future XSL step -->
+            <xsl:copy-of select="@align"/>
+            <xsl:copy-of select="@valign"/>
+
             <xsl:apply-templates/>
         </td>
     </xsl:template>
@@ -436,10 +559,23 @@
     </xsl:template>
 
     <xsl:template match="dtb:sent">
-        <s>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </s>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when
+                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
+                $parentname = 'sub' or $parentname = 'sup'">
+                <span role="sentence">
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <s>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </s>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:address">
@@ -478,53 +614,110 @@
     <xsl:template match="dtb:cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when
+                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
+                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
+                <span>
+                    <xsl:call-template name="attrs"/>
 
-        <citation>
-            <xsl:call-template name="attrs"/>
-
-            <!-- if no ID, then give a new ID -->
-            <xsl:choose>
-                <xsl:when test="@id"/>
-                <xsl:otherwise>
-                    <xsl:attribute name="id">
-                        <xsl:value-of select="$citeID"/>
-                    </xsl:attribute>
-                </xsl:otherwise>
-            </xsl:choose>
-
-            <xsl:if test="./title">
-                <p property="title">
-                    <xsl:attribute name="about">
-                        <xsl:choose>
-                            <xsl:when test="@id">
-                                <xsl:value-of select="@id"/>
-                            </xsl:when>
-                            <xsl:otherwise>
+                    <!-- if no ID, then give a new ID -->
+                    <xsl:choose>
+                        <xsl:when test="@id"/>
+                        <xsl:otherwise>
+                            <xsl:attribute name="id">
                                 <xsl:value-of select="$citeID"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:attribute>
-                    <xsl:apply-templates/>
-                </p>
-            </xsl:if>
-            <xsl:if test="./author">
-                <p property="author">
-                    <xsl:attribute name="about">
-                        <xsl:choose>
-                            <xsl:when test="@id">
-                                <xsl:value-of select="@id"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="$citeID"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:attribute>
-                    <xsl:apply-templates/>
-                </p>
-            </xsl:if>
+                            </xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
 
-        </citation>
+                    <xsl:if test="./title">
+                        <span property="title">
+                            <xsl:attribute name="about">
+                                <xsl:choose>
+                                    <xsl:when test="@id">
+                                        <xsl:value-of select="@id"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$citeID"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:if>
+                    <xsl:if test="./author">
+                        <span property="author">
+                            <xsl:attribute name="about">
+                                <xsl:choose>
+                                    <xsl:when test="@id">
+                                        <xsl:value-of select="@id"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$citeID"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:if>
+
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <citation>
+                    <xsl:call-template name="attrs"/>
+
+                    <!-- if no ID, then give a new ID -->
+                    <xsl:choose>
+                        <xsl:when test="@id"/>
+                        <xsl:otherwise>
+                            <xsl:attribute name="id">
+                                <xsl:value-of select="$citeID"/>
+                            </xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+
+                    <xsl:if test="./title">
+                        <span property="title">
+                            <xsl:attribute name="about">
+                                <xsl:choose>
+                                    <xsl:when test="@id">
+                                        <xsl:value-of select="@id"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$citeID"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:if>
+                    <xsl:if test="./author">
+                        <span property="author">
+                            <xsl:attribute name="about">
+                                <xsl:choose>
+                                    <xsl:when test="@id">
+                                        <xsl:value-of select="@id"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$citeID"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:if>
+
+                    <xsl:apply-templates/>
+
+                </citation>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
+
 
     <xsl:template match="dtb:covertitle">
         <block role="covertitle">
@@ -600,7 +793,7 @@
     <xsl:template match="dtb:span">
         <span>
             <xsl:call-template name="attrs"/>
-            <!-- normalize-samp.xsl might have put role='example' on some spans -->
+            <!-- normalize-samp.xsl sometimes puts role='example' on some spans, so be sure to copy it -->
             <xsl:if test="@role">
                 <xsl:copy-of select="@role"/>
             </xsl:if>
@@ -609,10 +802,21 @@
     </xsl:template>
 
     <xsl:template match="dtb:w">
-        <w>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </w>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when test="$parentname = 'sub' or $parentname = 'sup'">
+                <span>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <w>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </w>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <!-- end of elements that follow the same form -->
 
@@ -630,19 +834,33 @@
     </xsl:template>
 
     <xsl:template match="dtb:kbd">
-        <code>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </code>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when
+                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
+                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
+                <span>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <code>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </code>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:samp">
         <xsl:variable name="parentname" select="local-name(parent::node())"/>
         <xsl:choose>
             <!-- parents of samp which require samp to be an inline example -->
-            <xsl:when test="$parentname = 'a' or $parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'author' or
+            <xsl:when
+                test="$parentname = 'a' or $parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'author' or
                 $parentname = 'bdo' or $parentname = 'bridgehead' or $parentname = 'byline' or $parentname = 'cite' or
-                $parentname = 'dateline' or $parentname = 'dd' or $parentname = 'dfn' or $parentname = 'docauthor' or 
+                $parentname = 'dateline' or $parentname = 'dd' or $parentname = 'dfn' or $parentname = 'dt' or $parentname = 'docauthor' or 
                 $parentname = 'doctitle' or $parentname = 'em' or $parentname = 'h1' or $parentname = 'h2' or $parentname = 'h3' or
                 $parentname = 'h4' or $parentname = 'h5' or $parentname = 'h6' or $parentname = 'hd' or $parentname = 'line' or
                 $parentname = 'p' or $parentname = 'q' or $parentname = 'samp' or $parentname = 'sent' or $parentname = 'span' or 
@@ -664,10 +882,25 @@
     </xsl:template>
 
     <xsl:template match="dtb:dfn">
-        <term>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </term>
+        <xsl:variable name="parentname" select="local-name(parent::node)"/>
+        <xsl:choose>
+            <xsl:when
+                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
+                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
+                <!-- dfn can be translated to span because both have dtbook:inline content models, and we are already processing 
+                    child imggroup, br, and samp elements for dtbook:dfn-as-zedai:definition (span has the same processing requirements) -->
+                <span>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <term>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </term>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:poem">
@@ -677,23 +910,31 @@
     <xsl:template match="dtb:a">
         <ref>
             <xsl:if test="@href">
-                <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
+                <xsl:choose>
+                    <xsl:when test="@external='false'">
+                        <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+
             </xsl:if>
+            <xsl:copy-of select="@rev"/>
+            <xsl:copy-of select="@rel"/>
             <xsl:apply-templates/>
         </ref>
         <!-- TODO: deal with these dtbook:a attributes
             note that tabindex, accesskey only appear on this element in all of dtbook
         @type
         @hreflang
-        @rel
-        @rev
         @accesskey
         @tabindex
         -->
     </xsl:template>
 
     <xsl:template match="dtb:dl">
-        <!-- TODO: is this ordered or unordered? @type is required... -->
+        <!-- assumption: definition lists are unordered -->
         <list type="unordered">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>

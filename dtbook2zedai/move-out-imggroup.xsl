@@ -3,7 +3,7 @@
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0"
     xmlns:p2="http://code.google.com/p/daisy-pipeline/">
-    <!-- TODO: namespace for p2 is just temporary b/c it's required for xsl:function -->
+    <!-- TODO: what's the official namespace for pipeline2? -->
 
     <xd:doc>
         <xd:desc>Move imggroup out and split the element(s) that used to contain it. Description of
@@ -11,10 +11,14 @@
             http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI_imggroup</xd:desc>
 
     </xd:doc>
-
+    
     <xsl:output indent="yes" method="xml"/>
 
+
+    <!-- TODO: parametrize this so it can be used for linegroup too -->
+    
     <xsl:template match="/">
+       
         <xsl:message>start</xsl:message>
         <xsl:call-template name="test-and-move">
             <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
@@ -56,7 +60,7 @@
 
     <!-- these are invalid imggroup parents that can be split into many instances of themselves -->
     <xsl:variable name="invalid-parents-A"
-        select="tokenize('a,abbr,acronym,author,bdo,bridgehead,byline,cite,dateline,dd,dfn,docauthor,doctitle,em,
+        select="tokenize('a,abbr,acronym,author,bdo,bridgehead,byline,cite,dateline,dd,dt,dfn,docauthor,doctitle,em,
         line,linegroup,p,q,sent,span,strong,sub,sup,title,w', ',')"/>
     <!-- these are invalid imggroup parents that cannot be split into many instances of themselves -->
     <xsl:variable name="invalid-parents-B" select="tokenize('h1,h2,h3,h4,h5,h6,hd', ',')"/>
@@ -138,8 +142,24 @@
                         <xsl:when test="local-name($elem) = $split-into-elem">
                             <xsl:element name="{local-name($elem)}"
                                 namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                
                                 <xsl:apply-templates select="$elem/@*"/>
+                                
+                                <!-- for all except the first 'copy' of the original parent:
+                                    don't copy the node's ID since then it will result in many nodes with the same ID -->
+                                <xsl:if test="not(position() = 1 or local-name($first-child) = $elem-name-to-move)">
+                                    <xsl:if test="$elem/@id">
+                                        <!-- modifying the result of generate-id() by adding a character to the end
+                                            seems to correct the problem of it not being unique; however, this 
+                                            is an issue that should be explored in-depth -->
+                                        <xsl:variable name="tmp" select="concat(generate-id(), 'z')"/>
+                                        <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
+                                        <xsl:attribute name="id" select="$tmp"/>
+                                    </xsl:if>
+                                </xsl:if>
+                                
                                 <xsl:apply-templates select="current-group()"/>
+                            
                             </xsl:element>
                         </xsl:when>
                         <!-- split into a different element type than the original -->
@@ -157,8 +177,22 @@
                                 <xsl:otherwise>
                                     <xsl:element name="{$split-into-elem}"
                                         namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                                        
                                         <xsl:apply-templates select="$elem/@*"/>
+                                        
+                                        <!-- for all except the first 'copy' of the original parent:
+                                        don't copy the node's ID since then it will result in many nodes with the same ID -->
+                                        <xsl:if test="$elem/@id">
+                                            <xsl:variable name="tmp" select="generate-id()"/>
+                                            <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
+                                            <!-- modifying the result of generate-id() by adding a character to the end
+                                                seems to correct the problem of it not being unique; however, this 
+                                                is an issue that should be explored in-depth -->
+                                            <xsl:attribute name="id" select="concat(generate-id(), 'z')"/>
+                                        </xsl:if>
+                                        
                                         <xsl:apply-templates select="current-group()"/>
+                                        
                                     </xsl:element>
                                 </xsl:otherwise>
                             </xsl:choose>

@@ -1,14 +1,15 @@
 <?xml-stylesheet href="dtbookbasic.css" type="text/css"?>
-<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" id="d1e2" version="2005-3" xml:lang="en-US">
-    <head id="d1e4">
-        <meta id="d1e6" content="AUTO-UID-5059463624137734586" name="dtb:uid"/>
-        <meta id="d1e8" content="2.0.0.0 Beta" name="dt:version"/>
-        <meta id="d1e10" content="imggroups" name="dc:Title"/>
-        <meta id="d1e12" name="dc:Creator" content="Marisa DeMeglio"/>
-        <meta id="d1e14" content="2009-02-07" name="dc:Date"/>
-        <meta id="d1e17" name="dc:Publisher" content="Marisa DeMeglio"/>
-        <meta id="d1e19" content="AUTO-UID-5059463624137734586-imggroup" name="dc:Identifier"/>
-        <meta id="d1e21" content="en-US" name="dc:Language"/>
+<!DOCTYPE dtbook PUBLIC "-//NISO//DTD dtbook 2005-3//EN" "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd">
+<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-3" xml:lang="en-US">
+    <head>
+        <meta content="AUTO-UID-5059463624137734586" name="dtb:uid"/>
+        <meta content="2.0.0.0 Beta" name="dt:version"/>
+        <meta content="imggroups" name="dc:Title"/>
+        <meta name="dc:Creator" content="Marisa DeMeglio"/>
+        <meta content="2009-02-07" name="dc:Date"/>
+        <meta name="dc:Publisher" content="Marisa DeMeglio"/>
+        <meta content="AUTO-UID-5059463624137734586-imggroup" name="dc:Identifier"/>
+        <meta content="en-US" name="dc:Language"/>
     </head>
     <book id="d1e24" showin="blp">
         <frontmatter id="d1e26">
@@ -18,13 +19,16 @@
                 lover</sent></docauthor>
         </frontmatter>
         <bodymatter id="bodymatter_0001">
+            
             <level1 id="d1e39">
-                <h1>hello</h1>
+                <h1>A. hello</h1>
                 <imggroup id="onlyvalidimggroup">
                     <img src="valid" alt="valid"/>
                 </imggroup>
-                
-                <h1 id="d1e41">test 1 of imggroup inside h1, text before <imggroup id="d1e43">
+            </level1>
+            
+            <level1>
+                <h1 id="d1e41">B. test 1 of imggroup inside h1, text before <imggroup id="d1e43">
                     <img id="d1e45" src="abc.jpg" alt="abc"/>
                     <caption id="d1e47">i am a caption</caption>
                 </imggroup> text after
@@ -37,7 +41,7 @@
             </level1>
             
             <level1 id="d1e56">
-                <h1 id="d1e58">test 2 of imggroup inside h1, text before <span id="d1e60">span before</span> <imggroup id="d1e63">
+                <h1 id="d1e58">C. test 2 of imggroup inside h1, text before <span id="d1e60">span before</span> <imggroup id="d1e63">
                     <img id="d1e65" src="abc.jpg" alt="abc"/>
                     <caption id="d1e67">i am a caption</caption>
                 </imggroup></h1>
@@ -52,7 +56,7 @@
                 <h1 id="d1e77"><imggroup id="d1e78">
                     <img id="d1e80" src="abc.jpg" alt="abc"/>
                     <caption id="d1e82">i am a caption</caption>
-                </imggroup>test 3 of imggroup inside h1, text after</h1>
+                </imggroup>D. test 3 of imggroup inside h1, text after</h1>
                 
                 <p id="d1e87">ignore me</p>
                 
@@ -60,7 +64,7 @@
                 
             </level1>
             <level1 id="d1e91">
-                <h1 id="d1e93">test of imggroup in the middle</h1>
+                <h1 id="d1e93">E. test of imggroup in the middle</h1>
                 <p id="d1e96"> Para text before <imggroup id="d1e98">
                     <img id="d1e100" src="abc.jpg" alt="abc"/>
                     <caption id="d1e102">i am a caption</caption>
@@ -82,7 +86,7 @@
             </level1>
             
             <level1 id="d1e128">
-                <h1 id="d1e130">test of imggroup appearing first</h1>
+                <h1 id="d1e130">F. test of imggroup appearing first</h1>
                 <p id="d1e133">
                     <imggroup id="d1e135">
                         <img id="d1e137" src="abc.jpg" alt="abc"/>
@@ -99,7 +103,7 @@
             </level1>
             
             <level1 id="d1e163">
-                <h1 id="d1e165">test of imggroup appearing last</h1>
+                <h1 id="d1e165">G. test of imggroup appearing last</h1>
                 <p id="d1e168"> Para text before <imggroup id="d1e170">
                     <img id="d1e172" src="abc.jpg" alt="abc"/>
                     <caption id="d1e174">i am a caption</caption>
@@ -117,7 +121,7 @@
             </level1>
             
             <level1 id="d1e197">
-                <h1 id="d1e199">test of just imggroup</h1>
+                <h1 id="d1e199">H. test of just imggroup</h1>
                 <p id="d1e202">
                     <imggroup id="d1e204">
                         <img id="d1e206" src="abc.jpg" alt="abc"/>
@@ -136,7 +140,7 @@
             
             
             <level1 id="d1e228">
-                <h1 id="d1e230">many imggroups: test 1 of imggroup inside h1, text before <imggroup id="d1e232">
+                <h1 id="d1e230">I. many imggroups: test 1 of imggroup inside h1, text before <imggroup id="d1e232">
                     <img id="d1e234" src="abc.jpg" alt="abc"/>
                     <caption id="d1e236">i am a caption</caption>
                 </imggroup> text in the middle
@@ -154,7 +158,7 @@
             </level1>
             
             <level1 id="d1e253">
-                <h1 id="d1e255">many imggroups: test 2 of imggroup inside h1, text before <span id="d1e257">span before</span> <imggroup id="d1e260">
+                <h1 id="d1e255">J. many imggroups: test 2 of imggroup inside h1, text before <span id="d1e257">span before</span> <imggroup id="d1e260">
                     <img id="d1e262" src="abc.jpg" alt="abc"/>
                     <caption id="d1e264">i am a caption</caption>
                 </imggroup></h1>
@@ -176,7 +180,7 @@
                     <img id="d1e292" src="abc.jpg" alt="abc"/>
                     <caption id="d1e294">i am a caption</caption>
                 </imggroup>
-                    many imggroups: test 3 of imggroup inside h1, text after</h1>
+                    K. many imggroups: test 3 of imggroup inside h1, text after</h1>
                 
                 <p id="d1e299">ignore me</p>
                 
@@ -184,7 +188,7 @@
                 
             </level1>
             <level1 id="d1e303">
-                <h1 id="d1e305">many imggroups: test of imggroups in the middle</h1>
+                <h1 id="d1e305">L. many imggroups: test of imggroups in the middle</h1>
                 <p id="d1e308"> Para text before <imggroup id="d1e310">
                     <img id="d1e312" src="abc.jpg" alt="abc"/>
                     <caption id="d1e314">i am a caption</caption>
@@ -212,7 +216,7 @@
             </level1>
             
             <level1 id="d1e362">
-                <h1 id="d1e364">many imggroups: test of imggroup appearing first</h1>
+                <h1 id="d1e364">M. many imggroups: test of imggroup appearing first</h1>
                 <p id="d1e367">
                     <imggroup id="d1e369">
                         <img id="d1e371" src="abc.jpg" alt="abc"/>
@@ -236,7 +240,7 @@
             </level1>
             
             <level1 id="d1e412">
-                <h1 id="d1e414">test of imggroup appearing last</h1>
+                <h1 id="d1e414">N. test of imggroup appearing last</h1>
                 <p id="d1e417"> Para text before <imggroup id="d1e419">
                     <img id="d1e421" src="abc.jpg" alt="abc"/>
                     <caption id="d1e423">i am a caption</caption>
@@ -258,7 +262,7 @@
             </level1>
             
             <level1 id="d1e454">
-                <h1 id="d1e456">test of just imggroup</h1>
+                <h1 id="d1e456">O. test of just imggroup</h1>
                 <p id="d1e459">
                     <imggroup id="d1e461">
                         <img id="d1e463" src="abc.jpg" alt="abc"/>
@@ -281,6 +285,36 @@
                     </imggroup>
                 </a>Para text after</p>
                 
+            </level1>
+            
+            <level1 id="abc00">
+                <h1 id="abc01">P. test of many imggroup and text</h1>
+                <p id="abc02">
+                    
+                    text before
+                    
+                    <imggroup id="abc03">
+                        <img id="abc04" src="abc.jpg" alt="abc"/>
+                        <caption id="abc05">i am a caption</caption>
+                    </imggroup>
+                    
+                    text in between
+                    
+                    <imggroup id="abc03a">
+                        <img id="abc04a" src="abc.jpg" alt="abc"/>
+                        <caption id="abc05a">i am a caption</caption>
+                    </imggroup>
+                    
+                    text in between again
+                    
+                    <imggroup id="abc03b">
+                        <img id="abc04b" src="abc.jpg" alt="abc"/>
+                        <caption id="abc05b">i am a caption</caption>
+                    </imggroup>
+                    
+                    text at the end
+                    
+                </p>
             </level1>
             
             
