@@ -59,8 +59,6 @@
                     </xsl:if>
                 </originInfo>
             </xsl:if>
-
-
         </xsl:template>
     </mods>
 

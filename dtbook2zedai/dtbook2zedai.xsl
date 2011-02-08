@@ -110,36 +110,18 @@
                         <meta property="dcterms:rights" content="{@content}"/>
                     </xsl:when>
                     
-                    <!-- these dtb: properties will get converted to MODS and placed in a separate file -->
-                    <xsl:when test="@name = 'dtb:sourceDate'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:sourceEdition'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:sourcePublisher'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:sourceRights'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:sourceTitle'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:producer'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dtb:producedDate'">
-                        <meta property="{@name}" content="{@content}"/>
-                    </xsl:when>
-                    
                     <xsl:when test="@name = 'dtb:revisionDescription'">
                         <meta property="dcterms:description" content="{@content}" about="#meta-dcdate"/>
                     </xsl:when>
                 </xsl:choose>
                 
             </xsl:for-each>
-
+            
+            <!-- TODO: Right now, the MODS fileset is assumed to exist -->
+            <meta rel="z3986:meta-record" resource="TODO_MODS_FILENAME.xml">
+                <meta property="z3986:meta-record-type" about="TODO_MODS_FILENAME.xml" content="z3986:mods" />
+                <meta property="z3986:meta-record-version" about="TODO_MODS_FILENAME.xml" content="3.3" />
+            </meta>   
         </head>
 
     </xsl:template>
