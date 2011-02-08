@@ -44,9 +44,9 @@
     </xsl:template>
 
     <xsl:template match="dtb:dtbook">
-        <!-- convenience: use the same dublin core namespace as dtbook documents use -->
+        
         <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
-            xmlns:dc="http://purl.org/dc/terms/"
+            xmlns:dcterms="http://purl.org/dc/terms/"
             profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -59,11 +59,85 @@
 
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
             <meta rel="z3986:profile"
-                resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.7/"/>
+                resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
 
             <!-- TODO: look at each metadata and draw comparisons to zedai metadata -->
             <xsl:for-each select="dtb:meta">
-                <meta property="{@name}" content="{@content}"/>
+                <xsl:choose>
+                    <xsl:when test="@name = 'dc:Title'">
+                        <meta property="dcterms:title" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Identifier'">
+                        <meta property="dcterms:identifier" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Creator'">
+                        <meta property="dcterms:creator" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Date'">
+                        <meta property="dcterms:date" content="{@content}" id="meta-dcdate"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Publisher'">
+                        <meta property="dcterms:publisher" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Language'">
+                        <meta property="dcterms:language" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Subject'">
+                        <meta property="dcterms:subject" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Description'">
+                        <meta property="dcterms:description" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Contributor'">
+                        <meta property="dcterms:contributor" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Type'">
+                        <meta property="dcterms:type" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Format'">
+                        <meta property="dcterms:format" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Source'">
+                        <meta property="dcterms:source" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Relation'">
+                        <meta property="dcterms:relation" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Coverage'">
+                        <meta property="dcterms:coverage" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dc:Rights'">
+                        <meta property="dcterms:rights" content="{@content}"/>
+                    </xsl:when>
+                    
+                    <!-- these dtb: properties will get converted to MODS and placed in a separate file -->
+                    <xsl:when test="@name = 'dtb:sourceDate'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:sourceEdition'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:sourcePublisher'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:sourceRights'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:sourceTitle'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:producer'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    <xsl:when test="@name = 'dtb:producedDate'">
+                        <meta property="{@name}" content="{@content}"/>
+                    </xsl:when>
+                    
+                    <xsl:when test="@name = 'dtb:revisionDescription'">
+                        <meta property="dcterms:description" content="{@content}" about="#meta-dcdate"/>
+                    </xsl:when>
+                </xsl:choose>
+                
             </xsl:for-each>
 
         </head>

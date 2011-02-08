@@ -997,5 +997,6 @@
         <file name="move-out-linegroup.xsl"/>
         <file name="normalize-block-inline.xsl"/>
         <file name="normalize-samp.xsl"/>
+        <file name="process-mods-meta.xsl"/>
     </projectTree>
 </project>

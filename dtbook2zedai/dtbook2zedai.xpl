@@ -44,8 +44,6 @@
         </p:input>
     </p:validate-with-relax-ng>
     
-    
-    
     <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
        
@@ -65,7 +63,7 @@
        </p:xslt>
        
        <!-- move linegroups out from elements which must not contain them once converted to zedai -->
-       <!-- This XSL needs to be written; will base it on move-out-imggroup when that's working -->
+       <!-- TODO: review this approach; linegroups are very selectively used in ZedAI -->
        <p:xslt name="move-out-linegroup" use-when="0">
            <p:input port="stylesheet">
                <p:document href="./move-out-linegroup.xsl"/>
@@ -98,12 +96,16 @@
    
     
     <!-- Translate element and attribute names from DTBook to ZedAI -->
+    <!-- TODO: a parallel transformation that creates a MODS recordset (see process-mods-meta.xsl) -->
     <p:xslt name="translate-dtbook2zedai"> 
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>
     </p:xslt>
     
+    <!-- TODO: scrape the ZedAI output for CSS attributes; then remove them from the ZedAI file.
+    The reason we can't do this in parallel with the main ZedAI transformation step (above) is that too much
+    could potentially change wrt elements (and subsequently, their IDs) to generate an accurate CSS file.-->
     
     
     <!-- Validate the ZedAI output -->
