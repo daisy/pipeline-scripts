@@ -32,6 +32,8 @@
              
     </p:variable>
     
+    <p:variable name="mods-file" select="if (ends-with($zedai-file, '.xml')) then replace($zedai-file, '.xml', '-mods.xml')
+                                         else concat($zedai-file, '-mods.xml')"/>
     
     <cx:message>
         <p:with-option name="message" select="$zedai-file"/>
@@ -43,6 +45,16 @@
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
+    
+    <!-- create MODS metadata record -->
+    <p:xslt name="create-mods">
+        <p:input port="stylesheet">
+            <p:document href="./process-mods-meta.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:store>
+        <p:with-option name="href" select="$mods-file"/>
+    </p:store>
     
     <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
@@ -59,6 +71,9 @@
        <p:xslt name="normalize-samp">
            <p:input port="stylesheet">
                <p:document href="./normalize-samp.xsl"/>
+           </p:input>
+           <p:input port="source">
+               <p:pipe step="validate-dtbook" port="result"/>
            </p:input>
        </p:xslt>
        
@@ -93,11 +108,10 @@
        </p:xslt>
        
     </p:group>
-   
     
     <!-- Translate element and attribute names from DTBook to ZedAI -->
-    <!-- TODO: a parallel transformation that creates a MODS recordset (see process-mods-meta.xsl) -->
-    <p:xslt name="translate-dtbook2zedai"> 
+    <p:xslt name="translate-dtbook2zedai">
+        <p:with-param name="mods-filename" select="$mods-file"/>
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>

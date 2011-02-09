@@ -15,12 +15,12 @@
         </xd:desc>
     </xd:doc>
 
+    <xsl:param name="mods-filename"/>
+    
     <xsl:output indent="yes" method="xml"/>
-
+    
     <xsl:template match="/">
         <!-- just for testing: insert the oxygen stylesheet -->
-        <!-- this way, the oxygen editor validates.  however, this doesn't do anything useful until you save the document, because it's a relative path.
-            so, when the main xproc's p:store step gets sorted out, then this will be meaningful -->
         <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
@@ -117,10 +117,9 @@
                 
             </xsl:for-each>
             
-            <!-- TODO: Right now, the MODS fileset is assumed to exist -->
-            <meta rel="z3986:meta-record" resource="TODO_MODS_FILENAME.xml">
-                <meta property="z3986:meta-record-type" about="TODO_MODS_FILENAME.xml" content="z3986:mods" />
-                <meta property="z3986:meta-record-version" about="TODO_MODS_FILENAME.xml" content="3.3" />
+            <meta rel="z3986:meta-record" resource="">
+                <meta property="z3986:meta-record-type" about="$mods-filename" content="z3986:mods" />
+                <meta property="z3986:meta-record-version" about="$mods-filename" content="3.3" />
             </meta>   
         </head>
 
