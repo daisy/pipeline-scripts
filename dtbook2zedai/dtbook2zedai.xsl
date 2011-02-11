@@ -74,7 +74,7 @@
                         <meta property="dcterms:creator" content="{@content}"/>
                     </xsl:when>
                     <xsl:when test="@name = 'dc:Date'">
-                        <meta property="dcterms:date" content="{@content}" id="meta-dcdate"/>
+                        <meta property="dcterms:date" content="{@content}" xml:id="meta-dcdate"/>
                     </xsl:when>
                     <xsl:when test="@name = 'dc:Publisher'">
                         <meta property="dcterms:publisher" content="{@content}"/>
