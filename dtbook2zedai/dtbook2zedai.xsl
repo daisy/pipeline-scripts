@@ -16,14 +16,19 @@
     </xd:doc>
 
     <xsl:param name="mods-filename"/>
+    <xsl:param name="css-filename"/>
     
     <xsl:output indent="yes" method="xml"/>
     
     <xsl:template match="/">
-        <!-- just for testing: insert the oxygen stylesheet -->
+        <!-- just for testing: insert the oxygen schema reference -->
         <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
+        <xsl:processing-instruction name="xml-stylesheet">
+            href="<xsl:value-of select="$css-filename"/>"
+        </xsl:processing-instruction>
+        
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -240,8 +245,6 @@
 
     <xsl:template match="dtb:img">
 
-        <!-- TODO:  @height, @width belong in CSS -->
-
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
@@ -249,6 +252,14 @@
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
+            
+            <!-- height and width get put into CSS-->
+            <xsl:copy-of select="@height"/>
+            <xsl:copy-of select="@width"/>
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <description>
                 <xsl:value-of select="@alt"/>
             </description>
@@ -457,6 +468,8 @@
             <xsl:copy-of select="@cellpadding"/>
 
             <xsl:call-template name="attrs"/>
+            
+            <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="$tableID"/>
             </xsl:if>
@@ -489,7 +502,10 @@
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
             <xsl:copy-of select="@width"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </col>
     </xsl:template>
@@ -507,7 +523,10 @@
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
             <xsl:copy-of select="@width"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </colgroup>
     </xsl:template>
@@ -519,7 +538,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </thead>
     </xsl:template>
@@ -531,7 +553,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </tfoot>
     </xsl:template>
@@ -543,7 +568,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </tbody>
     </xsl:template>
@@ -555,7 +583,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </tr>
     </xsl:template>
@@ -579,7 +610,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
 
             <xsl:apply-templates/>
         </th>
@@ -599,7 +633,10 @@
             <!-- these will be put into a CSS file by a future XSL step -->
             <xsl:copy-of select="@align"/>
             <xsl:copy-of select="@valign"/>
-
+            <!-- generate an ID for use by CSS -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </td>
     </xsl:template>

@@ -170,7 +170,7 @@
         </accessCondition>
     </xsl:template>
 
-    <!-- identity template -->
+    <!-- identity template which discards everything -->
     <xsl:template match="@*|node()">
         <xsl:apply-templates select="@*|node()"/>
     </xsl:template>

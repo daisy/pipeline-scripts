@@ -21,7 +21,7 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">alpha-preview-test-case/greatpainters.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/greatpainters-css.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -37,35 +37,13 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">mods</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">process-mods-meta.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">mods</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/greatpainters_meta.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
                                     <String xml:space="preserve">dtbook2zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook2zedai.xsl</String>
+                                    <String xml:space="preserve">dtbook_samples/greatpainters-modified.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -76,40 +54,7 @@
                                     <String xml:space="preserve">XSL</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/imggroups.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">move out imggroup</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">move-out-imggroup.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">move out imggroup</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">move-out-imggroup2.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">move out imggroup</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/greatpainters-imggroup.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/valid-imggroup.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -120,40 +65,7 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/greatpainters.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/mentalhealth.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">getallelements</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../sandbox/dtbook2zedai/getallelements.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/t.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -164,7 +76,7 @@
                                     <String xml:space="preserve">XML</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">../../../pdfreport/data2pdf.xsl</String>
+                                    <String xml:space="preserve">../../../pdfreport/generateReport/generateReport/transform.xsl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -186,7 +98,29 @@
                                     <String xml:space="preserve">XML</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">../../../pdfreport/generateReport/generateReport/transform.xsl</String>
+                                    <String xml:space="preserve">../../../pdfreport/data2pdf.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">getallelements</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../sandbox/dtbook2zedai/getallelements.xsl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -197,7 +131,7 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/greatpainters-modified.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/mentalhealth.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -208,7 +142,40 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/t.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/greatpainters.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">move out imggroup</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook_samples/greatpainters-imggroup.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">move out imggroup</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">move-out-imggroup2.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">move out imggroup</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">move-out-imggroup.xsl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -219,7 +186,51 @@
                                     <String xml:space="preserve">XSL</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook_samples/valid-imggroup.xml</String>
+                                    <String xml:space="preserve">dtbook_samples/imggroups.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook2zedai.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">mods</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook_samples/greatpainters_meta.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">mods</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">process-mods-meta.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">alpha-preview-test-case/greatpainters.xml</String>
                                 </field>
                             </scenarioAssociation>
                         </scenarioAssociation-array>
@@ -1176,15 +1187,17 @@
     <projectTree name="dtbook2zedai.xpr">
         <folder path="alpha-preview-test-case/"/>
         <folder path="dtbook_samples/"/>
-        <folder path="normalize-linegroup/"/>
         <folder path="schema/"/>
-        <file name="convert-br-to-ln.xsl"/>
         <file name="dtbook2zedai.xpl"/>
         <file name="dtbook2zedai.xsl"/>
-        <file name="move-out-imggroup.xsl"/>
-        <file name="move-out-linegroup.xsl"/>
+        <file name="generate-css.xsl"/>
+        <file name="generate-mods.xsl"/>
         <file name="normalize-block-inline.xsl"/>
+        <file name="normalize-br-to-ln.xsl"/>
+        <file name="normalize-imggroup.xsl"/>
+        <file name="normalize-linegroup.xsl"/>
+        <file name="normalize-linegroup-flatten.xsl"/>
         <file name="normalize-samp.xsl"/>
-        <file name="process-mods-meta.xsl"/>
+        <file name="remove-css-attributes.xsl"/>
     </projectTree>
 </project>

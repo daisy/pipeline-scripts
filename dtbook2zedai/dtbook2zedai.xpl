@@ -32,8 +32,9 @@
              
     </p:variable>
     
-    <p:variable name="mods-file" select="if (ends-with($zedai-file, '.xml')) then replace($zedai-file, '.xml', '-mods.xml')
-                                         else concat($zedai-file, '-mods.xml')"/>
+    <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
+    
+    <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
     
     <cx:message>
         <p:with-option name="message" select="$zedai-file"/>
@@ -49,7 +50,7 @@
     <!-- create MODS metadata record -->
     <p:xslt name="create-mods">
         <p:input port="stylesheet">
-            <p:document href="./process-mods-meta.xsl"/>
+            <p:document href="./generate-mods.xsl"/>
         </p:input>
     </p:xslt>
     <p:store>
@@ -60,9 +61,9 @@
    <p:group name="normalize-dtbook">
        
        <!-- sort out the linegroup content model -->
-       <p:xslt name="normalize-linegroups" use-when="0">
+       <p:xslt name="normalize-linegroup-flatten" use-when="0">
            <p:input port="stylesheet">
-               <p:document href="./normalize-linegroup/dtbook-linegroup-flatten.xsl"/>
+               <p:document href="./normalize-linegroup-flatten.xsl"/>
            </p:input>
            
        </p:xslt>
@@ -79,16 +80,16 @@
        
        <!-- move linegroups out from elements which must not contain them once converted to zedai -->
        <!-- TODO: review this approach; linegroups are very selectively used in ZedAI -->
-       <p:xslt name="move-out-linegroup" use-when="0">
+       <p:xslt name="normalize-linegroup" use-when="0">
            <p:input port="stylesheet">
-               <p:document href="./move-out-linegroup.xsl"/>
+               <p:document href="./normalize-linegroup.xsl"/>
            </p:input>
        </p:xslt>
         
        <!-- move imggroups out from elements which must not contain them once converted to zedai -->
-       <p:xslt name="move-out-imggroup">
+       <p:xslt name="normalize-imggroup">
            <p:input port="stylesheet">
-               <p:document href="./move-out-imggroup.xsl"/>
+               <p:document href="./normalize-imggroup.xsl"/>
            </p:input>
        </p:xslt>
        
@@ -101,9 +102,9 @@
        </p:xslt>
        
        <!-- convert br to ln -->
-       <p:xslt name="convert-br-to-ln">
+       <p:xslt name="normalize-br-to-ln">
            <p:input port="stylesheet">
-               <p:document href="./convert-br-to-ln.xsl"/>
+               <p:document href="./normalize-br-to-ln.xsl"/>
            </p:input>
        </p:xslt>
        
@@ -112,15 +113,29 @@
     <!-- Translate element and attribute names from DTBook to ZedAI -->
     <p:xslt name="translate-dtbook2zedai">
         <p:with-param name="mods-filename" select="$mods-file"/>
+        <p:with-param name="css-filename" select="$css-file"/>
         <p:input port="stylesheet">
             <p:document href="./dtbook2zedai.xsl"/>
         </p:input>
     </p:xslt>
     
-    <!-- TODO: scrape the ZedAI output for CSS attributes; then remove them from the ZedAI file.
-    The reason we can't do this in parallel with the main ZedAI transformation step (above) is that too much
-    could potentially change wrt elements (and subsequently, their IDs) to generate an accurate CSS file.-->
+    <p:xslt name="generate-css">
+        <p:input port="stylesheet">
+            <p:document href="./generate-css.xsl"/>
+        </p:input>   
+    </p:xslt>
+    <p:store>
+        <p:with-option name="href" select="$css-file"/>
+    </p:store> 
     
+    <p:xslt name="remove-css-attributes">
+        <p:input port="stylesheet">
+            <p:document href="./remove-css-attributes.xsl"/>
+        </p:input>
+        <p:input port="source">
+            <p:pipe step="translate-dtbook2zedai" port="result"/>
+        </p:input>
+    </p:xslt>
     
     <!-- Validate the ZedAI output -->
     <p:validate-with-relax-ng assert-valid="false" name="validate-zedai" use-when="0">
