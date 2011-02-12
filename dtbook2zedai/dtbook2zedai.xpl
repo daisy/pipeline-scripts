@@ -119,6 +119,7 @@
         </p:input>
     </p:xslt>
     
+    
     <p:xslt name="generate-css">
         <p:input port="stylesheet">
             <p:document href="./generate-css.xsl"/>
@@ -136,6 +137,7 @@
             <p:pipe step="translate-dtbook2zedai" port="result"/>
         </p:input>
     </p:xslt>
+    
     
     <!-- Validate the ZedAI output -->
     <p:validate-with-relax-ng assert-valid="false" name="validate-zedai" use-when="0">
