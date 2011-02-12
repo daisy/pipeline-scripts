@@ -78,13 +78,7 @@
            </p:input>
        </p:xslt>
        
-       <!-- move linegroups out from elements which must not contain them once converted to zedai -->
-       <!-- TODO: review this approach; linegroups are very selectively used in ZedAI -->
-       <p:xslt name="normalize-linegroup" use-when="0">
-           <p:input port="stylesheet">
-               <p:document href="./normalize-linegroup.xsl"/>
-           </p:input>
-       </p:xslt>
+       <!-- TODO: normalize linegroups -->
         
        <!-- move imggroups out from elements which must not contain them once converted to zedai -->
        <p:xslt name="normalize-imggroup">

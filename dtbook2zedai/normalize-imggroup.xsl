@@ -14,9 +14,6 @@
     
     <xsl:output indent="yes" method="xml"/>
 
-
-    <!-- TODO: parametrize this so it can be used for linegroup too -->
-    
     <xsl:template match="/">
        
         <xsl:message>start</xsl:message>

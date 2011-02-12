@@ -8,18 +8,6 @@
 
     <!-- create MODS output from metadata in a DTBook document-->
 
-    <!-- TODO
-        
-        * process more than one dtb:producer 
-        * match the following:
-            - dc:Date (how different from originInfo & dtb:producedDate)
-            - dc:Publisher (how different from originInfo & dtb:producer)
-            - dc:Format
-            - dc:Source when @scheme is not 'isbn'
-            - dc:Relation
-            - dc:Coverage (DAISY 2005 standard notes 'not expected in DTBs')
-    -->
-
     <xsl:template match="/">
         <mods xmlns="http://www.loc.gov/mods/v3" version="3.3">
             <xsl:apply-templates/>
