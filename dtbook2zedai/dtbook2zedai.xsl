@@ -123,8 +123,8 @@
             </xsl:for-each>
             
             <meta rel="z3986:meta-record" resource="">
-                <meta property="z3986:meta-record-type" about="$mods-filename" content="z3986:mods" />
-                <meta property="z3986:meta-record-version" about="$mods-filename" content="3.3" />
+                <meta property="z3986:meta-record-type" about="{$mods-filename}" content="z3986:mods" />
+                <meta property="z3986:meta-record-version" about="{$mods-filename}" content="3.3" />
             </meta>   
         </head>
 

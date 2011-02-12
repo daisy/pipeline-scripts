@@ -124,7 +124,7 @@
             <p:document href="./generate-css.xsl"/>
         </p:input>   
     </p:xslt>
-    <p:store>
+    <p:store method="text">
         <p:with-option name="href" select="$css-file"/>
     </p:store> 
     
