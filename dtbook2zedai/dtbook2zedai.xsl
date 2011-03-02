@@ -220,7 +220,7 @@
             </xsl:if>
 
             <xsl:if test="@type = 'pl'">
-                <xsl:attribute name="rend:prefix">none</xsl:attribute>
+                <!-- no attributes added for type='pl' -->
             </xsl:if>
             <xsl:if test="@type = 'ul'">
                 <xsl:attribute name="type">unordered</xsl:attribute>
@@ -375,23 +375,10 @@
     </xsl:template>
 
     <xsl:template match="dtb:code">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <code>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </code>
-            </xsl:otherwise>
-        </xsl:choose>
+        <code>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </code>
     </xsl:template>
 
     <xsl:template match="dtb:pagenum">
@@ -401,67 +388,24 @@
     </xsl:template>
 
     <xsl:template match="dtb:noteref">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="local-name() = 'q' and ($parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w')">
-                <!-- TODO: warn about loss of data -->
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <noteref ref="{replace(@idref, '#', '')}">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:value-of select="."/>
-                </noteref>
-            </xsl:otherwise>
-        </xsl:choose>
+        <noteref ref="{replace(@idref, '#', '')}">
+            <xsl:call-template name="attrs"/>
+            <xsl:value-of select="."/>
+        </noteref>
     </xsl:template>
 
     <xsl:template match="dtb:annoref">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="local-name() = 'q' and ($parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w')">
-                <!-- TODO: warn about loss of data -->
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <annoref ref="{replace(@idref, '#', '')}">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:value-of select="."/>
-                </annoref>
-            </xsl:otherwise>
-        </xsl:choose>
+        <annoref ref="{replace(@idref, '#', '')}">
+            <xsl:call-template name="attrs"/>
+            <xsl:value-of select="."/>
+        </annoref>
     </xsl:template>
 
     <xsl:template match="dtb:blockquote|dtb:q">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="local-name() = 'q' and ($parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w')">
-                <!-- TODO: warn about loss of data -->
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-
-                <quote>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </quote>
-            </xsl:otherwise>
-        </xsl:choose>
+        <quote>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </quote>
     </xsl:template>
 
     <xsl:template match="dtb:rearmatter">
@@ -677,23 +621,11 @@
     </xsl:template>
 
     <xsl:template match="dtb:sent">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup'">
-                <span role="sentence">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <s>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </s>
-            </xsl:otherwise>
-        </xsl:choose>
+
+        <s>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </s>
     </xsl:template>
 
     <xsl:template match="dtb:address">
@@ -730,108 +662,53 @@
     <xsl:template match="dtb:cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span>
-                    <xsl:call-template name="attrs"/>
+        <citation>
+            <xsl:call-template name="attrs"/>
 
-                    <!-- if no ID, then give a new ID -->
-                    <xsl:choose>
-                        <xsl:when test="@id"/>
-                        <xsl:otherwise>
-                            <xsl:attribute name="id">
+            <!-- if no ID, then give a new ID -->
+            <xsl:choose>
+                <xsl:when test="@id"/>
+                <xsl:otherwise>
+                    <xsl:attribute name="id">
+                        <xsl:value-of select="$citeID"/>
+                    </xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:if test="./title">
+                <span property="title">
+                    <xsl:attribute name="about">
+                        <xsl:choose>
+                            <xsl:when test="@id">
+                                <xsl:value-of select="@id"/>
+                            </xsl:when>
+                            <xsl:otherwise>
                                 <xsl:value-of select="$citeID"/>
-                            </xsl:attribute>
-                        </xsl:otherwise>
-                    </xsl:choose>
-
-                    <xsl:if test="./title">
-                        <span property="title">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="@id">
-                                        <xsl:value-of select="@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:if>
-                    <xsl:if test="./author">
-                        <span property="author">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="@id">
-                                        <xsl:value-of select="@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:if>
-
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
                     <xsl:apply-templates/>
                 </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <citation>
-                    <xsl:call-template name="attrs"/>
-
-                    <!-- if no ID, then give a new ID -->
-                    <xsl:choose>
-                        <xsl:when test="@id"/>
-                        <xsl:otherwise>
-                            <xsl:attribute name="id">
+            </xsl:if>
+            <xsl:if test="./author">
+                <span property="author">
+                    <xsl:attribute name="about">
+                        <xsl:choose>
+                            <xsl:when test="@id">
+                                <xsl:value-of select="@id"/>
+                            </xsl:when>
+                            <xsl:otherwise>
                                 <xsl:value-of select="$citeID"/>
-                            </xsl:attribute>
-                        </xsl:otherwise>
-                    </xsl:choose>
-
-                    <xsl:if test="./title">
-                        <span property="title">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="@id">
-                                        <xsl:value-of select="@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:if>
-                    <xsl:if test="./author">
-                        <span property="author">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="@id">
-                                        <xsl:value-of select="@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:if>
-
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
                     <xsl:apply-templates/>
+                </span>
+            </xsl:if>
 
-                </citation>
-            </xsl:otherwise>
-        </xsl:choose>
+            <xsl:apply-templates/>
+
+        </citation>
     </xsl:template>
 
 
@@ -842,46 +719,22 @@
         </block>
     </xsl:template>
 
-    <xsl:template match="dtb:bdo">
-        <span its:dir="{@dir}">
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </span>
-    </xsl:template>
+
 
     <xsl:template match="dtb:acronym">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when test="$parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span>
-                    <xsl:choose>
-                        <xsl:when test="@pronounce = 'yes'">
-                            <xsl:attribute name="role">acronym</xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:attribute name="role">initialism</xsl:attribute>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <abbr>
-                    <!-- making an assumption: @pronounce has a default value of 'no' -->
-                    <xsl:choose>
-                        <xsl:when test="@pronounce = 'yes'">
-                            <xsl:attribute name="type">acronym</xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:attribute name="type">initialism</xsl:attribute>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </abbr>
-            </xsl:otherwise>
-        </xsl:choose>
+        <abbr>
+            <!-- making an assumption: @pronounce has a default value of 'no' -->
+            <xsl:choose>
+                <xsl:when test="@pronounce = 'yes'">
+                    <xsl:attribute name="type">acronym</xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="type">initialism</xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </abbr>
     </xsl:template>
 
     <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway) -->
@@ -905,21 +758,11 @@
 
 
     <xsl:template match="dtb:abbr">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when test="$parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span role="truncation">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <abbr type="truncation">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </abbr>
-            </xsl:otherwise>
-        </xsl:choose>
+
+        <abbr type="truncation">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </abbr>
     </xsl:template>
 
     <xsl:template match="dtb:sup">
@@ -939,7 +782,7 @@
     <xsl:template match="dtb:span">
         <span>
             <xsl:call-template name="attrs"/>
-            <!-- normalize-samp.xsl sometimes puts role='example' on some spans, so be sure to copy it -->
+            <!-- normalization steps sometimes put role='example' on some spans, so be sure to copy it -->
             <xsl:if test="@role">
                 <xsl:copy-of select="@role"/>
             </xsl:if>
@@ -948,30 +791,39 @@
     </xsl:template>
 
     <xsl:template match="dtb:w">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when test="$parentname = 'sub' or $parentname = 'sup'">
-                <span role="word">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <w>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </w>
-            </xsl:otherwise>
-        </xsl:choose>
+        <w>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </w>
     </xsl:template>
     <!-- end of elements that follow the same form -->
 
-    <xsl:template match="dtb:linegroup">
-        <lngroup>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </lngroup>
+    <xsl:template
+        match="dtb:annotation/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
+        dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
+        dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup | 
+        dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup">
+
+        <!-- TODO: copy attrs -->
+        <block>
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    <!-- wrap lines in paragraphs first to make them block-level elements -->
+                    <xsl:when test="name() = 'dtb:line'">
+                        <p>
+                            <xsl:apply-templates/>
+                        </p>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+        </block>
+
     </xsl:template>
+
+
     <xsl:template match="dtb:line">
         <ln>
             <xsl:call-template name="attrs"/>
@@ -980,71 +832,26 @@
     </xsl:template>
 
     <xsl:template match="dtb:kbd">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <code>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </code>
-            </xsl:otherwise>
-        </xsl:choose>
+
+        <code>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </code>
     </xsl:template>
 
     <xsl:template match="dtb:samp">
-        <xsl:variable name="parentname" select="local-name(parent::node())"/>
-        <xsl:choose>
-            <!-- parents of samp which require samp to be an inline example -->
-            <xsl:when
-                test="$parentname = 'a' or $parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'author' or
-                $parentname = 'bdo' or $parentname = 'bridgehead' or $parentname = 'byline' or $parentname = 'cite' or
-                $parentname = 'dateline' or $parentname = 'dd' or $parentname = 'dfn' or $parentname = 'dt' or $parentname = 'docauthor' or 
-                $parentname = 'doctitle' or $parentname = 'em' or $parentname = 'h1' or $parentname = 'h2' or $parentname = 'h3' or
-                $parentname = 'h4' or $parentname = 'h5' or $parentname = 'h6' or $parentname = 'hd' or $parentname = 'line' or
-                $parentname = 'p' or $parentname = 'q' or $parentname = 'samp' or $parentname = 'sent' or $parentname = 'span' or 
-                $parentname = 'strong' or $parentname = 'sub' or $parentname = 'sup' or $parentname = 'title' or $parentname = 'w'">
-                <span role="example">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <!-- else the parent allows block children -->
-            <xsl:otherwise>
-                <block role="example">
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </block>
-            </xsl:otherwise>
-        </xsl:choose>
 
+        <block role="example">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </block>
     </xsl:template>
 
     <xsl:template match="dtb:dfn">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <term>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </term>
-            </xsl:otherwise>
-        </xsl:choose>
+        <term>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </term>
     </xsl:template>
 
     <xsl:template match="dtb:poem">
@@ -1052,66 +859,59 @@
     </xsl:template>
 
     <xsl:template match="dtb:a">
-        <xsl:variable name="parentname" select="local-name(parent::node)"/>
-        <xsl:choose>
-            <xsl:when
-                test="$parentname = 'abbr' or $parentname = 'acronym' or $parentname = 'dt' or 
-                $parentname = 'sub' or $parentname = 'sup' or $parentname = 'w'">
-                <!-- TODO: warn about loss of data -->
-                <span>
-                    <xsl:call-template name="attrs"/>
-                    <xsl:apply-templates/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <ref>
-                    <xsl:if test="@href">
-                        <xsl:choose>
-                            <xsl:when test="@external='false'">
-                                <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:attribute name="xlink:href" select="@href"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+        <ref>
+            <xsl:if test="@href">
+                <xsl:choose>
+                    <xsl:when test="@external='false'">
+                        <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:otherwise>
+                </xsl:choose>
 
-                    </xsl:if>
-                    <xsl:copy-of select="@rev"/>
-                    <xsl:copy-of select="@rel"/>
+            </xsl:if>
+            <xsl:copy-of select="@rev"/>
+            <xsl:copy-of select="@rel"/>
 
-                    <xsl:apply-templates/>
+            <xsl:apply-templates/>
 
-                </ref>
-
-            </xsl:otherwise>
-        </xsl:choose>
+        </ref>
     </xsl:template>
 
     <xsl:template match="dtb:dl">
         <!-- assumption: definition lists are unordered -->
         <list type="unordered">
             <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
+
+            <xsl:for-each-group select="*|text()[normalize-space()]" group-starting-with="dtb:dt">
+                <item>
+                    <xsl:for-each select="current-group()">
+                        <xsl:choose>
+                            <xsl:when test="name() = 'dt'">
+                                <term>
+                                    <xsl:call-template name="attrs"/>
+                                    <xsl:apply-templates/>
+                                </term>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dd'">
+                                <definition>
+                                    <xsl:call-template name="attrs"/>
+                                    <xsl:apply-templates/>
+                                </definition>
+                            </xsl:when>
+                            
+                        </xsl:choose>
+                          
+                    </xsl:for-each>
+                </item>
+            </xsl:for-each-group>
+
+
         </list>
     </xsl:template>
 
-    <xsl:template match="dtb:dt">
-        <term>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </term>
-    </xsl:template>
 
-    <xsl:template match="dtb:dd">
-        <definition>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </definition>
-    </xsl:template>
-
-    <xsl:template match="dtb:lic">
-        <!-- TODO -->
-    </xsl:template>
 
     <xsl:template match="dtb:linenum">
         <lnum>

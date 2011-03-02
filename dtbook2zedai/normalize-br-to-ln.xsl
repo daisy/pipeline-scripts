@@ -16,7 +16,8 @@
     <xsl:template match="dtb:a[dtb:br] | dtb:author[dtb:br] | dtb:bdo[dtb:br] | dtb:bridgehead[dtb:br] | dtb:byline[dtb:br] | 
         dtb:cite[dtb:br] | dtb:dateline[dtb:br] | dtb:dd[dtb:br] | dtb:dfn[dtb:br] | dtb:docauthor[dtb:br] | dtb:doctitle[dtb:br] | 
         dtb:dt[dtb:br] | dtb:em[dtb:br] | dtb:h1[dtb:br] | dtb:h2[dtb:br] | dtb:h3[dtb:br] | dtb:h4[dtb:br] | dtb:h5[dtb:br] | 
-        dtb:h6[dtb:br] | dtb:hd[dtb:br] | dtb:p[dtb:br] | dtb:sent[dtb:br] | dtb:span[dtb:br] | dtb:strong[dtb:br] | dtb:title[dtb:br]">
+        dtb:h6[dtb:br] | dtb:hd[dtb:br] | dtb:p[dtb:br] | dtb:sent[dtb:br] | dtb:span[dtb:br] | dtb:strong[dtb:br] | dtb:title[dtb:br] | 
+        dtb:line[dtb:br]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
 
@@ -25,7 +26,6 @@
 
                     <xsl:element name="ln" namespace="http://www.daisy.org/z3986/2005/dtbook/">
                         <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
-
                     </xsl:element>
                 </xsl:if>
 

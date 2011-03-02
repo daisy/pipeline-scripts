@@ -60,14 +60,6 @@
     <!-- Normalize DTBook content model -->
    <p:group name="normalize-dtbook">
        
-       <!-- sort out the linegroup content model -->
-       <p:xslt name="normalize-linegroup-flatten" use-when="0">
-           <p:input port="stylesheet">
-               <p:document href="./normalize-linegroup-flatten.xsl"/>
-           </p:input>
-           
-       </p:xslt>
-       
        <!-- normalize nested samps -->
        <p:xslt name="normalize-samp">
            <p:input port="stylesheet">
@@ -78,15 +70,20 @@
            </p:input>
        </p:xslt>
        
-       <!-- TODO: normalize linegroups -->
-        
+       <!-- preprocess certain nested elements by making them into spans -->
+       <p:xslt name="normalize-inline-special">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-inline-special.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+      
        <!-- move imggroups out from elements which must not contain them once converted to zedai -->
        <p:xslt name="normalize-imggroup">
            <p:input port="stylesheet">
                <p:document href="./normalize-imggroup.xsl"/>
            </p:input>
        </p:xslt>
-       
        
        <!-- normalize mixed block/inline content models -->
        <p:xslt name="normalize-block-inline">
@@ -114,12 +111,12 @@
     </p:xslt>
     
     
-    <p:xslt name="generate-css">
+    <p:xslt name="generate-css" use-when="0">
         <p:input port="stylesheet">
             <p:document href="./generate-css.xsl"/>
         </p:input>   
     </p:xslt>
-    <p:store method="text">
+    <p:store method="text" use-when="0">
         <p:with-option name="href" select="$css-file"/>
     </p:store> 
     
