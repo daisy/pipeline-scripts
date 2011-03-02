@@ -233,6 +233,11 @@
         </list>
     </xsl:template>
 
+    <xsl:template match="dtb:li/dtb:hd">
+        <item>
+            <xsl:apply-templates select="."/>
+        </item>
+    </xsl:template>
     <xsl:template match="dtb:li">
         <item>
             <xsl:call-template name="attrs"/>

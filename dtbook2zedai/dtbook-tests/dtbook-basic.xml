@@ -32,6 +32,7 @@
                         platform-neutral standards (and off-the-shelf implementations of those
                         standards) at the heart of a comprehensive framework, which will:</sent>
                     <list type="ul">
+                        <hd>The Heading For The List</hd>
                         <li>minimize the development and maintenance cost, allowing developers to
                             ultimately focus more on actual transformations rather than the engine
                             that drives the transformations.</li>
