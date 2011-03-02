@@ -747,9 +747,11 @@
         <file name="generate-mods.xsl"/>
         <file name="normalize-block-inline.xsl"/>
         <file name="normalize-br-to-ln.xsl"/>
+        <file name="normalize-deflist-in-para.xsl"/>
         <file name="normalize-generic-moveout.xsl"/>
         <file name="normalize-imggroup.xsl"/>
         <file name="normalize-inline-special.xsl"/>
+        <file name="normalize-list-in-para.xsl"/>
         <file name="normalize-samp.xsl"/>
         <file name="remove-css-attributes.xsl"/>
     </projectTree>

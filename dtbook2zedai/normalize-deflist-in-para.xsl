@@ -7,22 +7,20 @@
     
     <xsl:output indent="yes" method="xml"/>
     
-    <xsl:param name="invalid-parents-A" select="tokenize('a,abbr,acronym,author,bdo,bridgehead,byline,cite,dateline,dd,dt,dfn,docauthor,doctitle,em,
-        line,linegroup,p,q,sent,span,strong,sub,sup,title,w', ',')"/>
+    <xsl:param name="invalid-parents-A" select="'p'"/>
     
-    <xsl:param name="invalid-parents-B" select="tokenize('h1,h2,h3,h4,h5,h6,hd', ',')"/>
+    <xsl:param name="invalid-parents-B"></xsl:param>
     
-    <xsl:param name="alternative" select="'p'"/>
+    <xsl:param name="alternative" select="'na'"/>
     
-    <xsl:param name="target-element" select="'imggroup'"/>
+    <xsl:param name="target-element" select="'dl'"/>
     
     <xsl:param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code,
         kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')"/>
-    
-    
+     
     <xsl:template match="/">
         
-        <xsl:message>normalize-imggroup</xsl:message>
+        <xsl:message>normalize-deflist-in-para</xsl:message>
         <xsl:call-template name="test-and-move">
             <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
         </xsl:call-template>

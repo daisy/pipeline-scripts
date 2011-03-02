@@ -228,16 +228,21 @@
             <xsl:if test="@type = 'ol'">
                 <xsl:attribute name="type">ordered</xsl:attribute>
             </xsl:if>
+            
             <xsl:apply-templates/>
-
         </list>
     </xsl:template>
 
-    <xsl:template match="dtb:li/dtb:hd">
+
+    <xsl:template match="dtb:list/dtb:hd">
         <item>
-            <xsl:apply-templates select="."/>
+            <hd>
+                <xsl:call-template name="attrs"/>
+                <xsl:apply-templates/>
+            </hd>
         </item>
     </xsl:template>
+
     <xsl:template match="dtb:li">
         <item>
             <xsl:call-template name="attrs"/>

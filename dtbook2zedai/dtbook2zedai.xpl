@@ -85,6 +85,20 @@
            </p:input>
        </p:xslt>
        
+       <!-- move lists out of paragraphs -->
+       <p:xslt name="normalize-list-in-para">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-list-in-para.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <!-- move definition lists out of paragraphs -->
+       <p:xslt name="normalize-deflist-in-para">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-deflist-in-para.xsl"/>
+           </p:input>
+       </p:xslt>
+       
        <!-- normalize mixed block/inline content models -->
        <p:xslt name="normalize-block-inline">
            <p:input port="stylesheet">
