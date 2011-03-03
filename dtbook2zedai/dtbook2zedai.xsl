@@ -228,7 +228,7 @@
             <xsl:if test="@type = 'ol'">
                 <xsl:attribute name="type">ordered</xsl:attribute>
             </xsl:if>
-            
+
             <xsl:apply-templates/>
         </list>
     </xsl:template>
@@ -893,35 +893,60 @@
         <!-- assumption: definition lists are unordered -->
         <list type="unordered">
             <xsl:call-template name="attrs"/>
-
-            <xsl:for-each-group select="*|text()[normalize-space()]" group-starting-with="dtb:dt">
-                <item>
-                    <xsl:for-each select="current-group()">
-                        <xsl:choose>
-                            <xsl:when test="name() = 'dt'">
-                                <term>
-                                    <xsl:call-template name="attrs"/>
-                                    <xsl:apply-templates/>
-                                </term>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dd'">
-                                <definition>
-                                    <xsl:call-template name="attrs"/>
-                                    <xsl:apply-templates/>
-                                </definition>
-                            </xsl:when>
-                            
-                        </xsl:choose>
-                          
-                    </xsl:for-each>
-                </item>
-            </xsl:for-each-group>
-
-
+            <xsl:apply-templates/>
         </list>
     </xsl:template>
 
+    <xsl:template match="dtb:item">
+        <item>
+            <xsl:apply-templates/>
+        </item>
+    </xsl:template>
 
+    <xsl:variable name="definition-list-block-elems"
+        select="tokenize('list,dl,div,poem,linegroup,table,sidebar,note,epigraph', ',')"/>
+
+    <xsl:template match="dtb:dd">
+        <xsl:choose>
+            <!-- when it has a block-level sibling, wrap in a p element -->
+            <xsl:when
+                test="preceding-sibling::*/name() = $definition-list-block-elems or following-sibling::*/name() = $definition-list-block-elems">
+                <p>
+                    <definition>
+                        <xsl:call-template name="attrs"/>
+                        <xsl:apply-templates/>
+                    </definition>
+                </p>
+            </xsl:when>
+            <xsl:otherwise>
+                <definition>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </definition>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="dtb:dt">
+        <xsl:choose>
+            <!-- when it has a block-level sibling, wrap in a p element -->
+            <xsl:when
+                test="preceding-sibling::*/name() = $definition-list-block-elems or following-sibling::*/name() = $definition-list-block-elems">
+                <p>
+                    <term>
+                        <xsl:call-template name="attrs"/>
+                        <xsl:apply-templates/>
+                    </term>
+                </p>
+            </xsl:when>
+            <xsl:otherwise>
+                <term>
+                    <xsl:call-template name="attrs"/>
+                    <xsl:apply-templates/>
+                </term>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <xsl:template match="dtb:linenum">
         <lnum>

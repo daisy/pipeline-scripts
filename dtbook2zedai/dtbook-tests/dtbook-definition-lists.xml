@@ -21,6 +21,8 @@
                 <h1>Some terminology</h1>
                 <p><sent>Vocabulary list:</sent>
                     <dl>
+                        <dd>TESTING NEVER STOPS</dd>
+                        <dt>I AM A TEST!</dt>
                         <dt>Audio NCX</dt>
                         <dd>Refers to a DAISY book that contains the complete book as synchronized
                             audio, plus a table of contents (which could include page numbers,
@@ -45,6 +47,17 @@
                             Python.</dd>
                     </dl>
                 </p>
+                
+                <dl>
+                    <dt>data</dt>
+                    <dd>a term referring to numbers in tables: 
+                        <table>
+                            <tbody><tr><td>012345</td></tr></tbody>
+                        </table>
+                        Data is often sorted, compared, and accidentally deleted.</dd>
+                </dl>
+                
+                
             </level1>
         </bodymatter>
     </book>

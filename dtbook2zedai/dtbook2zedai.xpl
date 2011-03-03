@@ -99,6 +99,13 @@
            </p:input>
        </p:xslt>
        
+       <!-- move producer notes out of inline elements -->
+       <p:xslt name="normalize-prodnote">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-prodnote.xsl"/>
+           </p:input>
+       </p:xslt>
+       
        <!-- normalize mixed block/inline content models -->
        <p:xslt name="normalize-block-inline">
            <p:input port="stylesheet">
@@ -112,6 +119,21 @@
                <p:document href="./normalize-br-to-ln.xsl"/>
            </p:input>
        </p:xslt>
+       
+       <!-- normalize definition lists by organizing into groups of items -->
+       <p:xslt name="normalize-deflist-1">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-deflist-1.xsl"/>
+           </p:input>
+       </p:xslt>
+       
+       <!-- normalize definition lists by relocating illegal elements from definitions -->
+       <p:xslt name="normalize-deflist-2">
+           <p:input port="stylesheet">
+               <p:document href="./normalize-deflist-2.xsl"/>
+           </p:input>
+       </p:xslt>
+       
        
     </p:group>
     
