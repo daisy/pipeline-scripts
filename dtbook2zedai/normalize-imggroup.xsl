@@ -17,7 +17,7 @@
     <xsl:param name="target-element" select="'imggroup'"/>
     
     <xsl:param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code,
-        kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')"/>
+        kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,poem', ',')"/>
     
     
     <xsl:template match="/">

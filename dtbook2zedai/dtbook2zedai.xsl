@@ -864,10 +864,6 @@
         </term>
     </xsl:template>
 
-    <xsl:template match="dtb:poem">
-        <!-- TODO -->
-    </xsl:template>
-
     <xsl:template match="dtb:a">
         <ref>
             <xsl:if test="@href">
@@ -954,5 +950,212 @@
             <xsl:apply-templates/>
         </lnum>
     </xsl:template>
+
+    <xsl:template match="dtb:poem">
+        <block role="poem">
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    <xsl:when test="name() = 'title'">
+                        <p role="title">
+                            <xsl:call-template name="attrs"/>
+                            <xsl:apply-templates/>
+                        </p>
+                    </xsl:when>
+
+                    <xsl:when test="name() = 'author'">
+                        <p role="author">
+                            <xsl:call-template name="attrs"/>
+                            <xsl:apply-templates/>
+                        </p>
+                    </xsl:when>
+
+                    <!-- making line into a block-level element. should it be p/ln instead? -->
+                    <xsl:when test="name() = 'line'">
+                        <p>
+                            <xsl:apply-templates select="."/>
+                        </p>
+                    </xsl:when>
+
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+
+        </block>
+    </xsl:template>
+
+    <xsl:template match="dtb:code | dtb:kbd">
+        <xsl:variable name="block-level-contents"
+            select="tokenize('dfn,code,samp,kbd,cite,a,img,imggroup,q,sent,w,prodnote,annoref,noteref', ',')"/>
+
+        <code>
+            <xsl:choose>
+                <!-- have to block-ize everything, though there are special rules for code -->
+                <xsl:when test="child::*/name() = $block-level-contents">
+                    <xsl:for-each select="child::node()">
+                        <xsl:choose>
+                            <xsl:when test="name() = 'dtb:em' or name() = 'dtb:strong'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:dfn'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:code' or name() = 'dtb:kbd'">
+                                <block>
+                                    <xsl:apply-templates select="."/>
+                                </block>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:samp'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:cite'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:abbr'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:acronym'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:a'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:img'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:imggroup'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:q'">
+                                <block>
+                                    <xsl:apply-templates select="."/>
+                                </block>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:sub'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:sup'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:span' or name() = 'dtb:bdo'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:sent'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:w'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:pagenum'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:prodnote'">
+                                <block>
+                                    <xsl:apply-templates select="."/>
+                                </block>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:annoref'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:noteref'">
+                                <p>
+                                    <xsl:apply-templates select="."/>
+                                </p>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:br'">
+                                <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
+                            </xsl:when>
+
+                        </xsl:choose>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="child::node()">
+                        <xsl:choose>
+                            <xsl:when test="name() = 'dtb:em' or name() = 'dtb:strong'">
+                                <ln>
+                                    <xsl:apply-templates select="."/>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:abbr'">
+                                <ln>
+                                    <span role="truncation">
+                                        <xsl:call-template name="attrs"/>
+                                        <xsl:apply-templates/>
+                                    </span>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:acronym'">
+                                <ln>
+                                    <span>
+                                        <xsl:choose>
+                                            <xsl:when test="@pronounce = 'yes'">
+                                                <xsl:attribute name="role">acronym</xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="role"
+                                                  >initialism</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                        <xsl:call-template name="attrs"/>
+                                        <xsl:apply-templates/>
+                                    </span>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:br'"><!-- TODO --></xsl:when>
+                            <xsl:when test="name() = 'dtb:sub'">
+                                <ln>
+                                    <xsl:apply-templates select="."/>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:sup'">
+                                <ln>
+                                    <xsl:apply-templates select="."/>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:span' or name() = 'dtb:bdo'">
+                                <ln>
+                                    <xsl:apply-templates select="."/>
+                                </ln>
+                            </xsl:when>
+                            <xsl:when test="name() = 'dtb:pagenum'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
+
+            <!-- TODO: wrap raw text in ln or p -->
+
+        </code>
+    </xsl:template>
+
+
 
 </xsl:stylesheet>

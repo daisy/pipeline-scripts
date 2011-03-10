@@ -58,7 +58,7 @@
         
         <!-- select all target element descendants whose parents are not in the list of valid parent names -->
         <xsl:variable name="invalid-target-elements" 
-            select="$elem/descendant::*[local-name() = $target-element][empty(index-of($valid-parents, name(parent::node())))]"/>
+            select="$elem/descendant::*[local-name() = $target-element][not(name(parent::node()) = $valid-parents)]"/>
         
         <!-- test if there is a target element whose parent is not in the set of valid parents -->
         <xsl:value-of select="empty($invalid-target-elements)"/>
