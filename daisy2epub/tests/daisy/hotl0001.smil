@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 1.0//EN" "SMIL10.dtd">
+<smil>
+	<head>
+		<meta name="dc:format" content="Daisy 2.02"/>
+		<meta name="ncc:timeInThisSmil" content="00:00:07.197"/>
+		<meta name="ncc:totalElapsedTime" content="00:00:00.000"/>
+		<layout>
+			<region id="txt-view"/>
+		</layout>
+		<meta name="ncc:generator" content="EasePublisher 2.11 ビルド 134 # 044FSI210113561"/>
+    <meta name="title" content="ごん狐"/>
+    <meta name="dc:title" content="ごんぎつね"/>
+    <meta name="dc:identifier" content="81353847207-020"/>
+  </head>
+	<body>
+		<seq dur="7.197s">
+			<par endsync="last">
+				<text src="gonxhtml.html#dol_1_1_1_hotl_0001" id="hotl_0001"/>
+				<seq>
+					<audio src="hotl0002.mp3" clip-begin="npt=0.000s" clip-end="npt=3.399s" id="audio_0001"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml.html#dol_1_1_1_xhot_0001" id="xhot_0001"/>
+				<seq>
+					<audio src="hotl0002.mp3" clip-begin="npt=3.399s" clip-end="npt=7.197s" id="audio_0002"/>
+				</seq>
+			</par>
+		</seq>
+	</body>
+</smil>

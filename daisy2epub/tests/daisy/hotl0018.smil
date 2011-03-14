@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 1.0//EN" "SMIL10.dtd">
+<smil>
+	<head>
+		<meta name="dc:format" content="Daisy 2.02"/>
+		<meta name="ncc:timeInThisSmil" content="00:00:27.644"/>
+		<meta name="ncc:totalElapsedTime" content="00:18:46.492"/>
+		<layout>
+			<region id="txt-view"/>
+		</layout>
+		<meta name="ncc:generator" content="EasePublisher 2.11 ビルド 134 # 044FSI210113561"/>
+    <meta name="title" content="五"/>
+    <meta name="dc:title" content="ごんぎつね"/>
+    <meta name="dc:identifier" content="81353847207-020"/>
+  </head>
+	<body>
+		<seq dur="27.644s">
+			<par endsync="last">
+				<text src="gonxhtml21.html#dol_1_23_24_hotl_001d" id="dol_1_24_hotl_001d"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=0.000s" clip-end="npt=1.999s" id="audio_0001"/>
+				</seq>
+			</par>
+			<par endsync="last" id="dol_1_24_hotl_001e" system-required="pagenumber-on">
+				<text src="gonxhtml21.html#dol_1_23_24_hotl_001e" id="xhot_009c"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=1.999s" clip-end="npt=2.799s" id="audio_0002"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml21.html#dol_1_23_24_xhot_0098" id="xhot_0098"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=2.799s" clip-end="npt=9.799s" id="audio_0003"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml21.html#dol_1_23_24_xhot_0099" id="xhot_0099"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=9.799s" clip-end="npt=15.199s" id="audio_0004"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml21.html#dol_1_23_24_xhot_009a" id="xhot_009a"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=15.199s" clip-end="npt=22.199s" id="audio_0005"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml21.html#dol_1_23_24_xhot_009b" id="xhot_009b"/>
+				<seq>
+					<audio src="hotl002a.mp3" clip-begin="npt=22.199s" clip-end="npt=27.644s" id="audio_0006"/>
+				</seq>
+			</par>
+		</seq>
+	</body>
+</smil>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 1.0//EN" "SMIL10.dtd">
+<smil>
+	<head>
+		<meta name="dc:format" content="Daisy 2.02"/>
+		<meta name="ncc:timeInThisSmil" content="00:01:19.792"/>
+		<meta name="ncc:totalElapsedTime" content="00:21:36.853"/>
+		<layout>
+			<region id="txt-view"/>
+		</layout>
+		<meta name="ncc:generator" content="EasePublisher 2.11 ビルド 134 # 044FSI210113561"/>
+    <meta name="title" content="6-2"/>
+    <meta name="dc:title" content="ごんぎつね"/>
+    <meta name="dc:identifier" content="81353847207-020"/>
+  </head>
+	<body>
+		<seq dur="79.792s">
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_26_hotl_0022" id="dol_1_26_hotl_0022"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=0.000s" clip-end="npt=1.199s" id="audio_0001"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00ae" id="xhot_00ae"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=1.199s" clip-end="npt=12.799s" id="audio_0002"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00af" id="xhot_00af"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=12.799s" clip-end="npt=18.999s" id="audio_0003"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b0" id="xhot_00b0"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=18.999s" clip-end="npt=23.599s" id="audio_0004"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b1" id="xhot_00b1"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=23.599s" clip-end="npt=32.799s" id="audio_0005"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b2" id="xhot_00b2"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=32.799s" clip-end="npt=40.799s" id="audio_0006"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b3" id="xhot_00b3"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=40.799s" clip-end="npt=48.192s" id="audio_0007"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b4" id="xhot_00b4"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=48.192s" clip-end="npt=53.991s" id="audio_0008"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b5" id="xhot_00b5"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=53.991s" clip-end="npt=62.991s" id="audio_0009"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b6" id="xhot_00b6"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=62.991s" clip-end="npt=69.991s" id="audio_0010"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml24.html#dol_1_26_27_xhot_00b7" id="xhot_00b7"/>
+				<seq>
+					<audio src="hotl0072.mp3" clip-begin="npt=69.991s" clip-end="npt=79.792s" id="audio_0011"/>
+				</seq>
+			</par>
+		</seq>
+	</body>
+</smil>

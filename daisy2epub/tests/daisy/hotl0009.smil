@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 1.0//EN" "SMIL10.dtd">
+<smil>
+	<head>
+		<meta name="dc:format" content="Daisy 2.02"/>
+		<meta name="ncc:timeInThisSmil" content="00:00:55.798"/>
+		<meta name="ncc:totalElapsedTime" content="00:05:36.913"/>
+		<layout>
+			<region id="txt-view"/>
+		</layout>
+		<meta name="ncc:generator" content="EasePublisher 2.11 ビルド 134 # 044FSI210113561"/>
+    <meta name="title" content="1-8"/>
+    <meta name="dc:title" content="ごんぎつね"/>
+    <meta name="dc:identifier" content="81353847207-020"/>
+  </head>
+	<body>
+		<seq dur="55.798s">
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_hotl_000b" id="dol_1_9_hotl_000b"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=0.000s" clip-end="npt=0.799s" id="audio_0001"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_002c" id="xhot_002c"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=0.799s" clip-end="npt=12.799s" id="audio_0002"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_002d" id="xhot_002d"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=12.799s" clip-end="npt=22.199s" id="audio_0003"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_002e" id="xhot_002e"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=22.199s" clip-end="npt=28.199s" id="audio_0004"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_002f" id="xhot_002f"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=28.199s" clip-end="npt=37.598s" id="audio_0005"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_0030" id="xhot_0030"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=37.598s" clip-end="npt=41.398s" id="audio_0006"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_0031" id="xhot_0031"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=41.398s" clip-end="npt=48.797s" id="audio_0007"/>
+				</seq>
+			</par>
+			<par endsync="last">
+				<text src="gonxhtml7.html#dol_1_9_9_xhot_0032" id="xhot_0032"/>
+				<seq>
+					<audio src="hotl0038.mp3" clip-begin="npt=48.797s" clip-end="npt=55.798s" id="audio_0008"/>
+				</seq>
+			</par>
+		</seq>
+	</body>
+</smil>
