@@ -6,7 +6,7 @@
         xmlns:cx="http://xmlcalabash.com/ns/extensions"
         xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
         exclude-inline-prefixes="cx">
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    
     <!-- 
         
         This XProc script is the main entry point for the DTBook2ZedAI module.
@@ -19,6 +19,8 @@
     
     
     <p:option name="output" select="''"/>
+    
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
     <p:variable name="zedai-file"
         select="resolve-uri(
