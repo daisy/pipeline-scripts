@@ -6,9 +6,14 @@
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/">
     
-    <xsl:output method="text"/>
+    <xsl:output method="xml"/>
+    
+    <!-- TODO:
+        need an intermediate format that is "real xml".  this is just plain text css with a tag wrapper to make xproc happy.
+        -->
     
     <xsl:template match="/">
+        <css>
         <xsl:apply-templates select="//z:object"/>
         <xsl:apply-templates select="//z:table"/>
         <xsl:apply-templates select="//z:col"/>
@@ -19,7 +24,7 @@
         <xsl:apply-templates select="//z:thead"/>
         <xsl:apply-templates select="//z:tbody"/>
         <xsl:apply-templates select="//z:tfoot"/>
-        
+        </css>
     </xsl:template>
     
     <xsl:template match="z:object">

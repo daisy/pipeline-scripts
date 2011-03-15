@@ -103,8 +103,6 @@
 
     <xsl:template name="move-elem-out">
         <xsl:param name="elem-name-to-move"/>
-        <xsl:message>Moving child element: <xsl:value-of select="$elem-name-to-move"/></xsl:message>
-        <xsl:message>The element itself: <xsl:value-of select="."/></xsl:message>
         <xsl:variable name="elem" select="."/>
         <xsl:variable name="first-child" select="child::node()[1]"/>
 
@@ -132,8 +130,7 @@
                                             seems to correct the problem of it not being unique; however, this 
                                             is an issue that should be explored in-depth -->
                                 <xsl:variable name="tmp" select="concat(generate-id(), 'z')"/>
-                                <xsl:message>Generating ID <xsl:value-of select="$tmp"
-                                    /></xsl:message>
+                                
                                 <xsl:attribute name="id" select="$tmp"/>
                             </xsl:if>
                         </xsl:if>

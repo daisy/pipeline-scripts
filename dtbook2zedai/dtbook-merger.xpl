@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<p:declare-step version="1.0" name="dtbook2zedai" xmlns:p="http://www.w3.org/ns/xproc"
+<p:declare-step version="1.0" name="dtbook-merger" type="p2:dtbook-merger"
+    xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
@@ -18,7 +19,10 @@
 
     <p:input port="source" primary="true" sequence="true"/>
     <p:input port="parameters" kind="parameter"/>
-
+    <p:output port="result" primary="true">
+        <p:pipe port="result" step="validate-zedai"/>
+    </p:output>
+    
     <p:option name="output" select="''"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -30,7 +34,7 @@
 
         <p:iteration-source select="/"/>
 
-        <p:validate-with-relax-ng assert-valid="true">
+        <p:validate-with-relax-ng>
             <p:input port="schema">
                 <p:document href="./schema/dtbook-2005-3.rng"/>
             </p:input>
@@ -201,7 +205,10 @@
         </p:input>
     </p:xslt>
 
-    <p:store>
-        <p:with-option name="href" select="'/Users/marisa/test.xml'"/>
-    </p:store>
+    <p:validate-with-relax-ng name="validate-zedai">
+        <p:input port="schema">
+            <p:document href="./schema/dtbook-2005-3.rng"/>
+        </p:input>
+    </p:validate-with-relax-ng>
+    
 </p:declare-step>

@@ -131,7 +131,7 @@
                                             seems to correct the problem of it not being unique; however, this 
                                             is an issue that should be explored in-depth -->
                                         <xsl:variable name="tmp" select="concat(generate-id(), 'z')"/>
-                                        <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
+                                        
                                         <xsl:attribute name="id" select="$tmp"/>
                                     </xsl:if>
                                 </xsl:if>
@@ -162,7 +162,7 @@
                                             don't copy the node's ID since then it will result in many nodes with the same ID -->
                                         <xsl:if test="$elem/@id">
                                             <xsl:variable name="tmp" select="generate-id()"/>
-                                            <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
+                                            
                                             <!-- modifying the result of generate-id() by adding a character to the end
                                                 seems to correct the problem of it not being unique; however, this 
                                                 is an issue that should be explored in-depth -->
