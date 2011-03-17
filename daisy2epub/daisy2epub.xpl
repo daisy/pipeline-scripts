@@ -1,397 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:opf="http://www.idpf.org/2007/opf" version="1.0">
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
+    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    xmlns:opf="http://www.idpf.org/2007/opf" version="1.0">
 
-    <p:output port="result">
-        <p:pipe port="result" step="epub-media-overlay"/>
-    </p:output>
+    <p:option name="href" required="true"/>
+    <p:option name="output" select="''"/>
 
-    <p:option name="nccFile" required="true"/>
-    <p:option name="outDir" required="true"/>
-
+    <p:import href="fileset-library.xpl"/>
     <p:import href="daisy2epub-library.xpl"/>
+    <p:import href="flow.xpl"/>
+    <p:import href="navigation.xpl"/>
+    <p:import href="media-overlay.xpl"/>
+    <p:import href="contents.xpl"/>
+    <p:import href="resources.xpl"/>
+    <p:import href="metadata.xpl"/>
+    <p:import href="manifest.xpl"/>
+    <p:import href="spine.xpl"/>
+    <p:import href="package.xpl"/>
+    <p:import href="container.xpl"/>
 
-    <p:variable name="nccPath" select="p:resolve-uri($nccFile,base-uri())">
-        <p:document href="daisy2epub.xpl"/>
+    <p:variable name="daisy-dir" select="replace(p:resolve-uri($href),'[^/]+$','')">
+        <p:inline>
+            <irrelevant/>
+        </p:inline>
     </p:variable>
-    <p:variable name="inPath" select="replace($nccPath,'[^/]+$','')">
-        <p:document href="daisy2epub.xpl"/>
+    <p:variable name="epub-file"
+        select="p:resolve-uri(
+                if ($output='') then concat(
+                    if (matches($href,'[^/]+\..+$'))
+                    then replace(tokenize($href,'/')[last()],'\..+$','')
+                    else tokenize($href,'/')[last()],'.epub')
+                else if (ends-with($output,'.epub')) then $output 
+                else concat($output,'.epub'))">
+        <p:inline>
+            <irrelevant/>
+        </p:inline>
     </p:variable>
-    <p:variable name="outPath"
-        select="replace(p:resolve-uri(concat($outDir,'/'),base-uri()),'[^/]+$','')">
-        <p:document href="daisy2epub.xpl"/>
-    </p:variable>
+    <p:variable name="epub-dir" select="p:resolve-uri('epub/',$epub-file)"/>
+    <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
-    <p:group name="daisy-ncc">
-        <p:documentation><![CDATA[
-            Loads and returns ncc.html as valid XHTML.
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <d2e:load-html name="result">
-            <p:with-option name="href" select="$nccPath"/>
-        </d2e:load-html>
-    </p:group>
-    <p:sink/>
 
-    <p:group name="daisy-flow">
+    <d2e:load-html name="ncc">
         <p:documentation><![CDATA[
-            Returns:
-            <c:body>
-                <c:file href="..."/>
-                <c:file href="..."/>
-                <c:file href="..."/>
-            </c:body>
-            Depends on "daisy-ncc"
+            read ncc.html
+            primary output: result
         ]]></p:documentation>
-        <p:output port="result"/>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-ncc"/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="daisy-ncc2flow.xsl"/>
-            </p:input>
-        </p:xslt>
-    </p:group>
+        <p:with-option name="href" select="p:resolve-uri($href)">
+            <p:inline>
+                <irrelevant/>
+            </p:inline>
+        </p:with-option>
+    </d2e:load-html>
     <p:sink/>
 
-    <p:group name="daisy-spine">
-        <p:documentation><![CDATA[
-            Returns:
-            <c:body>
-                <c:file href="..."/>
-                <c:file href="..."/>
-                <c:file href="..."/>
-            </c:body>
-            Depends on "daisy-flow"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:identity>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-flow"/>
-            </p:input>
-        </p:identity>
-        <p:for-each>
-            <p:iteration-source select="//c:file"/>
-            <p:variable name="href" select="/*/@href"/>
-            <p:load>
-                <p:with-option name="href" select="concat($inPath,$href)"/>
-            </p:load>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="smil-to-spinepart.xsl"/>
-                </p:input>
-            </p:xslt>
-        </p:for-each>
-        <p:wrap-sequence wrapper="c:result"/>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="spineparts-to-spine.xsl"/>
-            </p:input>
-        </p:xslt>
-    </p:group>
-    <p:sink/>
-    
-    <p:group name="daisy-resources">
-        <p:documentation><![CDATA[
-            Returns:
-            <c:body>
-                <c:file href="..."/>
-                <c:file href="..."/>
-                <c:file href="..."/>
-            </c:body>
-            Depends on "daisy-flow" and "daisy-spine"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <!-- TODO -->
-        <p:identity>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-flow"/>
-            </p:input>
-        </p:identity>
-    </p:group>
-    <p:sink/>
-    
-    <p:group name="epub-navigation">
-        <p:documentation><![CDATA[
-            Makes the Navigation Document based purely on ncc.html.
-            Depends on "daisy-ncc"
-         ]]></p:documentation>
-        <p:output port="store-complete" primary="false">
-            <p:pipe port="result" step="store"/>
-        </p:output>
-        <p:xslt>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-ncc"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="ncc-to-navigation.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:store name="store">
-            <p:with-option name="href" select="concat($outPath,'navigation.xhtml')"/>
-        </p:store>
-    </p:group>
-
-    <p:group name="epub-metadata">
-        <p:documentation><![CDATA[
-            Depends on "daisy-flow"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:xslt name="ncc-metadata">
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-ncc"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="ncc-to-metadata.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:sink/>
-        <p:for-each name="smil-metadata">
-            <p:output port="result"/>
-            <p:iteration-source select="//c:file">
-                <p:pipe port="result" step="daisy-flow"/>
-            </p:iteration-source>
-            <p:variable name="href" select="/*/@href"/>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="smil-to-metadata.xsl"/>
-                </p:input>
-            </p:xslt>
-        </p:for-each>
-        <p:sink/>
-        <p:for-each name="spine-metadata">
-            <p:output port="result"/>
-            <p:iteration-source select="//c:file">
-                <p:pipe port="result" step="daisy-spine"/>
-            </p:iteration-source>
-            <p:variable name="href" select="/*/@href"/>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="spine-to-metadata.xsl"/>
-                </p:input>
-            </p:xslt>
-        </p:for-each>
-        <p:sink/>
-        <p:identity>
-            <p:input port="source">
-                <p:inline>
-                    <opf:metadata/>
-                </p:inline>
-            </p:input>
-        </p:identity>
-        <p:insert position="last-child" match="/*">
-            <p:input port="insertion">
-                <p:pipe port="result" step="ncc-metadata"/>
-                <p:pipe port="result" step="smil-metadata"/>
-                <p:pipe port="result" step="spine-metadata"/>
-            </p:input>
-        </p:insert>
-        <p:unwrap match="opf:metadata[parent::opf:metadata]"/>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="metadata-cleanup.xsl"/>
-            </p:input>
-        </p:xslt>
-    </p:group>
+    <d2e:flow name="flow">
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:input port="source">
+            <p:pipe port="result" step="ncc"/>
+        </p:input>
+    </d2e:flow>
     <p:sink/>
 
-    <p:group name="epub-documents">
-        <p:documentation><![CDATA[
-            Depends on "daisy-spine"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:identity>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-spine"/>
-            </p:input>
-        </p:identity>
-        <p:viewport name="spine-metadata" match="//c:file">
-            <p:output port="result">
-                <p:pipe port="result" step="input"/>
-            </p:output>
-            <p:variable name="href" select="/*/@href"/>
-            <p:identity name="input"/>
-            <d2e:load-html>
-                <p:with-option name="href" select="concat($inPath,$href)"/>
-            </d2e:load-html>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="document-cleanup.xsl"/>
-                </p:input>
-            </p:xslt>
-            <p:store>
-                <p:with-option name="href" select="concat($outPath,$href)"/>
-            </p:store>
-        </p:viewport>
-    </p:group>
+    <d2e:navigation name="navigation">
+        <p:input port="source">
+            <p:pipe port="result" step="ncc"/>
+        </p:input>
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="epub-dir" select="$epub-dir"/>
+    </d2e:navigation>
+
+    <d2e:media-overlay name="media-overlay">
+        <p:input port="source">
+            <p:pipe port="manifest" step="flow"/>
+        </p:input>
+        <p:with-option name="daisy-dir" select="$daisy-dir"/>
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="epub-dir" select="$epub-dir"/>
+    </d2e:media-overlay>
+
+    <d2e:contents name="contents">
+        <p:input port="source">
+            <p:pipe port="spine-manifest" step="media-overlay"/>
+        </p:input>
+        <p:with-option name="daisy-dir" select="$daisy-dir"/>
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="epub-dir" select="$epub-dir"/>
+    </d2e:contents>
+
+    <d2e:resources name="resources">
+        <p:input port="source">
+            <p:pipe port="resource-manifest" step="navigation"/>
+            <p:pipe port="resource-manifest" step="media-overlay"/>
+            <p:pipe port="resource-manifest" step="contents"/>
+        </p:input>
+        <p:with-option name="daisy-dir" select="$daisy-dir"/>
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="epub-dir" select="$epub-dir"/>
+    </d2e:resources>
+
+    <d2e:manifest name="manifest">
+        <p:input port="source">
+            <p:pipe port="manifest" step="navigation"/>
+            <p:pipe port="manifest" step="media-overlay"/>
+            <p:pipe port="manifest" step="contents"/>
+            <p:pipe port="manifest" step="resources"/>
+        </p:input>
+    </d2e:manifest>
+
+    <d2e:metadata name="metadata">
+        <p:input port="source">
+            <p:pipe port="metadata" step="navigation"/>
+            <p:pipe port="metadata" step="media-overlay"/>
+            <p:pipe port="metadata" step="contents"/>
+        </p:input>
+    </d2e:metadata>
     <p:sink/>
 
-    <p:group name="epub-media-overlay">
-        <p:documentation><![CDATA[
-            Depends on "daisy-flow"
-            TODO: split or merge SMIL-files as necessary
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:identity>
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-flow"/>
-            </p:input>
-        </p:identity>
-        <p:viewport name="spine-metadata" match="//c:file">
-            <p:output port="result">
-                <p:pipe port="result" step="input"/>
-            </p:output>
-            <p:variable name="href" select="/*/@href"/>
-            <p:identity name="input"/>
-            <p:load>
-                <p:with-option name="href" select="concat($inPath,$href)"/>
-            </p:load>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="smil-cleanup.xsl"/>
-                </p:input>
-            </p:xslt>
-            <p:store>
-                <p:with-option name="href" select="concat($outPath,$href)"/>
-            </p:store>
-        </p:viewport>
-    </p:group>
-    <p:sink/>
-    
-    <p:group name="epub-manifest">
-        <p:documentation><![CDATA[
-            Depends on "daisy-ncc" and "daisy-spine"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:xslt name="resources-ncc">
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-ncc"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="ncc2resources.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:sink/>
-        <p:xslt name="resources-flow">
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-flow"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="flow2resources.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:sink/>
-        <p:xslt name="resources-documents">
-            <p:input port="source">
-                <p:pipe port="result" step="daisy-spine"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="documents2resources.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:sink/>
-        <p:identity>
-            <p:input port="source">
-                <p:inline>
-                    <c:body/>
-                </p:inline>
-            </p:input>
-        </p:identity>
-        <p:insert position="last-child">
-            <p:input port="insertion">
-                <p:pipe port="result" step="resources-ncc"/>
-            </p:input>
-        </p:insert>
-        <p:insert position="last-child">
-            <p:input port="insertion">
-                <p:pipe port="result" step="resources-flow"/>
-            </p:input>
-        </p:insert>
-        <p:insert position="last-child">
-            <p:input port="insertion">
-                <p:pipe port="result" step="resources-documents"/>
-            </p:input>
-        </p:insert>
-        <p:unwrap match="c:body[parent::c:body]"/>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="resources-fixup.xsl"/>
-            </p:input>
-        </p:xslt>
-    </p:group>
+    <d2e:spine name="spine">
+        <p:input port="source">
+            <p:pipe port="manifest" step="contents"/>
+        </p:input>
+    </d2e:spine>
     <p:sink/>
 
-    <p:group name="epub-spine">
-        <p:documentation><![CDATA[
-            Depends on "daisy-flow"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:identity>
-            <p:input port="source">
-                <p:inline>
-                    <doc/>
-                </p:inline>
-            </p:input>
-        </p:identity>
-    </p:group>
-    <p:sink/>
+    <d2e:package name="package">
+        <p:input port="metadata">
+            <p:pipe port="result" step="metadata"/>
+        </p:input>
+        <p:input port="manifest">
+            <p:pipe port="result" step="manifest"/>
+        </p:input>
+        <p:input port="spine">
+            <p:pipe port="result" step="spine"/>
+        </p:input>
+        <p:with-option name="content-dir" select="$content-dir"/>
+    </d2e:package>
 
-    <p:group name="epub-package">
-        <p:documentation><![CDATA[
-            Depends on "epub-spine", "epub-metadata" and "epub-manifest"
-        ]]></p:documentation>
-        <p:output port="result"/>
-        <p:identity>
-            <p:input port="source">
-                <p:inline>
-                    <doc/>
-                </p:inline>
-            </p:input>
-        </p:identity>
-    </p:group>
-    <p:sink/>
+    <d2e:container>
+        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="epub-dir" select="$epub-dir"/>
+        <p:input port="manifests">
+            <p:pipe port="manifest" step="navigation"/>
+            <p:pipe port="manifest" step="media-overlay"/>
+            <p:pipe port="manifest" step="contents"/>
+            <p:pipe port="manifest" step="resources"/>
+        </p:input>
+        <p:input port="store-complete">
+            <p:pipe port="store-complete" step="navigation"/>
+            <p:pipe port="store-complete" step="media-overlay"/>
+            <p:pipe port="store-complete" step="contents"/>
+            <p:pipe port="store-complete" step="resources"/>
+            <p:pipe port="store-complete" step="package"/>
+        </p:input>
+    </d2e:container>
 
-</p:declare-step>
+</p:pipeline>
