@@ -1,0 +1,919 @@
+<log4j:event logger="utfx.test_results" timestamp="1300459631780" level="INFO" thread="main">
+<log4j:message><![CDATA[logger created]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="&lt;init&gt;" file="ResultLogger.java" line="44"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459631789" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459631819" level="ERROR" thread="main">
+<log4j:message><![CDATA[Simple manifest FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459631820" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459631821" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459636343" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.XMLValidationError: [line 3, col 136]: Attribute "profile" must be declared for element type "smil".
+[line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "property" must be declared for element type "meta".
+[line 5, col 63]: The content of element type "meta" must match "EMPTY".
+[line 10, col 74]: Attribute "id" must be declared for element type "text".
+	at utfx.framework.XMLValidationTestCase.validate(XMLValidationTestCase.java:157)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459636344" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459636344" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640757" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640757" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640757" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640769" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal NCC FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640769" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640770" level="INFO" thread="main">
+<log4j:message><![CDATA[Remove duplicate c:entry started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640772" level="ERROR" thread="main">
+<log4j:message><![CDATA[Remove duplicate c:entry FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 192
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640777" level="INFO" thread="main">
+<log4j:message><![CDATA[Remove duplicate c:entry completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640777" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640781" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal content document FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640781" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640781" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640786" level="ERROR" thread="main">
+<log4j:message><![CDATA[Simple metadata FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640787" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640787" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640789" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal content document FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640790" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640790" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640796" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal NCC FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640796" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459640796" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459645208" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.XMLValidationError: [line 3, col 136]: Attribute "profile" must be declared for element type "smil".
+[line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "property" must be declared for element type "meta".
+[line 5, col 63]: The content of element type "meta" must match "EMPTY".
+[line 10, col 74]: Attribute "id" must be declared for element type "text".
+	at utfx.framework.XMLValidationTestCase.validate(XMLValidationTestCase.java:157)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459645208" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459645208" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649590" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649591" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649592" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649601" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal NCC FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 19
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649601" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649602" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [source fragment validation] started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649607" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [source fragment validation] FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.XMLValidationError: [line 3, col 57]: Attribute "xmlns" must be declared for element type "smil".
+[line 6, col 23]: The content of element type "head" is incomplete, it must match "(meta*,((layout|switch),meta*))?".
+	at utfx.framework.XMLValidationTestCase.validate(XMLValidationTestCase.java:157)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649608" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [source fragment validation] completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459649608" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [expected fragment validation] started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459653995" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [expected fragment validation] FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.XMLValidationError: [line 3, col 136]: Attribute "profile" must be declared for element type "smil".
+[line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "property" must be declared for element type "meta".
+[line 5, col 63]: The content of element type "meta" must match "EMPTY".
+[line 10, col 74]: Attribute "id" must be declared for element type "text".
+	at utfx.framework.XMLValidationTestCase.validate(XMLValidationTestCase.java:157)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459653995" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 [expected fragment validation] completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459653995" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654002" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 19
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654002" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 1.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654002" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654005" level="ERROR" thread="main">
+<log4j:message><![CDATA[Simple manifest FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654006" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654006" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal text content document started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654008" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal text content document FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 19
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654008" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal text content document completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654009" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654011" level="ERROR" thread="main">
+<log4j:message><![CDATA[Simple manifest FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 43
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654012" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple manifest completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459654012" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459658384" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.XMLValidationError: [line 3, col 136]: Attribute "profile" must be declared for element type "smil".
+[line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
+[line 5, col 46]: Attribute "property" must be declared for element type "meta".
+[line 5, col 63]: The content of element type "meta" must match "EMPTY".
+[line 10, col 74]: Attribute "id" must be declared for element type "text".
+	at utfx.framework.XMLValidationTestCase.validate(XMLValidationTestCase.java:157)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459658386" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 [source fragment validation] completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459658386" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459662806" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 15
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459662807" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459662807" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459662811" level="ERROR" thread="main">
+<log4j:message><![CDATA[Minimal NCC FAILED]]></log4j:message>
+<log4j:throwable><![CDATA[utfx.framework.StringComparisonFailure: UTF-X test failed: byte arrays differ at offset 17
+	at utfx.framework.UTFXTestCase.assertEquals(UTFXTestCase.java:108)
+	at utfx.framework.UTFXTestCase.assertEquivXML(UTFXTestCase.java:241)
+	at utfx.framework.XSLTTransformTestCase.testTransform(XSLTTransformTestCase.java:608)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at junit.framework.TestCase.runTest(TestCase.java:154)
+	at junit.framework.TestCase.runBare(TestCase.java:127)
+	at junit.framework.TestResult$1.protect(TestResult.java:106)
+	at junit.framework.TestResult.runProtected(TestResult.java:124)
+	at junit.framework.TestResult.run(TestResult.java:109)
+	at junit.framework.TestCase.run(TestCase.java:118)
+	at utfx.runner.TestRunner.runTestCase(TestRunner.java:236)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:246)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.runSuite(TestRunner.java:261)
+	at utfx.runner.TestRunner.runTest(TestRunner.java:244)
+	at utfx.runner.TestRunner.doRun(TestRunner.java:154)
+	at utfx.runner.TestRunner.start(TestRunner.java:308)
+	at utfx.runner.TestRunner.main(TestRunner.java:328)
+]]></log4j:throwable>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="addFailure" file="ResultLogger.java" line="64"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1300459662811" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+

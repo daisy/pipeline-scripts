@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.w3.org/ns/xproc-step">
+   <utfx:stylesheet src="../manifest2spine.xsl"/>
+   <utfx:test>
+      <utfx:name>Simple manifest</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <c:manifest>
+               <c:entry href="a.smil" media-type="application/smil+xml" original-href="a.smil" reverse-media-overlay="a.html"/> 
+               <c:entry href="b.smil" media-type="application/smil+xml" original-href="b.smil" reverse-media-overlay="b.html"/> 
+               <c:entry href="c.smil" media-type="application/smil+xml" original-href="c.smil" reverse-media-overlay="c.html"/> 
+            </c:manifest>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="a.html" media-type="application/xhtml+xml"/> 
+               <c:entry href="b.html" media-type="application/xhtml+xml"/> 
+               <c:entry href="c.html" media-type="application/xhtml+xml"/> 
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+</utfx:tests>

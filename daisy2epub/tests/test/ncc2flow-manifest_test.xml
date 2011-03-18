@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <utfx:stylesheet src="../ncc2flow-manifest.xsl" xmlns:c="http://www.w3.org/ns/xproc-step"/>
+   <utfx:test>
+      <utfx:name>Minimal NCC</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <html xmlns="http://www.w3.org/1999/xhtml">
+               <head>
+                  <title>HTML document title</title>
+                  <meta name="dc:date" content="2011-03-18" scheme="yyyy-mm-dd"/>
+                  <meta name="dc:format" content="Daisy 2.02"/>
+                  <meta name="dc:identifier" content="identifier"/>
+                  <meta name="dc:language" content="EN"/>
+                  <meta name="dc:publisher" content="DAISY Consortium"/>
+                  <meta name="dc:title" content="Title of DTB or Publication"/>
+                  <meta name="ncc:charset" content="UTF-8"/>
+                  <meta name="ncc:pageFront" content="1"/>
+                  <meta name="ncc:pageNormal" content="2"/>
+                  <meta name="ncc:pageSpecial" content="3"/>
+                  <meta name="ncc:tocItems" content="1"/>
+                  <meta name="ncc:totalTime" content="00:00:10" scheme="hh:mm:ss"/>
+               </head>
+               <body>
+                  <h1 class="title" id="title1"><a href="test.smil#fragment">Heading 1</a></h1>
+               </body>
+            </html>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="test.smil" media-type="application/smil+xml"/>
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+</utfx:tests>
