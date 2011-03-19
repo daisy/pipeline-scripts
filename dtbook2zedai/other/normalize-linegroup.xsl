@@ -2,30 +2,31 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0"
-    xmlns:p2="http://code.google.com/p/daisy-pipeline/">
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
     <!-- TODO: what's the official namespace for pipeline2? -->
     
-    <xd:doc>
-        <xd:desc>Move target element out and split the element(s) that used to contain it.</xd:desc>
-        
-    </xd:doc>
+    
+    
+    <!-- TODO: rethink the approach here.  this xsl is a copy of the one for imggroups, but lngroups may not be able to be treated the same.
+        would it be better to just remove lngroups that did not contain many lines?  -->
     
     <xsl:output indent="yes" method="xml"/>
     
-    <!-- these are invalid target element parents that can be split into many instances of themselves -->
-    <xsl:param name="invalid-parents-A"/>
-    <!-- these are invalid target element parents that cannot be split into many instances of themselves -->
-    <xsl:param name="invalid-parents-B"/>
-    <xsl:param name="alternative"/>
-    <xsl:param name="target-element"/>
-    <xsl:param name="valid-parents"/>
-   
+    <xsl:template match="/">
+        
+        <xsl:message>start</xsl:message>
+        <xsl:call-template name="test-and-move">
+            <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
+        </xsl:call-template>
+        
+    </xsl:template>
+    
     <!-- recursive -->
     <xsl:template name="test-and-move">
         <xsl:param name="doc"/>
         
         <xsl:choose>
-            <xsl:when test="p2:test-valid($doc) = true()">
+            <xsl:when test="d2z:test-valid($doc) = true()">
                 <xsl:message>Input is Valid</xsl:message>
                 <xsl:copy-of select="$doc"></xsl:copy-of>
             </xsl:when>
@@ -52,42 +53,57 @@
         </xsl:copy>
     </xsl:template>
     
+    <!-- these are invalid linegroup parents that can be split into many instances of themselves -->
+    <xsl:variable name="invalid-parents-A"
+        select="tokenize('annotation,caption,dd,prodnote,sidebar,td,th', ',')"/>
+    <!-- these are invalid linegroup parents that cannot be split into many instances of themselves -->
+    <xsl:variable name="invalid-parents-B" select="tokenize('level,level1,level2,level3,level4,level5,level6', ',')"/>
     
-    <xsl:function name="p2:test-valid">
+    
+    <xsl:function name="d2z:test-valid">
         <xsl:param name="elem"/>
         
-        <!-- select all target element descendants whose parents are not in the list of valid parent names -->
-        <xsl:variable name="invalid-target-elements" 
-            select="$elem/descendant::*[local-name() = $target-element][not(name(parent::node()) = $valid-parents)]"/>
+        <xsl:variable name="valid-parents"
+            select="tokenize('blockquote', ',')"/>
         
-        <!-- test if there is a target element whose parent is not in the set of valid parents -->
-        <xsl:value-of select="empty($invalid-target-elements)"/>
+        
+        <!-- select all lngroup descendants whose parents are not in the list of valid parent names -->
+        <xsl:variable name="invalid-lngroups" 
+            select="$elem/descendant::dtb:lngroup[empty(index-of($valid-parents, name(parent::node())))]"/>
+        
+        <!-- test if there is an lngroup whose parent is not in the set of valid parents -->
+        <xsl:value-of select="empty($invalid-lngroups)"/>
         
     </xsl:function>
     
     
-    <!-- match invalid element parents that actually have an invalid element child -->
+    <!-- match invalid lngroup parents that actually have an lngroup child -->
     <xsl:template
-        match="*[name() = $invalid-parents-A or name() = $invalid-parents-B][*/name() = $target-element]">
-        
-        <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>},
+        match="*
+        [
+        not(empty(index-of($invalid-parents-A, name()))) 
+        or 
+        not(empty(index-of($invalid-parents-B, name())))
+        ]
+        [dtb:lngroup]">
+        <xsl:message>Found unsuitable lngroup parent: {<xsl:value-of select="name()"/>},
             id={<xsl:value-of select="@id"/>}</xsl:message>
-        <xsl:call-template name="process-invalid-target-element-parent"/>
+        <xsl:call-template name="process-invalid-lngroup-parent"/>
     </xsl:template>
     
-    <!-- this template handles an element that has one or more target element child -->
-    <xsl:template name="process-invalid-target-element-parent">
+    <!-- this template handles an element that has one or more lngroup child -->
+    <xsl:template name="process-invalid-lngroup-parent">
         <xsl:choose>
             <xsl:when test="not(empty(index-of($invalid-parents-A, name())))">
                 <xsl:call-template name="move-elem-out">
-                    <xsl:with-param name="elem-name-to-move" select="$target-element"/>
+                    <xsl:with-param name="elem-name-to-move">lngroup</xsl:with-param>
                     <xsl:with-param name="split-into-elem" select="local-name()"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:when test="not(empty(index-of($invalid-parents-B, name())))">
                 <xsl:call-template name="move-elem-out">
-                    <xsl:with-param name="elem-name-to-move" select="$target-element"/>
-                    <xsl:with-param name="split-into-elem" select="$alternative"/>
+                    <xsl:with-param name="elem-name-to-move">lngroup</xsl:with-param>
+                    <xsl:with-param name="split-into-elem" select="'p'"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
@@ -108,7 +124,7 @@
         <xsl:for-each-group select="*|text()[normalize-space()]"
             group-adjacent="local-name() = $elem-name-to-move">
             <xsl:choose>
-                <!-- the target element itself-->
+                <!-- the lngroup itself-->
                 <xsl:when test="current-grouping-key()">
                     <xsl:copy-of select="current-group()"/>
                 </xsl:when>
@@ -131,7 +147,7 @@
                                             seems to correct the problem of it not being unique; however, this 
                                             is an issue that should be explored in-depth -->
                                         <xsl:variable name="tmp" select="concat(generate-id(), 'z')"/>
-                                        
+                                        <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
                                         <xsl:attribute name="id" select="$tmp"/>
                                     </xsl:if>
                                 </xsl:if>
@@ -162,7 +178,7 @@
                                             don't copy the node's ID since then it will result in many nodes with the same ID -->
                                         <xsl:if test="$elem/@id">
                                             <xsl:variable name="tmp" select="generate-id()"/>
-                                            
+                                            <xsl:message>Generating ID <xsl:value-of select="$tmp"/></xsl:message>
                                             <!-- modifying the result of generate-id() by adding a character to the end
                                                 seems to correct the problem of it not being unique; however, this 
                                                 is an issue that should be explored in-depth -->

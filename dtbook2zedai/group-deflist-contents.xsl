@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0"
-    xmlns:p2="http://code.google.com/p/daisy-pipeline/">
+    exclude-result-prefixes="dtb" version="2.0">
 
     <xsl:template match="/">
-        <xsl:message>normalize-deflist-1</xsl:message>
+        <xsl:message>group contents of definition list</xsl:message>
         <xsl:apply-templates/>
     </xsl:template>
 

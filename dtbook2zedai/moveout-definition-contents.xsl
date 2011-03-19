@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xd dtb" version="2.0"
-    xmlns:p2="http://code.google.com/p/daisy-pipeline/">
-    <!-- TODO: what's the official namespace for pipeline2? -->
+    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/" exclude-result-prefixes="dtb" version="2.0">
 
-    <xd:doc>
-        <xd:desc>Move target element out into the parent 'item' and split the 'dd' element that used
-            to contain it. This is a simplified non-recursive version of
-            normalize-generic-moveout.xsl</xd:desc>
 
-    </xd:doc>
+    <!--Move target element out into the parent 'item' and split the 'dd' element that used
+            to contain it. 
+    -->
 
     <xsl:output indent="yes" method="xml"/>
+
+    <xsl:include href="moveout-template.xsl"/>
+
     <xsl:param name="target-elements"
         select="tokenize('list,dl,div,poem,linegroup,table,sidebar,note,epigraph', ',')"/>
 
     <xsl:template match="/">
-        <xsl:message>normalize-deflist-2</xsl:message>
+        <xsl:message>normalize definitions in definition lists</xsl:message>
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -101,45 +99,4 @@
     </xsl:template>
 
 
-    <xsl:template name="move-elem-out">
-        <xsl:param name="elem-name-to-move"/>
-        <xsl:variable name="elem" select="."/>
-        <xsl:variable name="first-child" select="child::node()[1]"/>
-
-        <!-- move the element out a level -->
-        <xsl:for-each-group select="*|text()[normalize-space()]"
-            group-adjacent="local-name() = $elem-name-to-move">
-            <xsl:choose>
-                <!-- the target element itself-->
-                <xsl:when test="current-grouping-key()">
-                    <xsl:copy-of select="current-group()"/>
-                </xsl:when>
-
-                <xsl:otherwise>
-                    <xsl:element name="{local-name($elem)}"
-                        namespace="http://www.daisy.org/z3986/2005/dtbook/">
-
-                        <xsl:apply-templates select="$elem/@*"/>
-
-                        <!-- for all except the first 'copy' of the original parent:
-                                    don't copy the node's ID since then it will result in many nodes with the same ID -->
-                        <xsl:if
-                            test="not(position() = 1 or local-name($first-child) = $elem-name-to-move)">
-                            <xsl:if test="$elem/@id">
-                                <!-- modifying the result of generate-id() by adding a character to the end
-                                            seems to correct the problem of it not being unique; however, this 
-                                            is an issue that should be explored in-depth -->
-                                <xsl:variable name="tmp" select="concat(generate-id(), 'z')"/>
-                                
-                                <xsl:attribute name="id" select="$tmp"/>
-                            </xsl:if>
-                        </xsl:if>
-
-                        <xsl:apply-templates select="current-group()"/>
-
-                    </xsl:element>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:for-each-group>
-    </xsl:template>
 </xsl:stylesheet>

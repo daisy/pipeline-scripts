@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs"
-    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0"
+    version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
     xmlns="http://www.daisy.org/ns/z3986/authoring/">
 
-    <xd:doc scope="stylesheet">
-        <xd:desc>
-            <xd:p><xd:b>Created on:</xd:b> Aug 16, 2010</xd:p>
-            <xd:p><xd:b>Author:</xd:b> marisa</xd:p>
-            <xd:p>Take as input a dtbook 2005-3 document and produce zedai</xd:p>
-        </xd:desc>
-    </xd:doc>
-
+    <!-- Direct translation element and attribute names from DTBook to ZedAI.  
+    Most of the work regarding content model normalization has already been done -->
+    
     <xsl:param name="mods-filename"/>
     <xsl:param name="css-filename"/>
 
@@ -384,13 +380,6 @@
         </block>
     </xsl:template>
 
-    <xsl:template match="dtb:code">
-        <code>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </code>
-    </xsl:template>
-
     <xsl:template match="dtb:pagenum">
         <pagebreak value="{.}">
             <xsl:call-template name="attrs"/>
@@ -465,7 +454,7 @@
 
             <xsl:for-each select="child::node()">
                 <xsl:choose>
-                    <xsl:when test="name() = 'dtb:col'">
+                    <xsl:when test="local-name() = 'col'">
                         <!-- This creates a colgroup for each col; would it be better to merge them into one? -->
                         <colgroup>
                             <xsl:apply-templates/>
@@ -473,7 +462,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <!-- we already processed the caption -->
-                        <xsl:if test="name() != 'dtb:caption'">
+                        <xsl:if test="local-name() != 'caption'">
                             <xsl:apply-templates/>
                         </xsl:if>
                     </xsl:otherwise>
@@ -659,7 +648,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="dtb:ln">
+    <xsl:template match="d2z:ln">
         <ln>
             <xsl:apply-templates/>
         </ln>
@@ -819,7 +808,7 @@
             <xsl:for-each select="child::node()">
                 <xsl:choose>
                     <!-- wrap lines in paragraphs first to make them block-level elements -->
-                    <xsl:when test="name() = 'dtb:line'">
+                    <xsl:when test="local-name() = 'line'">
                         <p>
                             <xsl:apply-templates/>
                         </p>
@@ -841,14 +830,7 @@
         </ln>
     </xsl:template>
 
-    <xsl:template match="dtb:kbd">
-
-        <code>
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
-        </code>
-    </xsl:template>
-
+    <!-- any samp elements left at this point will be block-level, since nested samps were made into spans in earlier steps -->
     <xsl:template match="dtb:samp">
 
         <block role="example">
@@ -906,7 +888,8 @@
         <xsl:choose>
             <!-- when it has a block-level sibling, wrap in a p element -->
             <xsl:when
-                test="preceding-sibling::*/name() = $definition-list-block-elems or following-sibling::*/name() = $definition-list-block-elems">
+                test="preceding-sibling::*/local-name() = $definition-list-block-elems or 
+                following-sibling::*/local-name() = $definition-list-block-elems">
                 <p>
                     <definition>
                         <xsl:call-template name="attrs"/>
@@ -927,7 +910,8 @@
         <xsl:choose>
             <!-- when it has a block-level sibling, wrap in a p element -->
             <xsl:when
-                test="preceding-sibling::*/name() = $definition-list-block-elems or following-sibling::*/name() = $definition-list-block-elems">
+                test="preceding-sibling::*/local-name() = $definition-list-block-elems or 
+                following-sibling::*/local-name() = $definition-list-block-elems">
                 <p>
                     <term>
                         <xsl:call-template name="attrs"/>
@@ -955,14 +939,14 @@
         <block role="poem">
             <xsl:for-each select="child::node()">
                 <xsl:choose>
-                    <xsl:when test="name() = 'title'">
+                    <xsl:when test="local-name() = 'title'">
                         <p role="title">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
                         </p>
                     </xsl:when>
 
-                    <xsl:when test="name() = 'author'">
+                    <xsl:when test="local-name() = 'author'">
                         <p role="author">
                             <xsl:call-template name="attrs"/>
                             <xsl:apply-templates/>
@@ -970,7 +954,7 @@
                     </xsl:when>
 
                     <!-- making line into a block-level element. should it be p/ln instead? -->
-                    <xsl:when test="name() = 'line'">
+                    <xsl:when test="local-name() = 'line'">
                         <p>
                             <xsl:apply-templates select="."/>
                         </p>
@@ -985,177 +969,81 @@
         </block>
     </xsl:template>
 
-    <xsl:template match="dtb:code | dtb:kbd">
-        <xsl:variable name="block-level-contents"
-            select="tokenize('dfn,code,samp,kbd,cite,a,img,imggroup,q,sent,w,prodnote,annoref,noteref', ',')"/>
-
+    <xsl:template match="d2z:code-block">
         <code>
-            <xsl:choose>
-                <!-- have to block-ize everything, though there are special rules for code -->
-                <xsl:when test="child::*/name() = $block-level-contents">
-                    <xsl:for-each select="child::node()">
-                        <xsl:choose>
-                            <xsl:when test="name() = 'dtb:em' or name() = 'dtb:strong'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:dfn'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:code' or name() = 'dtb:kbd'">
-                                <block>
-                                    <xsl:apply-templates select="."/>
-                                </block>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:samp'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:cite'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:abbr'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:acronym'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:a'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:img'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:imggroup'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:q'">
-                                <block>
-                                    <xsl:apply-templates select="."/>
-                                </block>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:sub'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:sup'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:span' or name() = 'dtb:bdo'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:sent'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:w'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:pagenum'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:prodnote'">
-                                <block>
-                                    <xsl:apply-templates select="."/>
-                                </block>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:annoref'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:noteref'">
-                                <p>
-                                    <xsl:apply-templates select="."/>
-                                </p>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:br'">
-                                <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
-                            </xsl:when>
+            <xsl:call-template name="attrs"/>
+            <xsl:variable name="wrap-in-p" select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,
+                span,bdo,w,annoref,noteref,sent',',')"/>
+            <xsl:variable name="wrap-in-block" select="tokenize('code,kbd,q,prodnote',',')"/>
+            
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    <xsl:when test="local-name() = $wrap-in-p or self::text()[normalize-space()]">
+                        <p>
+                            <xsl:apply-templates select="."/>
+                        </p>
+                    </xsl:when>
+                    <xsl:when test="local-name() = $wrap-in-block">
+                        <block>
+                            <xsl:apply-templates select="."/>
+                        </block>
+                    </xsl:when>
+                    <xsl:when test="local-name() = 'br'">
+                        <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="."/>
+                    </xsl:otherwise>
+                    
+                </xsl:choose>
 
-                        </xsl:choose>
-                    </xsl:for-each>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:for-each select="child::node()">
-                        <xsl:choose>
-                            <xsl:when test="name() = 'dtb:em' or name() = 'dtb:strong'">
-                                <ln>
-                                    <xsl:apply-templates select="."/>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:abbr'">
-                                <ln>
-                                    <span role="truncation">
-                                        <xsl:call-template name="attrs"/>
-                                        <xsl:apply-templates/>
-                                    </span>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:acronym'">
-                                <ln>
-                                    <span>
-                                        <xsl:choose>
-                                            <xsl:when test="@pronounce = 'yes'">
-                                                <xsl:attribute name="role">acronym</xsl:attribute>
-                                            </xsl:when>
-                                            <xsl:otherwise>
-                                                <xsl:attribute name="role"
-                                                  >initialism</xsl:attribute>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                        <xsl:call-template name="attrs"/>
-                                        <xsl:apply-templates/>
-                                    </span>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:br'"><!-- TODO --></xsl:when>
-                            <xsl:when test="name() = 'dtb:sub'">
-                                <ln>
-                                    <xsl:apply-templates select="."/>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:sup'">
-                                <ln>
-                                    <xsl:apply-templates select="."/>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:span' or name() = 'dtb:bdo'">
-                                <ln>
-                                    <xsl:apply-templates select="."/>
-                                </ln>
-                            </xsl:when>
-                            <xsl:when test="name() = 'dtb:pagenum'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:for-each>
-                </xsl:otherwise>
-            </xsl:choose>
-
-            <!-- TODO: wrap raw text in ln or p -->
-
+            </xsl:for-each>
         </code>
+
     </xsl:template>
 
+    <xsl:template match="d2z:code-phrase">
+        <code>
+            <xsl:call-template name="attrs"/>
+            <xsl:for-each select="child::node()">
+                <xsl:choose>
+                    
+                    <xsl:when test="local-name() = 'abbr'">
+                        <span role="truncation">
+                            <xsl:call-template name="attrs"/>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:when>
+                    
+                    <xsl:when test="local-name() = 'acronym'">
+                        <span>
+                            <xsl:choose>
+                                <xsl:when test="@pronounce = 'yes'">
+                                    <xsl:attribute name="role">acronym</xsl:attribute>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="role">initialism</xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <xsl:call-template name="attrs"/>
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:when>
+                    <xsl:when test="local-name() = 'br'">
+                        <!-- TODO -->
+                    </xsl:when>
+                    
+                    <xsl:when test="local-name() = 'em' or local-name() = 'strong'">
+                        <xsl:apply-templates select="."/>
+                    </xsl:when>
+                    
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="."/>
+                    </xsl:otherwise>
 
+                </xsl:choose>
+            </xsl:for-each>
+        </code>
 
+    </xsl:template>
 </xsl:stylesheet>

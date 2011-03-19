@@ -4,20 +4,9 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
     exclude-result-prefixes="xd dtb" version="2.0">
     
-    <xsl:import href="normalize-generic-moveout.xsl"/>
+    <xsl:import href="moveout-generic.xsl"/>
     
     <xsl:output indent="yes" method="xml"/>
-    
-    <xsl:param name="invalid-parents-A" select="tokenize('abbr,acronym,dt,list,sub,sup', ',')"/>
-    
-    <xsl:param name="invalid-parents-B"></xsl:param>
-    
-    <xsl:param name="alternative" select="'na'"/>
-    
-    <xsl:param name="target-element" select="'prodnote'"/>
-    
-   <xsl:param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code,
-   kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')"/> 
     
     <xsl:template match="/">
         
@@ -25,6 +14,13 @@
         
         <xsl:call-template name="test-and-move">
             <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
+            
+            <xsl:with-param name="target-element" select="'prodnote'" tunnel="yes"/>
+            
+            <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code,
+                kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')"
+                tunnel="yes"/> 
+            
         </xsl:call-template>
         
     </xsl:template>       

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<p:declare-step version="1.0" name="dtbook-merger" type="p2:dtbook-merger"
+<p:declare-step version="1.0" name="merge-dtbook" type="d2z:merge-dtbook"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:p2="http://code.google.com/p/daisy-pipeline/" xmlns:dc="http://purl.org/dc/terms/"
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" xmlns:dc="http://purl.org/dc/terms/"
     exclude-inline-prefixes="cx">
     <!-- 
         

@@ -176,6 +176,26 @@
         </span>
     </xsl:template>
 
+    <!-- change nested samps to spans -->
+    <xsl:template match="samp[samp]">
+        <xsl:element name="samp">
+            <xsl:for-each select="node()">
+                <xsl:choose>
+                    <xsl:when test="local-name() = 'samp'">
+                        <xsl:element name="span">
+                            <xsl:attribute name="role">example</xsl:attribute>
+                            <xsl:apply-templates select="@*|node()"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+                    </xsl:otherwise>
+                </xsl:choose>
+                
+            </xsl:for-each>
+        </xsl:element>
+    </xsl:template>
+    
     <!-- generic conversion to span; no roles applied and no special treatment of child elements -->
     <xsl:template name="element2span">
         <span>
