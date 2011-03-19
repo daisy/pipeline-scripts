@@ -5,14 +5,14 @@
 
     <!--Move target element out into the parent 'item' and split the 'dd' element that used
             to contain it. 
+            
+        These cases are handled separately from the rest of the moveout-* transformations because
+        these are not recursive.  We are always assured of an <item> parent which can take the unallowed child element.
     -->
 
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:include href="moveout-template.xsl"/>
-
-    <xsl:param name="target-elements"
-        select="tokenize('list,dl,div,poem,linegroup,table,sidebar,note,epigraph', ',')"/>
 
     <xsl:template match="/">
         <xsl:message>normalize definitions in definition lists</xsl:message>
@@ -82,7 +82,7 @@
         </xsl:call-template>
     </xsl:template>
 
-    <xsl:template match="dtb:dd/dtb:item[dtb:note]">
+    <xsl:template match="dtb:item/dtb:dd[dtb:note]">
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
@@ -90,11 +90,19 @@
         </xsl:call-template>
     </xsl:template>
 
-    <xsl:template match="dtb:dd/dtb:item[dtb:epigraph]">
+    <xsl:template match="dtb:item/dtb:dd[dtb:epigraph]">
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
             <xsl:with-param name="elem-name-to-move">dtb:epigraph</xsl:with-param>
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template match="dtb:item/dtb:dd[dtb:annotation]">
+        <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
+            select="@id"/>}</xsl:message>
+        <xsl:call-template name="move-elem-out">
+            <xsl:with-param name="elem-name-to-move">dtb:annotation</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
