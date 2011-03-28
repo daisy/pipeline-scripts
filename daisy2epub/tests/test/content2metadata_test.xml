@@ -4,7 +4,7 @@
    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../content2metadata.xsl"/>
    <utfx:test>
-      <utfx:name>Minimal content document</utfx:name>
+      <utfx:name>No metadata</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
             <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
@@ -21,4 +21,24 @@
          </utfx:expected>
       </utfx:assert-equal>
    </utfx:test>
+   <utfx:test>
+      <utfx:name>Some non-global metadata</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
+               <head>
+                  <title>HTML document title</title>
+                  <meta name="ncc:charset" content="UTF-8"/>
+               </head>
+               <body>
+                  <h1 id="title1">Heading 1</h1>
+               </body>
+            </html>
+         </utfx:source>
+         <utfx:expected>
+            <c:metadata/>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <!-- what kind of metadata in content documents are global? is there any? -->
 </utfx:tests>

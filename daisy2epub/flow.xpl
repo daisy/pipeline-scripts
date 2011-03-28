@@ -15,7 +15,7 @@
 
     <p:option name="content-dir" required="true"/>
 
-    <p:import href="daisy2epub-library.xpl"/>
+    <p:import href="html-library.xpl"/>
 
     <p:xslt>
         <p:input port="parameters">

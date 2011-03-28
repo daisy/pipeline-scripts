@@ -4,7 +4,22 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.w3.org/ns/xproc-step">
    <utfx:stylesheet src="../manifest2spine.xsl"/>
    <utfx:test>
-      <utfx:name>Simple manifest</utfx:name>
+      <utfx:name>Simple entry</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <c:manifest>
+               <c:entry href="a.smil" media-type="application/smil+xml" original-href="a.smil" reverse-media-overlay="a.html"/>  
+            </c:manifest>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="a.html" media-type="application/xhtml+xml"/>
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
+      <utfx:name>Multiple entries</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
             <c:manifest>

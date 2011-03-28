@@ -9,7 +9,7 @@
     <p:option name="output" select="''"/>
 
     <p:import href="fileset-library.xpl"/>
-    <p:import href="daisy2epub-library.xpl"/>
+    <p:import href="html-library.xpl"/>
     <p:import href="flow.xpl"/>
     <p:import href="navigation.xpl"/>
     <p:import href="media-overlay.xpl"/>
@@ -42,7 +42,7 @@
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
 
-    <d2e:load-html name="ncc">
+    <px:load-html name="ncc">
         <p:documentation><![CDATA[
             read ncc.html
             primary output: result
@@ -52,7 +52,7 @@
                 <irrelevant/>
             </p:inline>
         </p:with-option>
-    </d2e:load-html>
+    </px:load-html>
     <p:sink/>
 
     <d2e:flow name="flow">
@@ -120,7 +120,7 @@
 
     <d2e:spine name="spine">
         <p:input port="source">
-            <p:pipe port="manifest" step="contents"/>
+            <p:pipe port="result" step="manifest"/>
         </p:input>
     </d2e:spine>
     <p:sink/>

@@ -24,7 +24,7 @@
     <p:option name="epub-dir" required="true"/>
     
     <p:import href="fileset-library.xpl"/>
-    <p:import href="daisy2epub-library.xpl"/>
+    <p:import href="html-library.xpl"/>
     
     <p:documentation><![CDATA[
             read XHTML-files
@@ -52,9 +52,9 @@
         <p:iteration-source select="//c:entry"/>
         <p:variable name="href" select="/*/@href"/>
         
-        <d2e:load-html>
+        <px:load-html>
             <p:with-option name="href" select="concat($daisy-dir,$href)"/>
-        </d2e:load-html>
+        </px:load-html>
         <p:xslt name="contents.iterate.xhtml">
             <p:input port="parameters">
                 <p:empty/>

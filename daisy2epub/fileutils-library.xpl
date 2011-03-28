@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <p:library version="1.0" xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">

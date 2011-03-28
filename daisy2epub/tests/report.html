@@ -85,344 +85,12 @@ body {
       <div style="font-size:14pt; text-align:center;">UTF-X Test Run
          Results
       </div>
-      <div style="font-size:12pt; text-align:center;">Fri Mar 18 15:47:11 CET 2011</div>
+      <div style="font-size:12pt; text-align:center;">Mon Mar 28 17:54:54 CEST 2011</div>
       <div style="font-size:12pt; text-align:center;">Test
          dir: <span style="font-family:Courier;">/home/jostein/daisy-pipeline-modules/daisy2epub/tests</span></div>
       <div>
-         <div><span style="color:cyan;">Time: </span><span>31049 ms</span></div>
-         <div><span>Test run: 21</span>, <span class="failure">Failures: 21</span></div>
-         <p></p>
-         <div class="failure">There were 21
-            failures.
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[1]</td>
-                     <td class="test-name">Simple manifest</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:manifest&gt;&lt;c:entry href="navigation.xhtml" id="navigation" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;c:entry href="content1.xhtml"
-               id="content1" media-type="application/xhtml+xml" original-href="text1.html"&gt;&lt;/c:entry&gt;&lt;c:entry href="content2.xhtml" id="content2"
-               media-type="application/xhtml+xml" original-href="text2.html"&gt;&lt;/c:entry&gt;&lt;c:entry href="content3.xhtml" id="content3" media-type="application/xhtml+xml"
-               original-href="text3.html"&gt;&lt;/c:entry&gt;&lt;c:entry href="timesheet1.smil" id="timesheet1" media-type="application/smil+xml" reverse-media-overlay="text1.html"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="timesheet2.smil" id="timesheet2" media-type="application/smil+xml" reverse-media-overlay="text2.html"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="timesheet3.smil" id="timesheet3" media-type="application/smil+xml" reverse-media-overlay="text3.html"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="audio1.mp3" id="audio1" media-type="audio/mpeg"&gt;&lt;/c:entry&gt;&lt;c:entry href="audio2.mp3" id="audio2" media-type="audio/mpeg"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="audio3.mp3" id="audio3" media-type="audio/mpeg"&gt;&lt;/c:entry&gt;&lt;c:entry href="stylesheet.css" id="stylesheet1" media-type="text/css"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="image.png" id="image1" media-type="image/png"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">opf:manifest&gt;&lt;opf:item href="navigation.xhtml" id="navigation" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="content1.xhtml"
-               id="content1" media-overlay="timesheet1" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="content2.xhtml" id="content2"
-               media-overlay="timesheet2" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="content3.xhtml" id="content3" media-overlay="timesheet3"
-               media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="timesheet1.smil" id="timesheet1" media-type="application/smil+xml"&gt;&lt;/opf:item&gt;&lt;opf:item
-               href="timesheet2.smil" id="timesheet2" media-type="application/smil+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="timesheet3.smil" id="timesheet3"
-               media-type="application/smil+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="audio1.mp3" id="audio1" media-type="audio/mpeg"&gt;&lt;/opf:item&gt;&lt;opf:item
-               href="audio2.mp3" id="audio2" media-type="audio/mpeg"&gt;&lt;/opf:item&gt;&lt;opf:item href="audio3.mp3" id="audio3" media-type="audio/mpeg"&gt;&lt;/opf:item&gt;&lt;opf:item
-               href="stylesheet.css" id="stylesheet1" media-type="text/css"&gt;&lt;/opf:item&gt;&lt;opf:item href="image.png" id="image1" media-type="image/png"&gt;&lt;/opf:item&gt;&lt;/opf:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[2]</td>
-                     <td class="test-name">Minimal SMIL 3.0 [source fragment validation]</td>
-                     <td class="failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                        [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                        [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                        [line 10, col 74]: Attribute "id" must be declared for element type "text".]
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[3]</td>
-                     <td class="test-name">Minimal SMIL 3.0</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">opf:metadata&gt;&lt;opf:meta baseProfile="Daisy" property="dc:format" readIndex="0" skip-content="true" version="3.0"&gt;Daisy 2.02&lt;/opf:meta&gt;&lt;/opf:metadata&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:metadata&gt;&lt;/c:metadata&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[4]</td>
-                     <td class="test-name">Minimal NCC</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">html&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;meta content="2011-03-18" name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/meta&gt;&lt;meta content="Daisy
-               2.02" name="dc:format"&gt;&lt;/meta&gt;&lt;meta content="identifier" name="dc:identifier"&gt;&lt;/meta&gt;&lt;meta content="EN" name="dc:language"&gt;&lt;/meta&gt;&lt;meta
-               content="DAISY Consortium" name="dc:publisher"&gt;&lt;/meta&gt;&lt;meta content="Title of DTB or Publication" name="dc:title"&gt;&lt;/meta&gt;&lt;meta
-               content="UTF-8" name="ncc:charset"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:pageFront"&gt;&lt;/meta&gt;&lt;meta content="2" name="ncc:pageNormal"&gt;&lt;/meta&gt;&lt;meta
-               content="3" name="ncc:pageSpecial"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:tocItems"&gt;&lt;/meta&gt;&lt;meta content="00:00:10" name="ncc:totalTime"
-               scheme="hh:mm:ss"&gt;&lt;/meta&gt;&lt;/head&gt;&lt;nav epub:type="toc" id="toc"&gt;&lt;ol&gt;&lt;/ol&gt;&lt;/nav&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:metadata&gt;&lt;c:meta content="2011-03-18" name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/c:meta&gt;&lt;c:meta content="Daisy 2.02" name="dc:format"&gt;&lt;/c:meta&gt;&lt;c:meta
-               content="identifier" name="dc:identifier"&gt;&lt;/c:meta&gt;&lt;c:meta content="EN" name="dc:language"&gt;&lt;/c:meta&gt;&lt;c:meta content="DAISY
-               Consortium" name="dc:publisher"&gt;&lt;/c:meta&gt;&lt;c:meta content="Title of DTB or Publication" name="dc:title"&gt;&lt;/c:meta&gt;&lt;c:meta content="UTF-8"
-               name="ncc:charset"&gt;&lt;/c:meta&gt;&lt;c:meta content="1" name="ncc:pageFront"&gt;&lt;/c:meta&gt;&lt;c:meta content="2" name="ncc:pageNormal"&gt;&lt;/c:meta&gt;&lt;c:meta
-               content="3" name="ncc:pageSpecial"&gt;&lt;/c:meta&gt;&lt;c:meta content="1" name="ncc:tocItems"&gt;&lt;/c:meta&gt;&lt;c:meta content="00:00:10" name="ncc:totalTime"
-               scheme="hh:mm:ss"&gt;&lt;/c:meta&gt;&lt;/c:metadata&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[5]</td>
-                     <td class="test-name">Remove duplicate c:entry</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 192]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;c:manifest&gt;&lt;c:entry href="a.mp3" media-type="audio/mpeg"&gt;&lt;/c:entry&gt;&lt;c:entry href="b.css" media-type="text/css"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="c.png" media-type="image/png"&gt;&lt;/c:entry&gt;&lt;</span><span class="diff">c:entry href="b.css" media-type="text/css"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;c:manifest&gt;&lt;c:entry href="a.mp3" media-type="audio/mpeg"&gt;&lt;/c:entry&gt;&lt;c:entry href="b.css" media-type="text/css"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="c.png" media-type="image/png"&gt;&lt;/c:entry&gt;&lt;</span><span class="diff">/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[6]</td>
-                     <td class="test-name">Minimal content document</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">opf:metadata&gt;&lt;opf:title&gt;HTML document title&lt;/opf:title&gt;&lt;/opf:metadata&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:metadata&gt;&lt;/c:metadata&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[7]</td>
-                     <td class="test-name">Simple metadata</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:metadata&gt;&lt;c:meta content="2011-03-18" name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/c:meta&gt;&lt;c:meta content="Daisy 2.02" name="dc:format"&gt;&lt;/c:meta&gt;&lt;c:meta
-               content="identifier" name="dc:identifier"&gt;&lt;/c:meta&gt;&lt;c:meta content="EN" name="dc:language"&gt;&lt;/c:meta&gt;&lt;c:meta content="DAISY
-               Consortium" name="dc:publisher"&gt;&lt;/c:meta&gt;&lt;c:meta content="Title of DTB or Publication" name="dc:title"&gt;&lt;/c:meta&gt;&lt;c:meta content="UTF-8"
-               name="ncc:charset"&gt;&lt;/c:meta&gt;&lt;c:meta content="1" name="ncc:pageFront"&gt;&lt;/c:meta&gt;&lt;c:meta content="2" name="ncc:pageNormal"&gt;&lt;/c:meta&gt;&lt;c:meta
-               content="3" name="ncc:pageSpecial"&gt;&lt;/c:meta&gt;&lt;c:meta content="1" name="ncc:tocItems"&gt;&lt;/c:meta&gt;&lt;c:meta content="00:00:10" name="ncc:totalTime"
-               scheme="hh:mm:ss"&gt;&lt;/c:meta&gt;&lt;/c:metadata&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">opf:metadata&gt;&lt;dc:identifier id="pub-id"&gt;identifier&lt;/dc:identifier&gt;&lt;dc:title&gt;Title of DTB or Publication&lt;/dc:title&gt;&lt;dc:language&gt;EN&lt;/dc:language&gt;&lt;opf:meta
-               property="dcterms:modified"&gt;{ignore dynamically created time}&lt;/opf:meta&gt;&lt;dc:date&gt;2011-03-18&lt;/dc:date&gt;&lt;dc:format&gt;Daisy 2.02&lt;/dc:format&gt;&lt;dc:publisher&gt;DAISY
-               Consortium&lt;/dc:publisher&gt;&lt;opf:meta property="ncc:charset"&gt;UTF-8&lt;/opf:meta&gt;&lt;opf:meta property="ncc:pageFront"&gt;1&lt;/opf:meta&gt;&lt;opf:meta
-               property="ncc:pageNormal"&gt;2&lt;/opf:meta&gt;&lt;opf:meta property="ncc:pageSpecial"&gt;3&lt;/opf:meta&gt;&lt;opf:meta property="ncc:tocItems"&gt;1&lt;/opf:meta&gt;&lt;opf:meta
-               property="ncc:totalTime"&gt;00:00:10&lt;/opf:meta&gt;&lt;/opf:metadata&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[8]</td>
-                     <td class="test-name">Minimal content document</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">html profile="http://www.idpf.org/epub/30/profile/content/"&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 id="title1"&gt;Heading
-               1&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:manifest&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[9]</td>
-                     <td class="test-name">Minimal NCC</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">html&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;meta content="2011-03-18" name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/meta&gt;&lt;meta content="Daisy
-               2.02" name="dc:format"&gt;&lt;/meta&gt;&lt;meta content="identifier" name="dc:identifier"&gt;&lt;/meta&gt;&lt;meta content="EN" name="dc:language"&gt;&lt;/meta&gt;&lt;meta
-               content="DAISY Consortium" name="dc:publisher"&gt;&lt;/meta&gt;&lt;meta content="Title of DTB or Publication" name="dc:title"&gt;&lt;/meta&gt;&lt;meta
-               content="UTF-8" name="ncc:charset"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:pageFront"&gt;&lt;/meta&gt;&lt;meta content="2" name="ncc:pageNormal"&gt;&lt;/meta&gt;&lt;meta
-               content="3" name="ncc:pageSpecial"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:tocItems"&gt;&lt;/meta&gt;&lt;meta content="00:00:10" name="ncc:totalTime"
-               scheme="hh:mm:ss"&gt;&lt;/meta&gt;&lt;/head&gt;&lt;nav epub:type="toc" id="toc"&gt;&lt;ol&gt;&lt;/ol&gt;&lt;/nav&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:manifest&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[10]</td>
-                     <td class="test-name">Minimal SMIL 3.0 [source fragment validation]</td>
-                     <td class="failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                        [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                        [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                        [line 10, col 74]: Attribute "id" must be declared for element type "text".]
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[11]</td>
-                     <td class="test-name">Minimal SMIL 3.0</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">smil baseProfile="Daisy" profile="http://www.idpf.org/epub/30/profile/content/" readIndex="0" version="3.0" xml:lang="EN"&gt;&lt;head
-               baseProfile="Daisy" readIndex="0" version="3.0"&gt;&lt;meta baseProfile="Daisy" property="dc:format" readIndex="0" skip-content="true"
-               version="3.0"&gt;Daisy 2.02&lt;/meta&gt;&lt;/head&gt;&lt;body baseProfile="Daisy" fill="default" readIndex="0" version="3.0"&gt;&lt;seq baseProfile="Daisy"
-               fill="default" readIndex="0" version="3.0"&gt;&lt;par baseProfile="Daisy" endsync="last" fill="default" readIndex="0" version="3.0"&gt;&lt;text
-               baseProfile="Daisy" bottom="auto" endsync="media" fill="default" height="auto" id="content1" left="auto" mediaRepeat="preserve"
-               readIndex="0" right="auto" src="content.html#fragment" top="auto" version="3.0" width="auto"&gt;&lt;/text&gt;&lt;/par&gt;&lt;/seq&gt;&lt;/body&gt;&lt;/smil&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:manifest&gt;&lt;c:entry href="content.html"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[12]</td>
-                     <td class="test-name">Minimal NCC</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 19]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;html</span><span class="diff">&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;meta content="2011-03-18" name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/meta&gt;&lt;meta content="Daisy
-               2.02" name="dc:format"&gt;&lt;/meta&gt;&lt;meta content="identifier" name="dc:identifier"&gt;&lt;/meta&gt;&lt;meta content="EN" name="dc:language"&gt;&lt;/meta&gt;&lt;meta
-               content="DAISY Consortium" name="dc:publisher"&gt;&lt;/meta&gt;&lt;meta content="Title of DTB or Publication" name="dc:title"&gt;&lt;/meta&gt;&lt;meta
-               content="UTF-8" name="ncc:charset"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:pageFront"&gt;&lt;/meta&gt;&lt;meta content="2" name="ncc:pageNormal"&gt;&lt;/meta&gt;&lt;meta
-               content="3" name="ncc:pageSpecial"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:tocItems"&gt;&lt;/meta&gt;&lt;meta content="00:00:10" name="ncc:totalTime"
-               scheme="hh:mm:ss"&gt;&lt;/meta&gt;&lt;/head&gt;&lt;nav epub:type="toc" id="toc"&gt;&lt;ol&gt;&lt;li&gt;&lt;a href="test.smil#fragment"&gt;Heading 1&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/nav&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;html</span><span class="diff"> profile="http://www.idpf.org/epub/30/profile/content/"&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;meta content="2011-03-18"
-               name="dc:date" scheme="yyyy-mm-dd"&gt;&lt;/meta&gt;&lt;meta content="Daisy 2.02" name="dc:format"&gt;&lt;/meta&gt;&lt;meta content="identifier" name="dc:identifier"&gt;&lt;/meta&gt;&lt;meta
-               content="EN" name="dc:language"&gt;&lt;/meta&gt;&lt;meta content="DAISY Consortium" name="dc:publisher"&gt;&lt;/meta&gt;&lt;meta content="Title of
-               DTB or Publication" name="dc:title"&gt;&lt;/meta&gt;&lt;meta content="UTF-8" name="ncc:charset"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:pageFront"&gt;&lt;/meta&gt;&lt;meta
-               content="2" name="ncc:pageNormal"&gt;&lt;/meta&gt;&lt;meta content="3" name="ncc:pageSpecial"&gt;&lt;/meta&gt;&lt;meta content="1" name="ncc:tocItems"&gt;&lt;/meta&gt;&lt;meta
-               content="00:00:10" name="ncc:totalTime" scheme="hh:mm:ss"&gt;&lt;/meta&gt;&lt;/head&gt;&lt;body&gt;&lt;nav epub:type="toc" id="toc"&gt;&lt;ol&gt;&lt;a href="test.smil#fragment"
-               id="title1"&gt;Heading 1&lt;/a&gt;&lt;/ol&gt;&lt;/nav&gt;&lt;/body&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[13]</td>
-                     <td class="test-name">Minimal SMIL 1.0 [source fragment validation]</td>
-                     <td class="failure">[[line 3, col 57]: Attribute "xmlns" must be declared for element type "smil".
-                        [line 6, col 23]: The content of element type "head" is incomplete, it must match "(meta*,((layout|switch),meta*))?".]
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[14]</td>
-                     <td class="test-name">Minimal SMIL 1.0 [expected fragment validation]</td>
-                     <td class="failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                        [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                        [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                        [line 10, col 74]: Attribute "id" must be declared for element type "text".]
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[15]</td>
-                     <td class="test-name">Minimal SMIL 1.0</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 19]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;smil</span><span class="diff">&gt;&lt;head&gt;&lt;meta content="Daisy 2.02" name="dc:format" skip-content="true"&gt;&lt;/meta&gt;&lt;/head&gt;&lt;body&gt;&lt;seq dur="20.0s" repeat="1"&gt;&lt;par
-               endsync="last" repeat="1"&gt;&lt;text fill="remove" id="content1" repeat="1" src="content.html#fragment"&gt;&lt;/text&gt;&lt;/par&gt;&lt;/seq&gt;&lt;/body&gt;&lt;/smil&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;smil</span><span class="diff"> profile="http://www.idpf.org/epub/30/profile/content/" version="3.0" xml:lang="EN"&gt;&lt;head&gt;&lt;meta property="dc:format"&gt;Daisy
-               2.02&lt;/meta&gt;&lt;/head&gt;&lt;body&gt;&lt;seq&gt;&lt;par&gt;&lt;text id="content1" src="content.html#fragment"&gt;&lt;/text&gt;&lt;/par&gt;&lt;/seq&gt;&lt;/body&gt;&lt;/smil&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[16]</td>
-                     <td class="test-name">Simple manifest</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:manifest&gt;&lt;c:entry href="content1.xhtml" id="content1" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;c:entry href="content2.xhtml"
-               id="content2" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;c:entry href="content3.xhtml" id="content3" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">opf:spine&gt;&lt;opf:item href="content1.xhtml" id="content1" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="content2.xhtml"
-               id="content2" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;opf:item href="content3.xhtml" id="content3" media-type="application/xhtml+xml"&gt;&lt;/opf:item&gt;&lt;/opf:spine&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[17]</td>
-                     <td class="test-name">Minimal text content document</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 19]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;html</span><span class="diff">&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 id="title1"&gt;Heading 1&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;html</span><span class="diff"> profile="http://www.idpf.org/epub/30/profile/content/"&gt;&lt;head&gt;&lt;title&gt;HTML document title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 id="title1"&gt;Heading
-               1&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[18]</td>
-                     <td class="test-name">Simple manifest</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 43]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;c:manifest&gt;&lt;c:entry href="a.</span><span class="diff">smil" media-type="application/smil+xml" original-href="a.smil" reverse-media-overlay="a.html"&gt;&lt;/c:entry&gt;&lt;c:entry href="b.smil"
-               media-type="application/smil+xml" original-href="b.smil" reverse-media-overlay="b.html"&gt;&lt;/c:entry&gt;&lt;c:entry href="c.smil" media-type="application/smil+xml"
-               original-href="c.smil" reverse-media-overlay="c.html"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;c:manifest&gt;&lt;c:entry href="a.</span><span class="diff">html" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;c:entry href="b.html" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;c:entry
-               href="c.html" media-type="application/xhtml+xml"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[19]</td>
-                     <td class="test-name">Minimal SMIL 3.0 [source fragment validation]</td>
-                     <td class="failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                        [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                        [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                        [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                        [line 10, col 74]: Attribute "id" must be declared for element type "text".]
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[20]</td>
-                     <td class="test-name">Minimal SMIL 3.0</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 15]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">smil baseProfile="Daisy" profile="http://www.idpf.org/epub/30/profile/content/" readIndex="0" version="3.0" xml:lang="EN"&gt;&lt;head
-               baseProfile="Daisy" readIndex="0" version="3.0"&gt;&lt;meta baseProfile="Daisy" property="dc:format" readIndex="0" skip-content="true"
-               version="3.0"&gt;Daisy 2.02&lt;/meta&gt;&lt;/head&gt;&lt;body baseProfile="Daisy" fill="default" readIndex="0" version="3.0"&gt;&lt;seq baseProfile="Daisy"
-               fill="default" readIndex="0" version="3.0"&gt;&lt;par baseProfile="Daisy" endsync="last" fill="default" readIndex="0" version="3.0"&gt;&lt;text
-               baseProfile="Daisy" bottom="auto" endsync="media" fill="default" height="auto" id="content1" left="auto" mediaRepeat="preserve"
-               readIndex="0" right="auto" src="content.html#fragment" top="auto" version="3.0" width="auto"&gt;&lt;/text&gt;&lt;/par&gt;&lt;/seq&gt;&lt;/body&gt;&lt;/smil&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;</span><span class="diff">c:entry reverse-media-overlay="content.html"&gt;&lt;/c:entry&gt;&lt;/utfx-wrapper&gt;</span></div>
-         <div class="test-failure">
-            <table>
-               <tbody>
-                  <tr>
-                     <td class="failure">[21]</td>
-                     <td class="test-name">Minimal NCC</td>
-                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 17]</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;c:</span><span class="diff">body&gt;&lt;c:file href="test.smil"&gt;&lt;/c:file&gt;&lt;/c:body&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;c:</span><span class="diff">manifest&gt;&lt;c:entry href="test.smil" media-type="application/smil+xml"&gt;&lt;/c:entry&gt;&lt;/c:manifest&gt;&lt;/utfx-wrapper&gt;</span></div>
+         <div><span style="color:cyan;">Time: </span><span>168 ms</span></div>
+         <div><span style="color:#44f733">OK (30 tests)</span></div>
          <p></p>
          <p>Test run details:</p>
          <div class="test-run-details">
@@ -468,8 +136,8 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">1</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">manifest2opf-manifest_test.xml.</span><span class="tr-test-name">Simple manifest</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">manifest2opf-manifest_test.xml.</span><span class="tr-test-name">Manifest with navigation doc, content docs, media overlays, audios, stylesheet and image</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -492,13 +160,8 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">2</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">media-overlay2metadata_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0 [source fragment validation]</span></td>
-                                                                     <td><span class="tr-failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                                                                           [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                                                                           [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                                                                           [line 10, col 74]: Attribute "id" must be declared for element type "text".]</span></td>
+                                                                     <td><span class="tr-suite-name">media-overlay2metadata_test.xml.</span><span class="tr-test-name">No metadata</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -508,8 +171,8 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">3</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">media-overlay2metadata_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">media-overlay2metadata_test.xml.</span><span class="tr-test-name">Some metadata that should be discarded for global use</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -532,8 +195,8 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">4</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">navigation2metadata_test.xml.</span><span class="tr-test-name">Minimal NCC</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">navigation2metadata_test.xml.</span><span class="tr-test-name">Some metadata</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -545,7 +208,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'resources-manifest-cleanup_test.xml' has 1 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'resources-manifest-cleanup_test.xml' has 2 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -556,8 +219,19 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">5</span>]
                                                                      </td>
+                                                                     <td><span class="tr-suite-name">resources-manifest-cleanup_test.xml.</span><span class="tr-test-name">Nothing to clean up (pass right through)</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">6</span>]
+                                                                     </td>
                                                                      <td><span class="tr-suite-name">resources-manifest-cleanup_test.xml.</span><span class="tr-test-name">Remove duplicate c:entry</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 192]</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -569,7 +243,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'content2metadata_test.xml' has 1 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'content2metadata_test.xml' has 2 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -578,10 +252,21 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">6</span>]
+                                                                     <td>[<span class="test-name">7</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">content2metadata_test.xml.</span><span class="tr-test-name">Minimal content document</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">content2metadata_test.xml.</span><span class="tr-test-name">No metadata</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">8</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">content2metadata_test.xml.</span><span class="tr-test-name">Some non-global metadata</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -602,58 +287,10 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">7</span>]
-                                                                     </td>
-                                                                     <td><span class="tr-suite-name">metadata2opf-metadata_test.xml.</span><span class="tr-test-name">Simple metadata</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                                                   <tbody>
-                                                      <tr>
-                                                         <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'content2resources_test.xml' has 1 tests/suites</span></td>
-                                                      </tr>
-                                                      <tr>
-                                                         <td>&nbsp;</td>
-                                                         <td>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">8</span>]
-                                                                     </td>
-                                                                     <td><span class="tr-suite-name">content2resources_test.xml.</span><span class="tr-test-name">Minimal content document</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                                                   <tbody>
-                                                      <tr>
-                                                         <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'navigation2resources_test.xml' has 1 tests/suites</span></td>
-                                                      </tr>
-                                                      <tr>
-                                                         <td>&nbsp;</td>
-                                                         <td>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">9</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">navigation2resources_test.xml.</span><span class="tr-test-name">Minimal NCC</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">metadata2opf-metadata_test.xml.</span><span class="tr-test-name">Some metadata</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -665,7 +302,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'media-overlay2resources_test.xml' has 2 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'content2resources_test.xml' has 3 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -676,13 +313,8 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">10</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">media-overlay2resources_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0 [source fragment validation]</span></td>
-                                                                     <td><span class="tr-failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                                                                           [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                                                                           [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                                                                           [line 10, col 74]: Attribute "id" must be declared for element type "text".]</span></td>
+                                                                     <td><span class="tr-suite-name">content2resources_test.xml.</span><span class="tr-test-name">Minimal content document</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -692,8 +324,111 @@ body {
                                                                      <td>&nbsp;</td>
                                                                      <td>[<span class="test-name">11</span>]
                                                                      </td>
+                                                                     <td><span class="tr-suite-name">content2resources_test.xml.</span><span class="tr-test-name">CSS-stylesheet in &lt;head/&gt;</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">12</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">content2resources_test.xml.</span><span class="tr-test-name">Two PNG-images</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                                <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td>&nbsp;</td>
+                                                         <td><span class="tr-suite-name">Suite 'navigation2resources_test.xml' has 2 tests/suites</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                         <td>&nbsp;</td>
+                                                         <td>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">13</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">navigation2resources_test.xml.</span><span class="tr-test-name">No referenced resources</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">14</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">navigation2resources_test.xml.</span><span class="tr-test-name">CSS-stylesheet referenced in &lt;head/&gt;</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                                <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td>&nbsp;</td>
+                                                         <td><span class="tr-suite-name">Suite 'media-overlay2resources_test.xml' has 4 tests/suites</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                         <td>&nbsp;</td>
+                                                         <td>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">15</span>]
+                                                                     </td>
                                                                      <td><span class="tr-suite-name">media-overlay2resources_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">16</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">media-overlay2resources_test.xml.</span><span class="tr-test-name">One referenced audio file</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">17</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">media-overlay2resources_test.xml.</span><span class="tr-test-name">Same audio file referenced twice</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">18</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">media-overlay2resources_test.xml.</span><span class="tr-test-name">Multiple audio files</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -714,10 +449,10 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">12</span>]
+                                                                     <td>[<span class="test-name">19</span>]
                                                                      </td>
                                                                      <td><span class="tr-suite-name">ncc2navigation_test.xml.</span><span class="tr-test-name">Minimal NCC</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 19]</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -729,7 +464,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'smil2media-overlay_test.xml' has 3 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'smil2media-overlay_test.xml' has 2 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -738,38 +473,21 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">13</span>]
-                                                                     </td>
-                                                                     <td><span class="tr-suite-name">smil2media-overlay_test.xml.</span><span class="tr-test-name">Minimal SMIL 1.0 [source fragment validation]</span></td>
-                                                                     <td><span class="tr-failure">[[line 3, col 57]: Attribute "xmlns" must be declared for element type "smil".
-                                                                           [line 6, col 23]: The content of element type "head" is incomplete, it must match "(meta*,((layout|switch),meta*))?".]</span></td>
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">14</span>]
-                                                                     </td>
-                                                                     <td><span class="tr-suite-name">smil2media-overlay_test.xml.</span><span class="tr-test-name">Minimal SMIL 1.0 [expected fragment validation]</span></td>
-                                                                     <td><span class="tr-failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                                                                           [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                                                                           [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                                                                           [line 10, col 74]: Attribute "id" must be declared for element type "text".]</span></td>
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">15</span>]
+                                                                     <td>[<span class="test-name">20</span>]
                                                                      </td>
                                                                      <td><span class="tr-suite-name">smil2media-overlay_test.xml.</span><span class="tr-test-name">Minimal SMIL 1.0</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 19]</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">21</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">smil2media-overlay_test.xml.</span><span class="tr-test-name">Discard &lt;layout/&gt;s</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -790,10 +508,10 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">16</span>]
+                                                                     <td>[<span class="test-name">22</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">manifest2opf-spine_test.xml.</span><span class="tr-test-name">Simple manifest</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">manifest2opf-spine_test.xml.</span><span class="tr-test-name">Simple spine</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -814,10 +532,10 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">17</span>]
+                                                                     <td>[<span class="test-name">23</span>]
                                                                      </td>
                                                                      <td><span class="tr-suite-name">xhtml2content_test.xml.</span><span class="tr-test-name">Minimal text content document</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 19]</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -829,7 +547,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'manifest2spine_test.xml' has 1 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'manifest2spine_test.xml' has 2 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -838,10 +556,21 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">18</span>]
+                                                                     <td>[<span class="test-name">24</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">manifest2spine_test.xml.</span><span class="tr-test-name">Simple manifest</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 43]</span></td>
+                                                                     <td><span class="tr-suite-name">manifest2spine_test.xml.</span><span class="tr-test-name">Simple entry</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">25</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">manifest2spine_test.xml.</span><span class="tr-test-name">Multiple entries</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -853,7 +582,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'media-overlay2reverse-media-overlay_test.xml' has 2 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'media-overlay2reverse-media-overlay_test.xml' has 1 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -862,26 +591,10 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">19</span>]
+                                                                     <td>[<span class="test-name">26</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">media-overlay2reverse-media-overlay_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0 [source fragment validation]</span></td>
-                                                                     <td><span class="tr-failure">[[line 3, col 136]: Attribute "profile" must be declared for element type "smil".
-                                                                           [line 5, col 46]: Attribute "content" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "name" is required and must be specified for element type "meta".
-                                                                           [line 5, col 46]: Attribute "property" must be declared for element type "meta".
-                                                                           [line 5, col 63]: The content of element type "meta" must match "EMPTY".
-                                                                           [line 10, col 74]: Attribute "id" must be declared for element type "text".]</span></td>
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">20</span>]
-                                                                     </td>
-                                                                     <td><span class="tr-suite-name">media-overlay2reverse-media-overlay_test.xml.</span><span class="tr-test-name">Minimal SMIL 3.0</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 15]</span></td>
+                                                                     <td><span class="tr-suite-name">media-overlay2reverse-media-overlay_test.xml.</span><span class="tr-test-name">Simple SMIL 3.0</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>
@@ -893,7 +606,7 @@ body {
                                                    <tbody>
                                                       <tr>
                                                          <td>&nbsp;</td>
-                                                         <td><span class="tr-suite-name">Suite 'ncc2flow-manifest_test.xml' has 1 tests/suites</span></td>
+                                                         <td><span class="tr-suite-name">Suite 'ncc2flow-manifest_test.xml' has 4 tests/suites</span></td>
                                                       </tr>
                                                       <tr>
                                                          <td>&nbsp;</td>
@@ -902,10 +615,43 @@ body {
                                                                <tbody>
                                                                   <tr>
                                                                      <td>&nbsp;</td>
-                                                                     <td>[<span class="test-name">21</span>]
+                                                                     <td>[<span class="test-name">27</span>]
                                                                      </td>
-                                                                     <td><span class="tr-suite-name">ncc2flow-manifest_test.xml.</span><span class="tr-test-name">Minimal NCC</span></td>
-                                                                     <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 17]</span></td>
+                                                                     <td><span class="tr-suite-name">ncc2flow-manifest_test.xml.</span><span class="tr-test-name">One referenced SMIL</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">28</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">ncc2flow-manifest_test.xml.</span><span class="tr-test-name">Multiple referenced SMILs</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">29</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">ncc2flow-manifest_test.xml.</span><span class="tr-test-name">Same SMIL referenced multiple times</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                     <td>&nbsp;</td>
+                                                                     <td>[<span class="test-name">30</span>]
+                                                                     </td>
+                                                                     <td><span class="tr-suite-name">ncc2flow-manifest_test.xml.</span><span class="tr-test-name">Manifest is in order of appearance ("the flow")</span></td>
+                                                                     <td><span class="tr-ok">[OK]</span></td>
                                                                   </tr>
                                                                </tbody>
                                                             </table>

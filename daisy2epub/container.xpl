@@ -14,7 +14,7 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="daisy2epub-library.xpl"/>
+    <p:import href="html-library.xpl"/>
     <p:import href="fileset-library.xpl"/>
     <p:import href="zip-library.xpl"/>
 

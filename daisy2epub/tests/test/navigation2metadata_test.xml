@@ -2,9 +2,9 @@
 <!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:epub="http://www.idpf.org/2011/epub"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <utfx:stylesheet src="../ncc2navigation.xsl"/>
+   <utfx:stylesheet src="../navigation2metadata.xsl"/>
    <utfx:test>
-      <utfx:name>Minimal NCC</utfx:name>
+      <utfx:name>Some metadata</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
             <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">

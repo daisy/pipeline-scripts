@@ -3,12 +3,12 @@
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../media-overlay2reverse-media-overlay.xsl"/>
-   <utfx:source-validation>
+   <!--utfx:source-validation>
       <utfx:dtd public="-//W3C//DTD SMIL 3.0 Daisy//EN"
          system="http://www.w3.org/2008/SMIL30/SMIL30Daisy.dtd"/>
-   </utfx:source-validation>
+   </utfx:source-validation-->
    <utfx:test>
-      <utfx:name>Minimal SMIL 3.0</utfx:name>
+      <utfx:name>Simple SMIL 3.0</utfx:name>
       <utfx:stylesheet-params>
          <utfx:with-param name="href" select="'timesheet.smil'"/>
          <utfx:with-param name="out-href" select="'timesheet.smil'"/>

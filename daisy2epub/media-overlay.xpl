@@ -54,7 +54,7 @@
 
         <p:iteration-source select="//c:entry"/>
         <p:variable name="href" select="/*/@href"/>
-
+        
         <p:load>
             <p:with-option name="href" select="concat($daisy-dir,$href)"/>
         </p:load>
