@@ -4,6 +4,25 @@
    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../resources-manifest-cleanup.xsl"/>
    <utfx:test>
+      <utfx:name>Nothing to clean up (pass right through)</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <c:manifest>
+               <c:entry href="a.mp3" media-type="audio/mpeg"/>
+               <c:entry href="b.css" media-type="text/css"/>
+               <c:entry href="c.png" media-type="image/png"/>
+            </c:manifest>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="a.mp3" media-type="audio/mpeg"/>
+               <c:entry href="b.css" media-type="text/css"/>
+               <c:entry href="c.png" media-type="image/png"/>
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
       <utfx:name>Remove duplicate c:entry</utfx:name>
       <utfx:assert-equal>
          <utfx:source>

@@ -13,8 +13,8 @@
 
     <xsl:template match="/*">
         <xsl:element name="html">
-            <xsl:namespace name="epub" select="'http://www.idpf.org/2011/epub'"/>
-            <xsl:apply-templates select="*"/>
+            <xsl:attribute name="profile" select="'http://www.idpf.org/epub/30/profile/content/'"/>
+            <xsl:apply-templates select="@*|*"/>
         </xsl:element>
     </xsl:template>
 
@@ -35,47 +35,53 @@
     </xsl:template>
 
     <xsl:template match="html:body">
-        <xsl:element name="nav">
-            <xsl:attribute name="epub:type" select="'toc'"/>
-            <xsl:attribute name="id" select="'toc'"/>
-            <xsl:element name="ol">
-                <xsl:call-template name="make-toc-level">
-                    <xsl:with-param name="level" select="'h1'"/>
-                    <xsl:with-param name="group" select="child::*"/>
-                </xsl:call-template>
-            </xsl:element>
-        </xsl:element>
-        <xsl:if test="child::html:span">
+        <body>
             <xsl:element name="nav">
-                <xsl:attribute name="epub:type" select="'page-list'"/>
-                <xsl:attribute name="style" select="'display:none'"/>
+                <xsl:attribute name="epub:type" select="'toc'"/>
+                <xsl:attribute name="id" select="'toc'"/>
                 <xsl:element name="ol">
-                    <xsl:for-each select="child::html:span">
-                        <xsl:element name="li">
-                            <xsl:element name="a">
-                                <xsl:attribute name="href" select="child::html:a[1]/@*"/>
-                                <xsl:value-of select="child::html:a[1]"/>
-                            </xsl:element>
-                        </xsl:element>
-                    </xsl:for-each>
+                    <xsl:call-template name="make-toc-level">
+                        <xsl:with-param name="level" select="'h1'"/>
+                        <xsl:with-param name="group" select="child::*"/>
+                    </xsl:call-template>
                 </xsl:element>
             </xsl:element>
-        </xsl:if>
-        <xsl:if test="child::html:div">
-            <xsl:element name="nav">
-                <xsl:attribute name="epub:type" select="'landmarks'"/>
-                <xsl:element name="ol">
-                    <xsl:for-each select="child::html:div">
-                        <xsl:element name="li">
-                            <xsl:element name="a">
-                                <xsl:attribute name="href" select="child::html:a[1]/@href"/>
-                                <xsl:value-of select="child::html:a[1]"/>
+            <xsl:if test="child::html:span">
+                <xsl:element name="nav">
+                    <xsl:attribute name="epub:type" select="'page-list'"/>
+                    <xsl:attribute name="style" select="'display:none'"/>
+                    <xsl:element name="ol">
+                        <xsl:for-each select="child::html:span">
+                            <xsl:element name="li">
+                                <a href="{child::html:a[1]/@href}">
+                                    <xsl:if test="@id">
+                                        <xsl:attribute name="id" select="@id"/>
+                                    </xsl:if>
+                                    <xsl:value-of select="child::html:a[1]"/>
+                                </a>
                             </xsl:element>
-                        </xsl:element>
-                    </xsl:for-each>
+                        </xsl:for-each>
+                    </xsl:element>
                 </xsl:element>
-            </xsl:element>
-        </xsl:if>
+            </xsl:if>
+            <xsl:if test="child::html:div">
+                <xsl:element name="nav">
+                    <xsl:attribute name="epub:type" select="'landmarks'"/>
+                    <xsl:element name="ol">
+                        <xsl:for-each select="child::html:div">
+                            <xsl:element name="li">
+                                <a href="{child::html:a[1]/@href}">
+                                    <xsl:if test="@id">
+                                        <xsl:attribute name="id" select="@id"/>
+                                    </xsl:if>
+                                    <xsl:value-of select="child::html:a[1]"/>
+                                </a>
+                            </xsl:element>
+                        </xsl:for-each>
+                    </xsl:element>
+                </xsl:element>
+            </xsl:if>
+        </body>
     </xsl:template>
 
     <xsl:template name="make-toc-level">
@@ -115,10 +121,12 @@
 
     <xsl:template
         match="html:*[self::html:h1 or self::html:h2 or self::html:h3 or self::html:h4 or self::html:h5 or self::html:h6]">
-        <xsl:element name="a">
-            <xsl:attribute name="href" select="child::html:a[1]/@href"/>
+        <a href="{child::html:a[1]/@href}">
+            <xsl:if test="@id">
+                <xsl:attribute name="id" select="@id"/>
+            </xsl:if>
             <xsl:value-of select="child::html:a[1]"/>
-        </xsl:element>
+        </a>
     </xsl:template>
 
 </xsl:stylesheet>

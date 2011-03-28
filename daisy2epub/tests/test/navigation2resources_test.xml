@@ -2,9 +2,9 @@
 <!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:epub="http://www.idpf.org/2011/epub"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <utfx:stylesheet src="../ncc2navigation.xsl"/>
+   <utfx:stylesheet src="../navigation2resources.xsl"/>
    <utfx:test>
-      <utfx:name>Minimal NCC</utfx:name>
+      <utfx:name>No referenced resources</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
             <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
@@ -34,6 +34,43 @@
          </utfx:source>
          <utfx:expected>
             <c:manifest/>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
+      <utfx:name>CSS-stylesheet referenced in &lt;head/&gt;</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
+               <head>
+                  <title>HTML document title</title>
+                  <meta name="dc:date" content="2011-03-18" scheme="yyyy-mm-dd"/>
+                  <meta name="dc:format" content="Daisy 2.02"/>
+                  <meta name="dc:identifier" content="identifier"/>
+                  <meta name="dc:language" content="EN"/>
+                  <meta name="dc:publisher" content="DAISY Consortium"/>
+                  <meta name="dc:title" content="Title of DTB or Publication"/>
+                  <meta name="ncc:charset" content="UTF-8"/>
+                  <meta name="ncc:pageFront" content="1"/>
+                  <meta name="ncc:pageNormal" content="2"/>
+                  <meta name="ncc:pageSpecial" content="3"/>
+                  <meta name="ncc:tocItems" content="1"/>
+                  <meta name="ncc:totalTime" content="00:00:10" scheme="hh:mm:ss"/>
+                  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+               </head>
+               <body>
+                  <nav epub:type="toc" id="toc">
+                     <ol>
+                        <a href="test.smil#fragment" id="title1">Heading 1</a>
+                     </ol>
+                  </nav>
+               </body>
+            </html>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="stylesheet.css" media-type="text/css"/>
+            </c:manifest>
          </utfx:expected>
       </utfx:assert-equal>
    </utfx:test>

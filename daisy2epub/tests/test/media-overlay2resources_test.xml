@@ -3,10 +3,10 @@
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../media-overlay2resources.xsl"/>
-   <utfx:source-validation>
+   <!--utfx:source-validation>
       <utfx:dtd public="-//W3C//DTD SMIL 3.0 Daisy//EN"
          system="http://www.w3.org/2008/SMIL30/SMIL30Daisy.dtd"/>
-   </utfx:source-validation>
+   </utfx:source-validation-->
    <utfx:test>
       <utfx:name>Minimal SMIL 3.0</utfx:name>
       <utfx:assert-equal>
@@ -25,8 +25,90 @@
             </smil>
          </utfx:source>
          <utfx:expected>
+            <c:manifest/>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
+      <utfx:name>One referenced audio file</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+               <head>
+                  <meta property="dc:format">Daisy 2.02</meta>
+               </head>
+               <body>
+                  <seq>
+                     <par>
+                        <text src="content.html#fragment" id="content1"/>
+                        <audio src="audio.mp3"/>
+                     </par>
+                  </seq>
+               </body>
+            </smil>
+         </utfx:source>
+         <utfx:expected>
             <c:manifest>
-               <c:entry href="content.html"/>
+               <c:entry href="audio.mp3"/>
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
+      <utfx:name>Same audio file referenced twice</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+               <head>
+                  <meta property="dc:format">Daisy 2.02</meta>
+               </head>
+               <body>
+                  <seq>
+                     <par>
+                        <text src="content.html#fragmentA" id="content1"/>
+                        <audio src="audio.mp3"/>
+                     </par>
+                     <par>
+                        <text src="content.html#fragmentB" id="content2"/>
+                        <audio src="audio.mp3"/>
+                     </par>
+                  </seq>
+               </body>
+            </smil>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="audio.mp3"/>
+            </c:manifest>
+         </utfx:expected>
+      </utfx:assert-equal>
+   </utfx:test>
+   <utfx:test>
+      <utfx:name>Multiple audio files</utfx:name>
+      <utfx:assert-equal>
+         <utfx:source>
+            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+               <head>
+                  <meta property="dc:format">Daisy 2.02</meta>
+               </head>
+               <body>
+                  <seq>
+                     <par>
+                        <text src="content.html#fragmentA" id="content1"/>
+                        <audio src="audioA.mp3"/>
+                     </par>
+                     <par>
+                        <text src="content.html#fragmentB" id="content2"/>
+                        <audio src="audioB.mp3"/>
+                     </par>
+                  </seq>
+               </body>
+            </smil>
+         </utfx:source>
+         <utfx:expected>
+            <c:manifest>
+               <c:entry href="audioA.mp3"/>
+               <c:entry href="audioB.mp3"/>
             </c:manifest>
          </utfx:expected>
       </utfx:assert-equal>

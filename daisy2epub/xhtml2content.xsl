@@ -8,4 +8,12 @@
         </xsl:copy>
     </xsl:template>
     
+    <xsl:template match="/*">
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:attribute name="profile" select="'http://www.idpf.org/epub/30/profile/content/'"/>
+            <xsl:apply-templates select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
 </xsl:stylesheet>

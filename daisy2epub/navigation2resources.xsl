@@ -4,7 +4,7 @@
     exclude-result-prefixes="#all">
 
     <xsl:template match="/*">
-        <c:body>
+        <c:manifest>
             <xsl:for-each select="/processing-instruction('xml-stylesheet')">
                 <xsl:variable name="href"
                     select="replace(.,'^.*href=(&amp;apos;|&quot;)(.*?)\1.*$','$2')"/>
@@ -20,7 +20,7 @@
                         </xsl:when>
                         <xsl:when
                             test="ends-with(lower-case($href),'.xsl') or ends-with(lower-case($href),'.xslt')">
-                            <xsl:value-of select="'text/css'"/>
+                            <xsl:value-of select="'application/xslt+xml'"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of select="false()"/>
@@ -28,13 +28,31 @@
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:if test="$inferredType">
-                    <c:file href="{$href}" type="{$inferredType}"/>
+                <c:entry href="{$href}" media-type="{$inferredType}"/>
                 </xsl:if>
             </xsl:for-each>
-            <xsl:for-each select="//@src | //@href">
-                <c:file href="{replace(.,'#.*$','')}"/>
+            <xsl:for-each select="//h:link[ends-with(lower-case(@href),'.css')]">
+                <c:entry href="{@href}" media-type="text/css"/>
             </xsl:for-each>
-        </c:body>
+            <xsl:for-each select="//h:img">
+                <xsl:variable name="type">
+                    <xsl:choose>
+                        <xsl:when test="ends-with(lower-case(@src),'.jpg')"
+                            ><![CDATA[image/jpeg]]></xsl:when>
+                        <xsl:when test="ends-with(lower-case(@src),'.jpeg')"
+                            ><![CDATA[image/jpeg]]></xsl:when>
+                        <xsl:when test="ends-with(lower-case(@src),'.png')"
+                            ><![CDATA[image/png]]></xsl:when>
+                        <xsl:when test="ends-with(lower-case(@src),'.gif')"
+                            ><![CDATA[image/gif]]></xsl:when>
+                        <xsl:otherwise/>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:if test="$type">
+                    <c:entry href="{@src}" media-type="{$type}"/>
+                </xsl:if>
+            </xsl:for-each>
+        </c:manifest>
     </xsl:template>
 
 </xsl:stylesheet>

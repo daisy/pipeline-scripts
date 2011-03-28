@@ -48,7 +48,9 @@
                <body>
                   <nav epub:type="toc" id="toc">
                      <ol>
-                        <a href="test.smil#fragment" id="title1">Heading 1</a>
+                        <li>
+                           <a href="test.smil#fragment" id="title1">Heading 1</a>
+                        </li>
                      </ol>
                   </nav>
                </body>
@@ -56,4 +58,5 @@
          </utfx:expected>
       </utfx:assert-equal>
    </utfx:test>
+   <!-- TODO: test header level nesting, spans (pages) and divs (landmarks) -->
 </utfx:tests>

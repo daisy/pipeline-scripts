@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" version="1.0">
+    xmlns:px="http://pipeline.daisy.org/ns/" version="1.0">
 
-    <p:declare-step type="d2e:load-html">
+    <p:declare-step type="px:load-html">
         <p:documentation><![CDATA[
             Tries first to p:load the HTML-file. An exception will be thrown
             if the file is not well formed XML, in which case the file will

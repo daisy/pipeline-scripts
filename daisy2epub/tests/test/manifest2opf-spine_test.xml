@@ -5,20 +5,29 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../manifest2opf-spine.xsl"/>
    <utfx:test>
-      <utfx:name>Simple manifest</utfx:name>
+      <utfx:name>Simple spine</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <c:manifest>
-               <c:entry id="content1" href="content1.xhtml" media-type="application/xhtml+xml"/>
-               <c:entry id="content2" href="content2.xhtml" media-type="application/xhtml+xml"/>
-               <c:entry id="content3" href="content3.xhtml" media-type="application/xhtml+xml"/>
-            </c:manifest>
+            <opf:manifest>
+               <item id="navigation" href="navigation.xhtml" media-type="application/xhtml+xml"/>
+               <item id="content1" href="content1.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet1"/>
+               <item id="content2" href="content2.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet2"/>
+               <item id="content3" href="content3.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet3"/>
+               <item id="timesheet1" href="timesheet1.smil" media-type="application/smil+xml"/>
+               <item id="timesheet2" href="timesheet2.smil" media-type="application/smil+xml"/>
+               <item id="timesheet3" href="timesheet3.smil" media-type="application/smil+xml"/>
+               <item id="audio1" href="audio1.mp3" media-type="audio/mpeg"/>
+               <item id="audio2" href="audio2.mp3" media-type="audio/mpeg"/>
+               <item id="audio3" href="audio3.mp3" media-type="audio/mpeg"/>
+               <item id="stylesheet1" href="stylesheet.css" media-type="text/css"/>
+               <item id="image1" href="image.png" media-type="image/png"/>
+            </opf:manifest>
          </utfx:source>
          <utfx:expected>
             <opf:spine>
-               <opf:item id="content1" href="content1.xhtml" media-type="application/xhtml+xml"/>
-               <opf:item id="content2" href="content2.xhtml" media-type="application/xhtml+xml"/>
-               <opf:item id="content3" href="content3.xhtml" media-type="application/xhtml+xml"/>
+               <itemref idref="content1"/>
+               <itemref idref="content2"/>
+               <itemref idref="content3"/>
             </opf:spine>
          </utfx:expected>
       </utfx:assert-equal>

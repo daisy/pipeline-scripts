@@ -5,7 +5,7 @@
    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <utfx:stylesheet src="../metadata2opf-metadata.xsl"/>
    <utfx:test>
-      <utfx:name>Simple metadata</utfx:name>
+      <utfx:name>Some metadata</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
             <c:metadata>
@@ -26,18 +26,20 @@
          <utfx:expected>
             <opf:metadata>
                <dc:identifier id="pub-id">identifier</dc:identifier>
-               <dc:title>Title of DTB or Publication</dc:title>
+               <dc:title id="title">Title of DTB or Publication</dc:title>
                <dc:language>EN</dc:language>
-               <opf:meta property="dcterms:modified">{ignore dynamically created time}</opf:meta>
-               <dc:date>2011-03-18</dc:date>
-               <dc:format>Daisy 2.02</dc:format>
-               <dc:publisher>DAISY Consortium</dc:publisher>
-               <opf:meta property="ncc:charset">UTF-8</opf:meta>
-               <opf:meta property="ncc:pageFront">1</opf:meta>
-               <opf:meta property="ncc:pageNormal">2</opf:meta>
-               <opf:meta property="ncc:pageSpecial">3</opf:meta>
-               <opf:meta property="ncc:tocItems">1</opf:meta>
-               <opf:meta property="ncc:totalTime">00:00:10</opf:meta>
+               <dc:date id="date">2011-03-18</dc:date>
+               <meta about="#date" property="scheme">yyyy-mm-dd</meta>
+               <meta property="dcterms:modified">{TODO: ignore dynamically created time}</meta>
+               <dc:format>ePub3</dc:format>
+               <dc:publisher id="meta_5">DAISY Consortium</dc:publisher>
+               <meta id="meta_7" property="ncc:charset">UTF-8</meta>
+               <meta id="meta_8" property="ncc:pageFront">1</meta>
+               <meta id="meta_9" property="ncc:pageNormal">2</meta>
+               <meta id="meta_10" property="ncc:pageSpecial">3</meta>
+               <meta id="meta_11" property="ncc:tocItems">1</meta>
+               <meta id="meta_12" property="ncc:totalTime">00:00:10</meta>
+               <meta about="#meta_12" property="scheme">hh:mm:ss</meta>
             </opf:metadata>
          </utfx:expected>
       </utfx:assert-equal>

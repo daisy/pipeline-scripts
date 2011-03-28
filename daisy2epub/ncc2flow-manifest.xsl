@@ -14,17 +14,13 @@
     </xsl:template>
 
     <xsl:template match="h:body">
-        <xsl:element name="c:body">
-            <xsl:for-each select="child::*">
-                <xsl:variable name="href" select="tokenize(child::h:a/@href,'#')[1]"/>
-                <xsl:if
-                    test="not(preceding-sibling::*/descendant::h:a[tokenize(@href,'#')[1]=$href])">
-                    <xsl:element name="c:file">
-                        <xsl:attribute name="href" select="$href"/>
-                    </xsl:element>
+        <c:manifest>
+            <xsl:for-each select="distinct-values(*/h:a/tokenize(@href,'#')[1])">
+                <xsl:if test="matches(.,'smil$')">
+                    <c:entry href="{.}" media-type="application/smil+xml"/>
                 </xsl:if>
             </xsl:for-each>
-        </xsl:element>
+        </c:manifest>
     </xsl:template>
-    
+
 </xsl:stylesheet>
