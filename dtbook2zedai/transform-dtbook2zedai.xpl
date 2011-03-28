@@ -94,7 +94,12 @@
                 <p:document href="normalize-block-inline.xsl"/>
             </p:input>
         </p:xslt>
-
+        <!-- normalize mixed section/block content models -->
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="normalize-section-block.xsl"/>
+            </p:input>
+        </p:xslt>
         <!-- normalize definition lists by relocating illegal elements from definitions -->
         <p:xslt>
             <p:input port="stylesheet">
