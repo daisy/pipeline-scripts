@@ -3,7 +3,9 @@
 <p:declare-step version="1.0" name="dtbook2zedai" xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" exclude-inline-prefixes="cx">
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" 
+    xmlns:p2meta="http://pipeline.daisy.org/ns/metadata/"
+    exclude-inline-prefixes="cx">
 
     <!-- 
         
@@ -20,7 +22,8 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="transform-dtbook2zedai.xpl"/>
     <p:import href="merge-dtbook.xpl"/>
-
+    <p:import href="../metadata/metadata.xpl"/>
+    
     <p:variable name="zedai-file"
         select="resolve-uri(
                     if ($output='') then concat(
@@ -57,19 +60,16 @@
             </cx:message>
         </p:otherwise>
     </p:choose>
--->
-
-
+    -->
+    
     <!-- create MODS metadata record -->
-    <p:xslt name="create-mods">
+    <p2meta:metadata-generator name="generate-metadata">
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
-        <p:input port="stylesheet">
-            <p:document href="generate-mods.xsl"/>
-        </p:input>
-    </p:xslt>
-
+        <p:with-option name="output" select="$mods-file"/>
+     </p2meta:metadata-generator>
+    
     <!-- normalize and transform -->
     <d2z:transform-dtbook2zedai name="transform-dtbook2zedai">
         <p:input port="source">

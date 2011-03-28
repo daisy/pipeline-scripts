@@ -845,5 +845,6 @@
     </meta>
     <projectTree name="dtbook2zedai.xpr">
         <folder path="."/>
+        <folder path="../utilities/"/>
     </projectTree>
 </project>
