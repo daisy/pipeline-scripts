@@ -7,8 +7,9 @@
     <p:option name="output" select="''"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="fileset-library.xpl"/>
-    <p:import href="zip-library.xpl"/>
+    <!--FIXME import utils from absolute URIs-->
+    <p:import href="../../../../utilities/files/fileset-library.xpl"/>
+    <p:import href="../../../../utilities/zip/zip-library.xpl"/>
     <p:import href="handle-zedai-refs.xpl"/>
 
     <p:variable name="epub-file"

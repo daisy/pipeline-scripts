@@ -10,7 +10,8 @@
   <p:option name="output" select="'output/'"/>
 
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="fileutils-library.xpl"/>
+  <!--FIXME import utils from absolute URIs-->
+  <p:import href="../../../../utilities/files/fileutils-library.xpl"/>
 
   <!-- TODO move this to XPath utils ? -->
   <p:variable name="output-dir"
