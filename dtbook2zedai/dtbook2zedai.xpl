@@ -4,13 +4,13 @@
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" 
-    xmlns:p2meta="http://pipeline.daisy.org/ns/metadata/"
+    xmlns:p2util="http://pipeline.daisy.org/ns/utilities/"
     exclude-inline-prefixes="cx">
 
     <!-- 
         
-        This XProc script is the main entry point for the DTBook2ZedAI module.
-        The module's homepage is here: http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI
+        The main entry point for the DTBook2ZedAI module.
+        http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI
         
     -->
 
@@ -21,8 +21,9 @@
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="transform-dtbook2zedai.xpl"/>
-    <p:import href="merge-dtbook.xpl"/>
-    <p:import href="../metadata/metadata.xpl"/>
+    <p:import href="../utilities/metadata-generator/metadata-generator.xpl"/>
+    <p:import href="../utilities/dtbook-merger/dtbook-merger.xpl"/>
+    <p:import href="../utilities/dtbook-migrator/dtbook-migrator.xpl"/>
     
     <p:variable name="zedai-file"
         select="resolve-uri(
@@ -40,35 +41,36 @@
 
     <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
 
+    
+    <!-- upgrade DTBook -->
+    <p2util:dtbook-migrator name="upgrade-dtbook"/>
+        
+    <!-- Merge documents -->
+    <p:count name="num-input-documents" limit="2"/>
+
+    <p:choose name="dtbook-merger">
+        <p:when test=".//c:result[. > 1]">
+            <p2util:dtbook-merger/>
+        </p:when>
+        <p:otherwise>
+            <p:identity/>
+        </p:otherwise>
+    </p:choose>
+    
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
         <p:input port="schema">
             <p:document href="schema/dtbook-2005-3.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-
-
-    <!--<p:count name="num-input-documents" limit="2"/>
-
-    <p:choose>
-        <p:when test=".//c:result[. > 1]">
-            <d2z:merge-dtbook/>
-        </p:when>
-        <p:otherwise>
-            <cx:message>
-                <p:with-option name="message" select="'single'"/>
-            </cx:message>
-        </p:otherwise>
-    </p:choose>
-    -->
     
     <!-- create MODS metadata record -->
-    <p2meta:metadata-generator name="generate-metadata">
+    <p2util:metadata-generator name="generate-metadata">
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
         <p:with-option name="output" select="$mods-file"/>
-     </p2meta:metadata-generator>
+     </p2util:metadata-generator>
     
     <!-- normalize and transform -->
     <d2z:transform-dtbook2zedai name="transform-dtbook2zedai">
@@ -79,12 +81,17 @@
         <p:with-option name="mods-filename" select="$mods-file"/>
     </d2z:transform-dtbook2zedai>
 
+    <!-- This is a step here instead of being an external library, because the following properties are required for generating CSS:
+        * elements are stable (no more moving them around and potentially changing their IDs)
+        * CSS information is still available
+    -->
     <p:xslt name="generate-css">
         <p:input port="source">
             <p:pipe step="transform-dtbook2zedai" port="result"/>
         </p:input>
         <p:input port="stylesheet">
             <p:inline>
+                <!-- This is a wrapper to XML-ify the raw CSS output.  XProc will only accept it this way. -->
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
                     <xsl:import href="generate-css.xsl"/>
                     <xsl:template match="/">
@@ -96,7 +103,8 @@
             </p:inline>
         </p:input>
     </p:xslt>
-
+    
+    <!-- Now that we've generated CSS, strip the style attributes -->
     <p:xslt name="remove-css-attributes">
         <p:input port="stylesheet">
             <p:document href="remove-css-attributes.xsl"/>
@@ -124,14 +132,6 @@
             <p:pipe step="validate-zedai" port="result"/>
         </p:input>
         <p:with-option name="href" select="$zedai-file"/>
-    </p:store>
-
-    <!-- write the MODS metadata record -->
-    <p:store>
-        <p:input port="source">
-            <p:pipe step="create-mods" port="result"/>
-        </p:input>
-        <p:with-option name="href" select="$mods-file"/>
     </p:store>
 
     <!-- write the CSS file (first strip it of its xml wrapper) -->

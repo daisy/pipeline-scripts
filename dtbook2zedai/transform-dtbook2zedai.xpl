@@ -7,6 +7,12 @@
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" exclude-inline-prefixes="cx">
 
 
+    <!-- 
+        
+        Transforms a file from DTBook-2005-3 to ZedAI.
+        Is only concerned with elements and attributes; does not store anything or extract any additional data (css, meta).        
+    -->
+
     <!-- input must be a valid DTBook 2005-3document -->
     <p:input port="source" primary="true"/>
 
@@ -115,10 +121,10 @@
         </p:xslt>
     </p:group>
     
-    <p:store>
+    <!--<p:store>
         <p:with-option name="href" select="'/tmp/normalized.xml'"/>
     </p:store>
-    
+    -->
     <!-- Translate element and attribute names from DTBook to ZedAI -->
     <p:xslt name="translate-dtbook2zedai">
         <p:with-param name="mods-filename" select="$mods-filename"/>
