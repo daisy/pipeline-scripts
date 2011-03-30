@@ -1,0 +1,154 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>UTF-X Test Results</title><style type="text/css">
+/* styles used in test summary */
+.suite-name {
+  color: #d71be8;
+  font-family: Courier;
+}
+.test-name {
+  color: cyan;
+  font-family: Courier;
+}
+.failure {
+  font-family: Courier;
+  color: red;
+}
+.error {
+  font-family: Courier;
+  color: yellow;
+}
+.ok {
+  font-family:Courier;
+  color:#44f733;
+}
+/* these are the styles used when displaying complete test run */
+.tr-suite-name {
+  color: #d71be8;
+  font-family: Courier;
+  font-size: 8pt;
+}
+.tr-test-name {
+  color: cyan;
+  font-family: Courier;
+  font-size: 8pt;
+}
+.tr-failure {
+  font-family: Courier;
+  color: red;
+  font-size: 8pt;  
+}
+.tr-error {
+  font-family: Courier;
+  color: yellow;
+  font-size: 8pt;  
+}
+.tr-ok {
+  font-family:Courier;
+  color:#44f733;
+  font-size: 8pt;  
+}
+
+.same-actual {
+    color: #44f733;
+    font-family: Courier;
+}
+.same-expected {
+    color: yellow;
+    font-family: Courier;
+}
+.diff {
+    color: red;
+    font-family: Courier;
+}
+.test-failure {
+    padding:2mm;
+    border-style:solid;
+    border-color:red;
+    border-width:1pt;
+}
+.test-error {
+    padding:2mm;
+    border-style:solid;
+    border-color:yellow;
+    border-width:1pt;
+}
+body {
+    font-family: Courier;
+    background-color:black;
+    color:white;
+}
+
+</style></head>
+   <body>
+      <div style="font-size:14pt; text-align:center;">UTF-X Test Run
+         Results
+      </div>
+      <div style="font-size:12pt; text-align:center;">Tue Mar 29 19:53:45 PDT 2011</div>
+      <div style="font-size:12pt; text-align:center;">Test
+         file: <span style="font-family:Courier;">/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/utfx/moveout-imggroup.xml</span></div>
+      <div>
+         <div><span style="color:cyan;">Time: </span><span>45 ms</span></div>
+         <div><span>Test run: 1</span>, <span class="failure">Failures: 1</span></div>
+         <p></p>
+         <div class="failure">There were 1
+            failures.
+         </div>
+         <div class="test-failure">
+            <table>
+               <tbody>
+                  <tr>
+                     <td class="failure">[1]</td>
+                     <td class="test-name">DTBook2ZedAI: Move Out Block-Level Code</td>
+                     <td class="failure">[UTF-X test failed: byte arrays differ at offset 63]</td>
+                  </tr>
+               </tbody>
+            </table>
+            <p>Actual:</p><span class="same-actual">&lt;utfx-wrapper&gt;&lt;dtbook&gt;&lt;book&gt;&lt;bodymatter&gt;&lt;level1&gt;&lt;div&gt;&lt;p&gt;Part A&lt;</span><span class="diff">imggroup id="d1e63"&gt;&lt;img alt="abc" id="d1e65" src="abc.jpg"&gt;&lt;/img&gt;&lt;caption id="d1e67"&gt;i am a caption&lt;/caption&gt;&lt;/imggroup&gt;Part
+               B&lt;/p&gt;&lt;/div&gt;&lt;/level1&gt;&lt;/bodymatter&gt;&lt;/book&gt;&lt;/dtbook&gt;&lt;/utfx-wrapper&gt;</span><p>Expected:</p><span class="same-expected">&lt;utfx-wrapper&gt;&lt;dtbook&gt;&lt;book&gt;&lt;bodymatter&gt;&lt;level1&gt;&lt;div&gt;&lt;p&gt;Part A&lt;</span><span class="diff">/p&gt;&lt;imggroup id="d1e63"&gt;&lt;img alt="abc" id="d1e65" src="abc.jpg"&gt;&lt;/img&gt;&lt;caption id="d1e67"&gt;i am a caption&lt;/caption&gt;&lt;/imggroup&gt;&lt;p&gt;Part
+               B&lt;/p&gt;&lt;/div&gt;&lt;/level1&gt;&lt;/bodymatter&gt;&lt;/book&gt;&lt;/dtbook&gt;&lt;/utfx-wrapper&gt;</span></div>
+         <p></p>
+         <p>Test run details:</p>
+         <div class="test-run-details">
+            <table border="0" width="100%" cellspacing="0" cellpadding="0">
+               <tbody>
+                  <tr>
+                     <td>&nbsp;</td>
+                     <td><span class="tr-suite-name">Suite 'UTF-X test suite: null' has 1 tests/suites</span></td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp;</td>
+                     <td>
+                        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                           <tbody>
+                              <tr>
+                                 <td>&nbsp;</td>
+                                 <td><span class="tr-suite-name">Suite 'moveout-imggroup.xml' has 1 tests/suites</span></td>
+                              </tr>
+                              <tr>
+                                 <td>&nbsp;</td>
+                                 <td>
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tbody>
+                                          <tr>
+                                             <td>&nbsp;</td>
+                                             <td>[<span class="test-name">1</span>]
+                                             </td>
+                                             <td><span class="tr-suite-name">moveout-imggroup.xml.</span><span class="tr-test-name">DTBook2ZedAI: Move Out Block-Level Code</span></td>
+                                             <td><span class="tr-failure">[UTF-X test failed: byte arrays differ at offset 63]</span></td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </body>
+</html>

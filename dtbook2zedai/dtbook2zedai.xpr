@@ -11,6 +11,39 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="name">
+                                    <String xml:space="preserve">temp</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/temp.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-imggroup.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook2zedai.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
                                     <String xml:space="preserve">dtbook-migrator</String>
                                 </field>
                                 <field name="type">
@@ -28,106 +61,29 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook2zedai.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">transform-dtbook2zedai.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-imggroup.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-merger</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-multivol-3.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-merger</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-merger.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-meta.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
                                     <String xml:space="preserve">dtbook-tests/dtbook-code.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">find-parents</String>
+                                    <String xml:space="preserve">dtbook2zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xpl</String>
+                                    <String xml:space="preserve">dtbook-tests/dtbook-css.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">find-parents</String>
+                                    <String xml:space="preserve">linebreaks-2</String>
                                 </field>
                                 <field name="type">
-                                    <String xml:space="preserve">XML</String>
+                                    <String xml:space="preserve">XSL</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xsl</String>
+                                    <String xml:space="preserve">xslt-unit-tests/linebreaks-2.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -149,7 +105,18 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-css.xml</String>
+                                    <String xml:space="preserve">transform-dtbook2zedai.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-mixed-section</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">normalize-section-block.xsl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -165,13 +132,68 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook-mixed-section</String>
+                                    <String xml:space="preserve">find-parents</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">find-parents</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook2zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-meta.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-merger</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-merger.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-merger</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-multivol-3.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XSL</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">normalize-section-block.xsl</String>
+                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
                                 </field>
                             </scenarioAssociation>
                         </scenarioAssociation-array>
@@ -203,6 +225,172 @@
                                 </field>
                                 <field name="inputXSLURL">
                                     <String xml:space="preserve">file:/home/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook2zedai/normalize-section-block.xsl</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String xml:space="preserve">${currentFileURL}</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <null/>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String xml:space="preserve">Saxon-HE</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String xml:space="preserve">linebreaks-2</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String xml:space="preserve">pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String xml:space="preserve">Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/convert-linebreaks.xsl</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String xml:space="preserve">${currentFileURL}</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <null/>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean xml:space="preserve">false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean xml:space="preserve">true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String xml:space="preserve">Saxon-HE</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String xml:space="preserve">temp</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String xml:space="preserve">pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String xml:space="preserve">Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String xml:space="preserve"></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/moveout-imggroup.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -487,16 +675,7 @@
                                     <xprocOption-array/>
                                 </field>
                                 <field name="xprocParameters">
-                                    <xprocParameterPort-array>
-                                    <xprocParameterPort>
-                                    <field name="portName">
-                                    <String xml:space="preserve">*</String>
-                                    </field>
-                                    <field name="parameters">
-                                    <xprocParameter-array/>
-                                    </field>
-                                    </xprocParameterPort>
-                                    </xprocParameterPort-array>
+                                    <xprocParameterPort-array/>
                                 </field>
                                 <field name="advancedOptionsMap">
                                     <null/>

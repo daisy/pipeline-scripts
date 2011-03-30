@@ -36,7 +36,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="//z:table">
+    <xsl:template match="z:table">
         <xsl:if test="@width or @border or @cellspacing or @cellpadding">
             #<xsl:value-of select="@xml:id"/>{
             <xsl:if test="@width">

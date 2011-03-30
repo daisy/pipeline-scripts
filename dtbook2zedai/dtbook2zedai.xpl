@@ -50,19 +50,35 @@
 
     <p:choose name="dtbook-merger">
         <p:when test=".//c:result[. > 1]">
-            <p2util:dtbook-merger/>
+            <p:output port="result"/>
+            <p2util:dtbook-merger>
+                <p:input port="source">
+                    <p:pipe port="result" step="upgrade-dtbook"/>
+                </p:input>
+            </p2util:dtbook-merger>
         </p:when>
         <p:otherwise>
-            <p:identity/>
+            <p:output port="result"/>
+            <p:identity>
+                <p:input port="source">
+                    <p:pipe port="result" step="upgrade-dtbook"/>
+                </p:input>
+            </p:identity>
         </p:otherwise>
     </p:choose>
+    
     
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
         <p:input port="schema">
             <p:document href="schema/dtbook-2005-3.rng"/>
         </p:input>
+        <p:input port="source">
+            <p:pipe port="result" step="dtbook-merger"/>
+        </p:input>
     </p:validate-with-relax-ng>
+    
+    <cx:message message="hello"/>
     
     <!-- create MODS metadata record -->
     <p2util:metadata-generator name="generate-metadata">
