@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
-    xmlns:history="http://utf-x.sourceforge.net/xsd/history_1_0/history.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
     xsi:schemaLocation="http://utf-x.sourceforge.net/xsd/history_1_0/history.xsd ../history.xsd">
 
-    <utfx:stylesheet src="moveout-code.xsl"/>
+    <utfx:stylesheet src="moveout-imggroup.xsl"/>
 
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
