@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-    xsi:schemaLocation="http://utf-x.sourceforge.net/xsd/history_1_0/history.xsd ../history.xsd">
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
     <utfx:stylesheet src="group-deflist-contents.xsl"/>
 
     <utfx:test>
-        <utfx:name>DTBook2ZedAI: Group Definition List Contents</utfx:name>
-        <utfx:assert-equal>
+        <utfx:name>Simple Definition List</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <dl>
-                    <dd>Definition lists have definitions</dd>
-                    <dt>And terms</dt>
                     <dt>Audio NCX</dt>
-                    <dd>Refers to a DAISY book that contains the complete book as synchronized audio, plus a table of contents (which could include page numbers, footnote
+                    <dd>Refers to a DAISY book that contains the complete book as synchronized
+                        audio, plus a table of contents (which could include page numbers, footnote
                         lists, etc). This term does not refer to a specific version of the DAISY
                         standard.</dd>
                     <dt>Audio normalization</dt>
@@ -35,34 +33,13 @@
                         language pack for the target application. The DAISY Lion is written in
                         Python.</dd>
                 </dl>
-                <dl>
-                    <dt>data</dt>
-                    <dd>a term which means numbers, figures, etc: <table>
-                            <tbody><tr><td>012345</td></tr></tbody>
-                        </table> Data is often sorted, compared, and accidentally deleted.</dd>
-                </dl>
-                <dl>
-                    <dd>DD-A</dd>
-                    <dt>DT-B</dt>
-                    <dt>DT-C</dt>
-                    <dd>DD-C-1</dd>
-                    <dd>DD-C-2</dd>
-                    <dt>DT-D</dt>
-                    <dt>DT-E</dt>
-                    <dd>DD-E</dd>
-                </dl>
             </utfx:source>
             <utfx:expected>
                 <dl>
                     <item>
-                        <dd>Definition lists have definitions</dd>
-                    </item>
-                    <item>
-                        <dt>And terms</dt>
-                    </item>
-                    <item>
                         <dt>Audio NCX</dt>
-                        <dd>Refers to a DAISY book that contains the complete book as synchronized audio, plus a table of contents (which could include page numbers,
+                        <dd>Refers to a DAISY book that contains the complete book as synchronized
+                            audio, plus a table of contents (which could include page numbers,
                             footnote lists, etc). This term does not refer to a specific version of
                             the DAISY standard.</dd>
                     </item>
@@ -90,14 +67,54 @@
                             Python.</dd>
                     </item>
                 </dl>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Minimal Definition List #1</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
                 <dl>
-                    <item>
-                        <dt>data</dt>
-                        <dd>a term which means numbers, figures, etc: <table>
-                                <tbody><tr><td>012345</td></tr></tbody>
-                            </table> Data is often sorted, compared, and accidentally deleted.</dd>
-                    </item>
+                    <dt>term</dt>
                 </dl>
+            </utfx:source>
+            <utfx:expected>
+                <dl>
+                    <item><dt>term</dt></item>
+                </dl>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Minimal Definition List #2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <dl>
+                    <dd>definition</dd>
+                </dl>
+            </utfx:source>
+            <utfx:expected>
+                <dl>
+                    <item><dd>definition</dd></item>
+                </dl>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Mixed Definition List</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <dl>
+                    <dd>DD-A</dd>
+                    <dt>DT-B</dt>
+                    <dt>DT-C</dt>
+                    <dd>DD-C-1</dd>
+                    <dd>DD-C-2</dd>
+                    <dt>DT-D</dt>
+                    <dt>DT-E</dt>
+                    <dd>DD-E</dd>
+                </dl></utfx:source>
+            <utfx:expected>
                 <dl>
                     <item>
                         <dd>DD-A</dd>

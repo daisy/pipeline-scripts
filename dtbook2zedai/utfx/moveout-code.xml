@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-    xsi:schemaLocation="http://utf-x.sourceforge.net/xsd/history_1_0/history.xsd ../history.xsd">
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
     <utfx:stylesheet src="moveout-code.xsl"/>
 
@@ -11,8 +10,8 @@
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
-        <utfx:name>DTBook2ZedAI: Move Out Block-Level Code</utfx:name>
-        <utfx:assert-equal>
+        <utfx:name>Move Out Block-Level Code</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <dtbook>
                     <bodymatter>
