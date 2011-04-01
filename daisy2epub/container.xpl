@@ -7,12 +7,13 @@
 
     <p:input port="manifests" primary="false" sequence="true"/>
     <p:input port="store-complete" primary="false" sequence="true"/>
-    <p:output port="result">
-        <p:pipe port="result" step="container"/>
+    <p:output port="result" primary="false">
+        <p:pipe port="result" step="epub-zip"/>
     </p:output>
 
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
+    <p:option name="epub-file" required="true"/>
 
     <p:import href="html-library.xpl"/>
     <p:import href="fileset-library.xpl"/>
@@ -83,15 +84,22 @@
     </px:join-manifests>
     <px:to-zip-manifest/>
     <p:add-attribute name="zip.manifest" match="c:entry[@name='mimetype']"
-        attribute-name="compression-method" attribute-value="stored"/>
-    <cx:zip>
+    attribute-name="compression-method" attribute-value="stored"/>
+    <!--p:identity name="zip.manifest"/-->
+    <cx:zip name="epub-zip">
         <p:input port="source">
             <p:empty/>
         </p:input>
         <p:input port="manifest">
             <p:pipe port="result" step="zip.manifest"/>
         </p:input>
-        <p:with-option name="href" select="$epub-file"/>
+        <!--
+            href must be a file path, not a URI. See Calabash issue 140:
+            http://code.google.com/p/xmlcalabash/issues/detail?id=140
+            
+            replace(...) should be replaced with px:uri-to-path or similar function (not yet implemented)
+        -->
+        <p:with-option name="href" select="replace($epub-file,'file:','')"/>
     </cx:zip>
     <p:sink/>
 

@@ -5,6 +5,7 @@
     
     <xsl:template match="/*">
         <c:manifest>
+            <xsl:attribute name="xml:base" select="replace(@xml:base,'^(.+/)[^/]*','$1')"/>
             <xsl:for-each select="/processing-instruction('xml-stylesheet')">
                 <xsl:variable name="href"
                     select="replace(.,'^.*href=(&amp;apos;|&quot;)(.*?)\1.*$','$2')"/>

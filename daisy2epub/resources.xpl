@@ -7,10 +7,10 @@
 
     <p:input port="source" sequence="true"/>
     <p:output port="manifest">
-        <p:pipe port="result" step="resources.manifest"/>
+        <p:pipe port="result" step="manifest"/>
     </p:output>
-    <p:output port="store-complete" primary="false">
-        <p:pipe port="store" step="resources.iterate"/>
+    <p:output port="store-complete" primary="false" sequence="true">
+        <p:pipe port="store" step="iterate"/>
     </p:output>
 
     <p:option name="daisy-dir" required="true"/>
@@ -38,30 +38,35 @@
             <p:document href="resources-manifest-cleanup.xsl"/>
         </p:input>
     </p:xslt>
-    <p:for-each name="resources.iterate">
-        <p:output port="result">
-            <p:pipe port="result" step="resources.iterate.manifest"/>
+    <p:for-each name="iterate">
+        <p:output port="manifest" primary="false">
+            <p:pipe port="result" step="iterate.manifest"/>
         </p:output>
-        <p:output port="store">
-            <p:pipe port="result" step="resources.iterate.copy"/>
+        <p:output port="store" primary="false">
+            <p:pipe port="result" step="iterate.copy"/>
         </p:output>
 
-        <p:iteration-source
-            select="//c:entry"/>
+        <p:iteration-source select="//c:entry"/>
         <p:variable name="href" select="/*/@href"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:variable name="reverse-media-overlay" select="/*/@reverse-media-overlay"/>
         <p:variable name="original-href" select="/*/@original-href"/>
 
-        <p:identity name="resources.iterate.source"/>
+        <p:variable name="copy-target" select="concat($content-dir,$href)"/>
 
-        <cxf:copy name="resources.iterate.copy">
-            <p:with-option name="href" select="concat($daisy-dir,$href)"/>
-            <p:with-option name="target" select="concat($content-dir,$href)"/>
+        <p:identity name="iterate.source"/>
+
+        <cxf:mkdir name="iterate.mkdir">
+            <p:with-option name="href" select="replace($copy-target,'[^/]+$','')"/>
+        </cxf:mkdir>
+        <cxf:copy name="iterate.copy">
+            <p:with-option name="href" select="concat($daisy-dir,$href)">
+                <p:pipe port="result" step="iterate.mkdir"/>
+            </p:with-option>
+            <p:with-option name="target" select="$copy-target"/>
         </cxf:copy>
-        <p:sink/>
 
-        <px:mime name="contents.iterate.mime">
+        <px:mime name="iterate.mime">
             <p:with-option name="href" select="$href"/>
         </px:mime>
         <p:sink/>
@@ -69,10 +74,11 @@
             <p:with-option name="base" select="$epub-dir"/>
         </px:create-manifest>
         <px:add-manifest-entry>
-            <p:with-option name="href" select="concat(substring-after($content-dir,$epub-dir),$href)"/>
+            <p:with-option name="href"
+                select="concat(substring-after($content-dir,$epub-dir),$href)"/>
             <p:with-option name="media-type"
-                select="if ($media-type) then $media-type else /*/@media-type">
-                <p:pipe port="result" step="contents.iterate.mime"/>
+                select="if ($media-type) then $media-type else /*/@type">
+                <p:pipe port="result" step="iterate.mime"/>
             </p:with-option>
         </px:add-manifest-entry>
         <p:choose>
@@ -95,14 +101,13 @@
                 <p:identity/>
             </p:otherwise>
         </p:choose>
-        <p:identity name="contents.iterate.manifest"/>
+        <p:identity name="iterate.manifest"/>
         <p:sink/>
     </p:for-each>
-    <p:sink/>
 
-    <px:join-manifests name="resources.manifest">
+    <px:join-manifests name="manifest">
         <p:input port="source">
-            <p:pipe port="result" step="resources.iterate"/>
+            <p:pipe port="manifest" step="iterate"/>
         </p:input>
     </px:join-manifests>
     <p:sink/>

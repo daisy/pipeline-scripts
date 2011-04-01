@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:opf="http://www.idpf.org/2007/opf" version="2.0">
+    xmlns:opf="http://www.idpf.org/2007/opf" exclude-result-prefixes="#all" version="2.0">
 
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -35,26 +35,28 @@
                     <xsl:choose>
                         <xsl:when test="starts-with(@name,'dc:')">
                             <xsl:element name="{@name}">
-                                <xsl:attribute name="id">
                                     <xsl:choose>
-                                        <xsl:when test="@name='dc:identifier'"
-                                            ><![CDATA[pub-id]]></xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of select="concat('meta_',position())"/>
-                                        </xsl:otherwise>
+                                        <xsl:when test="@name='dc:identifier'">
+                                            <xsl:attribute name="id" select="'pub-id'"/>
+                                        </xsl:when>
+                                        <xsl:when test="@scheme">
+                                            <xsl:attribute name="id" select="concat('meta_',position())"/>
+                                        </xsl:when>
                                     </xsl:choose>
-                                </xsl:attribute>
                                 <xsl:value-of select="@content"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
-                            <meta property="{@name}" id="meta_{position()}">
+                            <meta property="{@name}">
+                                <xsl:if test="@scheme">
+                                    <xsl:attribute name="id" select="concat('meta_',position())"/>
+                                </xsl:if>
                                 <xsl:value-of select="@content"/>
                             </meta>
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:if test="@scheme">
-                        <meta about="#meta_{position()}" property="scheme">
+                        <meta about="#{if (@name='dc:identifier') then 'pub-id' else concat('meta_',position())}" property="scheme">
                             <xsl:value-of select="@scheme"/>
                         </meta>
                     </xsl:if>

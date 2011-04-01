@@ -3,11 +3,7 @@
     xmlns:c="http://www.w3.org/ns/xproc-step" exclude-result-prefixes="#all" version="2.0">
 
     <xsl:template match="/*">
-        <c:manifest>
-            <xsl:for-each select="child::*">
-                <c:entry href="{@reverse-media-overlay}" media-type="application/xhtml+xml"/>
-            </xsl:for-each>
-        </c:manifest>
+        <c:entry reverse-media-overlay="{(//*[local-name()='text'])[1]/tokenize(@src,'#')[1]}"/>
     </xsl:template>
 
 </xsl:stylesheet>

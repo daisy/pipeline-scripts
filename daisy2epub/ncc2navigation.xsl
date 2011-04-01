@@ -9,29 +9,19 @@
               and mark those that are not referenced in the NCC with display:none.
     -->
 
-    <xsl:output xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
+    <xsl:output xpath-default-namespace="http://www.w3.org/1999/xhtml" indent="yes"/>
 
     <xsl:template match="/*">
-        <xsl:element name="html">
+        <html xmlns="http://www.w3.org/1999/xhtml">
             <xsl:attribute name="profile" select="'http://www.idpf.org/epub/30/profile/content/'"/>
-            <xsl:apply-templates select="@*|*"/>
-        </xsl:element>
+            <xsl:apply-templates select="@*[not(name()='xml:base')]|*"/>
+        </html>
     </xsl:template>
 
-    <!-- TODO: remove this identity template? -->
     <xsl:template match="@*|node()">
-        <xsl:choose>
-            <xsl:when test="self::*">
-                <xsl:element name="{local-name()}">
-                    <xsl:apply-templates select="@*|node()"/>
-                </xsl:element>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:copy>
-                    <xsl:apply-templates select="@*|node()"/>
-                </xsl:copy>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
     </xsl:template>
 
     <xsl:template match="html:body">
@@ -121,12 +111,28 @@
 
     <xsl:template
         match="html:*[self::html:h1 or self::html:h2 or self::html:h3 or self::html:h4 or self::html:h5 or self::html:h6]">
-        <a href="{child::html:a[1]/@href}">
-            <xsl:if test="@id">
-                <xsl:attribute name="id" select="@id"/>
-            </xsl:if>
-            <xsl:value-of select="child::html:a[1]"/>
-        </a>
+
+        <xsl:variable name="link-href" select="tokenize(child::html:a[1]/@href,'#')[1]"/>
+        <xsl:variable name="link-id"
+            select="if (contains(child::html:a[1]/@href,'#')) then tokenize(child::html:a[1]/@href,'#')[last()] else ''"/>
+        <xsl:variable name="self-id" select="ancestor-or-self::*/@id"/>
+        <xsl:choose>
+            <xsl:when
+                test="not($link-href='') and $link-href='navigation.xhtml' and not($link-id='') and $self-id=$link-id">
+                <!-- is link to self; remove it -->
+                <span>
+                    <xsl:apply-templates select="@id"/>
+                    <xsl:value-of select="child::html:a[1]"/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <a href="{child::html:a[1]/@href}">
+                    <xsl:apply-templates select="@id"/>
+                    <xsl:value-of select="child::html:a[1]"/>
+                </a>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
 
 </xsl:stylesheet>

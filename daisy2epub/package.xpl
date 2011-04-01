@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf" type="d2e:package" name="package"
+    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" exclude-inline-prefixes="#all" xmlns:opf="http://www.idpf.org/2007/opf" type="d2e:package" name="package"
     version="1.0">
 
     <p:documentation><![CDATA[
@@ -16,9 +16,11 @@
     <p:input port="metadata" primary="false"/>
     <p:input port="manifest" primary="false"/>
     <p:input port="spine" primary="false"/>
-    <p:output port="result"/>
+    <p:output port="result" primary="false">
+        <p:pipe port="result" step="document"/>
+    </p:output>
     <p:output port="store-complete" primary="false">
-        <p:pipe port="result" step="package.store"/>
+        <p:pipe port="result" step="store"/>
     </p:output>
     
     <p:option name="content-dir" required="true"/>
@@ -39,22 +41,22 @@
         </p:input>
     </p:insert>
     <p:add-attribute attribute-name="unique-identifier" match="/*">
-        <p:with-option name="attribute-value" select="'TODO (dc:identifier from metadata)'"/>
+        <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:identifier"/>
     </p:add-attribute>
     <p:add-attribute attribute-name="xml:lang" match="/*">
-        <p:with-option name="attribute-value" select="'TODO (language from metadata)'"/>
+        <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language"/>
     </p:add-attribute>
-    <p:identity name="package.document"/>
-    <p:store name="package.store">
+    <p:identity name="document"/>
+    <p:store name="store">
         <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
     </p:store>
-    <p:add-attribute attribute-name="xml:base" match="/*">
+    <!--p:add-attribute attribute-name="xml:base" match="/*">
         <p:input port="source">
-            <p:pipe port="result" step="package.document"/>
+            <p:pipe port="result" step="document"/>
         </p:input>
         <p:with-option name="attribute-value" select=".">
-            <p:pipe port="result" step="package.store"/>
+            <p:pipe port="result" step="store"/>
         </p:with-option>
-    </p:add-attribute>
+    </p:add-attribute-->
     
 </p:declare-step>
