@@ -44,6 +44,23 @@
                     </code>
                 </p>
                 
+                <p>
+                    <code>
+                        <dfn>Definition</dfn>
+                        <a href="stuff.org">Link</a>
+                        <cite>Cite cite cite</cite>
+                    </code>
+                </p>
+                
+                <p>
+                    <code>
+                        <em>Emphasis!</em>
+                        Some text.
+                    </code>
+                </p>
+                
+          
+                
             </level1>
 
         </bodymatter>

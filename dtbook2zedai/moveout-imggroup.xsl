@@ -6,11 +6,11 @@
     
     <xsl:include href="moveout-generic.xsl"/>
     
-    <xsl:template match="/">
+    <xsl:template match="//dtb:dtbook">
         
         <xsl:message>move image groups out</xsl:message>
         <xsl:call-template name="test-and-move">
-            <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
+            <xsl:with-param name="doc" select="//dtb:dtbook[1]/book[1]"/>
             <xsl:with-param name="target-element" select="'imggroup'" tunnel="yes"/>
             
             <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code,

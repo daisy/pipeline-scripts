@@ -36,7 +36,7 @@
                 
                 <!-- the recursive call -->
                 <xsl:call-template name="test-and-move">
-                    <xsl:with-param name="doc" select="$result//dtb:dtbook[1]"/>
+                    <xsl:with-param name="doc" select="$result//dtb:dtbook[1]/book"/>
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>

@@ -31,7 +31,7 @@
         </span>
     </xsl:template>
     
-    <xsl:template match="abbr/code | acronym/code | dt/code | sub/code | sub/code | w/code">
+    <xsl:template match="abbr/code | acronym/code | dt/code | sub/code | sup/code | w/code">
         <xsl:call-template name="element2span"/>
     </xsl:template>
 
@@ -48,12 +48,12 @@
     </xsl:template>
 
     <xsl:template
-        match="abbr/kbd | acronym/kbd | dt/kbd | sub/kbd | sub/kbd | w/kbd">
+        match="abbr/kbd | acronym/kbd | dt/kbd | sub/kbd | sup/kbd | w/kbd">
         <xsl:call-template name="element2span"/>
     </xsl:template>
     
 
-    <xsl:template match="abbr/q | acronym/q | dt/q | sub/q | sub/q | w/q | strong/q">
+    <xsl:template match="abbr/q | acronym/q | dt/q | sub/q | sup/q | w/q | strong/q">
         <xsl:call-template name="element2span"/>
     </xsl:template>
 
@@ -111,7 +111,7 @@
     </xsl:template>
     
     <xsl:template
-        match="abbr/a | acronym/a | dt/a | sub/a | sub/a | w/a">
+        match="abbr/a | acronym/a | dt/a | sub/a | sup/a | w/a">
         <!-- TODO: warn about loss of data -->
         <xsl:call-template name="element2span"/>
     </xsl:template>
@@ -124,8 +124,9 @@
     </xsl:template>
     
     
-    
-    <xsl:template match="abbr/cite | acronym/cite | dt/cite | sub/cite | sub/cite | w/cite | strong/cite">
+    <!-- TODO: check if we should check <em> too -->
+    <!-- TODO: why did we use @property and not @role?  -->
+    <xsl:template match="abbr/cite | acronym/cite | dt/cite | sub/cite | sup/cite | w/cite | strong/cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>
 

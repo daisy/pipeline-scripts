@@ -1,3 +1,5 @@
+<!-- can't test moveout-* at the moment due to utf-x not handling match="/" -->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
