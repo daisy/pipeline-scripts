@@ -9,8 +9,11 @@
     
     <xsl:output indent="yes" method="xml"/>
     
-    <xsl:template match="/">
-        
+    <!--<xsl:template match="/">
+        <xsl:call-template name="main"/>
+    </xsl:template>-->
+    
+    <xsl:template match="/"><!--name="main">-->
         <xsl:message>move code-block</xsl:message>
         <xsl:call-template name="test-and-move">
             <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>

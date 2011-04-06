@@ -19,9 +19,12 @@
     
     <!-- recursive -->
     <xsl:template name="test-and-move">
+        
         <xsl:param name="target-element" tunnel="yes"/>
         <xsl:param name="valid-parents" tunnel="yes"/>
         <xsl:param name="doc"/>
+        
+        <xsl:message>moveout-generic.xsl: test-and-move</xsl:message>
         
         <xsl:choose>
             
@@ -34,9 +37,13 @@
                     <xsl:apply-templates select="$doc"/>
                 </xsl:variable>
                 
+                <xsl:message>*******Result from recursive call*********</xsl:message>
+                <xsl:message select="$result"></xsl:message>
+                <xsl:message>****************</xsl:message>
+                
                 <!-- the recursive call -->
                 <xsl:call-template name="test-and-move">
-                    <xsl:with-param name="doc" select="$result//dtb:dtbook[1]/book"/>
+                    <xsl:with-param name="doc" select="$result//dtb:dtbook[1]"/>
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
@@ -47,9 +54,12 @@
         <xsl:param name="target-element"/>
         <xsl:param name="valid-parents"/>
         
+        <xsl:message>moveout-generic.xsl: test-valid</xsl:message>
+        
         <!-- select all target element descendants whose parents are not in the list of valid parent names -->
         <xsl:variable name="invalid-target-elements"
             select="$elem/descendant::*[local-name() = $target-element][not(local-name(parent::node()) = $valid-parents)]"/>
+        
         
         <!-- test if there is a target element whose parent is not in the set of valid parents -->
         <xsl:value-of select="empty($invalid-target-elements)"/>
@@ -64,10 +74,13 @@
     <xsl:template match="node()">
         <xsl:param name="valid-parents" tunnel="yes"/>
         <xsl:param name="target-element" tunnel="yes"/>
+        
+        <xsl:message>moveout-generic.xsl: match="node()"</xsl:message>
+        
         <xsl:choose>
             <xsl:when
                 test="not(local-name() = $valid-parents) and (child::*/local-name() = $target-element)">
-                <xsl:message>Found unsuitable parent: {<xsl:value-of select="local-name()"/>}, id={<xsl:value-of select="@id"/>}</xsl:message>
+                <xsl:message>Found unsuitable parent: &lt; <xsl:value-of select="local-name()"/> id=&quot;<xsl:value-of select="@id"/>&quot; &gt;</xsl:message>
                 <xsl:call-template name="process-invalid-target-element-parent"/>
             </xsl:when>
             <xsl:otherwise>

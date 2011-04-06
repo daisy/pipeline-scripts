@@ -1,6 +1,3 @@
-
-<!-- can't test moveout-* at the moment due to utf-x not handling match="/" -->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
@@ -14,19 +11,27 @@
     -->
     <utfx:test>
         <utfx:name>Move Out Block-Level Code</utfx:name>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
+        <utfx:call-template name="main">
+            <utfx:with-param name="doc">
                 <dtbook>
                     <bodymatter>
                         <level1>
                             <div>
-                                <a href="http://example.org"> Part A <code-block id="code">This is some code</code-block> Part B
-                                </a>
+                                <a href="http://example.org"> Part A <code-block id="code">This is some code</code-block> Part B</a>
                             </div>
                         </level1>
                     </bodymatter>
-                </dtbook>
+                </dtbook>  
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            
+            <utfx:source>
+                <empty/>
             </utfx:source>
+                
+            
+             
             <utfx:expected>
                 <dtbook>
                     <bodymatter>
