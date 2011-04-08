@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+
+    <utfx:stylesheet src="translate-dtbook2zedai.xsl"/>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: DTBook</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <dtbook/>
+            </utfx:source>
+            <utfx:expected>
+                <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
+                    xmlns:dcterms="http://purl.org/dc/terms/"
+                    profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Head</utfx:name>
+        <!-- blank @about in meta for mods records because that filename is a parameter -->
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <head/>
+            </utfx:source>
+            <utfx:expected>
+                <head>
+                    <meta rel="z3986:profile"
+                        resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
+                    <meta rel="z3986:meta-record" resource="">
+                        <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
+                        <meta property="z3986:meta-record-version" about="" content="3.3"/>
+                    </meta>
+                </head>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Book</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <book/>
+            </utfx:source>
+            <utfx:expected>
+                <body/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Frontmatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <frontmatter>
+                    <doctitle/>
+                    <docauthor/>
+                </frontmatter>
+            </utfx:source>
+            <utfx:expected>
+                <frontmatter>
+                    <section>
+                        <p role="title"/>
+                        <p role="author"/>
+                    </section>
+                </frontmatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Bodymatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <bodymatter/>
+            </utfx:source>
+            <utfx:expected>
+                <bodymatter/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Rearmatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <rearmatter/>
+            </utfx:source>
+            <utfx:expected>
+                <rearmatter/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Meta</utfx:name>
+        <!-- blank @about in meta for mods records because that filename is a parameter -->
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <head>
+                    <meta name="dc:Title" content="A"/>
+                    <meta name="dc:Identifier" content="B"/>
+                    <meta name="dc:Creator" content="C"/>
+                    <meta name="dc:Date" content="D"/>
+                    <meta name="dc:Publisher" content="E"/>
+                    <meta name="dc:Language" content="F"/>
+                    <meta name="dc:Subject" content="G"/>
+                    <meta name="dc:Description" content="H"/>
+                    <meta name="dc:Contributor" content="I"/>
+                    <meta name="dc:Type" content="J"/>
+                    <meta name="dc:Format" content="K"/>
+                    <meta name="dc:Source" content="L"/>
+                    <meta name="dc:Relation" content="M"/>
+                    <meta name="dc:Coverage" content="N"/>
+                    <meta name="dc:Rights" content="O"/>
+                    <meta name="dc:RevisionDescription" content="P"/>
+                </head>
+            </utfx:source>
+            <utfx:expected>
+                <head>
+                    <meta rel="z3986:profile"
+                        resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
+                    <meta property="dcterms:title" content="A"/>
+                    <meta property="dcterms:identifier" content="B"/>
+                    <meta property="dcterms:creator" content="C"/>
+                    <meta property="dcterms:date" content="D" xml:id="meta-dcdate"/>
+                    <meta property="dcterms:publisher" content="E"/>
+                    <meta property="dcterms:language" content="F"/>
+                    <meta property="dcterms:subject" content="G"/>
+                    <meta property="dcterms:description" content="H"/>
+                    <meta property="dcterms:contributor" content="I"/>
+                    <meta property="dcterms:type" content="J"/>
+                    <meta property="dcterms:format" content="K"/>
+                    <meta property="dcterms:source" content="L"/>
+                    <meta property="dcterms:relation" content="M"/>
+                    <meta property="dcterms:coverage" content="N"/>
+                    <meta property="dcterms:rights" content="O"/>
+                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/> <meta
+                        rel="z3986:meta-record" resource="">
+                        <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
+                        <meta property="z3986:meta-record-version" about="" content="3.3"/>
+                    </meta>
+                </head>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+</utfx:tests>
