@@ -935,6 +935,7 @@
         </lnum>
     </xsl:template>
 
+    <!-- TODO: why not @property for title & author like citation elem uses? -->
     <xsl:template match="dtb:poem">
         <block role="poem">
             <xsl:for-each select="child::node()">
@@ -973,8 +974,9 @@
         <code>
             <xsl:call-template name="attrs"/>
             <xsl:variable name="wrap-in-p" select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,
-                span,bdo,w,annoref,noteref,sent',',')"/>
-            <xsl:variable name="wrap-in-block" select="tokenize('code,kbd,q,prodnote',',')"/>
+                span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
+            <!-- is there ever a nested code-block ... ? -->
+            <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
             
             <xsl:for-each select="child::node()">
                 <xsl:choose>
