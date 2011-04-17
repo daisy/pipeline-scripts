@@ -3,9 +3,34 @@
     xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" type="d2e:resources" version="1.0">
+    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
+    type="d2e:resources" name="resources" version="1.0">
 
-    <p:input port="source" sequence="true"/>
+    <p:documentation xd:target="parent">
+        <xd:short>Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset,
+            and return a manifest of all the resulting files.</xd:short>
+        <xd:author>
+            <xd:name>Jostein Austvik Jacobsen</xd:name>
+            <xd:mailto>josteinaj@gmail.com</xd:mailto>
+            <xd:organization>NLB</xd:organization>
+        </xd:author>
+        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
+        <xd:input port="resource-manifests">List of auxiliary resources, like audio, stylesheets and
+            graphics.</xd:input>
+        <xd:output port="manifest">List of stored files.</xd:output>
+        <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
+        <xd:option name="daisy-dir">URI to the directory containing the NCC.</xd:option>
+        <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
+            stored.</xd:option>
+        <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
+        <xd:import href="../utilities/files/fileutils-library.xpl">For filesystem
+            operations.</xd:import>
+        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+            filesets.</xd:import>
+        <xd:import href="mime.xpl">For determining MIME-types.</xd:import>
+    </p:documentation>
+
+    <p:input port="resource-manifests" sequence="true" primary="false"/>
     <p:output port="manifest">
         <p:pipe port="result" step="manifest"/>
     </p:output>
@@ -17,27 +42,36 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="fileutils-library.xpl"/>
+    <p:import href="../utilities/files/fileutils-library.xpl"/>
+    <p:import href="../utilities/files/fileset-library.xpl"/>
     <p:import href="mime.xpl"/>
 
-    <p:documentation><![CDATA[
-            read satellite files; mp3, css, png, jpg etc.
-            input: resource-manifest@navigation
-            input: resource-manifest@resources
-            input: resource-manifest@documents
-            primary output: "manifest"
-            output: "store-complete"
-    ]]></p:documentation>
+    <p:documentation>Merge all resource manifests and remove duplicate entries.</p:documentation>
+    <p:group>
+        <p:output port="result"/>
+        <px:join-manifests>
+            <p:input port="source">
+                <p:pipe port="resource-manifests" step="resources"/>
+            </p:input>
+        </px:join-manifests>
+        <p:xslt>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="resources-manifest-cleanup.xsl"/>
+            </p:input>
+        </p:xslt>
+    </p:group>
 
-    <px:join-manifests/>
-    <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="resources-manifest-cleanup.xsl"/>
-        </p:input>
-    </p:xslt>
+    <p:documentation>
+        <xd:short>Iterate through all resources and copy them from the DAISY 2.02 fileset to the
+            EPUB 3 fileset.</xd:short>
+        <xd:output port="manifest">Sequence of manifests representing each stored auxiliary
+            resource.</xd:output>
+        <xd:output port="store">Sequence of results from storing the auxiliary resources, allowing
+            other steps to depend on the files being stored.</xd:output>
+    </p:documentation>
     <p:for-each name="iterate">
         <p:output port="manifest" primary="false">
             <p:pipe port="result" step="iterate.manifest"/>
@@ -105,6 +139,7 @@
         <p:sink/>
     </p:for-each>
 
+    <p:documentation>Make one manifest that references all auxiliary resources.</p:documentation>
     <px:join-manifests name="manifest">
         <p:input port="source">
             <p:pipe port="manifest" step="iterate"/>

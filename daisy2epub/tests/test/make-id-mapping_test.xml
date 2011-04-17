@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:epub="http://www.idpf.org/2011/epub"
+    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <utfx:stylesheet src="../make-id-mapping.xsl"/>
+    <utfx:test>
+        <utfx:name>Make mapping between id attributes in media overlays and content documents.</utfx:name>
+        <utfx:assert-equal>
+            <utfx:source>
+                <c:manifest xmlns:c="http://www.w3.org/ns/xproc-step">
+                    <c:entry reverse-media-overlay="content1.html" original-href="file:/home/user/book/dtb_0001.smil" media-type="application/smil+xml" href="dtb_0001.smil">
+                        <smil>
+                            <head>
+                                <meta name="dc:identifier" content="123456" skip-content="true"/>
+                                <meta name="dc:title" content="Title" skip-content="true"/>
+                                <meta name="dc:format" content="Daisy 2.02" skip-content="true"/>
+                                <meta name="title" content="Headline 1" skip-content="true"/>
+                                <meta name="ncc:totalElapsedTime" content="00:00:00" skip-content="true"/>
+                                <meta name="ncc:timeInThisSmil" content="00:00:12" skip-content="true"/>
+                                <meta name="ncc:generator" content="Regenerator 1.0.28" skip-content="true"/>
+                                <layout type="text/smil-basic-layout">
+                                    <region left="0" top="0" z-index="0" fit="hidden" skip-content="true" id="mo1_txtView"/>
+                                </layout>
+                            </head>
+                            <body>
+                                <seq dur="12s" repeat="1">
+                                    <par endsync="last" repeat="1" id="mo1_rgn_par_0001_0001">
+                                        <text src="content1.html#rgn_cnt_0001" repeat="1" fill="remove" id="mo1_rgn_txt_0001_0001"/>
+                                        <seq repeat="1">
+                                            <audio clip-begin="npt=0.000s" clip-end="npt=3.000s" src="dtb_0001.mp3" repeat="1" fill="remove" id="mo1_rgn_aud_0001_0001"/>
+                                        </seq>
+                                    </par>
+                                    <par endsync="last" repeat="1" id="mo1_rgn_par_0001_0002">
+                                        <text src="content1.html#rgn_cnt_0002" repeat="1" fill="remove" id="mo1_rgn_txt_0001_0002"/>
+                                        <seq repeat="1">
+                                            <audio clip-begin="npt=0.000s" clip-end="npt=2.000s" src="dtb_0001.mp3" repeat="1" fill="remove" id="mo1_rgn_aud_0001_0002"/>
+                                        </seq>
+                                    </par>
+                                    <par endsync="last" repeat="1" id="mo1_rgn_par_0001_0003">
+                                        <text src="content1.html#rgn_cnt_0003" repeat="1" fill="remove" id="mo1_rgn_txt_0001_0003"/>
+                                        <seq repeat="1">
+                                            <audio clip-begin="npt=2.000s" clip-end="npt=4.000s" src="dtb_0001.mp3" repeat="1" fill="remove" id="mo1_rgn_aud_0001_0003"/>
+                                        </seq>
+                                    </par>
+                                    <par endsync="last" repeat="1" id="mo1_rgn_par_0001_0004">
+                                        <text src="content2.html#rgn_cnt_0004" repeat="1" fill="remove" id="mo1_rgn_txt_0001_0004"/>
+                                        <seq repeat="1">
+                                            <audio clip-begin="npt=4.000s" clip-end="npt=6.000s" src="dtb_0001.mp3" repeat="1" fill="remove" id="mo1_rgn_aud_0001_0004"/>
+                                        </seq>
+                                    </par>
+                                    <par endsync="last" repeat="1" id="mo1_rgn_par_0001_0005">
+                                        <text src="content2.html#rgn_cnt_0005" repeat="1" fill="remove" id="mo1_rgn_txt_0001_0005"/>
+                                        <seq repeat="1">
+                                            <audio clip-begin="npt=0.000s" clip-end="npt=3.000s" src="dtb_0002.mp3" repeat="1" fill="remove" id="mo1_rgn_aud_0001_0005"/>
+                                        </seq>
+                                    </par>
+                                </seq>
+                            </body>
+                        </smil>
+                    </c:entry>
+                </c:manifest>
+            </utfx:source>
+            <utfx:expected>
+                <c:mapping xmlns:c="http://www.w3.org/ns/xproc-step">
+                    <c:entry original-content-href="content1.html" content-href="content1.xhtml" smil-href="dtb_0001.smil">
+                        <c:id content-id="rgn_cnt_0001" smil-id="rgn_txt_0001_0001" media-overlay-id="mo1_rgn_txt_0001_0001"/>
+                        <c:id content-id="rgn_cnt_0002" smil-id="rgn_txt_0001_0002" media-overlay-id="mo1_rgn_txt_0001_0002"/>
+                        <c:id content-id="rgn_cnt_0003" smil-id="rgn_txt_0001_0003" media-overlay-id="mo1_rgn_txt_0001_0003"/>
+                        <c:id content-id="rgn_cnt_0004" smil-id="rgn_txt_0001_0004" media-overlay-id="mo1_rgn_txt_0001_0004"/>
+                        <c:id content-id="rgn_cnt_0005" smil-id="rgn_txt_0001_0005" media-overlay-id="mo1_rgn_txt_0001_0005"/>
+                    </c:entry>
+                </c:mapping>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+</utfx:tests>

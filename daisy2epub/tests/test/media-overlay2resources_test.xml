@@ -11,7 +11,7 @@
       <utfx:name>Minimal SMIL 3.0</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+            <smil xml:base="http://example.com/overlay.smil" xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
                <head>
                   <meta property="dc:format">Daisy 2.02</meta>
                </head>
@@ -25,7 +25,7 @@
             </smil>
          </utfx:source>
          <utfx:expected>
-            <c:manifest/>
+            <c:manifest xml:base="http://example.com/"/>
          </utfx:expected>
       </utfx:assert-equal>
    </utfx:test>
@@ -33,7 +33,7 @@
       <utfx:name>One referenced audio file</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+            <smil xml:base="http://example.com/overlay.smil" xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
                <head>
                   <meta property="dc:format">Daisy 2.02</meta>
                </head>
@@ -48,7 +48,7 @@
             </smil>
          </utfx:source>
          <utfx:expected>
-            <c:manifest>
+            <c:manifest xml:base="http://example.com/">
                <c:entry href="audio.mp3"/>
             </c:manifest>
          </utfx:expected>
@@ -58,7 +58,7 @@
       <utfx:name>Same audio file referenced twice</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+            <smil xml:base="http://example.com/overlay.smil" xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
                <head>
                   <meta property="dc:format">Daisy 2.02</meta>
                </head>
@@ -77,7 +77,7 @@
             </smil>
          </utfx:source>
          <utfx:expected>
-            <c:manifest>
+            <c:manifest xml:base="http://example.com/">
                <c:entry href="audio.mp3"/>
             </c:manifest>
          </utfx:expected>
@@ -87,7 +87,7 @@
       <utfx:name>Multiple audio files</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
+            <smil xml:base="http://example.com/overlay.smil" xmlns="http://www.w3.org/ns/SMIL" version="3.0" profile="http://www.idpf.org/epub/30/profile/content/" xml:lang="EN">
                <head>
                   <meta property="dc:format">Daisy 2.02</meta>
                </head>
@@ -106,7 +106,7 @@
             </smil>
          </utfx:source>
          <utfx:expected>
-            <c:manifest>
+            <c:manifest xml:base="http://example.com/">
                <c:entry href="audioA.mp3"/>
                <c:entry href="audioB.mp3"/>
             </c:manifest>

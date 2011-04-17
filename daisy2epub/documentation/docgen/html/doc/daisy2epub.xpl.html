@@ -1,0 +1,632 @@
+<html><head><style type="text/css">
+                    body {
+                        font-family : futura, helvetica, arial, sans-serif;
+                    }
+                    section,
+                    article,
+                    header,
+                    footer,
+                    nav,
+                    aside,
+                    hgroup {
+                        display : block;
+                    }
+                    section.reference {
+                        border-style : solid;
+                        border-width : 1px;
+                        border-radius : 10px;
+                        -moz-border-radius : 10px;
+                        margin : 5px;
+                        padding : 20px;
+                        border-color : #CCC;
+                        background-color : #F9F9F9;
+                    }
+                    .child-topics section.reference {
+                        border-style : solid;
+                        border-width : 2px;
+                        border-radius : 10px;
+                        -moz-border-radius : 10px;
+                        margin : 20px;
+                        padding : 20px;
+                        border-color : #CCC;
+                        background-color : #EEF;
+                    }
+                    section.child-topics {
+                        margin-left : 25px;
+                    }
+                    .main-header h1 {
+                        width : 100%;
+                        border-style : solid;
+                        border-width : 0px 0px 1px 0px;
+                        font-size : 26px;
+                    }
+                    table {
+                        margin : 10px;
+                    }
+                    table.parml {
+                        border-style : solid;
+                        border-width : 1px;
+                        border-color : white;
+                        background-color : #EEF;
+                    }
+                    tr.plentry {
+                        border-style : dotted;
+                        border-width : 1px;
+                    }
+                    td.pt td.pd {
+                        padding : 5px;
+                        border-style : solid;
+                        border-width : 1px;
+                        border-radius : 4px;
+                    }
+                    .reference h1 {
+                        font-size : 22px;
+                        color : #006;
+                    }
+                    section.abstract,
+                    section.prolog,
+                    section.parameters,
+                    section.linklist,
+                    section.sourcecode {
+                        border-style : dotted;
+                        border-width : 1px;
+                        border-radius : 0px;
+                        margin : 10px;
+                        padding : 10px 10px 50px 10px;
+                        background-color : #F5F5FF;
+                    }
+                    section.sourcecode {
+                        /*display: none;*/
+                    }
+                    header.abstract-header,
+                    header.prolog-header,
+                    header.io-header,
+                    .linklist header,
+                    header.sourcecode-header {
+                        position : relative;
+                        top : -30px;
+                        float : left;
+                    }
+                    .abstract-header h1,
+                    .prolog-header h1,
+                    .io-header h1,
+                    .linklist h1,
+                    .sourcecode-header h1 {
+                        position : absolute;
+                        color : #006;
+                        background-color : #EEF;
+                        font-size : 18px;
+                        white-space : nowrap;
+                    }
+                    header.subheader {
+                        position : static;
+                        top : 0px;
+                        float : none;
+                    }
+                    .subheader h1 {
+                        color : #006;
+                        background-color : transparent;
+                        font-size : 16px;
+                    }</style></head><header class="main-header"><h1>daisy2epub.xpl</h1></header>
+   <section class="reference XProc "><header class="title "><h1>p:declare-step</h1></header><p class="shortdesc ">
+         Transforms a DAISY 2.02-book into an EPUB 3-book.
+      </p><section class="prolog "><header class="prolog-header"><h1>About</h1></header>
+      <p class="">Author: 
+         <xd:name xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">Jostein Austvik Jacobsen</xd:name> (<xd:mailto xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">josteinaj@gmail.com</xd:mailto>), <xd:organization xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">NLB</xd:organization>
+      </p>
+      <p class="">Maintainer: 
+         <xd:name xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">Jostein Austvik Jacobsen</xd:name>
+      </p>
+      <table class="metadata ">
+         
+         <tr class="othermeta "><td>Programming language</td><td>XProc</td></tr>
+         <tr class="othermeta "><td>Version</td><td>1.0</td></tr>
+         <tr class="othermeta "><td>XProc version</td><td>1.0</td></tr>
+      </table>
+   </section>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options"><tr><th>name</th><th>required</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">href</td>
+               <td class="pt ">true</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">output</td>
+               <td class="pt ">true</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <span class="related-links ">
+      <section class="linklist "><header class="title "><h1>Dependencies (p:import)</h1></header><p class="linkinfo ">These dependencies are derived from the p:import statements from the XProc
+                script.</p><p class="link "><a href="ncc.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">ncc.xpl</a></p><p class="link "><a href="navigation.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">navigation.xpl</a></p><p class="link "><a href="media-overlay.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">media-overlay.xpl</a></p><p class="link "><a href="contents.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">contents.xpl</a></p><p class="link "><a href="resources.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">resources.xpl</a></p><p class="link "><a href="metadata.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">metadata.xpl</a></p><p class="link "><a href="manifest.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">manifest.xpl</a></p><p class="link "><a href="spine.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">spine.xpl</a></p><p class="link "><a href="package.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">package.xpl</a></p><p class="link "><a href="container.xpl.html" style="padding-left: 20px; background: transparent url(../img/xproc.png) no-repeat center left;">container.xpl</a></p></section>
+      <section class="linklist "><header class="title "><h1>See also</h1></header><p class="linkinfo ">These are related readings suggested by the author of the XProc
+                script.</p><p class="link "><a href="http://code.google.com/p/daisy-pipeline/" target="_blank" class="external-link" style="padding-left: 20px; background: transparent url(../img/external_link.png) no-repeat center left;">http://code.google.com/p/daisy-pipeline/</a></p></section>
+   </span></section><section class="child-topics">
+      <section class="reference XProc "><header class="title "><h1>d2e:ncc - ncc</h1></header><p class="shortdesc ">
+         Load the DAISY 2.02 NCC.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">href</td>
+               <td class="pt "/>
+               <td class="pt ">inline</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:ncc name="ncc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:with-option name="href" select="p:resolve-uri($href)"&gt;
+            &lt;p:inline&gt;
+                &lt;irrelevant/&gt;
+            &lt;/p:inline&gt;
+        &lt;/p:with-option&gt;
+    &lt;/d2e:ncc&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:media-overlay - media-overlay</h1></header><p class="shortdesc ">
+         Load the DAISY 2.02 SMILs and store them as EPUB 3 SMILs.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">flow</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">flow@ncc</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">ncc-metadata</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">metadata@ncc</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">daisy-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:media-overlay name="media-overlay" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="flow"&gt;
+            &lt;p:pipe port="flow" step="ncc"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="ncc-metadata"&gt;
+            &lt;p:pipe port="metadata" step="ncc"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:with-option name="daisy-dir" select="$daisy-dir"/&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+        &lt;p:with-option name="epub-dir" select="$epub-dir"/&gt;
+    &lt;/d2e:media-overlay&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:contents - contents</h1></header><p class="shortdesc ">
+         Load the DAISY 2.02 text content documents and store them as EPUB 3 Content Documents.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">spine</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">spine-manifest@media-overlay</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">id-mapping</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">id-mapping@media-overlay</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">daisy-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:contents name="contents" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="spine"&gt;
+            &lt;p:pipe port="spine-manifest" step="media-overlay"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="id-mapping"&gt;
+            &lt;p:pipe port="id-mapping" step="media-overlay"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:with-option name="daisy-dir" select="$daisy-dir"/&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+        &lt;p:with-option name="epub-dir" select="$epub-dir"/&gt;
+    &lt;/d2e:contents&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:resources - resources</h1></header><p class="shortdesc ">
+         Copy all referenced auxilliary resources (audio, stylesheets, images, etc.)
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">resource-manifests</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">daisy-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:resources name="resources" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="resource-manifests"&gt;
+            &lt;p:pipe port="resource-manifest" step="ncc"/&gt;
+            &lt;p:pipe port="resource-manifest" step="media-overlay"/&gt;
+            &lt;p:pipe port="resource-manifest" step="contents"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:with-option name="daisy-dir" select="$daisy-dir"/&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+        &lt;p:with-option name="epub-dir" select="$epub-dir"/&gt;
+    &lt;/d2e:resources&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:metadata - metadata</h1></header><p class="shortdesc ">
+         Compile OPF metadata.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">metadata</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:metadata name="metadata" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="metadata"&gt;
+            &lt;p:pipe port="metadata" step="ncc"/&gt;
+            &lt;p:pipe port="metadata" step="media-overlay"/&gt;
+            &lt;p:pipe port="metadata" step="contents"/&gt;
+        &lt;/p:input&gt;
+    &lt;/d2e:metadata&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:manifest - manifest</h1></header><p class="shortdesc ">
+         Compile OPF manifest.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">source-manifest</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:manifest name="manifest" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+        &lt;p:with-option name="epub-dir" select="$epub-dir"/&gt;
+        &lt;p:input port="source-manifest"&gt;
+            &lt;p:pipe port="manifest" step="contents"/&gt;
+            &lt;p:pipe port="manifest" step="media-overlay"/&gt;
+            &lt;p:pipe port="manifest" step="resources"/&gt;
+        &lt;/p:input&gt;
+    &lt;/d2e:manifest&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:spine - spine</h1></header><p class="shortdesc ">
+         Compile OPF spine.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-manifest</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt ">opf-manifest@manifest</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:spine name="spine" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="opf-manifest"&gt;
+            &lt;p:pipe port="opf-manifest" step="manifest"/&gt;
+        &lt;/p:input&gt;
+    &lt;/d2e:spine&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:navigation - navigation</h1></header><p class="shortdesc ">
+         Make and store the EPUB 3 Navigation Document based on the DAISY 2.02 NCC.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">ncc</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">ncc@ncc</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">id-mapping</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">id-mapping@media-overlay</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:navigation name="navigation" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="ncc"&gt;
+            &lt;p:pipe port="ncc" step="ncc"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="id-mapping"&gt;
+            &lt;p:pipe port="id-mapping" step="media-overlay"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+    &lt;/d2e:navigation&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:package - package</h1></header><p class="shortdesc ">
+         Make and store the OPF.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-metadata</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">opf-metadata@metadata</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-manifest</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">opf-manifest@manifest</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-spine</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">opf-spine@spine</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:package name="package" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:input port="opf-metadata"&gt;
+            &lt;p:pipe port="opf-metadata" step="metadata"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="opf-manifest"&gt;
+            &lt;p:pipe port="opf-manifest" step="manifest"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="opf-spine"&gt;
+            &lt;p:pipe port="opf-spine" step="spine"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+    &lt;/d2e:package&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>d2e:container - container</h1></header><p class="shortdesc ">
+         Package the EPUB 3 fileset as a ZIP-file (OCF).
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">manifests</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt ">result-manifest@manifest</td>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">store-complete</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options xproc-with-options"><tr><th>name</th><th>required</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-dir</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">epub-file</td>
+               <td class="pt "/>
+               <td class="pt ">opf-metadata@metadata</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;d2e:container name="container" xmlns:p="http://www.w3.org/ns/xproc" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"&gt;
+        &lt;p:with-option name="content-dir" select="$content-dir"/&gt;
+        &lt;p:with-option name="epub-dir" select="$epub-dir"/&gt;
+        &lt;p:with-option name="epub-file" select="concat($output-dir,                                         if (string-length(replace(//dc:title,'[^a-zA-Z0-9_ -]',''))&gt;0)                                             then          replace(//dc:title,'[^a-zA-Z0-9_ -]','')                                             else          'output'                                       ,'.epub')"&gt;
+            &lt;p:pipe port="opf-metadata" step="metadata"/&gt;
+        &lt;/p:with-option&gt;
+        &lt;p:input port="manifests"&gt;
+            &lt;p:pipe port="result-manifest" step="manifest"/&gt;
+        &lt;/p:input&gt;
+        &lt;p:input port="store-complete"&gt;
+            &lt;p:pipe port="store-complete" step="navigation"/&gt;
+            &lt;p:pipe port="store-complete" step="media-overlay"/&gt;
+            &lt;p:pipe port="store-complete" step="contents"/&gt;
+            &lt;p:pipe port="store-complete" step="resources"/&gt;
+            &lt;p:pipe port="store-complete" step="package"/&gt;
+        &lt;/p:input&gt;
+    &lt;/d2e:container&gt;</code></pre>
+   </section></section>
+   </section>
+</html>

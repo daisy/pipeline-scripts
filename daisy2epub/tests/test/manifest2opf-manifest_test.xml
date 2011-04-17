@@ -25,18 +25,18 @@
          </utfx:source>
          <utfx:expected>
             <opf:manifest>
-               <item id="navigation" href="navigation.xhtml" media-type="application/xhtml+xml"/>
-               <item id="content1" href="content1.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet1"/>
-               <item id="content2" href="content2.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet2"/>
-               <item id="content3" href="content3.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet3"/>
-               <item id="timesheet1" href="timesheet1.smil" media-type="application/smil+xml"/>
-               <item id="timesheet2" href="timesheet2.smil" media-type="application/smil+xml"/>
-               <item id="timesheet3" href="timesheet3.smil" media-type="application/smil+xml"/>
-               <item id="audio1" href="audio1.mp3" media-type="audio/mpeg"/>
-               <item id="audio2" href="audio2.mp3" media-type="audio/mpeg"/>
-               <item id="audio3" href="audio3.mp3" media-type="audio/mpeg"/>
-               <item id="stylesheet1" href="stylesheet.css" media-type="text/css"/>
-               <item id="image1" href="image.png" media-type="image/png"/>
+               <item id="item_1" href="navigation.xhtml" media-type="application/xhtml+xml"/>
+               <item id="item_2" href="content1.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet1"/>
+               <item id="item_3" href="content2.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet2"/>
+               <item id="item_4" href="content3.xhtml" media-type="application/xhtml+xml" media-overlay="timesheet3"/>
+               <item id="item_5" href="timesheet1.smil" media-type="application/smil+xml"/>
+               <item id="item_6" href="timesheet2.smil" media-type="application/smil+xml"/>
+               <item id="item_7" href="timesheet3.smil" media-type="application/smil+xml"/>
+               <item id="item_8" href="audio1.mp3" media-type="audio/mpeg"/>
+               <item id="item_9" href="audio2.mp3" media-type="audio/mpeg"/>
+               <item id="item_10" href="audio3.mp3" media-type="audio/mpeg"/>
+               <item id="item_11" href="stylesheet.css" media-type="text/css"/>
+               <item id="item_12" href="image.png" media-type="image/png"/>
             </opf:manifest>
          </utfx:expected>
       </utfx:assert-equal>

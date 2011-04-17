@@ -32,12 +32,12 @@
                <meta about="#date" property="scheme">yyyy-mm-dd</meta>
                <meta property="dcterms:modified">{TODO: ignore dynamically created time}</meta>
                <dc:format>ePub3</dc:format>
-               <dc:publisher id="meta_5">DAISY Consortium</dc:publisher>
-               <meta id="meta_7" property="ncc:charset">UTF-8</meta>
-               <meta id="meta_8" property="ncc:pageFront">1</meta>
-               <meta id="meta_9" property="ncc:pageNormal">2</meta>
-               <meta id="meta_10" property="ncc:pageSpecial">3</meta>
-               <meta id="meta_11" property="ncc:tocItems">1</meta>
+               <dc:publisher>DAISY Consortium</dc:publisher>
+               <meta property="ncc:charset">UTF-8</meta>
+               <meta property="ncc:pageFront">1</meta>
+               <meta property="ncc:pageNormal">2</meta>
+               <meta property="ncc:pageSpecial">3</meta>
+               <meta property="ncc:tocItems">1</meta>
                <meta id="meta_12" property="ncc:totalTime">00:00:10</meta>
                <meta about="#meta_12" property="scheme">hh:mm:ss</meta>
             </opf:metadata>

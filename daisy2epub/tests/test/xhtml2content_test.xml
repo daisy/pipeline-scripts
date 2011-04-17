@@ -5,6 +5,9 @@
    <utfx:stylesheet src="../xhtml2content.xsl"/>
    <utfx:test>
       <utfx:name>Minimal text content document</utfx:name>
+      <utfx:stylesheet-params>
+         <utfx:with-param name="href" select="'content1.xhtml'"/>
+      </utfx:stylesheet-params>
       <utfx:assert-equal>
          <utfx:source>
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,7 +15,22 @@
                   <title>HTML document title</title>
                </head>
                <body>
-                  <h1 id="title1">Heading 1</h1>
+                  <h1 class="title" id="id1">
+                     <a href="content1.xhtml#id1">Headline 1</a>
+                  </h1>
+                  <p>
+                     <span class="sentence" id="id2">
+                        <a href="content1.xhtml#id2">First sentence.</a>
+                     </span>
+                  </p>
+                  <p>
+                     <span class="sentence" id="id3">
+                        <a href="content1.xhtml#id4">First sentence.</a>
+                     </span>
+                     <span class="sentence" id="id4">
+                        <a href="content2.xhtml#id4">Second sentence.</a>
+                     </span>
+                  </p>
                </body>
             </html>
          </utfx:source>
@@ -22,7 +40,22 @@
                   <title>HTML document title</title>
                </head>
                <body>
-                  <h1 id="title1">Heading 1</h1>
+                  <h1 class="title" id="id1">
+                     <span>Headline 1</span>
+                  </h1>
+                  <p>
+                     <span class="sentence" id="id2">
+                        <span>First sentence.</span>
+                     </span>
+                  </p>
+                  <p>
+                     <span class="sentence" id="id3">
+                        <a href="content1.xhtml#id4">First sentence.</a>
+                     </span>
+                     <span class="sentence" id="id4">
+                        <a href="content2.xhtml#id4">Second sentence.</a>
+                     </span>
+                  </p>
                </body>
             </html>
          </utfx:expected>

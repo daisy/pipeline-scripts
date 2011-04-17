@@ -4,9 +4,37 @@
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://pipeline.daisy.org/ns/"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
-    type="d2e:contents" name="contents" version="1.0">
+    xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" type="d2e:contents" name="contents"
+    version="1.0">
 
-    <p:input port="source" primary="true"/>
+    <p:documentation xd:target="parent">
+        <xd:short>Load the DAISY 2.02 text content documents and store them as EPUB 3 Content
+            Documents.</xd:short>
+        <xd:author>
+            <xd:name>Jostein Austvik Jacobsen</xd:name>
+            <xd:mailto>josteinaj@gmail.com</xd:mailto>
+            <xd:organization>NLB</xd:organization>
+        </xd:author>
+        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
+        <xd:input port="spine">List of DAISY 2.02 text content documents in playback
+            order.</xd:input>
+        <xd:input port="id-mapping">Map of id-attributes and fragment identifiers from the original
+            and resulting filesets.</xd:input>
+        <xd:output port="manifest">List of stored files.</xd:output>
+        <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
+        <xd:output port="resource-manifest">Auxiliary resources referenced from the resulting
+            Content Documents.</xd:output>
+        <xd:output port="metadata">Metadata from the Content Documents.</xd:output>
+        <xd:option name="daisy-dir">URI to the directory containing the NCC.</xd:option>
+        <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
+            stored.</xd:option>
+        <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
+        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+            filesets.</xd:import>
+        <xd:import href="../utilities/html/html-library.xpl">For loading HTML.</xd:import>
+    </p:documentation>
+
+    <p:input port="spine" primary="false"/>
     <p:input port="id-mapping" primary="false"/>
     <p:output port="manifest" primary="false">
         <p:pipe port="result" step="contents.manifest"/>
@@ -25,18 +53,22 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="fileset-library.xpl"/>
-    <p:import href="html-library.xpl"/>
+    <p:import href="../utilities/files/fileset-library.xpl"/>
+    <p:import href="../utilities/html/html-library.xpl"/>
 
-    <p:documentation><![CDATA[
-            read XHTML-files
-            input: spine-manifest@media-overlay
-            primary output: "manifest"
-            output: "store-complete"
-            output: "resource-manifest"
-            output: "metadata"
-    ]]></p:documentation>
-
+    <p:documentation>
+        <xd:short>Iterating through each text content document in the DAISY 2.02 fileset, converting
+            to EPUB 3 Content Documents, extracting auxiliary resources and metadata, and storing
+            the resulting files.</xd:short>
+        <xd:output port="manifest">Sequence of manifests representing each stored Content
+            Document.</xd:output>
+        <xd:output port="store">Sequence of results from storing the Content Documents, allowing
+            other steps to depend on the files being stored.</xd:output>
+        <xd:output port="resources">Sequence of manifests derived from each Content Document
+            containing references to all the auxiliary resources.</xd:output>
+        <xd:output port="metadata">Sequence of metadata sets intended for "global" consuption,
+            derived from each Content Document.</xd:output>
+    </p:documentation>
     <p:for-each name="contents.iterate">
         <p:output port="manifest">
             <p:pipe port="result" step="contents.iterate.manifest"/>
@@ -51,7 +83,9 @@
             <p:pipe port="result" step="contents.iterate.metadata"/>
         </p:output>
 
-        <p:iteration-source select="//c:entry"/>
+        <p:iteration-source select="//c:entry">
+            <p:pipe port="spine" step="contents"/>
+        </p:iteration-source>
         <p:variable name="href" select="/*/@href"/>
         <p:variable name="new-href" select="replace($href,'\.([^\.]+)$','.xhtml')"/>
 
@@ -59,6 +93,8 @@
             <p:with-option name="href" select="concat($daisy-dir,$href)"/>
         </px:load-html>
         <p:viewport match="//html:a">
+            <p:documentation xd:exclude="true">De-references SMIL-hrefs into their equivalent
+                XHTML-hrefs; see navigation.xpl-documentation for details.</p:documentation>
             <p:variable name="smil-href" select="tokenize(/*/@href,'#')[1]"/>
             <p:variable name="smil-id"
                 select="if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else ''"/>
@@ -81,6 +117,14 @@
             </p:input>
         </p:xslt>
         <p:delete match="/*/@xml:base"/>
+        <!--p:validate-with-schematron>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="schema">
+                <p:document href="../schemas/epub30/epub-xhtml-30.sch"/>
+            </p:input>
+        </p:validate-with-schematron-->
         <p:store name="contents.iterate.store">
             <p:with-option name="href" select="p:resolve-uri(concat($content-dir,$new-href))"/>
         </p:store>
@@ -129,6 +173,8 @@
         <p:sink/>
     </p:for-each>
 
+    <p:documentation>Make one single manifest containing references to all the stored Content
+        Documents.</p:documentation>
     <px:join-manifests name="contents.manifest">
         <p:input port="source">
             <p:pipe port="manifest" step="contents.iterate"/>
@@ -136,6 +182,8 @@
     </px:join-manifests>
     <p:sink/>
 
+    <p:documentation>Make one single manifest containing references to all the auxiliary
+        resources.</p:documentation>
     <px:join-manifests name="contents.resources">
         <p:input port="source">
             <p:pipe port="resources" step="contents.iterate"/>
@@ -143,6 +191,8 @@
     </px:join-manifests>
     <p:sink/>
 
+    <p:documentation>Make one single set of metadata extracted from all the Content
+        Documents.</p:documentation>
     <p:wrap-sequence wrapper="c:metadata">
         <p:input port="source">
             <p:pipe port="metadata" step="contents.iterate"/>

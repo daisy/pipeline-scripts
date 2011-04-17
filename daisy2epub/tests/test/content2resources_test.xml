@@ -7,7 +7,7 @@
       <utfx:name>Minimal content document</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
+            <html xml:base="http://example.com/navigation.xhtml" xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
                <head>
                   <title>HTML document title</title>
                </head>
@@ -17,7 +17,7 @@
             </html>
          </utfx:source>
          <utfx:expected>
-            <c:manifest/>
+            <c:manifest xml:base="http://example.com/"/>
          </utfx:expected>
       </utfx:assert-equal>
    </utfx:test>
@@ -25,7 +25,7 @@
       <utfx:name>CSS-stylesheet in &lt;head/&gt;</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
+            <html xml:base="http://example.com/navigation.xhtml" xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
                <head>
                   <title>HTML document title</title>
                   <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -36,7 +36,7 @@
             </html>
          </utfx:source>
          <utfx:expected>
-            <c:manifest>
+            <c:manifest xml:base="http://example.com/">
                <c:entry href="stylesheet.css" media-type="text/css"/>
             </c:manifest>
          </utfx:expected>
@@ -46,7 +46,7 @@
       <utfx:name>Two PNG-images</utfx:name>
       <utfx:assert-equal>
          <utfx:source>
-            <html xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
+            <html xml:base="http://example.com/navigation.xhtml" xmlns="http://www.w3.org/1999/xhtml" profile="http://www.idpf.org/epub/30/profile/content/">
                <head>
                   <title>HTML document title</title>
                </head>
@@ -58,7 +58,7 @@
             </html>
          </utfx:source>
          <utfx:expected>
-            <c:manifest>
+            <c:manifest xml:base="http://example.com/">
                <c:entry href="image1.png" media-type="image/png"/>
                <c:entry href="image2.png" media-type="image/png"/>
             </c:manifest>

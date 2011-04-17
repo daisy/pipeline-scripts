@@ -1,0 +1,248 @@
+<html><head><style type="text/css">
+                    body {
+                        font-family : futura, helvetica, arial, sans-serif;
+                    }
+                    section,
+                    article,
+                    header,
+                    footer,
+                    nav,
+                    aside,
+                    hgroup {
+                        display : block;
+                    }
+                    section.reference {
+                        border-style : solid;
+                        border-width : 1px;
+                        border-radius : 10px;
+                        -moz-border-radius : 10px;
+                        margin : 5px;
+                        padding : 20px;
+                        border-color : #CCC;
+                        background-color : #F9F9F9;
+                    }
+                    .child-topics section.reference {
+                        border-style : solid;
+                        border-width : 2px;
+                        border-radius : 10px;
+                        -moz-border-radius : 10px;
+                        margin : 20px;
+                        padding : 20px;
+                        border-color : #CCC;
+                        background-color : #EEF;
+                    }
+                    section.child-topics {
+                        margin-left : 25px;
+                    }
+                    .main-header h1 {
+                        width : 100%;
+                        border-style : solid;
+                        border-width : 0px 0px 1px 0px;
+                        font-size : 26px;
+                    }
+                    table {
+                        margin : 10px;
+                    }
+                    table.parml {
+                        border-style : solid;
+                        border-width : 1px;
+                        border-color : white;
+                        background-color : #EEF;
+                    }
+                    tr.plentry {
+                        border-style : dotted;
+                        border-width : 1px;
+                    }
+                    td.pt td.pd {
+                        padding : 5px;
+                        border-style : solid;
+                        border-width : 1px;
+                        border-radius : 4px;
+                    }
+                    .reference h1 {
+                        font-size : 22px;
+                        color : #006;
+                    }
+                    section.abstract,
+                    section.prolog,
+                    section.parameters,
+                    section.linklist,
+                    section.sourcecode {
+                        border-style : dotted;
+                        border-width : 1px;
+                        border-radius : 0px;
+                        margin : 10px;
+                        padding : 10px 10px 50px 10px;
+                        background-color : #F5F5FF;
+                    }
+                    section.sourcecode {
+                        /*display: none;*/
+                    }
+                    header.abstract-header,
+                    header.prolog-header,
+                    header.io-header,
+                    .linklist header,
+                    header.sourcecode-header {
+                        position : relative;
+                        top : -30px;
+                        float : left;
+                    }
+                    .abstract-header h1,
+                    .prolog-header h1,
+                    .io-header h1,
+                    .linklist h1,
+                    .sourcecode-header h1 {
+                        position : absolute;
+                        color : #006;
+                        background-color : #EEF;
+                        font-size : 18px;
+                        white-space : nowrap;
+                    }
+                    header.subheader {
+                        position : static;
+                        top : 0px;
+                        float : none;
+                    }
+                    .subheader h1 {
+                        color : #006;
+                        background-color : transparent;
+                        font-size : 16px;
+                    }</style></head><header class="main-header"><h1>package.xpl</h1></header>
+   <section class="reference XProc "><header class="title "><h1>p:declare-step - package</h1></header><p class="shortdesc ">
+         Compile and store the OPF.
+      </p><section class="prolog "><header class="prolog-header"><h1>About</h1></header>
+      <p class="">Author: 
+         <xd:name xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">Jostein Austvik Jacobsen</xd:name> (<xd:mailto xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">josteinaj@gmail.com</xd:mailto>), <xd:organization xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">NLB</xd:organization>
+      </p>
+      <p class="">Maintainer: 
+         <xd:name xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf">Jostein Austvik Jacobsen</xd:name>
+      </p>
+      <table class="metadata ">
+         
+         <tr class="othermeta "><td>Programming language</td><td>XProc</td></tr>
+         <tr class="othermeta "><td>XProc version</td><td>1.0</td></tr>
+      </table>
+   </section>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-metadata</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd ">
+                  <xd:input xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf" port="opf-metadata">Metadata in OPF-format.</xd:input>
+               </td>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-manifest</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd ">
+                  <xd:input xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf" port="opf-manifest">Manifest in OPF-format.</xd:input>
+               </td>
+            </tr>
+            <tr class="plentry ">
+               <td class="pt ">opf-spine</td>
+               <td class="pt ">false</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd ">
+                  <xd:input xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf" port="opf-spine">Spine in OPF-format.</xd:input>
+               </td>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-outputs">
+         <header class="title io-header"><h1>Outputs</h1></header>
+         <table class="parml xproc-outputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">store-complete</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt ">result@store</td>
+               <td class="pd ">
+                  <xd:output xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf" port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
+               </td>
+            </tr>
+         </table>
+      </section>
+      <section class="section parameters xproc-options">
+         <header class="title io-header"><h1>Options</h1></header>
+         <table class="parml xproc-options"><tr><th>name</th><th>required</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">content-dir</td>
+               <td class="pt ">true</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <span class="related-links ">
+      <section class="linklist "><header class="title "><h1>Dependencies (p:document)</h1></header><p class="linkinfo ">These dependencies are derived from documents loaded with the p:document
+                step in the XProc script.</p><p class="link "><a href="../schemas/epub30/package-30.sch.html" style="padding-left: 20px;">../schemas/epub30/package-30.sch</a></p></section>
+   </span></section><section class="child-topics">
+      <section class="reference XProc "><header class="title "><h1>p:identity</h1></header><p class="shortdesc ">
+         Construct the outer &lt;opf:package ...&gt;-element.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">source</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt ">inline</td>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;p:identity xmlns:p="http://www.w3.org/ns/xproc" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" xmlns:opf="http://www.idpf.org/2007/opf"&gt;
+        &lt;p:documentation target="parent"&gt;&lt;xd:short&gt;Construct the outer &amp;lt;opf:package ...&gt;-element.&lt;/xd:short&gt;&lt;xd:input name="source"/&gt;&lt;/p:documentation&gt;
+        &lt;p:input port="source"&gt;
+            &lt;p:inline&gt;
+                &lt;opf:package version="3.0" profile="http://www.idpf.org/epub/30/profile/package/"/&gt;
+            &lt;/p:inline&gt;
+        &lt;/p:input&gt;
+    &lt;/p:identity&gt;</code></pre>
+   </section></section>
+      <section class="reference XProc "><header class="title "><h1>p:insert</h1></header><p class="shortdesc ">
+         Inserts the metadata, manifest and spine (in that order) as children of the &lt;opf:package ...&gt;-element.
+      </p>
+      <section class="section ">
+         
+      </section>
+      <section class="section parameters xproc-inputs">
+         <header class="title io-header"><h1>Inputs</h1></header>
+         <table class="parml xproc-inputs"><tr><th>name</th><th>primary</th><th>sequence</th><th>connection</th><th>description</th></tr>
+            <tr class="plentry ">
+               <td class="pt ">insertion</td>
+               <td class="pt ">true</td>
+               <td class="pt "/>
+               <td class="pt "/>
+               <td class="pd "/>
+            </tr>
+         </table>
+      </section>
+   <section class="section sourcecode">
+      <header class="title sourcecode-header"><h1>Source Code</h1></header>
+      <pre class="codeblock"><code class="">&lt;p:insert position="last-child" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"&gt;
+        &lt;p:documentation target="parent"&gt;&lt;xd:short&gt;Inserts the metadata, manifest and spine (in that order) as children of the &amp;lt;opf:package ...&gt;-element.&lt;/xd:short&gt;&lt;xd:input name="insertion"/&gt;&lt;/p:documentation&gt;
+        &lt;p:input port="insertion"&gt;
+            &lt;p:pipe port="opf-metadata" step="package"/&gt;
+            &lt;p:pipe port="opf-manifest" step="package"/&gt;
+            &lt;p:pipe port="opf-spine" step="package"/&gt;
+        &lt;/p:input&gt;
+    &lt;/p:insert&gt;</code></pre>
+   </section></section>
+   </section>
+</html>

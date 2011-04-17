@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    version="1.0" xmlns:px="http://pipeline.daisy.org/ns/" type="px:mime">
+    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
+    version="1.0" type="px:mime">
+
+    <p:documentation xd:target="parent">
+        <xd:short>Determine the MIME-type of a file.</xd:short>
+        <xd:author>
+            <xd:name>Jostein Austvik Jacobsen</xd:name>
+            <xd:mailto>josteinaj@gmail.com</xd:mailto>
+            <xd:organization>NLB</xd:organization>
+        </xd:author>
+        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
+        <xd:option name="href">URI to the file you want to know the MIME-type of.</xd:option>
+        <xd:output port="result">Returns &lt;c:file href="(href)" type="(MIME-type)"/&gt;</xd:output>
+    </p:documentation>
 
     <p:option name="href" required="true"/>
     <p:output port="result"/>

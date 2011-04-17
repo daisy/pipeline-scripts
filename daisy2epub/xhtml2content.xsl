@@ -29,10 +29,10 @@
             <xsl:when
                 test="not($link-href='') and $link-href=$href and not($link-id='') and $self-id=$link-id">
                 <!-- is link to self; remove it -->
-                <span>
+                <xsl:element name="span" namespace="http://www.w3.org/1999/xhtml">
                     <xsl:apply-templates select="@id"/>
                     <xsl:apply-templates select="node()"/>
-                </span>
+                </xsl:element>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:copy>

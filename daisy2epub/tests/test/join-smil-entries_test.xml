@@ -7,7 +7,7 @@
         <utfx:assert-equal>
             <utfx:source>
                 <c:manifest>
-                    <c:entry reverse-media-overlay="gonxhtml.html" media-type="application/smil+xml"
+                    <c:entry original-href="hotl0001.smil" reverse-media-overlay="gonxhtml.html" media-type="application/smil+xml"
                         href="hotl0001.smil">
                         <smil>
                             <head>
@@ -43,7 +43,7 @@
                             </body>
                         </smil>
                     </c:entry>
-                    <c:entry reverse-media-overlay="gonxhtml.html" media-type="application/smil+xml"
+                    <c:entry original-href="hotl0002.smil" reverse-media-overlay="gonxhtml.html" media-type="application/smil+xml"
                         href="hotl0002.smil">
                         <smil>
                             <head>
@@ -102,7 +102,7 @@
                             </body>
                         </smil>
                     </c:entry>
-                    <c:entry reverse-media-overlay="gonxhtml1.html"
+                    <c:entry original-href="hotl0003.smil" reverse-media-overlay="gonxhtml1.html"
                         media-type="application/smil+xml" href="hotl0003.smil">
                         <smil>
                             <head>
@@ -268,7 +268,7 @@
                             </body>
                         </smil>
                     </c:entry>
-                    <c:entry reverse-media-overlay="gonxhtml1.html"
+                    <c:entry original-href="hotl0003.smil" reverse-media-overlay="gonxhtml1.html"
                         media-type="application/smil+xml" href="hotl0003.smil">
                         <smil>
                             <head>

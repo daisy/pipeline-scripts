@@ -1,0 +1,27 @@
+
+                <html xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d="http://www.example.org/documenter" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc">
+                    <head>
+                        <style type="text/css">
+                            
+                            #outer {height: 100%; overflow: hidden; position: relative; width: 100%;}
+                            #outer[id] {display: table; position: static;}
+                            
+                            #middle {position: absolute; top: 50%; width: 100%; text-align: center;} /* for explorer only*/
+                            #middle[id] {display: table-cell; vertical-align: middle; position: static;}
+                            
+                            #inner {position: relative; top: -50%; text-align: left;} /* for explorer only */
+                            #inner {width: 200px; margin-left: auto; margin-right: auto;} /* for all browsers*/
+                            
+                        </style>
+                    </head>
+                    <body>
+                        <div id="outer">
+                            <div id="middle">
+                                <div id="inner">
+                                    <img class="center" src="img/generated-using-pipeline2.png" alt="Generated using Pipeline 2"/>
+                                </div>
+                            </div>
+                        </div>
+                    </body>
+                </html>
+            

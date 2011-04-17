@@ -16,7 +16,7 @@
                 <xsl:variable name="reverse-media-overlay" select="@reverse-media-overlay"/>
                 <xsl:copy>
                     <xsl:apply-templates select="@*[not(name()='original-href')]"/>
-                    <xsl:if test="following-sibling::c:entry[@reverse-media-overlay and @reverse-media-overlay=$reverse-media-overlay]">
+                    <xsl:if test="not(following-sibling::c:entry[@reverse-media-overlay and @reverse-media-overlay=$reverse-media-overlay])">
                         <xsl:apply-templates select="@original-href"/>
                     </xsl:if>
                     <xsl:copy-of select="child::*"/>

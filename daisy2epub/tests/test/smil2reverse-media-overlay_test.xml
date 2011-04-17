@@ -2,7 +2,7 @@
 <!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition" xmlns:c="http://www.w3.org/ns/xproc-step"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <utfx:stylesheet src="../media-overlay2reverse-media-overlay.xsl"/>
+   <utfx:stylesheet src="../smil2reverse-media-overlay.xsl"/>
    <!--utfx:source-validation>
       <utfx:dtd public="-//W3C//DTD SMIL 3.0 Daisy//EN"
          system="http://www.w3.org/2008/SMIL30/SMIL30Daisy.dtd"/>
