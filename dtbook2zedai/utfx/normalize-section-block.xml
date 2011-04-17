@@ -38,7 +38,7 @@
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
-        <utfx:name>Normalize Mixed Section/Block: mixed (illegal)</utfx:name>
+        <utfx:name>Normalize Mixed Section/Block: mixed 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <bodymatter>
@@ -61,6 +61,45 @@
                             <h2>H2</h2>
                             <p><sent>S-1</sent></p>
                         </level2> <level2><p>ROGUE PARAGRAPH!</p></level2> <level2>
+                            <h2>H2</h2>
+                            <p>P-1</p>
+                        </level2> </level1>
+                </bodymatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: mixed 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <bodymatter>
+                    <level1>
+                        <h1>H1</h1>
+                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                            <h2>H2</h2>
+                            <p><sent>S-1</sent></p>
+                        </level2>
+                        <p>ROGUE PARAGRAPH 1!</p>
+                        <p>ROGUE PARAGRAPH 2!</p>
+                        <level2>
+                            <h2>H2</h2>
+                            <p>P-1</p>
+                        </level2> </level1>
+                </bodymatter>
+            </utfx:source>
+            <utfx:expected>
+                <bodymatter>
+                    <level1>
+                        <h1>H1</h1>
+                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                            <h2>H2</h2>
+                            <p><sent>S-1</sent></p>
+                        </level2>
+                        <level2>
+                            <p>ROGUE PARAGRAPH 1!</p>
+                            <p>ROGUE PARAGRAPH 2!</p>
+                        </level2>
+                        <level2>
                             <h2>H2</h2>
                             <p>P-1</p>
                         </level2> </level1>

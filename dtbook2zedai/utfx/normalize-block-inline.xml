@@ -46,7 +46,7 @@
             </utfx:source>
             <utfx:expected>
                 <div>
-                    <p>Para</p> <p><span>Span</span></p> <p><span>Span 2</span></p> <p>Another Para</p>
+                    <p>Para</p> <p><span>Span</span> <span>Span 2</span></p> <p>Another Para</p>
                 </div>
             </utfx:expected>
         </utfx:assert-equal>
@@ -61,7 +61,8 @@
             </utfx:source>
             <utfx:expected>
                 <div>
-                    <p>Para</p> <p><span>Span</span></p> <p><span>Span 2</span></p> <p>Another Para</p> <p>Plain Text</p> <p><span>Span 3</span></p>
+                    <p>Para</p> <p><span>Span</span> <span>Span 2</span></p> <p>Another Para</p> 
+                    <p>Plain Text <span>Span 3</span></p>
                 </div>
             </utfx:expected>
         </utfx:assert-equal>
@@ -76,7 +77,7 @@
             </utfx:source>
             <utfx:expected>
                 <level1>
-                    <p><span>Span</span></p> <p><span>Span 2</span></p>
+                    <p><span>Span</span> <span>Span 2</span></p>
                 </level1>
             </utfx:expected>
         </utfx:assert-equal>

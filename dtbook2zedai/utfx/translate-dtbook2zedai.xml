@@ -4,7 +4,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
 
     <utfx:stylesheet src="translate-dtbook2zedai.xsl"/>
 
@@ -119,7 +120,7 @@
                     <meta name="dc:Relation" content="M"/>
                     <meta name="dc:Coverage" content="N"/>
                     <meta name="dc:Rights" content="O"/>
-                    <meta name="dc:RevisionDescription" content="P"/>
+                    <meta name="dtb:revisionDescription" content="P"/>
                 </head>
             </utfx:source>
             <utfx:expected>
@@ -141,7 +142,8 @@
                     <meta property="dcterms:relation" content="M"/>
                     <meta property="dcterms:coverage" content="N"/>
                     <meta property="dcterms:rights" content="O"/>
-                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/> <meta
+                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/> 
+                    <meta
                         rel="z3986:meta-record" resource="">
                         <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
                         <meta property="z3986:meta-record-version" about="" content="3.3"/>
@@ -442,7 +444,7 @@
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: Caption</utfx:name>
+        <utfx:name>Translate-DTBook2ZedAI: Caption 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <caption imgref="#img0001">CAPTION</caption>
@@ -453,13 +455,13 @@
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: Caption</utfx:name>
+        <utfx:name>Translate-DTBook2ZedAI: Caption 2</utfx:name>
             <utfx:assert-equal normalise-internal-whitespace="yes">
                 <utfx:source>
-                    <caption imgref="#img0001">CAPTION</caption>
+                    <caption>Mixed <span>Text</span> Model</caption>
                 </utfx:source>
                 <utfx:expected>
-                    <caption ref="img0001">CAPTION</caption>
+                    <caption>Mixed <span>Text</span> Model</caption>
                 </utfx:expected>
             </utfx:assert-equal>
     </utfx:test>
@@ -471,6 +473,10 @@
                     <img src="image.png" alt="test image" id="img0001"/>
                     <caption>CAPTION</caption>
                 </imggroup>
+                <imggroup>
+                    <img src="image.png" alt="test image" id="img0002"/>
+                    <caption imgref="img0002">CAPTION</caption>
+                </imggroup>
             </utfx:source>
             <utfx:expected>
                 <block>
@@ -478,6 +484,12 @@
                         <description>test image</description>
                     </object>
                     <caption ref="img0001">CAPTION</caption>
+                </block>
+                <block>
+                    <object src="image.png" xml:id="img0002">
+                        <description>test image</description>
+                    </object>
+                    <caption ref="img0002">CAPTION</caption>
                 </block>
             </utfx:expected>
         </utfx:assert-equal>
@@ -515,7 +527,7 @@
                     <object src="image.png" xml:id="img0002">
                         <description>test image</description>
                     </object>
-                    <annotation by="republisher" ref="img0001">PRODNOTE</annotation>
+                    <annotation by="republisher" ref="img0002">PRODNOTE</annotation>
                 </block>
             </utfx:expected>
         </utfx:assert-equal>
@@ -541,7 +553,7 @@
             </utfx:source>
             <utfx:expected>
                 <note role="footnote"/>
-                <note class="endnote"/>
+                <note role="endnote"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -610,7 +622,7 @@
   
   
     <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: Table #1</utfx:name>
+        <utfx:name>Translate-DTBook2ZedAI: Table 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <table id="table1" width="100" border="2" cellspacing="10" cellpadding="10"/>
@@ -630,9 +642,8 @@
                 </table>
             </utfx:source>
             <utfx:expected>
-                <table id="table2">
-                    <caption ref="table2">This is a lovely <span>Caption!</span></caption>
-                </table>
+                <caption ref="table2">This is a lovely <span>Caption!</span></caption>
+                <table id="table2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -642,17 +653,14 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <table id="table3">
-                    <col/>
-                    <col/>
-                    <caption>table caption</caption>
-                    <tbody xml:id="tbody1"/>
+                    <col id="col1"/>
+                    <col id="col2"/>
+                    <tbody id="tbody1"/>
                 </table>
             </utfx:source>
             <utfx:expected>
-                <table id="table3">
-                    <caption ref="table3">caption</caption>
-                    <colgroup><col/></colgroup>
-                    <colgroup><col/></colgroup>
+                <table xml:id="table3">
+                    <colgroup><col xml:id="col1"/><col xml:id="col2"/></colgroup>
                     <tbody xml:id="tbody1"/>
                 </table>
             </utfx:expected>
@@ -666,7 +674,7 @@
                 <col span="3" align="left" valign="center" width="300" id="col1"/>
             </utfx:source>
             <utfx:expected>
-                <col span="3" align="left" valign="center" width="300" id="col1"/>
+                <col span="3" align="left" valign="center" width="300" xml:id="col1"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -677,23 +685,23 @@
             <utfx:source>
                 <colgroup span="3" id="colgroup1" align="left" valign="center" width="300"/>
                 <colgroup span="4" id="colgroup2">
-                    <col/>
-                    <col/>
+                    <col id="col1"/>
+                    <col id="col2"/>
                 </colgroup>
                 <colgroup id="colgroup3">
-                    <col/>
-                    <col/>
+                    <col id="col3"/>
+                    <col id="col4"/>
                 </colgroup>
             </utfx:source>
             <utfx:expected>
                 <colgroup xml:id="colgroup1" span="3" align="left" valign="center" width="300"/>
-                <colgroup xml:id="colgroup2">
-                    <col/>
-                    <col/>
+                <colgroup xml:id="colgroup2" span="4">
+                    <col xml:id="col1"/>
+                    <col xml:id="col2"/>
                 </colgroup>
                 <colgroup xml:id="colgroup3">
-                    <col/>
-                    <col/>
+                    <col xml:id="col3"/>
+                    <col xml:id="col4"/>
                 </colgroup>
             </utfx:expected>
         </utfx:assert-equal>
@@ -835,9 +843,8 @@
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI:ln </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
-            <!-- should be d2z:ln -->
             <utfx:source>
-                <ln/>
+                <d2z:ln/>
             </utfx:source>
             <utfx:expected>
                 <ln/>
@@ -859,16 +866,18 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <cite id="cite1">
+                    Text1
                     <title>Title</title>
                     <author>Author</author>
-                    Citation Text
+                    Text2
                 </cite>
             </utfx:source>
             <utfx:expected>
                 <citation xml:id="cite1">
+                    Text1
                     <span property="title" about="cite1">Title</span>
                     <span property="author" about="cite1">Author</span>
-                    Citation Text
+                    Text2
                 </citation>
             </utfx:expected>
         </utfx:assert-equal>
@@ -984,25 +993,25 @@
                 <level4><linegroup><line/><line/></linegroup></level4>
                 <level5><linegroup><line/><line/></linegroup></level5>
                 <level6><linegroup><line/><line/></linegroup></level6>
-                <td><linegroup><line/><line/></linegroup></td>
+                <td id="td1"><linegroup><line/><line/></linegroup></td>
                 <prodnote><linegroup><line/><line/></linegroup></prodnote>
                 <sidebar><linegroup><line/><line/></linegroup></sidebar>
                 <th id="th1"><linegroup><line/><line/></linegroup></th>
             </utfx:source>
             <utfx:expected>
-                <annotation><block><p><line/></p><p><line/></p><pagebreak value="4"/></block></annotation>
-                <caption><block><p><line/></p><p><line/></p></block></caption>
-                <level><block><p><line/></p><p><line/></p></block></level>
-                <level1><block><p><line/></p><p><line/></p></block></level1>
-                <level2><block><p><line/></p><p><line/></p></block></level2>
-                <level3><block><p><line/></p><p><line/></p></block></level3>
-                <level4><block><p><line/></p><p><line/></p></block></level4>
-                <level5><block><p><line/></p><p><line/></p></block></level5>
-                <level6><block><p><line/></p><p><line/></p></block></level6>
-                <td><block><p><line/></p><p><line/></p></block></td>
-                <prodnote><block><p><line/></p><p><line/></p></block></prodnote>
-                <sidebar><block><p><line/></p><p><line/></p></block></sidebar>
-                <th xml:id="th1"><block><p><line/></p><p><line/></p></block></th>
+                <annotation><block><p><ln/><ln/></p><pagebreak value="4"/></block></annotation>
+                <caption><block><p><ln/><ln/></p></block></caption>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <section><block><p><ln/><ln/></p></block></section>
+                <td xml:id="td1"><block><p><ln/><ln/></p></block></td>
+                <annotation by="republisher"><block><p><ln/><ln/></p></block></annotation>
+                <aside role="sidebar"><block><p><ln/><ln/></p></block></aside>
+                <th xml:id="th1"><block><p><ln/><ln/></p></block></th>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -1078,7 +1087,7 @@
                 <level><div/><dd/></level>
                 <level><poem/><dd/></level>
                 <level><linegroup/><dd/></level>
-                <level><table/><dd/></level>
+                <level><table id="table1"/><dd/></level>
                 <level><dd/><sidebar/></level>
                 <level><dd/><note/></level>
                 <level><dd/><epigraph/></level>
@@ -1090,10 +1099,10 @@
                 <section><block/><p><definition/></p></section>
                 <section><block role="poem"/><p><definition/></p></section>
                 <section><block/><p><definition/></p></section>
-                <section><table/><p><definition/></p></section>
+                <section><table xml:id="table1"/><p><definition/></p></section>
                 <section><p><definition/></p><aside role="sidebar"/></section>
-                <section><list/><p><definition/></p><note/></section>
-                <section><list/><p><definition/></p><block role="epigraph"/></section>
+                <section><p><definition/></p><note/></section>
+                <section><p><definition/></p><block role="epigraph"/></section>
                 <section><span/><definition/></section>
                 
             </utfx:expected>
@@ -1109,7 +1118,7 @@
                 <level><div/><dt/></level>
                 <level><poem/><dt/></level>
                 <level><linegroup/><dt/></level>
-                <level><table/><dt/></level>
+                <level><table id="table1"/><dt/></level>
                 <level><dt/><sidebar/></level>
                 <level><dt/><note/></level>
                 <level><dt/><epigraph/></level>
@@ -1121,10 +1130,10 @@
                 <section><block/><p><term/></p></section>
                 <section><block role="poem"/><p><term/></p></section>
                 <section><block/><p><term/></p></section>
-                <section><table/><p><term/></p></section>
+                <section><table xml:id="table1"/><p><term/></p></section>
                 <section><p><term/></p><aside role="sidebar"/></section>
-                <section><list/><p><term/></p><note/></section>
-                <section><list/><p><term/></p><block role="epigraph"/></section>
+                <section><p><term/></p><note/></section>
+                <section><p><term/></p><block role="epigraph"/></section>
                 <section><span/><term/></section>
              </utfx:expected>
         </utfx:assert-equal>
@@ -1145,7 +1154,7 @@
                 <poem>
                     <title>TITLE</title>
                     <author>AUTHOR</author>
-                    <ln>LINE</ln>
+                    <line>LINE</line>
                     <hd>HD</hd>
                 </poem>
             </utfx:source>
@@ -1153,7 +1162,7 @@
                 <block role="poem">
                     <p role="title">TITLE</p>
                     <p role="author">AUTHOR</p>
-                    <p>LINE</p>
+                    <p><ln>LINE</ln></p>
                     <hd>HD</hd>
                 </block>
             </utfx:expected>
@@ -1163,35 +1172,53 @@
         <utfx:name>Translate-DTBook2ZedAI: code-blocks </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <code-block/>
-                <code-block>
-                    <em/><strong/><dfn/><cite/><abbr/><acronym/><a/><sub/><sup/><span/><bdo/><w/><annoref/><noteref/><sent/>
-                </code-block>
-                <code-block>
+                <d2z:code-block/>
+                <d2z:code-block>
+                    <em/>
+                    <strong/>
+                    <dfn/>
+                    <cite id="cite1"/>
+                    <abbr/>
+                    <acronym/>
+                    <a href="abc.html" external="true"/>
+                    <sub/>
+                    <sup/>
+                    <span/>
+                    <w/>
+                    <annoref idref="REF"/>
+                    <noteref idref="REF"/>
+                    <sent/>
+                </d2z:code-block>
+                <d2z:code-block>
                     <prodnote/><q/>
-                </code-block>
-                <code-block>
-                    <em/><strong/><dfn/><cite/><abbr/><acronym/><a href="abc.html" external="true"/>
-                    <sub/><sup/><span/><bdo/><w/><annoref/><noteref/>
-                    <sent/><code-phrase/>
-                </code-block>
-                <code-block>
+                </d2z:code-block>
+                <d2z:code-block>
                     <em/><pagenum>23</pagenum>
-                </code-block>
-                <code-block>
-                    <ln>LINE</ln><q/>
-                </code-block>
+                </d2z:code-block>
+                <d2z:code-block>
+                    <line>LINE</line><q/>
+                </d2z:code-block>
             </utfx:source>
             <utfx:expected>
                 <code/>
                 <code>
-                    <block><annotation by="republisher"/><quote/></block>
+                    <p><emph/></p>
+                    <p><emph/></p>
+                    <p><term/></p>
+                    <p><citation xml:id="cite1"/></p>
+                    <p><abbr type="truncation"/></p>
+                    <p><abbr type="initialism"/></p>
+                    <p><ref xlink:href="abc.html"/></p>
+                    <p><sub/></p>
+                    <p><sup/></p>
+                    <p><span/></p>
+                    <p><w/></p>
+                    <p><annoref ref="REF"/></p>
+                    <p><noteref ref="REF"/></p>
+                    <p><s/></p>
                 </code>
                 <code>
-                    <p><emph/></p><p><emph/></p><p><term/></p><p><citation/></p><p><abbr type="truncation"/></p>
-                    <p><abbr type="initialism"/></p><p><ref xlink:href="abc.html"/></p>
-                    <p><sub/></p><p><sup/></p><p><span/></p><p><span/></p>
-                    <p><w/></p><p><annoref/></p><p><noteref/></p><p><s/></p><p><code/></p>
+                    <block><annotation by="republisher"/></block><block><quote/></block>
                 </code>
                 <code>
                     <p><emph/></p><pagebreak value="23"/>
@@ -1207,16 +1234,16 @@
         <utfx:name>Translate-DTBook2ZedAI: code-phrases </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <code-phrase/>
-                <code-phrase>
+                <d2z:code-phrase/>
+                <d2z:code-phrase>
                     <abbr/>
                     <acronym/>
                     <em/>
                     <strong/>
-                </code-phrase>
-                <code-phrase>
+                </d2z:code-phrase>
+                <d2z:code-phrase>
                     <span/><abbr/>
-                </code-phrase>
+                </d2z:code-phrase>
             </utfx:source>
             <utfx:expected>
                 <code/>

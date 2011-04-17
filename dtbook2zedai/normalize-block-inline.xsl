@@ -82,6 +82,48 @@
 
     <!-- take the context element's children and wrap any inlines in p elements -->
     <xsl:template name="blockize">
+        
+        <xsl:variable name="inlines"
+            select="tokenize('a,abbr,acronym,annoref,bdo,
+            blockquote,br,dfn,em,line,noteref,sent,span,
+            strong,sub,sup,w',',')"/>
+        
+        <xsl:variable name="parent" select="."/>
+        
+        <xsl:for-each-group group-adjacent="local-name() = $inlines" select="*">
+            <xsl:choose>
+                <xsl:when test="current-grouping-key()">
+                    <xsl:element name="p" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:for-each select="current-group()">
+                            <xsl:apply-templates select="."/>
+                        </xsl:for-each>
+                    </xsl:element>
+                </xsl:when>
+                
+                <xsl:when test="self::text()">
+                    <xsl:element name="p" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:copy/>
+                    </xsl:element>
+                </xsl:when>
+                
+                <!-- whitespace -->
+                <xsl:when test="self::text() and string-length(self::text()[normalize-space()]) = 0">
+                    <!-- TODO: ok to discard whitespace?-->
+                </xsl:when>
+                
+                <!-- all other elements must be block, so just copy them -->
+                <xsl:otherwise>
+                    <xsl:copy>
+                        <xsl:apply-templates select="@*|node()"/>
+                    </xsl:copy>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each-group>
+        
+    </xsl:template>
+    
+    <!-- take the context element's children and wrap any inlines in p elements -->
+    <xsl:template name="blockize" use-when="0">
 
         <xsl:variable name="inlines"
             select="tokenize('a,abbr,acronym,annoref,bdo,

@@ -255,7 +255,7 @@
                 <abbr><samp/></abbr>
                 <acronym><samp/></acronym>
                 <author><samp/></author>
-                <bdo><samp/></bdo>
+                <bdo dir="ltr"><samp/></bdo>
                 <bridgehead><samp/></bridgehead>
                 <byline><samp/></byline>
                 <cite><samp/></cite>
@@ -291,7 +291,7 @@
                 <abbr><span role="example"/></abbr>
                 <acronym><span role="example"/></acronym>
                 <author><span role="example"/></author>
-                <span><span role="example"/></span>
+                <span its:dir="ltr"><span role="example"/></span>
                 <bridgehead><span role="example"/></bridgehead>
                 <byline><span role="example"/></byline>
                 <cite><span role="example"/></cite>
@@ -406,17 +406,17 @@
             </utfx:source>
             
             <utfx:expected>
-                <abbr><span id="testid1"/></abbr>
-                <acronym><span id="testid2"/></acronym>
-                <dt><span id="testid3"/></dt>
-                <sub><span id="testid4"/></sub>
-                <sup><span id="testid5"/></sup>
-                <w><span id="testid6"/></w>
-                <strong><span id="testid7"/></strong>
+                <abbr><span xml:id="testid1"/></abbr>
+                <acronym><span xml:id="testid2"/></acronym>
+                <dt><span xml:id="testid3"/></dt>
+                <sub><span xml:id="testid4"/></sub>
+                <sup><span xml:id="testid5"/></sup>
+                <w><span xml:id="testid6"/></w>
+                <strong><span xml:id="testid7"/></strong>
                 <abbr>
-                    <span id="testid8">
-                        <span property="title"/>
-                        <span property="author"/>
+                    <span xml:id="testid8">
+                        <span property="title" about="testid8"/>
+                        <span property="author" about="testid8"/>
                     </span>
                 </abbr>     
             </utfx:expected>
@@ -455,7 +455,7 @@
             </utfx:source>
             
             <utfx:expected>
-                <span id="testid" xml:lang="jp" its:dir="ltr"/>
+                <span xml:id="testid" xml:lang="jp" its:dir="ltr"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
