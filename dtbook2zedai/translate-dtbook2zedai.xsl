@@ -466,9 +466,11 @@
                         </colgroup>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if test="local-name() != 'caption'">
-                            <xsl:apply-templates select="."/>
-                        </xsl:if>
+                        <xsl:for-each select="current-group()">
+                            <xsl:if test="local-name() != 'caption'">
+                                <xsl:apply-templates select="."/>
+                            </xsl:if>
+                        </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each-group>
@@ -819,7 +821,9 @@
                         </p>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:apply-templates select="."/>
+                        <xsl:for-each select="current-group()">
+                            <xsl:apply-templates select="."/>
+                        </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each-group>
@@ -954,25 +958,28 @@
 
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="local-name() = 'title'">
-                                <p role="title">
-                                    <xsl:call-template name="attrs"/>
-                                    <xsl:apply-templates/>
-                                </p>
-                            </xsl:when>
+                        <xsl:for-each select="current-group()">
+                            <xsl:choose>
+                                <xsl:when test="local-name() = 'title'">
+                                    <p role="title">
+                                        <xsl:call-template name="attrs"/>
+                                        <xsl:apply-templates/>
+                                    </p>
+                                </xsl:when>
 
-                            <xsl:when test="local-name() = 'author'">
-                                <p role="author">
-                                    <xsl:call-template name="attrs"/>
-                                    <xsl:apply-templates/>
-                                </p>
-                            </xsl:when>
+                                <xsl:when test="local-name() = 'author'">
+                                    <p role="author">
+                                        <xsl:call-template name="attrs"/>
+                                        <xsl:apply-templates/>
+                                    </p>
+                                </xsl:when>
 
-                            <xsl:otherwise>
-                                <xsl:apply-templates select="."/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                                <xsl:otherwise>
+                                    <xsl:apply-templates select="."/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+
                     </xsl:otherwise>
                 </xsl:choose>
 
@@ -981,7 +988,7 @@
         </block>
     </xsl:template>
 
-    
+
     <xsl:template match="d2z:code-block">
         <code>
             <xsl:call-template name="attrs"/>
@@ -989,29 +996,37 @@
                 select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
             <!-- is there ever a nested code-block ... ? -->
             <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
-
-            <xsl:for-each select="child::node()">
+            <xsl:for-each-group
+                group-adjacent="local-name() = $wrap-in-p or self::text()[normalize-space()]"
+                select="*">
                 <xsl:choose>
-                    <xsl:when test="local-name() = $wrap-in-p or self::text()[normalize-space()]">
+                    <xsl:when test="current-grouping-key()">
                         <p>
-                            <xsl:apply-templates select="."/>
+                            <xsl:for-each select="current-group()">
+                                <xsl:apply-templates select="."/>
+                            </xsl:for-each>
                         </p>
                     </xsl:when>
-                    <xsl:when test="local-name() = $wrap-in-block">
-                        <block>
-                            <xsl:apply-templates select="."/>
-                        </block>
-                    </xsl:when>
-                    <xsl:when test="local-name() = 'br'">
-                        <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
-                    </xsl:when>
                     <xsl:otherwise>
-                        <xsl:apply-templates select="."/>
+                        <xsl:for-each select="current-group()">
+                            <xsl:choose>
+                                <xsl:when test="local-name() = $wrap-in-block">
+                                    <block>
+                                        <xsl:apply-templates select="."/>
+                                    </block>
+                                </xsl:when>
+                                <xsl:when test="local-name() = 'br'">
+                                    <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:apply-templates select="."/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
                     </xsl:otherwise>
 
                 </xsl:choose>
-
-            </xsl:for-each>
+            </xsl:for-each-group>
         </code>
 
     </xsl:template>

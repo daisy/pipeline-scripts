@@ -54,10 +54,11 @@
         
         <xsl:param name="child-level-name"/>
         
-        <xsl:message>CHILD LEVEL NAME: <xsl:value-of select="$child-level-name"/></xsl:message>
+        <!--<xsl:message>CHILD LEVEL NAME: <xsl:value-of select="$child-level-name"/></xsl:message>
         
         <xsl:message select="."/>
         
+        -->
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:for-each-group group-adjacent="local-name() = $child-level-name" select="*">
@@ -70,13 +71,14 @@
                         <xsl:choose>
                             <xsl:when test="preceding-sibling::*/local-name() = $child-level-name">
                                 <xsl:element name="{$child-level-name}" namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                                    <xsl:copy-of select="."/>
+                                    <xsl:copy-of select="current-group()"/>
                                 </xsl:element>        
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:copy-of select="current-group()"/>
                             </xsl:otherwise>
                         </xsl:choose>
+                            
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each-group>

@@ -55,15 +55,15 @@
         <utfx:name>Normalize Mixed Block/Inline: mixed block and inline with plain text</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <div>
+                <prodnote>
                     <p>Para</p> <span>Span</span> <span>Span 2</span> <p>Another Para</p> Plain Text <span>Span 3</span>
-                </div>
+                </prodnote>
             </utfx:source>
             <utfx:expected>
-                <div>
+                <prodnote>
                     <p>Para</p> <p><span>Span</span> <span>Span 2</span></p> <p>Another Para</p> 
                     <p>Plain Text <span>Span 3</span></p>
-                </div>
+                </prodnote>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

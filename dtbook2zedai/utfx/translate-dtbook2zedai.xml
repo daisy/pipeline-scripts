@@ -142,9 +142,8 @@
                     <meta property="dcterms:relation" content="M"/>
                     <meta property="dcterms:coverage" content="N"/>
                     <meta property="dcterms:rights" content="O"/>
-                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/> 
-                    <meta
-                        rel="z3986:meta-record" resource="">
+                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/>
+                    <meta rel="z3986:meta-record" resource="">
                         <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
                         <meta property="z3986:meta-record-version" about="" content="3.3"/>
                     </meta>
@@ -152,7 +151,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Docauthor</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -164,7 +163,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Doctitle</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -176,7 +175,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: levels #1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -208,7 +207,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: levels #2</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -220,7 +219,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Headings</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -242,7 +241,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Text</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -250,7 +249,7 @@
             <utfx:expected>Text</utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: bridgehead and hd</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -264,7 +263,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: emphasis</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -278,8 +277,8 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
-    
+
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: List #1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -416,7 +415,7 @@
                     <item>Item 1</item>
                     <item>Item 2</item>
                 </list>
-                </utfx:expected>
+            </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
@@ -456,14 +455,14 @@
     </utfx:test>
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Caption 2</utfx:name>
-            <utfx:assert-equal normalise-internal-whitespace="yes">
-                <utfx:source>
-                    <caption>Mixed <span>Text</span> Model</caption>
-                </utfx:source>
-                <utfx:expected>
-                    <caption>Mixed <span>Text</span> Model</caption>
-                </utfx:expected>
-            </utfx:assert-equal>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <caption>Mixed <span>Text</span> Model</caption>
+            </utfx:source>
+            <utfx:expected>
+                <caption>Mixed <span>Text</span> Model</caption>
+            </utfx:expected>
+        </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Image group with caption</utfx:name>
@@ -494,7 +493,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Annotation</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -504,14 +503,14 @@
     </utfx:test>
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Prodnote</utfx:name>
-            <utfx:assert-equal normalise-internal-whitespace="yes">
-                <utfx:source>
-                    <prodnote imgref="#img0001">PRODNOTE</prodnote>
-                </utfx:source>
-                <utfx:expected>
-                    <annotation by="republisher" ref="img0001">PRODNOTE</annotation>
-                </utfx:expected>
-            </utfx:assert-equal>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <prodnote imgref="#img0001">PRODNOTE</prodnote>
+            </utfx:source>
+            <utfx:expected>
+                <annotation by="republisher" ref="img0001">PRODNOTE</annotation>
+            </utfx:expected>
+        </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Image group with prodnote</utfx:name>
@@ -543,7 +542,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Note </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -552,12 +551,12 @@
                 <note class="endnote"/>
             </utfx:source>
             <utfx:expected>
-                <note role="footnote"/>
-                <note role="endnote"/>
+                <note class="footnote" role="footnote"/>
+                <note class="endnote" role="endnote"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Div</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -569,7 +568,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: pagenum </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -605,22 +604,22 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
-<utfx:test>
-<utfx:name>Translate-DTBook2ZedAI: Quotes </utfx:name>
-<utfx:assert-equal normalise-internal-whitespace="yes">
-<utfx:source>
-    <blockquote/>
-    <q/>
-</utfx:source>
-<utfx:expected>
-    <quote/>
-    <quote/>
-</utfx:expected>
-</utfx:assert-equal>
-</utfx:test>
-  
-  
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes </utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote/>
+                <q/>
+            </utfx:source>
+            <utfx:expected>
+                <quote/>
+                <quote/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -632,7 +631,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 2</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -647,7 +646,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 3</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -666,7 +665,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: col</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -678,7 +677,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-   
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: colgroup</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -706,7 +705,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: thead </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -718,7 +717,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: tfoot</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -730,7 +729,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: tbody</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -742,7 +741,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-   
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: tr </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -754,15 +753,17 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: th</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <th id="th1" abbr="abc" headers="def" colspan="3" rowspan="3" scope="scope" align="right" valign="center"/>
+                <th id="th1" abbr="abc" headers="def" colspan="3" rowspan="3" scope="scope"
+                    align="right" valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <th xml:id="th1" abbr="abc" headers="def" colspan="3" rowspan="3" scope="scope" align="right" valign="center"/>
+                <th xml:id="th1" abbr="abc" headers="def" colspan="3" rowspan="3" scope="scope"
+                    align="right" valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -771,14 +772,16 @@
         <utfx:name>Translate-DTBook2ZedAI: td</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <td id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" align="center" valign="center"/>
+                <td id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" align="center"
+                    valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <td xml:id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" align="center" valign="center"/>
+                <td xml:id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" align="center"
+                    valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: byline</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -790,7 +793,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: sent</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -802,7 +805,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: address</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -814,7 +817,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: epigraph</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -826,7 +829,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: dateline </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -838,7 +841,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI:ln </utfx:name>
@@ -851,38 +854,30 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: br </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source><br/></utfx:source>
-            <utfx:expected></utfx:expected>
+            <utfx:expected/>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: cite </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <cite id="cite1">
-                    Text1
-                    <title>Title</title>
-                    <author>Author</author>
-                    Text2
-                </cite>
+                <cite id="cite1"> Text1 <title>Title</title>
+                    <author>Author</author> Text2 </cite>
             </utfx:source>
             <utfx:expected>
-                <citation xml:id="cite1">
-                    Text1
-                    <span property="title" about="cite1">Title</span>
-                    <span property="author" about="cite1">Author</span>
-                    Text2
-                </citation>
+                <citation xml:id="cite1"> Text1 <span property="title" about="cite1">Title</span>
+                    <span property="author" about="cite1">Author</span> Text2 </citation>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: covertitle </utfx:name>
@@ -895,7 +890,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: acronym</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -911,17 +906,17 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: link</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <link/>
             </utfx:source>
-            <utfx:expected></utfx:expected>
+            <utfx:expected/>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: p</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -929,7 +924,7 @@
             <utfx:expected><p/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: abbr</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -937,7 +932,7 @@
             <utfx:expected><abbr type="truncation"/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: sup</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -945,7 +940,7 @@
             <utfx:expected><sup/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: sub</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -953,7 +948,7 @@
             <utfx:expected><sub/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: span</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -967,7 +962,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: w</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -979,7 +974,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: linegroup</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1040,7 +1035,7 @@
             <utfx:expected><term/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: a</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1058,10 +1053,10 @@
                 <ref ref="para3" rel="REL"/>
                 <ref ref="chapter4" rev="REV"/>
             </utfx:expected>
-            
+
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: definition list </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1069,7 +1064,7 @@
             <utfx:expected><list type="unordered"/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: item </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1077,7 +1072,7 @@
             <utfx:expected><item/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: dd</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1092,7 +1087,7 @@
                 <level><dd/><note/></level>
                 <level><dd/><epigraph/></level>
                 <level><span/><dd/></level>
-            </utfx:source> 
+            </utfx:source>
             <utfx:expected>
                 <section><list/><p><definition/></p></section>
                 <section><list type="unordered"/><p><definition/></p></section>
@@ -1104,11 +1099,10 @@
                 <section><p><definition/></p><note/></section>
                 <section><p><definition/></p><block role="epigraph"/></section>
                 <section><span/><definition/></section>
-                
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: dt</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1123,7 +1117,7 @@
                 <level><dt/><note/></level>
                 <level><dt/><epigraph/></level>
                 <level><span/><dt/></level>
-            </utfx:source> 
+            </utfx:source>
             <utfx:expected>
                 <section><list/><p><term/></p></section>
                 <section><list type="unordered"/><p><term/></p></section>
@@ -1135,10 +1129,10 @@
                 <section><p><term/></p><note/></section>
                 <section><p><term/></p><block role="epigraph"/></section>
                 <section><span/><term/></section>
-             </utfx:expected>
+            </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: linenum</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1146,28 +1140,62 @@
             <utfx:expected><lnum/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: poem</utfx:name>
+        <utfx:name>Translate-DTBook2ZedAI: poem 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <poem>
                     <title>TITLE</title>
                     <author>AUTHOR</author>
-                    <line>LINE</line>
                     <hd>HD</hd>
+                    <line>LINE</line>
                 </poem>
             </utfx:source>
             <utfx:expected>
                 <block role="poem">
                     <p role="title">TITLE</p>
                     <p role="author">AUTHOR</p>
-                    <p><ln>LINE</ln></p>
                     <hd>HD</hd>
+                    <p><ln>LINE</ln></p>
                 </block>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: poem 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <poem>
+                    <title>TITLE</title>
+                    <author>AUTHOR</author>
+                    <hd>HD A</hd>
+                    <line>LINE 1</line>
+                    <line>LINE 2</line>
+                    <hd>HD B</hd>
+                    <line>LINE 3</line>
+                    <line>LINE 4</line>
+                </poem>
+            </utfx:source>
+            <utfx:expected>
+                <block role="poem">
+                    <p role="title">TITLE</p>
+                    <p role="author">AUTHOR</p>
+                    <hd>HD A</hd>
+                    <p>
+                        <ln>LINE 1</ln>
+                        <ln>LINE 2</ln>
+                    </p>
+                    <hd>HD B</hd>
+                    <p>
+                        <ln>LINE 3</ln>
+                        <ln>LINE 4</ln>
+                    </p>
+                </block>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: code-blocks </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -1202,20 +1230,11 @@
             <utfx:expected>
                 <code/>
                 <code>
-                    <p><emph/></p>
-                    <p><emph/></p>
-                    <p><term/></p>
-                    <p><citation xml:id="cite1"/></p>
-                    <p><abbr type="truncation"/></p>
-                    <p><abbr type="initialism"/></p>
-                    <p><ref xlink:href="abc.html"/></p>
-                    <p><sub/></p>
-                    <p><sup/></p>
-                    <p><span/></p>
-                    <p><w/></p>
-                    <p><annoref ref="REF"/></p>
-                    <p><noteref ref="REF"/></p>
-                    <p><s/></p>
+                    <p>
+                        <emph/><emph/><term/><citation xml:id="cite1"/>
+                        <abbr type="truncation"/><abbr type="initialism"/>
+                        <ref xlink:href="abc.html"/><sub/><sup/><span/><w/>
+                        <annoref ref="REF"/><noteref ref="REF"/><s/></p>
                 </code>
                 <code>
                     <block><annotation by="republisher"/></block><block><quote/></block>
@@ -1229,7 +1248,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: code-phrases </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
