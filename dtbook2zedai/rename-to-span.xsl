@@ -16,22 +16,22 @@
     -->
 
    <xsl:template match="dtb:lic">
-       <xsl:message>LIC</xsl:message>
        <xsl:call-template name="element2span"/>
    </xsl:template>
     
     <xsl:template match="dtb:dd/dtb:p | dtb:dd/dtb:address">
         <xsl:call-template name="element2span"/>
     </xsl:template>
+    
     <xsl:template match="dtb:dd/dtb:dateline">
-        <span role="time">
-            <xsl:call-template name="copy-attrs"/>
-        </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">time</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     <xsl:template match="dtb:dd/dtb:author">
-        <span role="author">
-            <xsl:call-template name="copy-attrs"/>
-        </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">author</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:template match="dtb:abbr/dtb:code | dtb:acronym/dtb:code | dtb:dt/dtb:code | 
@@ -67,40 +67,37 @@
 
     <xsl:template match="dtb:abbr/dtb:sent | dtb:acronym/dtb:sent | dtb:dt/dtb:sent | 
         dtb:sub/dtb:sent | dtb:sup/dtb:sent">
-        <span role="sentence">
-            <xsl:call-template name="copy-attrs"/>
-            <xsl:apply-templates/>
-        </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">sentence</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="dtb:sub/dtb:acronym | dtb:sup/dtb:acronym | dtb:w/dtb:acronym">
-        <span>
             <xsl:choose>
                 <xsl:when test="@pronounce = 'yes'">
-                    <xsl:attribute name="role">acronym</xsl:attribute>
+                    <xsl:call-template name="element2span">
+                        <xsl:with-param name="role">acronym</xsl:with-param>
+                    </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:attribute name="role">initialism</xsl:attribute>
+                    <xsl:call-template name="element2span">
+                        <xsl:with-param name="role">initialism</xsl:with-param>
+                    </xsl:call-template>
                 </xsl:otherwise>
             </xsl:choose>
-            <xsl:call-template name="copy-attrs"/>
-            <xsl:apply-templates/>
-        </span>
     </xsl:template>
     
     <xsl:template match="dtb:sub/dtb:abbr | dtb:sup/dtb:abbr | dtb:w/dtb:abbr">
-        <span role="truncation">
-            <xsl:call-template name="copy-attrs"/>
-            <xsl:apply-templates/>    
-        </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">truncation</xsl:with-param>
+        </xsl:call-template>
         
     </xsl:template>
     
     <xsl:template match="dtb:sub/dtb:w | dtb:sup/dtb:w">
-        <span role="word">
-            <xsl:call-template name="copy-attrs"/>
-            <xsl:apply-templates/>
-        </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">word</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:template match="dtb:a/dtb:samp | dtb:abbr/dtb:samp | dtb:acronym/dtb:samp | 
@@ -115,10 +112,9 @@
         dtb:sent/dtb:samp | dtb:span/dtb:samp | dtb:strong/dtb:samp | dtb:sub/dtb:samp |
         dtb:sup/dtb:samp | 
         dtb:title/dtb:samp | dtb:w/dtb:samp">
-                <span role="example">
-                    <xsl:call-template name="copy-attrs"/>
-                    <xsl:apply-templates/>
-                </span>
+        <xsl:call-template name="element2span">
+            <xsl:with-param name="role">example</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:template
@@ -135,10 +131,11 @@
     </xsl:template>
     
     <xsl:template match="dtb:bdo">
-        <span its:dir="{@dir}">
+        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+            <xsl:attribute name="its:dir" select="@dir"/>
             <xsl:call-template name="copy-attrs"/>
             <xsl:apply-templates/>
-        </span>
+        </xsl:element>
     </xsl:template>
     
     
@@ -150,7 +147,7 @@
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>
 
-        <span>
+        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
             <xsl:call-template name="copy-attrs"/>
             <!-- if no ID, then give a new ID -->
             <xsl:if test="not(@id)">
@@ -161,7 +158,8 @@
                 
                 <xsl:choose>
                     <xsl:when test="local-name() = 'title'">
-                        <span property="title">
+                        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                        <xsl:attribute name="property">title</xsl:attribute>
                             <xsl:attribute name="about">
                                 <xsl:choose>
                                     <xsl:when test="parent::node()/@id">
@@ -173,10 +171,11 @@
                                 </xsl:choose>
                             </xsl:attribute>
                             <xsl:apply-templates/>
-                        </span>
+                        </xsl:element>
                     </xsl:when>
                     <xsl:when test="local-name() = 'author'">
-                        <span property="author">
+                        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                            <xsl:attribute name="property">author</xsl:attribute>
                             <xsl:attribute name="about">
                                 <xsl:choose>
                                     <xsl:when test="parent::node()/@id">
@@ -188,14 +187,14 @@
                                 </xsl:choose>
                             </xsl:attribute>
                             <xsl:apply-templates/>
-                        </span>
+                        </xsl:element>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates select="."/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
-        </span>
+        </xsl:element>
     </xsl:template>
 
     <!-- change nested samps to spans -->
@@ -204,10 +203,9 @@
             <xsl:for-each select="node()">
                 <xsl:choose>
                     <xsl:when test="local-name() = 'samp'">
-                        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                            <xsl:attribute name="role">example</xsl:attribute>
-                            <xsl:apply-templates select="@*|node()"/>
-                        </xsl:element>
+                        <xsl:call-template name="element2span">
+                            <xsl:with-param name="role">example</xsl:with-param>
+                        </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
@@ -218,12 +216,16 @@
         </xsl:element>
     </xsl:template>
     
-    <!-- generic conversion to span; no roles applied and no special treatment of child elements -->
+    <!-- create a span with an optional role -->
     <xsl:template name="element2span">
-        <span>
+        <xsl:param name="role"/>
+        <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
+            <xsl:if test="string-length($role) gt 0">
+                <xsl:attribute name="role" select="$role"/>
+            </xsl:if>
             <xsl:call-template name="copy-attrs"/>
             <xsl:apply-templates/>
-        </span>
+        </xsl:element>
     </xsl:template>
 
     <xsl:template name="copy-attrs">

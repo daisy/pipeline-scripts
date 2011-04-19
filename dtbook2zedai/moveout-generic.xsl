@@ -37,10 +37,10 @@
                     <xsl:apply-templates select="$doc"/>
                 </xsl:variable>
                 
-                <xsl:message>*******Result from recursive call*********</xsl:message>
+                <!--<xsl:message>*******Result from recursive call*********</xsl:message>
                 <xsl:message select="$result"></xsl:message>
                 <xsl:message>****************</xsl:message>
-                
+                -->
                 <!-- the recursive call -->
                 <xsl:call-template name="test-and-move">
                     <xsl:with-param name="doc" select="$result//dtb:dtbook[1]"/>
@@ -75,8 +75,8 @@
         <xsl:param name="valid-parents" tunnel="yes"/>
         <xsl:param name="target-element" tunnel="yes"/>
         
-        <xsl:message>moveout-generic.xsl: match="node()"</xsl:message>
-        
+        <!--<xsl:message>moveout-generic.xsl: match="node()"</xsl:message>
+        -->
         <xsl:choose>
             <xsl:when
                 test="not(local-name() = $valid-parents) and (child::*/local-name() = $target-element)">

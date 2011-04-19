@@ -499,7 +499,7 @@
             <xsl:call-template name="attrs"/>
 
             <!-- ignore @span if there are any col children (this is what the DTBook DTD states, and it also maps nicely to ZedAI) -->
-            <xsl:if test="not(./col)">
+            <xsl:if test="not(./dtb:col)">
                 <xsl:copy-of select="@span"/>
             </xsl:if>
 
@@ -807,7 +807,7 @@
         match="dtb:annotation/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
         dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
         dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup | 
-        dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup">
+        dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup | dtb:poem/dtb:linegroup">
 
         <!-- TODO: copy attrs -->
         <block>

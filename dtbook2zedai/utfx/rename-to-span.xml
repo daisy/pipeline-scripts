@@ -11,11 +11,11 @@
         <utfx:name>Rename to Span: LIC</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <lic/>
+                <lic>ABC</lic>
             </utfx:source>
 
             <utfx:expected>
-                <span/>
+                <span>ABC</span>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -25,15 +25,15 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <dd>
-                    <p/>
-                    <address/>
+                    <p>ABC</p>
+                    <address>ABC</address>
                 </dd>
             </utfx:source>
 
             <utfx:expected>
                 <dd>
-                    <span/>
-                    <span/>
+                    <span>ABC</span>
+                    <span>ABC</span>
                 </dd>
             </utfx:expected>
         </utfx:assert-equal>
@@ -43,11 +43,11 @@
         <utfx:name>Rename to Span: DD/DATELINE</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <dd><dateline/></dd>
+                <dd><dateline>ABC</dateline></dd>
             </utfx:source>
 
             <utfx:expected>
-                <dd><span role="time"/></dd>
+                <dd><span role="time">ABC</span></dd>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -55,11 +55,11 @@
         <utfx:name>Rename to Span: DD/AUTHOR</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <dd><author/></dd>
+                <dd><author>ABC <sub>DEF</sub></author></dd>
             </utfx:source>
 
             <utfx:expected>
-                <dd><span role="author"/></dd>
+                <dd><span role="author">ABC <sub>DEF</sub></span></dd>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -376,11 +376,11 @@
         <utfx:name>Rename to Span: BDO</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <bdo dir="rtl"/>
+                <bdo dir="rtl">ABC</bdo>
             </utfx:source>
             
             <utfx:expected>
-                <span its:dir="rtl"/>                
+                <span its:dir="rtl">ABC</span>                
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -399,8 +399,9 @@
                 <strong><cite id="testid7"/></strong>
                 <abbr>
                     <cite id="testid8">
-                        <title/>
-                        <author/>
+                        <title>ABC</title>
+                        <author>ABC</author>
+                        <span>SPAN</span>
                     </cite>
                 </abbr>
             </utfx:source>
@@ -415,8 +416,9 @@
                 <strong><span xml:id="testid7"/></strong>
                 <abbr>
                     <span xml:id="testid8">
-                        <span property="title" about="testid8"/>
-                        <span property="author" about="testid8"/>
+                        <span property="title" about="testid8">ABC</span>
+                        <span property="author" about="testid8">ABC</span>
+                        <span>SPAN</span>
                     </span>
                 </abbr>     
             </utfx:expected>

@@ -64,8 +64,7 @@
             <xsl:apply-templates select="@*"/>
 
             <xsl:variable name="inlines"
-                select="tokenize('a,abbr,acronym,annoref,bdo,dfn,em,line,
-                noteref,sent,span,strong,sub,sup,w',',')"/>
+                select="tokenize('a,abbr,acronym,annoref,bdo,dfn,em,line,noteref,sent,span,strong,sub,sup,w',',')"/>
 
             <xsl:choose>
                 <xsl:when test="child::*/local-name() = $inlines">
@@ -84,9 +83,7 @@
     <xsl:template name="blockize">
         
         <xsl:variable name="inlines"
-            select="tokenize('a,abbr,acronym,annoref,bdo,
-            blockquote,br,dfn,em,line,noteref,sent,span,
-            strong,sub,sup,w',',')"/>
+            select="tokenize('a,abbr,acronym,annoref,bdo,blockquote,br,dfn,em,line,noteref,sent,span,strong,sub,sup,w',',')"/>
         
         <xsl:variable name="parent" select="."/>
         

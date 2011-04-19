@@ -71,7 +71,7 @@
                 </imggroup> Para text after </p>
                 
                 <p id="d1e107">Para text before 
-                    <a id="d1e109" href="ref.html" external="false">
+                    <a id="d1e109" href="ref.html" external="true">
                         <span id="d1e111">a/span[1] before</span>
                         
                         <imggroup id="d1e114">
@@ -93,7 +93,7 @@
                         <caption id="d1e139">i am a caption</caption>
                     </imggroup> Para text after</p>
                 
-                <p id="d1e144">Para text before <a id="d1e146" href="ref.html" external="false">
+                <p id="d1e144">Para text before <a id="d1e146" href="ref.html" external="true">
                     <imggroup id="d1e148">
                         <img id="d1e150" src="abc.jpg" alt="abc"/>
                         <caption id="d1e152">i am a caption</caption>
@@ -110,7 +110,7 @@
                 </imggroup>
                 </p>
                 
-                <p id="d1e179">Para text before <a id="d1e181" href="ref.html" external="false">
+                <p id="d1e179">Para text before <a id="d1e181" href="ref.html" external="true">
                     <span id="d1e183">a/span[1] before</span>
                     <imggroup id="d1e186">
                         <img id="d1e188" src="abc.jpg" alt="abc"/>
@@ -129,7 +129,7 @@
                     </imggroup>
                 </p>
                 
-                <p id="d1e213"> Para text before <a id="d1e215" href="ref.html" external="false">
+                <p id="d1e213"> Para text before <a id="d1e215" href="ref.html" external="true">
                     <imggroup id="d1e217">
                         <img id="d1e219" src="abc.jpg" alt="abc"/>
                         <caption id="d1e221">i am a caption</caption>
@@ -196,7 +196,7 @@
                 
                 <p id="d1e326">Para text before 
                     <imggroup id="d1e328"><img id="d1e329" src="abc" alt="abc"/></imggroup>
-                    <a id="d1e331" href="ref.html" external="false">
+                    <a id="d1e331" href="ref.html" external="true">
                         <span id="d1e333">a/span[1] before</span>
                         <imggroup id="d1e336">
                             <img id="d1e338" src="abc.jpg" alt="abc"/>
@@ -227,7 +227,7 @@
                     <img id="d1e390" src="abc.jpg" alt="abc"/>
                     <caption id="d1e392">i am a caption</caption>
                 </imggroup>
-                    <a id="d1e396" href="ref.html" external="false">
+                    <a id="d1e396" href="ref.html" external="true">
                         <imggroup id="d1e398">
                             <img id="d1e400" src="abc.jpg" alt="abc"/>
                             <caption id="d1e402">i am a caption</caption>
@@ -244,7 +244,7 @@
                 </imggroup>
                 </p>
                 
-                <p id="d1e428">Para text before <a id="d1e430" href="ref.html" external="false">
+                <p id="d1e428">Para text before <a id="d1e430" href="ref.html" external="true">
                     <span id="d1e432">a/span[1] before</span>
                     <imggroup id="d1e435">
                         <img id="d1e437" src="abc.jpg" alt="abc"/>
@@ -271,7 +271,7 @@
                     </imggroup>
                 </p>
                 
-                <p id="d1e478"> Para text before <a id="d1e480" href="ref.html" external="false">
+                <p id="d1e478"> Para text before <a id="d1e480" href="ref.html" external="true">
                     <imggroup id="d1e482">
                         <img id="d1e484" src="abc.jpg" alt="abc"/>
                         <caption id="d1e486">i am a caption</caption>

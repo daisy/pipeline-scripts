@@ -9,16 +9,18 @@
     
     <xsl:output indent="yes" method="xml"/>
     
-    <!--<xsl:template match="/">
-        <xsl:call-template name="main"/>
-    </xsl:template>-->
+    <xsl:template match="/">
+        <xsl:call-template name="main">
+            <xsl:with-param name="document" select="//dtb:dtbook[1]"/>
+        </xsl:call-template>
+    </xsl:template>
     
-    <xsl:template match="/"><!--name="main">-->
+    <xsl:template name="main">
+        <xsl:param name="document"/>
         <xsl:message>move code-block</xsl:message>
         <xsl:call-template name="test-and-move">
-            <xsl:with-param name="doc" select="//dtb:dtbook[1]"/>
-            <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
-                li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')" tunnel="yes"/>
+            <xsl:with-param name="doc" select="$document"/>
+            <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')" tunnel="yes"/>
             <xsl:with-param name="target-element" select="'code-block'" tunnel="yes"/>
         </xsl:call-template>
         

@@ -47,7 +47,7 @@
                 <p>
                     <code>
                         <dfn>Definition</dfn>
-                        <a href="stuff.org">Link</a>
+                        <a href="stuff.org" external="true">Link</a>
                         <cite>Cite cite cite</cite>
                     </code>
                 </p>
@@ -63,7 +63,7 @@
                     <sent>part 1</sent>
                     <code>
                         <prodnote render="optional">interleaved block-level code</prodnote>
-                        <a href="stuff.org">codestuff</a>
+                        <a href="stuff.org" external="true">codestuff</a>
                     </code>
                     <sent>part 2</sent>
                 </p>
