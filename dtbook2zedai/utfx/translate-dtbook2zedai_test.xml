@@ -642,7 +642,7 @@
             </utfx:source>
             <utfx:expected>
                 <caption ref="table2">This is a lovely <span>Caption!</span></caption>
-                <table id="table2"/>
+                <table xml:id="table2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -694,7 +694,7 @@
             </utfx:source>
             <utfx:expected>
                 <colgroup xml:id="colgroup1" span="3" align="left" valign="center" width="300"/>
-                <colgroup xml:id="colgroup2" span="4">
+                <colgroup xml:id="colgroup2">
                     <col xml:id="col1"/>
                     <col xml:id="col2"/>
                 </colgroup>

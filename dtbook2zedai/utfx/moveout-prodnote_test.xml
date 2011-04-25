@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+    
+    <utfx:stylesheet src="moveout-code.xsl"/>
+    
+    <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
+        li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
+    -->
+    <utfx:test>
+        <utfx:name>Move Out DL 1</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="doc">
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p>
+                                <span>before</span>
+                                <prodnote/>
+                                <span>after</span>
+                            </p>
+                        </level1>
+                    </bodymatter>
+                </dtbook>  
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            
+            
+            <utfx:expected>
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p><span>before</span></p>
+                            <prodnote/>
+                            <p><span>after</span></p>
+                        </level1>
+                    </bodymatter>
+                </dtbook>  
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+</utfx:tests>

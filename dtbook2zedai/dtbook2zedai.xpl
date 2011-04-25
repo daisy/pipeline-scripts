@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<p:declare-step version="1.0" name="dtbook2zedai" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+<p:declare-step version="1.0" name="dtbook2zedai" 
+    xmlns:p="http://www.w3.org/ns/xproc"
+    xmlns:c="http://www.w3.org/ns/xproc-step" 
+    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" 
     xmlns:p2util="http://pipeline.daisy.org/ns/utilities/"
@@ -21,10 +22,13 @@
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="transform-dtbook2zedai.xpl"/>
-    <p:import href="../utilities/metadata-generator/metadata-generator.xpl"/>
     <p:import href="../utilities/dtbook-merger/dtbook-merger.xpl"/>
     <p:import href="../utilities/dtbook-migrator/dtbook-migrator.xpl"/>
     
+    <p:import href="../utilities/metadata-generator/metadata-generator.xpl"/>
+    
+    <!--<p:import href="../utilities/dtbook-utilities/dtbook-utilities.xpl"/>
+    -->
     <p:variable name="zedai-file"
         select="resolve-uri(
                     if ($output='') then concat(
@@ -44,7 +48,9 @@
     
     <!-- upgrade DTBook -->
     <p2util:dtbook-migrator name="upgrade-dtbook"/>
-        
+    
+    <cx:message message="hi"/>
+    
     <!-- Merge documents -->
     <p:count name="num-input-documents" limit="2"/>
 
@@ -66,8 +72,7 @@
             </p:identity>
         </p:otherwise>
     </p:choose>
-    
-    
+ 
     <!-- Validate DTBook Input-->
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
         <p:input port="schema">
@@ -78,7 +83,7 @@
         </p:input>
     </p:validate-with-relax-ng>
     
-    <cx:message message="hello"/>
+    <cx:message message="{$zedai-file}"/>
     
     <!-- create MODS metadata record -->
     <p2util:metadata-generator name="generate-metadata">

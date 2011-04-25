@@ -13,7 +13,7 @@
         <utfx:name>Move Out Image Groups</utfx:name>
         <utfx:call-template name="main">
             <utfx:with-param name="document">
-                <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+                <dtbook>
                     <book>
                         <bodymatter>
                             <level1>
@@ -38,7 +38,7 @@
             </utfx:source>
             
             <utfx:expected>
-                <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+                <dtbook>
                     <book>
                         <bodymatter>
                             <level1>

@@ -24,7 +24,7 @@
 
             <xsl:for-each-group select="node()" group-ending-with="dtb:br">
                 <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
-                    <xsl:element name="ln" namespace="http://pipeline.daisy.org/ns/dtbook2zedai/">
+                    <xsl:element name="d2z:ln">
                         <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
                     </xsl:element>
                     

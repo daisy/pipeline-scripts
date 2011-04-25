@@ -87,7 +87,7 @@
         
         <xsl:variable name="parent" select="."/>
         
-        <xsl:for-each-group group-adjacent="local-name() = $inlines or self::text()" select="*">
+        <xsl:for-each-group group-adjacent="local-name() = $inlines or self::text()" select="node()[not(self::text()[normalize-space() = ''])]">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
                     <xsl:element name="p" namespace="http://www.daisy.org/z3986/2005/dtbook/">

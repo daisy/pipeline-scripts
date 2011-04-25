@@ -16,6 +16,8 @@
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
+        <xsl:message select="."/>
+        
         <!-- just for testing: insert the oxygen schema reference -->
         <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
@@ -24,6 +26,8 @@
         <xsl:processing-instruction name="xml-stylesheet"> href="<xsl:value-of
                 select="$css-filename"/>" </xsl:processing-instruction>
 
+        <xsl:message>Hello</xsl:message>
+        
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -41,7 +45,7 @@
     </xsl:template>
 
     <xsl:template match="dtb:dtbook">
-
+        <xsl:message>Hello</xsl:message>
         <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
             xmlns:dcterms="http://purl.org/dc/terms/"
             profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
@@ -214,16 +218,17 @@
                 <xsl:attribute name="rend:prefix">upper-roman</xsl:attribute>
             </xsl:if>
 
-            <xsl:if test="@type = 'pl'">
-                <!-- no attributes added for type='pl' -->
-            </xsl:if>
+            
             <xsl:if test="@type = 'ul'">
                 <xsl:attribute name="type">unordered</xsl:attribute>
             </xsl:if>
             <xsl:if test="@type = 'ol'">
                 <xsl:attribute name="type">ordered</xsl:attribute>
             </xsl:if>
-
+            <xsl:if test="@type = 'pl'">
+                <!-- no attributes added for type='pl' -->
+            </xsl:if>
+            
             <xsl:apply-templates/>
         </list>
     </xsl:template>
@@ -276,40 +281,37 @@
         </block>
     </xsl:template>
 
-    <xsl:template name="createCaption">
+    <!-- use modes! -->
+    <xsl:template match="dtb:caption" mode="table-caption">
         <xsl:param name="refValue"/>
-        <xsl:param name="sourceElement"/>
         <caption>
             <xsl:if test="$refValue">
                 <xsl:attribute name="ref" select="$refValue"/>
             </xsl:if>
             <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
+            <xsl:apply-templates mode="#default"/>
         </caption>
     </xsl:template>
 
-    <xsl:template match="dtb:caption">
-        <xsl:choose>
-            <xsl:when test="@imgref">
-                <xsl:call-template name="createCaption">
-                    <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="parent::dtb:imggroup">
-                        <!-- get the id of the image in the imggroup and use it as a ref -->
-                        <xsl:call-template name="createCaption">
-                            <xsl:with-param name="refValue" select="../dtb:img/@id"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:call-template name="createCaption"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:otherwise>
-        </xsl:choose>
-
+    <xsl:template match="dtb:caption" mode="#default">
+        <xsl:param name="refValue"/>
+        <caption>
+            <xsl:choose>
+                <xsl:when test="@imgref">
+                    <xsl:attribute name="ref" select="replace(@imgref, '#', '')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="parent::dtb:imggroup">
+                            <!-- get the id of the image in the imggroup and use it as a ref -->
+                            <xsl:attribute name="ref" select="../dtb:img/@id"/>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </caption>
     </xsl:template>
 
     <xsl:template name="createAnnotation">
@@ -430,14 +432,14 @@
         <xsl:if test="./dtb:caption">
             <xsl:choose>
                 <xsl:when test="@id">
-                    <xsl:call-template name="createCaption">
+                    <xsl:apply-templates mode="table-caption" select="./dtb:caption">
                         <xsl:with-param name="refValue" select="@id"/>
-                    </xsl:call-template>
+                    </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:call-template name="createCaption">
+                    <xsl:apply-templates mode="table-caption" select="./dtb:caption">
                         <xsl:with-param name="refValue" select="$tableID"/>
-                    </xsl:call-template>
+                    </xsl:apply-templates>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
@@ -996,9 +998,9 @@
                 select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
             <!-- is there ever a nested code-block ... ? -->
             <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
+            <!-- TODO: wrap text too -->
             <xsl:for-each-group
-                group-adjacent="local-name() = $wrap-in-p or self::text()[normalize-space()]"
-                select="*">
+                group-adjacent="local-name() = $wrap-in-p" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>

@@ -29,11 +29,13 @@
         <xsl:choose>
             
             <xsl:when test="d2z:test-valid($doc, $target-element, $valid-parents) = true()">
+                <xsl:message>VALID!!!</xsl:message>
                 <xsl:copy-of select="$doc"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message>Input is Invalid.  An element must be moved out.</xsl:message>
                 <xsl:variable name="result">
+                    <!--<xsl:apply-templates select="$doc/*[1]"/>-->
                     <xsl:apply-templates select="$doc"/>
                 </xsl:variable>
                 

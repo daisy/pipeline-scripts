@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+    
+    <utfx:stylesheet src="moveout-list.xsl"/>
+    
+    <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
+        li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
+    -->
+    <utfx:test>
+        <utfx:name>Move Out LIST 1</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p>
+                                <span>before</span>
+                                <list>
+                                    <item/>
+                                    <item/>
+                                </list>
+                                <span>after</span>
+                            </p>
+                        </level1>
+                    </bodymatter>
+                </dtbook>  
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            
+            
+            <utfx:expected>
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p><span>before</span></p>
+                            
+                            <list>
+                                <item/>
+                                <item/>
+                            </list>
+                            <p><span>after</span></p>
+                        </level1>
+                    </bodymatter>
+                </dtbook>  
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Move Out LIST 2</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <dtbook>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <h1>H ONE</h1>
+                                <p><sent>SENTENCE</sent>
+                                    <list type="ul">
+                                        <hd>The Heading For The List</hd>
+                                        <li>minimize the development and maintenance cost, allowing developers to
+                                            ultimately focus more on actual transformations rather than the engine
+                                            that drives the transformations.</li>
+                                        <li>lower the framework learning curve</li>
+                                        <li>increase interoperability with the heterogeneous production
+                                            workflows</li>
+                                        <li>increase the likelihood of re-use in both open source and commercial
+                                            applications.</li>
+                                    </list>
+                                </p>
+                                
+                            </level1>
+                            
+                        </bodymatter>
+                    </book>
+                </dtbook>
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source><empty/></utfx:source>
+            <utfx:expected>
+                <dtbook>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <h1>H ONE</h1>
+                                <p><sent>SENTENCE</sent></p>
+                                    <list type="ul">
+                                        <hd>The Heading For The List</hd>
+                                        <li>minimize the development and maintenance cost, allowing developers to
+                                            ultimately focus more on actual transformations rather than the engine
+                                            that drives the transformations.</li>
+                                        <li>lower the framework learning curve</li>
+                                        <li>increase interoperability with the heterogeneous production
+                                            workflows</li>
+                                        <li>increase the likelihood of re-use in both open source and commercial
+                                            applications.</li>
+                                    </list>
+                                
+                            </level1>
+                            
+                        </bodymatter>
+                    </book>
+                </dtbook>
+            </utfx:expected>
+        </utfx:assert-equal>
+        
+    </utfx:test>
+</utfx:tests>

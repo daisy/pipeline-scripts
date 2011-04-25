@@ -25,7 +25,9 @@
             <xsl:choose>
                 <!-- the target element itself-->
                 <xsl:when test="current-grouping-key()">
-                    <xsl:copy-of select="current-group()"/>
+                    <xsl:for-each select="current-group()">
+                        <xsl:apply-templates select="."/>
+                    </xsl:for-each>
                 </xsl:when>
                 
                 <xsl:otherwise>

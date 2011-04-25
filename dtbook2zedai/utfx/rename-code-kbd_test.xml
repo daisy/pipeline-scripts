@@ -2,6 +2,7 @@
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
     <utfx:stylesheet src="rename-code-kbd.xsl"/>
@@ -15,9 +16,9 @@
                 </code>
             </utfx:source>
             <utfx:expected>
-                <code-phrase>
+                <d2z:code-phrase>
                     <em/><strong/><abbr/><acronym/><br/><sub/><sup/><bdo/><pagenum/>plain text
-                </code-phrase>
+                </d2z:code-phrase>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -31,9 +32,9 @@
                 </code>
             </utfx:source>
             <utfx:expected>
-                <code-block>
+                <d2z:code-block>
                     <dfn/><code-phrase/><samp/><code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
-                </code-block>
+                </d2z:code-block>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -47,9 +48,9 @@
                 </kbd>
             </utfx:source>
             <utfx:expected>
-                <code-phrase>
+                <d2z:code-phrase>
                     <em/><strong/><abbr/><acronym/><br/><sub/><sup/><bdo/><pagenum/>plain text
-                </code-phrase>
+                </d2z:code-phrase>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -63,9 +64,9 @@
                 </kbd>
             </utfx:source>
             <utfx:expected>
-                <code-block>
-                    <dfn/><code-phrase/><samp/><code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
-                </code-block>
+                <d2z:code-block>
+                    <dfn/><d2z:code-phrase/><samp/><d2z:code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
+                </d2z:code-block>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

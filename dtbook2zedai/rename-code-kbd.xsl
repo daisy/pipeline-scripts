@@ -27,14 +27,14 @@
 
         <xsl:choose>
             <xsl:when test="child::*/local-name() = $block-level-contents">
-                <xsl:element name="code-block" namespace="http://pipeline.daisy.org/ns/dtbook2zedai/">
+                <xsl:element name="d2z:code-block">
                     <xsl:apply-templates/>
                 </xsl:element>
             </xsl:when>
             <!-- if it doesn't have any of the above elements, then all the contents must be from this list of phrase-level elements
                 em, strong,  abbr, acronym,  br,  sub, sup, bdo, pagenum, text()-->
             <xsl:otherwise>
-                <xsl:element name="code-phrase" namespace="http://pipeline.daisy.org/ns/dtbook2zedai/">
+                <xsl:element name="d2z:code-phrase">
                     <xsl:apply-templates/>
                 </xsl:element>
             </xsl:otherwise>

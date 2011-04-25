@@ -2,15 +2,8 @@
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
-
-    <!-- xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"-->
-    <!-- Are namespaces ignored?  The 'real' output is 
-        <ln xmlns="http://pipeline.daisy.org/ns/dtbook2zedai/"> ...</ln>
-        
-        But the elements are equivalent if I leave out namespace data from the comparison.
-        
-    -->
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
 
     <utfx:stylesheet src="convert-linebreaks.xsl"/>
 
@@ -124,129 +117,129 @@
                 <bodymatter>
                     <level>
                         <hd>
-                            <ln>This Test</ln>
-                            <ln>is about</ln>
-                            <ln>Linebreaks</ln>
+                            <d2z:ln>This Test</d2z:ln>
+                            <d2z:ln>is about</d2z:ln>
+                            <d2z:ln>Linebreaks</d2z:ln>
                         </hd>
                         <p>Filler</p>
                     </level>
                     <level1>
                         <h1>
-                            <ln>This Test</ln>
-                            <ln>is about</ln>
-                            <ln>Linebreaks</ln>
+                            <d2z:ln>This Test</d2z:ln>
+                            <d2z:ln>is about</d2z:ln>
+                            <d2z:ln>Linebreaks</d2z:ln>
                         </h1>
 
                         <p>
                             <span>
-                                <ln>This is a test for</ln>
-                                <ln>convert-linebreaks.xsl.</ln>
+                                <d2z:ln>This is a test for</d2z:ln>
+                                <d2z:ln>convert-linebreaks.xsl.</d2z:ln>
                             </span>
                             <span>When the test is successful, instead of being broken by
                                 &lt;br&gt;, each line will be wrapped by &gt;ln&lt; instead.</span>
                         </p>
 
                         <a href="http://example.org">
-                            <ln>Links</ln>
-                            <ln>may contain linebreaks</ln>
+                            <d2z:ln>Links</d2z:ln>
+                            <d2z:ln>may contain linebreaks</d2z:ln>
                         </a>
                         <author>
-                            <ln>An author</ln>
-                            <ln>can have a linebreak</ln>
-                            <ln>in their name</ln>
+                            <d2z:ln>An author</d2z:ln>
+                            <d2z:ln>can have a linebreak</d2z:ln>
+                            <d2z:ln>in their name</d2z:ln>
                         </author>
                         <p>
                             <span>
                                 <bdo dir="ltr">
-                                    <ln>BDO</ln>
-                                    <ln>with</ln>
-                                    <ln>Linebreak</ln>
+                                    <d2z:ln>BDO</d2z:ln>
+                                    <d2z:ln>with</d2z:ln>
+                                    <d2z:ln>Linebreak</d2z:ln>
                                 </bdo>
                             </span>
                         </p>
                         <bridgehead>
-                            <ln>Bridge</ln>
-                            <ln>Heads</ln>
-                            <ln>Can have Linebreaks too</ln>
+                            <d2z:ln>Bridge</d2z:ln>
+                            <d2z:ln>Heads</d2z:ln>
+                            <d2z:ln>Can have Linebreaks too</d2z:ln>
                         </bridgehead>
 
 
                         <byline>
-                            <ln>Byline1</ln>
-                            <ln>Byline2</ln>
+                            <d2z:ln>Byline1</d2z:ln>
+                            <d2z:ln>Byline2</d2z:ln>
                         </byline>
 
                         <cite>
-                            <ln>Cite1</ln>
-                            <ln>Cite2</ln>
+                            <d2z:ln>Cite1</d2z:ln>
+                            <d2z:ln>Cite2</d2z:ln>
                         </cite>
 
                         <dateline>
-                            <ln>Dateline1</ln>
-                            <ln>dateline2</ln>
+                            <d2z:ln>Dateline1</d2z:ln>
+                            <d2z:ln>dateline2</d2z:ln>
                         </dateline>
 
                         <dl>
                             <dd>
-                                <ln>DD1</ln>
-                                <ln>DD2</ln>
+                                <d2z:ln>DD1</d2z:ln>
+                                <d2z:ln>DD2</d2z:ln>
                             </dd>
                             <dt>
-                                <ln>DT1</ln>
-                                <ln>DT2</ln>
+                                <d2z:ln>DT1</d2z:ln>
+                                <d2z:ln>DT2</d2z:ln>
                             </dt>
                         </dl>
 
                         <p>
                             <dfn>
-                                <ln>DFN1</ln>
-                                <ln>DFN2</ln>
+                                <d2z:ln>DFN1</d2z:ln>
+                                <d2z:ln>DFN2</d2z:ln>
                             </dfn>
                         </p>
 
                         <docauthor>
-                            <ln>Docauthor1</ln>
-                            <ln>Docauthor2</ln>
+                            <d2z:ln>Docauthor1</d2z:ln>
+                            <d2z:ln>Docauthor2</d2z:ln>
                         </docauthor>
                         <doctitle>
-                            <ln>Doctitle1</ln>
-                            <ln>Doctitle2</ln>
+                            <d2z:ln>Doctitle1</d2z:ln>
+                            <d2z:ln>Doctitle2</d2z:ln>
                         </doctitle>
 
                         <p>
                             <em>
-                                <ln>EM1</ln>
-                                <ln>EM2</ln>
+                                <d2z:ln>EM1</d2z:ln>
+                                <d2z:ln>EM2</d2z:ln>
                             </em>
                         </p>
 
                         <p>
-                            <ln>P1</ln>
-                            <ln>P2</ln>
+                            <d2z:ln>P1</d2z:ln>
+                            <d2z:ln>P2</d2z:ln>
                         </p>
                         <p>
                             <sent>
-                                <ln>SENT1</ln>
-                                <ln>SENT2</ln>
+                                <d2z:ln>SENT1</d2z:ln>
+                                <d2z:ln>SENT2</d2z:ln>
                             </sent>
                         </p>
 
                         <p>
                             <strong>
-                                <ln>STRONG1</ln>
-                                <ln>STRONG2</ln>
+                                <d2z:ln>STRONG1</d2z:ln>
+                                <d2z:ln>STRONG2</d2z:ln>
                             </strong>
                         </p>
 
                         <poem>
                             <title>
-                                <ln>TITLE1</ln>
-                                <ln>TITLE2</ln>
+                                <d2z:ln>TITLE1</d2z:ln>
+                                <d2z:ln>TITLE2</d2z:ln>
                             </title>
 
                             <line>
-                                <ln>LINE1</ln>
-                                <ln>LINE2</ln>
+                                <d2z:ln>LINE1</d2z:ln>
+                                <d2z:ln>LINE2</d2z:ln>
                             </line>
 
                         </poem>
@@ -254,36 +247,36 @@
 
                         <level2>
                             <h2>
-                                <ln>H2-1</ln>
-                                <ln>H2-2</ln>
+                                <d2z:ln>H2-1</d2z:ln>
+                                <d2z:ln>H2-2</d2z:ln>
                             </h2>
                             <p>Filler</p>
 
                             <level3>
                                 <h3>
-                                    <ln>H3-1</ln>
-                                    <ln>H3-2</ln>
+                                    <d2z:ln>H3-1</d2z:ln>
+                                    <d2z:ln>H3-2</d2z:ln>
                                 </h3>
                                 <p>Filler</p>
 
                                 <level4>
                                     <h4>
-                                        <ln>H4-1</ln>
-                                        <ln>H4-2</ln>
+                                        <d2z:ln>H4-1</d2z:ln>
+                                        <d2z:ln>H4-2</d2z:ln>
                                     </h4>
                                     <p>Filler</p>
 
                                     <level5>
                                         <h5>
-                                            <ln>H5-1</ln>
-                                            <ln>H5-2</ln>
+                                            <d2z:ln>H5-1</d2z:ln>
+                                            <d2z:ln>H5-2</d2z:ln>
                                         </h5>
                                         <p>Filler</p>
 
                                         <level6>
                                             <h6>
-                                                <ln>H6-1</ln>
-                                                <ln>H6-2</ln>
+                                                <d2z:ln>H6-1</d2z:ln>
+                                                <d2z:ln>H6-2</d2z:ln>
                                             </h6>
                                             <p>Filler</p>
                                         </level6>
