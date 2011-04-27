@@ -6,9 +6,7 @@
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" exclude-inline-prefixes="cx">
 
-
     <!-- 
-        
         Transforms a file from DTBook-2005-3 to ZedAI.
         Is only concerned with elements and attributes; does not store anything or extract any additional data (css, meta).        
     -->
@@ -76,11 +74,11 @@
         </p:xslt>
 
         <!-- move lists out of paragraphs -->
-        <!--<p:xslt name="moveout-list">
+        <p:xslt name="moveout-list">
             <p:input port="stylesheet">
                 <p:document href="moveout-list.xsl"/>
             </p:input>
-        </p:xslt>-->
+        </p:xslt>
 
         <!-- move definition lists out of paragraphs -->
         <p:xslt name="moveout-deflist">

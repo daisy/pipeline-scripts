@@ -4,8 +4,9 @@
     exclude-result-prefixes="dtb" version="2.0">
 
     <xsl:template match="/">
-        <xsl:message>group contents of definition list</xsl:message>
+        <xsl:message>Group contents of a definition list into items</xsl:message>
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- identity template -->

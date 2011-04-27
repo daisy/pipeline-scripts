@@ -19,9 +19,8 @@
         dtb:th | dtb:caption | dtb:sidebar |
         dtb:address | dtb:covertitle | dtb:samp | dtb:td | dtb:blockquote">
 
-
-        <xsl:message select="."/>
-
+        <xsl:message>Normalize mixed block and inline content models for <xsl:value-of select="local-name(.)"/></xsl:message>
+        
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <!-- these tests represent a superset of inline and block elements of the elements that this template matches -->

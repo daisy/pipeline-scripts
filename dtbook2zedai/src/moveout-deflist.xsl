@@ -15,12 +15,13 @@
     
     <xsl:template name="main">
         <xsl:param name="document"/>
-        <xsl:message>move definition lists</xsl:message>
+        <xsl:message>Move out definition lists</xsl:message>
         <xsl:call-template name="test-and-move">
             <xsl:with-param name="doc" select="$document"/>
             <xsl:with-param name="target-element" select="'dl'" tunnel="yes"/>
             <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')" tunnel="yes"/>   
         </xsl:call-template>
+        <xsl:message>--Done</xsl:message>
         
     </xsl:template>       
     

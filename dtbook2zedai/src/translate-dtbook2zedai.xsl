@@ -16,19 +16,16 @@
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
-        <xsl:message select="."/>
-        
+        <xsl:message>Translate to ZedAI</xsl:message>
         <!-- just for testing: insert the oxygen schema reference -->
         <xsl:processing-instruction name="oxygen">
-            <xsl:text>RNGSchema="../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
+            <xsl:text>RNGSchema="../../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
 
         <xsl:processing-instruction name="xml-stylesheet"> href="<xsl:value-of
                 select="$css-filename"/>" </xsl:processing-instruction>
-
-        <xsl:message>Hello</xsl:message>
-        
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- a common set of attributes -->
@@ -45,7 +42,6 @@
     </xsl:template>
 
     <xsl:template match="dtb:dtbook">
-        <xsl:message>Hello</xsl:message>
         <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
             xmlns:dcterms="http://purl.org/dc/terms/"
             profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">

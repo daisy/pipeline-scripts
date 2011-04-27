@@ -15,6 +15,7 @@
 
     <!-- purposely exclude level6 because it cannot contain child levels -->
     <xsl:template match="dtb:level | dtb:level1 | dtb:level2 | dtb:level3 | dtb:level4 | dtb:level5">
+        <xsl:message>Normalize mixed section and block content model for <xsl:value-of select="local-name(.)"/></xsl:message>
         <xsl:choose>
             <xsl:when test="local-name() = 'level'">
                 <xsl:call-template name="normalize-level">

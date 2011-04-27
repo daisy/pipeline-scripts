@@ -8,7 +8,9 @@
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
+        <xsl:message>Renaming some elements to span</xsl:message>
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- transform these elements to spans so that they will be normalized as if they were spans

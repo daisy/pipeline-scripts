@@ -9,7 +9,7 @@
     <xsl:output method="text"/>
     
     <xsl:template match="/">
-        
+        <xsl:message>Generating CSS</xsl:message>
         <xsl:apply-templates select="//z:object"/>
         <xsl:apply-templates select="//z:table"/>
         <xsl:apply-templates select="//z:col"/>
@@ -20,7 +20,7 @@
         <xsl:apply-templates select="//z:thead"/>
         <xsl:apply-templates select="//z:tbody"/>
         <xsl:apply-templates select="//z:tfoot"/>
-        
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
     
     <xsl:template match="z:object">

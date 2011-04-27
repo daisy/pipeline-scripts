@@ -10,8 +10,9 @@
 
     <xsl:template match="/">
 
-        <xsl:message>rename code kbd</xsl:message>
+        <xsl:message>Rename code and kbd elements.</xsl:message>
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- identity template -->

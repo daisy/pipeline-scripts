@@ -24,25 +24,22 @@
         <xsl:param name="valid-parents" tunnel="yes"/>
         <xsl:param name="doc"/>
         
-        <xsl:message>moveout-generic.xsl: test-and-move</xsl:message>
+        <xsl:message>moveout-generic.xsl: Recursively testing validity and possibly moving out an element...</xsl:message>
         
         <xsl:choose>
             
             <xsl:when test="d2z:test-valid($doc, $target-element, $valid-parents) = true()">
-                <xsl:message>VALID!!!</xsl:message>
+                <xsl:message>Document is valid with regards to the given target element.</xsl:message>
                 <xsl:copy-of select="$doc"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message>Input is Invalid.  An element must be moved out.</xsl:message>
+                <xsl:message>Document is invalid.  An element must be moved out of its current parent.</xsl:message>
                 <xsl:variable name="result">
-                    <xsl:apply-templates select="$doc/*[1]"/>
-                    <!--<xsl:apply-templates select="$doc"/>-->
+                    <!-- TODO: sometimes the first option doesn't work, although it is better for utfx testing.  See dtbook-tests/dtbook-code.xml. -->
+                    <!--<xsl:apply-templates select="$doc/*[1]"/>-->
+                    <xsl:apply-templates select="$doc"/>
                 </xsl:variable>
                 
-                <!--<xsl:message>*******Result from recursive call*********</xsl:message>
-                <xsl:message select="$result"></xsl:message>
-                <xsl:message>****************</xsl:message>
-                -->
                 <!-- the recursive call -->
                 <xsl:call-template name="test-and-move">
                     <xsl:with-param name="doc" select="$result//dtb:dtbook[1]"/>
@@ -57,7 +54,7 @@
         <xsl:param name="target-element"/>
         <xsl:param name="valid-parents"/>
         
-        <xsl:message>moveout-generic.xsl: test-valid</xsl:message>
+        <xsl:message>moveout-generic.xsl: Testing validity...</xsl:message>
         
         <!-- select all target element descendants whose parents are not in the list of valid parent names -->
         <xsl:variable name="invalid-target-elements"
@@ -78,12 +75,10 @@
         <xsl:param name="valid-parents" tunnel="yes"/>
         <xsl:param name="target-element" tunnel="yes"/>
         
-        <!--<xsl:message>moveout-generic.xsl: match="node()"</xsl:message>
-        -->
         <xsl:choose>
             <xsl:when
                 test="not(local-name() = $valid-parents) and (child::*/local-name() = $target-element)">
-                <xsl:message>Found unsuitable parent: &lt; <xsl:value-of select="local-name()"/> id=&quot;<xsl:value-of select="@id"/>&quot; &gt;</xsl:message>
+                <xsl:message>Found unsuitable parent: name = <xsl:value-of select="local-name()"/> id = <xsl:value-of select="@id"/></xsl:message>
                 <xsl:call-template name="process-invalid-target-element-parent"/>
             </xsl:when>
             <xsl:otherwise>

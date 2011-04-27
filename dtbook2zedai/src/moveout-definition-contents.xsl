@@ -15,8 +15,9 @@
     <xsl:include href="moveout-template.xsl"/>
 
     <xsl:template match="/">
-        <xsl:message>normalize definitions in definition lists</xsl:message>
+        <xsl:message>Normalize definitions in definition lists by moving out certain child elements.</xsl:message>
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- identity template -->

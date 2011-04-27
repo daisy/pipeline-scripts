@@ -7,7 +7,9 @@
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
+        <xsl:message>Convert br to lines</xsl:message>
         <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- instead of br line delimiters, wrap lines with the ln element.  these elements' zedai content models are the same or a subset of
