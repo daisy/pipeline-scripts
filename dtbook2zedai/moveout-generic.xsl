@@ -35,8 +35,8 @@
             <xsl:otherwise>
                 <xsl:message>Input is Invalid.  An element must be moved out.</xsl:message>
                 <xsl:variable name="result">
-                    <!--<xsl:apply-templates select="$doc/*[1]"/>-->
-                    <xsl:apply-templates select="$doc"/>
+                    <xsl:apply-templates select="$doc/*[1]"/>
+                    <!--<xsl:apply-templates select="$doc"/>-->
                 </xsl:variable>
                 
                 <!--<xsl:message>*******Result from recursive call*********</xsl:message>
@@ -52,7 +52,8 @@
     </xsl:template>
     
     <xsl:function name="d2z:test-valid">
-        <xsl:param name="elem"/>
+        <!-- TODO: is this the correct type? -->
+        <xsl:param name="elem" as="element()"/>
         <xsl:param name="target-element"/>
         <xsl:param name="valid-parents"/>
         

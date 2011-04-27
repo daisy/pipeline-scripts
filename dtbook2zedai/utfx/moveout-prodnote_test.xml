@@ -10,7 +10,7 @@
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
-        <utfx:name>Move Out DL 1</utfx:name>
+        <utfx:name>Move Out PRODNOTE</utfx:name>
         <utfx:call-template name="main">
             <utfx:with-param name="doc">
                 <dtbook>

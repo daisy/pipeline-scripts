@@ -86,7 +86,6 @@
             select="tokenize('a,abbr,acronym,annoref,bdo,blockquote,br,dfn,em,line,noteref,sent,span,strong,sub,sup,w',',')"/>
         
         <xsl:variable name="parent" select="."/>
-        
         <xsl:for-each-group group-adjacent="local-name() = $inlines or self::text()" select="node()[not(self::text()[normalize-space() = ''])]">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">

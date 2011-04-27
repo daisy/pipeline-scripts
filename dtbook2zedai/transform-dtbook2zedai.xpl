@@ -96,18 +96,6 @@
             </p:input>
         </p:xslt>
 
-        <!-- normalize mixed block/inline content models -->
-        <p:xslt name="normalize-block-inline">
-            <p:input port="stylesheet">
-                <p:document href="normalize-block-inline.xsl"/>
-            </p:input>
-        </p:xslt>
-        <!-- normalize mixed section/block content models -->
-        <p:xslt name="normalize-section-block">
-            <p:input port="stylesheet">
-                <p:document href="normalize-section-block.xsl"/>
-            </p:input>
-        </p:xslt>
         <!-- normalize definition lists by relocating illegal elements from definitions -->
         <p:xslt name="moveout-definition-contents">
             <p:input port="stylesheet">
@@ -121,6 +109,19 @@
                 <p:document href="moveout-code.xsl"/>
             </p:input>
         </p:xslt>
+        <!-- normalize mixed block/inline content models -->
+        <p:xslt name="normalize-block-inline">
+            <p:input port="stylesheet">
+                <p:document href="normalize-block-inline.xsl"/>
+            </p:input>
+        </p:xslt>
+        <!-- normalize mixed section/block content models -->
+        <p:xslt name="normalize-section-block">
+            <p:input port="stylesheet">
+                <p:document href="normalize-section-block.xsl"/>
+            </p:input>
+        </p:xslt>
+        
     </p:group>
     
     
