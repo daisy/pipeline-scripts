@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" type="d2e:manifest" name="manifest"
-    version="1.0">
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="px:manifest" name="manifest" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Compile the manifest in the OPF-format</xd:short>
@@ -21,7 +20,7 @@
         <xd:output port="opf-manifest">Same as result manifest but in the OPF-format.</xd:output>
         <xd:output port="result-manifest">The source manifest with the addition of the navigation
             document entry.</xd:output>
-        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
     </p:documentation>
 
@@ -36,7 +35,7 @@
         <p:pipe port="result" step="result-manifest"/>
     </p:output>
 
-    <p:import href="../utilities/files/fileset-library.xpl"/>
+    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
 
     <px:join-manifests name="input-manifest">
         <p:input port="source">

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:xd="http://pipeline.daisy.org/ns/sample/doc" type="d2e:spine" version="1.0">
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="px:spine" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Compile the spine in the OPF-format based on the OPF-manifest.</xd:short>

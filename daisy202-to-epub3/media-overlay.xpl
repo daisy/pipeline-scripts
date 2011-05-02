@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    type="d2e:media-overlay" name="media-overlay" version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:media-overlay" name="media-overlay"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Load the DAISY 2.02 SMILs and store them as EPUB 3 SMILs.</xd:short>
@@ -29,9 +29,9 @@
         <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
         <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
-        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
-        <xd:import href="../utilities/smil/smil-library.xpl">For manipulating
+        <xd:import href="../utilities/smil-utils/smil-library.xpl">For manipulating
             SMIL-files.</xd:import>
     </p:documentation>
 
@@ -60,8 +60,8 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="../utilities/files/fileset-library.xpl"/>
-    <p:import href="../utilities/smil/smil-library.xpl"/>
+    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
+    <p:import href="../utilities/smil-utils/smil-library.xpl"/>
 
     <p:documentation>Load all SMIL-files</p:documentation>
     <p:viewport name="viewport" match="//c:entry">
@@ -71,7 +71,7 @@
         <p:load name="viewport.smil">
             <p:with-option name="href" select="concat($daisy-dir,$href)"/>
         </p:load>
-        <p:xslt name="viewport.smil.unique-ids">
+        <p:xslt name="viewport.unique-smil-ids">
             <p:with-param name="position" select="p:iteration-position()"/>
             <p:input port="stylesheet">
                 <p:document href="ensure-unique-smil-ids.xsl"/>
@@ -108,7 +108,7 @@
         </p:add-attribute>
         <p:insert match="/*" position="last-child">
             <p:input port="insertion">
-                <p:pipe port="result" step="viewport.smil.unique-ids"/>
+                <p:pipe port="result" step="viewport.unique-smil-ids"/>
             </p:input>
         </p:insert>
     </p:viewport>

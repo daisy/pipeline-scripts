@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Transforms a DAISY 2.02-book into an EPUB 3-book.</xd:short>
@@ -29,7 +28,7 @@
         <xd:import href="package.xpl">For making the package document.</xd:import>
         <xd:import href="container.xpl">For packaging the publication as a ZIP (OCF).</xd:import>
     </p:documentation>
-    
+
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
 
@@ -61,16 +60,16 @@
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
-    <d2e:ncc name="ncc">
+    <px:ncc name="ncc">
         <p:with-option name="href" select="p:resolve-uri($href)">
             <p:inline>
                 <irrelevant/>
             </p:inline>
         </p:with-option>
-    </d2e:ncc>
+    </px:ncc>
 
     <p:documentation>Load the DAISY 2.02 SMILs and store them as EPUB 3 SMILs.</p:documentation>
-    <d2e:media-overlay name="media-overlay">
+    <px:media-overlay name="media-overlay">
         <p:log port="spine-manifest" href="/home/jostein/Skrivebord/log.xml"/>
         <p:log port="id-mapping" href="/home/jostein/Skrivebord/log2.xml"/>
         <p:input port="flow">
@@ -82,12 +81,12 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-    </d2e:media-overlay>
-    
-    
+    </px:media-overlay>
+
+
     <p:documentation>Load the DAISY 2.02 text content documents and store them as EPUB 3 Content
         Documents.</p:documentation>
-    <d2e:contents name="contents">
+    <px:contents name="contents">
         <p:input port="spine">
             <p:pipe port="spine-manifest" step="media-overlay"/>
         </p:input>
@@ -97,11 +96,11 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-    </d2e:contents>
+    </px:contents>
 
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images,
         etc.)</p:documentation>
-    <d2e:resources name="resources">
+    <px:resources name="resources">
         <p:input port="resource-manifests">
             <p:pipe port="resource-manifest" step="ncc"/>
             <p:pipe port="resource-manifest" step="media-overlay"/>
@@ -110,19 +109,19 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-    </d2e:resources>
+    </px:resources>
 
     <p:documentation>Compile OPF metadata.</p:documentation>
-    <d2e:metadata name="metadata">
+    <px:metadata name="metadata">
         <p:input port="metadata">
             <p:pipe port="metadata" step="ncc"/>
             <p:pipe port="metadata" step="media-overlay"/>
             <p:pipe port="metadata" step="contents"/>
         </p:input>
-    </d2e:metadata>
+    </px:metadata>
 
     <p:documentation>Compile OPF manifest.</p:documentation>
-    <d2e:manifest name="manifest">
+    <px:manifest name="manifest">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:input port="source-manifest">
@@ -130,18 +129,18 @@
             <p:pipe port="manifest" step="media-overlay"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
-    </d2e:manifest>
+    </px:manifest>
 
     <p:documentation>Compile OPF spine.</p:documentation>
-    <d2e:spine name="spine">
+    <px:spine name="spine">
         <p:input port="opf-manifest">
             <p:pipe port="opf-manifest" step="manifest"/>
         </p:input>
-    </d2e:spine>
+    </px:spine>
 
     <p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
         NCC.</p:documentation>
-    <d2e:navigation name="navigation">
+    <px:navigation name="navigation">
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
@@ -149,10 +148,10 @@
             <p:pipe port="id-mapping" step="media-overlay"/>
         </p:input>
         <p:with-option name="content-dir" select="$content-dir"/>
-    </d2e:navigation>
+    </px:navigation>
 
     <p:documentation>Make and store the OPF.</p:documentation>
-    <d2e:package name="package">
+    <px:package name="package">
         <p:input port="opf-metadata">
             <p:pipe port="opf-metadata" step="metadata"/>
         </p:input>
@@ -163,10 +162,10 @@
             <p:pipe port="opf-spine" step="spine"/>
         </p:input>
         <p:with-option name="content-dir" select="$content-dir"/>
-    </d2e:package>
+    </px:package>
 
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
-    <d2e:container name="container">
+    <px:container name="container">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:with-option name="epub-file"
@@ -187,6 +186,6 @@
             <p:pipe port="store-complete" step="resources"/>
             <p:pipe port="store-complete" step="package"/>
         </p:input>
-    </d2e:container>
+    </px:container>
 
 </p:declare-step>

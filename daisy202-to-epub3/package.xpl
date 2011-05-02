@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    type="d2e:package" name="package" exclude-inline-prefixes="#all" version="1.0">
+    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="px:package" name="package" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Compile and store the OPF.</xd:short>

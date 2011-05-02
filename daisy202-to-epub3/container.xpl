@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    type="d2e:container" name="container" version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:container" name="container"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Package the EPUB 3 fileset in a ZIP (OCF).</xd:short>
@@ -25,9 +25,9 @@
             stored.</xd:option>
         <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
         <xd:option name="epub-file">URI to the output file.</xd:option>
-        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
-        <xd:import href="../utilities/zip/zip-library.xpl">For making ZIP-files.</xd:import>
+        <xd:import href="../utilities/zip-utils/zip-library.xpl">For making ZIP-files.</xd:import>
     </p:documentation>
 
     <p:input port="manifests" primary="false" sequence="true"/>
@@ -40,8 +40,8 @@
     <p:option name="epub-dir" required="true"/>
     <p:option name="epub-file" required="true"/>
 
-    <p:import href="../utilities/files/fileset-library.xpl"/>
-    <p:import href="../utilities/zip/zip-library.xpl"/>
+    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
+    <p:import href="../utilities/zip-utils/zip-library.xpl"/>
 
     <p:documentation>Create container descriptor.</p:documentation>
     <p:add-attribute match="c:container/c:rootfiles/c:rootfile"
@@ -60,7 +60,7 @@
     </p:add-attribute>
 
     <p:documentation>Store container descriptor.</p:documentation>
-    <p:store name="store-container.xml" indent="true" encoding="utf-8" omit-xml-declaration="false">
+    <p:store name="store-container" indent="true" encoding="utf-8" omit-xml-declaration="false">
         <p:with-option name="href" select="concat($epub-dir,'META-INF/container.xml')"/>
     </p:store>
 
@@ -81,7 +81,7 @@
         manifest.</p:documentation>
     <p:group>
         <p:output port="result"/>
-        <p:group name="fileset.core">
+        <p:group name="fileset-core">
             <p:output port="result"/>
             <px:create-manifest>
                 <p:with-option name="base" select="$epub-dir"/>
@@ -95,14 +95,14 @@
         </p:group>
         <px:join-manifests>
             <p:input port="source">
-                <p:pipe port="result" step="fileset.core"/>
+                <p:pipe port="result" step="fileset-core"/>
                 <p:pipe port="manifests" step="container"/>
             </p:input>
         </px:join-manifests>
     </p:group>
 
     <p:documentation>Transform the fileset manifest into a ZIP-manifest.</p:documentation>
-    <p:group name="zip.manifest">
+    <p:group name="zip-manifest">
         <p:output port="result"/>
         <px:to-zip-manifest/>
         <p:add-attribute match="c:entry[@name='mimetype']" attribute-name="compression-method"
@@ -115,7 +115,7 @@
             <p:empty/>
         </p:input>
         <p:input port="manifest">
-            <p:pipe port="result" step="zip.manifest"/>
+            <p:pipe port="result" step="zip-manifest"/>
         </p:input>
         <!--
             href must be a file path, not a URI. See Calabash issue 140:

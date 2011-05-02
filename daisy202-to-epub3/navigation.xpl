@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://pipeline.daisy.org/ns/"
-    xmlns:pxp="http://exproc.org/proposed/steps" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    type="d2e:navigation" name="navigation" version="1.0">
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:pxp="http://exproc.org/proposed/steps"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:navigation" name="navigation"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
@@ -21,19 +21,19 @@
         <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
         <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
-        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
     </p:documentation>
 
     <p:input port="ncc" primary="true"/>
     <p:input port="id-mapping" primary="false"/>
     <p:output port="store-complete" primary="false">
-        <p:pipe port="result" step="navigation.store"/>
+        <p:pipe port="result" step="store"/>
     </p:output>
 
     <p:option name="content-dir" required="true"/>
 
-    <p:import href="../utilities/files/fileset-library.xpl"/>
+    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
 
     <p:documentation>
         <xd:short>Resolve SMIL-hrefs to XHTML-hrefs.</xd:short>
@@ -70,9 +70,9 @@
             </p:with-option>
         </p:add-attribute>
     </p:viewport>
-    
+
     <p:documentation>Transform the NCC into a Navigation Document.</p:documentation>
-    <p:xslt name="navigation.xhtml">
+    <p:xslt name="xhtml">
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -88,7 +88,7 @@
             <p:document href="../schemas/epub30/epub-nav-30.sch"/>
         </p:input>
     </p:validate-with-schematron>
-    <p:store name="navigation.store">
+    <p:store name="store">
         <p:with-option name="href" select="concat($content-dir,'navigation.xhtml')"/>
     </p:store>
 

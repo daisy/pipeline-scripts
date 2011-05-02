@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d2e="http://pipeline.daisy.org/ns/daisy2epub/"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:px="http://pipeline.daisy.org/ns/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://pipeline.daisy.org/ns/sample/doc"
-    type="d2e:resources" name="resources" version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:resources" name="resources"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset,
@@ -23,11 +23,11 @@
         <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
         <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
-        <xd:import href="../utilities/files/fileutils-library.xpl">For filesystem
+        <xd:import href="../utilities/file-utils/fileutils-library.xpl">For filesystem
             operations.</xd:import>
-        <xd:import href="../utilities/files/fileset-library.xpl">For manipulating
+        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
-        <xd:import href="mime.xpl">For determining MIME-types.</xd:import>
+        <xd:import href="../utilities/mime-utils/mime.xpl">For determining MIME-types.</xd:import>
     </p:documentation>
 
     <p:input port="resource-manifests" sequence="true" primary="false"/>
@@ -42,9 +42,9 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="../utilities/files/fileutils-library.xpl"/>
-    <p:import href="../utilities/files/fileset-library.xpl"/>
-    <p:import href="mime.xpl"/>
+    <p:import href="../utilities/file-utils/fileutils-library.xpl"/>
+    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
+    <p:import href="../utilities/mime-utils/mime.xpl"/>
 
     <p:documentation>Merge all resource manifests and remove duplicate entries.</p:documentation>
     <p:group>
