@@ -71,6 +71,8 @@
 
     <p:documentation>Load the DAISY 2.02 SMILs and store them as EPUB 3 SMILs.</p:documentation>
     <d2e:media-overlay name="media-overlay">
+        <p:log port="spine-manifest" href="/home/jostein/Skrivebord/log.xml"/>
+        <p:log port="id-mapping" href="/home/jostein/Skrivebord/log2.xml"/>
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
@@ -81,7 +83,8 @@
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
     </d2e:media-overlay>
-
+    
+    
     <p:documentation>Load the DAISY 2.02 text content documents and store them as EPUB 3 Content
         Documents.</p:documentation>
     <d2e:contents name="contents">

@@ -14192,3 +14192,318 @@ Caused by: javax.xml.transform.TransformerConfigurationException: Failed to comp
 <log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
 </log4j:event>
 
+<log4j:event logger="utfx.test_results" timestamp="1303074218536" level="INFO" thread="main">
+<log4j:message><![CDATA[logger created]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="&lt;init&gt;" file="ResultLogger.java" line="44"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218571" level="INFO" thread="main">
+<log4j:message><![CDATA[Manifest with navigation doc, content docs, media overlays, audios, stylesheet and image started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218599" level="INFO" thread="main">
+<log4j:message><![CDATA[Manifest with navigation doc, content docs, media overlays, audios, stylesheet and image completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218600" level="INFO" thread="main">
+<log4j:message><![CDATA[Make mapping between id attributes in media overlays and content documents. started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218606" level="INFO" thread="main">
+<log4j:message><![CDATA[Make mapping between id attributes in media overlays and content documents. completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218607" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple SMIL 3.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218609" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple SMIL 3.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218609" level="INFO" thread="main">
+<log4j:message><![CDATA[No metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218611" level="INFO" thread="main">
+<log4j:message><![CDATA[No metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218611" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata that should be discarded for global use started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218618" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata that should be discarded for global use completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218619" level="INFO" thread="main">
+<log4j:message><![CDATA[Nothing to clean up (pass right through) started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218623" level="INFO" thread="main">
+<log4j:message><![CDATA[Nothing to clean up (pass right through) completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218623" level="INFO" thread="main">
+<log4j:message><![CDATA[Remove duplicate c:entry started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218644" level="INFO" thread="main">
+<log4j:message><![CDATA[Remove duplicate c:entry completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218644" level="INFO" thread="main">
+<log4j:message><![CDATA[No metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218646" level="INFO" thread="main">
+<log4j:message><![CDATA[No metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218646" level="INFO" thread="main">
+<log4j:message><![CDATA[Some non-global metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218647" level="INFO" thread="main">
+<log4j:message><![CDATA[Some non-global metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218648" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple SMIL 1.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218652" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple SMIL 1.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218652" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218659" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218659" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218673" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal content document completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218673" level="INFO" thread="main">
+<log4j:message><![CDATA[CSS-stylesheet in <head/> started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218675" level="INFO" thread="main">
+<log4j:message><![CDATA[CSS-stylesheet in <head/> completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218676" level="INFO" thread="main">
+<log4j:message><![CDATA[Two PNG-images started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218678" level="INFO" thread="main">
+<log4j:message><![CDATA[Two PNG-images completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218679" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218681" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal SMIL 3.0 completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218681" level="INFO" thread="main">
+<log4j:message><![CDATA[One referenced audio file started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218684" level="INFO" thread="main">
+<log4j:message><![CDATA[One referenced audio file completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218684" level="INFO" thread="main">
+<log4j:message><![CDATA[Same audio file referenced twice started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218686" level="INFO" thread="main">
+<log4j:message><![CDATA[Same audio file referenced twice completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218686" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple audio files started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218688" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple audio files completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218688" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218702" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal NCC completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218703" level="INFO" thread="main">
+<log4j:message><![CDATA[Join the first two of three SMILs started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218736" level="INFO" thread="main">
+<log4j:message><![CDATA[Join the first two of three SMILs completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218737" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple spine started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218744" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple spine completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218745" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal text content document started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218749" level="INFO" thread="main">
+<log4j:message><![CDATA[Minimal text content document completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218749" level="INFO" thread="main">
+<log4j:message><![CDATA[No referenced resources started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218751" level="INFO" thread="main">
+<log4j:message><![CDATA[No referenced resources completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218752" level="INFO" thread="main">
+<log4j:message><![CDATA[CSS-stylesheet referenced in <head/> started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218754" level="INFO" thread="main">
+<log4j:message><![CDATA[CSS-stylesheet referenced in <head/> completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218754" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple entry started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218756" level="INFO" thread="main">
+<log4j:message><![CDATA[Simple entry completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218756" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple entries started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218757" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple entries completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218758" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218761" level="INFO" thread="main">
+<log4j:message><![CDATA[Some metadata completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218761" level="INFO" thread="main">
+<log4j:message><![CDATA[One referenced SMIL started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218764" level="INFO" thread="main">
+<log4j:message><![CDATA[One referenced SMIL completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218764" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple referenced SMILs started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218767" level="INFO" thread="main">
+<log4j:message><![CDATA[Multiple referenced SMILs completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218767" level="INFO" thread="main">
+<log4j:message><![CDATA[Same SMIL referenced multiple times started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218769" level="INFO" thread="main">
+<log4j:message><![CDATA[Same SMIL referenced multiple times completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218769" level="INFO" thread="main">
+<log4j:message><![CDATA[Manifest is in order of appearance ("the flow") started]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="startTest" file="ResultLogger.java" line="84"/>
+</log4j:event>
+
+<log4j:event logger="utfx.test_results" timestamp="1303074218772" level="INFO" thread="main">
+<log4j:message><![CDATA[Manifest is in order of appearance ("the flow") completed]]></log4j:message>
+<log4j:locationInfo class="utfx.printers.ResultLogger" method="endTest" file="ResultLogger.java" line="74"/>
+</log4j:event>
+
