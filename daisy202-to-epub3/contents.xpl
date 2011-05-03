@@ -88,9 +88,9 @@
         <p:variable name="href" select="/*/@href"/>
         <p:variable name="new-href" select="replace($href,'\.([^\.]+)$','.xhtml')"/>
 
-        <px:load-html>
+        <px:html-load>
             <p:with-option name="href" select="concat($daisy-dir,$href)"/>
-        </px:load-html>
+        </px:html-load>
         <p:viewport match="//html:a">
             <p:documentation xd:exclude="true">De-references SMIL-hrefs into their equivalent
                 XHTML-hrefs; see navigation.xpl-documentation for details.</p:documentation>

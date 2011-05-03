@@ -42,9 +42,9 @@
     <p:import href="../utilities/html-utils/html-library.xpl"/>
 
     <p:documentation>Loads the NCC.</p:documentation>
-    <px:load-html name="ncc">
+    <px:html-load name="ncc">
         <p:with-option name="href" select="$href"/>
-    </px:load-html>
+    </px:html-load>
 
     <p:documentation>Makes a list of resources referenced from the NCC.</p:documentation>
     <p:xslt name="resources">
