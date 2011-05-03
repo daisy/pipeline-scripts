@@ -21,11 +21,11 @@
     <p:option name="output" select="''"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="transform-dtbook2zedai.xpl"/>
+    <p:import href="transform-to-zedai.xpl"/>
     <p:import href="../../utilities/dtbook-merger/dtbook-merger.xpl"/>
     <p:import href="../../utilities/dtbook-migrator/dtbook-migrator.xpl"/>
     
-    <p:import href="../../utilities/metadata-generator/metadata-generator.xpl"/>
+    <p:import href="../../utilities/metadata-utils/metadata-generator.xpl"/>
     
     <!--<p:import href="../utilities/dtbook-utilities/dtbook-utilities.xpl"/>
     -->
