@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="normalize-block-inline.xsl"/>
+    <utfx:stylesheet src="../src/normalize-block-inline.xsl"/>
     
     <utfx:test>
         <utfx:name>Normalize Mixed Block/Inline: only block-level</utfx:name>

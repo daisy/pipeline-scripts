@@ -7,7 +7,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
 
-    <utfx:stylesheet src="translate-dtbook2zedai.xsl"/>
+    <utfx:stylesheet src="../src/translate-elems-attrs-to-zedai.xsl"/>
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: DTBook</utfx:name>

@@ -3,7 +3,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:its="http://www.w3.org/2005/11/its" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
     xmlns="http://www.daisy.org/ns/z3986/authoring/">
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:d2z="http://www.daisy.org/ns/pipeline/dtbook-to-zedai/"
     exclude-result-prefixes="xs" version="2.0">
 
     <xsl:output indent="yes" method="xml"/>
@@ -26,6 +27,7 @@
 
             <xsl:for-each-group select="node()" group-ending-with="dtb:br">
                 <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
+                    <!-- TODO: need a "temporary" namespace, something like internal functions -->
                     <xsl:element name="d2z:ln">
                         <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
                     </xsl:element>

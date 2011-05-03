@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook2zedai" 
+<p:declare-step version="1.0" name="dtbook-to-zedai" 
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" 
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/" 
-    xmlns:p2util="http://pipeline.daisy.org/ns/utilities/"
+    xmlns:px-d2z="http://www.daisy.org/ns/pipeline/xproc/dtbook2005-3-to-zedai" 
+    xmlns:px-meta="http://www.daisy.org/ns/pipeline/xproc/generate-metadata"
+    xmlns:px-merge="http://www.daisy.org/ns/pipeline/xproc/merge-dtbook-files"
+    xmlns:px-up="http://www.daisy.org/ns/pipeline/xproc/upgrade-dtbook"
     exclude-inline-prefixes="cx">
 
     <!-- 
         
-        The main entry point for the DTBook2ZedAI module.
+        The main entry point for the DTBook-to-ZedAI module.
         http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI
         
     -->
@@ -21,14 +23,14 @@
     <p:option name="output" select="''"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="transform-to-zedai.xpl"/>
-    <p:import href="../../utilities/dtbook-merger/dtbook-merger.xpl"/>
-    <p:import href="../../utilities/dtbook-migrator/dtbook-migrator.xpl"/>
+    <p:import href="dtbook2005-3-to-zedai.xpl"/>
     
-    <p:import href="../../utilities/metadata-utils/metadata-generator.xpl"/>
+    <!-- TODO: absolute URIs -->
+    <p:import href="../../utilities/dtbook-utils/merge-dtbook-files/merge-dtbook-files.xpl"/>
+    <p:import href="../../utilities/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl"/>
+    <p:import href="../../utilities/metadata-utils/generate-metadata.xpl"/>
+    <!--<p:import href="../utilities/dtbook-utilities/dtbook-utilities.xpl"/>-->
     
-    <!--<p:import href="../utilities/dtbook-utilities/dtbook-utilities.xpl"/>
-    -->
     <p:variable name="zedai-file"
         select="resolve-uri(
                     if ($output='') then concat(
@@ -37,30 +39,29 @@
                         else tokenize(base-uri(/),'/')[last()],'-zedai.xml')
                     else if (ends-with($output,'.xml')) then $output 
                     else concat($output,'.xml'), base-uri(/))">
-        <p:pipe step="dtbook2zedai" port="source"/>
+        <p:pipe step="dtbook-to-zedai" port="source"/>
 
     </p:variable>
 
     <!-- TODO: mods and css files should be relative URIs -->
     <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
-
     <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
 
     
     <!-- upgrade DTBook -->
-    <p2util:dtbook-migrator name="upgrade-dtbook"/>
+    <px-up:upgrade-dtbook name="upgrade-dtbook"/>
     
     <!-- Merge documents -->
     <p:count name="num-input-documents" limit="2"/>
 
-    <p:choose name="dtbook-merger">
+    <p:choose name="choose-to-merge-dtbook-files">
         <p:when test=".//c:result[. > 1]">
             <p:output port="result"/>
-            <p2util:dtbook-merger>
+            <px-merge:merge-dtbook-files>
                 <p:input port="source">
                     <p:pipe port="result" step="upgrade-dtbook"/>
                 </p:input>
-            </p2util:dtbook-merger>
+            </px-merge:merge-dtbook-files>
         </p:when>
         <p:otherwise>
             <p:output port="result"/>
@@ -78,7 +79,7 @@
             <p:document href="../schema/dtbook-2005-3.rng"/>
         </p:input>
         <p:input port="source">
-            <p:pipe port="result" step="dtbook-merger"/>
+            <p:pipe port="result" step="choose-to-merge-dtbook-files"/>
         </p:input>
     </p:validate-with-relax-ng>
     
@@ -88,21 +89,21 @@
     </cx:message>
     
     <!-- create MODS metadata record -->
-    <p2util:metadata-generator name="generate-metadata">
+    <px-meta:generate-metadata name="generate-metadata">
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
         <p:with-option name="output" select="$mods-file"/>
-     </p2util:metadata-generator>
+     </px-meta:generate-metadata>
     
     <!-- normalize and transform -->
-    <d2z:transform-dtbook2zedai name="transform-dtbook2zedai">
+    <px-d2z:dtbook2005-3-to-zedai name="transform-to-zedai">
         <p:input port="source">
             <p:pipe port="result" step="validate-dtbook"/>
         </p:input>
         <p:with-option name="css-filename" select="$css-file"/>
         <p:with-option name="mods-filename" select="$mods-file"/>
-    </d2z:transform-dtbook2zedai>
+    </px-d2z:dtbook2005-3-to-zedai>
 
     <!-- This is a step here instead of being an external library, because the following properties are required for generating CSS:
         * elements are stable (no more moving them around and potentially changing their IDs)
@@ -110,7 +111,7 @@
     -->
     <p:xslt name="generate-css">
         <p:input port="source">
-            <p:pipe step="transform-dtbook2zedai" port="result"/>
+            <p:pipe step="transform-to-zedai" port="result"/>
         </p:input>
         <p:input port="stylesheet">
             <p:inline>
@@ -133,7 +134,7 @@
             <p:document href="remove-css-attributes.xsl"/>
         </p:input>
         <p:input port="source">
-            <p:pipe step="transform-dtbook2zedai" port="result"/>
+            <p:pipe step="transform-to-zedai" port="result"/>
         </p:input>
     </p:xslt>
 
@@ -150,7 +151,7 @@
 
     <!-- write files-->
     <!-- write the ZedAI file -->
-    <p:store>
+    <p:store name="store-zedai-file">
         <p:input port="source">
             <p:pipe step="validate-zedai" port="result"/>
         </p:input>
@@ -158,12 +159,12 @@
     </p:store>
 
     <!-- write the CSS file (first strip it of its xml wrapper) -->
-    <p:string-replace match="/text()" replace="''">
+    <p:string-replace match="/text()" replace="''" name="remove-css-xml-wrapper">
         <p:input port="source">
             <p:pipe step="generate-css" port="result"/>
         </p:input>
     </p:string-replace>
-    <p:store method="text">
+    <p:store method="text" name="store-css-file">
         <p:with-option name="href" select="$css-file"/>
     </p:store>
 </p:declare-step>

@@ -3,7 +3,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs"
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:its="http://www.w3.org/2005/11/its" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/">
     
     <xsl:output method="text"/>

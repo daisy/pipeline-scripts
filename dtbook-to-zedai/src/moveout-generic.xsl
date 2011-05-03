@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     exclude-result-prefixes="dtb" version="2.0"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
+    xmlns:f="http://www.daisy.org/ns/pipeline/internal-function">
     
     <!--
         Move target element out and split the element(s) that used to contain it.
@@ -28,7 +28,7 @@
         
         <xsl:choose>
             
-            <xsl:when test="d2z:test-valid($doc, $target-element, $valid-parents) = true()">
+            <xsl:when test="f:test-valid($doc, $target-element, $valid-parents) = true()">
                 <xsl:message>Document is valid with regards to the given target element.</xsl:message>
                 <xsl:copy-of select="$doc"/>
             </xsl:when>
@@ -48,7 +48,7 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:function name="d2z:test-valid">
+    <xsl:function name="f:test-valid">
         <!-- TODO: is this the correct type? -->
         <xsl:param name="elem" as="element()"/>
         <xsl:param name="target-element"/>

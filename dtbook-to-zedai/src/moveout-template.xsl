@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    exclude-result-prefixes="dtb" version="2.0"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
+    exclude-result-prefixes="dtb" version="2.0">
 
     
     <!-- move an element out from its parent and split the parent 
