@@ -5,7 +5,7 @@
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/">
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
     <utfx:stylesheet src="../src/translate-elems-attrs-to-zedai.xsl"/>
 
@@ -847,7 +847,7 @@
         <utfx:name>Translate-DTBook2ZedAI:ln </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <d2z:ln/>
+                <tmp:ln/>
             </utfx:source>
             <utfx:expected>
                 <ln/>
@@ -1200,8 +1200,8 @@
         <utfx:name>Translate-DTBook2ZedAI: code-blocks </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <d2z:code-block/>
-                <d2z:code-block>
+                <tmp:code-block/>
+                <tmp:code-block>
                     <em/>
                     <strong/>
                     <dfn/>
@@ -1216,16 +1216,16 @@
                     <annoref idref="REF"/>
                     <noteref idref="REF"/>
                     <sent/>
-                </d2z:code-block>
-                <d2z:code-block>
+                </tmp:code-block>
+                <tmp:code-block>
                     <prodnote/><q/>
-                </d2z:code-block>
-                <d2z:code-block>
+                </tmp:code-block>
+                <tmp:code-block>
                     <em/><pagenum>23</pagenum>
-                </d2z:code-block>
-                <d2z:code-block>
+                </tmp:code-block>
+                <tmp:code-block>
                     <line>LINE</line><q/>
-                </d2z:code-block>
+                </tmp:code-block>
             </utfx:source>
             <utfx:expected>
                 <code/>
@@ -1253,16 +1253,16 @@
         <utfx:name>Translate-DTBook2ZedAI: code-phrases </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <d2z:code-phrase/>
-                <d2z:code-phrase>
+                <tmp:code-phrase/>
+                <tmp:code-phrase>
                     <abbr/>
                     <acronym/>
                     <em/>
                     <strong/>
-                </d2z:code-phrase>
-                <d2z:code-phrase>
+                </tmp:code-phrase>
+                <tmp:code-phrase>
                     <span/><abbr/>
-                </d2z:code-phrase>
+                </tmp:code-phrase>
             </utfx:source>
             <utfx:expected>
                 <code/>

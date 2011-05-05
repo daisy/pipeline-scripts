@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
-    xmlns="http://www.daisy.org/ns/z3986/authoring/">
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    xmlns="http://www.daisy.org/ns/z3986/authoring/"
+    exclude-result-prefixes="xs dtb tmp">
 
     <!-- Direct translation element and attribute names from DTBook to ZedAI.  
     Most of the work regarding content model normalization has already been done -->
@@ -653,7 +654,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="d2z:ln">
+    <xsl:template match="tmp:ln">
         <ln>
             <xsl:apply-templates/>
         </ln>
@@ -988,7 +989,7 @@
     </xsl:template>
 
 
-    <xsl:template match="d2z:code-block">
+    <xsl:template match="tmp:code-block">
         <code>
             <xsl:call-template name="attrs"/>
             <xsl:variable name="wrap-in-p"
@@ -1030,7 +1031,7 @@
 
     </xsl:template>
 
-    <xsl:template match="d2z:code-phrase">
+    <xsl:template match="tmp:code-phrase">
         <code>
             <xsl:call-template name="attrs"/>
             <xsl:for-each select="child::node()">

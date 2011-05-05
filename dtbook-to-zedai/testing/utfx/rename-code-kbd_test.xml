@@ -2,7 +2,7 @@
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:d2z="http://pipeline.daisy.org/ns/dtbook2zedai/"
+    xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
     <utfx:stylesheet src="../src/rename-code-kbd.xsl"/>
@@ -16,9 +16,9 @@
                 </code>
             </utfx:source>
             <utfx:expected>
-                <d2z:code-phrase>
+                <tmp:code-phrase>
                     <em/><strong/><abbr/><acronym/><br/><sub/><sup/><bdo/><pagenum/>plain text
-                </d2z:code-phrase>
+                </tmp:code-phrase>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -28,13 +28,13 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <code>
-                    <dfn/><code-phrase/><samp/><code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
+                    <dfn/><tmp:code-phrase/><samp/><code/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
                 </code>
             </utfx:source>
             <utfx:expected>
-                <d2z:code-block>
-                    <dfn/><code-phrase/><samp/><code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
-                </d2z:code-block>
+                <tmp:code-block>
+                    <dfn/><tmp:code-phrase/><samp/><tmp:code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
+                </tmp:code-block>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -48,9 +48,9 @@
                 </kbd>
             </utfx:source>
             <utfx:expected>
-                <d2z:code-phrase>
+                <tmp:code-phrase>
                     <em/><strong/><abbr/><acronym/><br/><sub/><sup/><bdo/><pagenum/>plain text
-                </d2z:code-phrase>
+                </tmp:code-phrase>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -64,9 +64,9 @@
                 </kbd>
             </utfx:source>
             <utfx:expected>
-                <d2z:code-block>
-                    <dfn/><d2z:code-phrase/><samp/><d2z:code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
-                </d2z:code-block>
+                <tmp:code-block>
+                    <dfn/><tmp:code-phrase/><samp/><tmp:code-phrase/><cite/><a/><img/><imggroup/><q/><sent/><w/><prodnote/><annoref/><noteref/>
+                </tmp:code-block>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

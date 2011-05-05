@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-to-zedai" 
+<p:declare-step version="1.0" name="dtbook-to-zedai"
+    type="px:dtbook-to-zedai"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" 
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px-d2z="http://www.daisy.org/ns/pipeline/xproc/dtbook2005-3-to-zedai" 
-    xmlns:px-meta="http://www.daisy.org/ns/pipeline/xproc/generate-metadata"
-    xmlns:px-merge="http://www.daisy.org/ns/pipeline/xproc/merge-dtbook-files"
-    xmlns:px-up="http://www.daisy.org/ns/pipeline/xproc/upgrade-dtbook"
-    exclude-inline-prefixes="cx">
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    exclude-inline-prefixes="cx p c cxo px">
 
     <!-- 
         
@@ -49,7 +47,7 @@
 
     
     <!-- upgrade DTBook -->
-    <px-up:upgrade-dtbook name="upgrade-dtbook"/>
+    <px:upgrade-dtbook name="upgrade-dtbook"/>
     
     <!-- Merge documents -->
     <p:count name="num-input-documents" limit="2"/>
@@ -57,11 +55,11 @@
     <p:choose name="choose-to-merge-dtbook-files">
         <p:when test=".//c:result[. > 1]">
             <p:output port="result"/>
-            <px-merge:merge-dtbook-files>
+            <px:merge-dtbook-files>
                 <p:input port="source">
                     <p:pipe port="result" step="upgrade-dtbook"/>
                 </p:input>
-            </px-merge:merge-dtbook-files>
+            </px:merge-dtbook-files>
         </p:when>
         <p:otherwise>
             <p:output port="result"/>
@@ -89,21 +87,21 @@
     </cx:message>
     
     <!-- create MODS metadata record -->
-    <px-meta:generate-metadata name="generate-metadata">
+    <px:generate-metadata name="generate-metadata">
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
         <p:with-option name="output" select="$mods-file"/>
-     </px-meta:generate-metadata>
+     </px:generate-metadata>
     
     <!-- normalize and transform -->
-    <px-d2z:dtbook2005-3-to-zedai name="transform-to-zedai">
+    <px:dtbook2005-3-to-zedai name="transform-to-zedai">
         <p:input port="source">
             <p:pipe port="result" step="validate-dtbook"/>
         </p:input>
         <p:with-option name="css-filename" select="$css-file"/>
         <p:with-option name="mods-filename" select="$mods-file"/>
-    </px-d2z:dtbook2005-3-to-zedai>
+    </px:dtbook2005-3-to-zedai>
 
     <!-- This is a step here instead of being an external library, because the following properties are required for generating CSS:
         * elements are stable (no more moving them around and potentially changing their IDs)

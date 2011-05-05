@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:d2z="http://www.daisy.org/ns/pipeline/dtbook-to-zedai/"
-    exclude-result-prefixes="xs" version="2.0">
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    exclude-result-prefixes="xs tmp dtb" version="2.0">
 
     <xsl:output indent="yes" method="xml"/>
 
@@ -15,7 +15,7 @@
 
     <!-- instead of br line delimiters, wrap lines with the ln element.  these elements' zedai content models are the same or a subset of
         zedai:ln's own content model, so it's safe to wrap their contents in ln.
-        we use d2z:ln (a made-up element) and later convert to zedai:ln
+        we use tmp:ln (a made-up element) and later convert to zedai:ln
     -->
     <xsl:template match="dtb:a[dtb:br] | dtb:author[dtb:br] | dtb:bdo[dtb:br] | dtb:bridgehead[dtb:br] | dtb:byline[dtb:br] | 
         dtb:cite[dtb:br] | dtb:dateline[dtb:br] | dtb:dd[dtb:br] | dtb:dfn[dtb:br] | dtb:docauthor[dtb:br] | dtb:doctitle[dtb:br] | 
@@ -28,7 +28,7 @@
             <xsl:for-each-group select="node()" group-ending-with="dtb:br">
                 <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
                     <!-- TODO: need a "temporary" namespace, something like internal functions -->
-                    <xsl:element name="d2z:ln">
+                    <xsl:element name="tmp:ln">
                         <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
                     </xsl:element>
                     

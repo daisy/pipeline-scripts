@@ -3,8 +3,8 @@
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc/dtbook2005-3-to-zedai" 
-    exclude-inline-prefixes="cx">
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" 
+    exclude-inline-prefixes="cx px cxo px p c">
 
     <!-- 
         Transforms a file from DTBook-2005-3 to ZedAI.
