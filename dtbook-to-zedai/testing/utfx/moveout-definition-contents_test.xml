@@ -216,6 +216,7 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    
     <utfx:test>
         <utfx:name>Definition with multiple illegal child elements of the same type</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
