@@ -18,12 +18,10 @@
                         <bodymatter>
                             <level1>
                                 <div>
-                                    <p>Part A
-                                        <imggroup id="d1e63">
+                                    <p>Part A <imggroup id="d1e63">
                                             <img id="d1e65" src="abc.jpg" alt="abc"/>
                                             <caption id="d1e67">i am a caption</caption>
-                                        </imggroup>
-                                        Part B</p>
+                                        </imggroup> Part B</p>
                                 </div>
                             </level1>
                         </bodymatter>
@@ -32,11 +30,11 @@
             </utfx:with-param>
         </utfx:call-template>
         <utfx:assert-equal normalise-internal-whitespace="yes">
-            
+
             <utfx:source>
                 <empty/>
             </utfx:source>
-            
+
             <utfx:expected>
                 <dtbook>
                     <book>
@@ -53,6 +51,42 @@
                             </level1>
                         </bodymatter>
                     </book>
+                </dtbook>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Move Out Image Groups #2</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p>
+                                <span>before</span>
+                                <imggroup/>
+                                <span>after</span>
+                            </p>
+                        </level1>
+                    </bodymatter>
+                </dtbook>
+            </utfx:with-param>
+        </utfx:call-template>
+
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            <utfx:expected>
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <p><span>before</span></p>
+                            <imggroup/>
+                            <p><span>after</span></p>
+                        </level1>
+                    </bodymatter>
                 </dtbook>
             </utfx:expected>
         </utfx:assert-equal>

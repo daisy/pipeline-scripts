@@ -31,8 +31,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">list</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">list</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -40,8 +40,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">dl</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">dl</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -49,8 +49,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">div</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">div</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -58,8 +58,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">poem</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">poem</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -67,8 +67,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">linegroup</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">linegroup</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -76,8 +76,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">table</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">table</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -85,8 +85,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">sidebar</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">sidebar</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -94,8 +94,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">note</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">note</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -103,8 +103,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
                 select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">epigraph</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">epigraph</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
@@ -112,8 +112,8 @@
         <xsl:message>Found unsuitable parent: {<xsl:value-of select="name()"/>}, id={<xsl:value-of
             select="@id"/>}</xsl:message>
         <xsl:call-template name="move-elem-out">
-            <xsl:with-param name="elem-name-to-move">annotation</xsl:with-param>
-            <xsl:with-param name="split-into-elem">dd</xsl:with-param>
+            <xsl:with-param name="elem-to-move-name">annotation</xsl:with-param>
+            <xsl:with-param name="split-into-elem-name">dd</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 

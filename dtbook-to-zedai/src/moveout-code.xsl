@@ -17,11 +17,12 @@
         <xsl:param name="document"/>
         <xsl:message>Move out code-block</xsl:message>
         <xsl:call-template name="test-and-move">
-            <xsl:with-param name="doc" select="$document"/>
-            <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')" tunnel="yes"/>
-            <xsl:with-param name="target-element" select="'code-block'" tunnel="yes"/>
+            <xsl:with-param name="root-elem" select="if ($document instance of document-node()) then $document/*[1] else $document"/>
+            <xsl:with-param name="valid-parents-list" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th', ',')" tunnel="yes"/>
+            <xsl:with-param name="target-elem-name" select="'code-block'" tunnel="yes"/>
         </xsl:call-template>
         <xsl:message>--Done</xsl:message>
-    </xsl:template>       
+    </xsl:template>
+    
     
 </xsl:stylesheet>

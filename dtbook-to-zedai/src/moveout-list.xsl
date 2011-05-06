@@ -18,9 +18,10 @@
         <xsl:param name="document"/>
         <xsl:message>Move out lists</xsl:message>
         <xsl:call-template name="test-and-move">
-            <xsl:with-param name="doc" select="$document"/>
-            <xsl:with-param name="target-element" select="'list'" tunnel="yes"/>
-            <xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')"
+            <!--<xsl:with-param name="doc" select="$document"/>-->
+            <xsl:with-param name="root-elem" select="if ($document instance of document-node()) then $document/*[1] else $document"/>
+            <xsl:with-param name="target-elem-name" select="'list'" tunnel="yes"/>
+            <xsl:with-param name="valid-parents-list" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')"
                 tunnel="yes"/>
         </xsl:call-template>
         <xsl:message>--Done</xsl:message>

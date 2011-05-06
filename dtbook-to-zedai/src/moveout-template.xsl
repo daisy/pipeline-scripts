@@ -11,16 +11,18 @@
     <xsl:output indent="yes" method="xml"/>
     
     <xsl:template name="move-elem-out">
-        <xsl:param name="elem-name-to-move"/>
-        <xsl:param name="split-into-elem"/>
+        <xsl:param name="elem-to-move-name"/>
+        <xsl:param name="split-into-elem-name"/>
         
         
         <xsl:variable name="elem" select="."/>
         <xsl:variable name="first-child" select="child::node()[1]"/>
         
+        <xsl:message>Moving <xsl:value-of select="$elem-to-move-name"/> out of <xsl:value-of select="local-name($elem)"/>.</xsl:message>
+        
         <!-- move the element out a level -->
         <xsl:for-each-group select="*|text()[normalize-space()]"
-            group-adjacent="local-name() = $elem-name-to-move">
+            group-adjacent="local-name() = $elem-to-move-name">
             <xsl:choose>
                 <!-- the target element itself-->
                 <xsl:when test="current-grouping-key()">
@@ -33,7 +35,7 @@
                     <!-- split the parent element -->
                     <xsl:choose>
                         <!-- split into many of the same element -->
-                        <xsl:when test="local-name($elem) = $split-into-elem">
+                        <xsl:when test="local-name($elem) = $split-into-elem-name">
                             <xsl:element name="{local-name($elem)}"
                                 namespace="http://www.daisy.org/z3986/2005/dtbook/">
                                 
@@ -42,7 +44,7 @@
                                 <!-- for all except the first 'copy' of the original parent:
                                     don't copy the node's ID since then it will result in many nodes with the same ID -->
                                 <xsl:if
-                                    test="not(position() = 1 or local-name($first-child) = $elem-name-to-move)">
+                                    test="not(position() = 1 or local-name($first-child) = $elem-to-move-name)">
                                     <xsl:if test="$elem/@id">
                                         <!-- modifying the result of generate-id() by adding a character to the end
                                             seems to correct the problem of it not being unique; however, this 
@@ -62,7 +64,7 @@
                             <xsl:choose>
                                 <!-- for the first group, use the original element name -->
                                 <xsl:when
-                                    test="position() = 1 or local-name($first-child) = $elem-name-to-move">
+                                    test="position() = 1 or local-name($first-child) = $elem-to-move-name">
                                     <xsl:element name="{local-name($elem)}"
                                         namespace="http://www.daisy.org/z3986/2005/dtbook/">
                                         <xsl:apply-templates select="$elem/@*"/>
@@ -70,7 +72,7 @@
                                     </xsl:element>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <xsl:element name="{$split-into-elem}"
+                                    <xsl:element name="{$split-into-elem-name}"
                                         namespace="http://www.daisy.org/z3986/2005/dtbook/">
                                         
                                         <xsl:apply-templates select="$elem/@*"/>
