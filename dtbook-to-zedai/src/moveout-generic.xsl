@@ -13,7 +13,7 @@
         
     -->
     
-    <xsl:import href="moveout-template.xsl"/>
+    <xsl:include href="moveout-template.xsl"/>
     
     <xsl:output indent="yes" method="xml"/>
     
@@ -24,7 +24,7 @@
         <xsl:param name="valid-parents-list" tunnel="yes"/>
         <xsl:param name="root-elem"/>
         
-        <xsl:message>moveout-generic.xsl</xsl:message>
+        <xsl:message>Test-and-move</xsl:message>
         
         <xsl:choose>
             
@@ -47,12 +47,11 @@
     </xsl:template>
     
     <xsl:function name="f:test-valid">
-        <!-- TODO: is this the correct type? -->
         <xsl:param name="root-elem" as="element()"/>
         <xsl:param name="target-elem-name"/>
         <xsl:param name="valid-parents-list"/>
         
-        <xsl:message>moveout-generic.xsl: Testing validity...</xsl:message>
+        <xsl:message>Testing validity...</xsl:message>
         
         <!-- select all target element descendants whose parents are not in the list of valid parent names -->
         <xsl:variable name="invalid-target-elems"

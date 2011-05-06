@@ -3,7 +3,7 @@
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     exclude-result-prefixes="dtb" version="2.0">
     
-    <xsl:import href="moveout-generic.xsl"/>
+    <xsl:include href="moveout-generic.xsl"/>
     
     <xsl:output indent="yes" method="xml"/>
     

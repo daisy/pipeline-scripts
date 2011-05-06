@@ -884,7 +884,7 @@
         </list>
     </xsl:template>
 
-    <xsl:template match="dtb:item">
+    <xsl:template match="tmp:item">
         <item>
             <xsl:apply-templates/>
         </item>

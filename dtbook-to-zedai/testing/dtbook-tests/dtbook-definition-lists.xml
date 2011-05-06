@@ -47,24 +47,51 @@
                             Python.</dd>
                     </dl>
                 </p>
-                
+
                 <dl>
                     <dt>data</dt>
-                    <dd>a term referring to numbers in tables: 
-                        <table>
-                            <tbody><tr><td>012345</td></tr></tbody>
-                        </table>
-                        Data is often sorted, compared, and accidentally deleted.</dd>
+                    <dd>a term referring to numbers in tables: <table>
+                            <tbody>
+                                <tr>
+                                    <td>012345</td>
+                                </tr>
+                            </tbody>
+                        </table> Data is often sorted, compared, and accidentally deleted.</dd>
                 </dl>
+
+               
+
+                <img src="abc.jpg" alt="abc" id="image1"/>
+                <!--<dl>
+                    <dd>DD <div>
+                            <p>DIV/P</p>
+                        </div> middle of DD <annotation id="anno1">
+                            <p>P</p>
+                        </annotation> end of DD</dd>
+                </dl>
+
+                <dl>
+                    <dd>DD <div>
+                            <p>DIV1/P</p>
+                        </div>
+                        <dl>
+                            <dt>TERM</dt>
+                            <dd> DD2 <div>
+                                    <p>DIV2/p</p>
+                                </div> Rest of DD2 </dd>
+
+                        </dl> Rest of DD </dd>
+                </dl>
+                -->
                 
-                <p>
-                    <span>before</span>
-                    <dl>
-                        <dt/>
-                        <dd/>
-                    </dl>
-                    <span>after</span>
-                </p>
+                <dl>
+                    <dd>DD 
+                        <div>
+                            <p>DIV1/P</p>
+                        </div>
+                     Rest of DD 
+                    </dd>
+                </dl>
                 
             </level1>
         </bodymatter>
