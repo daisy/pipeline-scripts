@@ -14,8 +14,9 @@
     </xsl:template>
 
 
+    <!-- removed annotation from this list after the introduction of annotation-block and annotation-phrase -->
     <xsl:template
-        match="dtb:annotation | dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | 
+        match="dtb:div | dtb:prodnote | dtb:note | dtb:epigraph | dtb:li | 
         dtb:th | dtb:caption | dtb:sidebar |
         dtb:address | dtb:covertitle | dtb:samp | dtb:td | dtb:blockquote">
 
@@ -27,7 +28,7 @@
             <xsl:variable name="inlines"
                 select="tokenize('a,abbr,acronym,annoref,bdo,dfn,em,line,noteref,sent,span,strong,sub,sup,w,br',',')"/>
             <xsl:variable name="blocks"
-                select="tokenize('code-block,samp,cite,img,imggroup,pagenum,prodnote,p,list,dl,div,linegroup,byline,dateline,epigraph,table,address,author,prodnote,sidebar,note,annotation,doctitle,docauthor, covertitle,bridgehead',',')"/>
+                select="tokenize('code-block,samp,cite,img,imggroup,pagenum,prodnote,p,list,dl,div,linegroup,byline,dateline,epigraph,table,address,author,prodnote,sidebar,note,annotation-block,doctitle,docauthor, covertitle,bridgehead',',')"/>
 
             <xsl:variable name="has-inlines" select="not(empty(child::*[local-name() = $inlines]))"/>
             <xsl:variable name="has-blocks" select="not(empty(child::*[local-name() = $blocks]))"/>

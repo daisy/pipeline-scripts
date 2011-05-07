@@ -5,7 +5,8 @@
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
     <utfx:stylesheet src="../src/moveout-definition-contents.xsl"/>
-
+    <!-- TODO: rewrite these tests -->
+    
     <utfx:test>
         <utfx:name>Definition with LIST</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -190,7 +191,8 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <item>
-                    <dd>DD <div>DIV1</div>
+                    <dd>DD 
+                        <div>DIV1</div>
                         <dl>
                             <item>
                                 <dt>TERM</dt>
@@ -203,7 +205,7 @@
                 <item>
                     <dd>DD</dd>
                     <div>DIV1</div>
-                    <dl>
+                    <dd><dl>
                         <item>
                             <dt>TERM</dt>
                             <dd>DD2</dd>
@@ -211,12 +213,12 @@
                             <dd>Rest of DD2</dd>
                         </item>
                     </dl>
-                    <dd>Rest of DD</dd>
+                    Rest of DD</dd>
                 </item>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
     <utfx:test>
         <utfx:name>Definition with multiple illegal child elements of the same type</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -229,7 +231,7 @@
                 <item>
                     <dd>DD </dd>
                     <div>DIV1</div>
-                    <dd>middle of DD</dd> 
+                    <dd>middle of DD</dd>
                     <div>DIV2</div>
                     <dd>end of DD</dd>
                 </item>
@@ -241,19 +243,24 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <item>
-                    <dd>DD <div>DIV1</div> middle of DD <annotation>ANNO1</annotation> end of DD</dd>
+                    <dd>DD 
+                        <div>DIV1</div> 
+                        middle of DD 
+                        <annotation>ANNO1</annotation> 
+                        end of DD
+                    </dd>
                 </item>
             </utfx:source>
             <utfx:expected>
                 <item>
                     <dd>DD </dd>
                     <div>DIV1</div>
-                    <dd>middle of DD</dd> 
+                    <dd>middle of DD</dd>
                     <annotation>ANNO1</annotation>
                     <dd>end of DD</dd>
                 </item>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    
+
 </utfx:tests>

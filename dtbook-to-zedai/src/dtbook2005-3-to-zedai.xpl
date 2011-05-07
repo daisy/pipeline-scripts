@@ -24,7 +24,7 @@
     <p:option name="mods-filename" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-
+    <p:import href="moveout-definition-contents.xpl"/>
     <p:group name="rename-elements">
         <p:output port="result"/>
             
@@ -39,6 +39,13 @@
         <p:xslt name="rename-elements.code">
             <p:input port="stylesheet">
                 <p:document href="rename-code-kbd.xsl"/>
+            </p:input>
+        </p:xslt>
+        
+        <!-- identify block-level annotation elements vs phrase-level -->
+        <p:xslt name="rename-elements.annotation">
+            <p:input port="stylesheet">
+                <p:document href="rename-annotation.xsl"/>
             </p:input>
         </p:xslt>
     </p:group>
@@ -95,11 +102,12 @@
         </p:xslt>
 
         <!-- normalize definition lists by relocating illegal elements from definitions -->
-        <p:xslt name="normalize-content-model.moveout-definition-contents">
+        <!--<p:xslt name="normalize-content-model.moveout-definition-contents">
             <p:input port="stylesheet">
                 <p:document href="moveout-definition-contents.xsl"/>
             </p:input>
-        </p:xslt>
+            </p:xslt>-->
+        <px:moveout-definition-contents/>
 
         <!-- normalize code by moving out block-level elements-->
         <p:xslt name="normalize-content-model.moveout-code">

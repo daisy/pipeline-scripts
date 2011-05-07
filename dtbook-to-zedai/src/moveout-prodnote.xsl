@@ -20,7 +20,7 @@
             <!--<xsl:with-param name="doc" select="$document"/>-->
             <xsl:with-param name="root-elem" select="if ($document instance of document-node()) then $document/*[1] else $document"/>
             <xsl:with-param name="target-elem-name" select="'prodnote'" tunnel="yes"/>
-            <xsl:with-param name="valid-parents-list" select="tokenize('annotation,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')" tunnel="yes"/> 
+            <xsl:with-param name="valid-parents-list" select="tokenize('annotation-block,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,samp', ',')" tunnel="yes"/> 
         </xsl:call-template>
         <xsl:message>--Done</xsl:message>        
     </xsl:template>       

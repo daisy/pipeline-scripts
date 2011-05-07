@@ -48,6 +48,7 @@
                     </dl>
                 </p>
 
+                <p>A table</p>
                 <dl>
                     <dt>data</dt>
                     <dd>a term referring to numbers in tables: <table>
@@ -59,30 +60,35 @@
                         </table> Data is often sorted, compared, and accidentally deleted.</dd>
                 </dl>
 
-               
+                <p>Difficult use cases:</p>
 
                 <img src="abc.jpg" alt="abc" id="image1"/>
-                <!--<dl>
-                    <dd>DD <div>
-                            <p>DIV/P</p>
-                        </div> middle of DD <annotation id="anno1">
-                            <p>P</p>
-                        </annotation> end of DD</dd>
+                <dl>
+                    <dd>
+                        DD
+                        <div><p>DIV/P</p></div>
+                        middle of DD 
+                        <annotation id="anno1"><p>P</p></annotation>
+                        end of DD
+                    </dd>
                 </dl>
 
+                
+        
                 <dl>
-                    <dd>DD <div>
-                            <p>DIV1/P</p>
-                        </div>
+                    <dd>DD 
+                        <div><p>DIV1/P</p></div>
                         <dl>
                             <dt>TERM</dt>
-                            <dd> DD2 <div>
-                                    <p>DIV2/p</p>
-                                </div> Rest of DD2 </dd>
-
-                        </dl> Rest of DD </dd>
+                            <dd>
+                                DD2 
+                                <div><p>DIV2/p</p></div>
+                                Rest of DD2
+                            </dd>
+                        </dl>
+                        Rest of DD
+                    </dd>
                 </dl>
-                -->
                 
                 <dl>
                     <dd>DD 
@@ -92,6 +98,7 @@
                      Rest of DD 
                     </dd>
                 </dl>
+                
                 
             </level1>
         </bodymatter>

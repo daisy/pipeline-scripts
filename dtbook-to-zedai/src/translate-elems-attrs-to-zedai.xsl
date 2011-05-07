@@ -327,10 +327,14 @@
         </annotation>
     </xsl:template>
 
-    <xsl:template match="dtb:annotation">
+    <!--<xsl:template match="dtb:annotation">
         <xsl:call-template name="createAnnotation"/>
     </xsl:template>
-
+    -->
+    <xsl:template match="tmp:annotation-block | tmp:annotation-phrase">
+        <xsl:call-template name="createAnnotation"/>
+    </xsl:template>
+    
     <xsl:template match="dtb:prodnote">
 
         <xsl:choose>
@@ -804,7 +808,7 @@
     <!-- end of elements that follow the same form -->
 
     <xsl:template
-        match="dtb:annotation/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
+        match="tmp:annotation-block/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
         dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
         dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup | 
         dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup | dtb:poem/dtb:linegroup">

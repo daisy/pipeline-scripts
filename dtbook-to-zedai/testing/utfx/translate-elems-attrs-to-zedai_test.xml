@@ -497,8 +497,8 @@
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Annotation</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source><annotation/></utfx:source>
-            <utfx:expected><annotation/></utfx:expected>
+            <utfx:source><tmp:annotation-block/><tmp:annotation-phrase/></utfx:source>
+            <utfx:expected><annotation/><annotation/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
@@ -979,7 +979,7 @@
         <utfx:name>Translate-DTBook2ZedAI: linegroup</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <annotation><linegroup><line/><line/><pagenum>4</pagenum></linegroup></annotation>
+                <tmp:annotation-block><linegroup><line/><line/><pagenum>4</pagenum></linegroup></tmp:annotation-block>
                 <caption><linegroup><line/><line/></linegroup></caption>
                 <level><linegroup><line/><line/></linegroup></level>
                 <level1><linegroup><line/><line/></linegroup></level1>
@@ -1068,7 +1068,7 @@
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: item </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source><item/></utfx:source>
+            <utfx:source><tmp:item/></utfx:source>
             <utfx:expected><item/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

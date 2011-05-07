@@ -22,7 +22,7 @@
             <xsl:for-each-group select="*|text()[normalize-space()]" group-starting-with="dtb:dt">
                 <xsl:element name="tmp:item">
                     <xsl:for-each select="current-group()">
-                        <xsl:copy-of select="."/>
+                        <xsl:apply-templates select="."/>
                     </xsl:for-each>
                 </xsl:element>
             </xsl:for-each-group>
