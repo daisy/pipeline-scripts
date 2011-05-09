@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>org.daisy.pipeline</groupId>
+        <artifactId>daisy-pipeline-modules-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <packaging>pom</packaging>
+        <name>Daisy Pipeline Modules - Parent project</name>
+
+        <properties>
+                <tycho-version>0.10.0</tycho-version>
+		<daisy.site>${project.baseUri}../../daisy-pipeline/daisy.pipeline.site/target/site</daisy.site> 
+        </properties>
+	<modules>
+		<module>../dtbook2zedai</module>
+	</modules>
+ <repositories>
+                <repository>
+                  <id>framework_site</id>
+                  <layout>p2</layout>
+                  <url>${daisy.target}</url>
+                </repository>
+
+</repositories>
+        <build>
+                <plugins>
+                        <plugin>
+                                <groupId>org.sonatype.tycho</groupId>
+                                <artifactId>tycho-maven-plugin</artifactId>
+                                <version>${tycho-version}</version>
+                                <extensions>true</extensions>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.sonatype.tycho</groupId>
+                                <artifactId>maven-osgi-compiler-plugin</artifactId>
+                                <version>${tycho-version}</version>
+                                <configuration>
+                                        <source>1.6</source>
+                                        <target>1.6</target>
+                                </configuration>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.sonatype.tycho</groupId>
+                                <artifactId>module-site-configuration</artifactId>
+                                <version>${tycho-version}</version>
+                                <configuration>
+                                        <resolver>p2</resolver>
+                                        <target>
+                                                <artifact>
+                                                        <groupId>org.daisy.pipeline</groupId>
+                                                        <artifactId>module-site</artifactId>
+                                                        <version>0.0.1-SNAPSHOT</version>
+                                                        <classifier>definition</classifier>
+                                                </artifact>
+                                        </target>
+                                        <ignoreTychoRepositories>false</ignoreTychoRepositories>
+
+                                </configuration>
+                        </plugin>
+                </plugins>
+
+
+        </build>
+
+</project>

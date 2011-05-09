@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;daisy.modules.feature&apos; to &apos;daisy.pipeline.modules.feature&apos;" description="Rename resource &apos;daisy.modules.feature&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/daisy.modules.feature" name="daisy.pipeline.modules.feature" stamp="1304768447050" updateReferences="true"/>
+</session>
