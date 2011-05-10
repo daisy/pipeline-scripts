@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook2005-3-to-zedai" type="px:dtbook2005-3-to-zedai"
+<p:declare-step version="1.0" name="dtbook2005-3-to-zedai" type="pxi:dtbook2005-3-to-zedai"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" 
-    exclude-inline-prefixes="cx px cxo px p c">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" 
+    exclude-inline-prefixes="cx cxo pxi p c">
 
     <!-- 
         Transforms a file from DTBook-2005-3 to ZedAI.
@@ -107,7 +107,7 @@
                 <p:document href="moveout-definition-contents.xsl"/>
             </p:input>
             </p:xslt>-->
-        <px:moveout-definition-contents/>
+        <pxi:moveout-definition-contents/>
 
         <!-- normalize code by moving out block-level elements-->
         <p:xslt name="normalize-content-model.moveout-code">

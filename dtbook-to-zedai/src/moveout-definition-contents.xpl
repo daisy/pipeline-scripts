@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="moveout-definition-contents"
-    type="px:moveout-definition-contents"
+    type="pxi:moveout-definition-contents"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" 
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" 
-    exclude-inline-prefixes="cx p c cxo px">
+    exclude-inline-prefixes="cx p c cxo pxi">
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter"/>
