@@ -9,16 +9,27 @@
 
         <properties>
                 <tycho-version>0.10.0</tycho-version>
-		<daisy.site>${project.baseUri}../../daisy-pipeline/daisy.pipeline.site/target/site</daisy.site> 
+		 <daisy.repo>${project.baseUri}../../daisy-pipeline/repo/</daisy.repo>
+		<daisy.mtarget>${project.baseUri}../modules-target-platform/</daisy.mtarget> 
         </properties>
 	<modules>
-		<module>../dtbook2zedai</module>
+		<module>../modules-target-platform</module>
+		<module>../daisy.pipeline.modules.feature</module>
+		<module>../daisy.pipeline.modules.site</module>
+		<module>../metadata-utilities</module>
+		<module>../dtbook2zedai</module>  
 	</modules>
  <repositories>
-                <repository>
-                  <id>framework_site</id>
+		<repository>
+                  <id>daisy_repo</id>
                   <layout>p2</layout>
-                  <url>${daisy.target}</url>
+                  <url>${daisy.repo}</url>
+                </repository>
+
+                <repository>
+                  <id>modules-target-platform</id>
+                  <layout>p2</layout>
+                  <url>${daisy.mtarget}</url>
                 </repository>
 
 </repositories>
@@ -41,16 +52,16 @@
                         </plugin>
                         <plugin>
                                 <groupId>org.sonatype.tycho</groupId>
-                                <artifactId>module-site-configuration</artifactId>
+                                <artifactId>target-platform-configuration</artifactId>
                                 <version>${tycho-version}</version>
                                 <configuration>
                                         <resolver>p2</resolver>
                                         <target>
                                                 <artifact>
                                                         <groupId>org.daisy.pipeline</groupId>
-                                                        <artifactId>module-site</artifactId>
+                                                        <artifactId>modules-target-platform</artifactId>
                                                         <version>0.0.1-SNAPSHOT</version>
-                                                        <classifier>definition</classifier>
+                                                        <classifier>modules-tp</classifier>
                                                 </artifact>
                                         </target>
                                         <ignoreTychoRepositories>false</ignoreTychoRepositories>
