@@ -30,6 +30,10 @@
         <xsl:message>--Done</xsl:message>
     </xsl:template>
 
+    <xsl:template match="comment()">
+        <xsl:copy/>
+    </xsl:template>
+    
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
         <xsl:if test="@id">

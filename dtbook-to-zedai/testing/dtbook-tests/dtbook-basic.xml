@@ -11,6 +11,7 @@
         <meta content="pipeline2-dtbook-test-20110301-basic" name="dc:Identifier"/>
         <meta content="en-US" name="dc:Language"/>
     </head>
+    <!-- test -->
     <book>
         <frontmatter>
             <doctitle>Pipeline 2 DTBook Test Content: Basic</doctitle>
