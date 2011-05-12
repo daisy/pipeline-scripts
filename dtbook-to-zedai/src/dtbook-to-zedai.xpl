@@ -6,8 +6,10 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" 
-    exclude-inline-prefixes="cx p c cxo px">
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    exclude-inline-prefixes="cx p c cxo px tmp">
 
     <!-- 
         
@@ -120,13 +122,13 @@
      </px:generate-metadata>
     
     <p:documentation>Transform to ZedAI (will be invalid ZedAI because of lingering visual property attributes that are stripped out in the next steps)</p:documentation>
-    <px:dtbook2005-3-to-zedai name="transform-to-zedai">
+    <pxi:dtbook2005-3-to-zedai name="transform-to-zedai">
         <p:input port="source">
             <p:pipe port="result" step="validate-dtbook"/>
         </p:input>
         <p:with-option name="css-filename" select="$css-file"/>
         <p:with-option name="mods-filename" select="$mods-file"/>
-    </px:dtbook2005-3-to-zedai>
+    </pxi:dtbook2005-3-to-zedai>
 
     <!-- This is a step here instead of being an external library, because the following properties are required for generating CSS:
         * elements are stable (no more moving them around and potentially changing their IDs)
@@ -189,5 +191,12 @@
     </p:string-replace>
     <p:store method="text" name="store-css-file">
         <p:with-option name="href" select="$css-file"/>
+    </p:store>
+    
+    <p:store name="test-store">
+        <p:input port="source">
+            <p:pipe  step="upgrade-dtbook" port="result"/>
+        </p:input>
+        <p:with-option name="href" select="'file:///tmp/t.xml'"/>
     </p:store>
 </p:declare-step>

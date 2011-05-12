@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+    
+    <utfx:stylesheet src="../src/moveout-note.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Definition with NOTE</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <item>
+                    <dd>DD <note>notes <span>spans in notes</span></note> Rest of DD <span>spans in
+                        definition</span></dd>
+                </item>
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            <utfx:expected>
+                <item>
+                    <dd>DD </dd>
+                    <note>notes <span>spans in notes</span></note>
+                    <dd>Rest of DD <span>spans in definition</span></dd>
+                </item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>    
+</utfx:tests>
+
+

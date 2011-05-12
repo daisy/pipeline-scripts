@@ -113,4 +113,27 @@
         </utfx:assert-equal>
         
     </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Definition with LIST</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <item>
+                    <dd>DD <list><item>Nested List with One Item</item></list> Rest of DD</dd>
+                </item>
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+               <empty/> 
+            </utfx:source>
+            <utfx:expected>
+                <item>
+                    <dd>DD </dd>
+                    <list><item>Nested List with One Item</item></list>
+                    <dd>Rest of DD</dd>
+                </item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
 </utfx:tests>

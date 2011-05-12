@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+    
+    <utfx:stylesheet src="../src/moveout-table.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Definition with TABLE</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <item>
+                    <dt>data</dt>
+                    <dd>a term referring to numbers in tables: <table>
+                        <tbody><tr><td>012345</td></tr></tbody>
+                    </table> Data is often sorted, compared, and accidentally deleted.</dd>
+                </item>
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            <utfx:expected>
+                <item>
+                    <dt>data</dt>
+                    <dd>a term referring to numbers in tables:</dd>
+                    <table>
+                        <tbody><tr><td>012345</td></tr></tbody>
+                    </table>
+                    <dd>Data is often sorted, compared, and accidentally deleted.</dd>
+                </item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+</utfx:tests>
