@@ -20,5 +20,20 @@ syntax: regexp
 # ignore all output/ directories
 (^|/)output/
 
+# ignore all bin/ directories
+(^|/)bin/
+
+# ignore all generated/ directories
+(^|/)generated/
 # ignore all temp/ directories
 (^|/)temp/
+
+# ignore BndTools runtime directories
+(^|/)runtimefw/
+
+# ignore Maven target directories
+(^|/)target/
+# ignore metadata dirs 
+(^|/).metadata/
+
+
