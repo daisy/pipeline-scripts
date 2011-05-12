@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+
+    <utfx:stylesheet src="../src/moveout-annotation.xsl"/>
+
+    <utfx:test>
+        <utfx:name>Definition with ANNOTATION</utfx:name>
+        <utfx:call-template name="main">
+            <utfx:with-param name="document">
+                <dtbook>
+                    <bodymatter>
+                        <level1>
+                            <tmp:item>
+                                <dd>DD <tmp:annotation-block>annotations should not be inside
+                                    definitions</tmp:annotation-block> Rest of DD</dd>
+                            </tmp:item>
+                        </level1>
+                    </bodymatter>
+                </dtbook>
+            </utfx:with-param>
+        </utfx:call-template>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <empty/>
+            </utfx:source>
+            <utfx:expected>
+                <dtbook><bodymatter><level1><tmp:item>
+                                <dd>DD </dd>
+                                <tmp:annotation-block>annotations should not be inside
+                                    definitions</tmp:annotation-block>
+                                <dd>Rest of DD</dd>
+                            </tmp:item></level1></bodymatter></dtbook>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+</utfx:tests>

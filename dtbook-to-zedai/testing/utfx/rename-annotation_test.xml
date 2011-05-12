@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+    
+    <utfx:stylesheet src="../src/rename-annotation.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Rename Block-Level Annotation</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <annotation>
+                    <div/><sidebar/><caption/><tmp:code-block/><hd/><list/><note/><p/><blockquote/><table/><dl/><dateline/><epigraph/><address/>
+                    <imggroup/><poem/><linegroup/><samp/>
+                </annotation>
+            </utfx:source>
+            <utfx:expected>
+                <tmp:annotation-block>
+                    <div/><sidebar/><caption/><tmp:code-block/><hd/><list/><note/><p/><blockquote/><table/><dl/><dateline/><epigraph/><address/>
+                    <imggroup/><poem/><linegroup/><samp/>
+                </tmp:annotation-block>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Rename Phrase-Level Annotation</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <annotation>
+                    <em/><strong/><dfn/><tmp:code-phrase/><cite/><abbr/><acronym/><img/><byline/><line/><a/><sent/><w/><pagenum/><annoref/><noteref/>
+                </annotation>
+            </utfx:source>
+            <utfx:expected>
+                <tmp:annotation-phrase>
+                    <em/><strong/><dfn/><tmp:code-phrase/><cite/><abbr/><acronym/><img/><byline/><line/><a/><sent/><w/><pagenum/><annoref/><noteref/>
+                </tmp:annotation-phrase>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+   </utfx:tests>

@@ -3,7 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" 
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     exclude-inline-prefixes="cx cxo pxi p c">
 
     <!-- 
@@ -24,10 +24,9 @@
     <p:option name="mods-filename" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="moveout-definition-contents.xpl"/>
     <p:group name="rename-elements">
         <p:output port="result"/>
-            
+
         <!-- preprocess certain inline elements by making them into spans -->
         <p:xslt name="rename-elements.span">
             <p:input port="stylesheet">
@@ -41,7 +40,7 @@
                 <p:document href="rename-code-kbd.xsl"/>
             </p:input>
         </p:xslt>
-        
+
         <!-- identify block-level annotation elements vs phrase-level -->
         <p:xslt name="rename-elements.annotation">
             <p:input port="stylesheet">
@@ -49,8 +48,8 @@
             </p:input>
         </p:xslt>
     </p:group>
-    
-    
+
+
     <p:group name="convert-elements">
         <p:output port="result"/>
         <!-- convert br to ln -->
@@ -73,7 +72,7 @@
     <!-- Normalize DTBook content model -->
     <p:group name="normalize-content-model">
         <p:output port="result"/>
-        
+
         <p:xslt name="normalize-content-model.moveout-imggroup">
             <p:input port="stylesheet">
                 <p:document href="moveout-imggroup.xsl"/>
@@ -101,13 +100,51 @@
             </p:input>
         </p:xslt>
 
-        <!-- normalize definition lists by relocating illegal elements from definitions -->
-        <!--<p:xslt name="normalize-content-model.moveout-definition-contents">
+        <p:xslt name="moveout-div">
             <p:input port="stylesheet">
-                <p:document href="moveout-definition-contents.xsl"/>
+                <p:document href="moveout-div.xsl"/>
             </p:input>
-            </p:xslt>-->
-        <pxi:moveout-definition-contents/>
+        </p:xslt>
+
+        <!-- in practice, these steps will only be applied to definition element contents -->
+        <p:group name="moveout-from-definition">
+            <p:xslt name="moveout-from-definition.moveout-poem">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-poem.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-linegroup">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-linegroup.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-table">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-table.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-sidebar">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-sidebar.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-note">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-note.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-epigraph">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-epigraph.xsl"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt name="moveout-from-definition.moveout-annotation-block">
+                <p:input port="stylesheet">
+                    <p:document href="moveout-annotation.xsl"/>
+                </p:input>
+            </p:xslt>
+        </p:group>
+
 
         <!-- normalize code by moving out block-level elements-->
         <p:xslt name="normalize-content-model.moveout-code">
@@ -127,17 +164,17 @@
                 <p:document href="normalize-section-block.xsl"/>
             </p:input>
         </p:xslt>
-        
+
     </p:group>
-    
-    
+
+
     <p:store name="testing-store">
         <p:with-option name="href" select="'/tmp/t.xml'"/>
         <p:input port="source">
             <p:pipe port="result" step="normalize-content-model"/>
         </p:input>
     </p:store>
-    
+
     <!-- Translate element and attribute names from DTBook to ZedAI -->
     <p:xslt name="translate-to-zedai">
         <p:with-param name="mods-filename" select="$mods-filename"/>
@@ -149,7 +186,7 @@
             <p:pipe step="normalize-content-model" port="result"/>
         </p:input>
     </p:xslt>
-    
-    
+
+
 
 </p:declare-step>
