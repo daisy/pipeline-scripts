@@ -1,0 +1,10 @@
+<package name="http://www.daisy.org/dtbook2zedai" xmlns="http://expath.org/ns/pkg">
+	<module version="1.0.0" name="metadata-utilities">
+		<title>Metadata Utilities</title>
+		<xslt>
+			<import-uri>http://www.daisy.org/metadata-utilities/metadata-generator.xpl</import-uri>
+			<file>metadata-generator/metadata-generator.xpl</file>
+		</xslt>
+	</module>
+	
+</package>
