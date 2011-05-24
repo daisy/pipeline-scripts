@@ -23,10 +23,9 @@
         <xd:output port="result">Empty (results are written to disk).</xd:output>
         <xd:option name="output">URI of the output ZedAI file.</xd:option>
         
-        <xd:import href="dtbook2005-3-to-zedai.xpl">For transforming DTBook 2005-3 to ZedAI</xd:import>
-        <xd:import href="../../utilities/dtbook-utils/merge-dtbook-files/merge-dtbook-files.xpl">For merging DTBook files.</xd:import>
-        <xd:import href="../../utilities/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl">For upgrading DTBook files from 2005-1 or -2 to 2005-3</xd:import>
-        <xd:import href="../../utilities/metadata-utils/generate-metadata.xpl">For generating external metadata</xd:import>    
+        <xd:import href="dtbook2005-3-to-zedai.xpl">Internal XProc for transforming DTBook 2005-3 to ZedAI</xd:import>
+        <xd:import href="../../utilities/dtbook-utils/dtbook-utils-library.xpl">External utility for merging and upgrading DTBook files.</xd:import>
+        <xd:import href="../../utilities/metadata-utils/generate-metadata.xpl">External utility for generating metadata.</xd:import>    
     </p:documentation>
     
     <p:input port="source" primary="true" sequence="true"/>
@@ -38,10 +37,8 @@
     <p:import href="dtbook2005-3-to-zedai.xpl"/>
     
     <!-- TODO: absolute URIs -->
-    <p:import href="../../utilities/dtbook-utils/merge-dtbook-files/merge-dtbook-files.xpl"/>
-    <p:import href="../../utilities/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl"/>
     <p:import href="../../utilities/metadata-utils/generate-metadata.xpl"/>
-    <!--<p:import href="../utilities/dtbook-utilities/dtbook-utilities.xpl"/>-->
+    <p:import href="../../utilities/dtbook-utils/dtbook-utils-library.xpl"/>
     
     <!-- TODO: multivolume document context in parameter problem e.g. -->
     <p:variable name="test-var" select="'xyz'"/>
