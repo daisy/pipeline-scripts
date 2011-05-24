@@ -7,11 +7,14 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns="http://www.daisy.org/ns/z3986/authoring/"
-    exclude-result-prefixes="xs dtb tmp">
+    exclude-result-prefixes="xs dtb">
 
-    <!-- Direct translation element and attribute names from DTBook to ZedAI.  
-    Most of the work regarding content model normalization has already been done -->
-
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work regarding content model normalization has already been done.</desc>
+        <param name="mods-filename">The URI of the MODS metadata file containing the record for this document.</param>
+        <param name="css-filename">The URI of the CSS file for this document.</param>
+    </doc>
+    
     <xsl:param name="mods-filename"/>
     <xsl:param name="css-filename"/>
 
@@ -257,14 +260,18 @@
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
-
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
 
             <!-- height and width get put into CSS-->
-            <xsl:copy-of select="@height"/>
-            <xsl:copy-of select="@width"/>
+            <xsl:if test="@height">
+                <xsl:attribute name="tmp:height" select="@height"/>
+            </xsl:if>
+            <xsl:if test="@width">
+                <xsl:attribute name="tmp:width" select="@width"/>
+            </xsl:if>
+            
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -330,11 +337,7 @@
             <xsl:apply-templates/>
         </annotation>
     </xsl:template>
-
-    <!--<xsl:template match="dtb:annotation">
-        <xsl:call-template name="createAnnotation"/>
-    </xsl:template>
-    -->
+    
     <xsl:template match="tmp:annotation-block | tmp:annotation-phrase">
         <xsl:call-template name="createAnnotation"/>
     </xsl:template>
@@ -452,11 +455,19 @@
 
         <table>
             <!-- These will be put into CSS by a future XSL step -->
-            <xsl:copy-of select="@width"/>
-            <xsl:copy-of select="@border"/>
-            <xsl:copy-of select="@cellspacing"/>
-            <xsl:copy-of select="@cellpadding"/>
-
+            <xsl:if test="@width">
+                <xsl:attribute name="tmp:width" select="@width"/>
+            </xsl:if>
+            <xsl:if test="@border">
+                <xsl:attribute name="tmp:border" select="@border"/>
+            </xsl:if>
+            <xsl:if test="@cellspacing">
+                <xsl:attribute name="tmp:cellspacing" select="@cellspacing"/>
+            </xsl:if>
+            <xsl:if test="@cellpadding">
+                <xsl:attribute name="tmp:cellpadding" select="@cellpadding"/>
+            </xsl:if>
+            
             <xsl:call-template name="attrs"/>
 
             <!-- generate an ID for use by CSS -->
@@ -491,9 +502,16 @@
             <xsl:copy-of select="@span"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
-            <xsl:copy-of select="@width"/>
+            <xsl:if test="@width">
+                <xsl:attribute name="tmp:width" select="@width"/>
+            </xsl:if>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
+            
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -512,9 +530,15 @@
             </xsl:if>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
-            <xsl:copy-of select="@width"/>
+            <xsl:if test="@width">
+                <xsl:attribute name="tmp:width" select="@width"/>
+            </xsl:if>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -528,8 +552,12 @@
             <xsl:call-template name="attrs"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -543,8 +571,12 @@
             <xsl:call-template name="attrs"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -558,8 +590,12 @@
             <xsl:call-template name="attrs"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -573,8 +609,12 @@
             <xsl:call-template name="attrs"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -593,8 +633,12 @@
             <xsl:copy-of select="@scope"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -614,8 +658,12 @@
             <xsl:copy-of select="@scope"/>
 
             <!-- these will be put into a CSS file by a future XSL step -->
-            <xsl:copy-of select="@align"/>
-            <xsl:copy-of select="@valign"/>
+            <xsl:if test="@align">
+                <xsl:attribute name="tmp:align" select="@align"/>
+            </xsl:if>
+            <xsl:if test="@valign">
+                <xsl:attribute name="tmp:valign" select="@valign"/>
+            </xsl:if>
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -753,8 +801,6 @@
     <!-- link elements live in the head of dtbook documents; there seems to be no zedai equivalent (chances are, whatever they reference is not relevant in a zedai world anyway) -->
     <xsl:template match="dtb:link"/>
 
-    <!-- these are all of the same form: copy the dtbook element name and copy the translated attributes -->
-    <!-- they could probably be condensed in the future but I'm leaving them like this for now -->
     <xsl:template match="dtb:bodymatter">
         <bodymatter>
             <xsl:call-template name="attrs"/>
@@ -809,16 +855,15 @@
             <xsl:apply-templates/>
         </w>
     </xsl:template>
-    <!-- end of elements that follow the same form -->
-
+    
     <xsl:template
         match="tmp:annotation-block/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
         dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
         dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup | 
         dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup | dtb:poem/dtb:linegroup">
 
-        <!-- TODO: copy attrs -->
         <block>
+            <xsl:call-template name="attrs"/>
             <xsl:for-each-group group-adjacent="local-name() = 'line'" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">

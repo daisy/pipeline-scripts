@@ -4,8 +4,9 @@
     version="2.0"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns="http://www.daisy.org/ns/z3986/authoring/"
-    exclude-result-prefixes="xs rend its xlink">
+    exclude-result-prefixes="xs rend its xlink tmp">
     
     <xsl:output indent="yes" method="xml"/>
     
@@ -17,12 +18,12 @@
     </xsl:template>
     
     <!-- discard these attributes -->
-    <xsl:template match="@height"/>
-    <xsl:template match="@width"/>
-    <xsl:template match="@border"/>
-    <xsl:template match="@cellspacing"/>
-    <xsl:template match="@cellpadding"/>
-    <xsl:template match="@align"/>
-    <xsl:template match="@valign"/>
+    <xsl:template match="@tmp:height"/>
+    <xsl:template match="@tmp:width"/>
+    <xsl:template match="@tmp:border"/>
+    <xsl:template match="@tmp:cellspacing"/>
+    <xsl:template match="@tmp:cellpadding"/>
+    <xsl:template match="@tmp:align"/>
+    <xsl:template match="@tmp:valign"/>
     
 </xsl:stylesheet>

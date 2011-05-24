@@ -11,7 +11,7 @@
         <meta content="pipeline2-dtbook-test-20110301-basic" name="dc:Identifier"/>
         <meta content="en-US" name="dc:Language"/>
     </head>
-    <!-- test -->
+    <!-- test comment -->
     <book>
         <frontmatter>
             <doctitle>Pipeline 2 DTBook Test Content: Basic</doctitle>
@@ -25,7 +25,7 @@
                         print disabilities.</sent>
                     <sent>It is the follow-up and total redesign of the original DAISY Pipeline 1
                         project.</sent></p>
-
+                <img height="100px" width="100px" src="image.jpg" alt="hello"/>
             </level1>
             <level1>
                 <h1>About the Pipeline</h1>

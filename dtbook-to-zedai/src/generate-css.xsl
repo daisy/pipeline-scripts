@@ -6,7 +6,8 @@
     xmlns:its="http://www.w3.org/2005/11/its" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
-    exclude-result-prefixes="xs xd rend its xlink z">
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    exclude-result-prefixes="xs xd rend its xlink z tmp">
     
     <xsl:output method="text"/>
     
@@ -26,61 +27,61 @@
     </xsl:template>
     
     <xsl:template match="z:object">
-        <xsl:if test="@height or @width">
+        <xsl:if test="@tmp:height or @tmp:width">
             #<xsl:value-of select="@xml:id"/>{
-                <xsl:if test="@height">
-                    height: <xsl:value-of select="@height"/>;
+                <xsl:if test="@tmp:height">
+                    height: <xsl:value-of select="@tmp:height"/>;
                 </xsl:if>
-                <xsl:if test="@width">
-                    width: <xsl:value-of select="@height"/>;
+                <xsl:if test="@tmp:width">
+                    width: <xsl:value-of select="@tmp:height"/>;
                 </xsl:if>
             }
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="z:table">
-        <xsl:if test="@width or @border or @cellspacing or @cellpadding">
+        <xsl:if test="@tmp:width or @tmp:border or @tmp:cellspacing or @tmp:cellpadding">
             #<xsl:value-of select="@xml:id"/>{
-            <xsl:if test="@width">
-                width: <xsl:value-of select="@width"/>;
+            <xsl:if test="@tmp:width">
+                width: <xsl:value-of select="@tmp:width"/>;
             </xsl:if>
-            <xsl:if test="@border">
-                border: <xsl:value-of select="@border"/>;
+            <xsl:if test="@tmp:border">
+                border: <xsl:value-of select="@tmp:border"/>;
             </xsl:if>
-            <xsl:if test="@cellspacing">
-                cellspacing: <xsl:value-of select="@cellspacing"/>;
+            <xsl:if test="@tmp:cellspacing">
+                cellspacing: <xsl:value-of select="@tmp:cellspacing"/>;
             </xsl:if>
-            <xsl:if test="@cellpadding">
-                cellpadding: <xsl:value-of select="@cellpadding"/>;
+            <xsl:if test="@tmp:cellpadding">
+                cellpadding: <xsl:value-of select="@tmp:cellpadding"/>;
             </xsl:if>
             }
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="z:col | z:colgroup">
-        <xsl:if test="@width or @align or @valign">
+        <xsl:if test="@tmp:width or @tmp:align or @tmp:valign">
             #<xsl:value-of select="@xml:id"/>{
-            <xsl:if test="@width">
-                width: <xsl:value-of select="@width"/>;
+            <xsl:if test="@tmp:width">
+                width: <xsl:value-of select="@tmp:width"/>;
             </xsl:if>
-            <xsl:if test="@align">
-                align: <xsl:value-of select="@align"/>;
+            <xsl:if test="@tmp:align">
+                align: <xsl:value-of select="@tmp:align"/>;
             </xsl:if>
-            <xsl:if test="@valign">
-                valign: <xsl:value-of select="@valign"/>;
+            <xsl:if test="@tmp:valign">
+                valign: <xsl:value-of select="@tmp:valign"/>;
             </xsl:if>
             }
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="z:th | z:td | z:tr | z:tbody | z:tfoot | z:thead">
-        <xsl:if test="@align or @valign">
+        <xsl:if test="@tmp:align or @tmp:valign">
             #<xsl:value-of select="@xml:id"/>{
-            <xsl:if test="@align">
-                align: <xsl:value-of select="@align"/>;
+            <xsl:if test="@tmp:align">
+                align: <xsl:value-of select="@tmp:align"/>;
             </xsl:if>
-            <xsl:if test="@valign">
-                valign: <xsl:value-of select="@valign"/>;
+            <xsl:if test="@tmp:valign">
+                valign: <xsl:value-of select="@tmp:valign"/>;
             </xsl:if>
             }
         </xsl:if>

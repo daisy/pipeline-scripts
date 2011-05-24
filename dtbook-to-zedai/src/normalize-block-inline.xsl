@@ -104,9 +104,9 @@
                                </xsl:element>
                            </xsl:when>-->
                            
-                           <!-- whitespace -->
+                           <!-- discard whitespace -->
                            <xsl:when test="self::text() and string-length(self::text()[normalize-space()]) = 0">
-                               <!-- TODO: ok to discard whitespace?-->
+                               
                            </xsl:when>
                            
                            <!-- all other elements must be block, so just copy them -->

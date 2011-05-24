@@ -28,7 +28,6 @@
 
         <xsl:choose>
             <xsl:when test="child::*/local-name() = $block-level-contents">
-                <!-- TODO need a "temporary" namespace -->
                 <xsl:element name="tmp:code-block">
                     <xsl:apply-templates/>
                 </xsl:element>

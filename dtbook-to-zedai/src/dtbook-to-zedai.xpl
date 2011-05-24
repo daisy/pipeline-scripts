@@ -9,32 +9,26 @@
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" 
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    exclude-inline-prefixes="cx p c cxo px tmp">
+    exclude-inline-prefixes="cx p c cxo px tmp xd">
 
-    <!-- 
-        
-        The main entry point for the DTBook-to-ZedAI module.
-        http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI
-        
-    -->
     <p:documentation>
-        <xd:short>Transform DTBook XML into ZedAI XML</xd:short>
+        <xd:short>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and extracts metadata and CSS.  Writes output files to disk. More information can be found at http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI.</xd:short>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
             <xd:organization>DAISY</xd:organization>
         </xd:author>
         <xd:maintainer>Marisa DeMeglio</xd:maintainer>
-        <xd:input port="source">Input DTBook file or sequence of DTBook files.</xd:input>
+        <xd:input port="source">Input DTBook file or sequence of DTBook files. Versions supported: 1.1.0, 2005-1, 2005-2, 2005-3. </xd:input>
         <xd:output port="result">Empty (results are written to disk).</xd:output>
         <xd:option name="output">URI of the output ZedAI file.</xd:option>
         
         <xd:import href="dtbook2005-3-to-zedai.xpl">For transforming DTBook 2005-3 to ZedAI</xd:import>
         <xd:import href="../../utilities/dtbook-utils/merge-dtbook-files/merge-dtbook-files.xpl">For merging DTBook files.</xd:import>
         <xd:import href="../../utilities/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl">For upgrading DTBook files from 2005-1 or -2 to 2005-3</xd:import>
-        <xd:import href="../../utilities/metadata-utils/generate-metadata.xpl">For generating external metadata</xd:import>
-        
+        <xd:import href="../../utilities/metadata-utils/generate-metadata.xpl">For generating external metadata</xd:import>    
     </p:documentation>
+    
     <p:input port="source" primary="true" sequence="true"/>
     <p:input port="parameters" kind="parameter"/>
 
@@ -132,7 +126,7 @@
 
     <!-- This is a step here instead of being an external library, because the following properties are required for generating CSS:
         * elements are stable (no more moving them around and potentially changing their IDs)
-        * CSS information is still available
+        * CSS information is still available (via @tmp:* attributes)
     -->
     <p:documentation>Generate CSS from the visual property attributes in the ZedAI document</p:documentation>
     <p:xslt name="generate-css">

@@ -27,7 +27,6 @@
 
             <xsl:for-each-group select="node()" group-ending-with="dtb:br">
                 <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
-                    <!-- TODO: need a "temporary" namespace, something like internal functions -->
                     <xsl:element name="tmp:ln">
                         <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
                     </xsl:element>
