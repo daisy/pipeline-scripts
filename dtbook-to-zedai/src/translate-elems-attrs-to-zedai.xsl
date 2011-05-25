@@ -62,72 +62,9 @@
     <xsl:template match="dtb:head">
         <head>
             <xsl:call-template name="attrs"/>
-
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
             <meta rel="z3986:profile"
                 resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
-
-            <xsl:for-each select="dtb:meta">
-                <xsl:choose>
-                    <xsl:when test="@name = 'dc:Title'">
-                        <meta property="dcterms:title" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Identifier'">
-                        <meta property="dcterms:identifier" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Creator'">
-                        <meta property="dcterms:creator" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Date'">
-                        <meta property="dcterms:date" content="{@content}" xml:id="meta-dcdate"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Publisher'">
-                        <meta property="dcterms:publisher" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Language'">
-                        <meta property="dcterms:language" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Subject'">
-                        <meta property="dcterms:subject" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Description'">
-                        <meta property="dcterms:description" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Contributor'">
-                        <meta property="dcterms:contributor" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Type'">
-                        <meta property="dcterms:type" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Format'">
-                        <meta property="dcterms:format" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Source'">
-                        <meta property="dcterms:source" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Relation'">
-                        <meta property="dcterms:relation" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Coverage'">
-                        <meta property="dcterms:coverage" content="{@content}"/>
-                    </xsl:when>
-                    <xsl:when test="@name = 'dc:Rights'">
-                        <meta property="dcterms:rights" content="{@content}"/>
-                    </xsl:when>
-
-                    <xsl:when test="@name = 'dtb:revisionDescription'">
-                        <meta property="dcterms:description" content="{@content}"
-                            about="#meta-dcdate"/>
-                    </xsl:when>
-                </xsl:choose>
-
-            </xsl:for-each>
-
-            <meta rel="z3986:meta-record" resource="">
-                <meta property="z3986:meta-record-type" about="{$mods-filename}"
-                    content="z3986:mods"/>
-                <meta property="z3986:meta-record-version" about="{$mods-filename}" content="3.3"/>
-            </meta>
         </head>
 
     </xsl:template>

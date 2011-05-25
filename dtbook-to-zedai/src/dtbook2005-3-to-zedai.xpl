@@ -15,8 +15,8 @@
             <xd:organization>DAISY</xd:organization>
         </xd:author>
         <xd:maintainer>Marisa DeMeglio</xd:maintainer>
-        <xd:input port="source">Input DTBook 2005-3 document.</xd:input>
-        <xd:output port="result">Ouptut ZedAI document with temporary style attributes (prefixed by tmp:).</xd:output>
+        <xd:input port="source">DTBook 2005-3 document.</xd:input>
+        <xd:output port="result">ZedAI document with temporary style attributes (prefixed by tmp:).</xd:output>
         <xd:option name="css-filename">URI of the CSS file that will go with this document.</xd:option>
         <xd:option name="mods-filename">URI of the MODS file that will go with this
             document.</xd:option>
