@@ -13,18 +13,15 @@
     <p:import href="handle-zedai-refs.xpl"/>
 
     <p:variable name="epub-file"
-        select="resolve-uri(
+        select="p:resolve-uri(
                     if ($output='') then concat(
                         if (matches($href,'[^/]+\..+$'))
                         then replace(tokenize($href,'/')[last()],'\..+$','')
                         else tokenize($href,'/')[last()],'.epub')
                     else if (ends-with($output,'.epub')) then $output 
-                    else concat($output,'.epub'))">
-        <p:inline>
-            <irrelevant/>
-        </p:inline>
-    </p:variable>
-    <p:variable name="epub-dir" select="resolve-uri('epub/',$epub-file)"/>
+                    else concat($output,'.epub'))"/>
+    
+    <p:variable name="epub-dir" select="p:resolve-uri('epub/',$epub-file)"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
     <!--=========================================================================-->
@@ -33,7 +30,8 @@
     <p:group name="initialization">
         <p:output port="result"/>
         <p:load name="load">
-            <p:with-option name="href" select="resolve-uri($href)"/>
+            <p:with-option name="href" select="p:resolve-uri($href)"/>
+            
         </p:load>
         <p:add-xml-base/>
     </p:group>
