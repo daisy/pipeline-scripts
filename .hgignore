@@ -14,6 +14,10 @@ syntax: glob
 # A hidden file created by the Mac OS X Finder.
 .DS_Store
 
+# files created by utf-x
+utfx_log.xml
+report.html
+
 # switch to regexp syntax.
 syntax: regexp
 
