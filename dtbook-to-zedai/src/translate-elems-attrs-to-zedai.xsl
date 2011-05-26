@@ -3,18 +3,18 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
-    xmlns:its="http://www.w3.org/2005/11/its" 
-    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    xmlns="http://www.daisy.org/ns/z3986/authoring/"
-    exclude-result-prefixes="xs dtb">
+    xmlns="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="xs dtb">
 
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-        <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work regarding content model normalization has already been done.</desc>
-        <param name="mods-filename">The URI of the MODS metadata file containing the record for this document.</param>
+        <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
+            regarding content model normalization has already been done.</desc>
+        <param name="mods-filename">The URI of the MODS metadata file containing the record for this
+            document.</param>
         <param name="css-filename">The URI of the CSS file for this document.</param>
     </doc>
-    
+
     <xsl:param name="mods-filename"/>
     <xsl:param name="css-filename"/>
 
@@ -36,7 +36,7 @@
     <xsl:template match="comment()">
         <xsl:copy/>
     </xsl:template>
-    
+
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
         <xsl:if test="@id">
@@ -79,7 +79,7 @@
     <xsl:template match="dtb:frontmatter">
         <frontmatter>
             <xsl:call-template name="attrs"/>
-            <section>
+            <section xml:id="{generate-id()}">
                 <xsl:apply-templates select="dtb:doctitle"/>
                 <xsl:apply-templates select="dtb:covertitle"/>
                 <xsl:apply-templates select="dtb:docauthor"/>
@@ -107,6 +107,10 @@
         match="dtb:level1|dtb:level2|dtb:level3|dtb:level4|dtb:level5|dtb:level6|dtb:level">
         <section>
             <xsl:call-template name="attrs"/>
+            <!-- sections must have IDs since they might be referenced by floating annotations -->
+            <xsl:if test="not(@id)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:apply-templates/>
         </section>
     </xsl:template>
@@ -160,7 +164,7 @@
                 <xsl:attribute name="rend:prefix">upper-roman</xsl:attribute>
             </xsl:if>
 
-            
+
             <xsl:if test="@type = 'ul'">
                 <xsl:attribute name="type">unordered</xsl:attribute>
             </xsl:if>
@@ -170,7 +174,7 @@
             <xsl:if test="@type = 'pl'">
                 <!-- no attributes added for type='pl' -->
             </xsl:if>
-            
+
             <xsl:apply-templates/>
         </list>
     </xsl:template>
@@ -208,7 +212,7 @@
             <xsl:if test="@width">
                 <xsl:attribute name="tmp:width" select="@width"/>
             </xsl:if>
-            
+
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -267,18 +271,22 @@
             <xsl:if test="$byValue">
                 <xsl:attribute name="by" select="$byValue"/>
             </xsl:if>
+
             <xsl:if test="$refValue">
                 <xsl:attribute name="ref" select="$refValue"/>
             </xsl:if>
+            
+            <!-- at this point, annotations could still be "floating', i.e. not anchored to anything.  this will get fixed in another step.  -->
+
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </annotation>
     </xsl:template>
-    
+
     <xsl:template match="tmp:annotation-block | tmp:annotation-phrase">
         <xsl:call-template name="createAnnotation"/>
     </xsl:template>
-    
+
     <xsl:template match="dtb:prodnote">
 
         <xsl:choose>
@@ -404,7 +412,7 @@
             <xsl:if test="@cellpadding">
                 <xsl:attribute name="tmp:cellpadding" select="@cellpadding"/>
             </xsl:if>
-            
+
             <xsl:call-template name="attrs"/>
 
             <!-- generate an ID for use by CSS -->
@@ -448,7 +456,7 @@
             <xsl:if test="@valign">
                 <xsl:attribute name="tmp:valign" select="@valign"/>
             </xsl:if>
-            
+
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -792,7 +800,7 @@
             <xsl:apply-templates/>
         </w>
     </xsl:template>
-    
+
     <xsl:template
         match="tmp:annotation-block/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
         dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
@@ -987,8 +995,7 @@
             <!-- is there ever a nested code-block ... ? -->
             <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
             <!-- TODO: wrap text too -->
-            <xsl:for-each-group
-                group-adjacent="local-name() = $wrap-in-p" select="*">
+            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>
