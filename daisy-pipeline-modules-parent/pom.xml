@@ -17,7 +17,7 @@
 		<module>../daisy.pipeline.modules.feature</module>
 		<module>../daisy.pipeline.modules.site</module>
 		<module>../metadata-utilities</module>
-		<module>../dtbook2zedai</module>  
+		<module>../dtbook-to-zedai</module>  
 	</modules>
  <repositories>
 		<repository>

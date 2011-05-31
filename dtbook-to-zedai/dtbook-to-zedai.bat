@@ -78,4 +78,4 @@ IF "%IN_FILE%"=="" (
 set CP=
 for %%f IN ("%LIB_DIR%\*.jar") do set CP=!CP!;"%%f"
 
-%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% -i source="%IN_FILE%" "%MODULE_DIR%\src\dtbook2zedai.xpl" output="%OUT_FILE%"
+%JAVA% -classpath %CP%  -Dcom.xmlcalabash.phonehome=false com.xmlcalabash.drivers.Main -c %CONF_CALABASH% -i source="%IN_FILE%" "%MODULE_DIR%\src\dtbook-to-zedai.xpl" output="%OUT_FILE%"

@@ -21,11 +21,11 @@ Convert the provided "Great Painters" sample DTBook to a ZedAI document:
 
 On Linux/Mac:
 
-$ dtbook2zedai.sh -o greatpainter-zedai.xml sample/greatpainters.xml
+$ dtbook-to-zedai.sh -o greatpainter-zedai.xml sample/greatpainters.xml
 
 On Windows:
 
-> dtbook2zedai.bat -o greatpainter-zedai.xml sample\greatpainters.xml
+> dtbook-to-zedai.bat -o greatpainter-zedai.xml sample\greatpainters.xml
 
 The input DTBook and produced ZedAI are validated against their RelaxNG schemas.
 

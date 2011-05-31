@@ -11,7 +11,7 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -22,7 +22,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -33,7 +33,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -44,7 +44,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -55,29 +55,29 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook2zedai.xpl</String>
+                                    <String xml:space="preserve">dtbook-to-zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">transform-dtbook2zedai.xpl</String>
+                                    <String xml:space="preserve">transform-dtbook-to-zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -110,7 +110,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -121,7 +121,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -132,7 +132,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -143,7 +143,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -275,7 +275,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -286,18 +286,18 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">src/dtbook2zedai.xpl</String>
+                                    <String xml:space="preserve">src/dtbook-to-zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -308,7 +308,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -319,7 +319,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -330,7 +330,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -341,7 +341,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -352,7 +352,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -363,7 +363,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -374,7 +374,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -385,7 +385,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -396,7 +396,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai-multivol</String>
+                                    <String xml:space="preserve">dtbook-to-zedai-multivol</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
@@ -433,7 +433,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/home/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook2zedai/normalize-section-block.xsl</String>
+                                    <String xml:space="preserve">file:/home/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/normalize-section-block.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -516,7 +516,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/home/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook2zedai/convert-linebreaks.xsl</String>
+                                    <String xml:space="preserve">file:/home/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/convert-linebreaks.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -599,7 +599,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/moveout-imggroup.xsl</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/moveout-imggroup.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -682,7 +682,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/moveout-imggroup.xsl</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/moveout-imggroup.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -848,7 +848,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/moveout-code.xsl</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/moveout-code.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -931,7 +931,7 @@
                                     <String xml:space="preserve"></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/moveout-imggroup.xsl</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/moveout-imggroup.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String xml:space="preserve">${currentFileURL}</String>
@@ -1083,9 +1083,9 @@
                                     </field>
                                     <field name="urls">
                                     <String-array>
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/dtbook-tests/dtbook-multivol-1.xml</String>
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/dtbook-tests/dtbook-multivol-2.xml</String>
-                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook2zedai/dtbook-tests/dtbook-multivol-3.xml</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/dtbook-tests/dtbook-multivol-1.xml</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/dtbook-tests/dtbook-multivol-2.xml</String>
+                                    <String xml:space="preserve">file:/Users/marisa/Devel/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/dtbook-tests/dtbook-multivol-3.xml</String>
                                     </String-array>
                                     </field>
                                     </xprocInputPort>
@@ -1340,7 +1340,7 @@
                                     <null/>
                                 </field>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="baseURL">
                                     <null/>
@@ -1448,7 +1448,7 @@
                                     <null/>
                                 </field>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook2zedai-multivol</String>
+                                    <String xml:space="preserve">dtbook-to-zedai-multivol</String>
                                 </field>
                                 <field name="baseURL">
                                     <null/>

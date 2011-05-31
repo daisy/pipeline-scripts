@@ -58,4 +58,4 @@ then
 	usageExit 1 "The input DTBook document must be set\n"
 fi
 
-calabash -i source=${IN_FILE// /%20} ${MODULE_DIR// /%20}/src/dtbook2zedai.xpl output=${OUT_FILE// /%20}
+calabash -i source=${IN_FILE// /%20} ${MODULE_DIR// /%20}/src/dtbook-to-zedai.xpl output=${OUT_FILE// /%20}
