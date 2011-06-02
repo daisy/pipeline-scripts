@@ -36,7 +36,7 @@
     <p:input port="source" primary="true" sequence="true"/>
     <p:input port="parameters" kind="parameter"/>
 
-    <p:option name="output" select="''"/>
+    <p:option name="output" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="dtbook2005-3-to-zedai.xpl"/>
@@ -45,10 +45,8 @@
     <p:import href="../../utilities/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils-library.xpl"/>
 
-    <!-- TODO: multivolume document context in parameter problem e.g. -->
-    <p:variable name="test-var" select="'xyz'"/>
 
-    <p:variable name="zedai-file"
+    <!--<p:variable name="zedai-file1"
         select="resolve-uri(
                     if ($output='') then concat(
                         if (matches(base-uri(/),'[^/]+\..+$'))
@@ -58,19 +56,17 @@
                     else concat($output,'.xml'), base-uri(/))">
         <p:pipe step="dtbook-to-zedai" port="source"/>
 
-    </p:variable>
+    </p:variable>-->
 
-    <!-- TODO: mods and css files should be relative URIs -->
+    <p:variable name="zedai-file" select="$output"/>
     <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
     <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
 
-    <cx:message>
-        <p:with-option name="message" select="base-uri(/)"/>
-    </cx:message>
+    
 
     <cx:message message="Output ZedAI file:"/>
     <cx:message>
-        <p:with-option name="message" select="$zedai-file"/>
+        <p:with-option name="message" select="$output"/>
     </cx:message>
     
     <!-- =============================================================== -->
@@ -123,8 +119,8 @@
         <p:input port="source">
             <p:pipe port="result" step="validate-dtbook"/>
         </p:input>
-        <p:with-option name="css-filename" select="$css-file"/>
-        <p:with-option name="mods-filename" select="$mods-file"/>
+        <p:with-option name="css-filename" select="tokenize($css-file, '/')[last()]"/>
+        <p:with-option name="mods-filename" select="tokenize($mods-file, '/')[last()]"/>
     </pxi:dtbook2005-3-to-zedai>
 
 

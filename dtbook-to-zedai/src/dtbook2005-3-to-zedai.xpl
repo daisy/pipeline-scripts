@@ -29,7 +29,7 @@
 
     <p:input port="parameters" kind="parameter"/>
 
-    <!-- output is ZedAI, not valid -->
+    <!-- output is ZedAI -->
     <p:output port="result" primary="true">
         <p:pipe port="result" step="anchor-floating-annotations"/>
     </p:output>

@@ -13,10 +13,6 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="comment()">
-        <xsl:copy/>
-    </xsl:template>
-    
     <!-- identity template -->
     <xsl:template match="@*|node()">
         <xsl:copy>

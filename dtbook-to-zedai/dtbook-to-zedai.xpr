@@ -17,7 +17,7 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">testing/bookshare_books/Collin_Katai__Sollin_Kathai_.xml</String>
+                                    <String xml:space="preserve">src/dtbook-to-zedai.xpl</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -44,24 +44,13 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                    <String xml:space="preserve">dtbook-to-zedai-multivol</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-basic.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-to-zedai.xpl</String>
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-multivol-1.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -72,304 +61,7 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">transform-dtbook-to-zedai.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-definition-lists.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">linebreaks-2</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">utfx/test.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">moveout-imggroup</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">utfx/moveout-imggroup.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-imggroup.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-css.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-poem.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-meta.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-mixed-section</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-mixed-section.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-merger</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-multivol-3.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-merger</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-merger.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">find-parents</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">find-parents</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XML</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">linebreaks-2</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">xslt-unit-tests/linebreaks-2.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">temp</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/temp.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">test</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../dtbook-basic.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">test</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">../../../test.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-mixed-section</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XSL</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">normalize-section-block.xsl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">dtbook-tests/dtbook-code.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">src/dtbook-to-zedai.xpl</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-css.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-definition-lists.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-mixed-section.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-meta.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-mixed-text.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-code.xml</String>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai</String>
-                                </field>
-                                <field name="type">
-                                    <String xml:space="preserve">XPROC</String>
-                                </field>
-                                <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-poem.xml</String>
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-imggroup.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
@@ -391,18 +83,326 @@
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-imggroup.xml</String>
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-poem.xml</String>
                                 </field>
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="name">
-                                    <String xml:space="preserve">dtbook-to-zedai-multivol</String>
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
                                 </field>
                                 <field name="type">
                                     <String xml:space="preserve">XPROC</String>
                                 </field>
                                 <field name="url">
-                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-multivol-1.xml</String>
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-code.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-mixed-text.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-meta.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-mixed-section.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-definition-lists.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/dtbook-tests/dtbook-css.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-code.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-mixed-section</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">normalize-section-block.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">test</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../test.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">test</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../dtbook-basic.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">temp</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/temp.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">linebreaks-2</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">xslt-unit-tests/linebreaks-2.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">find-parents</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XML</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xsl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">find-parents</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../marisa/oneliners/find-parents.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-merger</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-merger.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-merger</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-multivol-3.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">fo/fo.framework/FO/FO PDF</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">../../../sandbox/xslt/hellopdf.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-mixed-section</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-mixed-section.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-meta.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-poem.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-css.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-imggroup.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">moveout-imggroup</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">utfx/moveout-imggroup.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">linebreaks-2</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XSL</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">utfx/test.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-definition-lists.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">transform-dtbook-to-zedai.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-to-zedai.xpl</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">dtbook-tests/dtbook-basic.xml</String>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="name">
+                                    <String xml:space="preserve">dtbook-to-zedai</String>
+                                </field>
+                                <field name="type">
+                                    <String xml:space="preserve">XPROC</String>
+                                </field>
+                                <field name="url">
+                                    <String xml:space="preserve">testing/bookshare_books/Collin_Katai__Sollin_Kathai_.xml</String>
                                 </field>
                             </scenarioAssociation>
                         </scenarioAssociation-array>
@@ -1328,13 +1328,30 @@
                                     <String xml:space="preserve">output</String>
                                     </field>
                                     <field name="value">
-                                    <String xml:space="preserve"></String>
+                                    <String xml:space="preserve">/Users/marisa/Projects/pipeline2/daisy-pipeline-modules/dtbook-to-zedai/testing/dtbook-tests/zedai-out.xml</String>
                                     </field>
                                     </xprocOption>
                                     </xprocOption-array>
                                 </field>
                                 <field name="xprocParameters">
-                                    <xprocParameterPort-array/>
+                                    <xprocParameterPort-array>
+                                    <xprocParameterPort>
+                                    <field name="portName">
+                                    <String xml:space="preserve">parameters</String>
+                                    </field>
+                                    <field name="parameters">
+                                    <xprocParameter-array/>
+                                    </field>
+                                    </xprocParameterPort>
+                                    <xprocParameterPort>
+                                    <field name="portName">
+                                    <String xml:space="preserve">*</String>
+                                    </field>
+                                    <field name="parameters">
+                                    <xprocParameter-array/>
+                                    </field>
+                                    </xprocParameterPort>
+                                    </xprocParameterPort-array>
                                 </field>
                                 <field name="advancedOptionsMap">
                                     <null/>
