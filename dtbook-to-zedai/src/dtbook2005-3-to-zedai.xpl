@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook2005-3-to-zedai" type="pxi:dtbook2005-3-to-zedai"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:p="http://www.w3.org/ns/xproc" 
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
-    exclude-inline-prefixes="cx cxo pxi p c xd">
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" exclude-inline-prefixes="cx cxo pxi p c xd">
 
     <p:documentation>
         <xd:short>Transforms DTBook 2005-3 XML into ZedAI XML. Part of the DTBook-to-ZedAI
@@ -19,23 +19,15 @@
         <xd:input port="source">DTBook 2005-3 document.</xd:input>
         <xd:output port="result">ZedAI document with temporary style attributes (prefixed by
             tmp:).</xd:output>
-        <xd:option name="css-filename">URI of the CSS file that will go with this
-            document.</xd:option>
-        <xd:option name="mods-filename">URI of the MODS file that will go with this
-            document.</xd:option>
     </p:documentation>
 
     <p:input port="source" primary="true"/>
-
     <p:input port="parameters" kind="parameter"/>
 
     <!-- output is ZedAI -->
     <p:output port="result" primary="true">
         <p:pipe port="result" step="anchor-floating-annotations"/>
     </p:output>
-
-    <p:option name="css-filename" required="true"/>
-    <p:option name="mods-filename" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
@@ -197,8 +189,6 @@
 
     <p:documentation>Translate element and attribute names from DTBook to ZedAI</p:documentation>
     <p:xslt name="translate-to-zedai">
-        <p:with-param name="mods-filename" select="$mods-filename"/>
-        <p:with-param name="css-filename" select="$css-filename"/>
         <p:input port="stylesheet">
             <p:document href="./translate-elems-attrs-to-zedai.xsl"/>
         </p:input>

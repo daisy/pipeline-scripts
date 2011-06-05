@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:its="http://www.w3.org/2005/11/its" 
-    exclude-result-prefixes="xs" version="2.0">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:its="http://www.w3.org/2005/11/its" exclude-result-prefixes="xs" version="2.0">
 
     <xsl:output indent="yes" method="xml"/>
 
@@ -17,14 +15,14 @@
         this works for elements with dtbook inline content models.
     -->
 
-   <xsl:template match="dtb:lic">
-       <xsl:call-template name="element2span"/>
-   </xsl:template>
-    
+    <xsl:template match="dtb:lic">
+        <xsl:call-template name="element2span"/>
+    </xsl:template>
+
     <xsl:template match="dtb:dd/dtb:p | dtb:dd/dtb:address">
         <xsl:call-template name="element2span"/>
     </xsl:template>
-    
+
     <xsl:template match="dtb:dd/dtb:dateline">
         <xsl:call-template name="element2span">
             <xsl:with-param name="role">time</xsl:with-param>
@@ -35,8 +33,9 @@
             <xsl:with-param name="role">author</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    
-    <xsl:template match="dtb:abbr/dtb:code | dtb:acronym/dtb:code | dtb:dt/dtb:code | 
+
+    <xsl:template
+        match="dtb:abbr/dtb:code | dtb:acronym/dtb:code | dtb:dt/dtb:code | 
         dtb:sub/dtb:code | dtb:sup/dtb:code | dtb:w/dtb:code">
         <xsl:call-template name="element2span"/>
     </xsl:template>
@@ -44,14 +43,18 @@
     <xsl:template
         match="dtb:abbr/dtb:noteref | dtb:acronym/dtb:noteref | dtb:dt/dtb:noteref | 
         dtb:sub/dtb:noteref | dtb:sup/dtb:noteref | dtb:w/dtb:noteref">
-        <!-- TODO: warn about loss of data -->
+        <xsl:message>WARNING: 'ref' attribute lost when transforming 'noteref' element into span. Source
+            element ID = <xsl:value-of select="@id"/>. REF = <xsl:value-of select="@ref"
+            /></xsl:message>
         <xsl:call-template name="element2span"/>
     </xsl:template>
 
     <xsl:template
         match="dtb:abbr/dtb:annoref | dtb:acronym/dtb:annoref | dtb:dt/dtb:annoref | 
         dtb:sub/dtb:annoref | dtb:sup/dtb:annoref | dtb:w/dtb:annoref">
-        <!-- TODO: warn about loss of data -->
+        <xsl:message>WARNING: 'ref' attribute lost when transforming 'annoref' element into span. Source
+            element ID = <xsl:value-of select="@id"/>. REF = <xsl:value-of select="@href"
+            /></xsl:message>
         <xsl:call-template name="element2span"/>
     </xsl:template>
 
@@ -60,14 +63,16 @@
         dtb:sub/dtb:kbd | dtb:sup/dtb:kbd | dtb:w/dtb:kbd">
         <xsl:call-template name="element2span"/>
     </xsl:template>
-    
 
-    <xsl:template match="dtb:abbr/dtb:q | dtb:acronym/dtb:q | dtb:dt/dtb:q | 
+
+    <xsl:template
+        match="dtb:abbr/dtb:q | dtb:acronym/dtb:q | dtb:dt/dtb:q | 
         dtb:sub/dtb:q | dtb:sup/dtb:q | dtb:w/dtb:q | dtb:strong/dtb:q">
         <xsl:call-template name="element2span"/>
     </xsl:template>
 
-    <xsl:template match="dtb:abbr/dtb:sent | dtb:acronym/dtb:sent | dtb:dt/dtb:sent | 
+    <xsl:template
+        match="dtb:abbr/dtb:sent | dtb:acronym/dtb:sent | dtb:dt/dtb:sent | 
         dtb:sub/dtb:sent | dtb:sup/dtb:sent">
         <xsl:call-template name="element2span">
             <xsl:with-param name="role">sentence</xsl:with-param>
@@ -75,34 +80,35 @@
     </xsl:template>
 
     <xsl:template match="dtb:sub/dtb:acronym | dtb:sup/dtb:acronym | dtb:w/dtb:acronym">
-            <xsl:choose>
-                <xsl:when test="@pronounce = 'yes'">
-                    <xsl:call-template name="element2span">
-                        <xsl:with-param name="role">acronym</xsl:with-param>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:call-template name="element2span">
-                        <xsl:with-param name="role">initialism</xsl:with-param>
-                    </xsl:call-template>
-                </xsl:otherwise>
-            </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="@pronounce = 'yes'">
+                <xsl:call-template name="element2span">
+                    <xsl:with-param name="role">acronym</xsl:with-param>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="element2span">
+                    <xsl:with-param name="role">initialism</xsl:with-param>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template match="dtb:sub/dtb:abbr | dtb:sup/dtb:abbr | dtb:w/dtb:abbr">
         <xsl:call-template name="element2span">
             <xsl:with-param name="role">truncation</xsl:with-param>
         </xsl:call-template>
-        
+
     </xsl:template>
-    
+
     <xsl:template match="dtb:sub/dtb:w | dtb:sup/dtb:w">
         <xsl:call-template name="element2span">
             <xsl:with-param name="role">word</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    
-    <xsl:template match="dtb:a/dtb:samp | dtb:abbr/dtb:samp | dtb:acronym/dtb:samp | 
+
+    <xsl:template
+        match="dtb:a/dtb:samp | dtb:abbr/dtb:samp | dtb:acronym/dtb:samp | 
         dtb:author/dtb:samp | dtb:bdo/dtb:samp | dtb:bridgehead/dtb:samp | 
         dtb:byline/dtb:samp | 
         dtb:cite/dtb:samp | dtb:dateline/dtb:samp | dtb:dd/dtb:samp | dtb:dfn/dtb:samp | 
@@ -118,20 +124,22 @@
             <xsl:with-param name="role">example</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    
+
     <xsl:template
         match="dtb:abbr/dtb:dfn | dtb:acronym/dtb:dfn | dtb:dt/dtb:dfn | 
         dtb:sub/dtb:dfn | dtb:sup/dtb:dfn | dtb:w/dtb:dfn">
         <xsl:call-template name="element2span"/>
     </xsl:template>
-    
+
     <xsl:template
         match="dtb:abbr/dtb:a | dtb:acronym/dtb:a | dtb:dt/dtb:a | dtb:sub/dtb:a | 
         dtb:sup/dtb:a | dtb:w/dtb:a">
-        <!-- TODO: warn about loss of data -->
+        <xsl:message>WARNING: 'href' attribute lost when transforming 'a' element into span. Source
+            element ID = <xsl:value-of select="@id"/>. HREF = <xsl:value-of select="@href"
+            /></xsl:message>
         <xsl:call-template name="element2span"/>
     </xsl:template>
-    
+
     <xsl:template match="dtb:bdo">
         <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
             <xsl:attribute name="its:dir" select="@dir"/>
@@ -139,11 +147,12 @@
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
-    
-    
+
+
     <!-- TODO: check if we should check <em> too -->
     <!-- TODO: why did we use @property and not @role?  -->
-    <xsl:template match="dtb:abbr/dtb:cite | dtb:acronym/dtb:cite | 
+    <xsl:template
+        match="dtb:abbr/dtb:cite | dtb:acronym/dtb:cite | 
         dtb:dt/dtb:cite | dtb:sub/dtb:cite | dtb:sup/dtb:cite | dtb:w/dtb:cite | 
         dtb:strong/dtb:cite">
         <!-- generate an ID, we might need it -->
@@ -155,13 +164,13 @@
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="$citeID"/>
             </xsl:if>
-            
+
             <xsl:for-each select="child::node()">
-                
+
                 <xsl:choose>
                     <xsl:when test="local-name() = 'title'">
                         <xsl:element name="span" namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                        <xsl:attribute name="property">title</xsl:attribute>
+                            <xsl:attribute name="property">title</xsl:attribute>
                             <xsl:attribute name="about">
                                 <xsl:choose>
                                     <xsl:when test="parent::node()/@id">
@@ -210,14 +219,16 @@
                         </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+                        <xsl:copy>
+                            <xsl:apply-templates select="@*|node()"/>
+                        </xsl:copy>
                     </xsl:otherwise>
                 </xsl:choose>
-                
+
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- create a span with an optional role -->
     <xsl:template name="element2span">
         <xsl:param name="role"/>
