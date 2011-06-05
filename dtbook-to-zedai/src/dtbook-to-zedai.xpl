@@ -14,7 +14,7 @@
     <p:documentation>
         <xd:short>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
             extracts metadata and CSS. Writes output files to disk. More information can be found at
-            http://code.google.com/p/daisy-pipeline/wiki/DTBook2ZedAI.</xd:short>
+            http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI.</xd:short>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
@@ -213,6 +213,7 @@
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
+        <p:log href="log.xml" port="result"/>
     </px:dtbook-to-zedai-meta>
 
     <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
