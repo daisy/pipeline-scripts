@@ -151,3 +151,42 @@ Binding(COMMAND+SHIFT+G,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	com.oxygenxml.editor.allEditorsScope,,,system)
+!SESSION 2011-06-07 22:51:17.943 -----------------------------------------------
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_24
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/marisa/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/marisa/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2011-06-07 22:51:25.644
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.jface 2 0 2011-06-07 22:52:15.614
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2011-06-07 22:52:15.615
+!MESSAGE A conflict occurred for COMMAND+SHIFT+G:
+Binding(COMMAND+SHIFT+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace,References in Workspace,
+		Search for references to the selected element in the workspace,
+		Category(org.eclipse.search.ui.category.search,Search,Search command category,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+G,
+	ParameterizedCommand(Command(com.oxygenxml.editor.goToMatchingTag,Go to Matching Tag,
+		Go to matching tag,
+		Category(com.oxygenxml.editor.category.OxygenXMLEditor,oXygen XML Editor,oXygen XML Editor commands,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.oxygenxml.editor.editors.xml.AbstractXMLTextEditor$26@2bc25a1d)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.oxygenxml.editor.xmlCommonEditorScope,,,system)
+Binding(COMMAND+SHIFT+G,
+	ParameterizedCommand(Command(com.oxygenxml.editor.goToMatchingBracket,Go to matching bracket,
+		Go to matching bracket,
+		Category(com.oxygenxml.editor.category.OxygenXMLEditor,oXygen XML Editor,oXygen XML Editor commands,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.oxygenxml.editor.allEditorsScope,,,system)
