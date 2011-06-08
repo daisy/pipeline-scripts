@@ -30,13 +30,21 @@
         <xd:import href="../../utilities/dtbook-utils/dtbook-utils-library.xpl">External utility for
             merging and upgrading DTBook files.</xd:import>
         <xd:import href="../../utilities/metadata-utils/metadata-utils-library.xpl">External utility
-            for generating metadata.</xd:import>
+        for generating metadata.</xd:import>
+        
+        <cd:converter name="dtbook-to-zedai" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/dtbook-to-zedai">
+            <cd:description>Convert DTBook XML to ZedAI XML</cd:description>  
+            <cd:arg  name="in"  type="input" port="source" desc="DTBook input file(s)" optional="false"/>         
+            <cd:arg  name="o"  type="option" bind="output-file" desc="Output file path" optional="false"/>
+        </cd:converter>     
+        
+        
     </p:documentation>
 
     <p:input port="source" primary="true" sequence="true"/>
     <p:input port="parameters" kind="parameter"/>
 
-    <p:option name="output" required="true"/>
+    <p:option name="output-file" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="dtbook2005-3-to-zedai.xpl"/>
@@ -44,13 +52,13 @@
     <p:import href="http://www.daisy.org/ns/pipeline/module/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="http://www.daisy.org/ns/pipeline/module/dtbook-utils/dtbook-utils-library.xpl"/>
 
-    <p:variable name="zedai-file" select="$output"/>
+    <p:variable name="zedai-file" select="$output-file"/>
     <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
     <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
 
     <cx:message message="Output ZedAI file:"/>
     <cx:message>
-        <p:with-option name="message" select="$output"/>
+        <p:with-option name="message" select="$output-file"/>
     </cx:message>
 
     <!-- =============================================================== -->

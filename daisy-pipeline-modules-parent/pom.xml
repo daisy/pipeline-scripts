@@ -16,8 +16,10 @@
 		<module>../modules-target-platform</module>
 		<module>../daisy.pipeline.modules.feature</module>
 		<module>../daisy.pipeline.modules.site</module>
-		<module>../metadata-utilities</module>
+		<!--<module>../metadata-utilities</module>-->
 		<module>../dtbook-to-zedai</module>  
+	    <module>../utilities/dtbook-utils</module>
+	    <module>../utilities/metadata-utils</module>
 	</modules>
  <repositories>
 		<repository>
