@@ -1,3 +1,4 @@
 #!/bin/bash
+set -x
 SCRIPTPATH=`dirname $0 | xargs readlink -f`
-$HOME/utf-x/utfx.sh -Dutfx.test.dir=$SCRIPTPATH/
+$UTFX_HOME/utfx.sh -Dutfx.test.dir=$SCRIPTPATH

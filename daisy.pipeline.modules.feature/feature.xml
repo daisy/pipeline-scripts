@@ -16,16 +16,19 @@
       [Enter License Description here.]
    </license>
 
-   <plugin
+   <!--<plugin
          id="metadata-utilities"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="dtbook2zedai"
+         id="dtbook-to-zedai"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+   -->
+   <plugin id="metadata-utils" download-size="0" install-size="0" version="0.0.0"/>
+   <plugin id="dtbook-utils" download-size="0" install-size="0" version="0.0.0"/>
+   <plugin id="dtbook-to-zedai" download-size="0" install-size="0" version="0.0.0"/>
 </feature>

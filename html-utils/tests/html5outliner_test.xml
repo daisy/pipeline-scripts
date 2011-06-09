@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE utfx:tests PUBLIC "-//UTF-X//DTD utfx-tests 1.0//EN" "utfx_tests.dtd">
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition">
+  <utfx:stylesheet src="html5outliner.xsl"/>
+
+  <utfx:test>
+    <utfx:name>html 5 outliner basic</utfx:name>
+    <utfx:stylesheet-params>
+      <utfx:with-param name="depth" select="2"/>
+      <utfx:with-param name="visible-depth" select="2"/>
+    </utfx:stylesheet-params>
+    <utfx:assert-equal normalise-internal-whitespace="yes">
+      <utfx:source>
+				<html>
+					<body>
+					 <h1>Foo</h1>
+					 <h2>Bar</h2>
+					 <blockquote>
+						<h3>Bla</h3>
+					 </blockquote>
+					 <p>Baz</p>
+					 <h2>Quux</h2>
+					 <section>
+						<h3>Thud</h3>
+					 </section>
+					 <p>Grunt</p>
+					</body>
+				</html>
+      </utfx:source>
+      <utfx:expected>
+				<html>
+					<body>
+					 <h1>Outline</h1>
+					 <ol>
+						 <li>Foo</li>
+						 <ol>
+							 <li>Bar</li>
+							 <li>Quux</li>
+							 <li>Thuud</li>
+						 </ol>
+					 </ol>
+					</body>
+				</html>
+			</utfx:expected>
+    </utfx:assert-equal>
+  </utfx:test>
+
+</utfx:tests>

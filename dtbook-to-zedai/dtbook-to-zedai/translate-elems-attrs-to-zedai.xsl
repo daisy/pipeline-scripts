@@ -10,25 +10,19 @@
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
             regarding content model normalization has already been done.</desc>
-        <param name="mods-filename">The URI of the MODS metadata file containing the record for this
-            document.</param>
-        <param name="css-filename">The URI of the CSS file for this document.</param>
     </doc>
-
-    <xsl:param name="mods-filename"/>
+    
     <xsl:param name="css-filename"/>
 
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
+        
         <!-- just for testing: insert the oxygen schema reference -->
-        <xsl:processing-instruction name="oxygen">
+        <!--<xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="../../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
-        </xsl:processing-instruction>
-
-        <xsl:processing-instruction name="xml-stylesheet"> href="<xsl:value-of
-                select="$css-filename"/>" </xsl:processing-instruction>
+        </xsl:processing-instruction>-->
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>

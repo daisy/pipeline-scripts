@@ -16,12 +16,11 @@
 		<module>../modules-target-platform</module>
 		<module>../daisy.pipeline.modules.feature</module>
 		<module>../daisy.pipeline.modules.site</module>
-		<module>../metadata-utilities</module>
-		<module>../dtbook2zedai</module>
-		<module>../utilities/epub3-nav-utils</module>
-		<module>../utilities/epub3-ocf-utils</module>
+		<module>../dtbook-to-zedai</module>  
+		<module>../utilities/dtbook-utils</module>
 		<module>../utilities/file-utils</module>
 		<module>../utilities/fileset-utils</module>
+		<module>../utilities/metadata-utils</module>
 		<module>../utilities/zip-utils</module>
 	</modules>
  <repositories>
