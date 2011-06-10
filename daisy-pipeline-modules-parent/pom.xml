@@ -22,6 +22,7 @@
 		<module>../utilities/fileset-utils</module>
 		<module>../utilities/metadata-utils</module>
 		<module>../utilities/zip-utils</module>
+		<module>../html-utils</module>
 	</modules>
  <repositories>
 		<repository>
