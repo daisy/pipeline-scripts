@@ -29,7 +29,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="dtbook2zedai"
+         id="dtbook-to-zedai"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
