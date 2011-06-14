@@ -46,4 +46,34 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="mediatype-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="daisy202-to-epub3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.file-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.fileset-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.zip-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
