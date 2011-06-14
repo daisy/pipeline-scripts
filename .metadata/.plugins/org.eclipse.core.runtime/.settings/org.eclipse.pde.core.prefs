@@ -1,4 +1,22 @@
-#Tue Jun 07 18:44:04 PDT 2011
-workspace_target_handle=local\:1307490892447.target
+#Fri Jun 10 10:00:42 CEST 2011
+target_platform_realization=false
+org.eclipse.pde.ui.os=linux
+additional_locations=/home/jostein/daisy-pipeline-modules/modules-target-platform/../daisy.pipeline.modules.site/target/site
+program_args=
+platform_path=/home/jostein/daisy-pipeline-modules/modules-target-platform/../../daisy-pipeline/daisy.pipeline.site/target/site
 eclipse.preferences.version=1
-platform_path=/Applications/eclipse
+target_mode=useOther
+target.profile=
+checkedPlugins=[savedAll]
+checkedVersionPlugins=[savedNone]
+org.eclipse.pde.ui.arch=x86_64
+saved_platform3=
+saved_platform2=
+saved_platform1=
+saved_platform0=/home/jostein/daisy-eclipse
+workspace_target_handle=resource\:/modules-target-platform/modules-tp.target
+org.eclipse.pde.ui.ws=gtk
+pooled_urls=
+org.eclipse.pde.ui.nl=nb_NO
+external_features=
+vm_args=
