@@ -4,9 +4,17 @@
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
-
+    
+    <p:pipeinfo>
+        <cd:converter name="daisy202-to-epub3" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
+            <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>  
+            <cd:arg  name="href"  type="option" bind="href" desc="Path to input NCC."/>
+            <cd:arg  name="output"  type="option" bind="output" desc="Path to output directory for the EPUB."/>
+        </cd:converter>
+    </p:pipeinfo>
+    
     <p:documentation xd:target="parent">
-        <xd:short>Transforms a DAISY 2.02-book into an EPUB 3-book.</xd:short>
+        <xd:short>Transforms a DAISY 2.02-book into an EPUB3-book.</xd:short>
         <xd:author>
             <xd:name>Jostein Austvik Jacobsen</xd:name>
             <xd:mailto>josteinaj@gmail.com</xd:mailto>
