@@ -3,7 +3,9 @@
 
 <target name="modules-tp">
 <locations>
-<location path="${project_loc}/../../daisy-pipeline/daisy.pipeline.site/target/site" type="Directory"/>
-<location path="${project_loc}/../daisy.pipeline.modules.site/target/site" type="Directory"/>
+	<location path="${project_loc}/../../daisy-pipeline/daisy.pipeline.site/target/site" type="Directory"/>
+	<location path="${project_loc}/../daisy.pipeline.modules.site/target/site" type="Directory"/>
+
 </locations>
+
 </target>

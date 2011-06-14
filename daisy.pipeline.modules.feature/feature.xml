@@ -29,7 +29,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="dtbook-to-zedai"
+         id="dtbook2zedai"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -42,6 +42,12 @@
 
    <plugin
          id="html-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="metadata-utilities"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
