@@ -1786,3 +1786,10 @@ org.eclipse.core.internal.resources.ResourceException: Resource is out of sync w
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
 !SUBENTRY 2 org.eclipse.core.resources 4 274 2011-06-14 10:31:30.310
 !MESSAGE Resource is out of sync with the file system: '/daisy.pipeline.modules.feature/target/daisy.modules.feature-1.0.0-SNAPSHOT.jar'.
+
+!ENTRY org.eclipse.core.resources 2 2 2011-06-14 20:06:53.999
+!MESSAGE Save operation warnings.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2011-06-14 20:06:53.999
+!MESSAGE The project description file (.project) for 'dtbook2zedai' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2011-06-14 20:06:53.999
+!MESSAGE The project description file (.project) for 'metadata-utilities' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
