@@ -32,7 +32,7 @@
         <xd:import href="../../utilities/metadata-utils/metadata-utils-library.xpl">External utility
         for generating metadata.</xd:import>
         
-        <cd:converter name="dtbook-to-zedai" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/dtbook-to-zedai">
+        <cd:converter name="dtbook-to-zedai" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
             <cd:description>Convert DTBook XML to ZedAI XML</cd:description>  
             <cd:arg  name="in"  type="input" port="source" desc="DTBook input file(s)" optional="false"/>         
             <cd:arg  name="o"  type="option" bind="output-file" desc="Output file path" optional="false"/>

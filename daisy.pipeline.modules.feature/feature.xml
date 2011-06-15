@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="metadata-utils"
+         id="org.daisy.pipeline.metadata-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -35,13 +35,13 @@
          version="0.0.0"/>
 
    <plugin
-         id="metadata-utilities"
+         id="org.daisy.pipeline.dtbook-to-zedai"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="dtbook-utils"
+         id="org.daisy.pipeline.dtbook-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
