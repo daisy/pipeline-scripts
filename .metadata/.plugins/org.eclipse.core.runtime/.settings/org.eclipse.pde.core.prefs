@@ -1,7 +1,7 @@
-#Mon Jun 13 08:50:42 BST 2011
+#Thu Jun 16 20:02:25 BST 2011
 target_platform_realization=false
 org.eclipse.pde.ui.os=linux
-additional_locations=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../daisy.pipeline.modules.site/target/site
+additional_locations=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../daisy.pipeline.modules.site/target/site,/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../../daisy-pipeline/repo
 program_args=
 platform_path=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../../daisy-pipeline/daisy.pipeline.site/target/site
 eclipse.preferences.version=1
@@ -11,10 +11,10 @@ checkedPlugins=[savedAll]
 checkedVersionPlugins=[savedNone]
 org.eclipse.pde.ui.arch=x86_64
 saved_platform3=/home/javi/dedicon/daisy/daisy-pipeline-modules/../daisy-pipeline/daisy.pipeline.site/target/site
-saved_platform2=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../../daisy-pipeline/daisy.pipeline.site/target/site
+saved_platform2=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../daisy.pipeline.modules.site/target/site
 saved_platform1=/home/javi/eclipse/eclipse
-saved_platform0=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../daisy.pipeline.modules.site/target/site
-workspace_target_handle=resource\:/modules-target-platform/modules-tp.target
+saved_platform0=/home/javi/dedicon/daisy/daisy-pipeline-modules/modules-target-platform/../../daisy-pipeline/daisy.pipeline.site/target/site
+workspace_target_handle=local\:1308250861255.target
 org.eclipse.pde.ui.ws=gtk
 pooled_urls=
 org.eclipse.pde.ui.nl=en_GB

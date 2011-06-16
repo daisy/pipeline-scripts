@@ -5,6 +5,7 @@
 <locations>
 	<location path="${project_loc}/../../daisy-pipeline/daisy.pipeline.site/target/site" type="Directory"/>
 	<location path="${project_loc}/../daisy.pipeline.modules.site/target/site" type="Directory"/>
+	<location path="${project_loc}/../../daisy-pipeline/repo" type="Directory"/>
 
 </locations>
 
