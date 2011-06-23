@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ZedAI to EPUB 3
+Bundle-SymbolicName: org.daisy.pipeline.zedai-to-epub3
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: converter-registry,
+ module-common,
+ html-utils,
+ mediatype-utils,
+ org.daisy.pipeline.file-utils,
+ org.daisy.pipeline.fileset-utils,
+ org.daisy.pipeline.zip-utils
+Service-Component: OSGI-INF/daisy202-to-epub3.xml
+Bundle-Vendor: DAISY Consortium
