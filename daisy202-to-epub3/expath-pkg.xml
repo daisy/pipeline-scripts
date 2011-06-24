@@ -1,8 +1,8 @@
-<package name="http://www.daisy.org/ns/pipeline/module/daisy202-to-epub3" xmlns="http://expath.org/ns/pkg">
+<package name="org.daisy.pipeline.modules.daisy202-to-epub3" xmlns="http://expath.org/ns/pkg">
     <module version="1.0.0" name="daisy202-to-epub3">
         <title>DAISY 2.02 to EPUB3</title>
         <xslt>
-            <import-uri>http://www.daisy.org/ns/pipeline/module/daisy202-to-epub3/daisy202-to-epub3.xpl</import-uri>
+            <import-uri>http://www.daisy.org/pipeline/modules/daisy202-to-epub3/daisy202-to-epub3.xpl</import-uri>
             <file>daisy202-to-epub3.xpl</file>
         </xslt>
     </module>

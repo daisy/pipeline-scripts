@@ -5,6 +5,6 @@
     </service>
     <property name="converter.name" type="String" value="dtbook-to-zedai"/>
     <property name="converter.description" type="String" value="Convert DTBook XML to ZedAI XML"/>
-    <property name="converter.url" type="String" value="http://www.daisy.org/ns/pipeline/module/dtbook-to-zedai/dtbook-to-zedai.xpl"/>
+    <property name="converter.url" type="String" value="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl"/>
     
 </scr:component>

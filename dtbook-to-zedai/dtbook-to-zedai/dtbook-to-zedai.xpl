@@ -49,8 +49,8 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="dtbook2005-3-to-zedai.xpl"/>
 
-    <p:import href="http://www.daisy.org/ns/pipeline/module/metadata-utils/metadata-utils-library.xpl"/>
-    <p:import href="http://www.daisy.org/ns/pipeline/module/dtbook-utils/dtbook-utils-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl"/>
 
     <p:variable name="zedai-file" select="$output-file"/>
     <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
