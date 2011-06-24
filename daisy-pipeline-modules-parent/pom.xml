@@ -12,6 +12,7 @@
 		 <daisy.baseUri>${project.baseUri}/${project.parent.relativePath}/../</daisy.baseUri>
 		 <daisy.repo>${daisy.baseUri}/../daisy-pipeline/repo/</daisy.repo>
 		<daisy.mtarget>${daisy.baseUri}/modules-target-platform/</daisy.mtarget> 
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         </properties>
 	<modules>
                 <!-- TODO change to  .. daisy.basedir rel path -->
@@ -82,6 +83,43 @@
                                         </target>
                                         <ignoreTychoRepositories>false</ignoreTychoRepositories>
 
+										          <environments>
+										            <environment>
+										              <os>linux</os>
+										              <ws>gtk</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										            <environment>
+										              <os>linux</os>
+										              <ws>gtk</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>carbon</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>cocoa</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>cocoa</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										            <environment>
+										              <os>win32</os>
+										              <ws>win32</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>win32</os>
+										              <ws>win32</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										          </environments>
                                 </configuration>
                         </plugin>
                 </plugins>
