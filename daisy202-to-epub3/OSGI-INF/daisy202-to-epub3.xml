@@ -5,5 +5,5 @@
    </service>
    <property name="converter.name" type="String" value="daisy202-to-epub3"/>
    <property name="converter.description" type="String" value="DAISY 2.02 to EPUB3"/>
-   <property name="converter.url" type="String" value="http://www.daisy.org/ns/pipeline/daisy202-to-epub3.xpl"/>
+   <property name="converter.url" type="String" value="http://www.daisy.org/pipeline/modules/daisy202-to-epub3/daisy202-to-epub3.xpl"/>
 </scr:component>
