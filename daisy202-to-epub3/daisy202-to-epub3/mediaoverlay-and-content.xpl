@@ -29,7 +29,7 @@
     <p:option name="daisy-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
 
-    <p:import href="../../utilities/fileset-utils/xproc/fileset-join.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
     <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/join.xpl"/>
     <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/upgrade-smil.xpl"/>
     <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/rearrange.xpl"/>

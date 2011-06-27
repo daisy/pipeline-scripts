@@ -28,39 +28,41 @@
     <p:option name="epub-dir" required="true"/>
 
     <p:input port="source-manifest" sequence="true" primary="false"/>
-    <p:output port="opf-manifest" primary="false">
+    <!--p:output port="opf-manifest" primary="false">
         <p:pipe port="result" step="opf-manifest"/>
-    </p:output>
-    <p:output port="result-manifest" primary="false">
-        <p:pipe port="result" step="result-manifest"/>
+    </p:output-->
+    <p:output port="result-manifest" primary="true">
+        <!--p:pipe port="result" step="result-manifest"/-->
     </p:output>
 
-    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-create.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-add-entry.xpl"/>
 
-    <px:join-manifests name="input-manifest">
+    <px:fileset-join name="input-manifest">
         <p:input port="source">
             <p:pipe port="source-manifest" step="manifest"/>
         </p:input>
-    </px:join-manifests>
-    <p:sink/>
+    </px:fileset-join>
+    <!--p:sink/-->
 
-    <px:create-manifest>
+    <!--px:fileset-create>
         <p:with-option name="base" select="$epub-dir"/>
-    </px:create-manifest>
-    <px:add-manifest-entry name="navigation-manifest">
+    </px:fileset-create>
+    <px:fileset-add-entry name="navigation-manifest">
         <p:with-option name="href"
             select="concat(substring-after($content-dir,$epub-dir),'navigation.xhtml')"/>
         <p:with-option name="media-type" select="'application/xhtml+xml'"/>
-    </px:add-manifest-entry>
-    <p:sink/>
+    </px:fileset-add-entry>
+    <p:sink/-->
 
-    <px:join-manifests name="result-manifest">
+    <!--px:fileset-join name="result-manifest">
         <p:input port="source">
             <p:pipe port="result" step="navigation-manifest"/>
             <p:pipe port="result" step="input-manifest"/>
         </p:input>
-    </px:join-manifests>
-    <p:xslt name="opf-manifest">
+    </px:fileset-join-->
+    <!--p:xslt name="opf-manifest">
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -68,6 +70,6 @@
             <p:document href="manifest2opf-manifest.xsl"/>
         </p:input>
     </p:xslt>
-    <p:sink/>
+    <p:sink/-->
 
 </p:declare-step>

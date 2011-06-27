@@ -33,7 +33,7 @@
 
     <p:input port="mediaoverlay" sequence="true"/>
     <p:input port="content" sequence="true"/>
-    <p:output port="manifest" primary="true">
+    <p:output port="manifest">
         <!--p:pipe port="result" step="manifest"/-->
     </p:output>
     <!--p:output port="store-complete" primary="false" sequence="true">
@@ -44,9 +44,8 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <!--p:import href="../../utilities/file-utils/fileutils-library.xpl"/-->
-    <p:import href="../../utilities/fileset-utils/xproc/fileset-join.xpl"/>
-    <p:import href="../../utilities/fileset-utils/xproc/fileset-copy.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-copy.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/fileutils.xpl"/>
     <p:import href="../../utilities/mediatype-utils/mediatype-utils/mediatype.xpl"/>
 
@@ -98,11 +97,13 @@
             <p:pipe port="result" step="smil-resources"/>
         </p:input>
     </px:fileset-join>
-
-    <!--px:fileset-join/>
-    <px:fileset-copy>
+    <!--px:fileset-copy>
         <p:with-option name="target" select="$content-dir"/>
     </px:fileset-copy-->
+    <p:add-attribute match="/*" name="TEMP" attribute-name="xml:base">
+        <p:with-option name="attribute-value" select="$content-dir"/>
+    </p:add-attribute>
+    
     <!--p:documentation>
         <xd:short>Iterate through all resources and copy them from the DAISY 2.02 fileset to the
             EPUB 3 fileset.</xd:short>

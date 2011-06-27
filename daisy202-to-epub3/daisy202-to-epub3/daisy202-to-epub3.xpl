@@ -52,7 +52,7 @@
     <p:import href="navigation.xpl"/>
     <p:import href="resources.xpl"/>
     <!--p:import href="metadata.xpl"/-->
-    <!--p:import href="manifest.xpl"/-->
+    <p:import href="manifest.xpl"/>
     <!--p:import href="spine.xpl"/-->
     <!--p:import href="package.xpl"/-->
     <!--p:import href="container.xpl"/-->
@@ -114,18 +114,21 @@
             <p:pipe port="metadata" step="contents"/>
         </p:input>
     </px:metadata>
-
+    
+    -->
+    
     <p:documentation>Compile OPF manifest.</p:documentation>
     <px:manifest name="manifest">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:input port="source-manifest">
-            <p:pipe port="manifest" step="contents"/>
-            <p:pipe port="manifest" step="mediaoverlay"/>
+            <p:pipe port="manifest" step="mediaoverlay-and-content"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
     </px:manifest>
-
+    
+    <!--
+    
     <p:documentation>Compile OPF spine.</p:documentation>
     <px:spine name="spine">
         <p:input port="opf-manifest">
