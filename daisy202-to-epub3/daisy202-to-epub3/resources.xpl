@@ -27,33 +27,37 @@
             operations.</xd:import>
         <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating
             filesets.</xd:import>
-        <xd:import href="../utilities/mime-utils/mime.xpl">For determining MIME-types.</xd:import>
+        <xd:import href="../utilities/mediatype-utils/mediatype.xpl">For determining media
+            types.</xd:import>
     </p:documentation>
 
-    <p:input port="resource-manifests" sequence="true" primary="false"/>
-    <p:output port="manifest">
-        <p:pipe port="result" step="manifest"/>
+    <p:input port="mediaoverlay" sequence="true"/>
+    <p:input port="content" sequence="true"/>
+    <p:output port="manifest" primary="true">
+        <!--p:pipe port="result" step="manifest"/-->
     </p:output>
-    <p:output port="store-complete" primary="false" sequence="true">
+    <!--p:output port="store-complete" primary="false" sequence="true">
         <p:pipe port="store" step="iterate"/>
-    </p:output>
+    </p:output-->
 
     <p:option name="daisy-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="../utilities/file-utils/fileutils-library.xpl"/>
-    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
-    <p:import href="../utilities/mime-utils/mime.xpl"/>
+    <!--p:import href="../../utilities/file-utils/fileutils-library.xpl"/-->
+    <p:import href="../../utilities/fileset-utils/xproc/fileset-join.xpl"/>
+    <p:import href="../../utilities/fileset-utils/xproc/fileset-copy.xpl"/>
+    <p:import href="http://xmlcalabash.com/extension/steps/fileutils.xpl"/>
+    <p:import href="../../utilities/mediatype-utils/mediatype-utils/mediatype.xpl"/>
 
-    <p:documentation>Merge all resource manifests and remove duplicate entries.</p:documentation>
+    <!--p:documentation>Merge all resource manifests and remove duplicate entries.</p:documentation>
     <p:group>
         <p:output port="result"/>
-        <px:join-manifests>
+        <px:fileset-join>
             <p:input port="source">
                 <p:pipe port="resource-manifests" step="resources"/>
             </p:input>
-        </px:join-manifests>
+        </px:fileset-join>
         <p:xslt>
             <p:input port="parameters">
                 <p:empty/>
@@ -62,9 +66,44 @@
                 <p:document href="resources-manifest-cleanup.xsl"/>
             </p:input>
         </p:xslt>
-    </p:group>
+        </p:group-->
 
-    <p:documentation>
+    <p:xslt name="content-resources">
+        <p:input port="source">
+            <p:pipe port="content" step="resources"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="content2resources.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:sink/>
+    <p:xslt name="smil-resources">
+        <p:input port="source">
+            <p:pipe port="mediaoverlay" step="resources"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="media-overlay2resources.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:sink/>
+    <px:fileset-join>
+        <p:input port="source">
+            <p:pipe port="result" step="content-resources"/>
+            <p:pipe port="result" step="smil-resources"/>
+        </p:input>
+    </px:fileset-join>
+
+    <!--px:fileset-join/>
+    <px:fileset-copy>
+        <p:with-option name="target" select="$content-dir"/>
+    </px:fileset-copy-->
+    <!--p:documentation>
         <xd:short>Iterate through all resources and copy them from the DAISY 2.02 fileset to the
             EPUB 3 fileset.</xd:short>
         <xd:output port="manifest">Sequence of manifests representing each stored auxiliary
@@ -100,19 +139,19 @@
             <p:with-option name="target" select="$copy-target"/>
         </cxf:copy>
 
-        <px:mime name="iterate.mime">
+        <px:mediatype-detect name="iterate.mediatype">
             <p:with-option name="href" select="$href"/>
-        </px:mime>
+        </px:mediatype-detect>
         <p:sink/>
-        <px:create-manifest>
+        <px:fileset-create>
             <p:with-option name="base" select="$epub-dir"/>
-        </px:create-manifest>
+        </px:fileset-create>
         <px:add-manifest-entry>
             <p:with-option name="href"
                 select="concat(substring-after($content-dir,$epub-dir),$href)"/>
             <p:with-option name="media-type"
                 select="if ($media-type) then $media-type else /*/@type">
-                <p:pipe port="result" step="iterate.mime"/>
+                <p:pipe port="result" step="iterate.mediatype"/>
             </p:with-option>
         </px:add-manifest-entry>
         <p:choose>
@@ -137,14 +176,14 @@
         </p:choose>
         <p:identity name="iterate.manifest"/>
         <p:sink/>
-    </p:for-each>
+    </p:for-each-->
 
-    <p:documentation>Make one manifest that references all auxiliary resources.</p:documentation>
+    <!--p:documentation>Make one manifest that references all auxiliary resources.</p:documentation>
     <px:join-manifests name="manifest">
         <p:input port="source">
             <p:pipe port="manifest" step="iterate"/>
         </p:input>
     </px:join-manifests>
-    <p:sink/>
+    <p:sink/-->
 
 </p:declare-step>

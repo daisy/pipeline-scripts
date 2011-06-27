@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:h="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" version="2.0"
+    xmlns:h="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" version="2.0"
     exclude-result-prefixes="#all">
     
     <xsl:template match="/*">
-        <c:manifest>
+        <d:fileset>
             <xsl:attribute name="xml:base" select="replace(@xml:base,'^(.+/)[^/]*','$1')"/>
             <xsl:for-each select="/processing-instruction('xml-stylesheet')">
                 <xsl:variable name="href"
@@ -29,11 +29,11 @@
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:if test="$inferredType">
-                    <c:entry href="{$href}" media-type="{$inferredType}"/>
+                    <d:file href="{$href}" media-type="{$inferredType}"/>
                 </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="//h:link[ends-with(lower-case(@href),'.css')]">
-                <c:entry href="{@href}" media-type="text/css"/>
+                <d:file href="{@href}" media-type="text/css"/>
             </xsl:for-each>
             <xsl:for-each select="//h:img">
                 <xsl:variable name="type">
@@ -50,10 +50,10 @@
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:if test="$type">
-                    <c:entry href="{@src}" media-type="{$type}"/>
+                    <d:file href="{@src}" media-type="{$type}"/>
                 </xsl:if>
             </xsl:for-each>
-        </c:manifest>
+        </d:fileset>
     </xsl:template>
     
 </xsl:stylesheet>
