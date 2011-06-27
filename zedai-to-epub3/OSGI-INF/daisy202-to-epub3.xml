@@ -5,5 +5,5 @@
    </service>
    <property name="converter.name" type="String" value="zedai-to-epub3"/>
    <property name="converter.description" type="String" value="ZedAI to EPUB 3"/>
-   <property name="converter.url" type="String" value="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/zedai-to-epub3.xpl"/>
+   <property name="converter.url" type="String" value="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.xpl"/>
 </scr:component>
