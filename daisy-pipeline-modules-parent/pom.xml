@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
         <modelVersion>4.0.0</modelVersion>
-        <groupId>org.daisy.pipeline</groupId>
+        <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>daisy-pipeline-modules-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <packaging>pom</packaging>
@@ -12,22 +12,29 @@
 		 <daisy.baseUri>${project.baseUri}/${project.parent.relativePath}/../</daisy.baseUri>
 		 <daisy.repo>${daisy.baseUri}/../daisy-pipeline/repo/</daisy.repo>
 		<daisy.mtarget>${daisy.baseUri}/modules-target-platform/</daisy.mtarget> 
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         </properties>
 	<modules>
                 <!-- TODO change to  .. daisy.basedir rel path -->
 		<module>../modules-target-platform</module>
                 <module>../daisy.pipeline.modules.feature</module>
                 <module>../daisy.pipeline.modules.site</module>
-                <module>../dtbook-to-zedai</module>  
+                <module>../daisy202-to-epub3</module>
+                <module>../dtbook-to-zedai</module>
                 <module>../utilities/dtbook-utils</module>
+                <module>../utilities/epub3-nav-utils</module>
+                <module>../utilities/epub3-ocf-utils</module>
+                <module>../utilities/epub3-pub-utils</module>
+               <!-- <module>../utilities/epub3-validation</module> -->
                 <module>../utilities/file-utils</module>
                 <module>../utilities/fileset-utils</module>
+                <module>../utilities/html-utils</module>
+                <module>../utilities/mediaoverlay-utils</module>
+                <module>../utilities/mediatype-utils</module>
                 <module>../utilities/metadata-utils</module>
                 <module>../utilities/zip-utils</module>
-                <module>../utilities/mediaoverlay-utils</module>
-                <module>../utilities/html-utils</module>
-
- 
+                <!-- <module>../zedai-to-epub3</module> -->
+                <!-- <module>../zedai-to-html</module> -->
 	</modules>
  <repositories>
 		<repository>
@@ -68,7 +75,7 @@
                                         <resolver>p2</resolver>
                                         <target>
                                                 <artifact>
-                                                        <groupId>org.daisy.pipeline</groupId>
+                                                        <groupId>org.daisy.pipeline.modules</groupId>
                                                         <artifactId>modules-target-platform</artifactId>
                                                         <version>0.0.1-SNAPSHOT</version>
                                                         <classifier>modules-tp</classifier>
@@ -76,6 +83,43 @@
                                         </target>
                                         <ignoreTychoRepositories>false</ignoreTychoRepositories>
 
+										          <environments>
+										            <environment>
+										              <os>linux</os>
+										              <ws>gtk</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										            <environment>
+										              <os>linux</os>
+										              <ws>gtk</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>carbon</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>cocoa</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>macosx</os>
+										              <ws>cocoa</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										            <environment>
+										              <os>win32</os>
+										              <ws>win32</ws>
+										              <arch>x86</arch>
+										            </environment>
+										            <environment>
+										              <os>win32</os>
+										              <ws>win32</ws>
+										              <arch>x86_64</arch>
+										            </environment>
+										          </environments>
                                 </configuration>
                         </plugin>
                 </plugins>
