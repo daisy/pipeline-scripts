@@ -23,13 +23,13 @@
          version="0.0.0"/>
 
    <plugin
-         id="mediaoverlay-utils"
+         id="org.daisy.pipeline.mediaoverlay-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="html-utils"
+         id="org.daisy.pipeline.html-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

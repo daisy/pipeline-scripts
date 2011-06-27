@@ -2,17 +2,21 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
-    
+
     <p:pipeinfo>
-        <cd:converter name="daisy202-to-epub3" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
-            <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>  
-            <cd:arg  name="href"  type="option" bind="href" desc="Path to input NCC."/>
-            <cd:arg  name="output"  type="option" bind="output" desc="Path to output directory for the EPUB."/>
+        <cd:converter name="daisy202-to-epub3" version="1.0"
+            xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
+            <cd:description>Transforms a DAISY 2.02 publication into an EPUB3
+                publication.</cd:description>
+            <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
+            <cd:arg name="output" type="option" bind="output"
+                desc="Path to output directory for the EPUB."/>
         </cd:converter>
     </p:pipeinfo>
-    
+
     <p:documentation xd:target="parent">
         <xd:short>Transforms a DAISY 2.02-book into an EPUB3-book.</xd:short>
         <xd:author>
@@ -26,7 +30,7 @@
         <xd:option name="href">Path to input NCC.</xd:option>
         <xd:option name="output">Path to output directory for the EPUB.</xd:option>
         <xd:import href="ncc.xpl">For loading the NCC.</xd:import>
-        <xd:import href="media-overlay.xpl">For processing SMIL timesheets.</xd:import>
+        <xd:import href="mediaoverlay.xpl">For processing SMIL timesheets.</xd:import>
         <xd:import href="contents.xpl">For processing content documents.</xd:import>
         <xd:import href="resources.xpl">For processing auxiliary resources.</xd:import>
         <xd:import href="metadata.xpl">For compiling metadata.</xd:import>
@@ -37,19 +41,21 @@
         <xd:import href="container.xpl">For packaging the publication as a ZIP (OCF).</xd:import>
     </p:documentation>
 
+    <p:output port="debug" sequence="true"/>
+    
+
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
 
     <p:import href="ncc.xpl"/>
+    <p:import href="mediaoverlay-and-content.xpl"/>
     <p:import href="navigation.xpl"/>
-    <p:import href="media-overlay.xpl"/>
-    <p:import href="contents.xpl"/>
     <p:import href="resources.xpl"/>
-    <p:import href="metadata.xpl"/>
-    <p:import href="manifest.xpl"/>
-    <p:import href="spine.xpl"/>
-    <p:import href="package.xpl"/>
-    <p:import href="container.xpl"/>
+    <!--p:import href="metadata.xpl"/-->
+    <!--p:import href="manifest.xpl"/-->
+    <!--p:import href="spine.xpl"/-->
+    <!--p:import href="package.xpl"/-->
+    <!--p:import href="container.xpl"/-->
 
     <p:variable name="daisy-dir" select="replace(p:resolve-uri($href),'[^/]+$','')">
         <p:inline>
@@ -76,54 +82,35 @@
         </p:with-option>
     </px:ncc>
 
-    <p:documentation>Load the DAISY 2.02 SMILs and store them as EPUB 3 SMILs.</p:documentation>
-    <px:media-overlay name="media-overlay">
-        <p:log port="spine-manifest" href="/home/jostein/Skrivebord/log.xml"/>
-        <p:log port="id-mapping" href="/home/jostein/Skrivebord/log2.xml"/>
+    <pxi:mediaoverlay-and-content name="mediaoverlay-and-content">
+        <p:with-option name="daisy-dir" select="$daisy-dir"/>
+        <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
-        <p:input port="ncc-metadata">
-            <p:pipe port="metadata" step="ncc"/>
-        </p:input>
-        <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="epub-dir" select="$epub-dir"/>
-    </px:media-overlay>
-
-
-    <p:documentation>Load the DAISY 2.02 text content documents and store them as EPUB 3 Content
-        Documents.</p:documentation>
-    <px:contents name="contents">
-        <p:input port="spine">
-            <p:pipe port="spine-manifest" step="media-overlay"/>
-        </p:input>
-        <p:input port="id-mapping">
-            <p:pipe port="id-mapping" step="media-overlay"/>
-        </p:input>
-        <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="epub-dir" select="$epub-dir"/>
-    </px:contents>
+    </pxi:mediaoverlay-and-content>
 
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images,
         etc.)</p:documentation>
     <px:resources name="resources">
-        <p:input port="resource-manifests">
-            <p:pipe port="resource-manifest" step="ncc"/>
-            <p:pipe port="resource-manifest" step="media-overlay"/>
-            <p:pipe port="resource-manifest" step="contents"/>
+        <p:input port="mediaoverlay">
+            <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
+        </p:input>
+        <p:input port="content">
+            <p:pipe port="daisy-content" step="mediaoverlay-and-content"/>
         </p:input>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
     </px:resources>
-
+    
+    <!--
+    
     <p:documentation>Compile OPF metadata.</p:documentation>
     <px:metadata name="metadata">
         <p:input port="metadata">
             <p:pipe port="metadata" step="ncc"/>
-            <p:pipe port="metadata" step="media-overlay"/>
+            <p:pipe port="metadata" step="mediaoverlay"/>
             <p:pipe port="metadata" step="contents"/>
         </p:input>
     </px:metadata>
@@ -134,7 +121,7 @@
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:input port="source-manifest">
             <p:pipe port="manifest" step="contents"/>
-            <p:pipe port="manifest" step="media-overlay"/>
+            <p:pipe port="manifest" step="mediaoverlay"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
     </px:manifest>
@@ -144,21 +131,21 @@
         <p:input port="opf-manifest">
             <p:pipe port="opf-manifest" step="manifest"/>
         </p:input>
-    </px:spine>
+    </px:spine-->
 
-    <p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
+    <!--p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
         NCC.</p:documentation>
     <px:navigation name="navigation">
+        <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
-        <p:input port="id-mapping">
-            <p:pipe port="id-mapping" step="media-overlay"/>
+        <p:input port="mediaoverlay">
+            <p:pipe port="mediaoverlay" step="mediaoverlay-and-content"/>
         </p:input>
-        <p:with-option name="content-dir" select="$content-dir"/>
-    </px:navigation>
+    </px:navigation-->
 
-    <p:documentation>Make and store the OPF.</p:documentation>
+    <!--p:documentation>Make and store the OPF.</p:documentation>
     <px:package name="package">
         <p:input port="opf-metadata">
             <p:pipe port="opf-metadata" step="metadata"/>
@@ -189,11 +176,13 @@
         </p:input>
         <p:input port="store-complete">
             <p:pipe port="store-complete" step="navigation"/>
-            <p:pipe port="store-complete" step="media-overlay"/>
+            <p:pipe port="store-complete" step="mediaoverlay"/>
             <p:pipe port="store-complete" step="contents"/>
             <p:pipe port="store-complete" step="resources"/>
             <p:pipe port="store-complete" step="package"/>
         </p:input>
     </px:container>
+    
+    -->
 
 </p:declare-step>

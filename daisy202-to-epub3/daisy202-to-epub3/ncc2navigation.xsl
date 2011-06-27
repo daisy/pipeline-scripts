@@ -3,12 +3,6 @@
     xmlns:html="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub"
     version="2.0" exclude-result-prefixes="#all">
 
-    <!--
-        TODO:
-            - possible improvement: infer more comprehensive TOC from all document files,
-              and mark those that are not referenced in the NCC with display:none.
-    -->
-
     <xsl:output xpath-default-namespace="http://www.w3.org/1999/xhtml" indent="yes"/>
 
     <xsl:template match="/*">
@@ -23,7 +17,13 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-
+    
+    <xsl:template match="html:head">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|html:title"/>
+        </xsl:copy>
+    </xsl:template>
+    
     <xsl:template match="html:body">
         <xsl:element name="body" namespace="http://www.w3.org/1999/xhtml">
             <xsl:element name="nav" namespace="http://www.w3.org/1999/xhtml">

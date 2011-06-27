@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
@@ -15,7 +15,6 @@
         </xd:author>
         <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
         <xd:input port="flow">SMIL-files listed in playback order.</xd:input>
-        <xd:input port="ncc-metadata">Metadata from the &lt;head/&gt; of the NCC.</xd:input>
         <xd:output port="manifest">List of stored files.</xd:output>
         <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
         <xd:output port="resource-manifest">Auxiliary resources referenced from the resulting
@@ -25,7 +24,6 @@
             and resulting filesets together.</xd:output>
         <xd:output port="spine-manifest">List of DAISY 2.02 text content documents in playback
             order.</xd:output>
-        <xd:option name="daisy-dir">URI to the directory containing the NCC.</xd:option>
         <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
         <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
@@ -36,7 +34,6 @@
     </p:documentation>
 
     <p:input port="flow" primary="true"/>
-    <p:input port="ncc-metadata"/>
     <p:output port="manifest" primary="false" sequence="true">
         <p:pipe port="result" step="manifest"/>
     </p:output>
@@ -56,20 +53,20 @@
         <p:pipe port="result" step="spine"/>
     </p:output>
 
-    <p:option name="daisy-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="../utilities/file-utils/fileset-library.xpl"/>
-    <p:import href="../utilities/smil-utils/smil-library.xpl"/>
+    <p:import href="../../utilities/fileset-utils/fileset-utils/fileset-library.xpl"/>
+    <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/*.xpl"/>
 
     <p:documentation>Load all SMIL-files</p:documentation>
-    <p:viewport name="viewport" match="//c:entry">
-        <p:variable name="href" select="/*/@href"/>
+    <p:add-xml-base all="true" relative="false"/>
+    <p:viewport name="viewport" match="//d:file">
+        <p:variable name="href" select="resolve-uri(/*/@href,/*/@xml:base)"/>
         <p:identity name="viewport.entry"/>
         <p:sink/>
         <p:load name="viewport.smil">
-            <p:with-option name="href" select="concat($daisy-dir,$href)"/>
+            <p:with-option name="href" select="$href"/>
         </p:load>
         <p:xslt name="viewport.unique-smil-ids">
             <p:with-param name="position" select="p:iteration-position()"/>
