@@ -16,5 +16,6 @@
    <nextCatalog catalog="./utilities/mediatype-utils/META-INF/catalog.xml"/>
    <nextCatalog catalog="./utilities/metadata-utils/META-INF/catalog.xml"/>
    <nextCatalog catalog="./utilities/zip-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./zedai-to-epub3/META-INF/catalog.xml"/>
    <nextCatalog catalog="./zedai-to-html/META-INF/catalog.xml"/>
 </catalog>
