@@ -25,7 +25,7 @@
                 <module>../utilities/epub3-nav-utils</module>
                 <module>../utilities/epub3-ocf-utils</module>
                 <module>../utilities/epub3-pub-utils</module>
-                <module>../utilities/epub3-validation</module>
+               <!-- <module>../utilities/epub3-validation</module> -->
                 <module>../utilities/file-utils</module>
                 <module>../utilities/fileset-utils</module>
                 <module>../utilities/html-utils</module>
