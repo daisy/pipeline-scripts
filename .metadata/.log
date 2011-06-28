@@ -1974,3 +1974,24 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64
 
 !ENTRY org.eclipse.core.resources 4 274 2011-06-16 20:01:01.252
 !MESSAGE Resource is out of sync with the file system: '/modules-target-platform/modules-tp.target'.
+!SESSION 2011-06-27 18:28:19.733 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_GB
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.core.resources 4 274 2011-06-27 18:33:23.603
+!MESSAGE Resource is out of sync with the file system: '/modules-target-platform/modules-tp.target'.
+
+!ENTRY org.eclipse.core.resources 4 274 2011-06-27 18:39:41.883
+!MESSAGE Resource is out of sync with the file system: '/modules-target-platform/modules-tp.target'.
+!SESSION 2011-06-27 18:50:47.411 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_GB
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.core.resources 4 274 2011-06-27 18:50:56.262
+!MESSAGE Resource is out of sync with the file system: '/modules-target-platform/modules-tp.target'.

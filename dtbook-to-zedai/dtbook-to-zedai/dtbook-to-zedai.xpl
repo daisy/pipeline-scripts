@@ -99,7 +99,7 @@
     <p:documentation>Validate the DTBook input</p:documentation>
     <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
         <p:input port="schema">
-            <p:document href="../schema/dtbook-2005-3.rng"/>
+            <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
         <p:input port="source">
             <p:pipe port="result" step="choose-to-merge-dtbook-files"/>
@@ -220,7 +220,6 @@
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
-        <p:log href="log.xml" port="result"/>
     </px:dtbook-to-zedai-meta>
 
     <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
@@ -270,7 +269,7 @@
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
         <p:input port="schema">
-            <p:document href="../schema/z3986a-book-0.8/z3986a-book.rng"/>
+            <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
 
