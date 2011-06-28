@@ -41,9 +41,10 @@
         <xd:import href="container.xpl">For packaging the publication as a ZIP (OCF).</xd:import>
     </p:documentation>
 
-    <p:output port="debug" sequence="true"/>
+    <p:output port="debug" sequence="true">
+        <p:pipe port="opf-spine" step="spine"/>
+    </p:output>
     
-
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
 
@@ -53,7 +54,7 @@
     <p:import href="resources.xpl"/>
     <!--p:import href="metadata.xpl"/-->
     <p:import href="manifest.xpl"/>
-    <!--p:import href="spine.xpl"/-->
+    <p:import href="spine.xpl"/>
     <!--p:import href="package.xpl"/-->
     <!--p:import href="container.xpl"/-->
 
@@ -72,6 +73,7 @@
     </p:variable>
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
+    <p:variable name="subcontent-dir" select="concat($content-dir,'DAISY/')"/>
 
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <px:ncc name="ncc">
@@ -84,7 +86,7 @@
 
     <pxi:mediaoverlay-and-content name="mediaoverlay-and-content">
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="content-dir" select="$subcontent-dir"/>
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
@@ -100,7 +102,7 @@
             <p:pipe port="daisy-content" step="mediaoverlay-and-content"/>
         </p:input>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="content-dir" select="$subcontent-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
     </px:resources>
     
@@ -121,33 +123,31 @@
     <px:manifest name="manifest">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-        <p:input port="source-manifest">
+        <p:input port="source">
             <p:pipe port="manifest" step="mediaoverlay-and-content"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
     </px:manifest>
-    
-    <!--
     
     <p:documentation>Compile OPF spine.</p:documentation>
     <px:spine name="spine">
         <p:input port="opf-manifest">
             <p:pipe port="opf-manifest" step="manifest"/>
         </p:input>
-    </px:spine-->
+    </px:spine>
 
-    <!--p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
+    <p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
         NCC.</p:documentation>
     <px:navigation name="navigation">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
-        <p:input port="mediaoverlay">
-            <p:pipe port="mediaoverlay" step="mediaoverlay-and-content"/>
+        <p:input port="daisy-smil">
+            <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
         </p:input>
-    </px:navigation-->
-
+    </px:navigation>
+    
     <!--p:documentation>Make and store the OPF.</p:documentation>
     <px:package name="package">
         <p:input port="opf-metadata">
@@ -159,12 +159,12 @@
         <p:input port="opf-spine">
             <p:pipe port="opf-spine" step="spine"/>
         </p:input>
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="content-dir" select="$subcontent-dir"/>
     </px:package>
 
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:container name="container">
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="content-dir" select="$subcontent-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:with-option name="epub-file"
             select="concat($output-dir,

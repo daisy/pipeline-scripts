@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:c="http://www.w3.org/ns/xproc-step" exclude-result-prefixes="#all" version="2.0">
+    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    exclude-result-prefixes="#all" version="2.0">
 
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -9,18 +10,16 @@
     </xsl:template>
 
     <xsl:template match="/*">
+        <xsl:variable name="fileset" select="."/>
         <opf:manifest>
             <xsl:for-each select="child::*">
-                <item>
-                    <xsl:apply-templates select="@href | @media-type"/>
-                    <xsl:attribute name="id" select="concat('item_',position())"/>
-                    <xsl:variable name="original-href" select="@original-href"/>
-                    <xsl:variable name="media-overlay"
-                        select="//c:entry[@reverse-media-overlay=$original-href]/@id"/>
-                    <xsl:if test="$media-overlay">
-                        <xsl:attribute name="media-overlay" select="$media-overlay"/>
+                <item href="{@href}" media-type="{@media-type}" id="{concat('item_',position())}">
+                    <xsl:if test="@media-type='application/xhtml+xml' and not(tokenize(@href,'/')[last()]='navigation.xhtml')">
+                        <xsl:variable name="smil" select="replace(@href,'xhtml$','smil')"/>
+                        <xsl:attribute name="media-overlay" select="concat('item_',count(($fileset/*[@href=$smil]/preceding-sibling::*))+1)"/>
                     </xsl:if>
                 </item>
+                <!-- NOTE: this assumes that the media overlays were generated based on the content documents. -->
             </xsl:for-each>
         </opf:manifest>
     </xsl:template>

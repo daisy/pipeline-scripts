@@ -11,7 +11,7 @@
     <xsl:template match="/*">
         <opf:spine>
             <xsl:for-each
-                select="child::*[@media-type='application/xhtml+xml' and not(@href='navigation.xhtml')]">
+                select="child::*[@media-type='application/xhtml+xml' and not(tokenize(@href,'/')[last()]='navigation.xhtml')]">
                 <itemref idref="{@id}"/>
             </xsl:for-each>
         </opf:spine>

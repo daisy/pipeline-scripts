@@ -27,26 +27,22 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:input port="source-manifest" sequence="true" primary="false"/>
-    <!--p:output port="opf-manifest" primary="false">
+    <p:input port="source" sequence="true"/>
+    <p:output port="opf-manifest" primary="false">
         <p:pipe port="result" step="opf-manifest"/>
-    </p:output-->
-    <p:output port="result-manifest" primary="true">
-        <!--p:pipe port="result" step="result-manifest"/-->
+    </p:output>
+    <p:output port="result" primary="false">
+        <p:pipe port="result" step="result-manifest"/>
     </p:output>
 
     <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-create.xpl"/>
     <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
     <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-add-entry.xpl"/>
 
-    <px:fileset-join name="input-manifest">
-        <p:input port="source">
-            <p:pipe port="source-manifest" step="manifest"/>
-        </p:input>
-    </px:fileset-join>
-    <!--p:sink/-->
+    <px:fileset-join name="input-manifest"/>
+    <p:sink/>
 
-    <!--px:fileset-create>
+    <px:fileset-create>
         <p:with-option name="base" select="$epub-dir"/>
     </px:fileset-create>
     <px:fileset-add-entry name="navigation-manifest">
@@ -54,15 +50,15 @@
             select="concat(substring-after($content-dir,$epub-dir),'navigation.xhtml')"/>
         <p:with-option name="media-type" select="'application/xhtml+xml'"/>
     </px:fileset-add-entry>
-    <p:sink/-->
+    <p:sink/>
 
-    <!--px:fileset-join name="result-manifest">
+    <px:fileset-join name="result-manifest">
         <p:input port="source">
             <p:pipe port="result" step="navigation-manifest"/>
             <p:pipe port="result" step="input-manifest"/>
         </p:input>
-    </px:fileset-join-->
-    <!--p:xslt name="opf-manifest">
+    </px:fileset-join>
+    <p:xslt name="opf-manifest">
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -70,6 +66,5 @@
             <p:document href="manifest2opf-manifest.xsl"/>
         </p:input>
     </p:xslt>
-    <p:sink/-->
 
 </p:declare-step>

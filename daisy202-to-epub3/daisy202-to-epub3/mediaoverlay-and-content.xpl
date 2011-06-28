@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="pxi:mediaoverlay-and-content" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:mo="http://www.w3.org/ns/SMIL"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" name="mediaoverlay-and-content" version="1.0">
 
@@ -16,7 +17,7 @@
         <p:pipe port="content" step="content-flow-iterate"/>
     </p:output>
     <p:output port="daisy-smil" sequence="true">
-        <p:pipe port="mediaoverlay" step="flow-iterate"/>
+        <p:pipe port="daisy-smil" step="flow-iterate"/>
     </p:output>
     <p:output port="daisy-content" sequence="true">
         <p:pipe port="content-with-original-base" step="content-flow-iterate"/>
@@ -29,6 +30,7 @@
     <p:option name="daisy-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
 
+    <p:import href="resolve-links.xpl"/>
     <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
     <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/join.xpl"/>
     <p:import href="../../utilities/mediaoverlay-utils/mediaoverlay-utils/upgrade-smil.xpl"/>
@@ -36,6 +38,9 @@
 
     <p:add-xml-base all="true" relative="false"/>
     <p:for-each name="flow-iterate">
+        <p:output port="daisy-smil" primary="false" sequence="true">
+            <p:pipe port="result" step="flow-iterate.daisy-smil"/>
+        </p:output>
         <p:output port="mediaoverlay" primary="false" sequence="true">
             <p:pipe port="result" step="flow-iterate.mediaoverlay"/>
         </p:output>
@@ -48,6 +53,9 @@
         <p:load name="flow-iterate.smils">
             <p:with-option name="href" select="$original-uri"/>
         </p:load>
+        <p:add-attribute match="/*" attribute-name="xml:base" name="flow-iterate.daisy-smil">
+            <p:with-option name="attribute-value" select="$original-uri"/>
+        </p:add-attribute>
         <px:mediaoverlay-upgrade-smil/>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="$original-uri"/>
@@ -105,6 +113,23 @@
         <p:load>
             <p:with-option name="href" select="$original-uri"/>
         </p:load>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="$original-uri"/>
+        </p:add-attribute>
+        <pxi:daisy202-to-epub3-resolve-links>
+            <p:input port="daisy-smil">
+                <p:pipe port="daisy-smil" step="flow-iterate"/>
+            </p:input>
+        </pxi:daisy202-to-epub3-resolve-links>
+        <p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
+            <p:add-attribute match="/*" attribute-name="href">
+                <p:with-option name="attribute-value"
+                    select="concat(replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml#'),if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else '')"
+                />
+            </p:add-attribute>
+        </p:viewport>
+
+        <p:delete match="/*/@xml:base"/>
         <p:xslt name="content-flow-iterate.content">
             <p:with-param name="href" select="$result-uri"/>
             <p:input port="stylesheet">
@@ -121,7 +146,8 @@
                 <p:pipe port="result" step="content-flow-iterate.content"/>
             </p:input>
         </p:add-attribute>
-        <p:add-attribute match="/*" attribute-name="xml:base" name="content-flow-iterate.content-with-original-base">
+        <p:add-attribute match="/*" attribute-name="xml:base"
+            name="content-flow-iterate.content-with-original-base">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>
     </p:for-each>
@@ -151,12 +177,14 @@
             if (matches(/*/@xml:base,'\.[^/]*$')) then replace(/*/@xml:base,'^(.*)\.[^/\.]*$','$1.smil') else concat(/*/@xml:base,'.smil'),
             string-length($daisy-dir)+1
             ))"/>
+        <p:identity/>
         <px:mediaoverlay-rearrange name="mediaoverlay-iterate.mediaoverlay-with-original-base">
             <p:input port="mediaoverlay">
                 <p:pipe port="result" step="mediaoverlay-joined"/>
             </p:input>
         </px:mediaoverlay-rearrange>
-        <p:add-attribute match="/*" name="mediaoverlay-iterate.mediaoverlay" attribute-name="xml:base">
+        <p:add-attribute match="/*" name="mediaoverlay-iterate.mediaoverlay"
+            attribute-name="xml:base">
             <p:with-option name="attribute-value" select="$result-uri"/>
         </p:add-attribute>
         <p:delete match="//@xml:base"/>
@@ -217,7 +245,5 @@
             <p:pipe port="result" step="mediaoverlay-filesets"/>
         </p:input>
     </px:fileset-join>
-
-
 
 </p:declare-step>
