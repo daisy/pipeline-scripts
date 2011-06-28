@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub"
+<xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:f="http://www.daisy.org/ns/functions" xmlns:its="http://www.w3.org/2005/11/its"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -509,7 +509,7 @@
   <xsl:template match="z:pagebreak[f:is-phrase(.)]">
     <span>
       <xsl:call-template name="role">
-        <xsl:with-param name="roles" select="('pagrebreak',@role)"/>
+        <xsl:with-param name="roles" select="('pagebreak',@role)"/>
       </xsl:call-template>
       <xsl:apply-templates select="@* except @role"/>
     </span>
@@ -786,14 +786,14 @@
     <!--TODO translate: @its:translate-->
   </xsl:template>
   <xsl:template match="@role">
-    <xsl:copy/>
+      <xsl:attribute name="epub:type" select="."/>
     <!--TODO translate: @role -->
   </xsl:template>
 
   <xsl:template name="role">
     <xsl:param name="roles" as="xs:string*"/>
     <xsl:variable name="role-string" select="normalize-space(string-join($roles,' '))"/>
-    <xsl:attribute name="role"
+    <xsl:attribute name="epub:type"
       select="string-join(distinct-values(tokenize($role-string,'\s+')),' ')"/>
   </xsl:template>
   <!--
