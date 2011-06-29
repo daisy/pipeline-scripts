@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:resources" name="resources"
     version="1.0">
@@ -39,10 +38,8 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
-    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
-    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-copy.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/fileutils.xpl"/>
-    <p:import href="../../utilities/mediatype-utils/mediatype-utils/mediatype.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
 
     <p:xslt name="content-resources">
         <p:input port="source">
@@ -56,17 +53,23 @@
         </p:input>
     </p:xslt>
     <p:sink/>
-    <p:xslt name="smil-resources">
-        <p:input port="source">
+    <p:for-each name="smil-resources">
+        <p:output port="result"/>
+        <p:iteration-source>
             <p:pipe port="mediaoverlay" step="resources"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="media-overlay2resources.xsl"/>
-        </p:input>
-    </p:xslt>
+        </p:iteration-source>
+        <p:xslt>
+            <p:input port="source">
+                <p:pipe port="mediaoverlay" step="resources"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="media-overlay2resources.xsl"/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
     <p:sink/>
     <px:fileset-join>
         <p:input port="source">
@@ -75,11 +78,8 @@
         </p:input>
     </px:fileset-join>
     <px:mediatype-detect name="iterate.mediatype"/>
-    <!--px:fileset-copy>
+    <px:fileset-copy>
         <p:with-option name="target" select="$content-dir"/>
-    </px:fileset-copy-->
-    <p:add-attribute match="/*" name="TEMP" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="$content-dir"/>
-    </p:add-attribute>
+    </px:fileset-copy>
 
 </p:declare-step>

@@ -42,7 +42,7 @@
     </p:documentation>
 
     <p:output port="debug" sequence="true">
-        <p:pipe port="opf-spine" step="spine"/>
+        <p:pipe port="store-complete" step="package"/>
     </p:output>
     
     <p:option name="href" required="true"/>
@@ -52,10 +52,10 @@
     <p:import href="mediaoverlay-and-content.xpl"/>
     <p:import href="navigation.xpl"/>
     <p:import href="resources.xpl"/>
-    <!--p:import href="metadata.xpl"/-->
+    <p:import href="metadata.xpl"/>
     <p:import href="manifest.xpl"/>
     <p:import href="spine.xpl"/>
-    <!--p:import href="package.xpl"/-->
+    <p:import href="package.xpl"/>
     <!--p:import href="container.xpl"/-->
 
     <p:variable name="daisy-dir" select="replace(p:resolve-uri($href),'[^/]+$','')">
@@ -106,35 +106,18 @@
         <p:with-option name="epub-dir" select="$epub-dir"/>
     </px:resources>
     
-    <!--
-    
-    <p:documentation>Compile OPF metadata.</p:documentation>
-    <px:metadata name="metadata">
-        <p:input port="metadata">
-            <p:pipe port="metadata" step="ncc"/>
-            <p:pipe port="metadata" step="mediaoverlay"/>
-            <p:pipe port="metadata" step="contents"/>
-        </p:input>
-    </px:metadata>
-    
-    -->
-    
-    <p:documentation>Compile OPF manifest.</p:documentation>
-    <px:manifest name="manifest">
+    <p:documentation>Make and store the OPF</p:documentation>
+    <px:package name="package">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-        <p:input port="source">
+        <p:input port="ncc">
+            <p:pipe port="ncc" step="ncc"/>
+        </p:input>
+        <p:input port="manifest">
             <p:pipe port="manifest" step="mediaoverlay-and-content"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
-    </px:manifest>
-    
-    <p:documentation>Compile OPF spine.</p:documentation>
-    <px:spine name="spine">
-        <p:input port="opf-manifest">
-            <p:pipe port="opf-manifest" step="manifest"/>
-        </p:input>
-    </px:spine>
+    </px:package>
 
     <p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
         NCC.</p:documentation>
@@ -148,21 +131,7 @@
         </p:input>
     </px:navigation>
     
-    <!--p:documentation>Make and store the OPF.</p:documentation>
-    <px:package name="package">
-        <p:input port="opf-metadata">
-            <p:pipe port="opf-metadata" step="metadata"/>
-        </p:input>
-        <p:input port="opf-manifest">
-            <p:pipe port="opf-manifest" step="manifest"/>
-        </p:input>
-        <p:input port="opf-spine">
-            <p:pipe port="opf-spine" step="spine"/>
-        </p:input>
-        <p:with-option name="content-dir" select="$subcontent-dir"/>
-    </px:package>
-
-    <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
+    <!--documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:container name="container">
         <p:with-option name="content-dir" select="$subcontent-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>

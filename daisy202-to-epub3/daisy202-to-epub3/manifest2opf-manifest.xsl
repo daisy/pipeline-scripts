@@ -11,9 +11,9 @@
 
     <xsl:template match="/*">
         <xsl:variable name="fileset" select="."/>
-        <opf:manifest>
+        <manifest xmlns="http://www.idpf.org/2007/opf">
             <xsl:for-each select="child::*">
-                <item href="{@href}" media-type="{@media-type}" id="{concat('item_',position())}">
+                <item xmlns="http://www.idpf.org/2007/opf" href="{@href}" media-type="{@media-type}" id="{concat('item_',position())}">
                     <xsl:if test="@media-type='application/xhtml+xml' and not(tokenize(@href,'/')[last()]='navigation.xhtml')">
                         <xsl:variable name="smil" select="replace(@href,'xhtml$','smil')"/>
                         <xsl:attribute name="media-overlay" select="concat('item_',count(($fileset/*[@href=$smil]/preceding-sibling::*))+1)"/>
@@ -21,7 +21,7 @@
                 </item>
                 <!-- NOTE: this assumes that the media overlays were generated based on the content documents. -->
             </xsl:for-each>
-        </opf:manifest>
+        </manifest>
     </xsl:template>
 
 </xsl:stylesheet>

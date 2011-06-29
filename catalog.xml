@@ -2,19 +2,17 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+   <nextCatalog catalog="./utilities/mediatype-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/fileset-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/epub3-pub-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/epub3-ocf-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/epub3-nav-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/html-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/dtbook-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/file-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/zip-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/metadata-utils/META-INF/catalog.xml"/>
+   <nextCatalog catalog="./utilities/mediaoverlay-utils/META-INF/catalog.xml"/>
    <nextCatalog catalog="./daisy202-to-epub3/META-INF/catalog.xml"/>
    <nextCatalog catalog="./dtbook-to-zedai/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/dtbook-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/epub3-nav-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/epub3-ocf-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/epub3-pub-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/epub3-validation/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/file-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/fileset-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/html-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/mediaoverlay-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/mediatype-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/metadata-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./utilities/zip-utils/META-INF/catalog.xml"/>
-   <nextCatalog catalog="./zedai-to-html/META-INF/catalog.xml"/>
 </catalog>

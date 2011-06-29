@@ -26,21 +26,18 @@
     <p:output port="ncc" primary="false">
         <p:pipe port="result" step="ncc"/>
     </p:output>
-    <p:output port="resource-manifest" primary="false">
-        <p:pipe port="result" step="resources"/>
-    </p:output>
     <p:output port="flow" primary="false">
         <p:pipe port="result" step="flow"/>
     </p:output>
     
-    <p:import href="../../utilities/html-utils/html-utils/html-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
 
     <p:documentation>Loads the NCC.</p:documentation>
     <px:html-load name="ncc">
         <p:with-option name="href" select="$href"/>
     </px:html-load>
 
-    <p:documentation>Makes a list of resources referenced from the NCC.</p:documentation>
+    <!--p:documentation>Makes a list of resources referenced from the NCC.</p:documentation>
     <p:xslt name="resources">
         <p:input port="parameters">
             <p:empty/>
@@ -49,7 +46,7 @@
             <p:document href="ncc2resources.xsl"/>
         </p:input>
     </p:xslt>
-    <p:sink/>
+    <p:sink/-->
 
     <!--p:documentation>Makes a list of metadata referenced from the NCC.</p:documentation>
     <p:xslt name="metadata">

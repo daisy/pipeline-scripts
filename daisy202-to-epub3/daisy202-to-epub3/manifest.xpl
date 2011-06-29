@@ -34,10 +34,8 @@
     <p:output port="result" primary="false">
         <p:pipe port="result" step="result-manifest"/>
     </p:output>
-
-    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-create.xpl"/>
-    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-join.xpl"/>
-    <p:import href="../../utilities/fileset-utils/fileset-utils/xproc/fileset-add-entry.xpl"/>
+    
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
 
     <px:fileset-join name="input-manifest"/>
     <p:sink/>

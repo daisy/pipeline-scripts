@@ -10,7 +10,7 @@
     </xsl:template>
 
     <xsl:template match="/*">
-        <opf:metadata>
+        <metadata xmlns="http://www.idpf.org/2007/opf">
             <dc:identifier id="pub-id">
                 <xsl:value-of select="//c:meta[@name='dc:identifier']/@content"/>
             </dc:identifier>
@@ -23,11 +23,11 @@
             <dc:date id="date">
                 <xsl:value-of select="//c:meta[@name='dc:date']/@content"/>
             </dc:date>
-            <meta about="#date" property="scheme">
+            <meta xmlns="http://www.idpf.org/2007/opf" about="#date" property="scheme">
                 <xsl:value-of select="//c:meta[@name='dc:date']/@scheme"/>
             </meta>
-            <meta property="dcterms:modified">{TODO: ignore dynamically created time}</meta>
-            <dc:format>ePub3</dc:format>
+            <meta xmlns="http://www.idpf.org/2007/opf" property="dcterms:modified">{TODO: ignore dynamically created time}</meta>
+            <dc:format>EPUB3</dc:format>
             <xsl:for-each select="//c:meta">
                 <xsl:if
                     test="not(@name='dc:identifier' or @name='dc:title' or @name='dc:language' or
@@ -47,7 +47,7 @@
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
-                            <meta property="{@name}">
+                            <meta xmlns="http://www.idpf.org/2007/opf" property="{@name}">
                                 <xsl:if test="@scheme">
                                     <xsl:attribute name="id" select="concat('meta_',position())"/>
                                 </xsl:if>
@@ -56,13 +56,13 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:if test="@scheme">
-                        <meta about="#{if (@name='dc:identifier') then 'pub-id' else concat('meta_',position())}" property="scheme">
+                        <meta xmlns="http://www.idpf.org/2007/opf" about="#{if (@name='dc:identifier') then 'pub-id' else concat('meta_',position())}" property="scheme">
                             <xsl:value-of select="@scheme"/>
                         </meta>
                     </xsl:if>
                 </xsl:if>
             </xsl:for-each>
-        </opf:metadata>
+        </metadata>
     </xsl:template>
 
 </xsl:stylesheet>

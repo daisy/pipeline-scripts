@@ -9,12 +9,12 @@
     </xsl:template>
 
     <xsl:template match="/*">
-        <opf:spine>
+        <spine xmlns="http://www.idpf.org/2007/opf">
             <xsl:for-each
                 select="child::*[@media-type='application/xhtml+xml' and not(tokenize(@href,'/')[last()]='navigation.xhtml')]">
-                <itemref idref="{@id}"/>
+                <itemref xmlns="http://www.idpf.org/2007/opf" idref="{@id}"/>
             </xsl:for-each>
-        </opf:spine>
+        </spine>
     </xsl:template>
 
 </xsl:stylesheet>

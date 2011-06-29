@@ -17,18 +17,20 @@
         <xd:output port="opf-metadata">Metadata in OPF-format.</xd:output>
     </p:documentation>
 
-    <p:input port="metadata" sequence="true" primary="false"/>
+    <p:input port="ncc" primary="true"/>
     <p:output port="opf-metadata" primary="false">
         <p:pipe port="result" step="opf-metadata"/>
     </p:output>
 
-    <p:wrap-sequence wrapper="c:metadata">
-        <p:input port="source">
-            <p:pipe port="metadata" step="metadata"/>
+    <p:xslt>
+        <p:input port="parameters">
+            <p:empty/>
         </p:input>
-    </p:wrap-sequence>
-    <p:unwrap match="c:metadata[parent::c:metadata]"/>
-    <p:xslt name="opf-metadata">
+        <p:input port="stylesheet">
+            <p:document href="ncc2metadata.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:xslt>
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -36,6 +38,7 @@
             <p:document href="metadata2opf-metadata.xsl"/>
         </p:input>
     </p:xslt>
+    <p:identity name="opf-metadata"/>
     <p:sink/>
 
 </p:declare-step>
