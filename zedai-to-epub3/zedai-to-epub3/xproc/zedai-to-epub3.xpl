@@ -62,10 +62,12 @@
     
     <p:documentation>Convert the ZedAI Document into several XHTML Documents</p:documentation>
     <p:group name="zedai-to-html">
-        <p:output port="html-chunks" sequence="true">
-            <p:pipe port="secondary" step="html-chunks"/>
+        <p:output port="result" primary="true">
         </p:output>
-        <p:xslt name="html-single">
+        <p:output port="html-files" sequence="true">
+            <p:pipe port="secondary" step="zedai-to-html.html-chunks"/>
+        </p:output>
+        <p:xslt name="zedai-to-html.html-single">
             <p:input port="source">
                 <p:pipe port="result" step="initialization"/>
             </p:input>
@@ -79,7 +81,7 @@
         <p:add-attribute attribute-name="xml:base" match="/*">
             <p:with-option name="attribute-value" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
         </p:add-attribute>
-        <p:xslt name="html-with-ids">
+        <p:xslt name="zedai-to-html.html-with-ids">
             <p:input port="stylesheet">
                 <p:document href="../xslt/html-id-fixer.xsl"/>
             </p:input>
@@ -87,7 +89,7 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <p:xslt name="html-chunks">
+        <p:xslt name="zedai-to-html.html-chunks">
             <!--TODO fix links while chunking (see links-to-chunks) -->
             <p:input port="stylesheet">
                 <p:document href="../xslt/html-chunker.xsl"/>
@@ -98,6 +100,42 @@
         </p:xslt>
         <p:sink/>
         <!--TODO store files -->
+        <!--TODO return fileset -->
+        <px:fileset-create/>
+        <px:fileset-add-entry>
+            <p:with-option name="href" select="'toc.xhtml'"/>
+            <!--TODO make sure the nav doc name is not already used-->
+        </px:fileset-add-entry>
+    </p:group>
+    
+    <!--=========================================================================-->
+    <!-- GENERATE THE NAVIGATION DOCUMENT                                        -->
+    <!--=========================================================================-->
+    
+    <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
+    <p:group name="navigation-doc">
+        <p:output port="result"/>
+        <px:epub3-nav-create-toc name="navigation-doc.toc">
+            <p:input port="source">
+                <p:pipe port="html-files" step="zedai-to-html"/>
+            </p:input>
+            <p:with-option name="base-dir" select="$content-dir">
+                <p:empty/>
+            </p:with-option>
+        </px:epub3-nav-create-toc>
+        <px:epub3-nav-create-page-list name="navigation-doc.page-list">
+            <p:input port="source">
+                <p:pipe port="html-files" step="zedai-to-html"/>
+            </p:input>
+        </px:epub3-nav-create-page-list>
+        <px:epub3-nav-aggregate>
+            <p:input port="source">
+                <p:pipe port="result" step="navigation-doc.toc"/>
+                <p:pipe port="result" step="navigation-doc.page-list"/>
+            </p:input>
+        </px:epub3-nav-aggregate>
+        <!--TODO create other nav types (configurable ?)-->
+        <!--TODO store file -->
         <!--TODO return fileset -->
     </p:group>
     
@@ -115,37 +153,6 @@
     </p:group>
     
     <!--=========================================================================-->
-    <!-- GENERATE THE NAVIGATION DOCUMENT                                        -->
-    <!--=========================================================================-->
-    
-    <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
-    <p:group name="navigation-doc">
-        <p:output port="result"/>
-        <px:epub3-nav-create-toc name="navigation-doc.toc">
-            <p:input port="source">
-                <p:pipe port="html-chunks" step="zedai-to-html"/>
-            </p:input>
-            <p:with-option name="base-dir" select="$content-dir">
-                <p:empty/>
-            </p:with-option>
-        </px:epub3-nav-create-toc>
-        <px:epub3-nav-create-page-list name="navigation-doc.page-list">
-            <p:input port="source">
-                <p:pipe port="html-chunks" step="zedai-to-html"/>
-            </p:input>
-        </px:epub3-nav-create-page-list>
-        <px:epub3-nav-aggregate>
-            <p:input port="source">
-                <p:pipe port="result" step="navigation-doc.toc"/>
-                <p:pipe port="result" step="navigation-doc.page-list"/>
-            </p:input>
-        </px:epub3-nav-aggregate>
-        <!--TODO create other nav types (configurable ?)-->
-        <!--TODO store file -->
-        <!--TODO return fileset -->
-    </p:group>
-    
-    <!--=========================================================================-->
     <!-- GENERATE THE PACKAGE DOCUMENT                                           -->
     <!--=========================================================================-->
     <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
@@ -154,6 +161,7 @@
         <px:fileset-join name="package-doc.join-filesets">
             <p:input port="source">
                 <p:pipe port="result" step="zedai-to-html"/>
+                <p:pipe port="result" step="navigation-doc"/>
                 <p:pipe port="result" step="resources"/>
             </p:input>
         </px:fileset-join>

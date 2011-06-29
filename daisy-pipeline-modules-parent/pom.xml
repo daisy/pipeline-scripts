@@ -33,8 +33,8 @@
                 <module>../utilities/mediatype-utils</module>
                 <module>../utilities/metadata-utils</module>
                 <module>../utilities/zip-utils</module>
-                <!-- <module>../zedai-to-epub3</module> -->
-                <!-- <module>../zedai-to-html</module> -->
+                 <module>../zedai-to-epub3</module> 
+                 <module>../zedai-to-html</module> 
 	</modules>
  <repositories>
 		<repository>
