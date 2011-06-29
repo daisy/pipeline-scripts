@@ -53,9 +53,6 @@
     <p:import href="mediaoverlay-and-content.xpl"/>
     <p:import href="navigation.xpl"/>
     <p:import href="resources.xpl"/>
-    <p:import href="metadata.xpl"/>
-    <p:import href="manifest.xpl"/>
-    <p:import href="spine.xpl"/>
     <p:import href="package.xpl"/>
     <p:import
         href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
@@ -97,10 +94,10 @@
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images,
         etc.)</p:documentation>
     <px:resources name="resources">
-        <p:input port="mediaoverlay">
+        <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
         </p:input>
-        <p:input port="content">
+        <p:input port="daisy-content">
             <p:pipe port="daisy-content" step="mediaoverlay-and-content"/>
         </p:input>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
@@ -160,7 +157,6 @@
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
-        <!--p:with-option name="target" select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',encode-for-uri(//dc:title),'.epub'),'^[^:]+:(.*)$','$1')"-->
         <p:with-option name="target" select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',//dc:title,'.epub'),'^[^:]+:(.*)$','$1')">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>

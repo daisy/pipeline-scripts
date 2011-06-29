@@ -1,1 +1,0 @@
-export _JAVA_OPTIONS='-Dcom.xmlcalabash.phonehome=false -Dxml.catalog.files=/home/jostein/xmlcatalog/catalog.xml -Dxml.catalog.staticCatalog=1 -Dxml.catalog.verbosity=10' && clear && calabash daisy202-to-epub3.xpl href=/home/jostein/nlbdirekte/trunk/NLBdirekte/books/valentin_hauy/ncc.html output=/home/jostein/daisy-pipeline-modules/daisy202-to-epub3/output

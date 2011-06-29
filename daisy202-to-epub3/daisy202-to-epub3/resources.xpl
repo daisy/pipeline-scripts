@@ -30,9 +30,9 @@
             types.</xd:import>
     </p:documentation>
 
-    <p:input port="mediaoverlay" sequence="true"/>
-    <p:input port="content" sequence="true"/>
-    <p:output port="manifest"/>
+    <p:input port="daisy-smil" sequence="true"/>
+    <p:input port="daisy-content" sequence="true"/>
+    <p:output port="manifest" primary="true"/>
 
     <p:option name="daisy-dir" required="true"/>
     <p:option name="subcontent-dir" required="true"/>
@@ -43,7 +43,7 @@
 
     <p:xslt name="content-resources">
         <p:input port="source">
-            <p:pipe port="content" step="resources"/>
+            <p:pipe port="daisy-content" step="resources"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -56,12 +56,9 @@
     <p:for-each name="smil-resources">
         <p:output port="result"/>
         <p:iteration-source>
-            <p:pipe port="mediaoverlay" step="resources"/>
+            <p:pipe port="daisy-smil" step="resources"/>
         </p:iteration-source>
         <p:xslt>
-            <p:input port="source">
-                <p:pipe port="mediaoverlay" step="resources"/>
-            </p:input>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
