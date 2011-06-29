@@ -1,3 +1,0 @@
-changeset = log_style.tmpl
-tag = '{tag}_,_'
-last_tag = '{tag}'

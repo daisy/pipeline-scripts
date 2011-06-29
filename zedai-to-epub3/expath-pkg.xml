@@ -1,0 +1,9 @@
+<package name="org.daisy.pipeline.modules.zedai-to-epub3" xmlns="http://expath.org/ns/pkg">
+    <module version="1.0.0" name="zedai-to-epub3">
+        <title>ZedAI to EPUB 3</title>
+        <xslt>
+            <import-uri>http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.xpl</import-uri>
+            <file>xproc/zedai-to-epub3.xpl</file>
+        </xslt>
+    </module>
+</package>
