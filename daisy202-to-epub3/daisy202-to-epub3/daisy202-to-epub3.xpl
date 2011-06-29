@@ -2,7 +2,8 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:opf="http://www.idpf.org/2007/opf"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
 
@@ -42,9 +43,9 @@
     </p:documentation>
 
     <p:output port="debug" sequence="true">
-        <p:pipe port="store-complete" step="package"/>
+        <p:pipe port="result" step="zip"/>
     </p:output>
-    
+
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
 
@@ -56,7 +57,8 @@
     <p:import href="manifest.xpl"/>
     <p:import href="spine.xpl"/>
     <p:import href="package.xpl"/>
-    <!--p:import href="container.xpl"/-->
+    <p:import
+        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
 
     <p:variable name="daisy-dir" select="replace(p:resolve-uri($href),'[^/]+$','')">
         <p:inline>
@@ -72,8 +74,8 @@
         </p:inline>
     </p:variable>
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
-    <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
-    <p:variable name="subcontent-dir" select="concat($content-dir,'DAISY/')"/>
+    <p:variable name="content-dir" select="concat($epub-dir,'Publication/')"/>
+    <p:variable name="subcontent-dir" select="concat($content-dir,'Content/')"/>
 
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <px:ncc name="ncc">
@@ -86,7 +88,7 @@
 
     <pxi:mediaoverlay-and-content name="mediaoverlay-and-content">
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$subcontent-dir"/>
+        <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
@@ -102,10 +104,10 @@
             <p:pipe port="daisy-content" step="mediaoverlay-and-content"/>
         </p:input>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
-        <p:with-option name="content-dir" select="$subcontent-dir"/>
+        <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
     </px:resources>
-    
+
     <p:documentation>Make and store the OPF</p:documentation>
     <px:package name="package">
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -123,6 +125,7 @@
         NCC.</p:documentation>
     <px:navigation name="navigation">
         <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
@@ -130,31 +133,37 @@
             <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
         </p:input>
     </px:navigation>
+
+    <p:documentation>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p:documentation>
+    <p:group name="finalize">
+        <p:output port="result" primary="false">
+            <p:pipe port="result" step="finalize.result"/>
+        </p:output>
+        <p:identity name="finalize.store-complete">
+            <p:input port="source">
+                <p:pipe port="store-complete" step="mediaoverlay-and-content"/>
+                <p:pipe port="manifest" step="resources"/>
+                <p:pipe port="store-complete" step="navigation"/>
+                <p:pipe port="store-complete" step="package"/>
+            </p:input>
+        </p:identity>
+        <p:sink/>
+        <px:epub3-ocf-finalize cx:depends-on="finalize.store-complete" name="finalize.result">
+            <p:input port="source">
+                <p:pipe port="fileset" step="package"/>
+            </p:input>
+        </px:epub3-ocf-finalize>
+    </p:group>
     
-    <!--documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
-    <px:container name="container">
-        <p:with-option name="content-dir" select="$subcontent-dir"/>
-        <p:with-option name="epub-dir" select="$epub-dir"/>
-        <p:with-option name="epub-file"
-            select="concat($output-dir,
-                                        if (string-length(replace(//dc:title,'[^a-zA-Z0-9_ -]',''))&gt;0)
-                                            then          replace(//dc:title,'[^a-zA-Z0-9_ -]','')
-                                            else          'output'
-                                      ,'.epub')">
-            <p:pipe port="opf-metadata" step="metadata"/>
+    <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
+    <px:epub3-ocf-zip name="zip">
+        <p:input port="source">
+            <p:pipe port="result" step="finalize"/>
+        </p:input>
+        <!--p:with-option name="target" select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',encode-for-uri(//dc:title),'.epub'),'^[^:]+:(.*)$','$1')"-->
+        <p:with-option name="target" select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',//dc:title,'.epub'),'^[^:]+:(.*)$','$1')">
+            <p:pipe port="opf-package" step="package"/>
         </p:with-option>
-        <p:input port="manifests">
-            <p:pipe port="result-manifest" step="manifest"/>
-        </p:input>
-        <p:input port="store-complete">
-            <p:pipe port="store-complete" step="navigation"/>
-            <p:pipe port="store-complete" step="mediaoverlay"/>
-            <p:pipe port="store-complete" step="contents"/>
-            <p:pipe port="store-complete" step="resources"/>
-            <p:pipe port="store-complete" step="package"/>
-        </p:input>
-    </px:container>
-    
-    -->
+    </px:epub3-ocf-zip>
 
 </p:declare-step>

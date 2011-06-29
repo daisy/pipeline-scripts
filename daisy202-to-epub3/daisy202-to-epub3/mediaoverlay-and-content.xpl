@@ -28,7 +28,7 @@
     </p:output>
 
     <p:option name="daisy-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
+    <p:option name="subcontent-dir" required="true"/>
 
     <p:import href="resolve-links.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
@@ -103,7 +103,7 @@
         <p:iteration-source select="/*/*"/>
         <p:variable name="original-uri" select="p:resolve-uri(/*/@href,/*/@xml:base)"/>
         <p:variable name="result-uri"
-            select="concat($content-dir,substring(
+            select="concat($subcontent-dir,substring(
             p:resolve-uri(
             if (matches(/*/@href,'\.[^\./]*$')) then replace(/*/@href,'(.*)\.[^\.]*$','$1.xhtml') else concat(/*/@href,'.xhtml'),
             /*/@xml:base
@@ -173,7 +173,7 @@
             <p:pipe port="content-with-original-base" step="content-flow-iterate"/>
         </p:iteration-source>
         <p:variable name="result-uri"
-            select="concat($content-dir,substring(
+            select="concat($subcontent-dir,substring(
             if (matches(/*/@xml:base,'\.[^/]*$')) then replace(/*/@xml:base,'^(.*)\.[^/\.]*$','$1.smil') else concat(/*/@xml:base,'.smil'),
             string-length($daisy-dir)+1
             ))"/>

@@ -24,7 +24,13 @@
 
     <p:input port="ncc" primary="false"/>
     <p:input port="manifest" primary="false" sequence="true"/>
-    
+
+    <p:output port="opf-package" primary="false">
+        <p:pipe port="result" step="opf-package"/>
+    </p:output>
+    <p:output port="fileset" primary="false">
+        <p:pipe port="result" step="result-fileset"/>
+    </p:output>
     <p:output port="store-complete" primary="false">
         <p:pipe port="result" step="store"/>
     </p:output>
@@ -75,11 +81,10 @@
         <p:sink/>
 
         <px:fileset-create>
-            <p:with-option name="base" select="$epub-dir"/>
+            <p:with-option name="base" select="$content-dir"/>
         </px:fileset-create>
         <px:fileset-add-entry name="opf-manifest.navigation-manifest">
-            <p:with-option name="href"
-                select="concat(substring-after($content-dir,$epub-dir),'navigation.xhtml')"/>
+            <p:with-option name="href" select="concat($content-dir,'navigation.xhtml')"/>
             <p:with-option name="media-type" select="'application/xhtml+xml'"/>
         </px:fileset-add-entry>
         <p:sink/>
@@ -114,8 +119,8 @@
     <p:identity>
         <p:documentation>Construct the outer &lt;opf:package ...&gt;-element.</p:documentation>
         <p:input port="source">
-            <p:inline>
-                <package xmlns="http://www.idpf.org/2007/opf" version="3.0" profile="http://www.idpf.org/epub/30/profile/package/"/>
+            <p:inline><![CDATA[]]><package xmlns="http://www.idpf.org/2007/opf" version="3.0"
+                    profile="http://www.idpf.org/epub/30/profile/package/"/>
             </p:inline>
         </p:input>
     </p:identity>
@@ -132,9 +137,27 @@
     <p:add-attribute attribute-name="xml:lang" match="/*">
         <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language"/>
     </p:add-attribute>
-    
-    <p:store name="store">
+    <p:identity name="opf-package"/>
+
+    <p:store name="store" indent="true">
         <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
     </p:store>
+
+    <px:fileset-add-entry name="fileset-with-package">
+        <p:input port="source">
+            <p:pipe port="fileset" step="opf-manifest"/>
+        </p:input>
+        <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
+        <p:with-option name="media-type" select="'application/oebps-package+xml'"/>
+    </px:fileset-add-entry>
+    <px:fileset-create name="fileset-with-epub-base">
+        <p:with-option name="base" select="$epub-dir"/>
+    </px:fileset-create>
+    <px:fileset-join name="result-fileset">
+        <p:input port="source">
+            <p:pipe port="result" step="fileset-with-package"/>
+            <p:pipe port="result" step="fileset-with-epub-base"/>
+        </p:input>
+    </px:fileset-join>
 
 </p:declare-step>

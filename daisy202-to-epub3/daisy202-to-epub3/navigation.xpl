@@ -34,8 +34,11 @@
     </p:output>
 
     <p:option name="content-dir" required="true"/>
-
+    <p:option name="subcontent-dir" required="true"/>
+    
     <p:import href="resolve-links.xpl"/>
+    
+    <p:variable name="subdir" select="substring-after($subcontent-dir,$content-dir)"/>
 
     <p:documentation>Transform the NCC into a Navigation Document.</p:documentation>
 
@@ -47,7 +50,7 @@
     <p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
         <p:add-attribute match="/*" attribute-name="href">
             <p:with-option name="attribute-value"
-                select="concat('DAISY/',replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml#'),if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else '')"
+                select="concat($subdir,replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml#'),if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else '')"
             />
         </p:add-attribute>
     </p:viewport>
@@ -63,7 +66,7 @@
     <p:delete match="html:ol[not(*)]"/>
     <p:identity name="result"/>
 
-    <p:store name="store">
+    <p:store name="store" indent="true">
         <p:with-option name="href" select="concat($content-dir,'navigation.xhtml')"/>
     </p:store>
     <p:add-attribute match="/*" attribute-name="xml:base">

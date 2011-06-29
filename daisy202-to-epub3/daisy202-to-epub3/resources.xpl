@@ -19,7 +19,7 @@
         <xd:output port="manifest">List of stored files.</xd:output>
         <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
         <xd:option name="daisy-dir">URI to the directory containing the NCC.</xd:option>
-        <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
+        <xd:option name="subcontent-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
         <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
         <xd:import href="../utilities/file-utils/fileutils-library.xpl">For filesystem
@@ -35,7 +35,7 @@
     <p:output port="manifest"/>
 
     <p:option name="daisy-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
+    <p:option name="subcontent-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
@@ -79,7 +79,7 @@
     </px:fileset-join>
     <px:mediatype-detect name="iterate.mediatype"/>
     <px:fileset-copy>
-        <p:with-option name="target" select="$content-dir"/>
+        <p:with-option name="target" select="$subcontent-dir"/>
     </px:fileset-copy>
 
 </p:declare-step>

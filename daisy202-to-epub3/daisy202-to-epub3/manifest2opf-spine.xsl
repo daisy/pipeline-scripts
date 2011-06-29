@@ -9,7 +9,7 @@
     </xsl:template>
 
     <xsl:template match="/*">
-        <spine xmlns="http://www.idpf.org/2007/opf">
+        <spine xmlns="http://www.idpf.org/2007/opf" toc="{child::*[tokenize(@href,'/')[last()]='navigation.xhtml']/@id}">
             <xsl:for-each
                 select="child::*[@media-type='application/xhtml+xml' and not(tokenize(@href,'/')[last()]='navigation.xhtml')]">
                 <itemref xmlns="http://www.idpf.org/2007/opf" idref="{@id}"/>
