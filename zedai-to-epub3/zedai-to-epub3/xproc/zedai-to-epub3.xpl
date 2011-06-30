@@ -4,11 +4,13 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    version="1.0" exclude-inline-prefixes="#all">
+    version="1.0">
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter"/>
-    <p:output port="result"/>
+    <p:output port="result">
+<!--        <p:pipe port="result" step="resources"/>-->
+    </p:output>
     
     <p:option name="output-dir" required="true"/>
     
@@ -26,12 +28,14 @@
         else tokenize($href,'/')[last()],'.epub')
         else if (ends-with($output,'.epub')) then $output 
         else concat($output,'.epub'))"/>-->
+    <p:variable name="zedai-base" select="p:base-uri()"/>
+    <p:variable name="zedai-basedir" select="replace($zedai-base,'^(.+/)[^/]*','$1')"/>
+    <p:variable name="zedai-basename" select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>
     <p:variable name="output-dir-absolute"
         select="p:resolve-uri($output-dir)"/>
     <p:variable name="epub-dir" select="concat($output-dir-absolute,'/epub/')"/>
+    <p:variable name="epub-file" select="concat($output-dir-absolute,'/',$zedai-basename,'.epub')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
-    <p:variable name="zedai-base" select="p:base-uri()"/>
-    <p:variable name="zedai-basename" select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>
     
     <!--=========================================================================-->
     <!-- INITIALIZATION                                                          -->
@@ -168,13 +172,34 @@
     <!--=========================================================================-->
     
     <p:documentation>Extract local resources referenced from the XHTML</p:documentation>
-    <!--<p:group name="resources">
+    <p:group name="resources">
         <p:output port="result"/>
-        <!-\-TODO call html-utils to get a file set of resource from the XHTML docs-\->
-        <!-\-TODO local only or all resources ?-\->
-        <!-\-TODO copy resources to the epub dir-\->
-        <p:identity/>
-    </p:group>-->
+        <!--TODO call html-utils to get a file set of resource from the XHTML docs-->
+        <!--TODO local only or all resources ?-->
+        <!--TODO copy resources to the epub dir-->
+        <p:for-each>
+            <p:iteration-source>
+                <p:pipe port="html-files" step="zedai-to-html"/>
+            </p:iteration-source>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/html-get-resources.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+        </p:for-each>
+        <px:fileset-join/>
+        <p:string-replace match="/*/@xml:base">
+            <p:with-option name="replace" select="concat('&quot;',$zedai-basedir,'&quot;')"/>
+        </p:string-replace>
+        <!--TODO detect unknown media types-->
+        <!--<px:mediatype-detect/>-->
+        <px:fileset-copy>
+            <p:with-option name="target" select="$content-dir"/>
+        </px:fileset-copy>
+    </p:group>
     
     <!--=========================================================================-->
     <!-- GENERATE THE PACKAGE DOCUMENT                                           -->
@@ -188,7 +213,7 @@
             <p:input port="source">
                 <p:pipe port="result" step="zedai-to-html"/>
                 <p:pipe port="result" step="navigation-doc"/>
-                <!--                <p:pipe port="result" step="resources"/>-->
+                <p:pipe port="result" step="resources"/>
             </p:input>
         </px:fileset-join>
         <!--TODO include nav doc in the spine ?-->
@@ -219,23 +244,23 @@
             </px:fileset-add-entry>
         </p:group>
     </p:group>
-    
     <!--=========================================================================-->
     <!-- BUILD THE EPUB PUBLICATION                                              -->
     <!--=========================================================================-->
     
     <p:documentation>Build the EPUB 3 Publication</p:documentation>
-    <!--<p:group name="epub">
+    <p:group name="epub">
         <p:output port="result"/>
-        <p:identity/>
+        <p:sink/><!--seems to be required to *not* connect non-primary ports on ocf-finalize-->
         <px:epub3-ocf-finalize>
-            <p:input port="source"/>
-            <!-\-<p:input port="metadata"></p:input>-\->
+            <p:input port="source">
+                <p:pipe port="result" step="package-doc"/>
+            </p:input>
         </px:epub3-ocf-finalize>
         <px:epub3-ocf-zip>
-            <p:with-option name="target" select="$output-dir"/>
+            <p:with-option name="target" select="$epub-file"/>
         </px:epub3-ocf-zip>
-    </p:group>-->
+    </p:group>
     
     
 </p:declare-step>
