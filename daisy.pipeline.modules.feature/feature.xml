@@ -17,19 +17,13 @@
    </license>
 
    <plugin
-         id="org.daisy.pipeline.modules.metadata-utils"
+         id="org.daisy.pipeline.modules.daisy202-to-epub3"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+    
    <plugin
          id="org.daisy.pipeline.modules.dtbook-utils"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.daisy.pipeline.modules.daisy202-to-epub3"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -76,13 +70,31 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+    
    <plugin
          id="org.daisy.pipeline.modules.mediatype-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
+    <plugin
+        id="org.daisy.pipeline.modules.metadata-utils"
+        download-size="0"
+        install-size="0"
+        version="0.0.0"/>
+    
+   <plugin
+         id="org.daisy.pipeline.modules.zedai-to-epub3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+    
+   <plugin
+         id="org.daisy.pipeline.modules.zedai-to-html"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+    
    <plugin
          id="org.daisy.pipeline.modules.zip-utils"
          download-size="0"
