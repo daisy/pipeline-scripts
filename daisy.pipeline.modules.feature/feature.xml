@@ -89,4 +89,16 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="org.daisy.pipeline.modules.zedai-to-html"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.dtbook-to-zedai"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
