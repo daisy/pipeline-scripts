@@ -12,7 +12,8 @@
             <xd:organization>NLB</xd:organization>
         </xd:author>
         <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
-        <xd:import href="../utilities/html-utils/html-library.xpl">For loading HTML.</xd:import>
+        <xd:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">For
+            loading HTML.</xd:import>
         <xd:option name="href">URI to the NCC.</xd:option>
         <xd:output port="ncc">The NCC as well-formed XHTML.</xd:output>
         <xd:output port="resource-manifest">Auxiliary resources referenced from the NCC.</xd:output>

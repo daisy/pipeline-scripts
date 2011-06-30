@@ -36,9 +36,9 @@
         <xd:import href="package.xpl">For making the package document.</xd:import>
     </p:documentation>
 
-    <p:output port="result">
+    <!--p:output port="result">
         <p:pipe port="result" step="zip"/>
-    </p:output>
+    </p:output-->
 
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
@@ -156,5 +156,6 @@
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
+    <p:sink/>
 
 </p:declare-step>
