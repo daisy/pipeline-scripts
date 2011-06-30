@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:resources" name="resources"
-    version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-resources"
+    name="resources" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset,
@@ -49,7 +49,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="content2resources.xsl"/>
+            <p:document href="daisy202-content-to-resource-fileset.xsl"/>
         </p:input>
     </p:xslt>
     <p:sink/>
@@ -63,7 +63,7 @@
                 <p:empty/>
             </p:input>
             <p:input port="stylesheet">
-                <p:document href="media-overlay2resources.xsl"/>
+                <p:document href="smil-to-resource-fileset.xsl"/>
             </p:input>
         </p:xslt>
     </p:for-each>

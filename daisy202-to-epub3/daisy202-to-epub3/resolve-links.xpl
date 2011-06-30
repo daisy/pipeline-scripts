@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-resolve-links"
-    name="resolve-links" version="1.0">
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="pxi:daisy202-to-epub3-resolve-links" name="resolve-links" version="1.0">
 
     <p:input port="source" primary="true"/>
     <p:input port="daisy-smil" sequence="true"/>
@@ -217,11 +216,11 @@
                         <xsl:apply-templates select="node()"/>
                     </xsl:template>
                     <xsl:template match="html:a">
-                        <xsl:element name="{name(parent::*)}"
-                            namespace="{namespace-uri(parent::*)}">
+                        <xsl:element name="{name(parent::*)}" namespace="{namespace-uri(parent::*)}">
                             <xsl:apply-templates select="parent::*/@*"/>
                             <xsl:choose>
-                                <xsl:when test="starts-with(@href,'file:') or starts-with(@href,'#') and substring(@href,2) = (@id | ancestor::*/@id | descendant::*/@id)">
+                                <xsl:when
+                                    test="starts-with(@href,'file:') or starts-with(@href,'#') and substring(@href,2) = (@id | ancestor::*/@id | descendant::*/@id)">
                                     <xsl:if test="not(parent::*/@id) and @id">
                                         <xsl:attribute name="id" select="@id"/>
                                     </xsl:if>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:ncc" version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-ncc" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Load the DAISY 2.02 NCC.</xd:short>
@@ -29,38 +28,13 @@
     <p:output port="flow" primary="false">
         <p:pipe port="result" step="flow"/>
     </p:output>
-    
+
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
 
     <p:documentation>Loads the NCC.</p:documentation>
     <px:html-load name="ncc">
         <p:with-option name="href" select="$href"/>
     </px:html-load>
-
-    <!--p:documentation>Makes a list of resources referenced from the NCC.</p:documentation>
-    <p:xslt name="resources">
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="ncc2resources.xsl"/>
-        </p:input>
-    </p:xslt>
-    <p:sink/-->
-
-    <!--p:documentation>Makes a list of metadata referenced from the NCC.</p:documentation>
-    <p:xslt name="metadata">
-        <p:input port="source">
-            <p:pipe port="result" step="ncc"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="ncc2metadata.xsl"/>
-        </p:input>
-    </p:xslt>
-    <p:sink/-->
 
     <p:documentation>Makes a chronologically ordered list of SMIL-files referenced from the
         NCC.</p:documentation>
@@ -72,7 +46,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="ncc2flow-manifest.xsl"/>
+            <p:document href="ncc-to-flow-fileset.xsl"/>
         </p:input>
     </p:xslt>
     <p:sink/>

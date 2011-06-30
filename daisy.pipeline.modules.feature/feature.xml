@@ -23,25 +23,68 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.daisy.pipeline.mediaoverlay-utils"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.daisy.pipeline.html-utils"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.daisy.pipeline.modules.dtbook-to-zedai"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.daisy.pipeline.modules.dtbook-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.daisy202-to-epub3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.epub3-nav-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.epub3-ocf-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.epub3-pub-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.file-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.fileset-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.html-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.mediaoverlay-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.mediatype-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.zip-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

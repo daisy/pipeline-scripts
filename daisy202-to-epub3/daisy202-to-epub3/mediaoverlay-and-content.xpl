@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="pxi:mediaoverlay-and-content" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:html="http://www.w3.org/1999/xhtml"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:mo="http://www.w3.org/ns/SMIL"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" name="mediaoverlay-and-content" version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:mo="http://www.w3.org/ns/SMIL" type="pxi:daisy202-to-epub3-mediaoverlay-and-content"
+    name="mediaoverlay-and-content" version="1.0">
 
     <p:input port="flow" primary="true"/>
 
@@ -133,7 +134,7 @@
         <p:xslt name="content-flow-iterate.content">
             <p:with-param name="href" select="$result-uri"/>
             <p:input port="stylesheet">
-                <p:document href="xhtml2content.xsl"/>
+                <p:document href="daisy202-content-to-epub3-content.xsl"/>
             </p:input>
         </p:xslt>
         <p:store indent="true" name="content-flow-iterate.store-content">

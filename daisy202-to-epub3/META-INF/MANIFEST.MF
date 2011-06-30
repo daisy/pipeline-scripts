@@ -5,10 +5,11 @@ Bundle-SymbolicName: org.daisy.pipeline.modules.daisy202-to-epub3
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: converter-registry,
  module-common,
+ org.daisy.pipeline.modules.epub3-nav-utils,
+ org.daisy.pipeline.modules.epub3-ocf-utils,
+ org.daisy.pipeline.modules.epub3-pub-utils,
+ org.daisy.pipeline.modules.fileset-utils,
  org.daisy.pipeline.modules.html-utils,
  org.daisy.pipeline.modules.mediaoverlay-utils,
- org.daisy.pipeline.modules.mediatype-utils,
- org.daisy.pipeline.modules.file-utils,
- org.daisy.pipeline.modules.fileset-utils,
- org.daisy.pipeline.modules.zip-utils
+ org.daisy.pipeline.modules.mediatype-utils
 Service-Component: OSGI-INF/daisy202-to-epub3.xml

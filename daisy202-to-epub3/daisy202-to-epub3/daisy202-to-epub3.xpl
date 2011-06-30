@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:opf="http://www.idpf.org/2007/opf"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
 
@@ -31,18 +29,14 @@
         <xd:option name="href">Path to input NCC.</xd:option>
         <xd:option name="output">Path to output directory for the EPUB.</xd:option>
         <xd:import href="ncc.xpl">For loading the NCC.</xd:import>
-        <xd:import href="mediaoverlay.xpl">For processing SMIL timesheets.</xd:import>
-        <xd:import href="contents.xpl">For processing content documents.</xd:import>
+        <xd:import href="mediaoverlay-and-content.xpl">For processing the SMILs and the
+            content.</xd:import>
         <xd:import href="resources.xpl">For processing auxiliary resources.</xd:import>
-        <xd:import href="metadata.xpl">For compiling metadata.</xd:import>
-        <xd:import href="manifest.xpl">For compiling the manifest.</xd:import>
-        <xd:import href="spine.xpl">For compiling the spine.</xd:import>
         <xd:import href="navigation.xpl">For making the navigation document.</xd:import>
         <xd:import href="package.xpl">For making the package document.</xd:import>
-        <xd:import href="container.xpl">For packaging the publication as a ZIP (OCF).</xd:import>
     </p:documentation>
 
-    <p:output port="debug" sequence="true">
+    <p:output port="result">
         <p:pipe port="result" step="zip"/>
     </p:output>
 
@@ -75,25 +69,25 @@
     <p:variable name="subcontent-dir" select="concat($content-dir,'Content/')"/>
 
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
-    <px:ncc name="ncc">
+    <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="p:resolve-uri($href)">
             <p:inline>
                 <irrelevant/>
             </p:inline>
         </p:with-option>
-    </px:ncc>
+    </pxi:daisy202-to-epub3-ncc>
 
-    <pxi:mediaoverlay-and-content name="mediaoverlay-and-content">
+    <pxi:daisy202-to-epub3-mediaoverlay-and-content name="mediaoverlay-and-content">
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
-    </pxi:mediaoverlay-and-content>
+    </pxi:daisy202-to-epub3-mediaoverlay-and-content>
 
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images,
         etc.)</p:documentation>
-    <px:resources name="resources">
+    <pxi:daisy202-to-epub3-resources name="resources">
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
         </p:input>
@@ -103,10 +97,10 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
-    </px:resources>
+    </pxi:daisy202-to-epub3-resources>
 
     <p:documentation>Make and store the OPF</p:documentation>
-    <px:package name="package">
+    <pxi:daisy202-to-epub3-package name="package">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
         <p:input port="ncc">
@@ -116,11 +110,11 @@
             <p:pipe port="manifest" step="mediaoverlay-and-content"/>
             <p:pipe port="manifest" step="resources"/>
         </p:input>
-    </px:package>
+    </pxi:daisy202-to-epub3-package>
 
     <p:documentation>Make and store the EPUB 3 Navigation Document based on the DAISY 2.02
         NCC.</p:documentation>
-    <px:navigation name="navigation">
+    <pxi:daisy202-to-epub3-navigation name="navigation">
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="subcontent-dir" select="$subcontent-dir"/>
         <p:input port="ncc">
@@ -129,7 +123,7 @@
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="mediaoverlay-and-content"/>
         </p:input>
-    </px:navigation>
+    </pxi:daisy202-to-epub3-navigation>
 
     <p:documentation>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p:documentation>
     <p:group name="finalize">
@@ -151,13 +145,14 @@
             </p:input>
         </px:epub3-ocf-finalize>
     </p:group>
-    
+
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:epub3-ocf-zip name="zip">
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
-        <p:with-option name="target" select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',//dc:title,'.epub'),'^[^:]+:(.*)$','$1')">
+        <p:with-option name="target"
+            select="replace(concat($output-dir,encode-for-uri(//dc:identifier),' - ',//dc:title,'.epub'),'^[^:]+:(.*)$','$1')">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>

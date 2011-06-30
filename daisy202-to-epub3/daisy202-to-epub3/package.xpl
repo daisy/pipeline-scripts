@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
-    type="px:package" name="package" exclude-inline-prefixes="#all" version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-package"
+    name="package" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Compile and store the OPF.</xd:short>
@@ -41,29 +40,17 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
 
     <p:documentation>Compile OPF metadata.</p:documentation>
-    <p:group name="opf-metadata">
-        <p:output port="result" primary="true"/>
-
-        <p:xslt>
-            <p:input port="source">
-                <p:pipe port="ncc" step="package"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="ncc2metadata.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="metadata2opf-metadata.xsl"/>
-            </p:input>
-        </p:xslt>
-    </p:group>
+    <p:xslt name="opf-metadata">
+        <p:input port="source">
+            <p:pipe port="ncc" step="package"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="ncc-metadata-to-opf-metadata.xsl"/>
+        </p:input>
+    </p:xslt>
     <p:sink/>
 
     <p:documentation>Compile OPF manifest.</p:documentation>
@@ -100,7 +87,7 @@
                 <p:empty/>
             </p:input>
             <p:input port="stylesheet">
-                <p:document href="manifest2opf-manifest.xsl"/>
+                <p:document href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/fileset-to-manifest.xsl"/>
             </p:input>
         </p:xslt>
     </p:group>
@@ -111,7 +98,9 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="manifest2opf-spine.xsl"/>
+            <p:document
+                href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/manifest-to-spine.xsl"
+            />
         </p:input>
     </p:xslt>
     <p:sink/>

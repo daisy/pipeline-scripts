@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils" xmlns:mo="http://www.w3.org/ns/SMIL"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:pxp="http://exproc.org/proposed/steps"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:navigation" name="navigation"
-    version="1.0">
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="pxi:daisy202-to-epub3-navigation" name="navigation" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
@@ -35,9 +31,9 @@
 
     <p:option name="content-dir" required="true"/>
     <p:option name="subcontent-dir" required="true"/>
-    
+
     <p:import href="resolve-links.xpl"/>
-    
+
     <p:variable name="subdir" select="substring-after($subcontent-dir,$content-dir)"/>
 
     <p:documentation>Transform the NCC into a Navigation Document.</p:documentation>
@@ -60,7 +56,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="ncc2navigation.xsl"/>
+            <p:document href="ncc-to-navigation.xsl"/>
         </p:input>
     </p:xslt>
     <p:delete match="html:ol[not(*)]"/>

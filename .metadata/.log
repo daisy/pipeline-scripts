@@ -2131,3 +2131,38 @@ org.eclipse.core.internal.resources.ResourceException: The project description f
 	at org.eclipse.equinox.launcher.Main.main(Main.java:1384)
 !SUBENTRY 2 org.eclipse.core.resources 4 567 2011-06-29 13:49:13.339
 !MESSAGE The project description file (.project) for 'zedai2html' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SESSION 2011-06-30 09:55:38.342 -----------------------------------------------
+eclipse.buildId=M20110210-1200
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=nb_NO
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.jface 2 0 2011-06-30 09:56:11.248
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2011-06-30 09:56:11.248
+!MESSAGE A conflict occurred for CTRL+SHIFT+G:
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace,References in Workspace,
+		Search for references to the selected element in the workspace,
+		Category(org.eclipse.search.ui.category.search,Search,Search command category,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.oxygenxml.editor.goToMatchingTag,Go to Matching Tag,
+		Go to matching tag,
+		Category(com.oxygenxml.editor.category.OxygenXMLEditor,oXygen XML Editor,oXygen XML Editor commands,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.oxygenxml.editor.editors.xml.AbstractXMLTextEditor$26@2eb5f307)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.oxygenxml.editor.xmlCommonEditorScope,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.oxygenxml.editor.goToMatchingBracket,Go to matching bracket,
+		Go to matching bracket,
+		Category(com.oxygenxml.editor.category.OxygenXMLEditor,oXygen XML Editor,oXygen XML Editor commands,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.oxygenxml.editor.allEditorsScope,,,system)
