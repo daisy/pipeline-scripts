@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-package"
     name="package" exclude-inline-prefixes="#all" version="1.0">
@@ -87,7 +87,9 @@
                 <p:empty/>
             </p:input>
             <p:input port="stylesheet">
-                <p:document href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/fileset-to-manifest.xsl"/>
+                <p:document
+                    href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/fileset-to-manifest.xsl"
+                />
             </p:input>
         </p:xslt>
     </p:group>
