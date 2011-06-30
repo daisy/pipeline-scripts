@@ -5,12 +5,19 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     version="1.0">
+    <p:pipeinfo>
+        <cd:converter name="zedai-to-epub3" version="1.0"
+            xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
+            <cd:description>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
+                publication.</cd:description>
+            <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
+            <cd:arg name="output-dir" type="option" bind="output" desc="Path to output directory for the EPUB."/>
+        </cd:converter>
+    </p:pipeinfo>
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter"/>
-    <p:output port="result">
-<!--        <p:pipe port="result" step="resources"/>-->
-    </p:output>
+    <p:output port="result"/>
     
     <p:option name="output-dir" required="true"/>
     
