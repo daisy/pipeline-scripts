@@ -56,7 +56,10 @@
     </p:group>
     <p:sink/>
     
-    <px:fileset-create name="fileset-base">
+    <px:fileset-create name="fileset-content-base">
+        <p:with-option name="base" select="$content-dir"/>
+    </px:fileset-create>
+    <px:fileset-create name="fileset-epub-base">
         <p:with-option name="base" select="$epub-dir"/>
     </px:fileset-create>
     
@@ -120,9 +123,9 @@
             <p:store indent="true" encoding="utf-8" method="xhtml">
                 <p:with-option name="href" select="base-uri(/*)"/>
             </p:store>
-            <px:fileset-add-entry media-type="application/xml+xhtml">
+            <px:fileset-add-entry media-type="application/xhtml+xml">
                 <p:input port="source">
-                    <p:pipe port="result" step="fileset-base"/>
+                    <p:pipe port="result" step="fileset-content-base"/>
                 </p:input>
                 <p:with-option name="href" select="base-uri(/*)">
                     <p:pipe port="current" step="zedai-to-html.iterate"/>
@@ -166,7 +169,7 @@
             </p:store>
             <px:fileset-add-entry media-type="application/xml+xhtml">
                 <p:input port="source">
-                    <p:pipe port="result" step="fileset-base"/>
+                    <p:pipe port="result" step="fileset-content-base"/>
                 </p:input>
                 <p:with-option name="href" select="$nav-base"/>
             </px:fileset-add-entry>
@@ -224,9 +227,6 @@
         </px:fileset-join>
         <!--TODO include nav doc in the spine ?-->
         <px:epub3-pub-create-package-doc name="package-doc.create">
-            <p:input port="fileset">
-                <p:pipe port="result" step="package-doc.join-filesets"/>
-            </p:input>
             <p:input port="spine">
                 <p:pipe port="result" step="zedai-to-html"/>
             </p:input>
@@ -257,10 +257,16 @@
     <p:documentation>Build the EPUB 3 Publication</p:documentation>
     <p:group name="epub">
         <p:output port="result"/>
+        <px:fileset-join name="epub.fileset">
+            <p:input port="source">
+                <p:pipe port="result" step="package-doc"/>
+                <p:pipe port="result" step="fileset-epub-base"/>
+            </p:input>
+        </px:fileset-join>
         <p:sink/><!--seems to be required to *not* connect non-primary ports on ocf-finalize-->
         <px:epub3-ocf-finalize>
             <p:input port="source">
-                <p:pipe port="result" step="package-doc"/>
+                <p:pipe port="result" step="epub.fileset"/>
             </p:input>
         </px:epub3-ocf-finalize>
         <px:epub3-ocf-zip>
