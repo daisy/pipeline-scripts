@@ -148,9 +148,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:inline>
-                <p:document href="resolve-links.xsl"/>
-            </p:inline>
+            <p:document href="resolve-links.xsl"/>
         </p:input>
     </p:xslt>
 
