@@ -42,25 +42,6 @@
                         <p:variable name="text-fragment"
                             select="if (contains(/*/*[local-name()='text']/@src,'#')) then tokenize(/*/*[local-name()='text']/@src,'#')[last()] else ''"/>
                         <p:choose>
-                            <!--p:documentation>When text@src references the content document and
-                                either an ancestor of, a descendant of or the 'a'-link itself (The
-                                XPath expression "[ancestor-or-self::*/@id=$text-fragment or
-                                descendant::*/@id=$text-fragment]" could be limited to
-                                "[parent::*/@id=$text-fragment or @id=$text-fragment]" for improved
-                                performance if needed.)</p:documentation>
-                            <p:when
-                                test="$text-uri=$content-base and ($text-id=$a-fragment or //html:a[@temp-id=$a-temp-id][parent::*/@id=$text-fragment or @id=$text-fragment])">
-                                <p:xpath-context>
-                                    <p:pipe port="result" step="iteratable-links"/>
-                                </p:xpath-context>
-                                <p:documentation>Unwrap the 'a'-link.</p:documentation>
-                                <p:add-attribute match="/*" attribute-name="unwrap"
-                                    attribute-value="1">
-                                    <p:input port="source">
-                                        <p:pipe port="result" step="a-original"/>
-                                    </p:input>
-                                </p:add-attribute>
-                            </p:when-->
                             <p:documentation>when text@src references the content (but not the
                                 'a'-link)</p:documentation>
                             <p:when test="$text-uri=$content-base">
@@ -88,17 +69,6 @@
                                     </p:input>
                                 </p:add-attribute>
                             </p:when>
-                            <!--p:documentation>When text@src references any other local
-                                file</p:documentation>
-                            <p:when test="starts-with($text-uri,'file:')">
-                                <p:documentation>Unwrap the 'a'-link.</p:documentation>
-                                <p:add-attribute match="/*" attribute-name="unwrap"
-                                    attribute-value="2">
-                                    <p:input port="source">
-                                        <p:pipe port="result" step="a-original"/>
-                                    </p:input>
-                                </p:add-attribute>
-                            </p:when-->
                             <p:otherwise>
                                 <p:documentation>Does not resolve to file in directories "above" the
                                     content documents directory (or external
@@ -170,34 +140,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-                    exclude-result-prefixes="#all">
-                    <xsl:template match="@*|node()">
-                        <xsl:copy>
-                            <xsl:apply-templates select="@*|node()"/>
-                        </xsl:copy>
-                    </xsl:template>
-                    <xsl:template match="html:ol">
-                        <xsl:variable name="ol" select="."/>
-                        <xsl:for-each-group select="*" group-adjacent="count(child::html:a) &gt; 0">
-                            <xsl:choose>
-                                <xsl:when test="current-grouping-key()">
-                                    <ol xmlns="http://www.w3.org/1999/xhtml">
-                                        <xsl:apply-templates select="$ol/@*[not(local-name()='id')]"/>
-                                        <xsl:apply-templates select="current-group()"/>
-                                    </ol>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:for-each select="current-group()">
-                                        <xsl:apply-templates select="html:ol"/>
-                                    </xsl:for-each>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each-group>
-                    </xsl:template>
-                </xsl:stylesheet>
-            </p:inline>
+            <p:document href="nav-unwrap-untitled-toc-levels.xsl"/>
         </p:input>
     </p:xslt>
     <p:xslt>
@@ -206,35 +149,7 @@
         </p:input>
         <p:input port="stylesheet">
             <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
-                    <xsl:template match="@*|node()">
-                        <xsl:copy>
-                            <xsl:apply-templates select="@*|node()"/>
-                        </xsl:copy>
-                    </xsl:template>
-                    <xsl:template match="*[child::html:a]">
-                        <xsl:apply-templates select="node()"/>
-                    </xsl:template>
-                    <xsl:template match="html:a">
-                        <xsl:element name="{name(parent::*)}" namespace="{namespace-uri(parent::*)}">
-                            <xsl:apply-templates select="parent::*/@*"/>
-                            <xsl:choose>
-                                <xsl:when
-                                    test="starts-with(@href,'file:') or starts-with(@href,'#') and substring(@href,2) = (@id | ancestor::*/@id | descendant::*/@id)">
-                                    <xsl:if test="not(parent::*/@id) and @id">
-                                        <xsl:attribute name="id" select="@id"/>
-                                    </xsl:if>
-                                    <xsl:apply-templates select="node()"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="@*|node()"/>
-                                    </xsl:copy>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:element>
-                    </xsl:template>
-                </xsl:stylesheet>
+                <p:document href="resolve-links.xsl"/>
             </p:inline>
         </p:input>
     </p:xslt>
