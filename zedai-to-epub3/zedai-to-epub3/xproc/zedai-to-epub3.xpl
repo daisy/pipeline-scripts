@@ -10,8 +10,8 @@
             xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
             <cd:description>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
                 publication.</cd:description>
-            <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
-            <cd:arg name="output-dir" type="option" bind="output" desc="Path to output directory for the EPUB."/>
+            <cd:arg name="source" type="input" port="source" desc="Path to input ZedAI."/>
+            <cd:arg name="output" type="option" bind="output-dir" desc="Path to output directory for the EPUB."/>
         </cd:converter>
     </p:pipeinfo>
     
