@@ -17,7 +17,6 @@
     
     <p:input port="source" primary="true"/>
     <p:input port="parameters" kind="parameter"/>
-    <p:output port="result"/>
     
     <p:option name="output-dir" required="true"/>
     
@@ -39,9 +38,9 @@
     <p:variable name="zedai-basedir" select="replace($zedai-base,'^(.+/)[^/]*','$1')"/>
     <p:variable name="zedai-basename" select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>
     <p:variable name="output-dir-absolute"
-        select="p:resolve-uri($output-dir)"/>
-    <p:variable name="epub-dir" select="concat($output-dir-absolute,'/epub/')"/>
-    <p:variable name="epub-file" select="concat($output-dir-absolute,'/',$zedai-basename,'.epub')"/>
+        select="p:resolve-uri(if (ends-with($output-dir,'/')) then $output-dir else concat($output-dir,'/'))"/>
+    <p:variable name="epub-dir" select="concat($output-dir-absolute,'epub/')"/>
+    <p:variable name="epub-file" select="concat($output-dir-absolute,$zedai-basename,'.epub')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
     
     <!--=========================================================================-->
@@ -268,6 +267,7 @@
             <p:with-option name="target" select="$epub-file"/>
         </px:epub3-ocf-zip>
     </p:group>
+    <p:sink/>
     
     
 </p:declare-step>
