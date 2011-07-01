@@ -9,6 +9,6 @@ Require-Bundle: converter-registry,
  org.daisy.pipeline.modules.epub3-ocf-utils,
  org.daisy.pipeline.modules.epub3-pub-utils,
  org.daisy.pipeline.modules.html-utils,
- org.daisy.pipeline.modules.mediatype-utils
-Service-Component: OSGI-INF/daisy202-to-epub3.xml
+ org.daisy.pipeline.modules.fileset-utils
+Service-Component: OSGI-INF/zedai-to-epub3.xml
 Bundle-Vendor: DAISY Consortium

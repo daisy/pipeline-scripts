@@ -3,7 +3,7 @@
   xmlns:f="http://www.daisy.org/ns/functions" xmlns:its="http://www.w3.org/2005/11/its"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="f xlink xs z"
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="#all"
   version="2.0">
 
   <xsl:output method="xml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
