@@ -53,7 +53,7 @@
     </p:viewport>
 
     <p:xslt>
-        <p:with-option name="pub-id" select="$pub-id"/>
+        <p:with-param name="pub-id" select="$pub-id"/>
         <p:input port="stylesheet">
             <p:document href="ncc-to-navigation.xsl"/>
         </p:input>

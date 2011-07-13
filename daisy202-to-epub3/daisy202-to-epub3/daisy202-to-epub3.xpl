@@ -7,7 +7,7 @@
             <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>
             <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
             <cd:arg name="output" type="option" bind="output" desc="Path to output directory for the EPUB."/>
-            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" desc="Whether or not to include media overlays and associated audio files (default 'true')"/>
+            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files (default 'true')"/>
         </cd:converter>
     </p:pipeinfo>
 
@@ -30,52 +30,34 @@
         <xd:import href="navigation.xpl">For making the navigation document.</xd:import>
         <xd:import href="package.xpl">For making the package document.</xd:import>
     </p:documentation>
-    
+
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
     <p:option name="mediaoverlay" required="false" select="'true'"/>
-    
-    <!--p:import href="ncc.xpl"/>
+
+    <p:import href="ncc.xpl"/>
     <p:import href="mediaoverlay-and-content.xpl"/>
     <p:import href="navigation.xpl"/>
     <p:import href="resources.xpl"/>
     <p:import href="package.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/-->
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
 
-    <!--p:variable name="daisy-dir" select="replace(p:resolve-uri($href),'[^/]+$','')">
-        <p:inline>
-            <irrelevant/>
-        </p:inline>
-    </p:variable>
-    <p:variable name="output-dir"
-        select="if (ends-with(p:resolve-uri($output),'/'))
-                                                 then p:resolve-uri($output)
-                                                 else concat(p:resolve-uri($output),'/')">
-        <p:inline>
-            <irrelevant/>
-        </p:inline>
-    </p:variable>
+    <p:variable name="daisy-dir" select="replace($href,'[^/]+$','')"/>
+    <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
-    <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/-->
-    
-    <!--p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
+    <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
+
+    <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))">
             <p:inline>
                 <irrelevant/>
             </p:inline>
         </p:with-option>
-        </pxi:daisy202-to-epub3-ncc-->
-    
-    <p:in-scope-names name="names"/>
-    <p:store href="file:/home/jostein/daisy-pipeline/Main/output/daisy202-to-epub3/ncc.xhtml">
-        <p:input port="source">
-            <p:pipe port="result" step="names"/>
-        </p:input>
-    </p:store>
-    
-    <!--p:documentation>Convert and copy the content files and SMIL-files</p:documentation>
+    </pxi:daisy202-to-epub3-ncc>
+
+    <p:documentation>Convert and copy the content files and SMIL-files</p:documentation>
     <pxi:daisy202-to-epub3-mediaoverlay-and-content name="mediaoverlay-and-content">
         <p:with-option name="pub-id" select="/*/@value">
             <p:pipe port="pub-id" step="ncc"/>
@@ -162,6 +144,6 @@
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
-    <p:sink/-->
+    <p:sink/>
 
 </p:declare-step>

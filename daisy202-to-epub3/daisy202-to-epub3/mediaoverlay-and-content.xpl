@@ -23,7 +23,7 @@
         <p:pipe port="store-complete" step="content-flow-iterate"/>
         <p:pipe port="store-complete" step="mediaoverlay-iterate"/>
     </p:output>
-
+    
     <p:option name="daisy-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
     <p:option name="include-mediaoverlay" required="true"/>

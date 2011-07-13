@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="pxi:daisy202-to-epub3-ncc" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="pxi:daisy202-to-epub3-ncc"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Load the DAISY 2.02 NCC.</xd:short>
@@ -50,7 +51,7 @@
         </p:input>
     </p:xslt>
     <p:sink/>
-    
+
     <p:add-attribute name="pub-id" match="/*" attribute-name="value">
         <p:with-option name="attribute-value" select="//html:head/html:meta[@name='dc:identifier']/@content">
             <p:pipe port="result" step="ncc"/>
