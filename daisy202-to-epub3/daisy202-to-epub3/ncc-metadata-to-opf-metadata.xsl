@@ -2,7 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:html="http://www.w3.org/1999/xhtml" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:opf="http://www.idpf.org/2007/opf" exclude-result-prefixes="#all" version="2.0">
-
+    
+    <xsl:param name="pub-id" required="yes"/>
+    
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
@@ -12,7 +14,7 @@
     <xsl:template match="/*">
         <metadata xmlns="http://www.idpf.org/2007/opf">
             <dc:identifier id="pub-id">
-                <xsl:value-of select="//html:head/html:meta[@name='dc:identifier']/@content"/>
+                <xsl:value-of select="$pub-id"/>
             </dc:identifier>
             <dc:title id="title">
                 <xsl:value-of select="//html:head/html:meta[@name='dc:title']/@content"/>

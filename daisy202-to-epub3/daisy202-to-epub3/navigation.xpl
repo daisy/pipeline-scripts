@@ -29,12 +29,13 @@
         <p:pipe port="result" step="store"/>
     </p:output>
 
+    <p:option name="publication-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
-    <p:option name="subcontent-dir" required="true"/>
+    <p:option name="pub-id" required="true"/>
 
     <p:import href="resolve-links.xpl"/>
 
-    <p:variable name="subdir" select="substring-after($subcontent-dir,$content-dir)"/>
+    <p:variable name="subdir" select="substring-after($content-dir,$publication-dir)"/>
 
     <p:documentation>Transform the NCC into a Navigation Document.</p:documentation>
 
@@ -52,9 +53,7 @@
     </p:viewport>
 
     <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
+        <p:with-option name="pub-id" select="$pub-id"/>
         <p:input port="stylesheet">
             <p:document href="ncc-to-navigation.xsl"/>
         </p:input>
@@ -63,7 +62,7 @@
     <p:identity name="result"/>
 
     <p:store name="store" indent="true">
-        <p:with-option name="href" select="concat($content-dir,'navigation.xhtml')"/>
+        <p:with-option name="href" select="concat($publication-dir,'navigation.xhtml')"/>
     </p:store>
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select=".">

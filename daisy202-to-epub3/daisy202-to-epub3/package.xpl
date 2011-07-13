@@ -17,7 +17,7 @@
         <xd:input port="opf-manifest">Manifest in OPF-format.</xd:input>
         <xd:input port="opf-spine">Spine in OPF-format.</xd:input>
         <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
-        <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be
+        <xd:option name="publication-dir">URI to the directory where all the EPUB 3 content should be
             stored.</xd:option>
     </p:documentation>
 
@@ -34,18 +34,17 @@
         <p:pipe port="result" step="store"/>
     </p:output>
 
-    <p:option name="content-dir" required="true"/>
+    <p:option name="publication-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
+    <p:option name="pub-id" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
 
     <p:documentation>Compile OPF metadata.</p:documentation>
     <p:xslt name="opf-metadata">
+        <p:with-param name="pub-id" select="$pub-id"/>
         <p:input port="source">
             <p:pipe port="ncc" step="package"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
         </p:input>
         <p:input port="stylesheet">
             <p:document href="ncc-metadata-to-opf-metadata.xsl"/>
@@ -68,10 +67,10 @@
         <p:sink/>
 
         <px:fileset-create>
-            <p:with-option name="base" select="$content-dir"/>
+            <p:with-option name="base" select="$publication-dir"/>
         </px:fileset-create>
         <px:fileset-add-entry name="opf-manifest.navigation-manifest">
-            <p:with-option name="href" select="concat($content-dir,'navigation.xhtml')"/>
+            <p:with-option name="href" select="concat($publication-dir,'navigation.xhtml')"/>
             <p:with-option name="media-type" select="'application/xhtml+xml'"/>
         </px:fileset-add-entry>
         <p:sink/>
@@ -131,14 +130,14 @@
     <p:identity name="opf-package"/>
 
     <p:store name="store" indent="true">
-        <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
+        <p:with-option name="href" select="concat($publication-dir,'package.opf')"/>
     </p:store>
 
     <px:fileset-add-entry name="fileset-with-package">
         <p:input port="source">
             <p:pipe port="fileset" step="opf-manifest"/>
         </p:input>
-        <p:with-option name="href" select="concat($content-dir,'package.opf')"/>
+        <p:with-option name="href" select="concat($publication-dir,'package.opf')"/>
         <p:with-option name="media-type" select="'application/oebps-package+xml'"/>
     </px:fileset-add-entry>
     <px:fileset-create name="fileset-with-epub-base">

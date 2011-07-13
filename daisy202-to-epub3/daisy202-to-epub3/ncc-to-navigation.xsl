@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub"
+    xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub"
     version="2.0" exclude-result-prefixes="#all">
 
     <xsl:output xpath-default-namespace="http://www.w3.org/1999/xhtml" indent="yes"/>
+    
+    <xsl:param name="pub-id" select="''"/>
 
     <xsl:template match="/*">
         <html xmlns="http://www.w3.org/1999/xhtml">
@@ -18,62 +20,60 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="html:head">
+    <xsl:template match="head">
         <xsl:copy>
-            <xsl:apply-templates select="@*|html:title"/>
+            <xsl:apply-templates select="@*|title"/>
+            <xsl:if test="$pub-id">
+                <meta name="dc:identifier" id="pub-id">
+                    <xsl:value-of select="$pub-id"/>
+                </meta>
+            </xsl:if>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="html:body">
-        <xsl:element name="body" namespace="http://www.w3.org/1999/xhtml">
-            <xsl:element name="nav" namespace="http://www.w3.org/1999/xhtml">
-                <xsl:attribute name="epub:type" select="'toc'"/>
-                <xsl:attribute name="id" select="'toc'"/>
-                <xsl:element name="ol" namespace="http://www.w3.org/1999/xhtml">
+    <xsl:template match="body">
+        <body>
+            <nav epub:type="toc" id="toc">
+                <ol>
                     <xsl:call-template name="make-toc-level">
                         <xsl:with-param name="level" select="'h1'"/>
                         <xsl:with-param name="group" select="child::*"/>
                     </xsl:call-template>
-                </xsl:element>
-            </xsl:element>
-            <xsl:if test="child::html:span">
-                <xsl:element name="nav" namespace="http://www.w3.org/1999/xhtml">
-                    <xsl:attribute name="epub:type" select="'page-list'"/>
-                    <xsl:attribute name="style" select="'display:none'"/>
-                    <xsl:element name="ol" namespace="http://www.w3.org/1999/xhtml">
-                        <xsl:for-each select="child::html:span">
-                            <xsl:element name="li" namespace="http://www.w3.org/1999/xhtml">
-                                <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
-                                    <xsl:attribute name="href" select="child::html:a[1]/@href"/>
+                </ol>
+            </nav>
+            <xsl:if test="child::span">
+                <nav epub:type="page-list" style="display:none">
+                    <ol>
+                        <xsl:for-each select="child::span">
+                            <li>
+                                <a href="{child::a[1]/@href}">
                                     <xsl:if test="@id">
                                         <xsl:attribute name="id" select="@id"/>
                                     </xsl:if>
-                                    <xsl:value-of select="child::html:a[1]"/>
-                                </xsl:element>
-                            </xsl:element>
+                                    <xsl:value-of select="child::a[1]"/>
+                                </a>
+                            </li>
                         </xsl:for-each>
-                    </xsl:element>
-                </xsl:element>
+                    </ol>
+                </nav>
             </xsl:if>
-            <xsl:if test="child::html:div">
-                <xsl:element name="nav" namespace="http://www.w3.org/1999/xhtml">
-                    <xsl:attribute name="epub:type" select="'landmarks'"/>
-                    <xsl:element name="ol" namespace="http://www.w3.org/1999/xhtml">
-                        <xsl:for-each select="child::html:div">
-                            <xsl:element name="li" namespace="http://www.w3.org/1999/xhtml">
-                                <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
-                                    <xsl:attribute name="href" select="child::html:a[1]/@href"/>
+            <xsl:if test="child::div">
+                <nav epub:type="landmarks">
+                    <ol>
+                        <xsl:for-each select="child::div">
+                            <li>
+                                <a href="{child::a[1]/@href}">
                                     <xsl:if test="@id">
                                         <xsl:attribute name="id" select="@id"/>
                                     </xsl:if>
-                                    <xsl:value-of select="child::html:a[1]"/>
-                                </xsl:element>
-                            </xsl:element>
+                                    <xsl:value-of select="child::a[1]"/>
+                                </a>
+                            </li>
                         </xsl:for-each>
-                    </xsl:element>
-                </xsl:element>
+                    </ol>
+                </nav>
             </xsl:if>
-        </xsl:element>
+        </body>
     </xsl:template>
 
     <xsl:template name="make-toc-level">
@@ -84,10 +84,10 @@
             <xsl:for-each-group select="$group" group-starting-with="*[local-name()=$level]">
                 <xsl:choose>
                     <xsl:when test="current-group()[1]/local-name()=$level">
-                        <xsl:element name="li" namespace="http://www.w3.org/1999/xhtml">
+                        <li>
                             <xsl:apply-templates select="current-group()[1]"/>
                             <xsl:if test="current-group()[position()>1]">
-                                <xsl:element name="ol" namespace="http://www.w3.org/1999/xhtml">
+                                <ol>
                                     <xsl:call-template name="make-toc-level">
                                         <xsl:with-param name="skipFirst" select="true()"/>
                                         <xsl:with-param name="level"
@@ -95,9 +95,9 @@
                                         <xsl:with-param name="group"
                                             select="current-group()[position()>1]"/>
                                     </xsl:call-template>
-                                </xsl:element>
+                                </ol>
                             </xsl:if>
-                        </xsl:element>
+                        </li>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:call-template name="make-toc-level">
@@ -112,30 +112,27 @@
     </xsl:template>
 
     <xsl:template
-        match="html:*[self::html:h1 or self::html:h2 or self::html:h3 or self::html:h4 or self::html:h5 or self::html:h6]">
-
-        <xsl:variable name="link-href" select="tokenize(child::html:a[1]/@href,'#')[1]"/>
+        match="*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]">
+        <xsl:variable name="link-href" select="tokenize(child::a[1]/@href,'#')[1]"/>
         <xsl:variable name="link-id"
-            select="if (contains(child::html:a[1]/@href,'#')) then tokenize(child::html:a[1]/@href,'#')[last()] else ''"/>
+            select="if (contains(child::a[1]/@href,'#')) then tokenize(child::a[1]/@href,'#')[last()] else ''"/>
         <xsl:variable name="self-id" select="ancestor-or-self::*/@id"/>
         <xsl:choose>
             <xsl:when
                 test="not($link-href='') and $link-href='navigation.xhtml' and not($link-id='') and $self-id=$link-id">
                 <!-- is link to self; remove it -->
-                <xsl:element name="span" namespace="http://www.w3.org/1999/xhtml">
+                <span>
                     <xsl:apply-templates select="@id"/>
-                    <xsl:value-of select="child::html:a[1]"/>
-                </xsl:element>
+                    <xsl:value-of select="child::a[1]"/>
+                </span>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
-                    <xsl:attribute name="href" select="child::html:a[1]/@href"/>
+                <a href="{child::a[1]/@href}">
                     <xsl:apply-templates select="@id"/>
-                    <xsl:value-of select="child::html:a[1]"/>
-                </xsl:element>
+                    <xsl:value-of select="child::a[1]"/>
+                </a>
             </xsl:otherwise>
         </xsl:choose>
-
     </xsl:template>
 
 </xsl:stylesheet>
