@@ -37,6 +37,7 @@
     <p:option name="publication-dir" required="true"/>
     <p:option name="epub-dir" required="true"/>
     <p:option name="pub-id" required="true"/>
+    <p:option name="compatibility-mode" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
 
@@ -69,10 +70,22 @@
         <px:fileset-create>
             <p:with-option name="base" select="$publication-dir"/>
         </px:fileset-create>
-        <px:fileset-add-entry name="opf-manifest.navigation-manifest">
+        <px:fileset-add-entry>
             <p:with-option name="href" select="concat($publication-dir,'navigation.xhtml')"/>
             <p:with-option name="media-type" select="'application/xhtml+xml'"/>
         </px:fileset-add-entry>
+        <p:choose>
+            <p:when test="$compatibility-mode">
+                <px:fileset-add-entry>
+                    <p:with-option name="href" select="concat($publication-dir,'ncx.xml')"/>
+                    <p:with-option name="media-type" select="'application/xhtml+xml'"/>
+                </px:fileset-add-entry>
+            </p:when>
+            <p:otherwise>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
+        <p:identity name="opf-manifest.navigation-manifest"/>
         <p:sink/>
 
         <px:fileset-join name="opf-manifest.fileset">

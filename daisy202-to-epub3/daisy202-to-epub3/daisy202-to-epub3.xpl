@@ -8,6 +8,7 @@
             <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
             <cd:arg name="output" type="option" bind="output" desc="Path to output directory for the EPUB."/>
             <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files (default 'true')"/>
+            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true" desc="Whether or not to include NCX-file and OPF guide element."/>
         </cd:converter>
     </p:pipeinfo>
 
@@ -34,6 +35,7 @@
     <p:option name="href" required="true"/>
     <p:option name="output" required="true"/>
     <p:option name="mediaoverlay" required="false" select="'true'"/>
+    <p:option name="compatibility-mode" required="false" select="'true'"/>
 
     <p:import href="ncc.xpl"/>
     <p:import href="mediaoverlay-and-content.xpl"/>
@@ -90,6 +92,7 @@
         </p:with-option>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
@@ -106,6 +109,7 @@
         </p:with-option>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>

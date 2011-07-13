@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub"
-    version="2.0" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2011/epub" version="2.0" exclude-result-prefixes="#all">
 
-    <xsl:output xpath-default-namespace="http://www.w3.org/1999/xhtml" indent="yes"/>
-    
-    <xsl:param name="pub-id" select="''"/>
+    <xsl:output indent="yes" include-content-type="no"/>
+
+    <xsl:param name="pub-id" required="yes"/>
 
     <xsl:template match="/*">
         <html xmlns="http://www.w3.org/1999/xhtml">
@@ -14,15 +12,17 @@
         </html>
     </xsl:template>
 
-    <xsl:template match="@*|node()">
+    <!--xsl:template match="@*|node()"-->
+        <!--xsl:copy-->
+        <!--xsl:value-of select="concat('ignored ',name(),' | ')"/>
+        <xsl:apply-templates select="@*|node()"/-->
+        <!--/xsl:copy-->
+    <!--/xsl:template-->
+
+    <xsl:template match="*[local-name()='head']">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="head">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|title"/>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <xsl:copy-of select="@*|*[local-name()='title']"/>
             <xsl:if test="$pub-id">
                 <meta name="dc:identifier" id="pub-id">
                     <xsl:value-of select="$pub-id"/>
@@ -30,8 +30,8 @@
             </xsl:if>
         </xsl:copy>
     </xsl:template>
-    
-    <xsl:template match="body">
+
+    <xsl:template match="*[local-name()='body']">
         <body>
             <nav epub:type="toc" id="toc">
                 <ol>
@@ -41,32 +41,32 @@
                     </xsl:call-template>
                 </ol>
             </nav>
-            <xsl:if test="child::span">
+            <xsl:if test="child::*[local-name()='span']">
                 <nav epub:type="page-list" style="display:none">
                     <ol>
-                        <xsl:for-each select="child::span">
+                        <xsl:for-each select="child::*[local-name()='span']">
                             <li>
-                                <a href="{child::a[1]/@href}">
+                                <a href="{child::*[local-name()='a'][1]/@href}">
                                     <xsl:if test="@id">
                                         <xsl:attribute name="id" select="@id"/>
                                     </xsl:if>
-                                    <xsl:value-of select="child::a[1]"/>
+                                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
                                 </a>
                             </li>
                         </xsl:for-each>
                     </ol>
                 </nav>
             </xsl:if>
-            <xsl:if test="child::div">
+            <xsl:if test="child::*[local-name()='div']">
                 <nav epub:type="landmarks">
                     <ol>
-                        <xsl:for-each select="child::div">
+                        <xsl:for-each select="child::*[local-name()='div']">
                             <li>
-                                <a href="{child::a[1]/@href}">
+                                <a href="{child::*[local-name()='a'][1]/@href}">
                                     <xsl:if test="@id">
                                         <xsl:attribute name="id" select="@id"/>
                                     </xsl:if>
-                                    <xsl:value-of select="child::a[1]"/>
+                                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
                                 </a>
                             </li>
                         </xsl:for-each>
@@ -92,8 +92,7 @@
                                         <xsl:with-param name="skipFirst" select="true()"/>
                                         <xsl:with-param name="level"
                                             select="if ($level='h1') then 'h2' else if ($level='h2') then 'h3' else if ($level='h3') then 'h4' else if ($level='h4') then 'h5' else 'h6'"/>
-                                        <xsl:with-param name="group"
-                                            select="current-group()[position()>1]"/>
+                                        <xsl:with-param name="group" select="current-group()[position()>1]"/>
                                     </xsl:call-template>
                                 </ol>
                             </xsl:if>
@@ -111,25 +110,22 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template
-        match="*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]">
-        <xsl:variable name="link-href" select="tokenize(child::a[1]/@href,'#')[1]"/>
-        <xsl:variable name="link-id"
-            select="if (contains(child::a[1]/@href,'#')) then tokenize(child::a[1]/@href,'#')[last()] else ''"/>
+    <xsl:template match="*[local-name()='h1' or local-name()='h2' or local-name()='h3' or local-name()='h4' or local-name()='h5' or local-name()='h6']">
+        <xsl:variable name="link-href" select="tokenize(child::*[local-name()='a'][1]/@href,'#')[1]"/>
+        <xsl:variable name="link-id" select="if (contains(child::*[local-name()='a'][1]/@href,'#')) then tokenize(child::*[local-name()='a'][1]/@href,'#')[last()] else ''"/>
         <xsl:variable name="self-id" select="ancestor-or-self::*/@id"/>
         <xsl:choose>
-            <xsl:when
-                test="not($link-href='') and $link-href='navigation.xhtml' and not($link-id='') and $self-id=$link-id">
+            <xsl:when test="not($link-href='') and $link-href='navigation.xhtml' and not($link-id='') and $self-id=$link-id">
                 <!-- is link to self; remove it -->
                 <span>
-                    <xsl:apply-templates select="@id"/>
-                    <xsl:value-of select="child::a[1]"/>
+                    <xsl:copy-of select="@id"/>
+                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <a href="{child::a[1]/@href}">
-                    <xsl:apply-templates select="@id"/>
-                    <xsl:value-of select="child::a[1]"/>
+                <a href="{child::*[local-name()='a'][1]/@href}">
+                    <xsl:copy-of select="@id"/>
+                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
                 </a>
             </xsl:otherwise>
         </xsl:choose>
