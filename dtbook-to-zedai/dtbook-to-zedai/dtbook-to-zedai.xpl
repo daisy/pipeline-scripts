@@ -23,13 +23,13 @@
         <xd:maintainer>Marisa DeMeglio</xd:maintainer>
         <xd:input port="source">DTBook file or sequence of DTBook files. Versions supported: 1.1.0,
             2005-1, 2005-2, 2005-3. </xd:input>
-        <xd:output port="result">Empty (ZedAI results are written to disk).</xd:output>
-        <xd:option name="output">File path for the output ZedAI file.</xd:option>
+        <xd:output port="result">Empty (results are written to disk).</xd:output>
+        <xd:option name="output">Directory path for the output fileset.</xd:option>
         <xd:import href="dtbook2005-3-to-zedai.xpl">Internal XProc for transforming DTBook 2005-3 to
             ZedAI</xd:import>
-        <xd:import href="../../utilities/dtbook-utils/dtbook-utils-library.xpl">External utility for
+        <xd:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl">External utility for
             merging and upgrading DTBook files.</xd:import>
-        <xd:import href="../../utilities/metadata-utils/metadata-utils-library.xpl">External utility
+        <xd:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">External utility
         for generating metadata.</xd:import>
         
        <cd:converter name="dtbook-to-zedai" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
@@ -43,8 +43,8 @@
 		   sequence="true"
 		   media-type="application/x-dtbook+xml"/>
 	  	<cd:arg  name="o"
-		   desc="Output file path"
-		   bind="output-file"
+		   desc="Output directory path"
+		   bind="output"
 		   bind-type="option"
 		   optional="false"
 		   dir="output"
@@ -57,22 +57,26 @@
     <p:input port="source" primary="true" sequence="true"/>
     <p:input port="parameters" kind="parameter"/>
 
-    <p:option name="output-file" required="true"/>
+    <p:option name="output-dir" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="dtbook2005-3-to-zedai.xpl"/>
 
+
     <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl"/>
-
-    <p:variable name="zedai-file" select="$output-file"/>
+    
+    <!-- replace the two lines above with these to test from within oxygen -->   
+    <!--
+    <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
+    <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
+    -->
+    
+    <p:variable name="zedai-file" select="if (ends-with($output-dir, '/')) then concat($output-dir, 'zedai.xml')
+                                          else concat($output-dir, '/zedai.xml')"/>
     <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
     <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
 
-    <cx:message message="Output ZedAI file:"/>
-    <cx:message>
-        <p:with-option name="message" select="$output-file"/>
-    </cx:message>
 
     <!-- =============================================================== -->
     <!-- UPGRADE -->
