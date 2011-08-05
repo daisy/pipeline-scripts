@@ -13,71 +13,109 @@
 
     <p:documentation>
         <xd:short>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
-            extracts metadata and CSS. Writes output files to disk. More information can be found at
-            http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI.</xd:short>
+            extracts metadata and CSS information into separate files. </xd:short>
+        <xd:detail>TODO: can we have an xd:element for component home pages? http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
             <xd:organization>DAISY</xd:organization>
         </xd:author>
-        <xd:maintainer>Marisa DeMeglio</xd:maintainer>
-        <xd:input port="source">DTBook file or sequence of DTBook files. Versions supported: 1.1.0,
-            2005-1, 2005-2, 2005-3. </xd:input>
-        <xd:output port="result">Empty (results are written to disk).</xd:output>
-        <xd:option name="output">Directory path for the output fileset.</xd:option>
-        <xd:import href="dtbook2005-3-to-zedai.xpl">Internal XProc for transforming DTBook 2005-3 to
-            ZedAI</xd:import>
-        <xd:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl">External utility for
-            merging and upgrading DTBook files.</xd:import>
-        <xd:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">External utility
-        for generating metadata.</xd:import>
-        
-       <cd:converter name="dtbook-to-zedai" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
-	  <cd:description>Convert DTBook XML to ZedAI XML</cd:description>  
-	 	<cd:arg  name="in"
-		   desc="DTBook input file(s)"
-		   bind="source"
-		   bind-type="port" 
-		   optional="false"
-		   dir="input"
-		   sequence="true"
-		   media-type="application/x-dtbook+xml"/>
-	  	<cd:arg  name="o"
-		   desc="Output directory path"
-		   bind="output"
-		   bind-type="option"
-		   optional="false"
-		   dir="output"
-		   type="anyFileURI"
-		   media-type="application/z3986-auth+xml"/>
-	</cd:converter> 
-        
     </p:documentation>
 
-    <p:input port="source" primary="true" sequence="true"/>
+    <!-- TODO: should we mark up this input with px: attributes? users should actually just ignore it. -->
     <p:input port="parameters" kind="parameter"/>
-
-    <p:option name="output-dir" required="true"/>
-
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="dtbook2005-3-to-zedai.xpl"/>
-
-
-    <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl"/>
     
-    <!-- replace the two lines above with these to test from within oxygen -->   
+    <p:input 
+        port="source" 
+        primary="true" 
+        sequence="true">
+        <p:documentation>
+            <xd:short>DTBook input file(s)</xd:short>
+        </p:documentation>
+        <p:pipeinfo>
+            <px:media-type>application/x-dtbook+xml</px:media-type>
+        </p:pipeinfo>
+    </p:input>
+    
+    <p:option 
+        name="output-dir" 
+        required="true">
+        <p:documentation>
+            <xd:short>Output directory</xd:short>
+        </p:documentation>
+        <p:pipeinfo>
+            <px:dir>output</px:dir>
+        </p:pipeinfo>
+    </p:option>
+    
+    <!-- TODO: make these optional. how to test whether an option has been set or not? -->
+    <!-- TODO: what is the px:dir for these? they are relevant to the web service but they affect the output -->
+    <p:option name="zedai-filename" required="true">
+        <p:documentation>
+            <xd:short>Filename for the output ZedAI file</xd:short>
+        </p:documentation>
+        <p:pipeinfo>
+            <px:dir>input</px:dir>    
+        </p:pipeinfo>
+    </p:option> 
+    <p:option name="mods-filename" required="true">
+        <p:documentation>
+            <xd:short>Filename for the output MODS file</xd:short>
+        </p:documentation>
+        <p:pipeinfo>
+            <px:dir>input</px:dir>
+        </p:pipeinfo>
+    </p:option>
+    <p:option name="css-filename" required="true">
+        <p:documentation>
+            <xd:short>Filename for the output CSS file</xd:short>
+        </p:documentation>
+        <p:pipeinfo>
+            <px:dir>input</px:dir> 
+        </p:pipeinfo>
+    </p:option>
+    
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>
+            <xd:short>Calabash extension steps.</xd:short>
+        </p:documentation>
+    </p:import>
+    <p:import href="dtbook2005-3-to-zedai.xpl">
+        <p:documentation>
+            <xd:short>Converts DTBook 2005-3 to ZedAI</xd:short> 
+        </p:documentation>
+    </p:import>
+    
+    <p:import href="copy-referenced-files.xpl">
+        <p:documentation>
+            <xd:short>Copies ZedAI referenced files to a specified output directory.</xd:short> 
+        </p:documentation>
+    </p:import>
+
     <!--
+    <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">
+        <p:documentation>
+            <xd:short>Collection of utilities for generating metadata.</xd:short> 
+        </p:documentation>
+    </p:import>
+    
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl">
+        <p:documentation>
+            <xd:short>Collection of utilities for merging and upgrading DTBook files.</xd:short> 
+        </p:documentation>
+    </p:import>
+    -->
+    <!-- replace the two imports above with these to test from within oxygen -->   
     <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
-    -->
     
-    <p:variable name="zedai-file" select="if (ends-with($output-dir, '/')) then concat($output-dir, 'zedai.xml')
-                                          else concat($output-dir, '/zedai.xml')"/>
-    <p:variable name="mods-file" select="replace($zedai-file, '.xml', '-mods.xml')"/>
-    <p:variable name="css-file" select="replace($zedai-file, '.xml', '.css')"/>
+    
+    <p:variable name="zedai-file" select="if (ends-with($output-dir, '/')) then concat($output-dir, $zedai-filename)
+                                          else concat($output-dir, '/', $zedai-filename)"/>
+    <p:variable name="mods-file" select="replace($zedai-file, $zedai-filename, $mods-filename)"/>
+    <p:variable name="css-file" select="replace($zedai-file, $zedai-filename, $css-filename)"/>
 
-
+    
     <!-- =============================================================== -->
     <!-- UPGRADE -->
     <!-- =============================================================== -->
@@ -293,6 +331,19 @@
     <!-- =============================================================== -->
     <!-- WRITE TO DISK -->
     <!-- =============================================================== -->
+    
+    <p:documentation>Copy all referenced files to the output directory</p:documentation>
+    
+    <pxi:copy-referenced-files>
+        <p:input port="source">
+            <p:pipe step="validate-zedai" port="result"/>
+        </p:input>
+        <p:with-option name="output-dir" select="$output-dir"/>
+        <p:with-option name="dtbook-base-uri" select="base-uri(/)">
+            <p:pipe port="source" step="dtbook-to-zedai"/>
+        </p:with-option>
+    </pxi:copy-referenced-files>
+    
     <p:documentation>Write the ZedAI document to disk.</p:documentation>
     <p:store name="store-zedai-file">
         <p:input port="source">
