@@ -28,51 +28,33 @@
     <p:input 
         port="source" 
         primary="true" 
-        sequence="true">
+        sequence="true"
+        px:media-type="application/x-dtbook+xml">
         <p:documentation>
             <xd:short>DTBook input file(s)</xd:short>
         </p:documentation>
-        <p:pipeinfo>
-            <px:media-type>application/x-dtbook+xml</px:media-type>
-        </p:pipeinfo>
     </p:input>
     
-    <p:option 
-        name="output-dir" 
-        required="true">
+    <p:option name="opt-output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>Output directory</xd:short>
         </p:documentation>
-        <p:pipeinfo>
-            <px:dir>output</px:dir>
-        </p:pipeinfo>
     </p:option>
     
-    <!-- TODO: make these optional. how to test whether an option has been set or not? -->
-    <!-- TODO: what is the px:dir for these? they are relevant to the web service but they affect the output -->
-    <p:option name="zedai-filename" required="true">
+    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string">
         <p:documentation>
             <xd:short>Filename for the output ZedAI file</xd:short>
         </p:documentation>
-        <p:pipeinfo>
-            <px:dir>input</px:dir>    
-        </p:pipeinfo>
     </p:option> 
-    <p:option name="mods-filename" required="true">
+    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string">
         <p:documentation>
             <xd:short>Filename for the output MODS file</xd:short>
         </p:documentation>
-        <p:pipeinfo>
-            <px:dir>input</px:dir>
-        </p:pipeinfo>
     </p:option>
-    <p:option name="css-filename" required="true">
+    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string">
         <p:documentation>
             <xd:short>Filename for the output CSS file</xd:short>
         </p:documentation>
-        <p:pipeinfo>
-            <px:dir>input</px:dir> 
-        </p:pipeinfo>
     </p:option>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
@@ -109,12 +91,38 @@
     <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
     
+    <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
+                                      else concat($opt-output-dir, '/')"/>
     
-    <p:variable name="zedai-file" select="if (ends-with($output-dir, '/')) then concat($output-dir, $zedai-filename)
-                                          else concat($output-dir, '/', $zedai-filename)"/>
-    <p:variable name="mods-file" select="replace($zedai-file, $zedai-filename, $mods-filename)"/>
-    <p:variable name="css-file" select="replace($zedai-file, $zedai-filename, $css-filename)"/>
+    <p:variable name="default-zedai-filename" select="'zedai.xml'"/>
+    <p:variable name="default-mods-filename" select="'zedai-mods.xml'"/>
+    <p:variable name="default-css-filename" select="'zedai-css.css'"/>
+    
+    <p:variable name="zedai-filename" select="if (p:value-available('opt-zedai-filename') 
+        and string-length($opt-zedai-filename) > 0) 
+        then $opt-zedai-filename
+        else $default-zedai-filename"/>
+    
+    <p:variable name="mods-filename" select="if (p:value-available('opt-mods-filename') 
+        and string-length($opt-zedai-filename) > 0) 
+        then $opt-mods-filename 
+        else $default-mods-filename"/>
+    
+    <p:variable name="css-filename" select="if (p:value-available('opt-css-filename')
+        and string-length($opt-css-filename) > 0)
+        then $opt-css-filename
+        else $default-css-filename"/>
+    
+    <p:variable name="zedai-file" select="concat($output-dir, $zedai-filename)"/>
+    <p:variable name="mods-file" select="concat($output-dir, $mods-filename)"/>
+    <p:variable name="css-file" select="concat($output-dir, $css-filename)"/>
 
+
+    <cx:message>
+        <p:with-option name="message" select="$zedai-filename"/>
+    </cx:message>
+    
+    
     
     <!-- =============================================================== -->
     <!-- UPGRADE -->
@@ -159,6 +167,7 @@
         <p:input port="source">
             <p:pipe port="result" step="choose-to-merge-dtbook-files"/>
         </p:input>
+        
     </p:validate-with-relax-ng>
 
     <p:documentation>Transform to ZedAI</p:documentation>
@@ -212,17 +221,19 @@
                 <p:input port="source">
                     <p:pipe step="transform-to-zedai" port="result"/>
                 </p:input>
-                <p:with-param name="css-filename" select="tokenize($css-file, '/')[last()]"/>
+                <p:with-param name="css" select="$css-filename"/>
                 <p:input port="stylesheet">
                     <p:inline>
                         <!-- This adds a processing instruction to reference the CSS file.  In the end, it's easier than using XProc's p:insert. -->
                         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                             version="2.0">
                             <xsl:output indent="yes" method="xml"/>
-                            <xsl:param name="css-filename"/>
+                            <xsl:param name="css"/>
+                            
                             <xsl:template match="/">
+                                <xsl:message>Adding CSS PI</xsl:message>
                                 <xsl:processing-instruction name="xml-stylesheet">
-                                        href="<xsl:value-of select="$css-filename"/>" </xsl:processing-instruction>
+                                        href="<xsl:value-of select="$css"/>" </xsl:processing-instruction>
                                 <xsl:apply-templates/>
                             </xsl:template>
                             <!-- identity template -->
@@ -301,7 +312,7 @@
             </p:inline>
         </p:input>
         <p:with-option name="replace"
-            select="concat('&quot;',tokenize($mods-file, '/')[last()],'&quot;')"/>
+            select="concat('&quot;',$mods-filename,'&quot;')"/>
     </p:string-replace>
 
     <p:documentation>Insert the MODS file reference metadata into the head of
@@ -322,6 +333,7 @@
     <!-- VALIDATE FINAL OUTPUT -->
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
+    <cx:message message="Validating ZedAI"/>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
         <p:input port="schema">
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
@@ -365,6 +377,9 @@
                     <p:pipe step="generate-css" port="result"/>
                 </p:input>
             </p:string-replace>
+            <cx:message>
+                <p:with-option name="message" select="$css-file"/>
+            </cx:message>
             <p:store method="text" name="store-css-file">
                 <p:with-option name="href" select="$css-file"/>
             </p:store>
@@ -378,12 +393,14 @@
         </p:otherwise>
     </p:choose>
 
-
+    
     <p:documentation>Write the MODS document to disk.</p:documentation>
+    
     <p:store name="store-mods-file">
         <p:input port="source">
             <p:pipe step="generate-mods-metadata" port="result"/>
         </p:input>
+        
         <p:with-option name="href" select="$mods-file"/>
     </p:store>
 
