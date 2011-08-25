@@ -41,17 +41,17 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output ZedAI file</xd:short>
         </p:documentation>
     </p:option> 
-    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output MODS file</xd:short>
         </p:documentation>
     </p:option>
-    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output CSS file</xd:short>
         </p:documentation>
@@ -74,7 +74,6 @@
         </p:documentation>
     </p:import>
 
-    <!--
     <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">
         <p:documentation>
             <xd:short>Collection of utilities for generating metadata.</xd:short> 
@@ -86,10 +85,9 @@
             <xd:short>Collection of utilities for merging and upgrading DTBook files.</xd:short> 
         </p:documentation>
     </p:import>
-    -->
     <!-- replace the two imports above with these to test from within oxygen -->   
-    <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
-    <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
+    <!-- <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/> -->
+    <!-- <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/> -->
     
     <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                       else concat($opt-output-dir, '/')"/>
@@ -98,18 +96,15 @@
     <p:variable name="default-mods-filename" select="'zedai-mods.xml'"/>
     <p:variable name="default-css-filename" select="'zedai-css.css'"/>
     
-    <p:variable name="zedai-filename" select="if (p:value-available('opt-zedai-filename') 
-        and string-length($opt-zedai-filename) > 0) 
+    <p:variable name="zedai-filename" select="if (string-length($opt-zedai-filename) > 0) 
         then $opt-zedai-filename
         else $default-zedai-filename"/>
     
-    <p:variable name="mods-filename" select="if (p:value-available('opt-mods-filename') 
-        and string-length($opt-zedai-filename) > 0) 
+    <p:variable name="mods-filename" select="if (string-length($opt-mods-filename) > 0) 
         then $opt-mods-filename 
         else $default-mods-filename"/>
     
-    <p:variable name="css-filename" select="if (p:value-available('opt-css-filename')
-        and string-length($opt-css-filename) > 0)
+    <p:variable name="css-filename" select="if (string-length($opt-css-filename) > 0)
         then $opt-css-filename
         else $default-css-filename"/>
     
@@ -119,7 +114,13 @@
 
 
     <cx:message>
-        <p:with-option name="message" select="$zedai-filename"/>
+        <p:with-option name="message" select="concat('ZedAI file name: ',$zedai-filename)"/>
+    </cx:message>
+    <cx:message>
+        <p:with-option name="message" select="concat('MODS file name: ',$mods-filename)"/>
+    </cx:message>
+    <cx:message>
+        <p:with-option name="message" select="concat('ZedAI file name: ',$css-filename)"/>
     </cx:message>
     
     
