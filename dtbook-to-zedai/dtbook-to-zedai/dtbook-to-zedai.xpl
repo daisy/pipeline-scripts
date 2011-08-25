@@ -12,9 +12,9 @@
     exclude-inline-prefixes="cx p c cxo px xd pxi z tmp">
 
     <p:documentation>
-        <xd:short>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
-            extracts metadata and CSS information into separate files. </xd:short>
-        <xd:detail>TODO: can we have an xd:element for component home pages? http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
+      <xd:short>DTBook to ZedAI</xd:short>
+      <xd:detail>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
+            extracts metadata and CSS information into separate files. Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
