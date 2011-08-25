@@ -13,7 +13,7 @@
 
     <p:documentation>
       <xd:short>DTBook to ZedAI</xd:short>
-      <xd:detail>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
+      <xd:detail>Transforms DTBook XML into ZedAI XML, and
             extracts metadata and CSS information into separate files. Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
