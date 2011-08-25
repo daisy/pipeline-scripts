@@ -25,7 +25,8 @@
     <!-- TODO: should we mark up this input with px: attributes? users should actually just ignore it. -->
     <p:input port="parameters" kind="parameter"/>
     
-    <p:input 
+    <p:input
+        px:name="input"
         port="source" 
         primary="true" 
         sequence="true"
