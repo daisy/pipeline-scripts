@@ -247,8 +247,17 @@
                 <xsl:otherwise>
                     <xsl:choose>
                         <xsl:when test="parent::dtb:imggroup">
-                            <!-- get the id of the image in the imggroup and use it as a ref -->
-                            <xsl:attribute name="ref" select="../dtb:img/@id"/>
+                            <xsl:choose>
+                                <xsl:when test="../dtb:img/@id">
+                                    <!-- get the id of the image in the imggroup and use it as a ref -->
+                                    <xsl:attribute name="ref" select="../dtb:img/@id"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <!-- we know that images with no IDs had them generated in the img template, so re-use that ID. -->
+                                    <xsl:attribute name="ref" select="generate-id(../dtb:img)"/>                           
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            
                         </xsl:when>
                     </xsl:choose>
                 </xsl:otherwise>
