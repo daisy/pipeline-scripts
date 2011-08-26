@@ -13,7 +13,8 @@
     </p:pipeinfo>
 
     <p:documentation xd:target="parent">
-        <xd:short>Transforms a DAISY 2.02-book into an EPUB3-book.</xd:short>
+    	<xd:short>daisy202-to-epub3</xd:short>
+        <xd:detail>Transforms a DAISY 2.02-book into an EPUB3-book.</xd:detail>
         <xd:author>
             <xd:name>Jostein Austvik Jacobsen</xd:name>
             <xd:mailto>josteinaj@gmail.com</xd:mailto>
@@ -32,10 +33,30 @@
         <xd:import href="package.xpl">For making the package document.</xd:import>
     </p:documentation>
 
-    <p:option name="href" required="true"/>
-    <p:option name="output" required="true"/>
-    <p:option name="mediaoverlay" required="false" select="'true'"/>
-    <p:option name="compatibility-mode" required="false" select="'true'"/>
+    <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
+    	<p:documentation>
+    	    <xd:short>href</xd:short>
+    		<xd:detail>Path to input NCC.</xd:detail>
+    	</p:documentation>
+    </p:option>
+    <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
+    	<p:documentation>
+    		<xd:short>output</xd:short>
+    		<xd:detail>Path to output directory for the EPUB.</xd:detail>
+    	</p:documentation>
+    </p:option>
+    <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
+    	<p:documentation>
+    		<xd:short>mediaoverlay</xd:short>
+    		<xd:detail>Whether or not to include media overlays and associated audio files (default 'true')</xd:detail>
+    	</p:documentation>
+    </p:option>
+    <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
+        <p:documentation>
+        	<xd:short>compatibility-mode</xd:short>
+    		<xd:detail>Whether or not to include NCX-file and OPF guide element.</xd:detail>
+    	</p:documentation>
+    </p:option>
 
     <p:import href="ncc.xpl"/>
     <p:import href="mediaoverlay-and-content.xpl"/>

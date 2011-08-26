@@ -4,21 +4,36 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" 
     version="1.0">
     <p:pipeinfo>
-        <cd:converter name="zedai-to-epub3" version="1.0"
+        <!--cd:converter name="zedai-to-epub3" version="1.0"
             xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
             <cd:description>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
                 publication.</cd:description>
             <cd:arg name="source" type="input" port="source" desc="Path to input ZedAI."/>
             <cd:arg name="output" type="option" bind="output-dir" desc="Path to output directory for the EPUB."/>
-        </cd:converter>
+        </cd:converter-->
     </p:pipeinfo>
-    
-    <p:input port="source" primary="true"/>
+    <p:documentation xd:target="parent">
+    	<xd:short>zedai-to-epub3</xd:short>
+        <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
+                publication.</xd:detail>
+    </p:documentation> 
+    <p:input port="source" primary="true" px:name="source" px:media-type="application/x-Z39.86-AI+xml">
+    	<p:documentation>
+    		<xd:short>source</xd:short>
+    		<xd:detail>Path to input ZedAI.</xd:detail>
+    	</p:documentation>
+    </p:input>
     <p:input port="parameters" kind="parameter"/>
     
-    <p:option name="output-dir" required="true"/>
+    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
+    	<p:documentation>
+    		<xd:short>output-dir</xd:short>
+    		<xd:detail>Path to output directory for the EPUB.</xd:detail>
+    	</p:documentation>
+    </p:option>
     
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/epub3-nav-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>

@@ -1,10 +1,10 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="dtbook-to-zedai">
-    <implementation class="org.daisy.converter.registry.OSGIConverterDescriptor"/>
+    <implementation class="org.daisy.pipeline.script.XProcScriptService"/>
     <service>
-        <provide interface="org.daisy.pipeline.modules.converter.ConverterDescriptor"/>
+        <provide interface="org.daisy.pipeline.script.XProcScriptService"/>
     </service>
-    <property name="converter.name" type="String" value="dtbook-to-zedai"/>
-    <property name="converter.description" type="String" value="Convert DTBook XML to ZedAI XML"/>
-    <property name="converter.url" type="String" value="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl"/>
+    <property name="script.name" type="String" value="dtbook-to-zedai"/>
+    <property name="script.description" type="String" value="Convert DTBook XML to ZedAI XML"/>
+    <property name="script.url" type="String" value="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl"/>
     
 </scr:component>
