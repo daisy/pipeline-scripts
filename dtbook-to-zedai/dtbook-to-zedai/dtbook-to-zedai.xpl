@@ -42,17 +42,17 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output ZedAI file</xd:short>
         </p:documentation>
     </p:option> 
-    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output MODS file</xd:short>
         </p:documentation>
     </p:option>
-    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string">
+    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Filename for the output CSS file</xd:short>
         </p:documentation>
@@ -75,7 +75,7 @@
         </p:documentation>
     </p:import>
 
-    <!--
+    
     <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">
         <p:documentation>
             <xd:short>Collection of utilities for generating metadata.</xd:short> 
@@ -87,10 +87,12 @@
             <xd:short>Collection of utilities for merging and upgrading DTBook files.</xd:short> 
         </p:documentation>
     </p:import>
-    -->
+    
     <!-- replace the two imports above with these to test from within oxygen -->   
+    <!--
     <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
+    -->
     
     <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                       else concat($opt-output-dir, '/')"/>
@@ -335,7 +337,7 @@
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <cx:message message="Validating ZedAI"/>
-    <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
+    <p:validate-with-relax-ng name="validate-zedai" assert-valid="true"    >
         <p:input port="schema">
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>
