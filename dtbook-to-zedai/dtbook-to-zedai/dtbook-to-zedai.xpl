@@ -13,7 +13,7 @@
 
     <p:documentation>
       <xd:short>DTBook to ZedAI</xd:short>
-      <xd:detail>Main entry point for DTBook-to-ZedAI. Transforms DTBook XML into ZedAI XML, and
+      <xd:detail>Transforms DTBook XML into ZedAI XML, and
             extracts metadata and CSS information into separate files. Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
@@ -25,7 +25,8 @@
     <!-- TODO: should we mark up this input with px: attributes? users should actually just ignore it. -->
     <p:input port="parameters" kind="parameter"/>
     
-    <p:input 
+    <p:input
+        px:name="input"
         port="source" 
         primary="true" 
         sequence="true"
@@ -86,8 +87,10 @@
         </p:documentation>
     </p:import>
     <!-- replace the two imports above with these to test from within oxygen -->   
-    <!-- <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/> -->
-    <!-- <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/> -->
+    <!--
+    <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
+    <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
+    -->
     
     <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                       else concat($opt-output-dir, '/')"/>
@@ -335,7 +338,7 @@
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <cx:message message="Validating ZedAI"/>
-    <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
+    <p:validate-with-relax-ng name="validate-zedai" assert-valid="true"    >
         <p:input port="schema">
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>

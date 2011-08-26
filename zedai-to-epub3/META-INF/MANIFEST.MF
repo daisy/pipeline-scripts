@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ZedAI to EPUB 3
 Bundle-SymbolicName: org.daisy.pipeline.modules.zedai-to-epub3
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: converter-registry,
- module-common,
+Require-Bundle: org.daisy.pipeline.framework, 
  org.daisy.pipeline.modules.epub3-nav-utils,
  org.daisy.pipeline.modules.epub3-ocf-utils,
  org.daisy.pipeline.modules.epub3-pub-utils,

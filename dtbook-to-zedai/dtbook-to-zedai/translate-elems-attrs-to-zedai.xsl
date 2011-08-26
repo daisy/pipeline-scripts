@@ -726,10 +726,10 @@
             <!-- making an assumption: @pronounce has a default value of 'no' -->
             <xsl:choose>
                 <xsl:when test="@pronounce = 'yes'">
-                    <xsl:attribute name="type">acronym</xsl:attribute>
+                    <xsl:attribute name="role">acronym</xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:attribute name="type">initialism</xsl:attribute>
+                    <xsl:attribute name="role">initialism</xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:call-template name="attrs"/>
@@ -757,7 +757,7 @@
 
     <xsl:template match="dtb:abbr">
 
-        <abbr type="truncation">
+        <abbr role="truncation">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </abbr>
