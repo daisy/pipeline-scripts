@@ -13,8 +13,7 @@
 
     <p:documentation>
       <xd:short>DTBook to ZedAI</xd:short>
-      <xd:detail>Transforms DTBook XML into ZedAI XML, and
-            extracts metadata and CSS information into separate files. Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
+      <xd:detail>Transforms DTBook XML into ZedAI XML.  Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
@@ -22,9 +21,6 @@
         </xd:author>
     </p:documentation>
 
-    <!-- TODO: should we mark up this input with px: attributes? users should actually just ignore it. -->
-    <p:input port="parameters" kind="parameter"/>
-    
     <p:input
         px:name="input"
         port="source" 
@@ -32,29 +28,34 @@
         sequence="true"
         px:media-type="application/x-dtbook+xml">
         <p:documentation>
-            <xd:short>DTBook input file(s)</xd:short>
+            <xd:short>DTBook file(s)</xd:short>
+            <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
         </p:documentation>
     </p:input>
     
     <p:option name="opt-output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>Output directory</xd:short>
+            <xd:detail>The directory to store the generated files in.</xd:detail>
         </p:documentation>
     </p:option>
     
     <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
-            <xd:short>Filename for the output ZedAI file</xd:short>
+            <xd:short>ZedAI filename</xd:short>
+            <xd:detail>Filename for the generated ZedAI file</xd:detail>
         </p:documentation>
     </p:option> 
     <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
-            <xd:short>Filename for the output MODS file</xd:short>
+            <xd:short>MODS filename</xd:short>
+            <xd:detail>Filename for the generated MODS file</xd:detail>
         </p:documentation>
     </p:option>
     <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
-            <xd:short>Filename for the output CSS file</xd:short>
+            <xd:short>CSS filename</xd:short>
+            <xd:detail>Filename for the generated CSS file</xd:detail>
         </p:documentation>
     </p:option>
     
@@ -75,6 +76,7 @@
         </p:documentation>
     </p:import>
 
+    <!-- for use with the pipeline framework -->
     <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">
         <p:documentation>
             <xd:short>Collection of utilities for generating metadata.</xd:short> 
@@ -86,12 +88,12 @@
             <xd:short>Collection of utilities for merging and upgrading DTBook files.</xd:short> 
         </p:documentation>
     </p:import>
+    
     <!-- replace the two imports above with these to test from within oxygen -->   
-    <!--
-    <p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
+    <!-- for use from within oxygen -->
+    <!--<p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
     -->
-    
     <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                       else concat($opt-output-dir, '/')"/>
     
@@ -132,7 +134,11 @@
     <!-- UPGRADE -->
     <!-- =============================================================== -->
     <p:documentation>Upgrade the DTBook document(s) to 2005-3</p:documentation>
-    <px:upgrade-dtbook name="upgrade-dtbook"/>
+    <px:upgrade-dtbook name="upgrade-dtbook">
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </px:upgrade-dtbook>
 
     <!-- =============================================================== -->
     <!-- MERGE -->
@@ -145,6 +151,9 @@
         <p:when test=".//c:result[. > 1]">
             <p:output port="result"/>
             <px:merge-dtbook>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
                 <p:input port="source">
                     <p:pipe port="result" step="upgrade-dtbook"/>
                 </p:input>
@@ -192,6 +201,9 @@
     <p:documentation>Generate CSS from the visual property attributes in the ZedAI
         document</p:documentation>
     <p:xslt name="generate-css">
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
         <p:input port="source">
             <p:pipe step="transform-to-zedai" port="result"/>
         </p:input>
@@ -266,6 +278,9 @@
     <p:documentation>Strip the visual property (CSS) attributes from the ZedAI
     document.</p:documentation>
     <p:xslt name="remove-css-attributes">
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
         <p:input port="stylesheet">
             <p:document href="remove-css-attributes.xsl"/>
         </p:input>
@@ -280,6 +295,9 @@
     <!-- =============================================================== -->
     <p:documentation>Generate MODS metadata</p:documentation>
     <px:dtbook-to-mods-meta name="generate-mods-metadata">
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
@@ -287,6 +305,10 @@
 
     <p:documentation>Generate ZedAI metadata</p:documentation>
     <px:dtbook-to-zedai-meta name="generate-zedai-metadata">
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
@@ -338,7 +360,7 @@
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <cx:message message="Validating ZedAI"/>
-    <p:validate-with-relax-ng name="validate-zedai" assert-valid="true"    >
+    <p:validate-with-relax-ng name="validate-zedai" assert-valid="true">
         <p:input port="schema">
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>

@@ -12,8 +12,7 @@
     </p:documentation>
 
     <p:input port="source" primary="true"/>
-    <p:input port="parameters" kind="parameter"/>
-
+    
     <p:option name="output-dir" required="true"/>
     <p:option name="dtbook-base-uri" required="true"/>
     
