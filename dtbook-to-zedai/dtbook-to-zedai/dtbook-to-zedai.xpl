@@ -22,7 +22,6 @@
     </p:documentation>
 
     <p:input
-        px:name="input"
         port="source" 
         primary="true" 
         sequence="true"
