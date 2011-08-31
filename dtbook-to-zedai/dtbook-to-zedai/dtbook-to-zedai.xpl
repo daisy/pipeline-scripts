@@ -13,7 +13,8 @@
 
     <p:documentation>
       <xd:short>DTBook to ZedAI</xd:short>
-      <xd:detail>Transforms DTBook XML into ZedAI XML.  Homepage: http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:detail>
+      <xd:detail>Transforms DTBook XML into ZedAI XML.</xd:detail>
+        <xd:homepage>http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:homepage>
         <xd:author>
             <xd:name>Marisa DeMeglio</xd:name>
             <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
