@@ -58,6 +58,12 @@
             <xd:detail>Filename for the generated CSS file</xd:detail>
         </p:documentation>
     </p:option>
+    <p:option name="opt-lang" required="false" px:dir="output" px:type="string" select="''">
+        <p:documentation>
+            <xd:short>Language code</xd:short>
+            <xd:detail>Language code of the input document.</xd:detail>
+        </p:documentation>
+    </p:option>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>
@@ -90,10 +96,10 @@
     </p:import>
     
     <!-- replace the two imports above with these to test from within oxygen -->   
-    <!-- for use from within oxygen -->
     <!--<p:import href="../../utilities/metadata-utils/metadata-utils/metadata-utils-library.xpl"/>
     <p:import href="../../utilities/dtbook-utils/dtbook-utils/dtbook-utils-library.xpl"/>
     -->
+    
     <p:variable name="output-dir" select="if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                       else concat($opt-output-dir, '/')"/>
     
@@ -355,6 +361,27 @@
     <!-- unwrap the meta list that was wrapped with tmp:wrapper -->
     <p:unwrap name="unwrap-meta-list" match="//z:head/tmp:wrapper"/>
 
+    <!-- add xml:lang if not already present AND if specified by the opt-lang option -->
+    <p:documentation>Add the xml:lang attribute</p:documentation>
+    <p:choose>
+        <p:when test="//z:document/@xml:lang">
+            <p:identity/>
+        </p:when>
+        <p:otherwise>
+            <p:choose>
+                <p:when test="string-length($opt-lang) > 0">
+                    <p:add-attribute match="//z:document">
+                        <p:with-option name="attribute-name" select="'xml:lang'"/>
+                        <p:with-option name="attribute-value" select="$opt-lang"/>
+                    </p:add-attribute>
+                </p:when>
+                <p:otherwise>
+                    <cx:message message="WARNING: required xml:lang attribute not found, and no 'opt-lang' option was passed to the converter."/>
+                    <p:identity/>
+                </p:otherwise>
+            </p:choose>
+        </p:otherwise>
+    </p:choose>
     <!-- =============================================================== -->
     <!-- VALIDATE FINAL OUTPUT -->
     <!-- =============================================================== -->
@@ -365,11 +392,11 @@
             <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-
+    
     <!-- =============================================================== -->
     <!-- WRITE TO DISK -->
     <!-- =============================================================== -->
-    
+    <cx:message message="Conversion complete. Storing files."/>
     <p:documentation>Copy all referenced files to the output directory</p:documentation>
     
     <pxi:copy-referenced-files>
@@ -430,5 +457,5 @@
         <p:with-option name="href" select="$mods-file"/>
     </p:store>
 
-
+    
 </p:declare-step>

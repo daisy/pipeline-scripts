@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    exclude-result-prefixes="dtb tmp" version="2.0"
+    exclude-result-prefixes="dtb" version="2.0"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
 

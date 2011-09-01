@@ -256,15 +256,7 @@
         </p:input>
     </p:xslt>
 
-    <!-- TODO: can I do this with p:add-attribute instead of the XSLT below? -->
     <p:documentation>Anchor any floating anotations</p:documentation>
-    <!--<p:add-attribute name="anchor-floating-annotations">
-        <p:with-option name="match" select="//z:annotation[not(@ref)]"/>
-        <p:with-option name="attribute-name" select="ref"/>
-        <p:with-option name="attribute-value" select="ancestor::z:section/@ref"/>
-        <p:with-option name="attribute-namespace" select="http://www.daisy.org/ns/z3986/authoring/"/>
-    </p:add-attribute>
-    -->
     <p:xslt name="anchor-floating-annotations">
         <p:input port="parameters">
             <p:empty/>

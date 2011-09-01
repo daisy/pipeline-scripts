@@ -20,9 +20,12 @@
         <xsl:message>Translate to ZedAI</xsl:message>
         
         <!-- just for testing: insert the oxygen schema reference -->
-        <!--<xsl:processing-instruction name="oxygen">
-            <xsl:text>RNGSchema="../../schema/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
-        </xsl:processing-instruction>-->
+        <!--
+            <xsl:processing-instruction name="oxygen">
+            <xsl:text>RNGSchema="/Users/marisa/Projects/pipeline2/daisy-pipeline-modules/schemas/zedai/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
+        </xsl:processing-instruction>
+        -->
+        
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>
@@ -945,7 +948,6 @@
         </lnum>
     </xsl:template>
 
-    <!-- TODO: why not @property for title & author like citation elem uses? -->
     <xsl:template match="dtb:poem">
         <block role="poem">
             <xsl:for-each-group group-adjacent="local-name() = 'line'" select="*">
@@ -962,14 +964,14 @@
                         <xsl:for-each select="current-group()">
                             <xsl:choose>
                                 <xsl:when test="local-name() = 'title'">
-                                    <p role="title">
+                                    <p property="title">
                                         <xsl:call-template name="attrs"/>
                                         <xsl:apply-templates/>
                                     </p>
                                 </xsl:when>
 
                                 <xsl:when test="local-name() = 'author'">
-                                    <p role="author">
+                                    <p property="author">
                                         <xsl:call-template name="attrs"/>
                                         <xsl:apply-templates/>
                                     </p>
@@ -995,10 +997,10 @@
             <xsl:call-template name="attrs"/>
             <xsl:variable name="wrap-in-p"
                 select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
-            <!-- is there ever a nested code-block ... ? -->
+            <!-- note that there is likely never a nested code-block -->
             <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
-            <!-- TODO: wrap text too -->
-            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p" select="*">
+            
+            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p or self::text()" select="node()[not(self::text()[normalize-space() = ''])]">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>
@@ -1059,7 +1061,7 @@
                         </span>
                     </xsl:when>
                     <xsl:when test="local-name() = 'br'">
-                        <!-- TODO -->
+                        <!-- There is no equivalent -->
                     </xsl:when>
 
                     <xsl:when test="local-name() = 'em' or local-name() = 'strong'">

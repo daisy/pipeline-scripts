@@ -6,6 +6,7 @@
     
     <!-- move an element out from its parent and split the parent 
         TODO: fix generate-id() problem (see below)
+        This issue is tracked here http://code.google.com/p/daisy-pipeline/issues/detail?id=37
     -->
     
     <xsl:output indent="yes" method="xml"/>

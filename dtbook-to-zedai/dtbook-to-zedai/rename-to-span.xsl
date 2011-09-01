@@ -149,12 +149,15 @@
     </xsl:template>
 
 
-    <!-- TODO: check if we should check <em> too -->
-    <!-- TODO: why did we use @property and not @role?  -->
+    <!-- here we use @property and not @role because
+        "For the author of quotes and subsections within a document, 
+        the property attribute must be used in conjunction with an about 
+        attribute that identifies the relationship" [ZedAI WG]
+    -->
     <xsl:template
         match="dtb:abbr/dtb:cite | dtb:acronym/dtb:cite | 
         dtb:dt/dtb:cite | dtb:sub/dtb:cite | dtb:sup/dtb:cite | dtb:w/dtb:cite | 
-        dtb:strong/dtb:cite">
+        dtb:strong/dtb:cite | dtb:em/dtb:cite">
         <!-- generate an ID, we might need it -->
         <xsl:variable name="citeID" select="generate-id()"/>
 
