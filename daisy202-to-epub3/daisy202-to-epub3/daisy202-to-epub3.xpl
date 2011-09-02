@@ -165,7 +165,7 @@
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
-        <p:with-option name="target" select="concat($output-dir,encode-for-uri(//dc:identifier),' - ',//dc:title,'.epub')">
+        <p:with-option name="target" select="concat($output-dir,encode-for-uri(concat(//dc:identifier,' - ',//dc:title,'.epub')))">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>

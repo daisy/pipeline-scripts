@@ -9,6 +9,7 @@ Require-Bundle: org.daisy.pipeline.modules.epub3-nav-utils,
  org.daisy.pipeline.modules.fileset-utils,
  org.daisy.pipeline.modules.html-utils,
  org.daisy.pipeline.modules.mediaoverlay-utils,
- org.daisy.pipeline.modules.mediatype-utils
+ org.daisy.pipeline.modules.mediatype-utils,
+ org.daisy.pipeline.modules.zip-utils
 Import-Package: org.daisy.pipeline.script
 Service-Component: OSGI-INF/daisy202-to-epub3.xml
