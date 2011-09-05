@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-package"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-package"
     name="package" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation xd:target="parent">
@@ -17,14 +15,18 @@
         <xd:input port="opf-manifest">Manifest in OPF-format.</xd:input>
         <xd:input port="opf-spine">Spine in OPF-format.</xd:input>
         <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
-        <xd:option name="publication-dir">URI to the directory where all the EPUB 3 content should be
-            stored.</xd:option>
+        <xd:option name="publication-dir">URI to the directory where all the EPUB 3 content should be stored.</xd:option>
     </p:documentation>
 
+    <!--<p:input port="flow" primary="false"/>-->
+    <p:input port="spine" primary="false" sequence="true"/>
     <p:input port="ncc" primary="false"/>
-    <p:input port="manifest" primary="false" sequence="true"/>
+    <p:input port="navigation" primary="false"/>
+    <p:input port="content-docs" sequence="true"/>
+    <p:input port="mediaoverlay" sequence="true"/>
+    <p:input port="resources" primary="false"/>
 
-    <p:output port="opf-package" primary="false">
+    <p:output port="opf-package" sequence="true" primary="true">
         <p:pipe port="result" step="opf-package"/>
     </p:output>
     <p:output port="fileset" primary="false">
@@ -34,12 +36,15 @@
         <p:pipe port="result" step="store"/>
     </p:output>
 
-    <p:option name="publication-dir" required="true"/>
-    <p:option name="epub-dir" required="true"/>
     <p:option name="pub-id" required="true"/>
     <p:option name="compatibility-mode" required="true"/>
+    <p:option name="publication-dir" required="true"/>
+    <p:option name="epub-dir" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
+
+    <p:variable name="result-uri" select="concat($publication-dir,'package.opf')"/>
 
     <p:documentation>Compile OPF metadata.</p:documentation>
     <p:xslt name="opf-metadata">
@@ -53,114 +58,96 @@
     </p:xslt>
     <p:sink/>
 
-    <p:documentation>Compile OPF manifest.</p:documentation>
-    <p:group name="opf-manifest">
-        <p:output port="result" primary="true"/>
-        <p:output port="fileset">
-            <p:pipe port="result" step="opf-manifest.fileset"/>
-        </p:output>
-
-        <px:fileset-join name="input-manifest">
-            <p:input port="source">
-                <p:pipe port="manifest" step="package"/>
-            </p:input>
-        </px:fileset-join>
-        <p:sink/>
-
-        <px:fileset-create>
-            <p:with-option name="base" select="$publication-dir"/>
-        </px:fileset-create>
-        <px:fileset-add-entry>
-            <p:with-option name="href" select="concat($publication-dir,'navigation.xhtml')"/>
-            <p:with-option name="media-type" select="'application/xhtml+xml'"/>
-        </px:fileset-add-entry>
-        <p:choose>
-            <p:when test="$compatibility-mode">
-                <px:fileset-add-entry>
-                    <p:with-option name="href" select="concat($publication-dir,'ncx.xml')"/>
-                    <p:with-option name="media-type" select="'application/xhtml+xml'"/>
-                </px:fileset-add-entry>
-            </p:when>
-            <p:otherwise>
-                <p:identity/>
-            </p:otherwise>
-        </p:choose>
-        <p:identity name="opf-manifest.navigation-manifest"/>
-        <p:sink/>
-
-        <px:fileset-join name="opf-manifest.fileset">
-            <p:input port="source">
-                <p:pipe port="manifest" step="package"/>
-                <p:pipe port="result" step="opf-manifest.navigation-manifest"/>
-            </p:input>
-        </px:fileset-join>
-        <p:xslt name="opf-manifest.result">
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document
-                    href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/fileset-to-manifest.xsl"
-                />
-            </p:input>
-        </p:xslt>
+    <p:group name="spine">
+        <p:output port="result" sequence="true"/>
+        <p:variable name="base" select="/*/@xml:base">
+            <p:pipe port="spine" step="package"/>
+        </p:variable>
+        <p:for-each>
+            <p:output port="result" sequence="true"/>
+            <p:iteration-source select="/*/d:file">
+                <p:pipe port="spine" step="package"/>
+            </p:iteration-source>
+            <p:choose>
+                <p:when test="/*/@media-type='application/xhtml+xml'">
+                    <p:wrap-sequence wrapper="d:fileset"/>
+                    <p:add-attribute match="/*" attribute-name="xml:base">
+                        <p:with-option name="attribute-value" select="$base"/>
+                    </p:add-attribute>
+                    <px:fileset-join/>
+                </p:when>
+                <p:otherwise>
+                    <p:identity>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                    </p:identity>
+                </p:otherwise>
+            </p:choose>
+        </p:for-each>
     </p:group>
-
-    <p:documentation>Compile OPF spine.</p:documentation>
-    <p:xslt name="opf-spine">
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document
-                href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xslt/manifest-to-spine.xsl"
-            />
-        </p:input>
-    </p:xslt>
     <p:sink/>
 
-    <p:identity>
-        <p:documentation>Construct the outer &lt;opf:package ...&gt;-element.</p:documentation>
+    <px:fileset-join name="manifest">
         <p:input port="source">
-            <p:inline><![CDATA[]]><package xmlns="http://www.idpf.org/2007/opf" version="3.0"
-                    profile="http://www.idpf.org/epub/30/profile/package/"/>
-            </p:inline>
+            <p:pipe port="spine" step="package"/>
+            <p:pipe port="resources" step="package"/>
         </p:input>
-    </p:identity>
-    <p:insert position="last-child">
-        <p:documentation>Inserts the metadata, manifest and spine (in that order) as children of the
-            &lt;opf:package ...&gt;-element.</p:documentation>
-        <p:input port="insertion">
+    </px:fileset-join>
+    <p:sink/>
+
+    <px:epub3-pub-create-package-doc>
+        <p:input port="spine-filesets">
+            <p:pipe port="result" step="spine"/>
+        </p:input>
+        <p:input port="publication-resources">
+            <p:pipe port="result" step="manifest"/>
+        </p:input>
+        <p:input port="metadata">
             <p:pipe port="result" step="opf-metadata"/>
-            <p:pipe port="result" step="opf-manifest"/>
-            <p:pipe port="result" step="opf-spine"/>
         </p:input>
-    </p:insert>
-    <p:add-attribute attribute-name="unique-identifier" match="/*" attribute-value="pub-id"/>
-    <p:add-attribute attribute-name="xml:lang" match="/*">
-        <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language"/>
-    </p:add-attribute>
+        <p:input port="content-docs">
+            <p:pipe port="navigation" step="package"/>
+            <p:pipe port="content-docs" step="package"/>
+        </p:input>
+        <p:input port="mediaoverlays">
+            <p:pipe port="mediaoverlay" step="package"/>
+        </p:input>
+        <p:with-option name="result-uri" select="$result-uri"/>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
+        <p:with-option name="detect-scripting" select="'false'"/>
+    </px:epub3-pub-create-package-doc>
+
     <p:identity name="opf-package"/>
 
     <p:store name="store" indent="true">
-        <p:with-option name="href" select="concat($publication-dir,'package.opf')"/>
+        <p:with-option name="href" select="$result-uri"/>
     </p:store>
 
-    <px:fileset-add-entry name="fileset-with-package">
-        <p:input port="source">
-            <p:pipe port="fileset" step="opf-manifest"/>
-        </p:input>
-        <p:with-option name="href" select="concat($publication-dir,'package.opf')"/>
-        <p:with-option name="media-type" select="'application/oebps-package+xml'"/>
-    </px:fileset-add-entry>
-    <px:fileset-create name="fileset-with-epub-base">
-        <p:with-option name="base" select="$epub-dir"/>
-    </px:fileset-create>
-    <px:fileset-join name="result-fileset">
-        <p:input port="source">
-            <p:pipe port="result" step="fileset-with-package"/>
-            <p:pipe port="result" step="fileset-with-epub-base"/>
-        </p:input>
-    </px:fileset-join>
+    <p:group name="result-fileset">
+        <p:output port="result"/>
+        <p:xslt>
+            <p:with-param name="base" select="replace($result-uri,'[^/]+$','')"/>
+            <p:input port="source">
+                <p:pipe port="result" step="opf-package"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="package.manifest-to-fileset.xsl"/>
+            </p:input>
+        </p:xslt>
+        <px:fileset-add-entry name="result-fileset.with-package">
+            <p:with-option name="href" select="$result-uri"/>
+            <p:with-option name="media-type" select="'application/oebps-package+xml'"/>
+        </px:fileset-add-entry>
+        <px:fileset-create name="result-fileset.with-epub-base">
+            <p:with-option name="base" select="$epub-dir"/>
+        </px:fileset-create>
+        <px:fileset-join>
+            <p:input port="source">
+                <p:pipe port="result" step="result-fileset.with-epub-base"/>
+                <p:pipe port="result" step="result-fileset.with-package"/>
+            </p:input>
+        </px:fileset-join>
+    </p:group>
 
 </p:declare-step>

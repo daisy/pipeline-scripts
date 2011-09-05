@@ -62,7 +62,9 @@
             <p:otherwise>
                 <p:identity>
                     <p:input port="source">
-                        <p:empty/>
+                        <p:inline>
+                            <p:empty/>
+                        </p:inline>
                     </p:input>
                 </p:identity>
             </p:otherwise>
