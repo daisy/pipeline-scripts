@@ -237,7 +237,7 @@
                 <p:pipe port="fileset" step="package"/>
             </p:input>
         </px:epub3-ocf-finalize>
-    </p:group>
+    </p:group><!--
 
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:epub3-ocf-zip name="zip">
@@ -248,6 +248,6 @@
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
-    <p:sink/>
+    <p:sink/>-->
 
 </p:declare-step>

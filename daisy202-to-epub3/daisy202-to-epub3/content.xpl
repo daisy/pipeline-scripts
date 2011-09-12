@@ -154,9 +154,8 @@
                         <p:document href="content.annotate-pagebreaks.xsl"/>
                     </p:input>
                 </p:xslt>
+                <!-- TODO: add html-outline-cleaner.xsl here when it's done ? -->
                 <p:identity name="content-flow-iterate.choose.otherwise.content"/>
-                <!-- TODO: add html-lot-annotator.xsl here when it's done ? -->
-                <!-- TODO: add html-loi-annotator.xsl here when it's done ? -->
                 <p:store indent="true"
                     name="content-flow-iterate.choose.otherwise.store-content">
                     <p:with-option name="href" select="$result-uri"/>

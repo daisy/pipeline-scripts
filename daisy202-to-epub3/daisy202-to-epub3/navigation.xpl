@@ -59,6 +59,9 @@
     </px:epub3-nav-create-toc>
     <p:sink/>
 
+    <!-- TODO: create nav with html-lot-annotator.xsl here when it's done -->
+    <!-- TODO: create nav with html-loi-annotator.xsl here when it's done -->
+
     <p:identity name="ncc-nav-toc">
         <p:input port="source" select="//html:nav[@*[name()='epub:type']='toc']">
             <p:pipe port="ncc-navigation" step="navigation"/>
@@ -162,7 +165,7 @@
             <p:output port="result" sequence="true">
                 <p:pipe port="result" step="store-ncx.store"/>
             </p:output>
-            <p:xslt name="store-ncx.ncx">
+            <p:xslt name="store-ncx.ncx-without-docauthors">
                 <p:input port="parameters">
                     <p:empty/>
                 </p:input>
@@ -173,6 +176,32 @@
                     <p:document href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/nav-to-ncx.xsl"/>
                 </p:input>
             </p:xslt>
+            <p:for-each>
+                <p:iteration-source select="//html:meta[@name='dc:creator']">
+                    <p:pipe port="ncc-navigation" step="navigation"/>
+                </p:iteration-source>
+                <p:template>
+                    <p:input port="template">
+                        <p:inline xmlns="http://www.daisy.org/z3986/2005/ncx/" exclude-inline-prefixes="#all">
+                            <docAuthor>
+                                <text>{string(/*/@content)}</text>
+                            </docAuthor>
+                        </p:inline>
+                    </p:input>
+                    <p:input port="parameters">
+                        <p:empty/>
+                    </p:input>
+                </p:template>
+            </p:for-each>
+            <p:identity name="store-ncx.docauthors"/>
+            <p:insert xmlns="http://www.daisy.org/z3986/2005/ncx/" match="/*/*[2]" position="after" name="store-ncx.ncx">
+                <p:input port="source">
+                    <p:pipe port="result" step="store-ncx.ncx-without-docauthors"/>
+                </p:input>
+                <p:input port="insertion">
+                    <p:pipe port="result" step="store-ncx.docauthors"/>
+                </p:input>
+            </p:insert>
             <p:store name="store-ncx.store" indent="true">
                 <p:with-option name="href" select="concat($publication-dir,'ncx.xml')"/>
             </p:store>
