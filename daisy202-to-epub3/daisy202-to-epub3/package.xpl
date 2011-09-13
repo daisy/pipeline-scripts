@@ -115,7 +115,7 @@
         </p:input>
         <p:with-option name="result-uri" select="$result-uri"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
-        <p:with-option name="detect-scripting" select="'false'"/>
+        <p:with-option name="detect-properties" select="'false'"/>
     </px:epub3-pub-create-package-doc>
 
     <p:identity name="opf-package"/>
