@@ -8,9 +8,6 @@
     <p:output port="result" primary="false">
         <p:pipe port="result" step="ncc-navigation.result"/>
     </p:output>
-    <p:output port="original-base" primary="false">
-        <p:pipe port="result" step="ncc-navigation.original-base"/>
-    </p:output>
 
     <p:option name="publication-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
@@ -105,22 +102,25 @@
     <p:add-attribute match="/*" attribute-name="profile" attribute-value="http://www.idpf.org/epub/30/profile/content/"/>
     <p:identity name="ncc-navigation.original-links"/>
     <p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
-        <p:add-attribute match="/*" attribute-name="href">
-            <p:with-option name="attribute-value"
-                select="concat($subdir,replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml#'),if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else '')"/>
-        </p:add-attribute>
+        <p:xslt>
+            <p:with-param name="from" select="$publication-dir"/>
+            <p:with-param name="to"
+                select="concat(if (starts-with(/*/@href,'#'))
+                                    then concat($publication-dir,'navigation.xhtml')
+                                    else concat($content-dir,replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml')),
+                               if (contains(/*/@href,'#')) then concat('#',tokenize(/*/@href,'#')[last()]) else '')"/>
+            <p:input port="stylesheet">
+                <p:document href="ncc-navigation.make-new-hrefs.xsl"/>
+            </p:input>
+        </p:xslt>
     </p:viewport>
-    <p:identity name="ncc-navigation.result"/>
-    <p:sink/>
-    
-    <p:add-attribute name="ncc-navigation.original-base" match="/*" attribute-name="xml:base">
-        <p:input port="source">
-            <p:pipe port="result" step="ncc-navigation.original-links"/>
-        </p:input>
-        <p:with-option name="attribute-value" select="/*/@xml:base">
-            <p:pipe port="ncc" step="ncc-navigation"/>
-        </p:with-option>
+    <p:add-attribute match="/*" attribute-name="original-base">
+        <p:with-option name="attribute-value" select="/*/@xml:base"/>
     </p:add-attribute>
+    <p:add-attribute match="/*" attribute-name="xml:base">
+        <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>
+    </p:add-attribute>
+    <p:identity name="ncc-navigation.result"/>
     <p:sink/>
 
 </p:declare-step>

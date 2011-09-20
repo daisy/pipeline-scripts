@@ -26,7 +26,7 @@
     </p:documentation>
 
     <!--<p:output port="dbg" sequence="true">
-        <p:pipe port="result" step="zip"/>
+        <p:pipe port="result" step="ncc-navigation"/>
     </p:output>-->
 
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
@@ -93,7 +93,7 @@
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
-
+    
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))"/>
@@ -135,9 +135,6 @@
         <p:input port="ncc-navigation">
             <p:pipe port="result" step="ncc-navigation"/>
         </p:input>
-        <p:input port="ncc-navigation-original-base">
-            <p:pipe port="original-base" step="ncc-navigation"/>
-        </p:input>
     </pxi:daisy202-to-epub3-content>
 
     <p:documentation>Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</p:documentation>
@@ -149,7 +146,7 @@
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
         <p:input port="ncc-navigation">
-            <p:pipe port="result" step="ncc-navigation"/>
+            <p:pipe port="ncc-navigation-pagefixed" step="content-without-full-navigation"/>
         </p:input>
         <p:input port="content">
             <p:pipe port="content" step="content-without-full-navigation"/>
@@ -166,7 +163,7 @@
             <p:pipe port="result" step="ncc-navigation"/>
         </p:with-option>
         <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil" step="flow"/>
+            <p:pipe port="daisy-smil-pagefixed" step="content-without-full-navigation"/>
         </p:input>
         <p:input port="content-with-original-base">
             <p:pipe port="content-with-original-base" step="content-without-full-navigation"/>
@@ -176,7 +173,7 @@
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.)</p:documentation>
     <pxi:daisy202-to-epub3-resources name="resources">
         <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil" step="flow"/>
+            <p:pipe port="daisy-smil-pagefixed" step="content-without-full-navigation"/>
         </p:input>
         <p:input port="daisy-content">
             <p:pipe port="content-with-original-base" step="content-without-full-navigation"/>
@@ -237,17 +234,17 @@
                 <p:pipe port="fileset" step="package"/>
             </p:input>
         </px:epub3-ocf-finalize>
-    </p:group><!--
+    </p:group>
 
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:epub3-ocf-zip name="zip">
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
-        <p:with-option name="target" select="concat($output-dir,encode-for-uri(concat(//dc:identifier,' - ',//dc:title,'.epub')))">
+        <p:with-option name="target" select="concat(replace($output-dir,'^file:',''),replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]',''))">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
-    <p:sink/>-->
+    <p:sink/>
 
 </p:declare-step>

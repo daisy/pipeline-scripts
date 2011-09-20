@@ -35,10 +35,6 @@
         <p:pipe port="result" step="store-ncx"/>
     </p:output>
 
-    <p:output port="dbg" sequence="true">
-        <p:pipe port="result" step="ncc-nav-toc"/>
-    </p:output>
-
     <p:option name="publication-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
     <p:option name="pub-id" required="true"/>
@@ -165,12 +161,36 @@
             <p:output port="result" sequence="true">
                 <p:pipe port="result" step="store-ncx.store"/>
             </p:output>
+
+            <p:for-each>
+                <p:iteration-source>
+                    <p:pipe port="content" step="navigation"/>
+                </p:iteration-source>
+                <p:variable name="xml-base" select="/*/@xml:base"/>
+                <px:fileset-create>
+                    <p:with-option name="base" select="$publication-dir"/>
+                </px:fileset-create>
+                <px:fileset-add-entry>
+                    <p:with-option name="href" select="$xml-base"/>
+                </px:fileset-add-entry>
+            </p:for-each>
+            <px:fileset-join name="store-ncx.spine"/>
+            <p:sink/>
+            
+            <p:insert match="/*" position="first-child">
+                <p:input port="source">
+                    <p:pipe port="result" step="result-with-xml-base"/>
+                </p:input>
+                <p:input port="insertion">
+                    <p:pipe port="result" step="store-ncx.spine"/>
+                </p:input>
+            </p:insert>
+            <p:add-attribute match="/*" attribute-name="xml:base">
+                <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>
+            </p:add-attribute>
             <p:xslt name="store-ncx.ncx-without-docauthors">
                 <p:input port="parameters">
                     <p:empty/>
-                </p:input>
-                <p:input port="source">
-                    <p:pipe port="result" step="result-with-xml-base"/>
                 </p:input>
                 <p:input port="stylesheet">
                     <p:document href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/nav-to-ncx.xsl"/>

@@ -16,9 +16,6 @@
     <p:output port="store-complete" sequence="true">
         <p:pipe port="store-complete" step="mediaoverlay-iterate"/>
     </p:output>
-    <p:output port="dbg" sequence="true">
-        <p:pipe port="result" step="mediaoverlay-joined"/>
-    </p:output>
 
     <p:option name="daisy-dir" required="true"/>
     <p:option name="publication-dir" required="true"/>
@@ -78,7 +75,7 @@
                                             string-length($daisy-dir)+1
                                     )
                                 )"/>
-                <px:mediaoverlay-rearrange name="dbg-tmp">
+                <px:mediaoverlay-rearrange>
                     <p:input port="mediaoverlay">
                         <p:pipe port="result" step="mediaoverlay-joined"/>
                     </p:input>
