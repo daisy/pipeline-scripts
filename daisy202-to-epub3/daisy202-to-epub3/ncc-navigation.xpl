@@ -99,7 +99,6 @@
             <p:pipe port="result" step="ncc-navigation.landmarks"/>
         </p:input>
     </p:insert>
-    <p:add-attribute match="/*" attribute-name="profile" attribute-value="http://www.idpf.org/epub/30/profile/content/"/>
     <p:identity name="ncc-navigation.original-links"/>
     <p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
         <p:xslt>

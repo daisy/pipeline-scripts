@@ -26,7 +26,7 @@
     </p:documentation>
 
     <!--<p:output port="dbg" sequence="true">
-        <p:pipe port="result" step="ncc-navigation"/>
+        <p:pipe port="dbg" step="resources"/>
     </p:output>-->
 
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
@@ -93,7 +93,7 @@
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
-    
+
     <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))"/>
@@ -146,7 +146,7 @@
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
         <p:input port="ncc-navigation">
-            <p:pipe port="ncc-navigation-pagefixed" step="content-without-full-navigation"/>
+            <p:pipe port="result" step="ncc-navigation"/>
         </p:input>
         <p:input port="content">
             <p:pipe port="content" step="content-without-full-navigation"/>
@@ -163,20 +163,20 @@
             <p:pipe port="result" step="ncc-navigation"/>
         </p:with-option>
         <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil-pagefixed" step="content-without-full-navigation"/>
+            <p:pipe port="daisy-smil" step="flow"/>
         </p:input>
-        <p:input port="content-with-original-base">
-            <p:pipe port="content-with-original-base" step="content-without-full-navigation"/>
+        <p:input port="content">
+            <p:pipe port="content" step="content-without-full-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-mediaoverlay>
 
     <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.)</p:documentation>
     <pxi:daisy202-to-epub3-resources name="resources">
         <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil-pagefixed" step="content-without-full-navigation"/>
+            <p:pipe port="daisy-smil" step="flow"/>
         </p:input>
         <p:input port="daisy-content">
-            <p:pipe port="content-with-original-base" step="content-without-full-navigation"/>
+            <p:pipe port="content" step="content-without-full-navigation"/>
         </p:input>
         <p:with-option name="include-mediaoverlay-resources" select="$mediaoverlay"/>
         <p:with-option name="content-dir" select="$content-dir"/>

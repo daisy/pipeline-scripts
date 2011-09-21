@@ -7,18 +7,20 @@
 
     <xsl:template match="@*|node()">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="if (@http-equiv) then true() else false()">
+                <xsl:attribute name="http-equiv" select="lower-case(@http-equiv)"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()"/>
         </xsl:copy>
     </xsl:template>
 
     <xsl:template match="/*">
         <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <xsl:attribute name="profile" select="'http://www.idpf.org/epub/30/profile/content/'"/>
-            <xsl:apply-templates select="node()"/>
+            <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-
+    
     <xsl:template match="head">
         <head>
             <xsl:apply-templates select="@*"/>
@@ -34,6 +36,10 @@
                 </xsl:otherwise>
             </xsl:choose>
         </head>
+    </xsl:template>
+    
+    <xsl:template match="meta">
+        <meta/>
     </xsl:template>
 
     <xsl:template match="a">

@@ -122,8 +122,10 @@
                     <xsl:template match="/*">
                         <xsl:copy>
                             <xsl:apply-templates select="@*"/>
-                            <xsl:attribute name="lang" select="$lang"/>
-                            <xsl:attribute name="xml:lang" select="$lang"/>
+                            <xsl:if test="$lang">
+                                <xsl:attribute name="lang" select="$lang"/>
+                                <xsl:attribute name="xml:lang" select="$lang"/>
+                            </xsl:if>
                             <xsl:apply-templates select="node()"/>
                         </xsl:copy>
                     </xsl:template>
@@ -176,7 +178,7 @@
             </p:for-each>
             <px:fileset-join name="store-ncx.spine"/>
             <p:sink/>
-            
+
             <p:insert match="/*" position="first-child">
                 <p:input port="source">
                     <p:pipe port="result" step="result-with-xml-base"/>

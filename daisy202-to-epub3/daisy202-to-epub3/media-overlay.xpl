@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL"
-    type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay"
+    version="1.0">
 
     <p:input port="daisy-smil" sequence="true" primary="true"/>
-    <p:input port="content-with-original-base" sequence="true"/>
+    <p:input port="content" sequence="true"/>
 
     <p:output port="mediaoverlay" sequence="true">
         <p:pipe port="mediaoverlay" step="mediaoverlay-iterate"/>
@@ -51,8 +50,12 @@
             <p:pipe port="store-complete" step="mediaoverlay-iterate.choose"/>
         </p:output>
         <p:iteration-source>
-            <p:pipe port="content-with-original-base" step="mediaoverlay"/>
+            <p:pipe port="content" step="mediaoverlay"/>
         </p:iteration-source>
+        <p:variable name="content-result-uri" select="/*/@xml:base"/>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="/*/@original-base"/>
+        </p:add-attribute>
         <p:choose name="mediaoverlay-iterate.choose">
             <p:when test="$include-mediaoverlay='true'">
                 <p:output port="mediaoverlay" sequence="true">
@@ -63,7 +66,7 @@
                 </p:output>
 
                 <p:variable name="result-uri"
-                    select="if (/*/@xml:base=$navigation-uri)
+                    select="if ($content-result-uri=$navigation-uri)
                                 then concat($publication-dir,'navigation.smil')
                                 else concat($content-dir,
                                     substring(
@@ -84,14 +87,12 @@
                     <p:when test="$result-uri = concat($publication-dir,'navigation.smil')">
                         <p:viewport match="//mo:text">
                             <p:add-attribute match="/*" attribute-name="src">
-                                <p:with-option name="attribute-value"
-                                    select="concat('navigation.xhtml#',tokenize(/*/@src,'#')[last()])"/>
+                                <p:with-option name="attribute-value" select="concat('navigation.xhtml#',tokenize(/*/@src,'#')[last()])"/>
                             </p:add-attribute>
                         </p:viewport>
                         <p:viewport match="//mo:audio">
                             <p:add-attribute match="/*" attribute-name="src">
-                                <p:with-option name="attribute-value"
-                                    select="concat(substring-after($content-dir,$publication-dir),/*/@src)"/>
+                                <p:with-option name="attribute-value" select="concat(substring-after($content-dir,$publication-dir),/*/@src)"/>
                             </p:add-attribute>
                         </p:viewport>
                     </p:when>

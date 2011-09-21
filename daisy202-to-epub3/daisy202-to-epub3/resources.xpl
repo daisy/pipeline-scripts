@@ -31,17 +31,23 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
 
-    <p:xslt name="content-resources">
-        <p:input port="source">
+    <p:for-each>
+        <p:iteration-source>
             <p:pipe port="daisy-content" step="resources"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="daisy202-content-to-resource-fileset.xsl"/>
-        </p:input>
-    </p:xslt>
+        </p:iteration-source>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="/*/@original-base"/>
+        </p:add-attribute>
+        <p:xslt>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="daisy202-content-to-resource-fileset.xsl"/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    <px:fileset-join name="content-resources"/>
     <p:sink/>
     <p:for-each name="smil-resources">
         <p:output port="result" sequence="true"/>
@@ -62,9 +68,7 @@
             <p:otherwise>
                 <p:identity>
                     <p:input port="source">
-                        <p:inline>
-                            <p:empty/>
-                        </p:inline>
+                        <p:empty/>
                     </p:input>
                 </p:identity>
             </p:otherwise>

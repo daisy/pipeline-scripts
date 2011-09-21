@@ -97,6 +97,9 @@
     <p:sink/>
 
     <px:epub3-pub-create-package-doc>
+        <p:with-option name="result-uri" select="$result-uri"/>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
+        <p:with-option name="detect-properties" select="'false'"/>
         <p:input port="spine-filesets">
             <p:pipe port="result" step="spine"/>
         </p:input>
@@ -113,9 +116,6 @@
         <p:input port="mediaoverlays">
             <p:pipe port="mediaoverlay" step="package"/>
         </p:input>
-        <p:with-option name="result-uri" select="$result-uri"/>
-        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
-        <p:with-option name="detect-properties" select="'false'"/>
     </px:epub3-pub-create-package-doc>
 
     <p:identity name="opf-package"/>

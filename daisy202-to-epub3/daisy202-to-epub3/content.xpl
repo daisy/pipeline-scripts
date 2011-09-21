@@ -7,17 +7,11 @@
     <p:input port="daisy-smil" sequence="true"/>
     <p:input port="ncc-navigation"/>
 
-    <p:output port="content-with-original-base" sequence="true">
+    <!--<p:output port="content-with-original-base" sequence="true">
         <p:pipe port="content-with-original-base" step="content-flow-iterate"/>
-    </p:output>
+    </p:output>-->
     <p:output port="content" sequence="true">
         <p:pipe port="content" step="content-flow-iterate"/>
-    </p:output>
-    <p:output port="daisy-smil-pagefixed" sequence="true">
-        <p:pipe port="result" step="fix-smil-pagebreak-references"/>
-    </p:output>
-    <p:output port="ncc-navigation-pagefixed">
-        <p:pipe port="ncc-navigation-pagefixed" step="content-flow-iterate"/>
     </p:output>
     <p:output port="manifest">
         <p:pipe port="result" step="manifest"/>
@@ -40,20 +34,14 @@
 
     <p:add-xml-base all="true" relative="false"/>
     <p:group name="content-flow-iterate">
-        <p:output port="content-with-original-base" primary="false" sequence="true">
+        <!--<p:output port="content-with-original-base" primary="false" sequence="true">
             <p:pipe port="content-with-original-base" step="content-flow-iterate.result"/>
-        </p:output>
+        </p:output>-->
         <p:output port="content" primary="false" sequence="true">
             <p:pipe port="content" step="content-flow-iterate.result"/>
         </p:output>
         <p:output port="store-complete" sequence="true">
             <p:pipe port="store-complete" step="content-flow-iterate.store-content"/>
-        </p:output>
-        <p:output port="moved-pages-mapping" sequence="true">
-            <p:pipe port="moved-pages-mapping" step="content-flow-iterate.move-pages"/>
-        </p:output>
-        <p:output port="ncc-navigation-pagefixed">
-            <p:pipe port="ncc-navigation-pagefixed" step="content-flow-iterate.move-pages"/>
         </p:output>
 
         <p:for-each name="content-flow-iterate.load-and-transform">
@@ -130,225 +118,22 @@
             </p:choose>
         </p:for-each>
 
-        <p:group name="content-flow-iterate.move-pages">
-            <p:output port="content" sequence="true" primary="true">
-                <p:pipe port="result" step="content-flow-iterate.move-pages.result"/>
-            </p:output>
-            <p:output port="moved-pages-mapping">
-                <p:pipe port="moved-pages-mapping" step="content-flow-iterate.move-pages.content"/>
-            </p:output>
-            <p:output port="ncc-navigation-pagefixed">
-                <p:pipe port="result" step="content-flow-iterate.ncc-fixed-pagerefs"/>
-            </p:output>
-
-            <p:split-sequence name="content-flow-iterate.move-pages.ncc-split">
-                <p:with-option name="test" select="concat('/*/@original-base=concat(&quot;',$daisy-dir,'&quot;,&quot;ncc.html&quot;)')">
-                    <p:empty/>
-                </p:with-option>
-            </p:split-sequence>
-            <p:sink/>
-
-            <p:wrap-sequence wrapper="wrapper">
-                <p:input port="source">
-                    <p:pipe port="content" step="content-flow-iterate.load-and-transform"/>
-                </p:input>
-            </p:wrap-sequence>
-            <p:delete match="/*/*/*"/>
-            <p:delete>
-                <p:with-option name="match"
-                    select="concat('html:html[not(@original-uri=concat(&quot;',$daisy-dir,'&quot;,&quot;ncc.html&quot;)) and preceding-sibling::*[@original-uri=concat(&quot;',$daisy-dir,'&quot;,&quot;ncc.html&quot;)]]')"
-                />
-            </p:delete>
-            <p:for-each>
-                <p:iteration-source select="/*/*"/>
-                <p:identity/>
-            </p:for-each>
-            <p:count name="content-flow-iterate.move-pages.ncc-position"/>
-            <p:sink/>
-
-            <p:wrap-sequence wrapper="wrapper">
-                <p:input port="source">
-                    <p:pipe step="content-flow-iterate.move-pages.ncc-split" port="not-matched"/>
-                </p:input>
-            </p:wrap-sequence>
-            <p:choose name="content-flow-iterate.move-pages.content">
-                <p:when test="count(//html:span[@class='page-normal' or @class='page-special' or @class='page-front']) = 0">
-                    <p:output port="content" primary="true"/>
-                    <p:output port="moved-pages-mapping">
-                        <p:inline>
-                            <mapping/>
-                        </p:inline>
-                    </p:output>
-                    <!-- no pagebreaks; don't do anything -->
-                    <p:identity/>
-                </p:when>
-                <p:otherwise>
-                    <p:output port="content" primary="true"/>
-                    <p:output port="moved-pages-mapping">
-                        <p:pipe port="result" step="content-flow-iterate.move-pages.content.mapping"/>
-                    </p:output>
-                    <p:choose>
-                        <p:when
-                            test="(string-length(normalize-space(string-join((//html:span[@class='page-normal' or @class='page-special' or @class='page-front'])[1]/preceding::text()[ancestor::html:body],''))) &gt; 0) = true()">
-                            <!-- there is no page break at the start of the first content document; lets generate one -->
-                            <p:xslt>
-                                <p:input port="parameters">
-                                    <p:empty/>
-                                </p:input>
-                                <p:input port="stylesheet">
-                                    <p:document href="content.generate-first-pagebreak.xsl"/>
-                                </p:input>
-                            </p:xslt>
-                        </p:when>
-                        <p:otherwise>
-                            <!-- first document starts with a pagebreak; don't do anything -->
-                            <p:identity/>
-                        </p:otherwise>
-                    </p:choose>
-                    <p:viewport match="html:html">
-                        <p:add-attribute match="html:span[@class='page-normal' or @class='page-special' or @class='page-front']" attribute-name="xml:base">
-                            <p:with-option name="attribute-value" select="/*/@xml:base"/>
-                        </p:add-attribute>
-                        <p:add-attribute match="html:span[@class='page-normal' or @class='page-special' or @class='page-front']" attribute-name="original-base">
-                            <p:with-option name="attribute-value" select="/*/@original-base"/>
-                        </p:add-attribute>
-                    </p:viewport>
-                    <p:xslt>
-                        <!-- replace all pagebreaks with their preceding pagebreak -->
-                        <p:input port="parameters">
-                            <p:empty/>
-                        </p:input>
-                        <p:input port="stylesheet">
-                            <p:document href="content.move-pagebreaks-1of3.xsl"/>
-                        </p:input>
-                    </p:xslt>
-                    <p:xslt>
-                        <!-- move all linebreaks at the start of a page to the end of the preceding page -->
-                        <p:input port="parameters">
-                            <p:empty/>
-                        </p:input>
-                        <p:input port="stylesheet">
-                            <p:document href="content.move-pagebreaks-2of3.xsl"/>
-                        </p:input>
-                    </p:xslt>
-                    <p:xslt name="content-flow-iterate.move-pages.content.annotated">
-                        <!-- <span/>s should not be the direct children of <body/>. Move to / wrap in <div/>s as appropriate. -->
-                        <p:input port="parameters">
-                            <p:empty/>
-                        </p:input>
-                        <p:input port="stylesheet">
-                            <p:document href="content.move-pagebreaks-3of3.xsl"/>
-                        </p:input>
-                    </p:xslt>
-                    <p:xslt name="content-flow-iterate.move-pages.content.mapping">
-                        <p:input port="parameters">
-                            <p:empty/>
-                        </p:input>
-                        <p:input port="stylesheet">
-                            <p:document href="content.make-pagebreak-mapping.xsl"/>
-                        </p:input>
-                    </p:xslt>
-                    <p:delete match="html:span[@class='page-normal' or @class='page-special' or @class='page-front']/@*[name()='original-base' or name() = 'xml:base']">
-                        <p:input port="source">
-                            <p:pipe step="content-flow-iterate.move-pages.content.annotated" port="result"/>
-                        </p:input>
-                    </p:delete>
-                </p:otherwise>
-            </p:choose>
-            <p:sink/>
-            
-            <p:insert match="/*" position="first-child">
-                <p:input port="source">
-                    <p:pipe step="content" port="ncc-navigation"/>
-                </p:input>
-                <p:input port="insertion">
-                    <p:pipe step="content-flow-iterate.move-pages.content" port="moved-pages-mapping"/>
-                </p:input>
-            </p:insert>
-            <p:viewport match="/*/*[1]/*">
-                <p:add-attribute match="/*" attribute-name="from">
-                    <p:with-option name="attribute-value" select="substring-after(/*/@from,$publication-dir)"/>
-                </p:add-attribute>
-                <p:add-attribute match="/*" attribute-name="to">
-                    <p:with-option name="attribute-value" select="substring-after(/*/@to,$publication-dir)"/>
-                </p:add-attribute>
-            </p:viewport>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="content.fix-ncc-pagerefs.xsl"/>
-                </p:input>
-            </p:xslt>
-            <p:identity name="content-flow-iterate.ncc-fixed-pagerefs"/>
-            <p:sink/>
-
-            <p:choose name="content-flow-iterate.move-pages.insert-ncc">
-                <p:when test=".=0">
-                    <p:xpath-context>
-                        <p:pipe step="content-flow-iterate.move-pages.ncc-position" port="result"/>
-                    </p:xpath-context>
-                    <p:identity>
-                        <p:input port="source">
-                            <p:pipe step="content-flow-iterate.move-pages.content" port="content"/>
-                        </p:input>
-                    </p:identity>
-                </p:when>
-                <p:otherwise>
-                    <p:choose>
-                        <p:when test=".=1">
-                            <p:xpath-context>
-                                <p:pipe step="content-flow-iterate.move-pages.ncc-position" port="result"/>
-                            </p:xpath-context>
-                            <p:insert match="/*/*[1]" position="before">
-                                <p:input port="insertion">
-                                    <p:pipe step="content-flow-iterate.ncc-fixed-pagerefs" port="result"/>
-                                </p:input>
-                                <p:input port="source">
-                                    <p:pipe step="content-flow-iterate.move-pages.content" port="content"/>
-                                </p:input>
-                            </p:insert>
-                        </p:when>
-                        <p:otherwise>
-                            <p:insert position="after">
-                                <p:with-option name="match" select="concat('/*/*[position() = (',(.-1),',last())]')">
-                                    <p:pipe step="content-flow-iterate.move-pages.ncc-position" port="result"/>
-                                </p:with-option>
-                                <p:input port="insertion">
-                                    <p:pipe step="content-flow-iterate.ncc-fixed-pagerefs" port="result"/>
-                                </p:input>
-                                <p:input port="source">
-                                    <p:pipe step="content-flow-iterate.move-pages.content" port="content"/>
-                                </p:input>
-                            </p:insert>
-                        </p:otherwise>
-                    </p:choose>
-                </p:otherwise>
-            </p:choose>
-            <p:for-each name="content-flow-iterate.move-pages.result">
-                <p:output port="result" primary="true" sequence="true"/>
-                <p:iteration-source select="/*/*"/>
-                <p:identity/>
-            </p:for-each>
-        </p:group>
-
         <p:for-each name="content-flow-iterate.result">
             <p:output port="content" primary="true" sequence="true">
-                <p:pipe step="content-flow-iterate.result.content" port="result"/>
+                <p:pipe step="content-flow-iterate.result.this" port="result"/>
             </p:output>
-            <p:output port="content-with-original-base" sequence="true">
+            <!--<p:output port="content-with-original-base" sequence="true">
                 <p:pipe step="content-flow-iterate.result.content-with-original-base" port="result"/>
-            </p:output>
+            </p:output>-->
             <p:variable name="original-base" select="/*/@original-base"/>
             <p:identity name="content-flow-iterate.result.this"/>
-            <p:delete match="/*/@original-base" name="content-flow-iterate.result.content"/>
-            <p:add-attribute attribute-name="xml:base" match="/*" name="content-flow-iterate.result.content-with-original-base">
+            <!--<p:delete match="/*/@original-base" name="content-flow-iterate.result.content"/>-->
+            <!--<p:add-attribute attribute-name="xml:base" match="/*" name="content-flow-iterate.result.content-with-original-base">
                 <p:with-option name="attribute-value" select="$original-base"/>
                 <p:input port="source">
                     <p:pipe step="content-flow-iterate.result.this" port="result"/>
                 </p:input>
-            </p:add-attribute>
+            </p:add-attribute>-->
             <p:sink/>
         </p:for-each>
 
@@ -357,7 +142,7 @@
                 <p:pipe step="content-flow-iterate.store-content.store-complete" port="result"/>
             </p:output>
             <p:variable name="result-base" select="/*/@xml:base"/>
-            <p:delete match="/*/@xml:base"/>
+            <p:delete match="/*/@xml:base|/*/@original-base"/>
             <p:store indent="true" name="content-flow-iterate.store-content.store-complete">
                 <p:with-option name="href" select="$result-base"/>
             </p:store>
@@ -387,33 +172,6 @@
         </p:add-attribute>
     </p:for-each>
     <px:fileset-join name="manifest"/>
-    <p:sink/>
-
-    <p:group name="fix-smil-pagebreak-references">
-        <p:output port="result" primary="true" sequence="true"/>
-        <p:wrap-sequence wrapper="wrapper">
-            <p:input port="source">
-                <p:pipe port="daisy-smil" step="content"/>
-            </p:input>
-        </p:wrap-sequence>
-        <p:insert match="/*" position="first-child">
-            <p:input port="insertion">
-                <p:pipe port="moved-pages-mapping" step="content-flow-iterate"/>
-            </p:input>
-        </p:insert>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="content.fix-smil-pagebreak-references.xsl"/>
-            </p:input>
-        </p:xslt>
-        <p:for-each>
-            <p:iteration-source select="/*/*"/>
-            <p:identity/>
-        </p:for-each>
-    </p:group>
     <p:sink/>
 
 </p:declare-step>
