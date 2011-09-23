@@ -3,7 +3,6 @@
 
     <!-- href to this xhtml document -->
     <xsl:param name="href" required="yes"/>
-    <xsl:param name="pub-id" select="''"/>
 
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -20,27 +19,8 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-    
-    <xsl:template match="head">
-        <head>
-            <xsl:apply-templates select="@*"/>
-            <xsl:choose>
-                <xsl:when test="$pub-id">
-                    <meta name="dc:identifier">
-                        <xsl:value-of select="$pub-id"/>
-                    </meta>
-                    <xsl:apply-templates select="*[not(self::meta and @name='dc:identifier')]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="*"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </head>
-    </xsl:template>
-    
-    <xsl:template match="meta">
-        <meta/>
-    </xsl:template>
+
+    <xsl:template match="meta"/>
 
     <xsl:template match="a">
         <xsl:variable name="link-href" select="tokenize(@href,'#')[1]"/>

@@ -1,18 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" type="pxi:daisy202-to-epub3-ncc-navigation"
-    name="ncc-navigation" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" version="1.0">
-
-    <p:input port="ncc"/>
-    <p:input port="daisy-smil" sequence="true"/>
+    name="ncc-navigation" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
+    
+    <p:documentation xd:target="parent">
+        <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
+    </p:documentation>
+    
+    <p:input port="ncc">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 NCC</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="daisy-smil" sequence="true">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
+            <xd:example xmlns="">
+                <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
+    </p:input>
 
     <p:output port="result" primary="false">
+        <p:documentation>
+            <xd:short>An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="ncc-navigation.result"/>
     </p:output>
 
-    <p:option name="publication-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
+    <p:option name="publication-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="content-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Content directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        </p:documentation>
+    </p:option>
 
-    <p:import href="resolve-links.xpl"/>
+    <p:import href="resolve-links.xpl">
+        <p:documentation>De-references links to SMIL-files.</p:documentation>
+    </p:import>
 
     <p:variable name="subdir" select="substring-after($content-dir,$publication-dir)"/>
     <pxi:daisy202-to-epub3-resolve-links>

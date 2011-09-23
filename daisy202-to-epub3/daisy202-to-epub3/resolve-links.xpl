@@ -1,12 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
-    type="pxi:daisy202-to-epub3-resolve-links" name="resolve-links" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-resolve-links" name="resolve-links" version="1.0">
 
-    <p:input port="source" primary="true"/>
-    <p:input port="daisy-smil" sequence="true"/>
-    <p:output port="result"/>
+    <p:documentation xd:target="parent">
+        <xd:short>De-references links in content documents.</xd:short>
+        <xd:detail>In DAISY 2.02, links point to other locations in the book via the SMIL files. For instance, a link in ncc.html
+            might point to content.smil#fragment, and the SMIL clip at content.smil#fragment might point to content.html#id.
+            This step would change the original link from content.smil#fragment to content.html#id.</xd:detail>
+    </p:documentation>
+
+    <p:input port="source" primary="true">
+        <p:documentation>
+            <xd:short>A DAISY 2.02 content document.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">
+                    <head>...</head>
+                    <body>
+                        ...
+                        <a href="a.smil#fragment"/>
+                        ...
+                    </body>
+                </html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="daisy-smil" sequence="true">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 SMIL documents.</xd:short>
+            <xd:example>
+                <smil xml:base="file:/home/user/daisy202/a.smil">
+                    <head>...</head>
+                    <seq dur="10s">
+                        <par endsync="last">
+                            <text id="fragment" src="a.html#id"/>
+                        </par>
+                    </seq>
+                </smil>
+                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:output port="result">
+        <p:documentation>
+            <xd:short>The resulting DAISY 2.02 content document.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">
+                    <head>...</head>
+                    <body>
+                        ...
+                        <a href="a.html#id"/>
+                        ...
+                    </body>
+                </html>
+            </xd:example>
+        </p:documentation>
+    </p:output>
 
     <p:variable name="content-base" select="/*/@xml:base"/>
 
@@ -17,8 +66,7 @@
     <p:documentation>For each 'a'-link</p:documentation>
     <p:viewport match="//html:a">
         <p:variable name="a-uri" select="resolve-uri(tokenize(/*/@href,'#')[1],/*/@xml:base)"/>
-        <p:variable name="a-fragment"
-            select="if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else ''"/>
+        <p:variable name="a-fragment" select="if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else ''"/>
         <p:identity name="a-original"/>
         <p:documentation>For each SMIL</p:documentation>
         <p:for-each>
@@ -34,13 +82,10 @@
                     <p:documentation>For each text element where the a@fragment matches the text@id
                         or text/parent@id</p:documentation>
                     <p:for-each>
-                        <p:iteration-source
-                            select="//*[local-name()='par' and (@id=$a-fragment or child::*[local-name()='text']/@id=$a-fragment)]"/>
+                        <p:iteration-source select="//*[local-name()='par' and (@id=$a-fragment or child::*[local-name()='text']/@id=$a-fragment)]"/>
                         <p:variable name="text-id" select="(/*/*[local-name()='text'] | /*/@id)[1]"/>
-                        <p:variable name="text-uri"
-                            select="p:resolve-uri(tokenize(/*/*[local-name()='text']/@src,'#')[1],/*/*[local-name()='text']/@xml:base)"/>
-                        <p:variable name="text-fragment"
-                            select="if (contains(/*/*[local-name()='text']/@src,'#')) then tokenize(/*/*[local-name()='text']/@src,'#')[last()] else ''"/>
+                        <p:variable name="text-uri" select="p:resolve-uri(tokenize(/*/*[local-name()='text']/@src,'#')[1],/*/*[local-name()='text']/@xml:base)"/>
+                        <p:variable name="text-fragment" select="if (contains(/*/*[local-name()='text']/@src,'#')) then tokenize(/*/*[local-name()='text']/@src,'#')[last()] else ''"/>
                         <p:choose>
                             <p:documentation>when text@src references the content (but not the
                                 'a'-link)</p:documentation>
@@ -48,8 +93,7 @@
                                 <p:documentation>Keep the link, but remove the part before the '#'
                                     in @src</p:documentation>
                                 <p:add-attribute match="/*" attribute-name="href">
-                                    <p:with-option name="attribute-value"
-                                        select="concat('#',$text-fragment)"/>
+                                    <p:with-option name="attribute-value" select="concat('#',$text-fragment)"/>
                                     <p:input port="source">
                                         <p:pipe port="result" step="a-original"/>
                                     </p:input>
@@ -62,8 +106,7 @@
                                     @href relative to the targeted file. TODO: improve this script
                                     to support "upwards-pointing" relative paths</p:documentation>
                                 <p:add-attribute match="/*" attribute-name="href">
-                                    <p:with-option name="attribute-value"
-                                        select="concat(substring($text-uri,(floor(string-length(replace($content-base,'[^/]+$','')))+1)),'#',$text-fragment)"/>
+                                    <p:with-option name="attribute-value" select="concat(substring($text-uri,(floor(string-length(replace($content-base,'[^/]+$','')))+1)),'#',$text-fragment)"/>
                                     <p:input port="source">
                                         <p:pipe port="result" step="a-original"/>
                                     </p:input>
@@ -134,7 +177,6 @@
         </p:choose>
         <p:delete match="/*/@xml:base"/>
     </p:viewport>
-    <!--p:delete match="//*[@unwrap]"/-->
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>

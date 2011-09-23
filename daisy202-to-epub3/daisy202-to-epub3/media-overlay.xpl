@@ -1,33 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay"
-    version="1.0">
-
-    <p:input port="daisy-smil" sequence="true" primary="true"/>
-    <p:input port="content" sequence="true"/>
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
+    
+    <p:documentation xd:target="parent">
+        <xd:short>For processing the SMILs.</xd:short>
+    </p:documentation>
+    
+    <p:input port="daisy-smil" sequence="true" primary="true">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
+            <xd:example xmlns="">
+                <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="content" sequence="true">
+        <p:documentation>
+            <xd:short>The EPUB3 Content Documents.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
 
     <p:output port="mediaoverlay" sequence="true">
+        <p:documentation>
+            <xd:short>The EPUB3 Media Overlays.</xd:short>
+            <xd:example>
+                <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/a.smil">...</smil>
+                <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/b.smil">...</smil>
+                <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="mediaoverlay" step="mediaoverlay-iterate"/>
     </p:output>
     <p:output port="manifest">
+        <p:documentation>
+            <xd:short>A fileset with references to all the EPUB3 Media Overlays.</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
+                    <d:file href="a.smil" media-type="application/smil+xml"/>
+                    <d:file href="b.smil" media-type="application/smil+xml"/>
+                    <d:file href="c.smil" media-type="application/smil+xml"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="manifest"/>
     </p:output>
     <p:output port="store-complete" sequence="true">
+        <p:documentation>
+            <xd:short>The results from storing the EPUB3 Media Overlays to disk.</xd:short>
+            <xd:example>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/a.smil</c:result>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/b.smil</c:result>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/c.smil</c:result>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="store-complete" step="mediaoverlay-iterate"/>
     </p:output>
 
-    <p:option name="daisy-dir" required="true"/>
-    <p:option name="publication-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
-    <p:option name="navigation-uri" required="true"/>
-    <p:option name="include-mediaoverlay" required="true"/>
+    <p:option name="daisy-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the DAISY 2.02 files.</xd:short>
+            <xd:example>file:/home/user/daisy202/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="publication-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="content-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Content directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="navigation-uri" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Navigation Document</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/navigation.xhtml</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-mediaoverlay" required="true">
+        <p:documentation>
+            <xd:short>Whether or not to include media overlays. Can be either 'true' or 'false'.</xd:short>
+        </p:documentation>
+    </p:option>
 
-    <p:import href="resolve-links.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/join.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/upgrade-smil.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/rearrange.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+        <p:documentation>For manipulating filesets.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/join.xpl">
+        <p:documentation>For joining media overlays.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/upgrade-smil.xpl">
+        <p:documentation>For converting DAISY 2.02 SMIL-files into EPUB3 Media Overlays.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/rearrange.xpl">
+        <p:documentation>For generating ("rearranging") new Media Overlays based on the Content Documents and the old Media Overlays.</p:documentation>
+    </p:import>
 
     <p:for-each name="daisy-smil-iterate">
         <p:iteration-source>

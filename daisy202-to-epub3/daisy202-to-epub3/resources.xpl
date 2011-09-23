@@ -4,32 +4,59 @@
 
     <p:documentation xd:target="parent">
         <xd:short>Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset, and return a manifest of all the resulting files.</xd:short>
-        <xd:author>
-            <xd:name>Jostein Austvik Jacobsen</xd:name>
-            <xd:mailto>josteinaj@gmail.com</xd:mailto>
-            <xd:organization>NLB</xd:organization>
-        </xd:author>
-        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
-        <xd:input port="resource-manifests">List of auxiliary resources, like audio, stylesheets and graphics.</xd:input>
-        <xd:output port="manifest">List of stored files.</xd:output>
-        <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
-        <xd:option name="subcontent-dir">URI to the directory where all the EPUB 3 content should be stored.</xd:option>
-        <xd:option name="epub-dir">URI to the directory where the OCF is being created.</xd:option>
-        <xd:import href="../utilities/file-utils/fileutils-library.xpl">For filesystem operations.</xd:import>
-        <xd:import href="../utilities/file-utils/fileset-library.xpl">For manipulating filesets.</xd:import>
-        <xd:import href="../utilities/mediatype-utils/mediatype.xpl">For determining media types.</xd:import>
     </p:documentation>
 
-    <p:input port="daisy-smil" sequence="true"/>
-    <p:input port="daisy-content" sequence="true"/>
-    <p:output port="manifest" primary="true"/>
+    <p:input port="daisy-smil" sequence="true">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
+            <xd:example xmlns="">
+                <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="daisy-content" sequence="true">
+        <p:documentation>
+            <xd:short>The EPUB3 Content Documents with @original-base annotated to reference the original DAISY 2.02 content files.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:output port="manifest" primary="true">
+        <p:documentation>
+            <xd:short>A fileset with references to all the resources after copying (audio, images, etc.).</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
+                    <d:file xml:base="audio.mp3" media-type="audio/mpeg"/>
+                    <d:file xml:base="image.jpg" media-type="image/jpeg"/>
+                    <d:file xml:base="stylesheet.css" media-type="text/css"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
+    </p:output>
 
-    <p:option name="content-dir" required="true"/>
-    <p:option name="epub-dir" required="true"/>
-    <p:option name="include-mediaoverlay-resources" required="true"/>
+    <p:option name="content-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Content directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-mediaoverlay-resources" required="true">
+        <p:documentation>
+            <xd:short>Whether or not to include audio files associated with media overlays. Can be either 'true' or 'false'.</xd:short>
+        </p:documentation>
+    </p:option>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+        <p:documentation>For manipulating filesets.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl">
+        <p:documentation>For identifying the media type of files.</p:documentation>
+    </p:import>
 
     <p:for-each>
         <p:iteration-source>
