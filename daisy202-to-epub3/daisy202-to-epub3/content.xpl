@@ -1,42 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:epub="http://www.idpf.org/2007/ops"
-    type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL"
+    xmlns:epub="http://www.idpf.org/2007/ops" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
 
-    <p:input port="content-flow" primary="true" sequence="true"/>
-    <p:input port="daisy-smil" sequence="true"/>
-    <p:input port="ncc-navigation"/>
+    <p:documentation xd:target="parent">
+        <xd:short>For processing the content.</xd:short>
+    </p:documentation>
 
-    <!--<p:output port="content-with-original-base" sequence="true">
-        <p:pipe port="content-with-original-base" step="content-flow-iterate"/>
-    </p:output>-->
+    <p:input port="content-flow" primary="true" sequence="true">
+        <p:documentation>
+            <xd:short>A fileset with references to the DAISY 2.02 content files, ordered by occurence in the DAISY 2.02 flow.</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/daisy202/">
+                    <d:file href="a.html" media-type="application/xhtml+xml"/>
+                    <d:file href="b.html" media-type="application/xhtml+xml"/>
+                    <d:file href="c.html" media-type="application/xhtml+xml"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="daisy-smil" sequence="true">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
+            <xd:example xmlns="">
+                <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
+                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="ncc-navigation">
+        <p:documentation>
+            <xd:short>An EPUB3 Navigation Document, which if it contains a page-list will be used to annotate page-breaks in the content documents.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+
     <p:output port="content" sequence="true">
+        <p:documentation>
+            <xd:short>The EPUB3 Content Documents.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="content" step="content-flow-iterate"/>
     </p:output>
     <p:output port="manifest">
+        <p:documentation>
+            <xd:short>A fileset with references to all the EPUB3 Content Documents.</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
+                    <d:file xml:base="a.xhtml" media-type="application/xhtml+xml"/>
+                    <d:file xml:base="b.xhtml" media-type="application/xhtml+xml"/>
+                    <d:file xml:base="c.xhtml" media-type="application/xhtml+xml"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="manifest"/>
     </p:output>
     <p:output port="store-complete" sequence="true">
+        <p:documentation>
+            <xd:short>The results from storing the EPUB3 Content Documents to disk.</xd:short>
+            <xd:example>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/a.xhtml</c:result>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/b.xhtml</c:result>
+                <c:result>file:/home/user/epub3/epub/Publication/Content/c.xhtml</c:result>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="store-complete" step="content-flow-iterate"/>
     </p:output>
 
-    <p:option name="daisy-dir" required="true"/>
-    <p:option name="publication-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
-    <p:option name="pub-id" required="true"/>
+    <p:option name="daisy-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the DAISY 2.02 files.</xd:short>
+            <xd:example>file:/home/user/daisy202/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="publication-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="content-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Content directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        </p:documentation>
+    </p:option>
 
-    <p:import href="resolve-links.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/join.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/upgrade-smil.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/rearrange.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
+    <p:import href="resolve-links.xpl">
+        <p:documentation>De-references links to SMIL-files.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+        <p:documentation>For manipulating filesets.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">
+        <p:documentation>For loading HTML-files.</p:documentation>
+    </p:import>
 
     <p:add-xml-base all="true" relative="false"/>
     <p:group name="content-flow-iterate">
-        <!--<p:output port="content-with-original-base" primary="false" sequence="true">
-            <p:pipe port="content-with-original-base" step="content-flow-iterate.result"/>
-        </p:output>-->
         <p:output port="content" primary="false" sequence="true">
             <p:pipe port="content" step="content-flow-iterate.result"/>
         </p:output>
@@ -93,7 +161,6 @@
                     </p:add-attribute>
                     <p:xslt>
                         <p:with-param name="href" select="$result-uri"/>
-                        <p:with-param name="pub-id" select="$pub-id"/>
                         <p:input port="stylesheet">
                             <p:document href="daisy202-content-to-epub3-content.xsl"/>
                         </p:input>

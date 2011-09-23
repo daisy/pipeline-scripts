@@ -5,33 +5,52 @@
 
     <p:documentation xd:target="parent">
         <xd:short>Load the DAISY 2.02 NCC.</xd:short>
-        <xd:author>
-            <xd:name>Jostein Austvik Jacobsen</xd:name>
-            <xd:mailto>josteinaj@gmail.com</xd:mailto>
-            <xd:organization>NLB</xd:organization>
-        </xd:author>
-        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
-        <xd:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">For loading HTML.</xd:import>
-        <xd:option name="href">URI to the NCC.</xd:option>
-        <xd:output port="ncc">The NCC as well-formed XHTML.</xd:output>
-        <xd:output port="resource-manifest">Auxiliary resources referenced from the NCC.</xd:output>
-        <xd:output port="metadata">Metadata from the &lt;head/&gt; of the NCC.</xd:output>
-        <xd:output port="flow">SMIL-files listed in playback order.</xd:output>
     </p:documentation>
 
-    <p:option name="href" required="true"/>
+    <p:option name="href" required="true">
+        <p:documentation>
+            <xd:short>URI to input NCC.</xd:short>
+            <xd:example>file:/home/user/daisy202/ncc.html</xd:example>
+        </p:documentation>
+    </p:option>
 
     <p:output port="ncc" primary="false">
+        <p:documentation>
+            <xd:short>The DAISY 2.02 NCC</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="ncc"/>
     </p:output>
     <p:output port="flow" primary="false">
+        <p:documentation>
+            <xd:short>A fileset with references to the DAISY 2.02 SMIL-files, ordered like the DAISY 2.02 flow.</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/daisy202/">
+                    <d:file href="a.smil" media-type="application/smil+xml"/>
+                    <d:file href="b.smil" media-type="application/smil+xml"/>
+                    <d:file href="c.smil" media-type="application/smil+xml"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="flow"/>
     </p:output>
     <p:output port="pub-id" primary="false">
+        <p:documentation>
+            <xd:short>The publication identifier, extracted from the dc:itentifier meta element in the DAISY 2.02 NCC.</xd:short>
+            <xd:example>
+                <d:meta>1234567890</d:meta>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="pub-id"/>
     </p:output>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">
+        <p:documentation>
+            <xd:short>For loading the NCC, which is a HTML-file.</xd:short>
+        </p:documentation>
+    </p:import>
 
     <p:documentation>Loads the NCC.</p:documentation>
     <px:html-load name="ncc">
@@ -63,5 +82,5 @@
         </p:input>
     </p:add-attribute>
     <p:sink/>
-    
+
 </p:declare-step>

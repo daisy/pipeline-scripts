@@ -5,16 +5,16 @@
     <p:pipeinfo>
         <cd:converter name="daisy202-to-epub3" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
             <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>
-            <cd:arg name="href" type="option" bind="href" desc="Path to input NCC."/>
-            <cd:arg name="output" type="option" bind="output" desc="Path to output directory for the EPUB."/>
-            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files (default 'true')"/>
-            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true" desc="Whether or not to include NCX-file and OPF guide element."/>
+            <cd:arg name="href" type="option" bind="href" desc="URI path to input NCC."/>
+            <cd:arg name="output" type="option" bind="output" desc="URI path to output directory for the EPUB."/>
+            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files. Can be either 'true' (default) or 'false'."/>
+            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true" desc="Whether or not to include NCX-file, OPF guide element and ASCII filenames. Can be either 'true' (default) or 'false'."
+            />
         </cd:converter>
     </p:pipeinfo>
 
     <p:documentation xd:target="parent">
-        <xd:short>daisy202-to-epub3</xd:short>
-        <xd:detail>Transforms a DAISY 2.02-book into a EPUB3-book.</xd:detail>
+        <xd:short>Transforms a DAISY 2.02 publication into an EPUB3 publication.</xd:short>
         <xd:author>
             <xd:name>Jostein Austvik Jacobsen</xd:name>
             <xd:mailto>josteinaj@gmail.com</xd:mailto>
@@ -22,35 +22,29 @@
         </xd:author>
         <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
         <xd:version>1.0</xd:version>
-        <xd:see>http://code.google.com/p/daisy-pipeline/</xd:see>
+        <xd:see>http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</xd:see>
     </p:documentation>
-
-    <!--<p:output port="dbg" sequence="true">
-        <p:pipe port="dbg" step="resources"/>
-    </p:output>-->
 
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
         <p:documentation>
-            <xd:short>href</xd:short>
-            <xd:detail>Path to input NCC.</xd:detail>
+            <xd:short>The URI to the input NCC.</xd:short>
+            <xd:example>file:/home/user/daisy202/ncc.html</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
-            <xd:short>output</xd:short>
-            <xd:detail>Path to output directory for the EPUB.</xd:detail>
+            <xd:short>The URI to the output directory for the EPUB.</xd:short>
+            <xd:example>file:/home/user/epub3/</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>mediaoverlay</xd:short>
-            <xd:detail>Whether or not to include media overlays and associated audio files (default 'true')</xd:detail>
+            <xd:short>Whether or not to include media overlays and associated audio files. Can be either 'true' (default) or 'false'.</xd:short>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>compatibility-mode</xd:short>
-            <xd:detail>Whether or not to include NCX-file and OPF guide element (default 'true').</xd:detail>
+            <xd:short>Whether or not to include NCX-file, OPF guide element and ASCII filenames. Can be either 'true' (default) or 'false'.</xd:short>
         </p:documentation>
     </p:option>
 
@@ -78,14 +72,8 @@
     <p:import href="package.xpl">
         <p:documentation>For making the package document.</p:documentation>
     </p:import>
-    <p:import href="resolve-links.xpl">
-        <p:documentation>De-references links to SMIL-files.</p:documentation>
-    </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
         <p:documentation>For putting it all into a ZIP container.</p:documentation>
-    </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
-        <p:documentation>For manipulating filesets.</p:documentation>
     </p:import>
 
     <p:variable name="daisy-dir" select="replace($href,'[^/]+$','')"/>
@@ -94,19 +82,25 @@
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
 
-    <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
+    <p:documentation>
+        <xd:short>Load the DAISY 2.02 NCC.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))"/>
     </pxi:daisy202-to-epub3-ncc>
 
-    <p:documentation/>
+    <p:documentation>
+        <xd:short>Load the SMIL-files.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-load-smil-flow name="flow">
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
     </pxi:daisy202-to-epub3-load-smil-flow>
 
-    <p:documentation>Makes a Navigation Document directly from the DAISY 2.02 NCC.</p:documentation>
+    <p:documentation>
+        <xd:short>Makes a Navigation Document directly from the DAISY 2.02 NCC.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -118,11 +112,10 @@
         </p:input>
     </pxi:daisy202-to-epub3-ncc-navigation>
 
-    <p:documentation>Convert and store the content files</p:documentation>
+    <p:documentation>
+        <xd:short>Convert and store the content files.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-content name="content-without-full-navigation">
-        <p:with-option name="pub-id" select="/*/@value">
-            <p:pipe port="pub-id" step="ncc"/>
-        </p:with-option>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -137,11 +130,10 @@
         </p:input>
     </pxi:daisy202-to-epub3-content>
 
-    <p:documentation>Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</p:documentation>
+    <p:documentation>
+        <xd:short>Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-navigation name="navigation">
-        <p:with-option name="pub-id" select="/*/@value">
-            <p:pipe port="pub-id" step="ncc"/>
-        </p:with-option>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
@@ -153,7 +145,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-navigation>
 
-    <p:documentation>Convert and copy the content files and SMIL-files</p:documentation>
+    <p:documentation>
+        <xd:short>Convert and copy the content files and SMIL-files.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-mediaoverlay name="mediaoverlay">
         <p:with-option name="include-mediaoverlay" select="$mediaoverlay"/>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
@@ -170,7 +164,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-mediaoverlay>
 
-    <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.)</p:documentation>
+    <p:documentation>
+        <xd:short>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.).</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-resources name="resources">
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="flow"/>
@@ -180,11 +176,12 @@
         </p:input>
         <p:with-option name="include-mediaoverlay-resources" select="$mediaoverlay"/>
         <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="epub-dir" select="$epub-dir"/>
     </pxi:daisy202-to-epub3-resources>
     <p:sink/>
 
-    <p:documentation>Make and store the OPF</p:documentation>
+    <p:documentation>
+        <xd:short>Make and store the OPF.</xd:short>
+    </p:documentation>
     <pxi:daisy202-to-epub3-package name="package">
         <p:input port="spine">
             <p:pipe port="manifest" step="content-without-full-navigation"/>
@@ -214,7 +211,9 @@
     </pxi:daisy202-to-epub3-package>
     <p:sink/>
 
-    <p:documentation>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p:documentation>
+    <p:documentation>
+        <xd:short>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</xd:short>
+    </p:documentation>
     <p:group name="finalize">
         <p:output port="result" primary="false">
             <p:pipe port="result" step="finalize.result"/>
@@ -236,7 +235,9 @@
         </px:epub3-ocf-finalize>
     </p:group>
 
-    <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
+    <p:documentation>
+        <xd:short>Package the EPUB 3 fileset as a ZIP-file (OCF).</xd:short>
+    </p:documentation>
     <px:epub3-ocf-zip name="zip">
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>

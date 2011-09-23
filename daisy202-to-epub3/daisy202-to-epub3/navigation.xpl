@@ -1,44 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" type="pxi:daisy202-to-epub3-navigation" name="navigation" version="1.0">
 
     <p:documentation xd:target="parent">
-        <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
-        <xd:author>
-            <xd:name>Jostein Austvik Jacobsen</xd:name>
-            <xd:mailto>josteinaj@gmail.com</xd:mailto>
-            <xd:organization>NLB</xd:organization>
-        </xd:author>
-        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
-        <xd:input port="ncc">The NCC as wellformed XHTML.</xd:input>
-        <xd:input port="id-mapping">The mapping of id-attributes and fragment identifiers of the resulting documents to the original documents.</xd:input>
-        <xd:output port="store-complete">Pipe connection for 'p:store'-dependencies.</xd:output>
-        <xd:option name="content-dir">URI to the directory where all the EPUB 3 content should be stored.</xd:option>
+        <xd:short>Make a EPUB3 Navigation Document based on the Content Documents.</xd:short>
     </p:documentation>
 
-    <p:input port="ncc-navigation" primary="true"/>
-    <p:input port="content" primary="false" sequence="true"/>
+    <p:input port="ncc-navigation" primary="true">
+        <p:documentation>
+            <xd:short>An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
+    <p:input port="content" primary="false" sequence="true">
+        <p:documentation>
+            <xd:short>The EPUB3 Content Documents.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </xd:example>
+        </p:documentation>
+    </p:input>
     <p:output port="navigation" primary="false">
+        <p:documentation>
+            <xd:short>The complete EPUB3 Navigation Document.</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="result-with-xml-base"/>
     </p:output>
     <p:output port="ncx" primary="false" sequence="true">
+        <p:documentation>
+            <xd:short>A NCX document generated based on the Navigation Document.</xd:short>
+            <xd:example>
+                <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">...</ncx>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="ncx" step="store-ncx"/>
     </p:output>
     <p:output port="content-navfix" sequence="true">
+        <p:documentation>
+            <xd:short>The same sequence of EPUB3 Content Documents as arrived on the "content" port, but with the old Navigation Document replaced by the new one (if it's in the spine).</xd:short>
+            <xd:example>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="content"/>
     </p:output>
     <p:output port="fileset">
+        <p:documentation>
+            <xd:short>A fileset with references to the Navigation Document and the NCX.</xd:short>
+            <xd:example>
+                <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/">
+                    <d:file xml:base="navigation.xhtml" media-type="application/xhtml+xml"/>
+                    <d:file xml:base="ncx.xml" media-type="application/x-dtbncx+xml"/>
+                </d:fileset>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="fileset"/>
     </p:output>
     <p:output port="store-complete" primary="false" sequence="true">
+        <p:documentation>
+            <xd:short>Results from storing the Navigation Document and the NCX.</xd:short>
+            <xd:example>
+                <c:result>file:/home/user/epub3/epub/Publication/navigation.xhtml</c:result>
+                <c:result>file:/home/user/epub3/epub/Publication/ncx.xml</c:result>
+            </xd:example>
+        </p:documentation>
         <p:pipe port="result" step="store"/>
         <p:pipe port="result" step="store-ncx"/>
     </p:output>
 
-    <p:option name="publication-dir" required="true"/>
-    <p:option name="content-dir" required="true"/>
-    <p:option name="pub-id" required="true"/>
-    <p:option name="compatibility-mode" required="true"/>
+    <p:option name="publication-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="content-dir" required="true">
+        <p:documentation>
+            <xd:short>URI to the EPUB3 Content directory.</xd:short>
+            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        </p:documentation>
+    </p:option>
+    <p:option name="compatibility-mode" required="true">
+        <p:documentation>
+            <xd:short>Whether or not to include NCX-file. Can be either 'true' (default) or 'false'.</xd:short>
+        </p:documentation>
+    </p:option>
 
     <p:import href="resolve-links.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
