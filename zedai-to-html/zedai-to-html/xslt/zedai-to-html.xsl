@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
-  xmlns:f="http://www.daisy.org/ns/functions" xmlns:its="http://www.w3.org/2005/11/its"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="#all"
-  version="2.0">
+  xmlns:f="http://www.daisy.org/ns/functions-internal" xmlns:its="http://www.w3.org/2005/11/its"
+  xmlns:pf="http://www.daisy.org/ns/functions" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="#all" version="2.0">
 
-  <xsl:output method="xml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
+  <xsl:import href="zedai-vocab-utils.xsl"/>
+
+  <xsl:output method="xhtml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
 
   <xsl:param name="base" select="base-uri()"/>
 
@@ -20,9 +21,9 @@
     <xsl:param name="nodes" as="node()*"/>
     <!--TODO translate: xml:lang-->
     <!--TODO config: externalize the profile definition-->
-    <html xml:lang="en" profile="http://www.idpf.org/epub/30/profile/content/">
+    <html xml:lang="en">
       <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8"/>
         <title><!--TODO translate: title--></title>
         <!--<meta name="dcterms:identifier" content="com.googlecode.zednext.alice"/>-->
         <!--<meta name="dcterms:publisher" content="CSU"/>-->
@@ -216,12 +217,23 @@
         <xsl:with-param name="roles" select="('toc',@role)"/>
       </xsl:call-template>
       <xsl:apply-templates select="@* except @role"/>
-      <xsl:apply-templates mode="toc"/>
+      <!--normalize adjacent z:entry elements into html:ul -->
+      <xsl:for-each-group select="*" group-adjacent="empty(self::z:entry)">
+        <xsl:choose>
+          <xsl:when test="not(current-grouping-key())">
+            <ul>
+              <xsl:apply-templates mode="toc" select="current-group()"/>
+            </ul>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="toc" select="current-group()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each-group>
     </nav>
   </xsl:template>
 
   <xsl:template match="z:entry" mode="toc">
-    <!--FIXME normalize adjacent entries into ul -->
     <li>
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates/>
@@ -400,7 +412,7 @@
 
   <!--====== Headings module ====================================-->
   <xsl:template match="z:h" mode="#all">
-    <xsl:element name="{if (z:hpart) then 'span' else 'h1'}">
+    <xsl:element name="{if (z:hpart) then 'hgroup' else 'h1'}">
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates/>
     </xsl:element>
@@ -474,8 +486,8 @@
 
   <!--====== Object module ======================================-->
   <xsl:template match="z:object[starts-with(@srctype,'image/')]">
-    <img src="{@src}" alt=""/>
-    <!--TODO translate: object children-->
+    <img src="{@src}" alt="{.}"/>
+    <!--TODO better translation of object children-->
     <!--Either:
      - direct children (implicit description[@by='author'])
      - description child
@@ -786,8 +798,10 @@
     <!--TODO translate: @its:translate-->
   </xsl:template>
   <xsl:template match="@role">
-      <xsl:attribute name="epub:type" select="."/>
-    <!--TODO translate: @role -->
+    <xsl:variable name="epub-type" select="pf:to-epub(.)"/>
+    <xsl:if test="$epub-type">
+      <xsl:attribute name="epub:type" select="$epub-type"/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="role">
