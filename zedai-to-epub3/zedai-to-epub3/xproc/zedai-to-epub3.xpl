@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
-    <p:pipeinfo>
-        <!--cd:converter name="zedai-to-epub3" version="1.0"
-            xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
-            <cd:description>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
-                publication.</cd:description>
-            <cd:arg name="source" type="input" port="source" desc="Path to input ZedAI."/>
-            <cd:arg name="output" type="option" bind="output-dir" desc="Path to output directory for the EPUB."/>
-        </cd:converter-->
-    </p:pipeinfo>
     <p:documentation xd:target="parent">
         <xd:short>zedai-to-epub3</xd:short>
-        <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3
-                publication.</xd:detail>
+        <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</xd:detail>
     </p:documentation>
     <p:input port="source" primary="true" px:name="source"
         px:media-type="application/x-Z39.86-AI+xml">
@@ -27,22 +16,19 @@
     </p:input>
     <p:input port="parameters" kind="parameter"/>
 
-    <p:option name="output-dir" required="true" px:dir="output"
-        px:type="anyDirURI">
+    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>output-dir</xd:short>
             <xd:detail>Path to output directory for the EPUB.</xd:detail>
         </p:documentation>
     </p:option>
 
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/epub3-nav-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/epub3-nav-library.xpl"/>
     <p:import
         href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
     <p:import
         href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     <!--<p:variable name="epub-file"
@@ -54,15 +40,12 @@
         else if (ends-with($output,'.epub')) then $output 
         else concat($output,'.epub'))"/>-->
     <p:variable name="zedai-base" select="p:base-uri()"/>
-    <p:variable name="zedai-basedir"
-        select="replace($zedai-base,'^(.+/)[^/]*','$1')"/>
-    <p:variable name="zedai-basename"
-        select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>
+    <p:variable name="zedai-basedir" select="replace($zedai-base,'^(.+/)[^/]*','$1')"/>
+    <p:variable name="zedai-basename" select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>
     <p:variable name="output-dir-absolute"
         select="p:resolve-uri(if (ends-with($output-dir,'/')) then $output-dir else concat($output-dir,'/'))"/>
     <p:variable name="epub-dir" select="concat($output-dir-absolute,'epub/')"/>
-    <p:variable name="epub-file"
-        select="concat($output-dir-absolute,$zedai-basename,'.epub')"/>
+    <p:variable name="epub-file" select="concat($output-dir-absolute,$zedai-basename,'.epub')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
     <!--=========================================================================-->
@@ -91,21 +74,16 @@
 
     <p:documentation>Extract metadata from ZedAI</p:documentation>
     <p:group name="metadata">
+        <!--<p:log port="result" href="file:/tmp/xproc/metadata.xml"/>-->
         <p:output port="result"/>
-        <p:identity>
-            <!--TODO handle metadata-->
+        <p:xslt>
             <p:input port="source">
-                <p:inline>
-                    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-                        <dc:identifier id="pub-id">TODO</dc:identifier>
-                        <dc:title>TODO</dc:title>
-                        <dc:language>en</dc:language>
-                        <meta property="dcterms:modified"
-                            >2011-09-05T11:30:00Z</meta>
-                    </metadata>
-                </p:inline>
+                <p:pipe port="result" step="initialization"/>
             </p:input>
-        </p:identity>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/zedai-to-metadata.xsl"/>
+            </p:input>
+        </p:xslt>
     </p:group>
 
     <!--=========================================================================-->
@@ -114,7 +92,7 @@
 
     <p:documentation>Convert the ZedAI Document into several XHTML Documents</p:documentation>
     <p:group name="zedai-to-html">
-        <p:output port="result" primary="true"/>
+        <p:output port="result" primary="true" sequence="true"/>
         <p:output port="html-files" sequence="true">
             <p:pipe port="secondary" step="zedai-to-html.html-chunks"/>
         </p:output>
@@ -144,6 +122,7 @@
             </p:input>
         </p:xslt>
         <p:xslt name="zedai-to-html.html-chunks">
+            <!--<p:log port="secondary" href="file:/tmp/xproc/html-files.xml"/>-->
             <!--TODO fix links while chunking (see links-to-chunks) -->
             <p:input port="stylesheet">
                 <p:document href="../xslt/html-chunker.xsl"/>
@@ -157,7 +136,8 @@
             <p:iteration-source>
                 <p:pipe port="secondary" step="zedai-to-html.html-chunks"/>
             </p:iteration-source>
-            <p:store indent="true" encoding="utf-8" method="xhtml">
+            <p:add-xml-base/>
+            <p:store indent="true" encoding="utf-8" method="xhtml" include-content-type="false">
                 <p:with-option name="href" select="base-uri(/*)"/>
             </p:store>
             <px:fileset-add-entry media-type="application/xhtml+xml">
@@ -169,7 +149,8 @@
                 </p:with-option>
             </px:fileset-add-entry>
         </p:for-each>
-        <px:fileset-join/>
+        <!--TODO epub3-pub-create-package-doc requires a sequence of filesets-->
+        <!--<px:fileset-join/>-->
     </p:group>
 
     <!--=========================================================================-->
@@ -178,6 +159,7 @@
 
     <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
     <p:group name="navigation-doc">
+        <!--<p:log port="html-file" href="file:/tmp/xproc/nav-doc.xml"/>-->
         <p:output port="result" primary="true">
             <p:pipe port="fileset" step="navigation-doc.result"/>
         </p:output>
@@ -211,9 +193,8 @@
             <p:output port="html-file">
                 <p:pipe port="result" step="navigation-doc.result.html-file"/>
             </p:output>
-            <p:variable name="nav-base"
-                select="concat($content-dir,'toc.xhtml')"/>
-            <p:store indent="true" encoding="utf-8" method="xhtml">
+            <p:variable name="nav-base" select="concat($content-dir,'toc.xhtml')"/>
+            <p:store indent="true" encoding="utf-8" method="xhtml" include-content-type="false">
                 <p:with-option name="href" select="$nav-base"/>
             </p:store>
             <px:fileset-add-entry media-type="application/xml+xhtml"
@@ -230,6 +211,7 @@
                 </p:input>
                 <p:with-option name="attribute-value" select="$nav-base"/>
             </p:add-attribute>
+            <p:sink/>
         </p:group>
     </p:group>
 
@@ -239,6 +221,7 @@
 
     <p:documentation>Extract local resources referenced from the XHTML</p:documentation>
     <p:group name="resources">
+        <!--<p:log port="result" href="file:/tmp/xproc/resources.xml"/>-->
         <p:output port="result"/>
         <!--TODO call html-utils to get a file set of resource from the XHTML docs-->
         <!--TODO local only or all resources ?-->
@@ -258,8 +241,7 @@
         </p:for-each>
         <px:fileset-join/>
         <p:string-replace match="/*/@xml:base">
-            <p:with-option name="replace"
-                select="concat('&quot;',$zedai-basedir,'&quot;')"/>
+            <p:with-option name="replace" select="concat('&quot;',$zedai-basedir,'&quot;')"/>
         </p:string-replace>
         <!--TODO detect unknown media types-->
         <!--<px:mediatype-detect/>-->
@@ -276,7 +258,7 @@
         <p:output port="result">
             <!--            <p:pipe port="result" step="package-doc.create"/>-->
         </p:output>
-        
+
         <px:fileset-join name="package-doc.join-filesets">
             <p:input port="source">
                 <p:pipe port="result" step="zedai-to-html"/>
@@ -285,8 +267,9 @@
             </p:input>
         </px:fileset-join>
         <p:sink/>
-        
+
         <px:epub3-pub-create-package-doc name="package-doc.create">
+            <!--<p:log port="result" href="file:/tmp/xproc/opf.xml"/>-->
             <p:input port="spine-filesets">
                 <!--TODO include nav doc in the spine ?-->
                 <p:pipe port="result" step="zedai-to-html"/>
@@ -298,19 +281,18 @@
                 <p:pipe port="result" step="metadata"/>
             </p:input>
             <p:input port="content-docs">
-                <p:pipe port="result" step="navigation-doc"/>
+                <p:pipe port="html-file" step="navigation-doc"/>
                 <p:pipe port="html-files" step="zedai-to-html"/>
             </p:input>
-            <p:with-option name="result-uri"
-                select="concat($content-dir,'package.opf')"/>
+            <p:with-option name="result-uri" select="concat($content-dir,'package.opf')"/>
+            <p:with-option name="compatibility-mode" select="'false'"/>
             <!--TODO configurability for other META-INF files ?-->
         </px:epub3-pub-create-package-doc>
 
         <p:group>
-            <p:variable name="opf-base"
-                select="concat($content-dir,'package.opf')"/>
-            <p:store media-type="application/oebps-package+xml" indent="true"
-                encoding="utf-8" omit-xml-declaration="false">
+            <p:variable name="opf-base" select="concat($content-dir,'package.opf')"/>
+            <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8"
+                omit-xml-declaration="false">
                 <p:with-option name="href" select="$opf-base"/>
             </p:store>
             <px:fileset-add-entry media-type="application/oebps-package+xml">
