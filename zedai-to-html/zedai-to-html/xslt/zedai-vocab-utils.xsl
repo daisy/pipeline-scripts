@@ -77,12 +77,12 @@
     <term zedai="presentation" epub="annotation"/><!--TODO refine-->
     <term zedai="production" epub="annotation"/><!--TODO refine-->
     <term zedai="attribution" epub="annotation"/><!--TODO refine-->
-    <term zedai="author" epub="dcterms:creator"/><!--TODO refine-->
-    <term zedai="editor" epub="dcterms:contributor"/><!--TODO refine-->
-    <term zedai="general-editor" epub="dcterms:contributor"/><!--TODO refine-->
-    <term zedai="commentator" epub="dcterms:contributor"/><!--TODO refine-->
-    <term zedai="translator" epub="dcterms:contributor"/><!--TODO refine-->
-    <term zedai="republisher" epub="dcterms:publisher"/><!--TODO refine-->
+    <term zedai="author"/>
+    <term zedai="editor"/>
+    <term zedai="general-editor"/>
+    <term zedai="commentator"/>
+    <term zedai="translator"/>
+    <term zedai="republisher"/>
     <term zedai="structure"/>
     <term zedai="aside"/>
     <term zedai="sidebar" epub="sidebar"/>
