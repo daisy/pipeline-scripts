@@ -467,7 +467,7 @@
   <xsl:template match="z:noteref">
     <a rel="note">
       <xsl:call-template name="role">
-        <xsl:with-param name="roles" select="('notered',@role)"/>
+        <xsl:with-param name="roles" select="('noteref',@role)"/>
       </xsl:call-template>
       <xsl:apply-templates select="@* except @role"/>
       <xsl:choose>
@@ -763,14 +763,15 @@
 
   <!--====== Char module ========================================-->
 
-  <xsl:template match="z:span" mode="#all">
-    <!-- TODO translate: => CSS ? -->
+  <!-- TODO differentiate from phrase level-->
+  <!--<xsl:template match="z:span" mode="#all">
+    <!-\- TODO translate: => CSS ? -\->
     <span>
-      <!-- TODO translate: @role -->
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates mode="#current"/>
+      <!-\- TODO translate: @role -\->
     </span>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <!--===========================================================-->
@@ -784,10 +785,6 @@
   <!--===========================================================-->
   <!-- Global attributes                                         -->
   <!--===========================================================-->
-
-  <xsl:template name="attr">
-    <xsl:apply-templates select="@*"/>
-  </xsl:template>
 
   <xsl:template match="@xml:id">
     <xsl:attribute name="id" select="."/>
@@ -803,6 +800,9 @@
       <xsl:attribute name="epub:type" select="$epub-type"/>
     </xsl:if>
   </xsl:template>
+
+  <!--Do not copy attributes by default-->
+  <xsl:template match="@*" mode="#all"/>
 
   <xsl:template name="role">
     <xsl:param name="roles" as="xs:string*"/>
