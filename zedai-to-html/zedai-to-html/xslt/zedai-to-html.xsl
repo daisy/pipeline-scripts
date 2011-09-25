@@ -336,13 +336,27 @@
 
   <!--====== Caption module =====================================-->
 
-  <xsl:template match="z:caption" mode="#all">
-    <!--TODO normalize: captions-->
+  <xsl:template match="z:caption" mode="figcaption">
     <figcaption>
-      <xsl:apply-templates select="@*"/>
       <!--TODO translate: @role-->
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="@*" mode="#default"/>
+      <xsl:apply-templates mode="#default"/>
     </figcaption>
+  </xsl:template>
+  <xsl:template match="z:caption">
+    <xsl:variable name="ref" select="//*[@xml:id=current()/@ref]"/>
+    <xsl:choose>
+      <xsl:when test="$ref[self::z:object]">
+        <!--do nothing, handled by z:object template-->
+      </xsl:when>
+      <xsl:otherwise>
+        <span>
+          <!--TODO translate: @role-->
+          <xsl:apply-templates select="@*"/>
+          <xsl:apply-templates/>
+        </span>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!--====== Cite module ========================================-->
@@ -465,7 +479,7 @@
     </aside>
   </xsl:template>
   <xsl:template match="z:noteref">
-    <a rel="note">
+    <a rel="note" href="{concat('#',@ref)}">
       <xsl:call-template name="role">
         <xsl:with-param name="roles" select="('noteref',@role)"/>
       </xsl:call-template>
@@ -485,15 +499,27 @@
   </xsl:template>
 
   <!--====== Object module ======================================-->
-  <xsl:template match="z:object[starts-with(@srctype,'image/')]">
-    <img src="{@src}" alt="{.}"/>
+  <xsl:template match="z:object[f:is-image(.)]" mode="#all">
+    <xsl:variable name="caption" select="//z:caption[@ref=current()/@xml:id]"/>
+    <xsl:choose>
+      <xsl:when test="$caption">
+        <figure>
+          <xsl:apply-templates select="@*"/>
+          <img src="{@src}" alt="{.}"/>
+          <xsl:apply-templates select="$caption" mode="figcaption"/>
+        </figure>
+      </xsl:when>
+      <xsl:otherwise>
+        <img src="{@src}" alt="{.}"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <!--TODO better translation of object children-->
     <!--Either:
      - direct children (implicit description[@by='author'])
      - description child
      - external desription-->
   </xsl:template>
-  <xsl:template match="object">
+  <xsl:template match="z:object" mode="#all">
     <xsl:message select="'object: unsuported media type'"/>
   </xsl:template>
 
@@ -832,9 +858,14 @@
 
   <xsl:function name="f:is-phrase" as="xs:boolean">
     <xsl:param name="node" as="node()"/>
-    <xsl:value-of
+    <xsl:sequence
       select="$node/preceding-sibling::text()[normalize-space()]
       or $node/following-sibling::text()[normalize-space()]"
     />
+  </xsl:function>
+  <xsl:function name="f:is-image" as="xs:boolean">
+    <xsl:param name="node" as="node()"/>
+    <xsl:sequence
+      select="starts-with($node/@srctype,'image/') or matches($node/@src,'\.(jpg|png|gif|svg)$')"/>
   </xsl:function>
 </xsl:stylesheet>
