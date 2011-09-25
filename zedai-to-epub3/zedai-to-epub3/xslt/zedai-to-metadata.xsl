@@ -128,21 +128,22 @@
       <meta about="#role" property="scheme" datatype="xsd:anyURI">http://id.loc.gov/vocabulary/relators</meta>
     -->
     <xsl:choose>
-      <xsl:when test="@property=('dcterms:contributor','dcterms:coverage')">
-        <!-- DCMES optional elements: 
+      <!--<xsl:when test="@property=('dcterms:contributor','dcterms:coverage','...')">
+        <!-\- DCMES optional elements: 
           contributor | coverage | creator | date | description | format 
           | publisher | relation | rights | source | subject | type
-        -->
-        <!--TODO translate dcterms:* into dc:*-->
-        <!--TODO pick content from meta/@content or string-value(.)-->
+        -\->
+        <!-\-TODO translate dcterms:* into dc:*-\->
+        <!-\-TODO pick content from meta/@content or string-value(.)-\->
         <xsl:element name="{@property}">
           <xsl:value-of select="."/>
         </xsl:element>
-      </xsl:when>
+      </xsl:when>-->
       <xsl:when
         test="not(
            starts-with(@property,'z3986:')
-        or @property=('dcterms:identifier','dcterms:title','dcterms:language'))">
+        or @property=('dcterms:identifier','dcterms:title','dcterms:language'))
+        and normalize-space(if (@content) then @content else .) ">
         <!--TODO declare custom vocabularies-->
         <!--TODO refine RDFa attributes parsing-->
         <meta property="{@property}">
@@ -198,7 +199,7 @@
 
   <xsl:function name="f:get-identifiers" as="xs:string*">
     <xsl:param name="doc" as="document-node()"/>
-    <xsl:value-of
+    <xsl:sequence
       select="distinct-values((
       $doc/z:document/z:head/z:meta[@property='dcterms:identifier']/@content))"
     />
