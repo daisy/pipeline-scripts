@@ -857,10 +857,12 @@
   <!--===========================================================-->
 
   <xsl:function name="f:is-phrase" as="xs:boolean">
+    <!--TODO fixme-->
     <xsl:param name="node" as="node()"/>
     <xsl:sequence
       select="$node/preceding-sibling::text()[normalize-space()]
-      or $node/following-sibling::text()[normalize-space()]"
+      or $node/following-sibling::text()[normalize-space()]
+      or $node/parent::z:p or $node/parent::z:block"
     />
   </xsl:function>
   <xsl:function name="f:is-image" as="xs:boolean">
