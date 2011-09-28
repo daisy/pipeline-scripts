@@ -242,7 +242,8 @@
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
-        <p:with-option name="target" select="concat(replace($output-dir,'^file:',''),replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]',''))">
+        <!--<p:with-option name="target" select="concat(replace($output-dir,'^file:',''),replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]',''))">-->
+        <p:with-option name="target" select="concat($output-dir,encode-for-uri(replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]','')))">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
