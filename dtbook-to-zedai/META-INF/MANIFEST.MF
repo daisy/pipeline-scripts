@@ -2,8 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: dtbook-to-zedai
 Bundle-SymbolicName: org.daisy.pipeline.modules.dtbook-to-zedai
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Require-Bundle: org.daisy.pipeline.modules.metadata-utils,
- org.daisy.pipeline.modules.dtbook-utils
+ org.daisy.pipeline.modules.dtbook-utils,
+ org.daisy.pipeline.modules.file-utils
 Import-Package: org.daisy.pipeline.script
 Service-Component: OSGI-INF/dtbook-to-zedai.xml

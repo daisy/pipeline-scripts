@@ -2,10 +2,10 @@
 <p:declare-step version="1.0" name="copy-referenced-files" type="pxi:copy-referenced-files"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
-    xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
-    exclude-inline-prefixes="cx p cxf pxi z">
+    exclude-inline-prefixes="cx p px pxi z">
 
     <p:documentation>
     <p>Take an input ZedAI file and copy from the source directory to the destination directory all referenced files.  This script does not output anything.</p>    
@@ -17,7 +17,7 @@
     <p:option name="dtbook-base-uri" required="true"/>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/fileutils.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     
     <p:variable name="out" select="if (ends-with($output-dir, '/')) then $output-dir
         else concat($output-dir, '/')"/>
@@ -40,10 +40,10 @@
             <p:with-option name="message" select="$target-value"/>
         </cx:message>
         
-        <cxf:copy name="copy">
+        <px:copy name="copy">
             <p:with-option name="href" select="$href-value"/>
             <p:with-option name="target" select="$target-value"/>
-        </cxf:copy>
+        </px:copy>
             
     </p:for-each>
     
