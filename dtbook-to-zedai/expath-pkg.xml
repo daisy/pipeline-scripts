@@ -1,9 +1,0 @@
-<package name="org.daisy.pipeline.modules.dtbook-to-zedai" xmlns="http://expath.org/ns/pkg">
-	<module version="1.0.0" name="dtbook-to-zedai">
-		<title>DTBook To ZedAI</title>
-		<xslt>
-			<import-uri>http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl</import-uri>
-			<file>dtbook-to-zedai.xpl</file>
-		</xslt>
-	</module>
-</package>

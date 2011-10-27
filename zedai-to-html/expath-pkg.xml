@@ -1,9 +1,0 @@
-<package name="org.daisy.pipeline.modules.zedai-to-html" xmlns="http://expath.org/ns/pkg">
-    <module version="1.0.0" name="zedai-to-html">
-        <title>ZedAI to HTML</title>
-        <xslt>
-            <import-uri>http://www.daisy.org/pipeline/modules/zedai-to-html/xslt/zedai-to-html.xsl</import-uri>
-            <file>xslt/zedai-to-html.xsl</file>
-        </xslt>
-    </module>
-</package>
