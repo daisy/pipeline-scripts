@@ -17,6 +17,7 @@
 	<modules>
                 <!-- TODO change to  .. daisy.basedir rel path -->
 		<module>../modules-target-platform</module>
+		<module>../common-entities</module>
                 <module>../daisy.pipeline.modules.feature</module>
                 <module>../daisy.pipeline.modules.site</module>
                 <module>../daisy202-to-epub3</module>

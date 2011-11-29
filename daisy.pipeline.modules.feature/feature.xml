@@ -21,7 +21,7 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-    
+
    <plugin
          id="org.daisy.pipeline.modules.dtbook-utils"
          download-size="0"
@@ -70,31 +70,31 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-    
+
    <plugin
          id="org.daisy.pipeline.modules.mediatype-utils"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
-    <plugin
-        id="org.daisy.pipeline.modules.metadata-utils"
-        download-size="0"
-        install-size="0"
-        version="0.0.0"/>
-    
+   <plugin
+         id="org.daisy.pipeline.modules.metadata-utils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
    <plugin
          id="org.daisy.pipeline.modules.zedai-to-epub3"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-    
+
    <plugin
          id="org.daisy.pipeline.modules.zedai-to-html"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-    
+
    <plugin
          id="org.daisy.pipeline.modules.zip-utils"
          download-size="0"
@@ -109,6 +109,12 @@
 
    <plugin
          id="org.daisy.pipeline.modules.dtbook-to-zedai"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.daisy.pipeline.modules.common-entities"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
