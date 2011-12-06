@@ -2,6 +2,6 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl"
-        uri="../dtbook-to-zedai/dtbook-to-zedai.xpl"/>
+   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-epub3/dtbook-to-epub3.xpl"
+        uri="../dtbook-to-epub3/dtbook-to-epub3.xpl"/>
 </catalog>

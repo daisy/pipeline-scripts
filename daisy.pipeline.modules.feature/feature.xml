@@ -119,4 +119,10 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="org.daisy.pipeline.modules.dtbook-to-epub3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

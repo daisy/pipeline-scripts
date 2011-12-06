@@ -3,6 +3,7 @@
     version="1.0" name="main">
 
     <p:input port="source" primary="true"/>
+    <p:output port="result"/>
 
     <p:for-each>
         <p:iteration-source select="//file"/>
@@ -68,8 +69,8 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-    <p:store doctype-public="-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN"
+    <!--<p:store doctype-public="-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN"
         doctype-system="http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"
-        omit-xml-declaration="false" indent="true" href="catalog.xml"/>
+        omit-xml-declaration="false" indent="true" href="catalog.xml"/>-->
     
 </p:declare-step>

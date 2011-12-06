@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:zedai-to-epub3" version="1.0">
     <p:documentation xd:target="parent">
         <xd:short>zedai-to-epub3</xd:short>
         <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</xd:detail>

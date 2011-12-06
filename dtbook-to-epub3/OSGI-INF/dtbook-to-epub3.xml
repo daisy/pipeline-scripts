@@ -1,0 +1,10 @@
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dtbook-to-epub3">
+    <implementation class="org.daisy.pipeline.script.XProcScriptService"/>
+    <service>
+        <provide interface="org.daisy.pipeline.script.XProcScriptService"/>
+    </service>
+    <property name="script.name" type="String" value="dtbook-to-epub3"/>
+    <property name="script.description" type="String" value="Convert DTBook XML to ZedAI XML"/>
+    <property name="script.url" type="String" value="http://www.daisy.org/pipeline/modules/dtbook-to-epub3/dtbook-to-epub3.xpl"/>
+    
+</scr:component>

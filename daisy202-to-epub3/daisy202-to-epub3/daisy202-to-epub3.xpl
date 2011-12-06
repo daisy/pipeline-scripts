@@ -75,7 +75,9 @@
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
         <p:documentation>For putting it all into a ZIP container.</p:documentation>
     </p:import>
-
+    
+    <!--<p:output port="dbg" primary="true"/>-->
+    
     <p:variable name="daisy-dir" select="replace($href,'[^/]+$','')"/>
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>

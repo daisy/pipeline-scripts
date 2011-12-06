@@ -131,7 +131,7 @@
         <p:with-option name="message" select="concat('MODS file name: ',$mods-filename)"/>
     </cx:message>
     <cx:message>
-        <p:with-option name="message" select="concat('ZedAI file name: ',$css-filename)"/>
+        <p:with-option name="message" select="concat('CSS file name: ',$css-filename)"/>
     </cx:message>
     
     
