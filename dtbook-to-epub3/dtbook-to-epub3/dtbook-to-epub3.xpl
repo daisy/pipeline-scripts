@@ -25,14 +25,33 @@
             <xd:detail>file: URI to the output directory where both temp-files and the resulting EPUB3 publication is stored.</xd:detail>
         </p:documentation>
     </p:option>
-
+    
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.xpl"/>
     
     <p:variable name="resolved-output-dir" select="p:resolve-uri(if (ends-with($output-dir,'/')) then $output-dir else concat($output-dir,'/'))"/>
     <!--<p:variable name="encoded-title" select="encode-for-uri(replace(//dtbook:meta[@name='dc:Title']/@content,'[/\\?%*:|&quot;&lt;&gt;]',''))"/> TODO: zedai-to-epub3 does not handle complex filenames as input yet. -->
     <p:variable name="encoded-title" select="'book'"/>
-
+    
+    <px:dtbook-to-zedai-load>
+        <p:input port="source">
+            <p:pipe port="source" step="dtbook-to-epub3"/>
+        </p:input>
+    </px:dtbook-to-zedai-load>
+    
+    <px:dtbook-to-zedai-convert>
+        <p:with-option name="opt-output-dir" select="concat($resolved-output-dir,'zedai/')"/>
+        <p:with-option name="opt-zedai-filename" select="concat($encoded-title,'.xml')"/>
+    </px:dtbook-to-zedai-convert>
+    
+    <px:zedai-to-epub3-convert/>
+    
+    <px:zedai-to-epub3-store>
+        <p:with-option name="output-dir" select="concat($resolved-output-dir,'epub/')"/>
+    </px:zedai-to-epub3-store>
+    
+    <!-- The simple way:
+    
     <px:dtbook-to-zedai name="dtbook-to-zedai">
         <p:input port="source">
             <p:pipe port="source" step="dtbook-to-epub3"/>
@@ -50,5 +69,7 @@
         </p:input>
         <p:with-option name="output-dir" select="concat($resolved-output-dir,'epub/')"/>
     </px:zedai-to-epub3>
-
+    
+    -->
+    
 </p:declare-step>

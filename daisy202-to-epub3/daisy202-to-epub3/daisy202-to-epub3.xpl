@@ -83,7 +83,54 @@
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
-
+    
+    <p:choose>
+        <p:when test="not(matches($href,'\w+:/'))">
+            <p:error code="PDE01">
+                <p:input port="source">
+                    <p:inline>
+                        <message>href must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all directory separators (\) must be replaced with forward slashes (/).</message>
+                    </p:inline>
+                </p:input>
+            </p:error>
+        </p:when>
+        <p:when test="not(matches($output,'\w+:/'))">
+            <p:error code="PDE02">
+                <p:input port="source">
+                    <p:inline>
+                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all directory separators (\) must be replaced with forward slashes (/).</message>
+                    </p:inline>
+                </p:input>
+            </p:error>
+        </p:when>
+        <p:when test="not($mediaoverlay='true' or $mediaoverlay='false')">
+            <p:error code="PDE03">
+                <p:input port="source">
+                    <p:inline>
+                        <message>When given, mediaoverlay must be either "true" (default) or "false".</message>
+                    </p:inline>
+                </p:input>
+            </p:error>
+        </p:when>
+        <p:when test="not($compatibility-mode='true' or $compatibility-mode='false')">
+            <p:error code="PDE04">
+                <p:input port="source">
+                    <p:inline>
+                        <message>When given, compatibility-mode must be either "true" (default) or "false".</message>
+                    </p:inline>
+                </p:input>
+            </p:error>
+        </p:when>
+        <p:otherwise>
+            <p:identity>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
+    <p:sink/>
+    
     <p:documentation>
         <xd:short>Load the DAISY 2.02 NCC.</xd:short>
     </p:documentation>
