@@ -605,7 +605,28 @@
             <p:pipe port="result" step="generate-css"/>
             <p:pipe step="generate-mods-metadata" port="result"/>
         </p:iteration-source>
-        <p:identity/>
+        <p:variable name="in-memory-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="/*/@xml:base">
+            <p:pipe port="result" step="result.fileset"/>
+        </p:variable>
+        <p:choose>
+            <p:xpath-context>
+                <p:pipe port="result" step="result.fileset"/>
+            </p:xpath-context>
+            <p:when test="//d:file[resolve-uri(@href,$fileset-base) = resolve-uri($in-memory-base)]">
+                <!-- document is in the fileset; keep it -->
+                <p:identity/>
+            </p:when>
+            <p:otherwise>
+                <!-- document is not in the fileset; discard it -->
+                <p:sink/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:empty/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
     </p:for-each>
 
 </p:declare-step>
