@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
 
     <p:pipeinfo>
         <cd:converter name="daisy202-to-epub3" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
             <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>
             <cd:arg name="href" type="option" bind="href" desc="URI path to input NCC."/>
             <cd:arg name="output" type="option" bind="output" desc="URI path to output directory for the EPUB."/>
-            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files. Can be either 'true' (default) or 'false'."/>
-            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true" desc="Whether or not to include NCX-file, OPF guide element and ASCII filenames. Can be either 'true' (default) or 'false'."
-            />
+            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true"
+                desc="Whether or not to include media overlays and associated audio files."/>
+            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true"
+                desc="Whether or not to include NCX-file, OPF guide element and ASCII filenames."/>
         </cd:converter>
     </p:pipeinfo>
 
@@ -39,12 +41,12 @@
     </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>Whether or not to include media overlays and associated audio files. Can be either 'true' (default) or 'false'.</xd:short>
+            <xd:short>Whether or not to include media overlays and associated audio files.</xd:short>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>Whether or not to include NCX-file, OPF guide element and ASCII filenames. Can be either 'true' (default) or 'false'.</xd:short>
+            <xd:short>Whether or not to include NCX-file, OPF guide element and ASCII filenames.</xd:short>
         </p:documentation>
     </p:option>
 
@@ -75,21 +77,20 @@
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
         <p:documentation>For putting it all into a ZIP container.</p:documentation>
     </p:import>
-    
-    <!--<p:output port="dbg" primary="true"/>-->
-    
+
     <p:variable name="daisy-dir" select="replace($href,'[^/]+$','')"/>
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
-    
+
     <p:choose>
         <p:when test="not(matches($href,'\w+:/'))">
             <p:error code="PDE01">
                 <p:input port="source">
                     <p:inline>
-                        <message>href must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all directory separators (\) must be replaced with forward slashes (/).</message>
+                        <message>href must be a valid URI. In practice this simply means that the path must be prefixed with "file:/", and in Windows, all
+                            directory separators (\) must be replaced with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
             </p:error>
@@ -98,7 +99,8 @@
             <p:error code="PDE02">
                 <p:input port="source">
                     <p:inline>
-                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all directory separators (\) must be replaced with forward slashes (/).</message>
+                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all
+                            directory separators (\) must be replaced with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
             </p:error>
@@ -130,26 +132,20 @@
         </p:otherwise>
     </p:choose>
     <p:sink/>
-    
-    <p:documentation>
-        <xd:short>Load the DAISY 2.02 NCC.</xd:short>
-    </p:documentation>
+
+    <p:documentation>Load the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))"/>
     </pxi:daisy202-to-epub3-ncc>
 
-    <p:documentation>
-        <xd:short>Load the SMIL-files.</xd:short>
-    </p:documentation>
+    <p:documentation>Load the SMIL-files.</p:documentation>
     <pxi:daisy202-to-epub3-load-smil-flow name="flow">
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
     </pxi:daisy202-to-epub3-load-smil-flow>
 
-    <p:documentation>
-        <xd:short>Makes a Navigation Document directly from the DAISY 2.02 NCC.</xd:short>
-    </p:documentation>
+    <p:documentation>Makes a Navigation Document directly from the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -161,9 +157,7 @@
         </p:input>
     </pxi:daisy202-to-epub3-ncc-navigation>
 
-    <p:documentation>
-        <xd:short>Convert and store the content files.</xd:short>
-    </p:documentation>
+    <p:documentation>Convert and store the content files.</p:documentation>
     <pxi:daisy202-to-epub3-content name="content-without-full-navigation">
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
@@ -179,9 +173,7 @@
         </p:input>
     </pxi:daisy202-to-epub3-content>
 
-    <p:documentation>
-        <xd:short>Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</xd:short>
-    </p:documentation>
+    <p:documentation>Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</p:documentation>
     <pxi:daisy202-to-epub3-navigation name="navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -194,9 +186,7 @@
         </p:input>
     </pxi:daisy202-to-epub3-navigation>
 
-    <p:documentation>
-        <xd:short>Convert and copy the content files and SMIL-files.</xd:short>
-    </p:documentation>
+    <p:documentation>Convert and copy the content files and SMIL-files.</p:documentation>
     <pxi:daisy202-to-epub3-mediaoverlay name="mediaoverlay">
         <p:with-option name="include-mediaoverlay" select="$mediaoverlay"/>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
@@ -213,9 +203,7 @@
         </p:input>
     </pxi:daisy202-to-epub3-mediaoverlay>
 
-    <p:documentation>
-        <xd:short>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.).</xd:short>
-    </p:documentation>
+    <p:documentation>Copy all referenced auxilliary resources (audio, stylesheets, images, etc.).</p:documentation>
     <pxi:daisy202-to-epub3-resources name="resources">
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="flow"/>
@@ -228,9 +216,7 @@
     </pxi:daisy202-to-epub3-resources>
     <p:sink/>
 
-    <p:documentation>
-        <xd:short>Make and store the OPF.</xd:short>
-    </p:documentation>
+    <p:documentation>Make and store the OPF.</p:documentation>
     <pxi:daisy202-to-epub3-package name="package">
         <p:input port="spine">
             <p:pipe port="manifest" step="content-without-full-navigation"/>
@@ -260,9 +246,7 @@
     </pxi:daisy202-to-epub3-package>
     <p:sink/>
 
-    <p:documentation>
-        <xd:short>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</xd:short>
-    </p:documentation>
+    <p:documentation>Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p:documentation>
     <p:group name="finalize">
         <p:output port="result" primary="false">
             <p:pipe port="result" step="finalize.result"/>
@@ -284,15 +268,14 @@
         </px:epub3-ocf-finalize>
     </p:group>
 
-    <p:documentation>
-        <xd:short>Package the EPUB 3 fileset as a ZIP-file (OCF).</xd:short>
-    </p:documentation>
+    <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:epub3-ocf-zip name="zip">
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
         <!--<p:with-option name="target" select="concat(replace($output-dir,'^file:',''),replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]',''))">-->
-        <p:with-option name="target" select="concat($output-dir,encode-for-uri(replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]','')))">
+        <p:with-option name="target"
+            select="concat($output-dir,encode-for-uri(replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]','')))">
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>

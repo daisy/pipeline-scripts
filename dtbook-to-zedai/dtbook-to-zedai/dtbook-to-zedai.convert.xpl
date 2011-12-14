@@ -517,8 +517,8 @@
             <p:variable name="dtbook-source-uri" select="p:resolve-uri($src, $dtbook-base)"/>
             <!-- TODO: Using fn:resolve-uri for $source-uri instead of p:resolve uri because of a bug in oXygen XML Editor 13.1, build 2011112512
                 (http://lists.w3.org/Archives/Public/xproc-dev/2011Dec/0010.html).
-                Switch to p:resolve-uri when it's fixed. -->
-            <p:variable name="source-uri" select="(//d:file[resolve-uri(@href,/*/@xml:base) = $dtbook-source-uri]/@xml:base, $dtbook-source-uri)[1]">
+                Switch to p:resolve-uri when it's fixed? -->
+            <p:variable name="source-uri" select="(//d:file[resolve-uri(@href,/*/@xml:base) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
                 <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
             </p:variable>
             <p:variable name="result-uri" select="p:resolve-uri($src, $output-dir)"/>
@@ -527,23 +527,16 @@
                 <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
             </cx:message>
             <p:sink/>
-
-            <p:add-attribute match="/*" attribute-name="href">
-                <p:input port="source">
-                    <p:inline>
-                        <d:file/>
-                    </p:inline>
-                </p:input>
-                <p:with-option name="attribute-value" select="p:resolve-uri($src,$zedai-file)"/>
-            </p:add-attribute>
-            <p:add-attribute match="/*" attribute-name="xml:base">
+            
+            <px:fileset-create>
+                <p:with-option name="base" select="$output-dir"/>
+            </px:fileset-create>
+            <px:fileset-add-entry>
+                <p:with-option name="href" select="p:resolve-uri($src,$zedai-file)"/>
+            </px:fileset-add-entry>
+            <p:add-attribute match="/*/*" attribute-name="original-href">
                 <p:with-option name="attribute-value" select="$source-uri"/>
             </p:add-attribute>
-            <p:wrap-sequence wrapper="d:fileset"/>
-            <p:add-attribute match="/*" attribute-name="xml:base">
-                <p:with-option name="attribute-value" select="$output-dir"/>
-            </p:add-attribute>
-            <px:fileset-join/>
         </p:for-each>
 
         <p:documentation>If CSS was generated: Add it to the fileset.</p:documentation>

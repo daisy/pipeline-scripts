@@ -63,7 +63,7 @@
         <p:iteration-source select="/*/*">
             <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
         </p:iteration-source>
-        <p:variable name="on-disk" select="(/*/@xml:base, '')[1]"/>
+        <p:variable name="on-disk" select="(/*/@original-href, '')[1]"/>
         <p:variable name="target" select="p:resolve-uri(/*/@href, $fileset-base)"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:choose>

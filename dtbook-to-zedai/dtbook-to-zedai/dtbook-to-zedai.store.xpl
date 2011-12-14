@@ -59,19 +59,19 @@
     </p:for-each>
     <p:wrap-sequence wrapper="d:fileset"/>
     <px:fileset-join name="fileset.in-memory"/>
-
+    
     <p:for-each>
         <p:iteration-source select="/*/*">
             <p:pipe port="fileset.in" step="dtbook-to-zedai.store"/>
         </p:iteration-source>
-        <p:variable name="on-disk" select="(/*/@xml:base, '')[1]"/>
+        <p:variable name="on-disk" select="(/*/@original-href, 'nothing')[1]"/>
         <p:variable name="target" select="p:resolve-uri(/*/@href, $fileset-base)"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:choose>
             <p:xpath-context>
                 <p:pipe port="result" step="fileset.in-memory"/>
             </p:xpath-context>
-            <p:when test="//d:file[@href=$target]">
+            <p:when test="$target = //d:file/@href">
                 <p:documentation>File is in memory.</p:documentation>
                 <p:split-sequence>
                     <p:with-option name="test" select="concat('/*/@xml:base=&quot;',$target,'&quot;')"/>
@@ -95,6 +95,16 @@
                         </p:store>
                     </p:otherwise>
                 </p:choose>
+            </p:when>
+            <p:when test="not($on-disk)">
+                <p:error code="PEZE00">
+                    <p:input port="source">
+                        <p:inline>
+                            <c:message>Found document in fileset that are neither stored on disk nor in memory.</c:message>
+                        </p:inline>
+                    </p:input>
+                </p:error>
+                <p:sink/>
             </p:when>
             <p:otherwise>
                 <p:documentation>File is already on disk; copy it to the new location.</p:documentation>

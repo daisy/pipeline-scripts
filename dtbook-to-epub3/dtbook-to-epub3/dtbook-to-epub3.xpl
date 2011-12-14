@@ -11,7 +11,7 @@
             <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
         </p:documentation>
     </p:input>
-    
+
     <p:option name="language" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Language code</xd:short>
@@ -31,9 +31,9 @@
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.store.xpl"/>
 
-    <!--<p:variable name="encoded-title" select="encode-for-uri(replace(//dtbook:meta[@name='dc:Title']/@content,'[/\\?%*:|&quot;&lt;&gt;]',''))"/> TODO: zedai-to-epub3 does not handle complex filenames as input yet. -->
-    <p:variable name="encoded-title" select="'book'"/>
-    <!--<p:variable name="encoded-title" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*')"/>-->
+    <!--<p:variable name="encoded-title" select="encode-for-uri(replace(//dtbook:meta[@name='dc:Title']/@content,'[/\\?%*:|&quot;&lt;&gt;]',''))"/>-->
+    <!--<p:variable name="encoded-title" select="'book'"/>-->
+    <p:variable name="encoded-title" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')"/>
 
     <p:xslt name="output-dir-uri">
         <p:with-param name="href" select="concat($output-dir,'/')"/>
@@ -85,14 +85,14 @@
             </p:input>
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-epub3-convert>
-        
+
         <px:zedai-to-epub3-store name="store">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.zedai-to-epub3"/>
             </p:input>
             <p:with-option name="epub-file" select="$epub-file-uri"/>
         </px:zedai-to-epub3-store>
-        
+
     </p:group>
 
 </p:declare-step>

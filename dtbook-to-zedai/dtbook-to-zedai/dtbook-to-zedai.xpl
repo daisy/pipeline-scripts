@@ -13,17 +13,17 @@
             <xd:organization>DAISY</xd:organization>
         </xd:author>
     </p:documentation>
-
-    <p:import href="dtbook-to-zedai.load.xpl"/>
-    <p:import href="dtbook-to-zedai.convert.xpl"/>
-    <p:import href="dtbook-to-zedai.store.xpl"/>
-
+    
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation>
             <xd:short>DTBook file(s)</xd:short>
             <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
         </p:documentation>
     </p:input>
+    
+    <p:import href="dtbook-to-zedai.load.xpl"/>
+    <p:import href="dtbook-to-zedai.convert.xpl"/>
+    <p:import href="dtbook-to-zedai.store.xpl"/>
 
     <p:option name="opt-output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
@@ -55,7 +55,7 @@
             <xd:detail>Language code of the input document.</xd:detail>
         </p:documentation>
     </p:option>
-
+    
     <px:dtbook-to-zedai-load name="load"/>
 
     <px:dtbook-to-zedai-convert name="convert">

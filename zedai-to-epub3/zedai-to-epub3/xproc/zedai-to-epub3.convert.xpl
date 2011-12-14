@@ -66,12 +66,14 @@
                             </p:identity>
                         </p:when>
                         <p:otherwise>
-                            <cx:message>
-                                <p:with-option name="message" select="concat('Input ZedAI not in memory, loading from disk: ', $zedai-base)"/>
-                            </cx:message>
-                            <p:load>
-                                <p:with-option name="href" select="$zedai-base"/>
-                            </p:load>
+                            <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
+                                <!-- TODO: describe the error on the wiki and insert correct error code -->
+                                <p:input port="source">
+                                    <p:inline>
+                                        <message>Found ZedAI document in fileset but not in memory. Please load the ZedAI document into memory before converting it.</message>
+                                    </p:inline>
+                                </p:input>
+                            </p:error>
                         </p:otherwise>
                     </p:choose>
                     <p:delete match="/*/@xml:base"/>
@@ -286,7 +288,7 @@
             <p:delete match="d:file[@media-type='application/x-Z39.86-AI+xml']"/>
             <p:viewport match="/*/*">
                 <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
-                <p:variable name="original-uri" select="(/*/@xml:base, p:resolve-uri(/*/@href,$fileset-base))[1]"/>
+                <p:variable name="original-uri" select="(/*/@original-href, p:resolve-uri(/*/@href,$fileset-base))[1]"/>
                 <p:xslt>
                     <p:with-param name="to" select="p:resolve-uri(/*/@href,$fileset-base)"/>
                     <p:with-param name="from" select="$zedai-uri"/>
@@ -374,7 +376,7 @@
         </p:identity>
         <p:viewport match="//d:file">
             <p:variable name="file-href" select="p:resolve-uri(/*/@href,$fileset-base)"/>
-            <p:variable name="file-original" select="if (/*/@xml:base) then p:resolve-uri(/*/@xml:base,$fileset-base) else ''"/>
+            <p:variable name="file-original" select="if (/*/@original-href) then p:resolve-uri(/*/@original-href) else ''"/>
             <p:choose>
                 <p:xpath-context>
                     <p:pipe port="result" step="wrapped-in-memory"/>

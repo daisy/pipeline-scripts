@@ -46,7 +46,7 @@
                 <p:with-option name="href" select="$href"/>
                 <p:with-option name="media-type" select="$media-type"/>
             </px:fileset-add-entry>
-            <p:add-attribute match="/*/*" attribute-name="xml:base">
+            <p:add-attribute match="/*/*" attribute-name="original-href">
                 <p:with-option name="attribute-value" select="p:resolve-uri($href,$zedai-href)"/>
             </p:add-attribute>
         </p:for-each>
@@ -59,7 +59,7 @@
             <p:with-option name="href" select="$zedai-href"/>
             <p:with-option name="media-type" select="'application/x-Z39.86-AI+xml'"/>
         </px:fileset-add-entry>
-        <p:add-attribute match="/*/*" attribute-name="xml:base">
+        <p:add-attribute match="/*/*" attribute-name="original-href">
             <p:with-option name="attribute-value" select="$zedai-href"/>
         </p:add-attribute>
         <p:identity name="fileset.zedai"/>

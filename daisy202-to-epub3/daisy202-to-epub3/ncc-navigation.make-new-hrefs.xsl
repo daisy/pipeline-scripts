@@ -3,7 +3,7 @@
     <xsl:param name="from" required="yes"/>
     <xsl:param name="to" required="yes"/>
 
-    <xsl:include href="http://www.daisy.org/pipeline/modules/file-utils/xslt/relative-uri.xsl"/>
+    <xsl:include href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
 
     <xsl:template match="/*">
         <xsl:copy>
