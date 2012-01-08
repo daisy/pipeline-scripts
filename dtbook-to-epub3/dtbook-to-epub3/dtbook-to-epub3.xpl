@@ -5,6 +5,10 @@
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="#all">
 
+        <p:documentation>
+            <xd:short>dtbook-to-epub3</xd:short>
+            <xd:detail>Converts multiple dtbooks to epub3 format</xd:detail>
+        </p:documentation>
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation>
             <xd:short>DTBook file(s)</xd:short>

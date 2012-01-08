@@ -16,7 +16,8 @@
     </p:pipeinfo>
 
     <p:documentation xd:target="parent">
-        <xd:short>Transforms a DAISY 2.02 publication into an EPUB3 publication.</xd:short>
+        <xd:short>daisy202-to-epub3</xd:short>
+        <xd:detail>Transforms a DAISY 2.02 publication into an EPUB3 publication.</xd:detail>
         <xd:author>
             <xd:name>Jostein Austvik Jacobsen</xd:name>
             <xd:mailto>josteinaj@gmail.com</xd:mailto>
