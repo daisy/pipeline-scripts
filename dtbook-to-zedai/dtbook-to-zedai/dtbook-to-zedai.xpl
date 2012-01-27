@@ -4,7 +4,7 @@
     exclude-inline-prefixes="#all">
 
     <p:documentation>
-        <xd:short>DTBook to ZedAI</xd:short>
+        <xd:short>dtbook-to-zedai</xd:short>
         <xd:detail>Transforms DTBook XML into ZedAI XML.</xd:detail>
         <xd:homepage>http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:homepage>
         <xd:author>
