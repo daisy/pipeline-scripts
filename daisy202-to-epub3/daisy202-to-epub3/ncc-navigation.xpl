@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" type="pxi:daisy202-to-epub3-ncc-navigation"
-    name="ncc-navigation" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" version="1.0">
-    
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step"
+    type="pxi:daisy202-to-epub3-ncc-navigation" name="ncc-navigation" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions" version="1.0">
+
     <p:documentation xd:target="parent">
         <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
     </p:documentation>
-    
+
     <p:input port="ncc">
         <p:documentation>
             <xd:short>The DAISY 2.02 NCC</xd:short>
@@ -14,13 +15,20 @@
             </xd:example>
         </p:documentation>
     </p:input>
-    <p:input port="daisy-smil" sequence="true">
+    <p:input port="resolve-links-mapping">
         <p:documentation>
-            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
-            <xd:example xmlns="">
-                <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
-                <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
-                <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
+            <xd:short>A map of all the links in the SMIL files.</xd:short>
+            <xd:example>
+                <di:mapping xmlns:di="http://www.daisy.org/ns/pipeline/tmp">
+                    <di:smil xml:base="file:/home/user/a.smil">
+                        <di:text par-id="fragment1" text-id="frg1" src="a.html#txt1"/>
+                        <di:text par-id="fragment2" text-id="frg2" src="a.html#txt2"/>
+                    </di:smil>
+                    <di:smil xml:base="file:/home/user/b.smil">
+                        <di:text par-id="fragment1" text-id="frg1" src="b.html#txt1"/>
+                        <di:text par-id="fragment2" text-id="frg2" src="b.html#txt2"/>
+                    </di:smil>
+                </di:mapping>
             </xd:example>
         </p:documentation>
     </p:input>
@@ -29,7 +37,8 @@
         <p:documentation>
             <xd:short>An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
             </xd:example>
         </p:documentation>
         <p:pipe port="result" step="ncc-navigation.result"/>
@@ -48,6 +57,9 @@
         </p:documentation>
     </p:option>
 
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>Calabash extension steps.</p:documentation>
+    </p:import>
     <p:import href="resolve-links.xpl">
         <p:documentation>De-references links to SMIL-files.</p:documentation>
     </p:import>
@@ -57,10 +69,13 @@
         <p:input port="source">
             <p:pipe port="ncc" step="ncc-navigation"/>
         </p:input>
-        <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil" step="ncc-navigation"/>
+        <p:input port="resolve-links-mapping">
+            <p:pipe port="resolve-links-mapping" step="ncc-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links>
+    <cx:message>
+        <p:with-option name="message" select="'dereferenced all links in the SMIL files'"/>
+    </cx:message>
     <p:identity name="ncc-navigation.no-navs"/>
     <p:sink/>
     <p:xslt name="ncc-navigation.toc">
@@ -74,6 +89,9 @@
             <p:document href="ncc-to-nav-toc.xsl"/>
         </p:input>
     </p:xslt>
+    <cx:message>
+        <p:with-option name="message" select="'created TOC from NCC'"/>
+    </cx:message>
     <p:sink/>
     <p:xslt>
         <p:input port="parameters">
@@ -86,6 +104,9 @@
             <p:document href="ncc-to-nav-page-list.xsl"/>
         </p:input>
     </p:xslt>
+    <cx:message>
+        <p:with-option name="message" select="'created page list from NCC'"/>
+    </cx:message>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -111,6 +132,9 @@
             <p:document href="ncc-to-nav-landmarks.xsl"/>
         </p:input>
     </p:xslt>
+    <cx:message>
+        <p:with-option name="message" select="'created landmarks from NCC'"/>
+    </cx:message>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -157,6 +181,9 @@
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>
     </p:add-attribute>
+    <cx:message>
+        <p:with-option name="message" select="'created Navigation Document from NCC'"/>
+    </cx:message>
     <p:identity name="ncc-navigation.result"/>
     <p:sink/>
 

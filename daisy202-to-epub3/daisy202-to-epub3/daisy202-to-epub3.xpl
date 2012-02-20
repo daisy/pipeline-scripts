@@ -30,29 +30,39 @@
 
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
         <p:documentation>
-            <xd:short>The URI to the input NCC.</xd:short>
+            <xd:short>href</xd:short>
+            <xd:detail>The URI to the input NCC.</xd:detail>
             <xd:example>file:/home/user/daisy202/ncc.html</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
-            <xd:short>The URI to the output directory for the EPUB.</xd:short>
+            <xd:short>output</xd:short>
+            <xd:detail>The URI to the output directory for the EPUB.</xd:detail>
             <xd:example>file:/home/user/epub3/</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>Whether or not to include media overlays and associated audio files.</xd:short>
+            <xd:short>mediaoverlay</xd:short>
+            <xd:detail>Whether or not to include media overlays and associated audio files.</xd:detail>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
-            <xd:short>Whether or not to include NCX-file, OPF guide element and ASCII filenames.</xd:short>
+            <xd:short>compatibility-mode</xd:short>
+            <xd:detail>Whether or not to include NCX-file, OPF guide element and ASCII filenames.</xd:detail>
         </p:documentation>
     </p:option>
-
+    
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>Calabash extension steps.</p:documentation>
+    </p:import>
     <p:import href="ncc.xpl">
         <p:documentation>For loading the NCC.</p:documentation>
+    </p:import>
+    <p:import href="resolve-links.create-mapping.xpl">
+        <p:documentation>For creating a map of all links in the SMIL files.</p:documentation>
     </p:import>
     <p:import href="ncc-navigation.xpl">
         <p:documentation>For making a Navigation Document based on the NCC.</p:documentation>
@@ -100,7 +110,7 @@
             <p:error code="PDE02">
                 <p:input port="source">
                     <p:inline>
-                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file://", and in Windows, all
+                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file:/", and in Windows, all
                             directory separators (\) must be replaced with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
@@ -145,7 +155,14 @@
             <p:pipe port="flow" step="ncc"/>
         </p:input>
     </pxi:daisy202-to-epub3-load-smil-flow>
-
+    
+    <p:documentation>Make a map of all links from the SMIL files to the content files</p:documentation>
+    <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
+        <p:input port="daisy-smil">
+            <p:pipe port="daisy-smil" step="flow"/>
+        </p:input>
+    </pxi:daisy202-to-epub3-resolve-links-create-mapping>
+    
     <p:documentation>Makes a Navigation Document directly from the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
@@ -153,8 +170,8 @@
         <p:input port="ncc">
             <p:pipe port="ncc" step="ncc"/>
         </p:input>
-        <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil" step="flow"/>
+        <p:input port="resolve-links-mapping">
+            <p:pipe port="result" step="resolve-links-mapping"/>
         </p:input>
     </pxi:daisy202-to-epub3-ncc-navigation>
 
@@ -163,8 +180,8 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
-        <p:input port="daisy-smil">
-            <p:pipe port="daisy-smil" step="flow"/>
+        <p:input port="resolve-links-mapping">
+            <p:pipe port="result" step="resolve-links-mapping"/>
         </p:input>
         <p:input port="content-flow">
             <p:pipe port="content-flow" step="flow"/>
@@ -267,6 +284,10 @@
                 <p:pipe port="fileset" step="package"/>
             </p:input>
         </px:epub3-ocf-finalize>
+        <cx:message>
+            <p:with-option name="message" select="'finalized the EPUB3 fileset'"/>
+        </cx:message>
+        <p:sink/>
     </p:group>
 
     <p:documentation>Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
@@ -280,6 +301,9 @@
             <p:pipe port="opf-package" step="package"/>
         </p:with-option>
     </px:epub3-ocf-zip>
+    <cx:message>
+        <p:with-option name="message" select="concat('zipped the EPUB3 fileset as ',/*/@href)"/>
+    </cx:message>
     <p:sink/>
 
 </p:declare-step>

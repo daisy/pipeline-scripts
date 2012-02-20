@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" type="pxi:daisy202-to-epub3-navigation" name="navigation" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-navigation" name="navigation" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Make a EPUB3 Navigation Document based on the Content Documents.</xd:short>
@@ -10,7 +11,8 @@
         <p:documentation>
             <xd:short>An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
             </xd:example>
         </p:documentation>
     </p:input>
@@ -18,10 +20,14 @@
         <p:documentation>
             <xd:short>The EPUB3 Content Documents.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html"
+                    >...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html"
+                    >...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html"
+                    >...</html>
             </xd:example>
         </p:documentation>
     </p:input>
@@ -29,7 +35,8 @@
         <p:documentation>
             <xd:short>The complete EPUB3 Navigation Document.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
             </xd:example>
         </p:documentation>
         <p:pipe port="result" step="result-with-xml-base"/>
@@ -45,12 +52,17 @@
     </p:output>
     <p:output port="content-navfix" sequence="true">
         <p:documentation>
-            <xd:short>The same sequence of EPUB3 Content Documents as arrived on the "content" port, but with the old Navigation Document replaced by the new one (if it's in the spine).</xd:short>
+            <xd:short>The same sequence of EPUB3 Content Documents as arrived on the "content" port, but with the old Navigation Document replaced by the new
+                one (if it's in the spine).</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml"
+                    original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml"
+                    original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml"
+                    original-base="file:/home/user/daisy202/c.html">...</html>
             </xd:example>
         </p:documentation>
         <p:pipe port="result" step="content"/>
@@ -97,13 +109,17 @@
         </p:documentation>
     </p:option>
 
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>Calabash extension steps.</p:documentation>
+    </p:import>
     <p:import href="resolve-links.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/epub3-nav-library.xpl"/>
 
     <p:variable name="subdir" select="substring-after($content-dir,$publication-dir)"/>
 
-    <p:documentation xd:target="parent">Make a Navigation Document based on the navs generated from the NCC and the outline generated from the content.</p:documentation>
+    <p:documentation xd:target="parent">Make a Navigation Document based on the navs generated from the NCC and the outline generated from the
+        content.</p:documentation>
 
     <px:epub3-nav-create-toc name="content-nav-toc">
         <p:input port="source">
@@ -284,6 +300,15 @@
             <p:store name="store-ncx.store" indent="true">
                 <p:with-option name="href" select="concat($publication-dir,'ncx.xml')"/>
             </p:store>
+            <cx:message>
+                <p:input port="source">
+                    <p:inline>
+                        <doc/>
+                    </p:inline>
+                </p:input>
+                <p:with-option name="message" select="concat('stored ',$publication-dir,'ncx.xml')"/>
+            </cx:message>
+            <p:sink/>
             <p:add-attribute name="store-ncx.ncx-with-base" attribute-name="xml:base" match="/*">
                 <p:input port="source">
                     <p:pipe port="result" step="store-ncx.ncx"/>
@@ -348,6 +373,9 @@
                         <p:pipe port="result" step="result-with-xml-base"/>
                     </p:input>
                 </p:identity>
+                <cx:message>
+                    <p:with-option name="message" select="'the navigation document is in the spine; replaced it with the updated version'"/>
+                </cx:message>
             </p:when>
             <p:otherwise>
                 <p:identity/>

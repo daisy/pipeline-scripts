@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     type="pxi:daisy202-to-epub3-load-smil-flow" name="load-smil-flow" version="1.0">
 
     <p:documentation xd:target="parent">
@@ -44,6 +45,10 @@
         <p:pipe port="result" step="content-flow"/>
     </p:output>
 
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>Calabash extension steps.</p:documentation>
+    </p:import>
+
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
         <p:documentation>For manipulating filesets.</p:documentation>
     </p:import>
@@ -62,6 +67,9 @@
         <p:load name="flow-iterate.smils">
             <p:with-option name="href" select="$original-uri"/>
         </p:load>
+        <cx:message>
+            <p:with-option name="message" select="concat('loaded ',$original-uri)"/>
+        </cx:message>
         <p:add-attribute match="/*" attribute-name="xml:base" name="flow-iterate.daisy-smil">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>

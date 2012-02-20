@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="pxi:daisy202-to-epub3-package" name="package" exclude-inline-prefixes="#all" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    type="pxi:daisy202-to-epub3-package" name="package" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Compile and store the OPF.</xd:short>
@@ -32,7 +33,8 @@
         <p:documentation>
             <xd:short>The EPUB3 Navigation Document.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
+                    original-base="file:/home/user/daisy202/ncc.html">...</html>
             </xd:example>
         </p:documentation>
     </p:input>
@@ -40,9 +42,12 @@
         <p:documentation>
             <xd:short>The EPUB3 Content Documents.</xd:short>
             <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml"
+                    original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml"
+                    original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml"
+                    original-base="file:/home/user/daisy202/c.html">...</html>
             </xd:example>
         </p:documentation>
     </p:input>
@@ -124,6 +129,9 @@
         </p:documentation>
     </p:option>
 
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
+        <p:documentation>Calabash extension steps.</p:documentation>
+    </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
         <p:documentation>For manipulating filesets.</p:documentation>
     </p:import>
@@ -210,6 +218,13 @@
     <p:store name="store" indent="true">
         <p:with-option name="href" select="$result-uri"/>
     </p:store>
+    <cx:message>
+        <p:input port="source">
+            <p:pipe port="result" step="store"/>
+        </p:input>
+        <p:with-option name="message" select="concat('stored ',$result-uri)"/>
+    </cx:message>
+    <p:sink/>
 
     <p:group name="result-fileset">
         <p:output port="result"/>
