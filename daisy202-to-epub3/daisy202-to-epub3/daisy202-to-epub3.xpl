@@ -54,7 +54,7 @@
             <xd:detail>Whether or not to include NCX-file, OPF guide element and ASCII filenames.</xd:detail>
         </p:documentation>
     </p:option>
-    
+
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
@@ -95,44 +95,70 @@
     <p:variable name="publication-dir" select="concat($epub-dir,'Publication/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
 
+    <p:in-scope-names name="vars"/>
+    <p:identity>
+        <p:input port="source">
+            <p:inline>
+                <dummy-doc-for-p-template/>
+            </p:inline>
+        </p:input>
+    </p:identity>
     <p:choose>
         <p:when test="not(matches($href,'\w+:/'))">
-            <p:error code="PDE01">
-                <p:input port="source">
-                    <p:inline>
-                        <message>href must be a valid URI. In practice this simply means that the path must be prefixed with "file:/", and in Windows, all
-                            directory separators (\) must be replaced with forward slashes (/).</message>
+            <p:template>
+                <p:input port="template">
+                    <p:inline exclude-inline-prefixes="#all">
+                        <message>href: "{$href}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows,
+                            remember to replace all directory separators (\) with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
-            </p:error>
+                <p:input port="parameters">
+                    <p:pipe step="vars" port="result"/>
+                </p:input>
+            </p:template>
+            <p:error code="PDE01"/>
         </p:when>
         <p:when test="not(matches($output,'\w+:/'))">
-            <p:error code="PDE02">
-                <p:input port="source">
-                    <p:inline>
-                        <message>output must be a valid URI. In practice this simply means that the path must be prefixed with "file:/", and in Windows, all
-                            directory separators (\) must be replaced with forward slashes (/).</message>
+            <p:template>
+                <p:input port="template">
+                    <p:inline exclude-inline-prefixes="#all">
+                        <message>output: "{$output}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows,
+                            remember to replace all directory separators (\) with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
-            </p:error>
+                <p:input port="parameters">
+                    <p:pipe step="vars" port="result"/>
+                </p:input>
+            </p:template>
+            <p:error code="PDE02"/>
         </p:when>
         <p:when test="not($mediaoverlay='true' or $mediaoverlay='false')">
-            <p:error code="PDE03">
-                <p:input port="source">
-                    <p:inline>
-                        <message>When given, mediaoverlay must be either "true" (default) or "false".</message>
+            <p:template>
+                <p:input port="template">
+                    <p:inline exclude-inline-prefixes="#all">
+                        <message>mediaoverlay: "{$mediaoverlay}" is not a valid value. When given, mediaoverlay must be either "true" (default) or
+                            "false".</message>
                     </p:inline>
                 </p:input>
-            </p:error>
+                <p:input port="parameters">
+                    <p:pipe step="vars" port="result"/>
+                </p:input>
+            </p:template>
+            <p:error code="PDE03"/>
         </p:when>
         <p:when test="not($compatibility-mode='true' or $compatibility-mode='false')">
-            <p:error code="PDE04">
-                <p:input port="source">
-                    <p:inline>
-                        <message>When given, compatibility-mode must be either "true" (default) or "false".</message>
+            <p:template>
+                <p:input port="template">
+                    <p:inline exclude-inline-prefixes="#all">
+                        <message>compatibility-mode: "{$compatibility-mode}" is not a valid value. When given, compatibility-mode must be either "true"
+                            (default) or "false".</message>
                     </p:inline>
                 </p:input>
-            </p:error>
+                <p:input port="parameters">
+                    <p:pipe step="vars" port="result"/>
+                </p:input>
+            </p:template>
+            <p:error code="PDE04"/>
         </p:when>
         <p:otherwise>
             <p:identity>
@@ -155,14 +181,14 @@
             <p:pipe port="flow" step="ncc"/>
         </p:input>
     </pxi:daisy202-to-epub3-load-smil-flow>
-    
+
     <p:documentation>Make a map of all links from the SMIL files to the content files</p:documentation>
     <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="flow"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links-create-mapping>
-    
+
     <p:documentation>Makes a Navigation Document directly from the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
