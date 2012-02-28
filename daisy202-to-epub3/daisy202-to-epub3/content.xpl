@@ -164,21 +164,29 @@
                             <p:pipe port="resolve-links-mapping" step="content"/>
                         </p:input>
                     </pxi:daisy202-to-epub3-resolve-links>
-                    <p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
+                    <!--<p:viewport match="html:a[@href and not(matches(@href,'^[^/]+:'))]">
                         <p:add-attribute match="/*" attribute-name="href">
                             <p:with-option name="attribute-value"
                                 select="concat(replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml#'),if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else '')"
                             />
                         </p:add-attribute>
-                    </p:viewport>
-
+                    </p:viewport>-->
+                    
                     <p:add-attribute match="/*" attribute-name="xml:base">
                         <p:with-option name="attribute-value" select="$result-uri"/>
                     </p:add-attribute>
                     <p:xslt>
-                        <p:with-param name="href" select="$result-uri"/>
+                        <p:with-param name="content-dir" select="$content-dir"/>
                         <p:input port="stylesheet">
                             <p:document href="daisy202-content-to-epub3-content.xsl"/>
+                        </p:input>
+                    </p:xslt>
+                    <p:xslt>
+                        <p:input port="stylesheet">
+                            <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-cleanup.xsl"/>
+                        </p:input>
+                        <p:input port="parameters">
+                            <p:empty/>
                         </p:input>
                     </p:xslt>
                     <p:insert match="/*" position="first-child">

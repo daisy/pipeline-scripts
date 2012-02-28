@@ -55,6 +55,8 @@
     </p:import>
 
     <p:variable name="content-base" select="/*/@xml:base"/>
+    <p:variable name="content-filename" select="replace(replace($content-base,'^.*/([^/]+)$','$1'),'^([^#]+)#.*$','$1')"/>
+    <p:variable name="content-filename-position" select="string-length($content-filename)+1"/>
 
     <p:documentation>For each 'a'-link</p:documentation>
     <p:viewport match="//html:a">
@@ -69,16 +71,23 @@
                 <p:xslt>
                     <p:with-param name="from" select="$content-base"/>
                     <p:with-param name="to" select="$result"/>
+                    <p:with-param name="filename" select="$content-filename"/>
+                    <p:with-param name="filename-position" select="$content-filename-position"/>
                     <p:input port="stylesheet">
                         <p:inline>
                             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
                                 <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
                                 <xsl:param name="from" required="yes"/>
                                 <xsl:param name="to" required="yes"/>
+                                <xsl:param name="filename" required="yes"/>
+                                <xsl:param name="filename-position" required="yes"/>
                                 <xsl:template match="/*">
                                     <xsl:copy>
                                         <xsl:copy-of select="@*"/>
                                         <xsl:attribute name="href" select="pf:relativize-uri($to,$from)"/>
+                                        <xsl:if test="starts-with(/*/@href,$filename)">
+                                            <xsl:attribute name="href" select="substring(/*/@href,$filename-position)"/>
+                                        </xsl:if>
                                         <xsl:copy-of select="node()"/>
                                     </xsl:copy>
                                 </xsl:template>

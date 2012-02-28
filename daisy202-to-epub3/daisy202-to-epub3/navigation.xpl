@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-navigation" name="navigation" version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-navigation" name="navigation"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>Make a EPUB3 Navigation Document based on the Content Documents.</xd:short>
@@ -184,7 +185,7 @@
         <p:input port="stylesheet">
             <p:inline>
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
-                    <xsl:output indent="yes"/>
+                    <xsl:output indent="yes" method="xml"/>
                     <xsl:param name="title" required="yes"/>
                     <xsl:param name="lang" select="''"/>
                     <xsl:template match="@*|node()">
@@ -211,6 +212,12 @@
             </p:inline>
         </p:input>
     </p:xslt>
+    <p:delete match="/html:html/html:head/html:meta[@http-equiv]"/>
+    <p:delete match="html:a[normalize-space(string-join(self::*//text(),''))='']"/>
+    <p:delete match="html:span[normalize-space(string-join(self::*//text(),''))='']"/>
+    <p:delete match="html:li[normalize-space(string-join(self::*//text(),''))='' or not(html:a or html:span)]"/>
+    <p:delete match="html:ol[normalize-space(string-join(self::*//text(),''))='' or not(html:li)]"/>
+    <p:delete match="html:nav[not(@epub:type='toc') and normalize-space(string-join(self::*//text(),''))='']"/>
     <p:identity name="result-without-xml-base"/>
 
     <p:store name="store" indent="true">

@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
+    xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>For processing the SMILs.</xd:short>
@@ -113,7 +113,18 @@
     <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/rearrange.xpl">
         <p:documentation>For generating ("rearranging") new Media Overlays based on the Content Documents and the old Media Overlays.</p:documentation>
     </p:import>
-
+    
+    <p:declare-step type="pxi:fix-textrefs">
+        <p:input port="source"/>
+        <p:output port="result"/>
+        <p:viewport match="/*//mo:seq[@epub:textref]">
+            <p:add-attribute match="/*" attribute-name="epub:textref">
+                <p:with-option name="attribute-value" select="replace(/*/@epub:textref,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
+            </p:add-attribute>
+            <pxi:fix-textrefs/>
+        </p:viewport>
+    </p:declare-step>
+    
     <p:for-each name="daisy-smil-iterate">
         <p:iteration-source>
             <p:pipe port="daisy-smil" step="mediaoverlay"/>
@@ -132,7 +143,7 @@
         <p:with-option name="message" select="'joined all the media overlays'"/>
     </cx:message>
     <p:sink/>
-
+    
     <p:for-each name="mediaoverlay-iterate">
         <p:output port="mediaoverlay" sequence="true">
             <p:pipe port="mediaoverlay" step="mediaoverlay-iterate.choose"/>
@@ -169,16 +180,13 @@
                                             string-length($daisy-dir)+1
                                     )
                                 )"/>
-                <cx:message>
-                    <p:with-option name="message" select="concat('DEBUG: will now rearrange ',$result-uri)"/>
-                </cx:message>
                 <px:mediaoverlay-rearrange>
                     <p:input port="mediaoverlay">
                         <p:pipe port="result" step="mediaoverlay-joined"/>
                     </p:input>
                 </px:mediaoverlay-rearrange>
                 <cx:message>
-                    <p:with-option name="message" select="concat('rearranged ',$result-uri)"/>
+                    <p:with-option name="message" select="concat('compiled a media overlay for ',$result-uri)"/>
                 </cx:message>
                 <p:choose>
                     <p:when test="$result-uri = concat($publication-dir,'navigation.smil')">
@@ -206,6 +214,7 @@
                         <p:with-option name="attribute-value" select="replace(/*/@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
                     </p:add-attribute>
                 </p:viewport>
+                <pxi:fix-textrefs/>
                 <p:store indent="true" name="mediaoverlay-iterate.store-mediaoverlay">
                     <p:with-option name="href" select="$result-uri"/>
                 </p:store>
