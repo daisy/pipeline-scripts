@@ -70,7 +70,6 @@
         </px:zedai-to-epub3-load>
 
         <px:zedai-to-epub3-convert name="convert">
-            <p:log port="fileset.out"/>
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="load"/>
             </p:input>

@@ -203,8 +203,6 @@
                 <p:with-option name="href" select="$result-uri"/>
             </px:fileset-add-entry>
         </p:for-each>
-        <!--TODO epub3-pub-create-package-doc requires a sequence of filesets-->
-        <px:fileset-join/>
     </p:group>
 
     <!--=========================================================================-->
