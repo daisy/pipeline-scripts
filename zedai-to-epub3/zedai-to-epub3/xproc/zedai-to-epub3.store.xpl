@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    type="px:zedai-to-epub3-store" name="zedai-to-epub3.store" exclude-inline-prefixes="#all" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:c="http://www.w3.org/ns/xproc-step"
+    type="px:zedai-to-epub3-store" name="zedai-to-epub3.store" exclude-inline-prefixes="#all"
+    version="1.0">
 
     <p:documentation xd:target="parent">
         <xd:short>zedai-to-epub3</xd:short>
@@ -11,7 +14,8 @@
     <p:input port="fileset.in" primary="true">
         <p:documentation>
             <xd:short>A fileset referencing all resources to be stored.</xd:short>
-            <xd:detail>Contains references to all the EPUB3 files and any resources they reference (images etc.).</xd:detail>
+            <xd:detail>Contains references to all the EPUB3 files and any resources they reference
+                (images etc.).</xd:detail>
         </p:documentation>
     </p:input>
 
@@ -33,7 +37,8 @@
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
+    <p:import
+        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
         <p:documentation>For packaging and storing the finished EPUB file.</p:documentation>
     </p:import>
 
@@ -58,6 +63,7 @@
     <p:wrap-sequence wrapper="d:fileset"/>
     <px:fileset-join name="fileset.in-memory"/>
 
+
     <p:for-each>
         <p:output port="result" sequence="true"/>
         <p:iteration-source select="/*/*">
@@ -72,8 +78,13 @@
             </p:xpath-context>
             <p:when test="//d:file[@href=$target]">
                 <p:documentation>File is in memory.</p:documentation>
+                <cx:message>
+                    <p:with-option name="message" select="concat('writing in-memory document to ',$target)"
+                    />
+                </cx:message>
                 <p:split-sequence>
-                    <p:with-option name="test" select="concat('/*/@xml:base=&quot;',$target,'&quot;')"/>
+                    <p:with-option name="test"
+                        select="concat('/*/@xml:base=&quot;',$target,'&quot;')"/>
                     <p:input port="source">
                         <p:pipe port="in-memory.in" step="zedai-to-epub3.store"/>
                     </p:input>
@@ -82,7 +93,8 @@
                 <p:choose>
                     <p:when test="$media-type='application/xhtml+xml'">
                         <p:documentation>In-memory file is a Content Document.</p:documentation>
-                        <p:store indent="true" encoding="utf-8" method="xhtml" include-content-type="false" name="store.content-doc">
+                        <p:store indent="true" encoding="utf-8" method="xhtml"
+                            include-content-type="false" name="store.content-doc">
                             <p:with-option name="href" select="$target"/>
                         </p:store>
                         <p:identity>
@@ -93,7 +105,8 @@
                     </p:when>
                     <p:when test="$media-type='application/oebps-package+xml'">
                         <p:documentation>In-memory file is the Package Document.</p:documentation>
-                        <p:store media-type="application/oebps-package+xml" indent="true" encoding="utf-8" omit-xml-declaration="false" name="store.package-doc">
+                        <p:store media-type="application/oebps-package+xml" indent="true"
+                            encoding="utf-8" omit-xml-declaration="false" name="store.package-doc">
                             <p:with-option name="href" select="$target"/>
                         </p:store>
                         <p:identity>
@@ -119,17 +132,33 @@
                 <p:error code="PEZE00">
                     <p:input port="source">
                         <p:inline>
-                            <c:message>Found document in fileset that are neither stored on disk nor in memory.</c:message>
+                            <c:message>Found document in fileset that are neither stored on disk nor
+                                in memory.</c:message>
                         </p:inline>
                     </p:input>
                 </p:error>
             </p:when>
             <p:otherwise>
-                <p:documentation>File is already on disk; copy it to the new location.</p:documentation>
+                <p:documentation>File is already on disk; copy it to the new
+                    location.</p:documentation>
                 <p:variable name="target-dir" select="replace($target,'[^/]+$','')"/>
-                <px:info>
-                    <p:with-option name="href" select="$target-dir"/>
-                </px:info>
+                <cx:message>
+                    <p:with-option name="message" select="concat('copying disk file to ',$target)"/>
+                </cx:message>
+                <p:try>
+                    <p:group>
+                        <px:info>
+                            <p:with-option name="href" select="$target-dir"/>
+                        </px:info>
+                    </p:group>
+                    <p:catch>
+                        <p:identity>
+                            <p:input port="source">
+                                <p:empty/>
+                            </p:input>
+                        </p:identity>
+                    </p:catch>
+                </p:try>
                 <p:wrap-sequence wrapper="info"/>
                 <p:choose name="mkdir">
                     <p:when test="empty(/info/*)">
