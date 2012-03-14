@@ -15,7 +15,8 @@
         e.g. prefix="foaf: http://xmlns.com/foaf/0.1/"
   -->
   <xsl:template match="/z:document">
-    <metadata>
+    <!-- TODO dynamically generate @prefix -->
+    <metadata prefix="dc: http://purl.org/dc/elements/1.1/">
       <!--== Identifier ==-->
       <xsl:for-each select="f:get-identifiers(/)">
         <dc:identifier id="{if(position()=1) then 'pub-id' else concat('pub-id-',position())}">
@@ -142,7 +143,7 @@
       <xsl:when
         test="not(
            starts-with(@property,'z3998:')
-        or @property=('dcterms:identifier','dcterms:title','dcterms:language'))
+        or @property=('dc:identifier','dc:title','dc:language'))
         and normalize-space(if (@content) then @content else .) ">
         <!--TODO declare custom vocabularies-->
         <!--TODO refine RDFa attributes parsing-->
