@@ -183,7 +183,7 @@
                     </p:xslt>
                     <p:xslt>
                         <p:input port="stylesheet">
-                            <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-cleanup.xsl"/>
+                            <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html5-upgrade.xsl"/>
                         </p:input>
                         <p:input port="parameters">
                             <p:empty/>
