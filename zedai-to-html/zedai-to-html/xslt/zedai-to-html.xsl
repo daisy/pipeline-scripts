@@ -23,7 +23,7 @@
     <!--TODO config: externalize the profile definition-->
     <html xml:lang="en">
       <head>
-        <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8"/>
+        <meta charset="UTF-8"/>
         <title><!--TODO translate: title--></title>
         <!--<meta name="dcterms:identifier" content="com.googlecode.zednext.alice"/>-->
         <!--<meta name="dcterms:publisher" content="CSU"/>-->
