@@ -2,15 +2,15 @@
 <xsl:stylesheet xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:f="http://www.daisy.org/ns/pipeline/internal-functions"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" version="2.0" exclude-result-prefixes="xs z"
+  xmlns:z="http://www.daisy.org/ns/z3998/authoring/" version="2.0" exclude-result-prefixes="xs z"
   xpath-default-namespace="http://www.idpf.org/2007/opf">
 
   <xsl:output method="xml" indent="yes"/>
 
   <!--TODO resolve metadata prefixes from @profile and @prefix
      * default prefixes declared in @profile
-        e.g. @profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/"
-             declares "dcterms" and "z3986"
+        e.g. @profile="http://www.daisy.org/z3998/2011/vocab/profiles/default/"
+             declares "dcterms" and "z3998"
      * other prefixes are explicitly declared in @prefix
         e.g. prefix="foaf: http://xmlns.com/foaf/0.1/"
   -->
@@ -86,30 +86,30 @@
     </metadata>
   </xsl:template>
 
-  <xsl:template match="z:meta[@rel='z3986:meta-record']">
+  <xsl:template match="z:meta[@rel='z3998:meta-record']">
     <xsl:variable name="this" select="."/>
     <xsl:variable name="record-type"
-      select="ancestor::z:head//z:meta[@property='z3986:meta-record-type' and @about=$this/@resource][1]/@content"/>
+      select="ancestor::z:head//z:meta[@property='z3998:meta-record-type' and @about=$this/@resource][1]/@content"/>
     <xsl:choose>
-      <xsl:when test="$record-type='z3986:mods'">
+      <xsl:when test="$record-type='z3998:mods'">
         <link rel="mods-record" href="{@resource}"/>
       </xsl:when>
-      <xsl:when test="$record-type='z3986:onix-books'">
+      <xsl:when test="$record-type='z3998:onix-books'">
         <link rel="onix-record" href="{@resource}"/>
       </xsl:when>
-      <xsl:when test="$record-type='z3986:marc21-xml'">
+      <xsl:when test="$record-type='z3998:marc21-xml'">
         <link rel="marc21xml-record" href="{@resource}"/>
       </xsl:when>
-      <xsl:when test="$record-type=('z3986:dcterms-rdf','z3986:dctersm-rdfa')">
+      <xsl:when test="$record-type=('z3998:dcterms-rdf','z3998:dctersm-rdfa')">
         <!--TODO translate external DCTERMS records ?-->
       </xsl:when>
     </xsl:choose>
   </xsl:template>
 
 
-  <xsl:template match="z:meta[@rel and not(starts-with(@rel,'z3986:'))]">
+  <xsl:template match="z:meta[@rel and not(starts-with(@rel,'z3998:'))]">
     <!--TODO make sure prefix is declared-->
-    <xsl:if test="@rel ne 'z3986:profile'">
+    <xsl:if test="@rel ne 'z3998:profile'">
       <link rel="{@rel}" href="{@resoure}"/>
     </xsl:if>
   </xsl:template>
@@ -141,7 +141,7 @@
       </xsl:when>-->
       <xsl:when
         test="not(
-           starts-with(@property,'z3986:')
+           starts-with(@property,'z3998:')
         or @property=('dcterms:identifier','dcterms:title','dcterms:language'))
         and normalize-space(if (@content) then @content else .) ">
         <!--TODO declare custom vocabularies-->

@@ -3,7 +3,7 @@
   xmlns:f="http://www.daisy.org/ns/functions-internal" xmlns:its="http://www.w3.org/2005/11/its"
   xmlns:pf="http://www.daisy.org/ns/functions" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:z="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="#all" version="2.0">
+  xmlns:z="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="#all" version="2.0">
 
   <xsl:import href="zedai-vocab-utils.xsl"/>
 

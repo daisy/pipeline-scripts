@@ -48,7 +48,7 @@
             <p:iteration-source select="/*/*"/>
             <p:output port="result" sequence="true"/>
             <p:choose>
-                <p:when test="/*/@media-type = 'application/x-Z39.86-AI+xml'">
+                <p:when test="/*/@media-type = 'application/z3998-auth+xml'">
                     <p:variable name="zedai-base" select="p:resolve-uri(/*/@href,$fileset-base)"/>
                     <p:split-sequence name="zedai-input.for-each.split">
                         <p:input port="source">
@@ -94,7 +94,7 @@
                     <!-- TODO: describe the error on the wiki and insert correct error code -->
                     <p:input port="source">
                         <p:inline>
-                            <message>No XML documents with the ZedAI media type ('application/x-Z39.86-AI+xml') found in the fileset.</message>
+                            <message>No XML documents with the ZedAI media type ('application/z3998-auth+xml') found in the fileset.</message>
                         </p:inline>
                     </p:input>
                 </p:error>
@@ -105,7 +105,7 @@
                     <!-- TODO: describe the error on the wiki and insert correct error code -->
                     <p:input port="source">
                         <p:inline>
-                            <message>More than one XML document with the ZedAI media type ('application/x-Z39.86-AI+xml') found in the fileset; there can only
+                            <message>More than one XML document with the ZedAI media type ('application/z3998-auth+xml') found in the fileset; there can only
                                 be one ZedAI document.</message>
                         </p:inline>
                     </p:input>
@@ -149,7 +149,7 @@
             <p:pipe port="html-files" step="zedai-to-html.iterate"/>
         </p:output>
         <p:variable name="zedai-basename"
-            select="replace(replace(//*[@media-type='application/x-Z39.86-AI+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
+            select="replace(replace(//*[@media-type='application/z3998-auth+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
             <p:pipe port="fileset.in" step="zedai-to-epub3.convert"/>
         </p:variable>
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
@@ -284,8 +284,8 @@
         <p:group name="resources">
             <p:output port="result"/>
             <p:variable name="fileset-base" select="/*/@xml:base"/>
-            <p:variable name="zedai-uri" select="p:resolve-uri(//d:file[@media-type='application/x-Z39.86-AI+xml']/@href,$fileset-base)"/>
-            <p:delete match="d:file[@media-type='application/x-Z39.86-AI+xml']"/>
+            <p:variable name="zedai-uri" select="p:resolve-uri(//d:file[@media-type='application/z3998-auth+xml']/@href,$fileset-base)"/>
+            <p:delete match="d:file[@media-type='application/z3998-auth+xml']"/>
             <p:viewport match="/*/*">
                 <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
                 <p:variable name="original-uri" select="(/*/@original-href, p:resolve-uri(/*/@href,$fileset-base))[1]"/>

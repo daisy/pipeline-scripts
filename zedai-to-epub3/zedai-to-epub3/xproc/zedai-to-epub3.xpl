@@ -8,7 +8,7 @@
         <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</xd:detail>
     </p:documentation>
 
-    <p:input port="source" primary="true" px:name="source" px:media-type="application/x-Z39.86-AI+xml">
+    <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
         <p:documentation>
             <xd:short>source</xd:short>
             <xd:detail>Path to input ZedAI.</xd:detail>
@@ -70,6 +70,7 @@
         </px:zedai-to-epub3-load>
 
         <px:zedai-to-epub3-convert name="convert">
+            <p:log port="fileset.out"/>
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="load"/>
             </p:input>
