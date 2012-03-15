@@ -2,10 +2,10 @@
 <xsl:stylesheet  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0"
-    xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
+    xmlns:rend="http://www.daisy.org/ns/z3998/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
+    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     exclude-result-prefixes="xs xd rend its xlink z tmp">
     

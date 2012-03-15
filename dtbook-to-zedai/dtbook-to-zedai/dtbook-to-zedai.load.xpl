@@ -2,7 +2,7 @@
 <p:declare-step version="1.0" name="dtbook-to-zedai.load" type="px:dtbook-to-zedai-load" xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="cx p c cxo px xd pxi z tmp">
 
     <p:documentation>

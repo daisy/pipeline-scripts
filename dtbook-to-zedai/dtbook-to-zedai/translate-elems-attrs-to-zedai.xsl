@@ -2,10 +2,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
+    xmlns:rend="http://www.daisy.org/ns/z3998/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    xmlns="http://www.daisy.org/ns/z3986/authoring/" exclude-result-prefixes="xs dtb">
+    xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="xs dtb">
 
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
@@ -22,7 +22,7 @@
         <!-- just for testing: insert the oxygen schema reference -->
         <!--
             <xsl:processing-instruction name="oxygen">
-            <xsl:text>RNGSchema="/Users/marisa/Projects/pipeline2/daisy-pipeline-modules/schemas/zedai/z3986a-book-0.8/z3986a-book.rng" type="xml"</xsl:text>
+            <xsl:text>RNGSchema="/Users/marisa/Projects/pipeline2/daisy-pipeline-modules/schemas/zedai/z3998-book-1.0/z3998-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
         -->
         
@@ -48,9 +48,9 @@
     </xsl:template>
 
     <xsl:template match="dtb:dtbook">
-        <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
+        <document xmlns:z3998="http://www.daisy.org/z3998/2012/vocab/decl/#"
             xmlns:dcterms="http://purl.org/dc/terms/"
-            profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/">
+            profile="http://www.daisy.org/z3998/2012/vocab/profiles/default/">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </document>
@@ -60,8 +60,8 @@
         <head>
             <xsl:call-template name="attrs"/>
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
-            <meta rel="z3986:profile"
-                resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
+            <meta rel="z3998:profile"
+                resource="http://www.daisy.org/z3998/2012/auth/profiles/book/0.8/"/>
         </head>
 
     </xsl:template>

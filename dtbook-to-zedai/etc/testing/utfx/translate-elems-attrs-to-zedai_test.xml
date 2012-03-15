@@ -3,7 +3,7 @@
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:rend="http://www.daisy.org/ns/z3986/authoring/features/rend/"
+    xmlns:rend="http://www.daisy.org/ns/z3998/authoring/features/rend/"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
@@ -16,9 +16,9 @@
                 <dtbook/>
             </utfx:source>
             <utfx:expected>
-                <document xmlns:z3986="http://www.daisy.org/z3986/2011/vocab/decl/#"
+                <document xmlns:z3998="http://www.daisy.org/z3998/2011/vocab/decl/#"
                     xmlns:dcterms="http://purl.org/dc/terms/"
-                    profile="http://www.daisy.org/z3986/2011/vocab/profiles/default/"/>
+                    profile="http://www.daisy.org/z3998/2012/vocab/profiles/default/"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -32,11 +32,11 @@
             </utfx:source>
             <utfx:expected>
                 <head>
-                    <meta rel="z3986:profile"
-                        resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
-                    <meta rel="z3986:meta-record" resource="">
-                        <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
-                        <meta property="z3986:meta-record-version" about="" content="3.3"/>
+                    <meta rel="z3998:profile"
+                        resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/"/>
+                    <meta rel="z3998:meta-record" resource="">
+                        <meta property="z3998:meta-record-type" about="" content="z3998:mods"/>
+                        <meta property="z3998:meta-record-version" about="" content="3.3"/>
                     </meta>
                 </head>
             </utfx:expected>
@@ -125,8 +125,8 @@
             </utfx:source>
             <utfx:expected>
                 <head>
-                    <meta rel="z3986:profile"
-                        resource="http://www.daisy.org/z3986/2011/auth/profiles/book/0.8/"/>
+                    <meta rel="z3998:profile"
+                        resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/"/>
                     <meta property="dcterms:title" content="A"/>
                     <meta property="dcterms:identifier" content="B"/>
                     <meta property="dcterms:creator" content="C"/>
@@ -143,9 +143,9 @@
                     <meta property="dcterms:coverage" content="N"/>
                     <meta property="dcterms:rights" content="O"/>
                     <meta property="dcterms:description" content="P" about="#meta-dcdate"/>
-                    <meta rel="z3986:meta-record" resource="">
-                        <meta property="z3986:meta-record-type" about="" content="z3986:mods"/>
-                        <meta property="z3986:meta-record-version" about="" content="3.3"/>
+                    <meta rel="z3998:meta-record" resource="">
+                        <meta property="z3998:meta-record-type" about="" content="z3998:mods"/>
+                        <meta property="z3998:meta-record-version" about="" content="3.3"/>
                     </meta>
                 </head>
             </utfx:expected>

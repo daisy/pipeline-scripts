@@ -2,7 +2,7 @@
 <p:declare-step version="1.0" name="dtbook-to-zedai.convert" type="px:dtbook-to-zedai-convert" xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
+    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="cx p c cxo px xd pxi z tmp">
 
     <p:documentation>
@@ -420,9 +420,9 @@
     <p:string-replace match="//z:meta/@resource | //z:meta/@about" name="create-mods-ref-meta">
         <p:input port="source">
             <p:inline>
-                <meta rel="z3986:meta-record" resource="@@" xmlns="http://www.daisy.org/ns/z3986/authoring/">
-                    <meta property="z3986:meta-record-type" about="@@" content="z3986:mods" xmlns="http://www.daisy.org/ns/z3986/authoring/"/>
-                    <meta property="z3986:meta-record-version" about="@@" content="3.3" xmlns="http://www.daisy.org/ns/z3986/authoring/"/>
+                <meta rel="z3998:meta-record" resource="@@" xmlns="http://www.daisy.org/ns/z3998/authoring/">
+                    <meta property="z3998:meta-record-type" about="@@" content="z3998:mods" xmlns="http://www.daisy.org/ns/z3998/authoring/"/>
+                    <meta property="z3998:meta-record-version" about="@@" content="3.3" xmlns="http://www.daisy.org/ns/z3998/authoring/"/>
                 </meta>
             </p:inline>
         </p:input>
@@ -471,7 +471,7 @@
     <cx:message message="Validating ZedAI"/>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="true">
         <p:input port="schema">
-            <p:document href="./schema/z3986a-book-0.8/z3986a-book.rng"/>
+            <p:document href="./schema/z3998-book-1.9/z3998-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
     <cx:message message="Conversion complete."/>
@@ -504,7 +504,7 @@
         </px:fileset-create>
         <px:fileset-add-entry name="result.fileset.zedai">
             <p:with-option name="href" select="$zedai-file"/>
-            <p:with-option name="media-type" select="'application/x-Z39.86-AI+xml'"/>
+            <p:with-option name="media-type" select="'application/z3998-auth+xml'"/>
         </px:fileset-add-entry>
 
         <p:documentation>Add all the auxiliary resources to the fileset.</p:documentation>
