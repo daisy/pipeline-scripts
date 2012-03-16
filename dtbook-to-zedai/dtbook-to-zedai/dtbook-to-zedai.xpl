@@ -20,10 +20,6 @@
             <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
         </p:documentation>
     </p:input>
-    
-    <p:import href="dtbook-to-zedai.load.xpl"/>
-    <p:import href="dtbook-to-zedai.convert.xpl"/>
-    <p:import href="dtbook-to-zedai.store.xpl"/>
 
     <p:option name="opt-output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
@@ -55,6 +51,10 @@
             <xd:detail>Language code of the input document.</xd:detail>
         </p:documentation>
     </p:option>
+    
+    <p:import href="dtbook-to-zedai.load.xpl"/>
+    <p:import href="dtbook-to-zedai.convert.xpl"/>
+    <p:import href="dtbook-to-zedai.store.xpl"/>
     
     <px:dtbook-to-zedai-load name="load"/>
 
