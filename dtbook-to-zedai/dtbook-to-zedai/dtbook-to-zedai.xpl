@@ -21,31 +21,31 @@
         </p:documentation>
     </p:input>
 
-    <p:option name="opt-output-dir" required="true" px:dir="output" px:type="anyDirURI">
+    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>Output directory</xd:short>
             <xd:detail>The directory to store the generated files in.</xd:detail>
         </p:documentation>
     </p:option>
-    <p:option name="opt-zedai-filename" required="false" px:dir="output" px:type="string" select="''">
+    <p:option name="zedai-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>ZedAI filename</xd:short>
             <xd:detail>Filename for the generated ZedAI file</xd:detail>
         </p:documentation>
     </p:option>
-    <p:option name="opt-mods-filename" required="false" px:dir="output" px:type="string" select="''">
+    <p:option name="mods-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>MODS filename</xd:short>
             <xd:detail>Filename for the generated MODS file</xd:detail>
         </p:documentation>
     </p:option>
-    <p:option name="opt-css-filename" required="false" px:dir="output" px:type="string" select="''">
+    <p:option name="css-filename" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>CSS filename</xd:short>
             <xd:detail>Filename for the generated CSS file</xd:detail>
         </p:documentation>
     </p:option>
-    <p:option name="opt-lang" required="false" px:dir="output" px:type="string" select="''">
+    <p:option name="lang" required="false" px:dir="output" px:type="string" select="''">
         <p:documentation>
             <xd:short>Language code</xd:short>
             <xd:detail>Language code of the input document.</xd:detail>
@@ -62,11 +62,11 @@
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
-        <p:with-option name="opt-output-dir" select="$opt-output-dir"/>
-        <p:with-option name="opt-zedai-filename" select="$opt-zedai-filename"/>
-        <p:with-option name="opt-mods-filename" select="$opt-mods-filename"/>
-        <p:with-option name="opt-css-filename" select="$opt-css-filename"/>
-        <p:with-option name="opt-lang" select="$opt-lang"/>
+        <p:with-option name="opt-output-dir" select="$output-dir"/>
+        <p:with-option name="opt-zedai-filename" select="$zedai-filename"/>
+        <p:with-option name="opt-mods-filename" select="$mods-filename"/>
+        <p:with-option name="opt-css-filename" select="$css-filename"/>
+        <p:with-option name="opt-lang" select="$lang"/>
     </px:dtbook-to-zedai-convert>
 
     <px:dtbook-to-zedai-store name="store">
