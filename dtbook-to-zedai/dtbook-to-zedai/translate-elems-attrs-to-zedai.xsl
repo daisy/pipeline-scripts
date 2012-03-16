@@ -48,9 +48,14 @@
     </xsl:template>
 
     <xsl:template match="dtb:dtbook">
-        <document xmlns:z3998="http://www.daisy.org/z3998/2012/vocab/decl/#"
-            xmlns:dcterms="http://purl.org/dc/terms/"
-            profile="http://www.daisy.org/z3998/2012/vocab/profiles/default/">
+        <document>
+            <!-- make sure xml:lang is set - if not, try to infer from:
+              1. a dc:language metadata
+              2. an xml:lang attribute on the book element
+              3. the default value 'en' --> 
+            <xsl:if test="empty(@xml:lang)">
+                <xsl:attribute name="xml:lang" select="(dtb:head/dtb:meta[lower-case(@name)='dc:language'][1]/@content,dtb:book/@xml:lang,'en')[1]"/>
+            </xsl:if>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </document>
@@ -60,8 +65,20 @@
         <head>
             <xsl:call-template name="attrs"/>
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
-            <meta rel="z3998:profile"
-                resource="http://www.daisy.org/z3998/2012/auth/profiles/book/0.8/"/>
+            <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+                <meta property="z3998:name" content="book"/>
+                <meta property="z3998:version" content="1.0"/>
+            </meta>
+            <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+            <meta property="dc:identifier" content="@@"/>
+            <meta property="dc:publisher" content="{(string(dtb:meta[lower-case(@name)='dc:publisher'][1]/@content),'Anonymous')[1]}" />
+            <meta property="dc:date">
+                <xsl:value-of
+                    select="format-dateTime(
+                    adjust-dateTime-to-timezone(current-dateTime(),xs:dayTimeDuration('PT0H')),
+                    '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"
+                />
+            </meta>
         </head>
 
     </xsl:template>

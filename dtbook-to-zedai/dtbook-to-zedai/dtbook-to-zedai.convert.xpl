@@ -406,15 +406,20 @@
         </p:input>
     </px:dtbook-to-zedai-meta>
 
-    <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
-    <p:insert match="//z:head" position="first-child" name="insert-zedai-meta">
-        <p:input port="insertion">
-            <p:pipe port="result" step="generate-zedai-metadata"/>
-        </p:input>
-        <p:input port="source">
-            <p:pipe port="result" step="remove-css-attributes"/>
-        </p:input>
-    </p:insert>
+    <p:group name="insert-zedai-meta">
+        <p:output port="result"/>
+        <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
+        <p:insert match="/z:document/z:head" position="last-child">
+            <p:input port="insertion">
+                <p:pipe port="result" step="generate-zedai-metadata"/>
+            </p:input>
+            <p:input port="source">
+                <p:pipe port="result" step="remove-css-attributes"/>
+            </p:input>
+        </p:insert>
+        <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
+        <p:uuid match="/z:document/z:head//z:meta[@property='dc:identifier']/@content"/>
+    </p:group>
 
     <p:documentation>Create a meta element for the MODS file reference</p:documentation>
     <p:string-replace match="//z:meta/@resource | //z:meta/@about" name="create-mods-ref-meta">
@@ -471,7 +476,7 @@
     <cx:message message="Validating ZedAI"/>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="true">
         <p:input port="schema">
-            <p:document href="./schema/z3998-book-1.9/z3998-book.rng"/>
+            <p:document href="./schema/z3998-book-1.0/z3998-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
     <cx:message message="Conversion complete."/>
