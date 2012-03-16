@@ -29,7 +29,7 @@
         </p:documentation>
     </p:option>
 
-    <p:option name="output-dir" required="true" px:dir="output" px:type="string">
+    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>Output directory</xd:short>
             <xd:detail>file: URI to the output directory where both temp-files and the resulting
