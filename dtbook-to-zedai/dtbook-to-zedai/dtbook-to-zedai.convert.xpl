@@ -283,8 +283,8 @@
         <p:input port="source">
             <p:pipe port="result" step="validate-dtbook"/>
         </p:input>
+        <!--<p:log port="result" href="file:/tmp/d2z-intermediate.xml"/>-->
     </pxi:dtbook2005-3-to-zedai>
-
 
     <!-- =============================================================== -->
     <!-- CSS -->

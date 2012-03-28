@@ -212,6 +212,9 @@
 
     <xsl:template match="dtb:img">
 
+        <!-- generate an ID in case we need it -->
+        <xsl:variable name="imgID" select="generate-id()"/>
+        
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
@@ -227,11 +230,18 @@
                 <xsl:attribute name="tmp:width" select="@width"/>
             </xsl:if>
 
-            <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
-                <xsl:attribute name="xml:id" select="generate-id()"/>
+                <xsl:attribute name="xml:id" select="$imgID"/>
             </xsl:if>
             <description>
+                <xsl:choose>
+                    <xsl:when test="not(@id)">
+                        <xsl:attribute name="ref" select="$imgID"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="ref" select="@id"/>
+                    </xsl:otherwise>
+                </xsl:choose>
                 <xsl:value-of select="@alt"/>
             </description>
         </object>
