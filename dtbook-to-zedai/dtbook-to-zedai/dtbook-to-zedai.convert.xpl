@@ -119,7 +119,7 @@
             <xd:short>For determining the media type of files.</xd:short>
         </p:documentation>
     </p:import>
-
+    
     <p:variable name="output-dir"
         select="p:resolve-uri(
                     if (ends-with($opt-output-dir, '/')) then $opt-output-dir 

@@ -86,6 +86,12 @@
     <xsl:template match="dtb:book">
         <body>
             <xsl:call-template name="attrs"/>
+            <!-- insert frontmatter if there is none -->
+            <xsl:if test="not(child::dtb:frontmatter)">
+                <frontmatter>
+                    <section><h role="title"><xsl:value-of select="preceding-sibling::dtb:head/dtb:meta[@name='dc:Title']/@content"/></h></section>
+                </frontmatter>
+            </xsl:if>
             <xsl:apply-templates/>
         </body>
     </xsl:template>

@@ -47,7 +47,7 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
-
+  
     <p:for-each>
         <p:add-xml-base/>
     </p:for-each>
