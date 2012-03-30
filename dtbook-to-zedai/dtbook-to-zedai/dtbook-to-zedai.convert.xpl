@@ -417,7 +417,7 @@
                 <p:pipe port="result" step="remove-css-attributes"/>
             </p:input>
         </p:insert>
-        <p:documentation>Insert metadata into the head of ZedAI</p:documentation>
+        <p:documentation>Generate UUID for ZedAI identifier</p:documentation>
         <p:uuid match="/z:document/z:head//z:meta[@property='dc:identifier']/@content"/>
     </p:group>
 

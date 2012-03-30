@@ -23,7 +23,6 @@
         <xsl:apply-templates select="//z:thead"/>
         <xsl:apply-templates select="//z:tbody"/>
         <xsl:apply-templates select="//z:tfoot"/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
     
     <xsl:template match="z:object">

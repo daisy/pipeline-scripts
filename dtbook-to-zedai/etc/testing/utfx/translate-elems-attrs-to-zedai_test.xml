@@ -7,7 +7,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
-    <utfx:stylesheet src="../src/translate-elems-attrs-to-zedai.xsl"/>
+    <utfx:stylesheet src="../../dtbook-to-zedai/translate-elems-attrs-to-zedai.xsl"/>
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: DTBook</utfx:name>
@@ -16,9 +16,7 @@
                 <dtbook/>
             </utfx:source>
             <utfx:expected>
-                <document xmlns:z3998="http://www.daisy.org/z3998/2011/vocab/decl/#"
-                    xmlns:dcterms="http://purl.org/dc/terms/"
-                    profile="http://www.daisy.org/z3998/2012/vocab/profiles/default/"/>
+                <document xml:lang="en"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -32,12 +30,15 @@
             </utfx:source>
             <utfx:expected>
                 <head>
-                    <meta rel="z3998:profile"
-                        resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/"/>
-                    <meta rel="z3998:meta-record" resource="">
-                        <meta property="z3998:meta-record-type" about="" content="z3998:mods"/>
-                        <meta property="z3998:meta-record-version" about="" content="3.3"/>
+                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+                        <meta property="z3998:name" content="book"/>
+                        <meta property="z3998:version" content="1.0"/>
                     </meta>
+                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+                    <meta property="dc:identifier" content="CANNOT TEST"/>
+                    <meta property="dc:publisher" content="Anonymous" />
+                    <meta property="dc:date">CANNOT TEST</meta>
+                    
                 </head>
             </utfx:expected>
         </utfx:assert-equal>
@@ -50,7 +51,7 @@
                 <book/>
             </utfx:source>
             <utfx:expected>
-                <body/>
+                <body><frontmatter><section><h role="title"></h></section></frontmatter></body>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -66,7 +67,7 @@
             </utfx:source>
             <utfx:expected>
                 <frontmatter>
-                    <section>
+                    <section xml:id="CANNOT TEST">
                         <p role="title"/>
                         <p role="author"/>
                     </section>
@@ -123,30 +124,17 @@
                     <meta name="dtb:revisionDescription" content="P"/>
                 </head>
             </utfx:source>
+            <!-- remember that all metadata ends up in an external MODs file-->
             <utfx:expected>
                 <head>
-                    <meta rel="z3998:profile"
-                        resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/"/>
-                    <meta property="dcterms:title" content="A"/>
-                    <meta property="dcterms:identifier" content="B"/>
-                    <meta property="dcterms:creator" content="C"/>
-                    <meta property="dcterms:date" content="D" xml:id="meta-dcdate"/>
-                    <meta property="dcterms:publisher" content="E"/>
-                    <meta property="dcterms:language" content="F"/>
-                    <meta property="dcterms:subject" content="G"/>
-                    <meta property="dcterms:description" content="H"/>
-                    <meta property="dcterms:contributor" content="I"/>
-                    <meta property="dcterms:type" content="J"/>
-                    <meta property="dcterms:format" content="K"/>
-                    <meta property="dcterms:source" content="L"/>
-                    <meta property="dcterms:relation" content="M"/>
-                    <meta property="dcterms:coverage" content="N"/>
-                    <meta property="dcterms:rights" content="O"/>
-                    <meta property="dcterms:description" content="P" about="#meta-dcdate"/>
-                    <meta rel="z3998:meta-record" resource="">
-                        <meta property="z3998:meta-record-type" about="" content="z3998:mods"/>
-                        <meta property="z3998:meta-record-version" about="" content="3.3"/>
+                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+                        <meta property="z3998:name" content="book"/>
+                        <meta property="z3998:version" content="1.0"/>
                     </meta>
+                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+                    <meta property="dc:identifier" content="CANNOT TEST"/>
+                    <meta property="dc:publisher" content="E" />
+                    <meta property="dc:date">CANNOT TEST</meta>
                 </head>
             </utfx:expected>
         </utfx:assert-equal>
@@ -193,12 +181,12 @@
                 </level1>
             </utfx:source>
             <utfx:expected>
-                <section>
-                    <section>
-                        <section>
-                            <section>
-                                <section>
-                                    <section/>
+                <section xml:id="CANNOT TEST">
+                    <section xml:id="CANNOT TEST">
+                        <section xml:id="CANNOT TEST">
+                            <section xml:id="CANNOT TEST">
+                                <section xml:id="CANNOT TEST">
+                                    <section xml:id="CANNOT TEST"/>
                                 </section>
                             </section>
                         </section>
@@ -215,7 +203,7 @@
                 <level/>
             </utfx:source>
             <utfx:expected>
-                <section/>
+                <section xml:id="CANNOT TEST"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -425,8 +413,8 @@
                 <img src="image.png" height="300" width="300" alt="test image" id="abcde"/>
             </utfx:source>
             <utfx:expected>
-                <object src="image.png" height="300" width="300" xml:id="abcde">
-                    <description>test image</description>
+                <object src="image.png" tmp:height="300" tmp:width="300" xml:id="abcde">
+                    <description ref="abcde">test image</description>
                 </object>
             </utfx:expected>
         </utfx:assert-equal>
@@ -480,13 +468,13 @@
             <utfx:expected>
                 <block>
                     <object src="image.png" xml:id="img0001">
-                        <description>test image</description>
+                        <description ref="img0001">test image</description>
                     </object>
                     <caption ref="img0001">CAPTION</caption>
                 </block>
                 <block>
                     <object src="image.png" xml:id="img0002">
-                        <description>test image</description>
+                        <description ref="img0002">test image</description>
                     </object>
                     <caption ref="img0002">CAPTION</caption>
                 </block>
@@ -524,7 +512,7 @@
             <utfx:expected>
                 <block>
                     <object src="image.png" xml:id="img0002">
-                        <description>test image</description>
+                        <description ref="img0002">test image</description>
                     </object>
                     <annotation by="republisher" ref="img0002">PRODNOTE</annotation>
                 </block>
@@ -627,7 +615,7 @@
                 <table id="table1" width="100" border="2" cellspacing="10" cellpadding="10"/>
             </utfx:source>
             <utfx:expected>
-                <table xml:id="table1" width="100" border="2" cellspacing="10" cellpadding="10"/>
+                <table xml:id="table1" tmp:width="100" tmp:border="2" tmp:cellspacing="10" tmp:cellpadding="10"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -673,7 +661,7 @@
                 <col span="3" align="left" valign="center" width="300" id="col1"/>
             </utfx:source>
             <utfx:expected>
-                <col span="3" align="left" valign="center" width="300" xml:id="col1"/>
+                <col span="3" tmp:align="left" tmp:valign="center" tmp:width="300" xml:id="col1"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -693,7 +681,7 @@
                 </colgroup>
             </utfx:source>
             <utfx:expected>
-                <colgroup xml:id="colgroup1" span="3" align="left" valign="center" width="300"/>
+                <colgroup xml:id="colgroup1" span="3" tmp:align="left" tmp:valign="center" tmp:width="300"/>
                 <colgroup xml:id="colgroup2">
                     <col xml:id="col1"/>
                     <col xml:id="col2"/>
@@ -713,7 +701,7 @@
                 <thead id="thead1" align="left" valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <thead xml:id="thead1" align="left" valign="center"/>
+                <thead xml:id="thead1" tmp:align="left" tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -725,7 +713,7 @@
                 <tfoot id="tfoot1" align="left" valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <tfoot xml:id="tfoot1" align="left" valign="center"/>
+                <tfoot xml:id="tfoot1" tmp:align="left" tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -737,7 +725,7 @@
                 <tbody id="tbody2" align="left" valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <tbody xml:id="tbody2" align="left" valign="center"/>
+                <tbody xml:id="tbody2" tmp:align="left" tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -749,7 +737,7 @@
                 <tr id="tr1" align="left" valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <tr xml:id="tr1" align="left" valign="center"/>
+                <tr xml:id="tr1" tmp:align="left" tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -763,7 +751,7 @@
             </utfx:source>
             <utfx:expected>
                 <th xml:id="th1" abbr="abc" headers="def" colspan="3" rowspan="3" scope="scope"
-                    align="right" valign="center"/>
+                    tmp:align="right" tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -776,8 +764,8 @@
                     valign="center"/>
             </utfx:source>
             <utfx:expected>
-                <td xml:id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" align="center"
-                    valign="center"/>
+                <td xml:id="td1" headers="abc" colspan="3" rowspan="4" scope="scope" tmp:align="center"
+                    tmp:valign="center"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -900,9 +888,9 @@
                 <acronym>DMFC</acronym>
             </utfx:source>
             <utfx:expected>
-                <abbr type="acronym">FALAFL</abbr>
-                <abbr type="initialism">ZPQA</abbr>
-                <abbr type="initialism">DMFC</abbr>
+                <abbr role="acronym">FALAFL</abbr>
+                <abbr role="initialism">ZPQA</abbr>
+                <abbr role="initialism">DMFC</abbr>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -929,7 +917,7 @@
         <utfx:name>Translate-DTBook2ZedAI: abbr</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source><abbr/></utfx:source>
-            <utfx:expected><abbr type="truncation"/></utfx:expected>
+            <utfx:expected><abbr role="truncation"/></utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
 
@@ -996,13 +984,13 @@
             <utfx:expected>
                 <annotation><block><p><ln/><ln/></p><pagebreak value="4"/></block></annotation>
                 <caption><block><p><ln/><ln/></p></block></caption>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
-                <section><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
                 <td xml:id="td1"><block><p><ln/><ln/></p></block></td>
                 <annotation by="republisher"><block><p><ln/><ln/></p></block></annotation>
                 <aside role="sidebar"><block><p><ln/><ln/></p></block></aside>
@@ -1089,16 +1077,16 @@
                 <level><span/><dd/></level>
             </utfx:source>
             <utfx:expected>
-                <section><list/><p><definition/></p></section>
-                <section><list type="unordered"/><p><definition/></p></section>
-                <section><block/><p><definition/></p></section>
-                <section><block role="poem"/><p><definition/></p></section>
-                <section><block/><p><definition/></p></section>
-                <section><table xml:id="table1"/><p><definition/></p></section>
-                <section><p><definition/></p><aside role="sidebar"/></section>
-                <section><p><definition/></p><note/></section>
-                <section><p><definition/></p><block role="epigraph"/></section>
-                <section><span/><definition/></section>
+                <section xml:id="CANNOT TEST"><list/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><list type="unordered"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block role="poem"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><table xml:id="table1"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><aside role="sidebar"/></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><note/></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><block role="epigraph"/></section>
+                <section xml:id="CANNOT TEST"><span/><definition/></section>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -1119,16 +1107,16 @@
                 <level><span/><dt/></level>
             </utfx:source>
             <utfx:expected>
-                <section><list/><p><term/></p></section>
-                <section><list type="unordered"/><p><term/></p></section>
-                <section><block/><p><term/></p></section>
-                <section><block role="poem"/><p><term/></p></section>
-                <section><block/><p><term/></p></section>
-                <section><table xml:id="table1"/><p><term/></p></section>
-                <section><p><term/></p><aside role="sidebar"/></section>
-                <section><p><term/></p><note/></section>
-                <section><p><term/></p><block role="epigraph"/></section>
-                <section><span/><term/></section>
+                <section xml:id="CANNOT TEST"><list/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><list type="unordered"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block role="poem"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><table xml:id="table1"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><aside role="sidebar"/></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><note/></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><block role="epigraph"/></section>
+                <section xml:id="CANNOT TEST"><span/><term/></section>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -1154,8 +1142,8 @@
             </utfx:source>
             <utfx:expected>
                 <block role="poem">
-                    <p role="title">TITLE</p>
-                    <p role="author">AUTHOR</p>
+                    <p property="title">TITLE</p>
+                    <p property="author">AUTHOR</p>
                     <hd>HD</hd>
                     <p><ln>LINE</ln></p>
                 </block>
@@ -1179,8 +1167,8 @@
             </utfx:source>
             <utfx:expected>
                 <block role="poem">
-                    <p role="title">TITLE</p>
-                    <p role="author">AUTHOR</p>
+                    <p property="title">TITLE</p>
+                    <p property="author">AUTHOR</p>
                     <hd>HD A</hd>
                     <p>
                         <ln>LINE 1</ln>
@@ -1232,7 +1220,7 @@
                 <code>
                     <p>
                         <emph/><emph/><term/><citation xml:id="cite1"/>
-                        <abbr type="truncation"/><abbr type="initialism"/>
+                        <abbr role="truncation"/><abbr role="initialism"/>
                         <ref xlink:href="abc.html"/><sub/><sup/><span/><w/>
                         <annoref ref="REF"/><noteref ref="REF"/><s/></p>
                 </code>

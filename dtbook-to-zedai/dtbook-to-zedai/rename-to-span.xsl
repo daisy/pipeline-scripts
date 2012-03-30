@@ -6,7 +6,7 @@
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
-        <xsl:message>Renaming some elements to span</xsl:message>
+        <xsl:message>Renaming certain elements to span with @role</xsl:message>
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>

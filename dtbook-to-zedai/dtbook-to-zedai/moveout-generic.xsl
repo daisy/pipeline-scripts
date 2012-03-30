@@ -24,7 +24,7 @@
         <xsl:param name="valid-parents-list" tunnel="yes"/>
         <xsl:param name="root-elem"/>
         
-        <xsl:message>Test-and-move</xsl:message>
+        <xsl:message>Analyzing nesting. Will make necessary changes.</xsl:message>
         
         <xsl:choose>
             

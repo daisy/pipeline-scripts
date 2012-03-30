@@ -10,7 +10,7 @@
     
     <xsl:template match="/">
         
-        <xsl:message>Rename annotation elements to identify block or phrase variants.</xsl:message>
+        <xsl:message>Renaming annotation elements to identify block or phrase variants.</xsl:message>
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>

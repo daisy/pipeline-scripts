@@ -10,7 +10,7 @@
 
     <xsl:template match="/">
 
-        <xsl:message>Rename code and kbd elements.</xsl:message>
+        <xsl:message>Renaming code and kbd elements to reflect block or phrase variants.</xsl:message>
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>

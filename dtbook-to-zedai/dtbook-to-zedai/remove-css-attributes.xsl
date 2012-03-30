@@ -13,6 +13,7 @@
     
     <!-- identity template -->
     <xsl:template match="@*|node()">
+        <xsl:message>Removing temporary styling attributes.</xsl:message>
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>

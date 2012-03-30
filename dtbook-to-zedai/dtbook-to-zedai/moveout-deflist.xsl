@@ -15,7 +15,7 @@
 
     <xsl:template name="main">
         <xsl:param name="document"/>
-        <xsl:message>Move out deflist</xsl:message>
+        <xsl:message>Reparenting deflist elements where required</xsl:message>
         <xsl:call-template name="test-and-move">
             <!--<xsl:with-param name="doc" select="$document"/>-->
             <xsl:with-param name="root-elem" select="if ($document instance of document-node()) then $document/*[1] else $document"/>
@@ -24,7 +24,6 @@
             <xsl:with-param name="valid-parents-list" select="tokenize('annotation-block,prodnote,sidebar,address,covertitle,div,epigraph,imggroup,caption,code-block,kbd,li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th,poem,samp,item', ',')"  tunnel="yes"/>
             
         </xsl:call-template>
-        <xsl:message>--Done</xsl:message>
         
     </xsl:template>       
     

@@ -99,6 +99,7 @@
     <xsl:template match="dtb:frontmatter">
         <frontmatter>
             <xsl:call-template name="attrs"/>
+            <!-- all sections must have IDs in case we need to anchor floating annotations to them -->
             <section xml:id="{generate-id()}">
                 <xsl:apply-templates select="dtb:doctitle"/>
                 <xsl:apply-templates select="dtb:covertitle"/>
@@ -127,7 +128,7 @@
         match="dtb:level1|dtb:level2|dtb:level3|dtb:level4|dtb:level5|dtb:level6|dtb:level">
         <section>
             <xsl:call-template name="attrs"/>
-            <!-- sections must have IDs since they might be referenced by floating annotations -->
+            <!-- all sections must have IDs in case we need to anchor floating annotations to them -->            
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
