@@ -437,7 +437,18 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
-
+        
+        <!-- move @summary into a caption -->
+        <xsl:if test="@summary">
+            <xsl:choose>
+                <xsl:when test="@id">
+                    <caption ref="{@id}"><xsl:value-of select="@summary"/></caption>
+                </xsl:when>
+                <xsl:otherwise>
+                    <caption ref="{$tableID}"><xsl:value-of select="@summary"/></caption>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
         <table>
             <!-- These will be put into CSS by a future XSL step -->
             <xsl:if test="@width">
