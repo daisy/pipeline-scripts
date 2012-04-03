@@ -7,7 +7,7 @@
         <meta content="Pipeline 2 DTBook Test Content: Basic" name="dc:Title"/>
         <meta name="dc:Creator" content="Marisa D."/>
         <meta content="2011-03-01" name="dc:Date"/>
-        <meta name="dc:Publisher" content="Marisa D."/>
+        <meta name="dc:publisher" content="TestPublisher"/>
         <meta content="pipeline2-dtbook-test-20110301-basic" name="dc:Identifier"/>
         <meta content="en-US" name="dc:Language"/>
     </head>

@@ -11,21 +11,21 @@
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
             regarding content model normalization has already been done.</desc>
     </doc>
-    
+
     <xsl:param name="css-filename"/>
 
     <xsl:output indent="yes" method="xml"/>
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
-        
+
         <!-- just for testing: insert the oxygen schema reference -->
         <!--
             <xsl:processing-instruction name="oxygen">
             <xsl:text>RNGSchema="/Users/marisa/Projects/pipeline2/daisy-pipeline-modules/schemas/zedai/z3998-book-1.0/z3998-book.rng" type="xml"</xsl:text>
         </xsl:processing-instruction>
         -->
-        
+
         <xsl:apply-templates/>
         <xsl:message>--Done</xsl:message>
     </xsl:template>
@@ -52,9 +52,11 @@
             <!-- make sure xml:lang is set - if not, try to infer from:
               1. a dc:language metadata
               2. an xml:lang attribute on the book element
-              3. the default value 'en' --> 
+              3. the default value 'en' -->
             <xsl:if test="empty(@xml:lang)">
-                <xsl:attribute name="xml:lang" select="(dtb:head/dtb:meta[lower-case(@name)='dc:language'][1]/@content,dtb:book/@xml:lang,'en')[1]"/>
+                <xsl:attribute name="xml:lang"
+                    select="(dtb:head/dtb:meta[lower-case(@name)='dc:language'][1]/@content,dtb:book/@xml:lang,'en')[1]"
+                />
             </xsl:if>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -65,13 +67,18 @@
         <head>
             <xsl:call-template name="attrs"/>
             <!-- hard-coding the zedai 'book' profile for dtbook transformation -->
-            <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+            <meta rel="z3998:profile"
+                resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
                 <meta property="z3998:name" content="book"/>
                 <meta property="z3998:version" content="1.0"/>
             </meta>
-            <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+            <meta rel="z3998:rdfa-context"
+                resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
             <meta property="dc:identifier" content="@@"/>
-            <meta property="dc:publisher" content="{(string(dtb:meta[lower-case(@name)='dc:publisher'][1]/@content),'Anonymous')[1]}" />
+            
+            <xsl:variable name="dcPublisher" select="dtb:meta[lower-case(@name)='dc:publisher']/@content"/>
+            <meta property="dc:publisher" content="{if (string-length($dcPublisher) &gt; 0) then $dcPublisher else 'Anonymous'}"/>
+            
             <meta property="dc:date">
                 <xsl:value-of
                     select="format-dateTime(
@@ -89,7 +96,13 @@
             <!-- insert frontmatter if there is none -->
             <xsl:if test="not(child::dtb:frontmatter)">
                 <frontmatter>
-                    <section><h role="title"><xsl:value-of select="preceding-sibling::dtb:head/dtb:meta[@name='dc:Title']/@content"/></h></section>
+                    <section>
+                        <h role="title">
+                            <xsl:value-of
+                                select="preceding-sibling::dtb:head/dtb:meta[@name='dc:Title']/@content"
+                            />
+                        </h>
+                    </section>
                 </frontmatter>
             </xsl:if>
             <xsl:apply-templates/>
@@ -128,7 +141,7 @@
         match="dtb:level1|dtb:level2|dtb:level3|dtb:level4|dtb:level5|dtb:level6|dtb:level">
         <section>
             <xsl:call-template name="attrs"/>
-            <!-- all sections must have IDs in case we need to anchor floating annotations to them -->            
+            <!-- all sections must have IDs in case we need to anchor floating annotations to them -->
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
@@ -221,7 +234,7 @@
 
         <!-- generate an ID in case we need it -->
         <xsl:variable name="imgID" select="generate-id()"/>
-        
+
         <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
         <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
             however, it's an issue under consideration in the zedai group -->
@@ -291,10 +304,10 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <!-- we know that images with no IDs had them generated in the img template, so re-use that ID. -->
-                                    <xsl:attribute name="ref" select="generate-id(../dtb:img)"/>                           
+                                    <xsl:attribute name="ref" select="generate-id(../dtb:img)"/>
                                 </xsl:otherwise>
                             </xsl:choose>
-                            
+
                         </xsl:when>
                     </xsl:choose>
                 </xsl:otherwise>
@@ -315,7 +328,7 @@
             <xsl:if test="$refValue">
                 <xsl:attribute name="ref" select="$refValue"/>
             </xsl:if>
-            
+
             <!-- at this point, annotations could still be "floating', i.e. not anchored to anything.  this will get fixed in another step.  -->
 
             <xsl:call-template name="attrs"/>
@@ -437,15 +450,19 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
-        
+
         <!-- move @summary into an annotation -->
         <xsl:if test="@summary">
             <xsl:choose>
                 <xsl:when test="@id">
-                    <annotation ref="{@id}"><xsl:value-of select="@summary"/></annotation>
+                    <annotation ref="{@id}">
+                        <xsl:value-of select="@summary"/>
+                    </annotation>
                 </xsl:when>
                 <xsl:otherwise>
-                    <annotation ref="{$tableID}"><xsl:value-of select="@summary"/></annotation>
+                    <annotation ref="{$tableID}">
+                        <xsl:value-of select="@summary"/>
+                    </annotation>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
@@ -686,10 +703,10 @@
     </xsl:template>
 
     <xsl:template match="dtb:address">
-        <block>
+        <address>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </block>
+        </address>
     </xsl:template>
 
     <xsl:template match="dtb:epigraph">
@@ -1044,8 +1061,9 @@
                 select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
             <!-- note that there is likely never a nested code-block -->
             <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
-            
-            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p or self::text()" select="node()[not(self::text()[normalize-space() = ''])]">
+
+            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p or self::text()"
+                select="node()[not(self::text()[normalize-space() = ''])]">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>

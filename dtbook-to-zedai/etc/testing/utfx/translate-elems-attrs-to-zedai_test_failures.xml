@@ -35,6 +35,30 @@
     </utfx:test>
 
     <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Head dc:publisher</utfx:name>
+        <!-- blank @about in meta for mods records because that filename is a parameter -->
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <head>
+                    <meta name="dc:publisher" content=""/>
+                </head>
+            </utfx:source>
+            <utfx:expected>
+                <head>
+                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+                        <meta property="z3998:name" content="book"/>
+                        <meta property="z3998:version" content="1.0"/>
+                    </meta>
+                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+                    <meta property="dc:identifier" content="CANNOT TEST"/>
+                    <meta property="dc:publisher" content="Anonymous" />
+                    <meta property="dc:date">CANNOT TEST</meta>
+                </head>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+    <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Frontmatter</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
