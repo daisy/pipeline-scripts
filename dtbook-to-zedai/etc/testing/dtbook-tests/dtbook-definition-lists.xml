@@ -62,7 +62,7 @@
 
                 <p>Difficult use cases:</p>
 
-                <img src="abc.jpg" alt="abc" id="image1"/>
+                <img src="image.jpg" alt="abc" id="image1"/>
                 <dl>
                     <dd>
                         DD

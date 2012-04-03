@@ -438,14 +438,14 @@
             </xsl:choose>
         </xsl:if>
         
-        <!-- move @summary into a caption -->
+        <!-- move @summary into an annotation -->
         <xsl:if test="@summary">
             <xsl:choose>
                 <xsl:when test="@id">
-                    <caption ref="{@id}"><xsl:value-of select="@summary"/></caption>
+                    <annotation ref="{@id}"><xsl:value-of select="@summary"/></annotation>
                 </xsl:when>
                 <xsl:otherwise>
-                    <caption ref="{$tableID}"><xsl:value-of select="@summary"/></caption>
+                    <annotation ref="{$tableID}"><xsl:value-of select="@summary"/></annotation>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>

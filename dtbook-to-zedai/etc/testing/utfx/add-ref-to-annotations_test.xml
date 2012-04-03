@@ -17,7 +17,8 @@
             </utfx:source>
             <utfx:expected>
                 <z:section xml:id="sec1">
-                    <z:annotation ref="sec1">Annotation</z:annotation>        
+                    <z:annotation ref="sec1">Annotation</z:annotation>
+                    <z:annotation role="production">Please review annotations and their targets (@ref). Source document contained one or more annotations with no explicit references.</z:annotation>
                 </z:section>
             </utfx:expected>
         </utfx:assert-equal>

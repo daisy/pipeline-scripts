@@ -7,9 +7,19 @@
     <xsl:output indent="yes" method="xml"/>
     
     <xsl:template match="//z:annotation[not(@ref)]">
+        <xsl:message>Annotations without @ref will be attached to their nearest section parent element.</xsl:message>
         <xsl:copy>
             <xsl:attribute name="ref" select="ancestor::z:section/@xml:id"/>
             <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="//z:section[1]">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+            <z:annotation role="production">
+                Please review annotations and their targets (@ref). Source document contained one or more annotations with no explicit references.
+            </z:annotation>
         </xsl:copy>
     </xsl:template>
     
