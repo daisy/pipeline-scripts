@@ -74,17 +74,25 @@
             </meta>
             <meta rel="z3998:rdfa-context"
                 resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+            
+            <!-- this dummy identifier value will be filled in by an external step -->
             <meta property="dc:identifier" content="@@"/>
             
-            <xsl:variable name="dcPublisher" select="dtb:meta[lower-case(@name)='dc:publisher']/@content"/>
-            <meta property="dc:publisher" content="{if (string-length($dcPublisher) &gt; 0) then $dcPublisher else 'Anonymous'}"/>
+            <!-- 
+                note that the translation of existing dtbook to zedai metadata, 
+                including using a pre-existing value for dc:publisher, 
+                happens in a different step.
+                This just ensures a value for dc:publisher if there is none present in the source doc
+            -->
+            <xsl:if test="string-length(normalize-space(dtb:meta[lower-case(@name)='dc:publisher']/@content)) = 0">
+                <meta property="dc:publisher" content="Anonymous"/>    
+            </xsl:if>
             
+            <!-- use the current date -->
             <meta property="dc:date">
-                <xsl:value-of
-                    select="format-dateTime(
+                <xsl:attribute name="content" select="format-dateTime(
                     adjust-dateTime-to-timezone(current-dateTime(),xs:dayTimeDuration('PT0H')),
-                    '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"
-                />
+                    '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"/>
             </meta>
         </head>
 
@@ -420,6 +428,17 @@
     <xsl:template match="dtb:blockquote|dtb:q">
         <quote>
             <xsl:call-template name="attrs"/>
+            <xsl:if test="@cite">
+                <xsl:choose>
+                    <!-- for internal references, use @ref; otherwise use @xlink:ref -->
+                    <xsl:when test="starts-with(@cite, '#')">
+                        <xsl:attribute name="ref" select="substring(@cite, 2)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:href" select="@cite"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
             <xsl:apply-templates/>
         </quote>
     </xsl:template>

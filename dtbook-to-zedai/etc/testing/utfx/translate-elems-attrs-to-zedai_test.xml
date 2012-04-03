@@ -471,17 +471,16 @@
         <utfx:name>Translate-DTBook2ZedAI: Quotes </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <blockquote/>
-                <q/>
+                <blockquote cite="#the-ref"/>
+                <q cite="http://example.org/page#ref"/>
             </utfx:source>
             <utfx:expected>
-                <quote/>
-                <quote/>
+                <quote ref="the-ref"/>
+                <quote xlink:href="http://example.org/page#ref"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-
-
+    
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -533,10 +532,9 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <table id="table4" summary="the summary"/>
-                    
             </utfx:source>
             <utfx:expected>
-                <caption ref="table4">the summary</caption>
+                <annotation ref="table4">the summary</annotation>
                 <table xml:id="table4"/>
             </utfx:expected>
         </utfx:assert-equal>
@@ -552,7 +550,7 @@
             </utfx:source>
             <utfx:expected>
                 <caption ref="table5">This is a lovely <span>Caption!</span></caption>
-                <caption ref="table5">the summary</caption>
+                <annotation ref="table5">the summary</annotation>
                 <table xml:id="table5"/>
             </utfx:expected>
         </utfx:assert-equal>
@@ -705,7 +703,7 @@
                 <address/>
             </utfx:source>
             <utfx:expected>
-                <block/>
+                <address/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

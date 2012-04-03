@@ -19,13 +19,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <!-- discard these attributes -->
-    <xsl:template match="@tmp:height"/>
-    <xsl:template match="@tmp:width"/>
-    <xsl:template match="@tmp:border"/>
-    <xsl:template match="@tmp:cellspacing"/>
-    <xsl:template match="@tmp:cellpadding"/>
-    <xsl:template match="@tmp:align"/>
-    <xsl:template match="@tmp:valign"/>
+    <!-- discard tmp: attributes, which were used to hold css data prior to extraction -->
+    <xsl:template match="@tmp:*"/>
     
 </xsl:stylesheet>

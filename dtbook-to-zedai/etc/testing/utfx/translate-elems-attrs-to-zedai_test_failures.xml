@@ -25,38 +25,14 @@
                         <meta property="z3998:version" content="1.0"/>
                     </meta>
                     <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
-                    <meta property="dc:identifier" content="CANNOT TEST"/>
-                    <meta property="dc:publisher" content="Anonymous" />
+                    <meta property="dc:identifier" content="@@"/>
+                    <meta property="dc:publisher" content="Anonymous"/>
                     <meta property="dc:date">CANNOT TEST</meta>
-                    
                 </head>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
 
-    <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: Head dc:publisher</utfx:name>
-        <!-- blank @about in meta for mods records because that filename is a parameter -->
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
-                <head>
-                    <meta name="dc:publisher" content=""/>
-                </head>
-            </utfx:source>
-            <utfx:expected>
-                <head>
-                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
-                        <meta property="z3998:name" content="book"/>
-                        <meta property="z3998:version" content="1.0"/>
-                    </meta>
-                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
-                    <meta property="dc:identifier" content="CANNOT TEST"/>
-                    <meta property="dc:publisher" content="Anonymous" />
-                    <meta property="dc:date">CANNOT TEST</meta>
-                </head>
-            </utfx:expected>
-        </utfx:assert-equal>
-    </utfx:test>
     
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Frontmatter</utfx:name>
@@ -78,46 +54,6 @@
         </utfx:assert-equal>
     </utfx:test>
     
-    <utfx:test>
-        <utfx:name>Translate-DTBook2ZedAI: Meta</utfx:name>
-        <!-- blank @about in meta for mods records because that filename is a parameter -->
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
-                <head>
-                    <meta name="dc:Title" content="A"/>
-                    <meta name="dc:Identifier" content="B"/>
-                    <meta name="dc:Creator" content="C"/>
-                    <meta name="dc:Date" content="D"/>
-                    <meta name="dc:Publisher" content="E"/>
-                    <meta name="dc:Language" content="F"/>
-                    <meta name="dc:Subject" content="G"/>
-                    <meta name="dc:Description" content="H"/>
-                    <meta name="dc:Contributor" content="I"/>
-                    <meta name="dc:Type" content="J"/>
-                    <meta name="dc:Format" content="K"/>
-                    <meta name="dc:Source" content="L"/>
-                    <meta name="dc:Relation" content="M"/>
-                    <meta name="dc:Coverage" content="N"/>
-                    <meta name="dc:Rights" content="O"/>
-                    <meta name="dtb:revisionDescription" content="P"/>
-                </head>
-            </utfx:source>
-            <!-- remember that all metadata ends up in an external MODs file-->
-            <utfx:expected>
-                <head>
-                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
-                        <meta property="z3998:name" content="book"/>
-                        <meta property="z3998:version" content="1.0"/>
-                    </meta>
-                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
-                    <meta property="dc:identifier" content="CANNOT TEST"/>
-                    <meta property="dc:publisher" content="E" />
-                    <meta property="dc:date">CANNOT TEST</meta>
-                </head>
-            </utfx:expected>
-        </utfx:assert-equal>
-    </utfx:test>
-
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: levels #1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
