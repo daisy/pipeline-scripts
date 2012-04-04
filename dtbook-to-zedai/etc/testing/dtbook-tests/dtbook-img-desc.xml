@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dtbook PUBLIC "-//NISO//DTD dtbook 2005-3//EN" "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd">
+<?xml-stylesheet href="dtbookbasic.css" type="text/css"?>
+<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-3" xml:lang="en-US">
+    <head>
+        <meta content="pipeline2-dtbook-test-20110301-imggroups" name="dtb:uid"/>
+        <meta content="Pipeline 2 DTBook Test Content: Image Groups" name="dc:Title"/>
+        <meta name="dc:Creator" content="Marisa D."/>
+        <meta content="2011-03-01" name="dc:Date"/>
+        <meta name="dc:Publisher" content="Marisa D."/>
+        <meta content="pipeline2-dtbook-test-20110301-imggroups" name="dc:Identifier"/>
+        <meta content="en-US" name="dc:Language"/>
+    </head>
+    <book>
+        <frontmatter>
+            <doctitle>Pipeline 2 DTBook Test Content: Images and descriptions</doctitle>
+            <docauthor>Marisa D.</docauthor>
+        </frontmatter>
+        <bodymatter>
+            <level1 id="d1e39">
+                <h1>A. hello</h1>
+                <img src="image.jpg" alt="first"/>
+                <img src="image.jpg" alt="second" longdesc="#imgdesc"/>
+                <prodnote id="imgdesc" render="required">
+                    <p>This is a description of the image</p>
+                </prodnote>
+                <prodnote id="random-prodnote" render="required">
+                    <p>This is a floating prodnote</p>
+                </prodnote>
+            </level1>
+                        
+        </bodymatter>
+    </book>
+</dtbook>

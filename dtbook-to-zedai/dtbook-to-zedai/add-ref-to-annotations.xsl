@@ -14,12 +14,14 @@
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
-
-    <xsl:template match="//z:section[1]">
+    
+    <!-- we know that, in our converted documents, frontmatter always contains a section -->
+    <xsl:template match="//z:frontmatter/z:section[1]">
+        <xsl:param name="firstSection"/>
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
             <xsl:if test="//z:annotation[not(@ref)]">
-                <annotation role="production"> Please review annotations and their targets (@ref).
+                <annotation xmlns="http://www.daisy.org/ns/z3998/authoring/" role="production"> Please review annotations and their targets (@ref).
                     Source document contained one or more annotations with no explicit references.
                 </annotation>
             </xsl:if>

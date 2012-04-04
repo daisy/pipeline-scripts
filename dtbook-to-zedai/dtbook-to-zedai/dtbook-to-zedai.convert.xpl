@@ -502,7 +502,7 @@
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <cx:message message="Validating ZedAI"/>
-    <p:validate-with-relax-ng name="validate-zedai" assert-valid="true">
+    <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
         <p:input port="schema">
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>

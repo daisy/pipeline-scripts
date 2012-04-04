@@ -349,32 +349,35 @@
     </xsl:template>
 
     <xsl:template match="dtb:prodnote">
-
-        <xsl:choose>
-            <xsl:when test="@imgref">
-                <xsl:call-template name="createAnnotation">
-                    <xsl:with-param name="byValue" select="'republisher'"/>
-                    <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="parent::dtb:imggroup">
-                        <!-- get the id of the image in the imggroup and use it as a ref -->
-                        <xsl:call-template name="createAnnotation">
-                            <xsl:with-param name="byValue" select="'republisher'"/>
-                            <xsl:with-param name="refValue" select="../dtb:img/@id"/>
-                        </xsl:call-template>
-                    </xsl:when>
-
-                    <xsl:otherwise>
-                        <xsl:call-template name="createAnnotation">
-                            <xsl:with-param name="byValue" select="'republisher'"/>
-                        </xsl:call-template>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:otherwise>
-        </xsl:choose>
+        <!-- make sure no img@longdesc references this prodnote; in that case, we deal with it elsewhere -->
+        <xsl:variable name="prodnoteID" select="@id"/>
+        <xsl:if test="not(//dtb:img[replace(@longdesc, '#', '')=$prodnoteID])">
+            <xsl:choose>
+                <xsl:when test="@imgref">
+                    <xsl:call-template name="createAnnotation">
+                        <xsl:with-param name="byValue" select="'republisher'"/>
+                        <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="parent::dtb:imggroup">
+                            <!-- get the id of the image in the imggroup and use it as a ref -->
+                            <xsl:call-template name="createAnnotation">
+                                <xsl:with-param name="byValue" select="'republisher'"/>
+                                <xsl:with-param name="refValue" select="../dtb:img/@id"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        
+                        <xsl:otherwise>
+                            <xsl:call-template name="createAnnotation">
+                                <xsl:with-param name="byValue" select="'republisher'"/>
+                            </xsl:call-template>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>    
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="dtb:sidebar">
