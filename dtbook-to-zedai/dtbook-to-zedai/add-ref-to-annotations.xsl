@@ -11,7 +11,7 @@
             element.</xsl:message>
         <xsl:copy>
             <xsl:attribute name="ref" select="ancestor::z:section/@xml:id"/>
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
     

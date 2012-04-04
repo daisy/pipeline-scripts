@@ -13,13 +13,13 @@
     
     <!-- identity template -->
     <xsl:template match="@*|node()">
-        <xsl:message>Removing temporary styling attributes.</xsl:message>
+        <xsl:message>Removing temporary attributes.</xsl:message>
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
     
     <!-- discard tmp: attributes, which were used to hold css data prior to extraction -->
-    <xsl:template match="@tmp:*"/>
+    <!--<xsl:template match="@tmp:*"/>-->
     
 </xsl:stylesheet>

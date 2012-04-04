@@ -374,6 +374,19 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Prodnote #2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <prodnote id="pn1">PRODNOTE</prodnote>
+            </utfx:source>
+            <utfx:expected>
+                <annotation xml:id="pn1" by="republisher">PRODNOTE</annotation>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Image group with prodnote</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">

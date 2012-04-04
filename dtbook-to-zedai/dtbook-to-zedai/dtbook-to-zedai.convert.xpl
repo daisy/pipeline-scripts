@@ -387,14 +387,14 @@
 
 
     <!-- this step should remove the 'tmp' prefix (it is no longer needed after this point) but it doesn't! -->
-    <p:documentation>Strip the visual property (CSS) attributes from the ZedAI
+    <p:documentation>Strip temporary attributes from the ZedAI
         document.</p:documentation>
     <p:xslt name="remove-css-attributes">
         <p:input port="parameters">
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="remove-css-attributes.xsl"/>
+            <p:document href="remove-tmp-attributes.xsl"/>
         </p:input>
         <p:input port="source">
             <p:pipe step="add-css-reference" port="result"/>

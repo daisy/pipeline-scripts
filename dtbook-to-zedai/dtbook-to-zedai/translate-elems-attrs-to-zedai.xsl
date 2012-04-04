@@ -5,6 +5,7 @@
     xmlns:rend="http://www.daisy.org/ns/z3998/authoring/features/rend/"
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    xmlns:d="http://www.daisy.org/ns/z3998/authoring/features/description/"
     xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="xs dtb">
 
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
@@ -74,25 +75,28 @@
             </meta>
             <meta rel="z3998:rdfa-context"
                 resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
-            
+
             <!-- this dummy identifier value will be filled in by an external step -->
             <meta property="dc:identifier" content="@@"/>
-            
+
             <!-- 
                 note that the translation of existing dtbook to zedai metadata, 
                 including using a pre-existing value for dc:publisher, 
                 happens in a different step.
                 This just ensures a value for dc:publisher if there is none present in the source doc
             -->
-            <xsl:if test="string-length(normalize-space(dtb:meta[lower-case(@name)='dc:publisher']/@content)) = 0">
-                <meta property="dc:publisher" content="Anonymous"/>    
+            <xsl:if
+                test="string-length(normalize-space(dtb:meta[lower-case(@name)='dc:publisher']/@content)) = 0">
+                <meta property="dc:publisher" content="Anonymous"/>
             </xsl:if>
-            
+
             <!-- use the current date -->
             <meta property="dc:date">
-                <xsl:attribute name="content" select="format-dateTime(
+                <xsl:attribute name="content"
+                    select="format-dateTime(
                     adjust-dateTime-to-timezone(current-dateTime(),xs:dayTimeDuration('PT0H')),
-                    '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"/>
+                    '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"
+                />
             </meta>
         </head>
 
@@ -242,10 +246,6 @@
 
         <!-- generate an ID in case we need it -->
         <xsl:variable name="imgID" select="generate-id()"/>
-
-        <!-- dtb @longdesc is a URI which resolves to a prodnote elsewhere the book -->
-        <!-- zedai does not currently have a description equivalent to @alt/@longdesc, 
-            however, it's an issue under consideration in the zedai group -->
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>
@@ -258,22 +258,32 @@
                 <xsl:attribute name="tmp:width" select="@width"/>
             </xsl:if>
 
+            
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="$imgID"/>
             </xsl:if>
-            <description>
-                <xsl:choose>
-                    <xsl:when test="not(@id)">
-                        <xsl:attribute name="ref" select="$imgID"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="ref" select="@id"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <xsl:value-of select="@alt"/>
-            </description>
+            <xsl:choose>
+                <!-- when we're using longdesc, just point to it with @desc.
+                    the value in @alt will be copied as the diagram markup is created.-->
+                <xsl:when test="@longdesc">
+                    <xsl:attribute name="desc" select="replace(@longdesc, '#', '')"/>
+                </xsl:when>
+                <!-- if there's no longdesc, then use zedai's description element for the alt text -->
+                <xsl:otherwise>
+                    <description>
+                        <xsl:choose>
+                            <xsl:when test="not(@id)">
+                                <xsl:attribute name="ref" select="$imgID"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="ref" select="@id"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:value-of select="@alt"/>
+                    </description>
+                </xsl:otherwise>
+            </xsl:choose>
         </object>
-
     </xsl:template>
 
     <xsl:template match="dtb:imggroup">
@@ -329,6 +339,8 @@
         <xsl:param name="byValue"/>
         <xsl:param name="refValue"/>
         <annotation>
+            <xsl:call-template name="attrs"/>
+
             <xsl:if test="$byValue">
                 <xsl:attribute name="by" select="$byValue"/>
             </xsl:if>
@@ -339,46 +351,64 @@
 
             <!-- at this point, annotations could still be "floating', i.e. not anchored to anything.  this will get fixed in another step.  -->
 
-            <xsl:call-template name="attrs"/>
+
             <xsl:apply-templates/>
         </annotation>
     </xsl:template>
 
+    <!-- these elements were dtb:annotation elements but they were sorted into block and phrase variants in a separate step. -->
     <xsl:template match="tmp:annotation-block | tmp:annotation-phrase">
         <xsl:call-template name="createAnnotation"/>
     </xsl:template>
 
     <xsl:template match="dtb:prodnote">
-        <!-- make sure no img@longdesc references this prodnote; in that case, we deal with it elsewhere -->
-        <xsl:variable name="prodnoteID" select="@id"/>
-        <xsl:if test="not(//dtb:img[replace(@longdesc, '#', '')=$prodnoteID])">
-            <xsl:choose>
-                <xsl:when test="@imgref">
-                    <xsl:call-template name="createAnnotation">
-                        <xsl:with-param name="byValue" select="'republisher'"/>
-                        <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="parent::dtb:imggroup">
-                            <!-- get the id of the image in the imggroup and use it as a ref -->
-                            <xsl:call-template name="createAnnotation">
-                                <xsl:with-param name="byValue" select="'republisher'"/>
-                                <xsl:with-param name="refValue" select="../dtb:img/@id"/>
-                            </xsl:call-template>
-                        </xsl:when>
-                        
-                        <xsl:otherwise>
-                            <xsl:call-template name="createAnnotation">
-                                <xsl:with-param name="byValue" select="'republisher'"/>
-                            </xsl:call-template>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:otherwise>
-            </xsl:choose>    
-        </xsl:if>
+        <xsl:variable name="prodnoteIDRef" select="concat('#', @id)"/>
+        <xsl:choose>
+            <!-- when the prodnote is a longdesc, create a DIAGRAM longdesc element -->
+            <xsl:when test="//dtb:img[@longdesc=$prodnoteIDRef]">
+                <d:description xml:id="{@id}">
+                    <d:body>
+                        <d:summary>
+                            <xsl:value-of select="//dtb:img[@longdesc=$prodnoteIDRef]/@alt"/>
+                        </d:summary>
+                        <d:longdesc>
+                            <xsl:attribute name="by" select="'republisher'"/>
+                            <xsl:apply-templates/>
+                        </d:longdesc>
+                    </d:body>
+                </d:description>
+            </xsl:when>
+            
+            <!-- when the prodnote is not a longdesc (perhaps more common), create an annotation -->
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="@imgref">
+                        <xsl:call-template name="createAnnotation">
+                            <xsl:with-param name="byValue" select="'republisher'"/>
+                            <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="parent::dtb:imggroup">
+                                <!-- get the id of the image in the imggroup and use it as a ref -->
+                                <xsl:call-template name="createAnnotation">
+                                    <xsl:with-param name="byValue" select="'republisher'"/>
+                                    <xsl:with-param name="refValue" select="../dtb:img/@id"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="createAnnotation">
+                                    <xsl:with-param name="byValue" select="'republisher'"/>
+                                </xsl:call-template>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
+
 
     <xsl:template match="dtb:sidebar">
         <aside role="sidebar">
