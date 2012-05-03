@@ -219,7 +219,7 @@
     <p:delete match="html:ol[normalize-space(string-join(self::*//text(),''))='' or not(html:li)]"/>
     <p:delete match="html:nav[not(@epub:type='toc') and normalize-space(string-join(self::*//text(),''))='']"/>
     <p:identity name="result-without-xml-base"/>
-
+    
     <p:store name="store" indent="true">
         <p:with-option name="href" select="concat($publication-dir,'navigation.xhtml')"/>
     </p:store>

@@ -205,16 +205,17 @@
                         <p:identity/>
                     </p:otherwise>
                 </p:choose>
-                <p:add-attribute match="/*" name="mediaoverlay-iterate.mediaoverlay" attribute-name="xml:base">
+                <p:add-attribute match="/*" attribute-name="xml:base">
                     <p:with-option name="attribute-value" select="$result-uri"/>
                 </p:add-attribute>
-                <p:delete match="//@xml:base"/>
                 <p:viewport match="//mo:text">
                     <p:add-attribute match="/*" attribute-name="src">
                         <p:with-option name="attribute-value" select="replace(/*/@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
                     </p:add-attribute>
                 </p:viewport>
                 <pxi:fix-textrefs/>
+                <p:identity name="mediaoverlay-iterate.mediaoverlay"/>
+                <p:delete match="//@xml:base"/>
                 <p:store indent="true" name="mediaoverlay-iterate.store-mediaoverlay">
                     <p:with-option name="href" select="$result-uri"/>
                 </p:store>
