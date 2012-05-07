@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis Table Registry">
+    <implementation class="org.liblouis.LiblouisTableRegistry"/>
+    <reference bind="addTableSet"
+        unbind="removeTableSet"
+        interface="org.liblouis.LiblouisTableSet"
+        cardinality="0..n"
+        name="LiblouisTableSet"
+        policy="dynamic"/>
+</scr:component>

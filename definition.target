@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Restored Target" sequenceNumber="9">
+<locations>
+<location path="${workspace_loc}/../../daisy-pipeline/daisy.pipeline.site/target/site" type="Directory"/>
+<location path="${workspace_loc}/../../daisy-pipeline.modules/daisy.pipeline.modules.site/target/site" type="Directory"/>
+<location path="${workspace_loc}/../../daisy-pipeline/repo" type="Directory"/>
+<location path="${workspace_loc}/../../daisy-pipeline/daisy.pipeline.frontend.site/target/site" type="Directory"/>
+<location path="${workspace_loc}/repo" type="Directory"/>
+<location path="${workspace_loc}/brailleutils-calabash/target" type="Directory"/>
+<location path="${workspace_loc}/liblouis-core/target" type="Directory"/>
+<location path="${workspace_loc}/liblouis-saxon/target" type="Directory"/>
+<location path="${workspace_loc}/liblouis-tables/target" type="Directory"/>
+<location path="${workspace_loc}/liblouis-tables-sbs/target" type="Directory"/>
+<location path="${workspace_loc}/liblouisxml-calabash/target" type="Directory"/>
+<location path="${workspace_loc}/zedai-to-pef/target" type="Directory"/>
+</locations>
+<environment>
+<os>macosx</os>
+<ws>cocoa</ws>
+<arch>x86_64</arch>
+<nl>en_US</nl>
+</environment>
+<launcherArgs>
+<vmArgs>org.osgi.framework.system.packages=sun.misc</vmArgs>
+<programArgs>org.osgi.framework.system.packages=sun.misc</programArgs>
+</launcherArgs>
+</target>

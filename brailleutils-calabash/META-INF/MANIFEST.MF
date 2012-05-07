@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Braille Utils Calabash Atomic Steps
+Bundle-SymbolicName: org.daisy.pipeline.modules.brailleutils-calabash
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.apache.aries.spifly.dynamic.bundle
+Import-Package: com.xmlcalabash.core;version="0.9.34",
+ com.xmlcalabash.io;version="0.9.34",
+ com.xmlcalabash.library;version="0.9.34",
+ com.xmlcalabash.model;version="0.9.34",
+ com.xmlcalabash.runtime;version="0.9.34",
+ com.xmlcalabash.util;version="0.9.34",
+ net.sf.saxon.s9api;version="9.2.1.5",
+ org.daisy.braille.pef,
+ org.daisy.braille.table,
+ org.daisy.common.xproc.calabash,
+ org.daisy.factory
+Service-Component: OSGI-INF/emboss-pef.xml,
+ OSGI-INF/pef-to-text.xml,
+ OSGI-INF/text-to-pef.xml,
+ OSGI-INF/validate-pef.xml
+Export-Package: org.daisy.common.xproc.calabash.steps.brailleutils
