@@ -11,14 +11,14 @@
     <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
         <p:documentation>
             <xd:short>source</xd:short>
-            <xd:detail>Path to input ZedAI.</xd:detail>
+            <xd:detail>Input ZedAI.</xd:detail>
         </p:documentation>
     </p:input>
 
     <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>output-dir</xd:short>
-            <xd:detail>Path to output directory for the EPUB.</xd:detail>
+            <xd:detail>Output directory for the EPUB.</xd:detail>
         </p:documentation>
     </p:option>
 

@@ -17,8 +17,7 @@
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation>
             <xd:short>DTBook file(s)</xd:short>
-            <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a
-                merge will be performed.</xd:detail>
+            <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
         </p:documentation>
     </p:input>
 
@@ -32,8 +31,7 @@
     <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>Output directory</xd:short>
-            <xd:detail>file: URI to the output directory where both temp-files and the resulting
-                EPUB3 publication is stored.</xd:detail>
+            <xd:detail>Directory where both temp-files and the resulting EPUB3 publication is stored.</xd:detail>
         </p:documentation>
     </p:option>
 

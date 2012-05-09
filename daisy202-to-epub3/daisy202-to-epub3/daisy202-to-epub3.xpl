@@ -31,27 +31,27 @@
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
         <p:documentation>
             <xd:short>href</xd:short>
-            <xd:detail>The URI to the input NCC.</xd:detail>
+            <xd:detail>Input NCC.</xd:detail>
             <xd:example>file:/home/user/daisy202/ncc.html</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
         <p:documentation>
             <xd:short>output</xd:short>
-            <xd:detail>The URI to the output directory for the EPUB.</xd:detail>
+            <xd:detail>Output directory for the EPUB.</xd:detail>
             <xd:example>file:/home/user/epub3/</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
             <xd:short>mediaoverlay</xd:short>
-            <xd:detail>Whether or not to include media overlays and associated audio files.</xd:detail>
+            <xd:detail>Whether or not to include media overlays and associated audio files (true or false).</xd:detail>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
         <p:documentation>
             <xd:short>compatibility-mode</xd:short>
-            <xd:detail>Whether or not to include NCX-file, OPF guide element and ASCII filenames.</xd:detail>
+            <xd:detail>Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</xd:detail>
         </p:documentation>
     </p:option>
 
