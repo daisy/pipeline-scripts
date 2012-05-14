@@ -16,6 +16,24 @@
     <p:import href="xml2brl.xpl"/>
     <p:import href="create-liblouisxml-files.xpl"/>
     
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-list-item.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-border.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
     <p:xslt name="create-automatic-styles">
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-automatic-styles.xsl"/>

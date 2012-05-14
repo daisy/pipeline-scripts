@@ -61,11 +61,27 @@
         </p:xslt>
     </p:for-each>
     
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="create-liblouisxml-files" port="source"/>
+        </p:input>
+    </p:identity>
+    
+    <p:xslt name="borders-sem">
+        <p:input port="stylesheet">
+            <p:document href="../xslt/create-borders-sem-file.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
     <p:split-sequence test="/lblxml:config-file" name="split-liblouisxml-files">
         <p:input port="source">
             <p:pipe step="default-sem" port="result"/>
             <p:pipe step="styles-cfg" port="result"/>
             <p:pipe step="styles-sem" port="result"/>
+            <p:pipe step="borders-sem" port="result"/>
         </p:input>
     </p:split-sequence>
     
