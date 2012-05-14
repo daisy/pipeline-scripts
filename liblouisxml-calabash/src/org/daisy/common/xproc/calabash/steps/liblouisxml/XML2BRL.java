@@ -44,9 +44,11 @@ public class XML2BRL extends DefaultStep {
 	/**
 	 * Creates a new instance of Identity
 	 */
-	public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL canonicalFile) {
+	//public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL canonicalFile) {
+	public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL iniFile) {
 		super(runtime, step);
-		this.canonicalFile = canonicalFile;
+		//this.canonicalFile = canonicalFile;
+		this.iniFile = iniFile;
 	}
 
 	@Override

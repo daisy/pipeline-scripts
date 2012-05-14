@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Identity Liblouis Tables" activate="start">
-    <implementation class="org.daisy.common.xproc.calabash.steps.liblouisxml.IdentityLiblouisTableSet"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Identity Liblouis Tables">
+    <implementation class="org.liblouis.LiblouisTableSet"/>
     <service>
         <provide interface="org.liblouis.LiblouisTableSet"/>
     </service>
+    <property name="identifier" type="String"
+        value="org.daisy.common.xproc.calabash.steps.liblouisxml.IdentityLiblouisTableSet"/>
+    <property name="directory" type="String" value="/tables"/>
 </scr:component>
+
+
+
+
