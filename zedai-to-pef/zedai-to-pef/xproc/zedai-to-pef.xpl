@@ -4,8 +4,8 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
-    xmlns:cxl="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    xmlns:cxb="http://xmlcalabash.com/ns/extensions/brailleutils"
+    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:brlutls="http://xmlcalabash.com/ns/extensions/brailleutils"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
     <p:documentation xd:target="parent">
@@ -33,8 +33,8 @@
     <!-- <p:option name="pef-rows"/> -->
     <!-- <p:option name="pef-columns"/> -->
     
-    <p:import href="http://www.daisy.org/pipeline/modules/liblouisxml-calabash/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/liblouisxml-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/xproc/library.xpl"/>
     
     <p:variable name="input-uri" select="base-uri(/)"/>
     
@@ -126,21 +126,21 @@
         
         <!-- format braille html with liblouisxml -->
         
-        <cxl:format-braille name="liblouisxml">
+        <lblxml:xml2brl name="liblouisxml">
             <p:input port="source">
                 <p:pipe port="result" step="liblouis"/>
             </p:input>
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
-        </cxl:format-braille>
+        </lblxml:xml2brl>
         
         <!-- convert to pef with brailleutils -->
         
-        <cxb:text-to-pef name="text-to-pef">
+        <brlutls:text2pef name="text-to-pef">
             <p:input port="source">
                 <p:pipe step="liblouisxml" port="result"/>
             </p:input>
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
-        </cxb:text-to-pef>
+        </brlutls:text2pef>
         
         <!-- store -->
         

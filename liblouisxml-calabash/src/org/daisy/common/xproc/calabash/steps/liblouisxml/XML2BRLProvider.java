@@ -14,13 +14,13 @@ import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 
-public class FormatBrailleProvider implements XProcStepProvider {
+public class XML2BRLProvider implements XProcStepProvider {
 
 	private File configPath = null;
 
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new FormatBraille(runtime, step, configPath);
+		return new XML2BRL(runtime, step, configPath);
 	}
 
 	public void start(ComponentContext context) {

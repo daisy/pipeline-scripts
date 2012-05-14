@@ -16,8 +16,8 @@ Import-Package: com.xmlcalabash.core;version="0.9.34",
  org.daisy.braille.table,
  org.daisy.common.xproc.calabash,
  org.daisy.factory
-Service-Component: OSGI-INF/emboss-pef.xml,
- OSGI-INF/pef-to-text.xml,
- OSGI-INF/text-to-pef.xml,
- OSGI-INF/validate-pef.xml
+Service-Component: OSGI-INF/emboss.xml,
+ OSGI-INF/pef2text.xml,
+ OSGI-INF/text2pef.xml,
+ OSGI-INF/validate.xml
 Export-Package: org.daisy.common.xproc.calabash.steps.brailleutils

@@ -20,10 +20,10 @@ import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
-public class FormatBraille extends DefaultStep {
+public class XML2BRL extends DefaultStep {
 
-	private static final QName cxl_formatted_braille
-		= new QName("cxl", "http://xmlcalabash.com/ns/extensions/liblouisxml", "formatted_braille");
+	private static final QName lblxml_formatted_braille
+		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "formatted-braille-file");
 	private static final QName _temp_dir = new QName("temp-dir");
 
 	private final File configPath;
@@ -36,7 +36,7 @@ public class FormatBraille extends DefaultStep {
 	/**
 	 * Creates a new instance of Identity
 	 */
-	public FormatBraille(XProcRuntime runtime, XAtomicStep step, File configPath) {
+	public XML2BRL(XProcRuntime runtime, XAtomicStep step, File configPath) {
 		super(runtime, step);
 		this.configPath = configPath;
 	}
@@ -88,7 +88,7 @@ public class FormatBraille extends DefaultStep {
 			// and wrap it in a new XML document
 			TreeWriter treeWriter = new TreeWriter(runtime);
 			treeWriter.startDocument(step.getNode().getBaseURI());
-			treeWriter.addStartElement(cxl_formatted_braille);
+			treeWriter.addStartElement(lblxml_formatted_braille);
 			treeWriter.startContent();
 			treeWriter.addText(new String(buffer, "UTF-8"));
 			treeWriter.addEndElement();

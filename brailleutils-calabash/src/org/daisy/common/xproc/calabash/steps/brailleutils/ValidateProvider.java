@@ -13,23 +13,23 @@ import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 
-public class EmbossPEFProvider implements XProcStepProvider {
+public class ValidateProvider implements XProcStepProvider {
 
 	private static final QName _message = new QName("", "message");
 
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new EmbossStep(runtime, step);
+		return new ValidatePEFStep(runtime, step);
 	}
 
-	private class EmbossStep extends DefaultStep {
+	private class ValidatePEFStep extends DefaultStep {
 		private ReadablePipe source = null;
 		private WritablePipe result = null;
 
 		/**
 		 * Creates a new instance of Identity
 		 */
-		public EmbossStep(XProcRuntime runtime, XAtomicStep step) {
+		public ValidatePEFStep(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
 
