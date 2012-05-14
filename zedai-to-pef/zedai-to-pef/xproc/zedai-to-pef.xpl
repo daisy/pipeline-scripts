@@ -96,14 +96,14 @@
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:variable>
         
-        <!-- zedai to html -->
+        <!-- flatten some elements -->
         
-        <p:xslt name="zedai-to-html">
+        <p:xslt>
             <p:input port="source">
                 <p:pipe port="source" step="zedai-to-pef"/>
             </p:input>
             <p:input port="stylesheet">
-                <p:document href="http://www.daisy.org/pipeline/modules/zedai-to-html/xslt/zedai-to-html.xsl"/>
+                <p:document href="../xslt/flatten.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -112,42 +112,41 @@
         
         <!-- translate text nodes with liblouis -->
         
-        <p:xslt name="liblouis">
-            <p:input port="source">
-                <p:pipe port="result" step="zedai-to-html"/>
-            </p:input>
+        <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="../xslt/translate-to-braille.xsl"/>
+                <p:document href="../xslt/translate.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
         </p:xslt>
         
-        <!-- format braille html with liblouisxml -->
+        <!-- add styling -->
         
-        <lblxml:xml2brl name="liblouisxml">
-            <p:input port="source">
-                <p:pipe port="result" step="liblouis"/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/add-styling.xsl"/>
             </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        
+        <!-- format with liblouisxml -->
+        
+        <lblxml:format>
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
-        </lblxml:xml2brl>
+        </lblxml:format>
         
         <!-- convert to pef with brailleutils -->
         
         <brlutls:text2pef name="text-to-pef">
-            <p:input port="source">
-                <p:pipe step="liblouisxml" port="result"/>
-            </p:input>
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
         </brlutls:text2pef>
         
         <!-- store -->
         
         <p:store indent="true" encoding="utf-8">
-            <p:input port="source">
-                <p:pipe step="text-to-pef" port="result"/>
-            </p:input>
             <p:with-option name="href" select="$output-uri"/>
         </p:store>
         

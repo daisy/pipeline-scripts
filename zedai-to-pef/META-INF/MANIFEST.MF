@@ -4,10 +4,10 @@ Bundle-Name: ZedAI to PEF
 Bundle-SymbolicName: org.daisy.pipeline.modules.zedai-to-pef
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DAISY Consortium
-Require-Bundle: org.daisy.pipeline.modules.zedai-to-html,
- org.daisy.pipeline.modules.file-utils,
+Require-Bundle: org.daisy.pipeline.modules.file-utils,
  org.daisy.pipeline.modules.brailleutils-calabash,
  org.daisy.pipeline.modules.liblouis-saxon,
- org.daisy.pipeline.modules.liblouisxml-calabash
+ org.daisy.pipeline.modules.liblouisxml-calabash,
+ org.daisy.pipeline.modules.braille-formatting-utils
 Import-Package: org.daisy.pipeline.script
 Service-Component: OSGI-INF/zedai-to-pef.xml
