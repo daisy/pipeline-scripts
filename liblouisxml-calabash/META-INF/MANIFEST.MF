@@ -4,6 +4,7 @@ Bundle-Name: Liblouisxml Calabash Atomic Step
 Bundle-SymbolicName: org.daisy.pipeline.modules.liblouisxml-calabash
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.daisy.pipeline.modules.braille-formatting-utils
 Import-Package: com.xmlcalabash.core;version="0.9.34",
  com.xmlcalabash.io;version="0.9.34",
  com.xmlcalabash.library;version="0.9.34",

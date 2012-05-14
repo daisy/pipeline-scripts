@@ -17,16 +17,19 @@ public class Liblouisxml {
 	 * @param otherSettings (or null): key/value pairs
 	 * @param input: an existing file
 	 * @param output: path to the output file
-	 * @param configPath: a directory that must contain canonical.cfg + all files listed in configFiles and semanticFiles
+	 * @param configPath (or null): - a directory that must contain canonical.cfg
+	 *                                  & all files listed in configFiles and semanticFiles
+	 * 								- can be relative to tempDir
+	 * 								- if configPath is null, . (tempDir) is used
 	 * @param tablePath: LOUIS_TABLEPATH
 	 * @param tempDir
 	 * @throws Exception
 	 */
 
 	public static void xml2brl(
-			String[] configFiles,
-			String[] semanticFiles,
-			String[] tables,
+			List<String> configFiles,
+			List<String> semanticFiles,
+			List<String> tables,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
@@ -38,7 +41,7 @@ public class Liblouisxml {
 
         command.add(Activator.getNativePath() + File.separator + "xml2brl");
         command.add("-f");
-        command.add(configPath.getAbsolutePath() + File.separator +
+        command.add((configPath != null ? configPath.getAbsolutePath() : ".") + File.separator +
         		(configFiles != null ? StringUtils.join(configFiles, ",") : ""));
 
         Map<String,String> settings = new HashMap<String,String>();

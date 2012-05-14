@@ -5,4 +5,5 @@
     <nextCatalog catalog="./brailleutils-calabash/META-INF/catalog.xml"/>
     <nextCatalog catalog="./liblouisxml-calabash/META-INF/catalog.xml"/>
     <nextCatalog catalog="./zedai-to-pef/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/braille-formatting-utils/META-INF/catalog.xml"/>
 </catalog>

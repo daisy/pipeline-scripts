@@ -15,6 +15,7 @@
 <location path="${workspace_loc}/liblouis-tables-sbs/target" type="Directory"/>
 <location path="${workspace_loc}/liblouisxml-calabash/target" type="Directory"/>
 <location path="${workspace_loc}/zedai-to-pef/target" type="Directory"/>
+<location path="${workspace_loc}/utilities/braille-formatting-utils/target" type="Directory"/>
 </locations>
 <environment>
 <os>macosx</os>
