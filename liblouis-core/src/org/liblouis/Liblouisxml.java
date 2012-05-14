@@ -17,7 +17,7 @@ public class Liblouisxml {
 	 * @param otherSettings (or null): key/value pairs
 	 * @param input: an existing file
 	 * @param output: path to the output file
-	 * @param configPath (or null): - a directory that must contain canonical.cfg
+	 * @param configPath (or null): - a directory that must contain canonical.cfg (liblouisutdml.ini)
 	 *                                  & all files listed in configFiles and semanticFiles
 	 * 								- can be relative to tempDir
 	 * 								- if configPath is null, . (tempDir) is used
@@ -39,7 +39,8 @@ public class Liblouisxml {
 
         List<String> command = new ArrayList<String>();
 
-        command.add(Activator.getNativePath() + File.separator + "xml2brl");
+        //command.add(Activator.getNativePath() + File.separator + "xml2brl");
+        command.add(Activator.getNativePath() + File.separator + "file2brl");
         command.add("-f");
         command.add((configPath != null ? configPath.getAbsolutePath() : ".") + File.separator +
         		(configFiles != null ? StringUtils.join(configFiles, ",") : ""));

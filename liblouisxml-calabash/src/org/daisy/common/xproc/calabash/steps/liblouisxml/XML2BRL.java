@@ -33,7 +33,8 @@ public class XML2BRL extends DefaultStep {
 		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "formatted-braille-file");
 	private static final QName _temp_dir = new QName("temp-dir");
 
-	private final URL canonicalFile;
+	//private final URL canonicalFile;
+	private final URL iniFile;
 	private final String[] tables = new String[]{"nabcc.dis", "braille-patterns.cti", "pagenum.cti"};
 	private ReadablePipe source = null;
 	private ReadablePipe configFiles = null;
@@ -43,11 +44,9 @@ public class XML2BRL extends DefaultStep {
 	/**
 	 * Creates a new instance of Identity
 	 */
-	//public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL canonicalFile) {
-	public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL iniFile) {
+	public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL canonicalFile) {
 		super(runtime, step);
-		//this.canonicalFile = canonicalFile;
-		this.iniFile = iniFile;
+		this.canonicalFile = canonicalFile;
 	}
 
 	@Override
@@ -139,12 +138,16 @@ public class XML2BRL extends DefaultStep {
 		}
 	}
 
-	private void unpackCanonicalFile(File toDir) throws Exception {
-		File to = new File(toDir.getAbsolutePath() + File.separator + "canonical.cfg");
+	//private void unpackCanonicalFile(File toDir) throws Exception {
+	private void unpackIniFile(File toDir) throws Exception {
+		//File to = new File(toDir.getAbsolutePath() + File.separator + "canonical.cfg");
+		File to = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
 		to.createNewFile();
 		FileOutputStream writer = new FileOutputStream(to);
-		canonicalFile.openConnection();
-		InputStream reader = canonicalFile.openStream();
+		//canonicalFile.openConnection();
+		iniFile.openConnection();
+		//InputStream reader = canonicalFile.openStream();
+		InputStream reader = iniFile.openStream();
 		byte[] buffer = new byte[153600];
 		int bytesRead = 0;
 		while ((bytesRead = reader.read(buffer)) > 0) {
