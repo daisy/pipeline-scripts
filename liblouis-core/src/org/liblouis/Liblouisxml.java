@@ -40,7 +40,8 @@ public class Liblouisxml {
         List<String> command = new ArrayList<String>();
 
         //command.add(Activator.getNativePath() + File.separator + "xml2brl");
-        command.add(Activator.getNativePath() + File.separator + "file2brl");
+        command.add(Activator.getNativePath() + File.separator + "file2brl"
+        				+ (OSUtils.isWindows() ? ".exe" : ""));
         command.add("-f");
         command.add((configPath != null ? configPath.getAbsolutePath() : ".") + File.separator +
         		(configFiles != null ? StringUtils.join(configFiles, ",") : ""));
