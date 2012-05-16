@@ -12,9 +12,9 @@
     <xsl:template match="*[local-name()='head']"/>
 
     <xsl:template match="*[local-name()='body']">
-            <xsl:if test="child::*[local-name()='span']">
+            <xsl:if test="child::*[local-name()='span' and starts-with(@class,'page-')]">
                     <ol>
-                        <xsl:for-each select="child::*[local-name()='span']">
+                        <xsl:for-each select="child::*[local-name()='span' and starts-with(@class,'page-')]">
                             <li>
                                 <a href="{child::*[local-name()='a'][1]/@href}">
                                     <xsl:if test="@id">

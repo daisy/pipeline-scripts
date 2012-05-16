@@ -5,8 +5,8 @@
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="@id and concat($doc-href,'#',@id)=/*/*[1]/descendant::html:nav[@epub:type='page-list']/descendant::html:a/@href">
-                <xsl:attribute name="epub:type" select="'pagebreak'"/>
-                <xsl:attribute name="title" select="."/>
+                <xsl:attribute name="epub:type" select="if (contains(@epub:type,'pagebreak')) then @epub:type else normalize-space(concat(@epub:type,' pagebreak'))"/>
+                <xsl:attribute name="title" select="normalize-space(.)"/>
             </xsl:if>
             <xsl:apply-templates select="node()"/>
         </xsl:copy>
