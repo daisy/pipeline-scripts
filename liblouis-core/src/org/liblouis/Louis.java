@@ -13,19 +13,19 @@ import com.sun.jna.ptr.IntByReference;
 /**
  * Copyright (C) 2010 Swiss Library for the Blind, Visually Impaired and Print
  * Disabled
- * 
+ *
  * This file is part of liblouis-javabindings.
- * 
+ *
  * liblouis-javabindings is free software: you can redistribute it
  * and/or modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
@@ -33,11 +33,13 @@ import com.sun.jna.ptr.IntByReference;
 
 public class Louis {
 
+	private static final String TABLE_SET_ID = "org.liblouis.DefaultLiblouisTableSet";
+
 	private static final int OUT_IN_RATIO = 2;
 	private static final char TXT_SOFT_HYPHEN = '\u00AD';
 	private static final char BRL_SOFT_HYPHEN = 't';
 	private static final String BRL_HARD_HYPHEN = "-m";
-	
+
 	private final int charSize;
 	private final String encoding;
 	private final LouisLibrary INSTANCE;
@@ -48,7 +50,7 @@ public class Louis {
 	 * public interface that calls Liblouis translate. As a workaround for a bug
 	 * in LibLouis, we squeeze all whitespace into a single space before calling
 	 * liblouis translate.
-	 * 
+	 *
 	 * @param trantab
 	 * @param inbuf
 	 * @return
@@ -71,6 +73,8 @@ public class Louis {
 
 	private Louis() {
 		NativeLibrary.addSearchPath("louis", Activator.getNativePath().getAbsolutePath());
+		Environment.setVariable("LOUIS_TABLEPATH",
+				LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), true);
 		INSTANCE = (LouisLibrary) Native.loadLibrary(("louis"),
 				LouisLibrary.class);
 		charSize = INSTANCE.lou_charSize();
@@ -134,7 +138,7 @@ public class Louis {
 					// Don't hyphenate the text when an exception occurs (because of liblouis bug in outputPos).
 				}
 			}
-			return outbuf;			
+			return outbuf;
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Encoding not supported by JVM:" + encoding);
 		}
@@ -147,7 +151,7 @@ public class Louis {
 	public static String squeeze(final String in) {
 		return in.replaceAll("(?:\\p{Z}|\\s)+", " ");
 	}
-	
+
 	private static boolean[] convertHyphenPos(boolean[] inHyphenPos, int[] inPosToOutPosMap) {
 		boolean[] outHyphenPos = new boolean[inPosToOutPosMap.length - 1];
 		try {
@@ -178,14 +182,14 @@ public class Louis {
 				final byte[] inbuf, final IntByReference inlen,
 				final byte[] outbuf, final IntByReference outlen,
 				final byte[] typeform, final byte[] spacing, final int mode);
-		
+
 		public int lou_translate(final String trantab,
 				final byte[] inbuf, final IntByReference inlen,
 				final byte[] outbuf, final IntByReference outlen,
-				final byte[] typeform, final byte[] spacing, 
+				final byte[] typeform, final byte[] spacing,
 				final int[] outposPos, final int[] inposPos, final IntByReference cursorpos,
 				final int mode);
-		
+
 		public int lou_charSize();
 
 		public String lou_version();
