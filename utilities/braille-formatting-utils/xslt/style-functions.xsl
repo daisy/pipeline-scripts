@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs brl"
     version="2.0">
     
     <xsl:variable name="property-names" as="xs:string*"
@@ -100,6 +100,21 @@
         </xsl:choose>
     </xsl:function>
     
+    <xsl:function name="brl:get-property-or-inherited" as="xs:string?">
+        <xsl:param name="element" as="element()"/>
+        <xsl:param name="property-name" as="xs:string"/>
+        <xsl:variable name="value"
+            select="brl:get-property-or-default(string($element/@brl:style), $property-name)"/>
+        <xsl:choose>
+            <xsl:when test="$value='inherit' and $element/parent::*">
+                <xsl:sequence select="brl:get-property-or-inherited($element/parent::*, $property-name)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="$value" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+    
     <xsl:function name="brl:override-style" as="xs:string">
         <xsl:param name="base-style"/>
         <xsl:param name="override-with-style"/>
@@ -113,7 +128,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="base-value"
-                            select="brl:get-property($base-style, ., ())" as="xs:string?"/>/>
+                            select="brl:get-property($base-style, ., ())" as="xs:string?"/>
                         <xsl:if test="$base-value">
                             <xsl:sequence select="concat(.,':',$base-value)"/>
                         </xsl:if>

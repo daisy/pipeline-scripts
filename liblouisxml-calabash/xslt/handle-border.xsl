@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    exclude-result-prefixes="xs"
+    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    exclude-result-prefixes="xs brl lblxml"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -24,7 +25,7 @@
         <xsl:variable name="border-bottom" as="xs:string"
             select="brl:get-property-or-default($style, 'border-bottom')"/>
         <xsl:choose>
-            <xsl:when test="($display='block' or $display='list-item') and
+            <xsl:when test="($display='block' or $display='list-item' or $display='toc') and
                             ($border-top!='none' or $border-bottom!='none')">
                 <xsl:variable name="padding-top" as="xs:string"
                     select="brl:get-property-or-default($style, 'padding-top')"/>
@@ -32,24 +33,28 @@
                     select="brl:get-property-or-default($style, 'padding-bottom')"/>
                 <div>
                     <xsl:attribute name="brl:style"
-                        select="brl:override-style($style, 'padding-top:0;padding-bottom:0')"/>
+                        select="brl:override-style($style, 'display:block;
+                                                            padding-top:0;
+                                                            padding-bottom:0;
+                                                            border-top:none;
+                                                            border-bottom:none')"/>
                     <xsl:if test="$border-top!='none'">
-                        <brl:border>
+                        <lblxml:border>
                             <xsl:attribute name="style" select="$border-top"/>
-                        </brl:border>
+                        </lblxml:border>
                     </xsl:if>
                     <xsl:copy>
                         <xsl:apply-templates select="@*"/>
                         <xsl:attribute name="brl:style"
-                            select="concat('display:block;
-                                            margin-top:', $padding-top, ';',
+                            select="concat('display:', $display, ';',
+                                           'margin-top:', $padding-top, ';',
                                            'margin-bottom:', $padding-bottom)"/>
                         <xsl:apply-templates select="node()"/>
                     </xsl:copy>
                     <xsl:if test="$border-bottom!='none'">
-                        <brl:border>
+                        <lblxml:border>
                             <xsl:attribute name="style" select="$border-bottom"/>
-                        </brl:border>
+                        </lblxml:border>
                     </xsl:if>
                 </div>
             </xsl:when>

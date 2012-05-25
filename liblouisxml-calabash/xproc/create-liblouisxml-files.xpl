@@ -9,11 +9,15 @@
     <p:input port="styles" sequence="true"/>
     
     <p:output port="config" sequence="true" primary="true">
-        <p:pipe step="split-liblouisxml-files" port="matched"/>
+        <p:pipe step="styles-cfg" port="result"/>
+        <p:pipe step="misc-cfg" port="result"/>
     </p:output>
     
     <p:output port="semantic" sequence="true">
-        <p:pipe step="split-liblouisxml-files" port="not-matched"/>
+        <p:pipe step="default-sem" port="result"/>
+        <p:pipe step="styles-sem" port="result"/>
+        <p:pipe step="borders-sem" port="result"/>
+        <p:pipe step="misc-sem" port="result"/>
     </p:output>
     
     <p:xslt name="default-sem">
@@ -25,49 +29,34 @@
         </p:input>
     </p:xslt>
     
-    <p:identity>
+    <p:xslt name="styles-cfg">
         <p:input port="source">
             <p:pipe step="create-liblouisxml-files" port="styles"/>
         </p:input>
-    </p:identity>
-    
-    <p:for-each name="styles-cfg">
-        <p:output port="result"/>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/create-styles-cfg-file.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-    </p:for-each>
-    
-    <p:identity>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/create-styles-cfg-file.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+
+    <p:xslt name="styles-sem">
         <p:input port="source">
             <p:pipe step="create-liblouisxml-files" port="styles"/>
         </p:input>
-    </p:identity>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/create-styles-sem-file.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
     
-    <p:for-each name="styles-sem">
-        <p:output port="result"/>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/create-styles-sem-file.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-    </p:for-each>
-    
-    <p:identity>
+    <p:xslt name="borders-sem">
         <p:input port="source">
             <p:pipe step="create-liblouisxml-files" port="source"/>
         </p:input>
-    </p:identity>
-    
-    <p:xslt name="borders-sem">
         <p:input port="stylesheet">
             <p:document href="../xslt/create-borders-sem-file.xsl"/>
         </p:input>
@@ -76,13 +65,30 @@
         </p:input>
     </p:xslt>
     
-    <p:split-sequence test="/lblxml:config-file" name="split-liblouisxml-files">
+    <p:identity name="misc-cfg">
         <p:input port="source">
-            <p:pipe step="default-sem" port="result"/>
-            <p:pipe step="styles-cfg" port="result"/>
-            <p:pipe step="styles-sem" port="result"/>
-            <p:pipe step="borders-sem" port="result"/>
+            <p:inline><lblxml:config-file>
+style toc
+    braillePageNumberFormat blank
+
+style preformatted-line
+    leftMargin 0
+    rightMargin 0
+    firstLineIndent 0
+    format leftJustified
+    skipNumberLines yes
+            </lblxml:config-file></p:inline>
         </p:input>
-    </p:split-sequence>
+    </p:identity>
+    
+    <p:identity name="misc-sem">
+        <p:input port="source">
+            <p:inline><lblxml:semantic-file>
+toc &amp;xpath(//lblxml:toc[not(preceding::*)])
+skip &amp;xpath(//lblxml:toc[preceding::*])
+preformatted-line &amp;xpath(//lblxml:preformatted//lblxml:line)
+            </lblxml:semantic-file></p:inline>
+        </p:input>
+    </p:identity>
     
 </p:declare-step>

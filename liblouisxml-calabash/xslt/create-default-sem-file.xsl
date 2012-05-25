@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs lblxml"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
@@ -20,7 +19,10 @@
             select="distinct-values($element-names)"/>
         
         <lblxml:semantic-file>
-            <xsl:text>namespaces brl=http://www.daisy.org/ns/pipeline/braille&#xa;</xsl:text>
+            
+            <xsl:text>namespaces </xsl:text>
+            <xsl:text>brl=http://www.daisy.org/ns/pipeline/braille,</xsl:text>
+            <xsl:text>lblxml=http://xmlcalabash.com/ns/extensions/liblouisxml&#xa;</xsl:text>
             <xsl:text>document </xsl:text>
             <xsl:value-of select="$root-element-name"/>
             <xsl:text>&#xa;</xsl:text>

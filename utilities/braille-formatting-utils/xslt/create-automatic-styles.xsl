@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs brl my"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -11,12 +11,12 @@
     
     <xsl:include href="style-functions.xsl" />
    
-    <xsl:key name="style-string" match="//*[@brl:style and not(starts-with(@brl:style,'#'))]" use="string(@brl:style)"/>
+    <xsl:key name="style-string" match="//*[@brl:style]" use="string(@brl:style)"/>
    
     <xsl:template match="/">
         <xsl:result-document href="automatic-styles.xml" format="automatic-styles-output">
             <brl:styles>
-                <xsl:for-each select="//*[@brl:style and not(starts-with(@brl:style,'#'))]">
+                <xsl:for-each select="//*[@brl:style]">
                     <xsl:variable name="style-string" select="string(@brl:style)"/>
                     <xsl:variable name="style-name" select="my:generate-style-name(.)"/>
                     <xsl:if test="$style-name=my:generate-style-name(key('style-string', $style-string)[1])">
@@ -34,7 +34,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="@brl:style[not(starts-with(.,'#'))]">
+    <xsl:template match="@brl:style">
         <xsl:variable name="style-string" select="string(.)"/>
         <xsl:attribute name="brl:style" select="concat('#', my:generate-style-name(key('style-string', $style-string)[1]))"/>
     </xsl:template>

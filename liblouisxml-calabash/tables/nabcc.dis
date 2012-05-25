@@ -1,5 +1,7 @@
 # This file will produce 8 dot NABCC output.
 
+display \x0020 a
+
 display \x0020 0
 display \x0061 1
 display \x0031 2
