@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs brl lblxml"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
@@ -15,13 +15,13 @@
         <lblxml:semantic-file>
             
             <xsl:variable name="border-styles" as="xs:string*">
-                <xsl:for-each select="//brl:border/@style">
+                <xsl:for-each select="//lblxml:border/@style">
                     <xsl:sequence select="string(.)"/>
                 </xsl:for-each>
             </xsl:variable>
             
             <xsl:for-each select="distinct-values($border-styles)">
-                <xsl:text>boxline &amp;xpath(//brl:border[@style='</xsl:text>
+                <xsl:text>boxline &amp;xpath(//lblxml:border[@style='</xsl:text>
                 <xsl:value-of select="."/>
                 <xsl:text>']) </xsl:text>
                 <xsl:value-of select="brl:unicode-braille-to-nabcc(.)"/>

@@ -29,26 +29,32 @@ import com.xmlcalabash.util.TreeWriter;
 
 public class XML2BRL extends DefaultStep {
 
-	private static final QName lblxml_formatted_braille
-		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "formatted-braille-file");
+	private static final QName lblxml_output
+		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "output");
+	private static final QName lblxml_section
+		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "section");
+	//private static final QName lblxml_page
+	//	= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "page");
+
 	private static final QName _temp_dir = new QName("temp-dir");
 
-	//private final URL canonicalFile;
-	private final URL iniFile;
-	private final String[] tables = new String[]{"nabcc.dis", "braille-patterns.cti", "pagenum.cti"};
+	private static URL iniFile;
+	private static final String[] tables = new String[]{"nabcc.dis", "braille-patterns.cti", "pagenum.cti"};
+
+	public static void setIniFile(URL iniFile) {
+		XML2BRL.iniFile = iniFile;
+	}
+
 	private ReadablePipe source = null;
 	private ReadablePipe configFiles = null;
 	private ReadablePipe semanticFiles = null;
 	private WritablePipe result = null;
 
 	/**
-	 * Creates a new instance of Identity
+	 * Creates a new instance of XML2BRL
 	 */
-	//public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL canonicalFile) {
-	public XML2BRL(XProcRuntime runtime, XAtomicStep step, URL iniFile) {
+	public XML2BRL(XProcRuntime runtime, XAtomicStep step) {
 		super(runtime, step);
-		//this.canonicalFile = canonicalFile;
-		this.iniFile = iniFile;
 	}
 
 	@Override
@@ -70,6 +76,8 @@ public class XML2BRL extends DefaultStep {
 	@Override
 	public void reset() {
 		source.resetReader();
+		configFiles.resetReader();
+		semanticFiles.resetReader();
 		result.resetWriter();
 	}
 
@@ -83,7 +91,6 @@ public class XML2BRL extends DefaultStep {
 
 			// Write config files
 			List<String> configFileNames = new ArrayList<String>();
-			//unpackCanonicalFile(tempDir);
 			unpackIniFile(tempDir);
 			configFileNames.add("canonical.cfg");
 			if (configFiles != null) {
@@ -111,27 +118,49 @@ public class XML2BRL extends DefaultStep {
 			serializer.serializeNode(xml);
 			serializer.close();
 
+			File bodyTempFile = new File(tempDir + File.separator + "lbx_body.temp");
+			bodyTempFile.delete();
+
 			// Convert using xml2brl
 			File textFile = File.createTempFile("liblouisxml.", ".txt", tempDir);
 			Liblouisxml.xml2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, textFile, null,
 					LiblouisTableRegistry.getLouisTablePath(), tempDir);
 			//xmlFile.delete();
 
-			// Read the text document...
+			// Read the text document and wrap it in a new XML document
+			long totalLength = textFile.length();
+			long bodyLength = bodyTempFile.exists() ? bodyTempFile.length() : totalLength;
+			long frontLength = totalLength - bodyLength;
 			InputStream textStream = new FileInputStream(textFile);
-			byte[] buffer = new byte[(int)textFile.length()];
-			textStream.read(buffer);
-			textStream.close();
-			//textFile.delete();
+			byte[] buffer;
 
-			// and wrap it in a new XML document
 			TreeWriter treeWriter = new TreeWriter(runtime);
 			treeWriter.startDocument(step.getNode().getBaseURI());
-			treeWriter.addStartElement(lblxml_formatted_braille);
+			treeWriter.addStartElement(lblxml_output);
 			treeWriter.startContent();
-			treeWriter.addText(new String(buffer, "UTF-8"));
+			if (frontLength > 0) {
+				treeWriter.addStartElement(lblxml_section);
+				treeWriter.startContent();
+				buffer = new byte[(int)frontLength];
+				textStream.read(buffer);
+				treeWriter.addText(new String(buffer, "UTF-8"));
+				treeWriter.addEndElement();
+				treeWriter.addStartElement(lblxml_section);
+				treeWriter.startContent();
+				buffer = new byte[(int)bodyLength];
+				textStream.read(buffer);
+				treeWriter.addText(new String(buffer, "UTF-8"));
+				treeWriter.addEndElement();
+			} else {
+				buffer = new byte[(int)totalLength];
+				textStream.read(buffer);
+				treeWriter.addText(new String(buffer, "UTF-8"));
+			}
 			treeWriter.addEndElement();
 			treeWriter.endDocument();
+
+			textStream.close();
+			//textFile.delete();
 
 			result.write(treeWriter.getResult());
 
@@ -140,15 +169,11 @@ public class XML2BRL extends DefaultStep {
 		}
 	}
 
-	//private void unpackCanonicalFile(File toDir) throws Exception {
-	private void unpackIniFile(File toDir) throws Exception {
-		//File to = new File(toDir.getAbsolutePath() + File.separator + "canonical.cfg");
+	private static void unpackIniFile(File toDir) throws Exception {
 		File to = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
 		to.createNewFile();
 		FileOutputStream writer = new FileOutputStream(to);
-		//canonicalFile.openConnection();
 		iniFile.openConnection();
-		//InputStream reader = canonicalFile.openStream();
 		InputStream reader = iniFile.openStream();
 		byte[] buffer = new byte[153600];
 		int bytesRead = 0;

@@ -90,7 +90,7 @@
             <p:pipe port="result" step="output-dir-uri"/>
         </p:variable>
         
-        <p:variable name="output-uri" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef')"/>
+        <p:variable name="output-uri" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef.xml')"/>
         
         <p:variable name="temp-dir-uri" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>

@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs brl my"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -17,9 +17,8 @@
     </xsl:template>
     
     <xsl:template match="*[contains(string(@brl:style), 'list-item')]">
-        <xsl:variable name="style" as="xs:string" select="string(@brl:style)"/>
         <xsl:variable name="display" as="xs:string"
-            select="brl:get-property-or-default($style, 'display')"/>
+            select="brl:get-property-or-default(string(@brl:style), 'display')"/>
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="$display='list-item'">
@@ -38,23 +37,7 @@
     
     <xsl:function name="my:get-list-style-type" as="xs:string">
         <xsl:param name="element" as="element()"/>
-        <xsl:variable name="list-style-type"
-            select="brl:get-property-or-default(string($element/@brl:style), 'list-style-type')"/>
-        <xsl:choose>
-            <xsl:when test="$list-style-type='inherit'">
-                <xsl:choose>
-                    <xsl:when test="$element/parent::*">
-                        <xsl:sequence select="my:get-list-style-type($element/parent::*)"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="'none'"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="$list-style-type" />
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:sequence select="brl:get-property-or-inherited($element, 'list-style-type')"/>
     </xsl:function>
     
 </xsl:stylesheet>

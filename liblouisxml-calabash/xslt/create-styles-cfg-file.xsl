@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-result-prefixes="xs"
+    exclude-result-prefixes="xs brl lblxml"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
@@ -15,13 +15,48 @@
     <xsl:variable name="POSITIVE_NUMBER" select="'^[1-9][0-9]*$'"/>
 
     <xsl:template match="/">
+        <xsl:call-template name="create-config-file">
+            <xsl:with-param name="display-values" select="('block', 'list-item', 'toc')"/>
+        </xsl:call-template>
+    </xsl:template>
+
+    <xsl:template name="create-config-file">
+        
+        <xsl:param name="display-values" as="xs:string*"/>
+        <xsl:param name="toc-title-style" as="xs:string" select="''"/>
+        <xsl:param name="toc-item-styles" as="xs:string*"/>
         
         <lblxml:config-file>
             <xsl:for-each select="//brl:style">
+                
                 <xsl:variable name="display" as="xs:string" select="brl:get-property-or-default(.,'display')"/>
-                <xsl:if test="$display='block' or $display='list-item'">
+                <xsl:variable name="style-name" as="xs:string?">
+                    <xsl:if test="index-of($display-values, $display)">
+                        <xsl:choose>
+                            <xsl:when test="$display='toc-title'">
+                                <xsl:if test="concat('#', @name)=$toc-title-style">
+                                    <xsl:sequence select="'contentsheader'"/>
+                                </xsl:if>
+                            </xsl:when>
+                            <xsl:when test="$display='toc-item'">
+                                <xsl:variable name="index" select="index-of($toc-item-styles, concat('#', @name))" as="xs:integer?"/>
+                                <xsl:if test="$index">
+                                    <xsl:if test="$index &gt; 0 and $index &lt;= 10">
+                                        <xsl:sequence select="concat('contents', $index)"/>
+                                    </xsl:if>
+                                </xsl:if>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="string(@name)"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                </xsl:variable>
+                
+                <xsl:if test="$style-name">
+                    
                     <xsl:text>style </xsl:text>
-                    <xsl:value-of select="@name"/>
+                    <xsl:sequence select="$style-name"/>
                     <xsl:text>&#xa;</xsl:text>
                     
                     <xsl:variable name="text-align" as="xs:string" select="brl:get-property-or-default(.,'text-align')"/>
@@ -41,6 +76,9 @@
                     
                     <xsl:variable name="format" as="xs:string?">
                         <xsl:choose>
+                            <xsl:when test="$display='toc-item'">
+                                <xsl:value-of select="'contents'"/>
+                            </xsl:when>
                             <xsl:when test="$text-align='left'">
                                 <xsl:value-of select="'leftJustified'"/>
                             </xsl:when>
@@ -128,6 +166,7 @@
                     </xsl:if>
                     
                     <xsl:text>&#xa;</xsl:text>
+                    
                 </xsl:if>
             </xsl:for-each>
         </lblxml:config-file>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
-	xmlns:my="http://github.com/bertfrees">
+	xmlns:my="http://github.com/bertfrees"
+	exclude-result-prefixes="xs z my">
 	
 	<xsl:output method="xml" encoding="utf-8" indent="yes" />
 	
@@ -25,7 +25,7 @@
 		<xsl:apply-templates mode="flatten"/>
 	</xsl:template>
 	
-	<xsl:template match="text()" mode="flatten">
+	<xsl:template match="text()|@*" mode="flatten">
 		<xsl:copy/>
 	</xsl:template>
 	

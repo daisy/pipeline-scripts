@@ -118,13 +118,22 @@
             <toc>
                 <h>Contents</h>
                 <pagebreak value="IX"/>
+                
+                <entry><ref ref="chapter_1">I. Down the Rabbit-Hole</ref></entry>
+                <entry><ref ref="chapter_2">II. The Pool of Tears</ref></entry>
+                <entry><ref ref="chapter_3">III. A Caucus-Race and a Long Tale</ref></entry>
+                
+                <!--
                 <entry> I. Down the Rabbit-Hole <ref ref="p1">1</ref>
                 </entry>
                 <entry> II. The Pool of Tears <ref ref="p15">15</ref>
                 </entry>
                 <entry> III. A Caucus-Race and a Long Tale <ref ref="p29">29</ref>
                 </entry>
-                <!--     <d:tocentry><d:label>IV. The <name>Rabbit</name>Sends in a Little Bill</d:label>
+                -->
+                
+                <!--
+                <d:tocentry><d:label>IV. The <name>Rabbit</name>Sends in a Little Bill</d:label>
                     <d:pageref ref="p41">41</d:pageref>
                 </d:tocentry>
                 <d:tocentry><d:label>V. Advice from a Caterpillar</d:label>
@@ -160,7 +169,7 @@
                 <pagebreak value="1" xml:id="p1"/>
                 <object xml:id="img_2" src="images/alice02a.png" srctype="image/png"
                     >White Rabbit checking watch</object> 
-                <h>
+                <h xml:id="chapter_1">
                     <hpart>Chapter I.</hpart>                     
                     <hpart>Down the Rabbit-Hole</hpart>
                 </h>
@@ -357,7 +366,7 @@
             </section>
             <section>
                 <pagebreak value="15" xml:id="p15"/>
-                <h>CHAPTER II</h>
+                <h xml:id="chapter_2">CHAPTER II</h>
                 <p>The Pool of Tears</p>
                 <object xml:id="img_5" src="images/alice05a.png" srctype="image/png">
                     <p><name>Alice</name> stretched tall</p>
@@ -562,7 +571,7 @@
             </section>
             <section>
                 <pagebreak value="29" xml:id="p29"/>
-                <h>CHAPTER III</h>
+                <h xml:id="chapter_3">CHAPTER III</h>
                 <p>A Caucus-Race and a Long Tale</p>
                 <object xml:id="img_9" src="images/alice10a.png" srctype="image/png">
                     <p>Mouse telling story to birds and Alice</p>
