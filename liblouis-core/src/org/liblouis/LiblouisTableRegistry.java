@@ -34,6 +34,10 @@ public class LiblouisTableRegistry {
 		return StringUtils.join(paths, ",");
 	}
 
+	public static String getLouisTablePath(String id) {
+		return getLouisTablePath(new String[]{id});
+	}
+
 	public static String getLouisTablePath() {
 		List<String> paths = new ArrayList<String>();
 		for (LiblouisTableSet tableSet : registeredTableSets.values()) {

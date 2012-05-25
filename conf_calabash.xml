@@ -12,15 +12,15 @@
 <implementation type="px:zip" class-name="com.xmlcalabash.extensions.Zip"/>
 
 <implementation type="brlutls:emboss-pef"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.EmbossPEF"/>
+                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Emboss"/>
 <implementation type="brlutls:pef-to-text"
                 class-name="org.daisy.common.xproc.calabash.steps.brailleutils.PEF2Text"/>
 <implementation type="brlutls:text-to-pef"
                 class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Text2PEF"/>
 <implementation type="brlutls:validate-pef"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.ValidatePEF"/>
+                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Validate"/>
 
-<implementation type="lblxml:format-braille"
-                class-name="org.daisy.common.xproc.calabash.steps.liblouisxml.FormatBraille"/>
+<implementation type="lblxml:xml2brl"
+                class-name="org.daisy.common.xproc.calabash.steps.liblouisxml.XML2BRL"/>
 
 </xproc-config>

@@ -29,6 +29,9 @@ import com.xmlcalabash.util.TreeWriter;
 
 public class XML2BRL extends DefaultStep {
 
+	private static final String TABLE_SET_ID
+		= "org.daisy.common.xproc.calabash.steps.liblouisxml.IdentityLiblouisTableSet";
+
 	private static final QName lblxml_output
 		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "output");
 	private static final QName lblxml_section
@@ -124,7 +127,7 @@ public class XML2BRL extends DefaultStep {
 			// Convert using xml2brl
 			File textFile = File.createTempFile("liblouisxml.", ".txt", tempDir);
 			Liblouisxml.xml2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, textFile, null,
-					LiblouisTableRegistry.getLouisTablePath(), tempDir);
+					LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
 			//xmlFile.delete();
 
 			// Read the text document and wrap it in a new XML document
