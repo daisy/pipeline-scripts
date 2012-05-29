@@ -19,7 +19,7 @@
     <p:declare-step type="brlutls:text2pef">
         <p:input port="source" sequence="false" primary="true"/>
         <p:output port="result" sequence="false" primary="true"/>
-        <p:option name="temp-dir" required="true" px:type="anyDirURI"/>
+        <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
     </p:declare-step>
     
     <p:declare-step type="brlutls:validate">

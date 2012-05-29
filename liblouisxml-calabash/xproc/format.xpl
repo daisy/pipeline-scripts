@@ -5,8 +5,8 @@
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
     version="1.0">
     
-    <p:input port="source" sequence="false" primary="true"/>    
-    <p:option name="temp-dir" required="true" px:type="anyDirURI"/>    
+    <p:input port="source" sequence="false" primary="true"/>
+    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="create-liblouisxml-files.xpl"/>

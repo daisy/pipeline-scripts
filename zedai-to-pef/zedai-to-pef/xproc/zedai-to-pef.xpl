@@ -20,14 +20,14 @@
         </p:documentation>
     </p:input>
     
-    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
+    <p:option name="output-dir" required="true" px:output="result" px:sequence="false" px:type="anyDirURI">
         <p:documentation>
             <xd:short>output-dir</xd:short>
             <xd:detail>Path to output directory for the PEF.</xd:detail>
         </p:documentation>
     </p:option>
     
-    <p:option name="temp-dir" required="true" px:type="anyDirURI"/>
+    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
     
     <!-- <p:option name="liblouis-tables"/> -->
     <!-- <p:option name="pef-rows"/> -->

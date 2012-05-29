@@ -10,7 +10,7 @@
     <p:input port="toc-styles" sequence="false"/>
     <p:input port="config-files" sequence="true"/>
     <p:input port="semantic-files" sequence="true"/>
-    <p:option name="temp-dir" required="true" px:type="anyDirURI"/>    
+    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <!-- TODO: support multiple TOCs -->
