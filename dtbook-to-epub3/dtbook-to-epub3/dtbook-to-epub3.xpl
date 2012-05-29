@@ -5,7 +5,7 @@
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
     xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="#all">

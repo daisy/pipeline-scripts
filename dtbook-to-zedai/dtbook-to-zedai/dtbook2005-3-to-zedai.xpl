@@ -5,7 +5,7 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" exclude-inline-prefixes="cx cxo pxi p c xd">
+    exclude-inline-prefixes="cx cxo pxi p c">
 
     <p:documentation>
         Transforms DTBook 2005-3 XML into ZedAI XML. Part of the DTBook-to-ZedAI module.

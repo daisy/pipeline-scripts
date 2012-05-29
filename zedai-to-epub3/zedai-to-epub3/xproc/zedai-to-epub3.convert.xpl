@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" type="px:zedai-to-epub3-convert"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:zedai-to-epub3-convert"
     name="zedai-to-epub3.convert" exclude-inline-prefixes="#all" version="1.0">
 
-    <p:documentation xd:target="parent">
+    <p:documentation>
         Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.
     </p:documentation>
 

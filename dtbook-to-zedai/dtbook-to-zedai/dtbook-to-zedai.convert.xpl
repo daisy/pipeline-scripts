@@ -5,10 +5,10 @@
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="cx p c cxo px xd pxi z tmp">
+    exclude-inline-prefixes="cx p c cxo px pxi z tmp">
 
     <p:documentation>
         Transforms DTBook XML into ZedAI XML.

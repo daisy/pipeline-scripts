@@ -2,11 +2,11 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     type="px:zedai-to-epub3-store" name="zedai-to-epub3.store" exclude-inline-prefixes="#all"
     version="1.0">
 
-    <p:documentation xd:target="parent">
+    <p:documentation>
         Packages and stores an EPUB3 fileset to disk.
     </p:documentation>
 

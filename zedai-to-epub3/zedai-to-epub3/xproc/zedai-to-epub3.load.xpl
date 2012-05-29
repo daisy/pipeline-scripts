@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     type="px:zedai-to-epub3-load" exclude-inline-prefixes="#all" version="1.0">
 
-    <p:documentation xd:target="parent">Loads a ZedAI (DAISY 4 XML) fileset from disk.</p:documentation>
+    <p:documentation>Loads a ZedAI (DAISY 4 XML) fileset from disk.</p:documentation>
     <p:input port="source" primary="true" px:name="source"/>
     <p:output port="fileset.out" primary="true">
         <p:pipe port="result" step="fileset"/>
