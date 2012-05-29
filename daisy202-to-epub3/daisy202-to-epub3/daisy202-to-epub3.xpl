@@ -2,49 +2,41 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" version="1.0">
 
-    <p:pipeinfo>
-        <cd:converter name="daisy202-to-epub3" version="1.0" xmlns:cd="http://www.daisy.org/ns/pipeline/converter">
-            <cd:description>Transforms a DAISY 2.02 publication into an EPUB3 publication.</cd:description>
-            <cd:arg name="href" type="option" bind="href" desc="URI path to input NCC."/>
-            <cd:arg name="output" type="option" bind="output" desc="URI path to output directory for the EPUB."/>
-            <cd:arg name="mediaoverlay" type="option" bind="mediaoverlay" optional="true" desc="Whether or not to include media overlays and associated audio files."/>
-            <cd:arg name="compatibility-mode" type="option" bind="compatibility-mode" optional="true" desc="Whether or not to include NCX-file, OPF guide element and ASCII filenames."/>
-        </cd:converter>
-    </p:pipeinfo>
-
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DAISY 2.02 to EPUB3</h1>
         <p px:role="desc">Transforms a DAISY 2.02 publication into an EPUB3 publication.</p>
-        <div px:role="author maintainer">
-            <p px:role="name">Jostein Austvik Jacobsen</p>
-            <a px:role="contact" href="mailto:josteinaj@gmail.com"> josteinaj@gmail.com </a>
-            <p px:role="organization">NLB</p>
-        </div>
-        <p class="version">1.0</p>
-        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3"> http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</a>
+        <dl px:role="author maintainer">
+            <dt>Name:</dt>
+            <dd px:role="name">Jostein Austvik Jacobsen</dd>
+            <dt>E-mail:</dt>
+            <dd><a px:role="contact" href="mailto:josteinaj@gmail.com">josteinaj@gmail.com</a></dd>
+            <dt>Organization:</dt>
+            <dd px:role="organization">NLB</dd>
+        </dl>
+        <p>Homepage: <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3">http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</a>.</p>
     </p:documentation>
 
-    <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
+    <p:option name="href" required="true" px:type="anyFileURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">href</h2>
             <p px:role="desc">Input NCC.</p>
             <pre><code class="example">file:/home/user/daisy202/ncc.html</code></pre>
         </p:documentation>
     </p:option>
-    <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
+    <p:option name="output" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output</h2>
             <p px:role="desc">Output directory for the EPUB.</p>
             <pre><code class="example">file:/home/user/epub3/</code></pre>
         </p:documentation>
     </p:option>
-    <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
+    <p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">mediaoverlay</h2>
             <p px:role="desc">Whether or not to include media overlays and associated audio files (true or false).</p>
         </p:documentation>
     </p:option>
-    <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
+    <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">compatibility-mode</h2>
             <p px:role="desc">Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</p>
@@ -52,37 +44,37 @@
     </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Calabash extension steps.</p></p:documentation>
     </p:import>
     <p:import href="ncc.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For loading the NCC.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For loading the NCC.</p></p:documentation>
     </p:import>
     <p:import href="resolve-links.create-mapping.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For creating a map of all links in the SMIL files.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For creating a map of all links in the SMIL files.</p></p:documentation>
     </p:import>
     <p:import href="ncc-navigation.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For making a Navigation Document based on the NCC.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For making a Navigation Document based on the NCC.</p></p:documentation>
     </p:import>
     <p:import href="navigation.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For making a more complete Navigation Document based on all the Content Documents.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For making a more complete Navigation Document based on all the Content Documents.</p></p:documentation>
     </p:import>
     <p:import href="load-smil-flow.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For loading the SMIL flow.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For loading the SMIL flow.</p></p:documentation>
     </p:import>
     <p:import href="content.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For processing the content.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For processing the content.</p></p:documentation>
     </p:import>
     <p:import href="media-overlay.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For processing the SMILs.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For processing the SMILs.</p></p:documentation>
     </p:import>
     <p:import href="resources.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For processing auxiliary resources.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For processing auxiliary resources.</p></p:documentation>
     </p:import>
     <p:import href="package.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For making the package document.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For making the package document.</p></p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For putting it all into a ZIP container.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For putting it all into a ZIP container.</p></p:documentation>
     </p:import>
 
     <p:variable name="daisy-dir" select="replace($href,'[^/]+$','')"/>
@@ -162,27 +154,31 @@
     </p:choose>
     <p:sink/>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Load the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc name="ncc">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Load the DAISY 2.02 NCC.</p></p:documentation>
+        
         <p:with-option name="href" select="concat($daisy-dir,replace($href,'^.*/([^/]*)$','$1'))"/>
     </pxi:daisy202-to-epub3-ncc>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Load the SMIL-files.</p:documentation>
     <pxi:daisy202-to-epub3-load-smil-flow name="flow">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Load the SMIL-files.</p></p:documentation>
+        
         <p:input port="flow">
             <p:pipe port="flow" step="ncc"/>
         </p:input>
     </pxi:daisy202-to-epub3-load-smil-flow>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Make a map of all links from the SMIL files to the content files</p:documentation>
     <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Make a map of all links from the SMIL files to the content files</p></p:documentation>
+        
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="flow"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links-create-mapping>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Makes a Navigation Document directly from the DAISY 2.02 NCC.</p:documentation>
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Makes a Navigation Document directly from the DAISY 2.02 NCC.</p></p:documentation>
+        
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="ncc">
@@ -193,8 +189,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-ncc-navigation>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Convert and store the content files.</p:documentation>
     <pxi:daisy202-to-epub3-content name="content-without-full-navigation">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Convert and store the content files.</p></p:documentation>
+        
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -209,8 +206,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-content>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</p:documentation>
     <pxi:daisy202-to-epub3-navigation name="navigation">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Compile and store the EPUB 3 Navigation Document based on all the Content Documents (including the Navigation Document).</p></p:documentation>
+        
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
@@ -222,8 +220,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-navigation>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Convert and copy the content files and SMIL-files.</p:documentation>
     <pxi:daisy202-to-epub3-mediaoverlay name="mediaoverlay">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Convert and copy the content files and SMIL-files.</p></p:documentation>
+        
         <p:with-option name="include-mediaoverlay" select="$mediaoverlay"/>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
@@ -239,8 +238,9 @@
         </p:input>
     </pxi:daisy202-to-epub3-mediaoverlay>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Copy all referenced auxilliary resources (audio, stylesheets, images, etc.).</p:documentation>
     <pxi:daisy202-to-epub3-resources name="resources">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Copy all referenced auxilliary resources (audio, stylesheets, images, etc.).</p></p:documentation>
+        
         <p:input port="daisy-smil">
             <p:pipe port="daisy-smil" step="flow"/>
         </p:input>
@@ -252,8 +252,9 @@
     </pxi:daisy202-to-epub3-resources>
     <p:sink/>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Make and store the OPF.</p:documentation>
     <pxi:daisy202-to-epub3-package name="package">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Make and store the OPF.</p></p:documentation>
+        
         <p:input port="spine">
             <p:pipe port="manifest" step="content-without-full-navigation"/>
         </p:input>
@@ -282,8 +283,9 @@
     </pxi:daisy202-to-epub3-package>
     <p:sink/>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p:documentation>
     <p:group name="finalize">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Finalize the EPUB3 fileset (i.e. make it ready for zipping).</p></p:documentation>
+        
         <p:output port="result" primary="false">
             <p:pipe port="result" step="finalize.result"/>
         </p:output>
@@ -308,8 +310,9 @@
         <p:sink/>
     </p:group>
 
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Package the EPUB 3 fileset as a ZIP-file (OCF).</p:documentation>
     <px:epub3-ocf-zip name="zip">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Package the EPUB 3 fileset as a ZIP-file (OCF).</p></p:documentation>
+        
         <p:input port="source">
             <p:pipe port="result" step="finalize"/>
         </p:input>
