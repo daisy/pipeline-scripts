@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step"
-    type="pxi:daisy202-to-epub3-ncc-navigation" name="ncc-navigation" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" type="pxi:daisy202-to-epub3-ncc-navigation" name="ncc-navigation"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</xd:short>
+    <p:documentation>
+        <p px:role="desc">Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</p>
     </p:documentation>
 
     <p:input port="ncc">
-        <p:documentation>
-            <xd:short>The DAISY 2.02 NCC</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The DAISY 2.02 NCC</p>
+            <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">...</html>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="resolve-links-mapping">
-        <p:documentation>
-            <xd:short>A map of all the links in the SMIL files.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A map of all the links in the SMIL files.</p>
+            <pre><code class="example">
                 <di:mapping xmlns:di="http://www.daisy.org/ns/pipeline/tmp">
                     <di:smil xml:base="file:/home/user/a.smil">
                         <di:text par-id="fragment1" text-id="frg1" src="a.html#txt1"/>
@@ -29,39 +28,38 @@
                         <di:text par-id="fragment2" text-id="frg2" src="b.html#txt2"/>
                     </di:smil>
                 </di:mapping>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
 
     <p:output port="result" primary="false">
-        <p:documentation>
-            <xd:short>An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</xd:short>
-            <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
-                    original-base="file:/home/user/daisy202/ncc.html">...</html>
-            </xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</p>
+            <pre><code class="example">
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="ncc-navigation.result"/>
     </p:output>
 
     <p:option name="publication-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Publication directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="content-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Content directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Content directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/Content/</code></pre>
         </p:documentation>
     </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
     <p:import href="resolve-links.xpl">
-        <p:documentation>De-references links to SMIL-files.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">De-references links to SMIL-files.</p:documentation>
     </p:import>
 
     <p:variable name="subdir" select="substring-after($content-dir,$publication-dir)"/>

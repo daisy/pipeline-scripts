@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resources" name="resources" version="1.0">
+    xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resources" name="resources" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset, and return a manifest of all the resulting files.</xd:short>
+    <p:documentation>
+        <h1 px:role="desc">Copy the auxiliary resources from the DAISY 2.02 fileset to the EPUB 3 fileset, and return a manifest of all the resulting files.</h1>
     </p:documentation>
 
     <p:input port="daisy-smil" sequence="true">
-        <p:documentation>
-            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
-            <xd:example xmlns="">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The DAISY 2.02 SMIL-files.</p>
+            <pre><code class="example">
                 <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
                 <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
                 <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="daisy-content" sequence="true">
-        <p:documentation>
-            <xd:short>The EPUB3 Content Documents with @original-base annotated to reference the original DAISY 2.02 content files.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The EPUB3 Content Documents with @original-base annotated to reference the original DAISY 2.02 content files.</p>
+            <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:output port="manifest" primary="true">
-        <p:documentation>
-            <xd:short>A fileset with references to all the resources after copying (audio, images, etc.).</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset with references to all the resources after copying (audio, images, etc.).</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
                     <d:file xml:base="audio.mp3" media-type="audio/mpeg"/>
                     <d:file xml:base="image.jpg" media-type="image/jpeg"/>
                     <d:file xml:base="stylesheet.css" media-type="text/css"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:output>
 
     <p:option name="content-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Content directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Content directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/Content/</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="include-mediaoverlay-resources" required="true">
-        <p:documentation>
-            <xd:short>Whether or not to include audio files associated with media overlays. Can be either 'true' or 'false'.</xd:short>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">Whether or not to include audio files associated with media overlays. Can be either 'true' or 'false'.</p>
         </p:documentation>
     </p:option>
-    
+
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
-        <p:documentation>For manipulating filesets.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl">
-        <p:documentation>For identifying the media type of files.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For identifying the media type of files.</p:documentation>
     </p:import>
 
     <p:for-each>

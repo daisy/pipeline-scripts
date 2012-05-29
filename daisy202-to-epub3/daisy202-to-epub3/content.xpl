@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>For processing the content.</xd:short>
+    <p:documentation>
+        <p px:role="desc">For processing the content.</p>
     </p:documentation>
 
     <p:input port="content-flow" primary="true" sequence="true">
-        <p:documentation>
-            <xd:short>A fileset with references to the DAISY 2.02 content files, ordered by occurence in the DAISY 2.02 flow.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset with references to the DAISY 2.02 content files, ordered by occurence in the DAISY 2.02 flow.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/daisy202/">
                     <d:file href="a.html" media-type="application/xhtml+xml"/>
                     <d:file href="b.html" media-type="application/xhtml+xml"/>
                     <d:file href="c.html" media-type="application/xhtml+xml"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="resolve-links-mapping">
-        <p:documentation>
-            <xd:short>A map of all the links in the SMIL files.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A map of all the links in the SMIL files.</p>
+            <pre><code class="example">
                 <di:mapping xmlns:di="http://www.daisy.org/ns/pipeline/tmp">
                     <di:smil xml:base="file:/home/user/a.smil">
                         <di:text par-id="fragment1" text-id="frg1" src="a.html#txt1"/>
@@ -34,88 +32,84 @@
                         <di:text par-id="fragment2" text-id="frg2" src="b.html#txt2"/>
                     </di:smil>
                 </di:mapping>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="ncc-navigation">
-        <p:documentation>
-            <xd:short>An EPUB3 Navigation Document, which if it contains a page-list will be used to annotate page-breaks in the content documents.</xd:short>
-            <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
-                    original-base="file:/home/user/daisy202/ncc.html">...</html>
-            </xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">An EPUB3 Navigation Document, which if it contains a page-list will be used to annotate page-breaks in the content documents.</p>
+            <pre><code class="example">
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </code></pre>
         </p:documentation>
     </p:input>
 
     <p:output port="content" sequence="true">
-        <p:documentation>
-            <xd:short>The EPUB3 Content Documents.</xd:short>
-            <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml"
-                    original-base="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml"
-                    original-base="file:/home/user/daisy202/b.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml"
-                    original-base="file:/home/user/daisy202/c.html">...</html>
-            </xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The EPUB3 Content Documents.</p>
+            <pre><code class="example">
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </code></pre>
         </p:documentation>
         <p:pipe port="content" step="content-flow-iterate"/>
     </p:output>
     <p:output port="manifest">
-        <p:documentation>
-            <xd:short>A fileset with references to all the EPUB3 Content Documents.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset with references to all the EPUB3 Content Documents.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
                     <d:file xml:base="a.xhtml" media-type="application/xhtml+xml"/>
                     <d:file xml:base="b.xhtml" media-type="application/xhtml+xml"/>
                     <d:file xml:base="c.xhtml" media-type="application/xhtml+xml"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="manifest"/>
     </p:output>
     <p:output port="store-complete" sequence="true">
-        <p:documentation>
-            <xd:short>The results from storing the EPUB3 Content Documents to disk.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The results from storing the EPUB3 Content Documents to disk.</p>
+            <pre><code class="example">
                 <c:result>file:/home/user/epub3/epub/Publication/Content/a.xhtml</c:result>
                 <c:result>file:/home/user/epub3/epub/Publication/Content/b.xhtml</c:result>
                 <c:result>file:/home/user/epub3/epub/Publication/Content/c.xhtml</c:result>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="store-complete" step="content-flow-iterate"/>
     </p:output>
 
     <p:option name="daisy-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the DAISY 2.02 files.</xd:short>
-            <xd:example>file:/home/user/daisy202/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the DAISY 2.02 files.</p>
+            <pre><code class="example">file:/home/user/daisy202/</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="publication-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Publication directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="content-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Content directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/Content/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Content directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/Content/</code></pre>
         </p:documentation>
     </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
     <p:import href="resolve-links.xpl">
-        <p:documentation>De-references links to SMIL-files.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">De-references links to SMIL-files.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
-        <p:documentation>For manipulating filesets.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">
-        <p:documentation>For loading HTML-files.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For loading HTML-files.</p:documentation>
     </p:import>
 
     <p:add-xml-base all="true" relative="false"/>
@@ -171,7 +165,7 @@
                             />
                         </p:add-attribute>
                     </p:viewport>-->
-                    
+
                     <p:add-attribute match="/*" attribute-name="xml:base">
                         <p:with-option name="attribute-value" select="$result-uri"/>
                     </p:add-attribute>
@@ -206,8 +200,7 @@
                         <p:with-option name="attribute-value" select="$original-uri"/>
                     </p:add-attribute>
                     <cx:message>
-                        <p:with-option name="message"
-                            select="concat('upgraded the DAISY 2.02 content document ',$original-uri,' into the EPUB3 content document ',$result-uri)"/>
+                        <p:with-option name="message" select="concat('upgraded the DAISY 2.02 content document ',$original-uri,' into the EPUB3 content document ',$result-uri)"/>
                     </cx:message>
                 </p:otherwise>
             </p:choose>

@@ -1,56 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    type="pxi:daisy202-to-epub3-load-smil-flow" name="load-smil-flow" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-load-smil-flow" name="load-smil-flow" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>For loading the SMIL flow.</xd:short>
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <h1 px:role="desc">For loading the SMIL flow.</h1>
     </p:documentation>
 
     <p:input port="flow" primary="true">
-        <p:documentation>
-            <xd:short>A fileset with references to the DAISY 2.02 SMIL-files, ordered like the DAISY 2.02 flow.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset with references to the DAISY 2.02 SMIL-files, ordered like the DAISY 2.02 flow.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/daisy202/">
                     <d:file href="a.smil" media-type="application/smil+xml"/>
                     <d:file href="b.smil" media-type="application/smil+xml"/>
                     <d:file href="c.smil" media-type="application/smil+xml"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:output port="daisy-smil" sequence="true">
-        <p:documentation>
-            <xd:short>The DAISY 2.02 SMIL-files.</xd:short>
-            <xd:example xmlns="">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The DAISY 2.02 SMIL-files.</p>
+            <pre><code class="example">
                 <smil xml:base="file:/home/user/daisy202/a.smil">...</smil>
                 <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
                 <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="daisy-smil" step="flow-iterate"/>
     </p:output>
     <p:output port="content-flow" sequence="true">
-        <p:documentation>
-            <xd:short>A fileset with references to the DAISY 2.02 content files, ordered by occurence in the DAISY 2.02 flow.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset with references to the DAISY 2.02 content files, ordered by occurence in the DAISY 2.02 flow.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/daisy202/">
                     <d:file href="a.html" media-type="application/xhtml+xml"/>
                     <d:file href="b.html" media-type="application/xhtml+xml"/>
                     <d:file href="c.html" media-type="application/xhtml+xml"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="content-flow"/>
     </p:output>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
-        <p:documentation>For manipulating filesets.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
 
     <p:add-xml-base all="true" relative="false"/>

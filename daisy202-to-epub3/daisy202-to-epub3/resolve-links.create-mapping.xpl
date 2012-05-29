@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resolve-links-create-mapping"
-    name="resolve-links-create-mapping" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    type="pxi:daisy202-to-epub3-resolve-links-create-mapping" name="resolve-links-create-mapping" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>Creates a reusable mapping for pxi:daisy202-to-epub3-resolve-links</xd:short>
+    <p:documentation>
+        <h1 px:role="desc">Creates a reusable mapping for pxi:daisy202-to-epub3-resolve-links</h1>
     </p:documentation>
 
     <p:input port="daisy-smil" sequence="true" primary="true">
-        <p:documentation>
-            <xd:short>The DAISY 2.02 SMIL documents.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The DAISY 2.02 SMIL documents.</p>
+            <pre><code class="example">
                 <smil xml:base="file:/home/user/daisy202/a.smil">
                     <head>...</head>
                     <seq dur="10s">
@@ -21,14 +20,14 @@
                 </smil>
                 <smil xml:base="file:/home/user/daisy202/b.smil">...</smil>
                 <smil xml:base="file:/home/user/daisy202/c.smil">...</smil>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
 
     <p:output port="result">
-        <p:documentation>
-            <xd:short>A map of all the links in the SMIL files.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A map of all the links in the SMIL files.</p>
+            <pre><code class="example">
                 <di:mapping xmlns:di="http://www.daisy.org/ns/pipeline/tmp">
                     <di:smil xml:base="file:/home/user/a.smil">
                         <di:text par-id="fragment1" text-id="frg1" src="a.html#txt1"/>
@@ -39,19 +38,31 @@
                         <di:text par-id="fragment2" text-id="frg2" src="b.html#txt2"/>
                     </di:smil>
                 </di:mapping>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:output>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
 
     <p:for-each>
-        <p:documentation>For each SMIL</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each SMIL</p:documentation>
         <p:variable name="smil-base" select="/*/@xml:base"/>
         <p:add-xml-base all="true" relative="false"/>
-        <p:documentation>For each text element where the a@fragment matches the text@id or text/parent@id</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each text element where the a@fragment matches the text@id or text/parent@id</p:documentation>
+        <!--<p:viewport match="//*[local-name()='par' and @system-required='sidebar-on']">
+            
+        </p:viewport>-->
+        <!--<p:viewport match="//*[local-name()='par' and @system-required='prodnote-on']">
+            
+        </p:viewport>-->
+        <p:viewport match="//*[local-name()='seq' and (./*[local-name()='par'])[2]/@system-required='footnote-on']">
+            <p:add-attribute match="TODO"/>
+        </p:viewport>
+        <!--<p:viewport match="//*[local-name()='par' and @system-required='pagenumber-on']">
+            
+        </p:viewport>-->
         <p:for-each>
             <p:iteration-source select="//*[local-name()='par']"/>
             <p:variable name="par-id" select="/*/@id"/>

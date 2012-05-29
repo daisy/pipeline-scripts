@@ -1,70 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    type="pxi:daisy202-to-epub3-package" name="package" exclude-inline-prefixes="#all" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-package"
+    name="package" exclude-inline-prefixes="#all" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>Compile and store the OPF.</xd:short>
+    <p:documentation>
+        <p px:role="desc">Compile and store the OPF.</p>
     </p:documentation>
 
     <p:input port="spine" primary="false" sequence="true">
-        <p:documentation>
-            <xd:short>A ordered fileset of Content Documents sorted in reading order.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A ordered fileset of Content Documents sorted in reading order.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/Content/">
                     <d:file xml:base="a.xhtml" media-type="application/xhtml+xml"/>
                     <d:file xml:base="b.xhtml" media-type="application/xhtml+xml"/>
                     <d:file xml:base="c.xhtml" media-type="application/xhtml+xml"/>
                 </d:fileset>
-            </xd:example>
-            <xd:see>http://idpf.org/epub/30/spec/epub30-overview.html#sec-nav-order</xd:see>
+            </code></pre>
+            <p>See also: <a class="see" href="http://idpf.org/epub/30/spec/epub30-overview.html#sec-nav-order">http://idpf.org/epub/30/spec/epub30-overview.html#sec-nav-order</a></p>
         </p:documentation>
     </p:input>
     <p:input port="ncc" primary="false">
-        <p:documentation>
-            <xd:short>The DAISY 2.02 NCC</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The DAISY 2.02 NCC</p>
+            <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">...</html>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="navigation" primary="false">
-        <p:documentation>
-            <xd:short>The EPUB3 Navigation Document.</xd:short>
-            <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml"
-                    original-base="file:/home/user/daisy202/ncc.html">...</html>
-            </xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The EPUB3 Navigation Document.</p>
+            <pre><code class="example">
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="content-docs" sequence="true">
-        <p:documentation>
-            <xd:short>The EPUB3 Content Documents.</xd:short>
-            <xd:example>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml"
-                    original-base="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml"
-                    original-base="file:/home/user/daisy202/b.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml"
-                    original-base="file:/home/user/daisy202/c.html">...</html>
-            </xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The EPUB3 Content Documents.</p>
+            <pre><code class="example">
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-base="file:/home/user/daisy202/a.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-base="file:/home/user/daisy202/b.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-base="file:/home/user/daisy202/c.html">...</html>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="mediaoverlay" sequence="true">
-        <p:documentation>
-            <xd:short>The EPUB3 Media Overlays.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The EPUB3 Media Overlays.</p>
+            <pre><code class="example">
                 <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/a.smil">...</smil>
                 <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/b.smil">...</smil>
                 <smil xmlns="http://www.w3.org/ns/SMIL" version="3.0" xml:base="file:/home/user/epub3/epub/Publication/Content/c.smil">...</smil>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="resources" primary="false">
-        <p:documentation>
-            <xd:short>Files other than the Content Documents in the spine and the Media Overlays.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">Files other than the Content Documents in the spine and the Media Overlays.</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/">
                     <d:file xml:base="navigation.xhtml" media-type="application/xhtml+xml"/>
                     <d:file xml:base="ncx.xml" media-type="application/x-dtbncx+xml"/>
@@ -72,76 +67,76 @@
                     <d:file xml:base="Content/image.jpg" media-type="image/jpeg"/>
                     <d:file xml:base="Content/stylesheet.css" media-type="text/css"/>
                 </d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
 
     <p:output port="opf-package" sequence="true" primary="true">
-        <p:documentation>
-            <xd:short>The package document.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The package document.</p>
+            <pre><code class="example">
                 <opf:package>...</opf:package>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="opf-package"/>
     </p:output>
     <p:output port="fileset" primary="false">
-        <p:documentation>
-            <xd:short>A fileset of all the files in the EPUB3 publication, including the package file itself</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A fileset of all the files in the EPUB3 publication, including the package file itself</p>
+            <pre><code class="example">
                 <d:fileset xmlns:d="http://www.daisy.org/ns/pipeline/data" xml:base="file:/home/user/epub3/epub/Publication/">...</d:fileset>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="result-fileset"/>
     </p:output>
     <p:output port="store-complete" primary="false">
-        <p:documentation>
-            <xd:short>The result from storing the package document.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The result from storing the package document.</p>
+            <pre><code class="example">
                 <c:result>file:/home/user/epub3/epub/Publication/package.opf</c:result>
-            </xd:example>
+            </code></pre>
         </p:documentation>
         <p:pipe port="result" step="store"/>
     </p:output>
 
     <p:option name="pub-id" required="true">
-        <p:documentation>
-            <xd:short>The publication identifier.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
-            <xd:see>http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier</xd:see>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The publication identifier.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/</code></pre>
+            <p>See also: <a class="see" href="http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier">http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier</a></p>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="true">
-        <p:documentation>
-            <xd:short>Whether or not to make the package document backwards-compatible. Can be either 'true' (default) or 'false'.</xd:short>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">Whether or not to make the package document backwards-compatible. Can be either 'true' (default) or 'false'.</p>
         </p:documentation>
     </p:option>
     <p:option name="publication-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the EPUB3 Publication directory.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the EPUB3 Publication directory.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="epub-dir" required="true">
-        <p:documentation>
-            <xd:short>URI to the directory where the EPUB3-file should be stored.</xd:short>
-            <xd:example>file:/home/user/epub3/epub/Publication/</xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">URI to the directory where the EPUB3-file should be stored.</p>
+            <pre><code class="example">file:/home/user/epub3/epub/Publication/</code></pre>
         </p:documentation>
     </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
-        <p:documentation>For manipulating filesets.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl">
-        <p:documentation>For making the package document.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For making the package document.</p:documentation>
     </p:import>
 
     <p:variable name="result-uri" select="concat($publication-dir,'package.opf')"/>
 
-    <p:documentation>Compile OPF metadata.</p:documentation>
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">Compile OPF metadata.</p:documentation>
     <p:xslt name="opf-metadata">
         <p:with-param name="pub-id" select="$pub-id"/>
         <p:input port="source">

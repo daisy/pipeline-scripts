@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:xd="http://www.daisy.org/ns/pipeline/doc" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resolve-links"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resolve-links"
     name="resolve-links" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>De-references links in content documents.</xd:short>
-        <xd:detail>In DAISY 2.02, links point to other locations in the book via the SMIL files. For instance, a link in ncc.html might point to
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <p px:role="desc">De-references links in content documents.</p>
+        <p>In DAISY 2.02, links point to other locations in the book via the SMIL files. For instance, a link in ncc.html might point to
             content.smil#fragment, and the SMIL clip at content.smil#fragment might point to content.html#id. This step would change the original link from
-            content.smil#fragment to content.html#id.</xd:detail>
+            content.smil#fragment to content.html#id.</p>
     </p:documentation>
 
     <p:input port="source" primary="true">
-        <p:documentation>
-            <xd:short>A DAISY 2.02 content document.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A DAISY 2.02 content document.</p>
+            <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">
                     <head>...</head>
                     <body> ... <a href="a.smil#fragment"/> ... </body>
                 </html>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:input port="resolve-links-mapping">
-        <p:documentation>
-            <xd:short>A map of all the links in the SMIL files.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">A map of all the links in the SMIL files.</p>
+            <pre><code class="example">
                 <di:mapping xmlns:di="http://www.daisy.org/ns/pipeline/tmp">
                     <di:smil xml:base="file:/home/user/a.smil">
                         <di:text par-id="fragment1" text-id="frg1" src="a.html#txt1"/>
@@ -35,30 +35,30 @@
                         <di:text par-id="fragment2" text-id="frg2" src="b.html#txt2"/>
                     </di:smil>
                 </di:mapping>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:input>
     <p:output port="result">
-        <p:documentation>
-            <xd:short>The resulting DAISY 2.02 content document.</xd:short>
-            <xd:example>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <p px:role="desc">The resulting DAISY 2.02 content document.</p>
+            <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/daisy202/ncc.html">
                     <head>...</head>
                     <body> ... <a href="a.html#id"/> ... </body>
                 </html>
-            </xd:example>
+            </code></pre>
         </p:documentation>
     </p:output>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
 
     <p:variable name="content-base" select="/*/@xml:base"/>
     <p:variable name="content-filename" select="replace(replace($content-base,'^.*/([^/]+)$','$1'),'^([^#]+)#.*$','$1')"/>
     <p:variable name="content-filename-position" select="string-length($content-filename)+1"/>
 
-    <p:documentation>For each 'a'-link</p:documentation>
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each 'a'-link</p:documentation>
     <p:viewport match="//html:a">
         <p:variable name="original-uri" select="resolve-uri(tokenize(/*/@href,'#')[1],$content-base)"/>
         <p:variable name="original-fragment" select="if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else ''"/>
