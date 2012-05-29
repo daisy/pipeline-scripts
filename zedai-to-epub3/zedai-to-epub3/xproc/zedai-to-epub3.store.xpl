@@ -7,15 +7,12 @@
     version="1.0">
 
     <p:documentation xd:target="parent">
-        <xd:short>zedai-to-epub3</xd:short>
-        <xd:detail>Packages and stores an EPUB3 fileset to disk.</xd:detail>
+        Packages and stores an EPUB3 fileset to disk.
     </p:documentation>
 
     <p:input port="fileset.in" primary="true">
         <p:documentation>
-            <xd:short>A fileset referencing all resources to be stored.</xd:short>
-            <xd:detail>Contains references to all the EPUB3 files and any resources they reference
-                (images etc.).</xd:detail>
+            A fileset referencing all resources to be stored. Contains references to all the EPUB3 files and any resources they reference (images etc.).
         </p:documentation>
     </p:input>
 

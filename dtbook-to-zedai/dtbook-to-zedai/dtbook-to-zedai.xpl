@@ -3,52 +3,54 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
     exclude-inline-prefixes="#all">
 
-    <p:documentation>
-        <xd:short>dtbook-to-zedai</xd:short>
-        <xd:detail>Transforms DTBook XML into ZedAI XML.</xd:detail>
-        <xd:homepage>http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:homepage>
-        <xd:author>
-            <xd:name>Marisa DeMeglio</xd:name>
-            <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
-            <xd:organization>DAISY</xd:organization>
-        </xd:author>
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <h1 px:role="name">DTBook to ZedAI</h1>
+        <p px:role="desc">Transforms DTBook XML into ZedAI XML.</p>
+        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI">
+            http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI
+        </a>
+        <div px:role="author maintainer">
+            <p px:role="name">Marisa DeMeglio</p>
+            <a px:role="contact" href="mailto:marisa.demeglio@gmail.com">marisa.demeglio@gmail.com</a>
+            <p px:role="organization">DAISY Consortium</p>
+        </div>
     </p:documentation>
     
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
-        <p:documentation>
-            <xd:short>DTBook file(s)</xd:short>
-            <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">DTBook file(s)</h2>
+            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</p>
         </p:documentation>
     </p:input>
 
-    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
-        <p:documentation>
-            <xd:short>Output directory</xd:short>
-            <xd:detail>The directory to store the generated files in.</xd:detail>
+    <p:option name="output-dir" required="true" px:output="output" px:type="anyDirURI">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Output directory</h2>
+            <p px:role="desc">The directory to store the generated files in.</p>
         </p:documentation>
     </p:option>
-    <p:option name="zedai-filename" required="false" px:dir="output" px:type="string" select="''">
-        <p:documentation>
-            <xd:short>ZedAI filename</xd:short>
-            <xd:detail>Filename for the generated ZedAI file</xd:detail>
+    <p:option name="zedai-filename" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">ZedAI filename</h2>
+            <p px:role="desc">Filename for the generated ZedAI file</p>
         </p:documentation>
     </p:option>
-    <p:option name="mods-filename" required="false" px:dir="output" px:type="string" select="''">
-        <p:documentation>
-            <xd:short>MODS filename</xd:short>
-            <xd:detail>Filename for the generated MODS file</xd:detail>
+    <p:option name="mods-filename" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">MODS filename</h2>
+            <p px:role="desc">Filename for the generated MODS file</p>
         </p:documentation>
     </p:option>
-    <p:option name="css-filename" required="false" px:dir="output" px:type="string" select="''">
-        <p:documentation>
-            <xd:short>CSS filename</xd:short>
-            <xd:detail>Filename for the generated CSS file</xd:detail>
+    <p:option name="css-filename" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">CSS filename</h2>
+            <p px:role="desc">Filename for the generated CSS file</p>
         </p:documentation>
     </p:option>
-    <p:option name="lang" required="false" px:dir="output" px:type="string" select="''">
-        <p:documentation>
-            <xd:short>Language code</xd:short>
-            <xd:detail>Language code of the input document.</xd:detail>
+    <p:option name="lang" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Language code</h2>
+            <p px:role="desc">Language code of the input document.</p>
         </p:documentation>
     </p:option>
     

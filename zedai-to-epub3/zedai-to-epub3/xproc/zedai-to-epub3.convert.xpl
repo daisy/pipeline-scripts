@@ -4,8 +4,7 @@
     name="zedai-to-epub3.convert" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation xd:target="parent">
-        <xd:short>zedai-to-epub3</xd:short>
-        <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</xd:detail>
+        Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.
     </p:documentation>
 
     <p:input port="fileset.in" primary="true"/>

@@ -3,7 +3,7 @@
     <service>
         <provide interface="org.daisy.pipeline.script.XProcScriptService"/>
     </service>
-    <property name="script.name" type="String" value="dtbook-to-epub3"/>
+    <property name="script.id" type="String" value="dtbook-to-epub3"/>
     <property name="script.description" type="String" value="Convert DTBook XML to ZedAI XML"/>
     <property name="script.url" type="String" value="http://www.daisy.org/pipeline/modules/dtbook-to-epub3/dtbook-to-epub3.xpl"/>
     

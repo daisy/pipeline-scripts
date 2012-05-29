@@ -6,20 +6,12 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="cx p c cxo px xd pxi z tmp">
 
     <p:documentation>
-        <xd:short>DTBook to ZedAI - store</xd:short>
-        <xd:detail>Copy all referenced files to the output directory.</xd:detail>
-        <xd:homepage>http://code.google.com/p/daisy-pipeline/wiki/DTBookToZedAI</xd:homepage>
-        <xd:author>
-            <xd:name>Marisa DeMeglio</xd:name>
-            <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
-            <xd:organization>DAISY</xd:organization>
-        </xd:author>
+            Copy all referenced files to the output directory.
     </p:documentation>
 
     <p:input port="fileset.in" primary="true">
         <p:documentation>
-            <xd:short>A fileset referencing all resources to be stored.</xd:short>
-            <xd:detail>Contains references to the ZedAI file and any resources it references (images etc.).</xd:detail>
+            A fileset containing references to the ZedAI file and any resources it references (images, etc.).
         </p:documentation>
     </p:input>
 

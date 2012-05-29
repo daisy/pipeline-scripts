@@ -10,28 +10,28 @@
     xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="#all">
 
-    <p:documentation>
-        <xd:short>dtbook-to-epub3</xd:short>
-        <xd:detail>Converts multiple dtbooks to epub3 format</xd:detail>
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <h1 px:role="name">DTBook to EPUB3</h1>
+        <p px:role="desc">Converts multiple dtbooks to epub3 format</p>
     </p:documentation>
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
-        <p:documentation>
-            <xd:short>DTBook file(s)</xd:short>
-            <xd:detail>One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">DTBook file(s)</h2>
+            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</p>
         </p:documentation>
     </p:input>
 
     <p:option name="language" required="false" px:dir="output" px:type="string" select="''">
-        <p:documentation>
-            <xd:short>Language code</xd:short>
-            <xd:detail>Language code of the input document.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Language code</h2>
+            <p px:role="desc">Language code of the input document.</p>
         </p:documentation>
     </p:option>
 
     <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
-        <p:documentation>
-            <xd:short>Output directory</xd:short>
-            <xd:detail>Directory where both temp-files and the resulting EPUB3 publication is stored.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Output directory</h2>
+            <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
         </p:documentation>
     </p:option>
 

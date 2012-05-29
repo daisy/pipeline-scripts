@@ -8,17 +8,7 @@
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc" exclude-inline-prefixes="cx cxo pxi p c xd">
 
     <p:documentation>
-        <xd:short>Transforms DTBook 2005-3 XML into ZedAI XML. Part of the DTBook-to-ZedAI
-            module.</xd:short>
-        <xd:author>
-            <xd:name>Marisa DeMeglio</xd:name>
-            <xd:mailto>marisa.demeglio@gmail.com</xd:mailto>
-            <xd:organization>DAISY</xd:organization>
-        </xd:author>
-        <xd:maintainer>Marisa DeMeglio</xd:maintainer>
-        <xd:input port="source">DTBook 2005-3 document.</xd:input>
-        <xd:output port="result">ZedAI document with temporary style attributes (prefixed by
-            tmp:).</xd:output>
+        Transforms DTBook 2005-3 XML into ZedAI XML. Part of the DTBook-to-ZedAI module.
     </p:documentation>
 
     <p:input port="source" primary="true"/>

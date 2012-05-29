@@ -3,22 +3,22 @@
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
     type="px:zedai-to-epub3" name="zedai-to-epub3" version="1.0">
 
-    <p:documentation xd:target="parent">
-        <xd:short>zedai-to-epub3</xd:short>
-        <xd:detail>Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</xd:detail>
+    <p:documentation xd:target="parent" xmlns="http://www.w3.org/1999/xhtml">
+        <h1 px:role="name">ZedAI to EPUB3</h1>
+        <p px:role="desc">Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.</p>
     </p:documentation>
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
-        <p:documentation>
-            <xd:short>source</xd:short>
-            <xd:detail>Input ZedAI.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">source</h2>
+            <p px:role="desc">Input ZedAI.</p>
         </p:documentation>
     </p:input>
 
     <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
-        <p:documentation>
-            <xd:short>output-dir</xd:short>
-            <xd:detail>Output directory for the EPUB.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">output-dir</h2>
+            <p px:role="desc">Output directory for the EPUB.</p>
         </p:documentation>
     </p:option>
 

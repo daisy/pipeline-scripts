@@ -15,43 +15,45 @@
         </cd:converter>
     </p:pipeinfo>
 
-    <p:documentation xd:target="parent">
-        <xd:short>daisy202-to-epub3</xd:short>
-        <xd:detail>Transforms a DAISY 2.02 publication into an EPUB3 publication.</xd:detail>
-        <xd:author>
-            <xd:name>Jostein Austvik Jacobsen</xd:name>
-            <xd:mailto>josteinaj@gmail.com</xd:mailto>
-            <xd:organization>NLB</xd:organization>
-        </xd:author>
-        <xd:maintainer>Jostein Austvik Jacobsen</xd:maintainer>
+    <p:documentation xd:target="parent" xmlns="http://www.w3.org/1999/xhtml">
+        <h1 px:role="name">DAISY 2.02 to EPUB3</h1>
+        <p px:role="desc">Transforms a DAISY 2.02 publication into an EPUB3 publication.</p>
+        <div px:role="author maintainer">
+            <p px:role="name">Jostein Austvik Jacobsen</p>
+            <a px:role="contact" href="mailto:josteinaj@gmail.com">
+                josteinaj@gmail.com
+            </a>
+            <p px:role="organization">NLB</p>
+        </div>
         <xd:version>1.0</xd:version>
-        <xd:see>http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</xd:see>
+        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3">
+            http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</a>
     </p:documentation>
-
+    
     <p:option name="href" required="true" px:dir="input" px:type="anyFileURI">
-        <p:documentation>
-            <xd:short>href</xd:short>
-            <xd:detail>Input NCC.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">href</h2>
+            <p px:role="desc">Input NCC.</p>
             <xd:example>file:/home/user/daisy202/ncc.html</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="output" required="true" px:dir="output" px:type="anyDirURI">
-        <p:documentation>
-            <xd:short>output</xd:short>
-            <xd:detail>Output directory for the EPUB.</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">output</h2>
+            <p px:role="desc">Output directory for the EPUB.</p>
             <xd:example>file:/home/user/epub3/</xd:example>
         </p:documentation>
     </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:dir="input" px:type="string">
-        <p:documentation>
-            <xd:short>mediaoverlay</xd:short>
-            <xd:detail>Whether or not to include media overlays and associated audio files (true or false).</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">mediaoverlay</h2>
+            <p px:role="desc">Whether or not to include media overlays and associated audio files (true or false).</p>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:dir="input" px:type="string">
-        <p:documentation>
-            <xd:short>compatibility-mode</xd:short>
-            <xd:detail>Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</xd:detail>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">compatibility-mode</h2>
+            <p px:role="desc">Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</p>
         </p:documentation>
     </p:option>
 
