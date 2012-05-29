@@ -57,9 +57,9 @@
         <!--<p:viewport match="//*[local-name()='par' and @system-required='prodnote-on']">
             
         </p:viewport>-->
-        <p:viewport match="//*[local-name()='seq' and (./*[local-name()='par'])[2]/@system-required='footnote-on']">
+        <!--<p:viewport match="//*[local-name()='seq' and (./*[local-name()='par'])[2]/@system-required='footnote-on']">
             <p:add-attribute match="TODO"/>
-        </p:viewport>
+        </p:viewport>-->
         <!--<p:viewport match="//*[local-name()='par' and @system-required='pagenumber-on']">
             
         </p:viewport>-->
