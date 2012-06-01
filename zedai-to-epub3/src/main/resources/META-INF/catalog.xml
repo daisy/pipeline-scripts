@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog
+  PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
+  <uri name="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.xpl" uri="../xml/xproc/zedai-to-epub3.xpl"  px:script="true"/>
+  <uri name="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.load.xpl" uri="../xml/xproc/zedai-to-epub3.load.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl" uri="../xml/xproc/zedai-to-epub3.convert.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.store.xpl" uri="../xml/xproc/zedai-to-epub3.store.xpl"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-nav-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-ocf-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-pub-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:html-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils" />
+</catalog>
