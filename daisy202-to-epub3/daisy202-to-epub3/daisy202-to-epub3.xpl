@@ -16,7 +16,7 @@
         <p>Homepage: <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3">http://code.google.com/p/daisy-pipeline/wiki/DAISY202ToEPUB3</a>.</p>
     </p:documentation>
 
-    <p:option name="href" required="true" px:type="anyFileURI">
+    <p:option name="href" required="true" px:type="anyFileURI" px:media-type="application/xhtml+xml text/html">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">href</h2>
             <p px:role="desc">Input NCC.</p>
