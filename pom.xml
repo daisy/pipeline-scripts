@@ -12,7 +12,8 @@
   <description>Aggregator POM to build all the DAISY Pipeline 2 modules.</description>
 
   <modules>
-    <module>parent</module>
+    <module>poms/parent</module>
+    <module>poms/bom</module>
     <module>common-entities</module>
     <module>daisy202-to-epub3</module>
     <module>dtbook-to-epub3</module>
