@@ -1,9 +1,0 @@
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="daisy202-to-epub3">
-   <implementation class="org.daisy.pipeline.script.XProcScriptService"/>
-   <service>
-       <provide interface="org.daisy.pipeline.script.XProcScriptService"/>
-   </service>
-   <property name="script.id" type="String" value="daisy202-to-epub3"/>
-   <property name="script.description" type="String" value="DAISY 2.02 to EPUB3"/>
-   <property name="script.url" type="String" value="http://www.daisy.org/pipeline/modules/daisy202-to-epub3/daisy202-to-epub3.xpl"/>
-</scr:component>
