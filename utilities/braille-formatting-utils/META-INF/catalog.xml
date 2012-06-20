@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE catalog
-  PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" uri="../xslt/style-functions.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/encoding-functions.xsl" uri="../xslt/encoding-functions.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-automatic-styles.xsl" uri="../xslt/create-automatic-styles.xsl"/>
-</catalog>

@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.daisy.pipeline.modules</groupId>
-  <artifactId>liblouis-tables</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
 
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>daisy-pipeline-modules-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../../daisy-pipeline.modules/daisy-pipeline-modules-parent/</relativePath>
+    <artifactId>modules-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath/>
   </parent>
 
-  <repositories>
-    <repository>
-      <id>bert_repo</id>
-      <layout>p2</layout>
-      <url>${project.baseUri}/../repo</url>
-    </repository>
-  </repositories>
+  <groupId>org.daisy.pipeline.modules</groupId>
+  <artifactId>liblouis-tables</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+
+  <name>DAISY Pipeline 2 module :: liblouis-tables</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration combine.self="override">
+          <Include-Resource>{maven-resources}</Include-Resource>
+          <_include></_include>
+          <instructions>
+            <Import-Package>org.liblouis</Import-Package>
+            <Service-Component>OSGI-INF/liblouis-default-tables.xml</Service-Component>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
