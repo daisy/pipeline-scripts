@@ -7,40 +7,52 @@
     
     <xsl:variable name="property-names" as="xs:string*"
         select="('display',
-                 'text-align',
                  'margin-left',
                  'margin-right',
                  'margin-top',
                  'margin-bottom',
+                 'padding-left',
+                 'padding-right',
+                 'padding-bottom',
+                 'padding-top',
+                 'border-left',
+                 'border-right',
+                 'border-bottom',
+                 'border-top',
+                 'text-align',
                  'text-indent',
                  'page-break-before',
                  'page-break-after',
                  'page-break-inside',
                  'orphans',
                  'widows',
-                 'border-bottom',
-                 'border-top',
-                 'padding-bottom',
-                 'padding-top',
-                 'list-style-type')"/>
+                 'list-style-type',
+                 'margin-left-absolute',
+                 'margin-right-absolute')"/>
     
     <xsl:variable name="default-property-values" as="xs:string*"
         select="('inline',
-                 'inherit',
-                 'inherit',
-                 'inherit',
                  '0',
                  '0',
+                 '0',
+                 '0',
+                 '0',
+                 '0',
+                 '0',
+                 '0',
+                 'none',
+                 'none',
+                 'none',
+                 'none',
+                 'inherit',
                  'inherit',
                  'auto',
                  'auto',
                  'inherit',
                  '0',
                  '0',
-                 'none',
-                 'none',
-                 '0',
-                 '0',
+                 'inherit',
+                 'inherit',
                  'inherit')"/>
     
     <xsl:function name="brl:get-default-property" as="xs:string?">
@@ -139,6 +151,23 @@
         <xsl:value-of select="string-join($name-value-pairs,';')"/>
     </xsl:function>
     
+    <xsl:function name="brl:remove-style-values" as="xs:string">
+        <xsl:param name="base-style"/>
+        <xsl:param name="remove-values" as="xs:string*"/>
+        <xsl:variable name="name-value-pairs" as="xs:string*">
+            <xsl:for-each select="$property-names">
+                <xsl:if test="not(index-of($remove-values, .))">
+                    <xsl:variable name="base-value"
+                        select="brl:get-property($base-style, ., ())" as="xs:string?"/>
+                    <xsl:if test="$base-value">
+                        <xsl:sequence select="concat(.,':',$base-value)"/>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:value-of select="string-join($name-value-pairs,';')"/>
+    </xsl:function>
+    
     <xsl:function name="brl:style-element" as="element()">
         <xsl:param name="style-string" as="xs:string" />
         <xsl:param name="style-name" as="xs:string?" />
@@ -178,6 +207,16 @@
                         <xsl:sequence select="concat(.,':',$value)"/>
                     </xsl:if>
                 </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:value-of select="string-join($name-value-pairs,';')"/>
+    </xsl:function>
+    
+    <xsl:function name="brl:style-string-without-inherit" as="xs:string">
+        <xsl:param name="element" as="element()"/>
+        <xsl:variable name="name-value-pairs" as="xs:string*">
+            <xsl:for-each select="$property-names">
+                <xsl:sequence select="concat(.,':',brl:get-property-or-inherited($element, .))"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:value-of select="string-join($name-value-pairs,';')"/>

@@ -60,12 +60,10 @@
                     <xsl:text>&#xa;</xsl:text>
                     
                     <xsl:variable name="text-align" as="xs:string" select="brl:get-property-or-default(.,'text-align')"/>
-                    <xsl:variable name="margin-left" as="xs:string" select="brl:get-property-or-default(.,'margin-left')"/>
-                    <xsl:variable name="margin-right" as="xs:string" select="brl:get-property-or-default(.,'margin-right')"/>
+                    <xsl:variable name="margin-left" as="xs:string" select="brl:get-property-or-default(.,'margin-left-absolute')"/>
+                    <xsl:variable name="margin-right" as="xs:string" select="brl:get-property-or-default(.,'margin-right-absolute')"/>
                     <xsl:variable name="margin-top" as="xs:string" select="brl:get-property-or-default(.,'margin-top')"/>
                     <xsl:variable name="margin-bottom" as="xs:string" select="brl:get-property-or-default(.,'margin-bottom')"/>
-                    <xsl:variable name="padding-top" as="xs:string" select="brl:get-property-or-default(.,'padding-top')"/>
-                    <xsl:variable name="padding-bottom" as="xs:string" select="brl:get-property-or-default(.,'padding-bottom')"/>
                     <xsl:variable name="text-indent" as="xs:string" select="brl:get-property-or-default(.,'text-indent')"/>
                     <xsl:variable name="page-break-before" as="xs:string" select="brl:get-property-or-default(.,'page-break-before')"/>
                     <xsl:variable name="page-break-after" as="xs:string" select="brl:get-property-or-default(.,'page-break-after')"/>
@@ -96,28 +94,26 @@
                     
                     <!-- leftMargin -->
                     
-                    <xsl:if test="matches($margin-left, $INTEGER_NUMBER)">
+                    <xsl:if test="matches($margin-left, $NATURAL_NUMBER)">
                         <xsl:value-of select="concat('   leftMargin ', $margin-left, '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- rightMargin -->
                     
-                    <xsl:if test="matches($margin-right, $INTEGER_NUMBER)">
+                    <xsl:if test="matches($margin-right, $NATURAL_NUMBER)">
                         <xsl:value-of select="concat('   rightMargin ', $margin-right, '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesBefore -->
                     
-                    <xsl:variable name="linesBefore" as="xs:string"
-                        select="format-number(number($margin-top) + number($padding-top), '0')"/>
+                    <xsl:variable name="linesBefore" as="xs:string" select="$margin-top"/>
                     <xsl:if test="matches($linesBefore, $POSITIVE_NUMBER)">
                         <xsl:value-of select="concat('   linesBefore ', $linesBefore, '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesAfter -->
                     
-                    <xsl:variable name="linesAfter" as="xs:string"
-                        select="format-number(number($margin-bottom) + number($padding-bottom), '0')"/>
+                    <xsl:variable name="linesAfter" as="xs:string" select="$margin-bottom"/>
                     <xsl:if test="matches($linesAfter, $POSITIVE_NUMBER)">
                         <xsl:value-of select="concat('   linesAfter ', $linesAfter, '&#xa;')"/>
                     </xsl:if>

@@ -12,6 +12,7 @@
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="create-liblouisxml-files.xpl"/>
+    <p:import href="format-side-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="xml2brl.xpl"/>
     
@@ -26,7 +27,7 @@
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/handle-border.xsl"/>
+            <p:document href="../xslt/handle-margin-border-padding.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -74,10 +75,22 @@
         </p:input>
     </lblxml:create-liblouisxml-files>
     
-    <lblxml:format-toc name="format-toc">
+    <lblxml:format-side-border>
         <p:input port="source">
             <p:pipe step="create-styles-xml" port="result"/>
         </p:input>
+        <p:input port="config-files">
+            <p:pipe step="create-liblouisxml-files" port="config"/>
+        </p:input>
+        <p:input port="semantic-files">
+            <p:pipe step="create-liblouisxml-files" port="semantic"/>
+        </p:input>
+        <p:with-option name="temp-dir" select="$temp-dir">
+            <p:empty/>
+        </p:with-option>
+    </lblxml:format-side-border>
+    
+    <lblxml:format-toc name="format-toc">
         <p:input port="toc-styles">
             <p:pipe step="create-styles-xml" port="secondary"/>
         </p:input>
