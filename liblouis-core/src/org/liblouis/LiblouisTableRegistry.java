@@ -10,12 +10,12 @@ public class LiblouisTableRegistry {
 
 	private static final Map<String,LiblouisTableSet> registeredTableSets = new HashMap<String,LiblouisTableSet>();
 
-	public static void addTableSet(LiblouisTableSet tableSet) {
+	public void addTableSet(LiblouisTableSet tableSet) {
 		System.out.println("Adding table set to registry: " + tableSet.getIdentifier());
 		registeredTableSets.put(tableSet.getIdentifier(), tableSet);
 	}
 
-	public static void removeTableSet(LiblouisTableSet tableSet) {
+	public void removeTableSet(LiblouisTableSet tableSet) {
 		System.out.println("Removing table set from registry: " + tableSet.getIdentifier());
 		registeredTableSets.remove(tableSet.getIdentifier());
 	}
