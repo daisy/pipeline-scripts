@@ -8,19 +8,20 @@
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:input port="toc-styles" sequence="false"/>
-    <p:input port="config-files" sequence="true"/>
-    <p:input port="semantic-files" sequence="true"/>
+    <p:input port="config-files" sequence="false"/>
+    <p:input port="semantic-files" sequence="false"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <!-- TODO: support multiple TOCs / indexes -->
     
     <p:import href="update-toc.xpl"/>
+    <p:import href="store-files.xpl"/>
     
     <p:choose>
         <p:when test="//lblxml:toc">
             
-            <p:xslt name="toc-styles-cfg">
+            <p:xslt>
                 <p:input port="source">
                     <p:pipe step="format-toc" port="toc-styles"/>
                 </p:input>
@@ -35,7 +36,13 @@
                 </p:with-param>
             </p:xslt>
             
-            <p:xslt name="toc-styles-sem" template-name="initial">
+            <lblxml:store-files name="config-files">
+                <p:input port="directory">
+                    <p:pipe step="format-toc" port="config-files"/>
+                </p:input>
+            </lblxml:store-files>
+            
+            <p:xslt template-name="initial">
                 <p:input port="stylesheet">
                     <p:document href="../xslt/create-toc-styles-sem-file.xsl"/>
                 </p:input>
@@ -44,17 +51,21 @@
                 </p:with-param>
             </p:xslt>
             
+            <lblxml:store-files name="semantic-files">
+                <p:input port="directory">
+                    <p:pipe step="format-toc" port="semantic-files"/>
+                </p:input>
+            </lblxml:store-files>
+            
             <lblxml:update-toc>
                 <p:input port="source">
                     <p:pipe step="format-toc" port="source"/>
                 </p:input>
                 <p:input port="config-files">
-                    <p:pipe step="format-toc" port="config-files"/>
-                    <p:pipe step="toc-styles-cfg" port="result"/>
+                    <p:pipe step="config-files" port="result"/>
                 </p:input>
                 <p:input port="semantic-files">
-                    <p:pipe step="format-toc" port="semantic-files"/>
-                    <p:pipe step="toc-styles-sem" port="result"/>
+                    <p:pipe step="semantic-files" port="result"/>
                 </p:input>
                 <p:with-option name="temp-dir" select="$temp-dir">
                     <p:empty/>

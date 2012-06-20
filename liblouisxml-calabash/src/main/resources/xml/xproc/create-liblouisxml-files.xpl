@@ -7,18 +7,17 @@
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:input port="styles" sequence="true"/>
+    <p:input port="directory" sequence="false"/>
     
-    <p:output port="config" sequence="true" primary="true">
-        <p:pipe step="styles-cfg" port="result"/>
-        <p:pipe step="misc-cfg" port="result"/>
+    <p:output port="config" sequence="false">
+        <p:pipe step="config-files" port="result"/>
     </p:output>
     
-    <p:output port="semantic" sequence="true">
-        <p:pipe step="default-sem" port="result"/>
-        <p:pipe step="styles-sem" port="result"/>
-        <p:pipe step="borders-sem" port="result"/>
-        <p:pipe step="misc-sem" port="result"/>
+    <p:output port="semantic" sequence="false">
+        <p:pipe step="semantic-files" port="result"/>
     </p:output>
+    
+    <p:import href="store-files.xpl"/>
     
     <p:xslt name="default-sem">
         <p:input port="stylesheet">
@@ -90,5 +89,27 @@ preformatted-line &amp;xpath(//lblxml:preformatted//lblxml:line)
             </lblxml:semantic-file></p:inline>
         </p:input>
     </p:identity>
+    
+    <lblxml:store-files name="config-files">
+        <p:input port="source">
+            <p:pipe step="styles-cfg" port="result"/>
+            <p:pipe step="misc-cfg" port="result"/>
+        </p:input>
+        <p:input port="directory">
+            <p:pipe step="create-liblouisxml-files" port="directory"/>
+        </p:input>
+    </lblxml:store-files>
+    
+    <lblxml:store-files name="semantic-files">
+        <p:input port="source">
+            <p:pipe step="default-sem" port="result"/>
+            <p:pipe step="styles-sem" port="result"/>
+            <p:pipe step="borders-sem" port="result"/>
+            <p:pipe step="misc-sem" port="result"/>
+        </p:input>
+        <p:input port="directory">
+            <p:pipe step="create-liblouisxml-files" port="directory"/>
+        </p:input>
+    </lblxml:store-files>
     
 </p:declare-step>

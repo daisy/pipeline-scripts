@@ -4,26 +4,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 
+import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
@@ -40,6 +44,9 @@ public class XML2BRL extends DefaultStep {
 	//	= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "page");
 
 	private static final QName _temp_dir = new QName("temp-dir");
+	private static final QName c_directory = new QName("http://www.w3.org/ns/xproc-step", "directory");
+	private static final QName c_file = new QName("http://www.w3.org/ns/xproc-step", "file");
+	private static final QName _name = new QName("name");
 
 	private static URL iniFile;
 	private static final String[] tables = new String[]{"nabcc.dis", "braille-patterns.cti", "pagenum.cti"};
@@ -86,32 +93,45 @@ public class XML2BRL extends DefaultStep {
 
 	@Override
 	public void run() throws SaxonApiException {
+
 		super.run();
 
 		try {
 
 			File tempDir = new File(new URI(getOption(_temp_dir).getString()));
 
-			// Write config files
+			// Get configuration files
 			List<String> configFileNames = new ArrayList<String>();
-			unpackIniFile(tempDir);
 			if (configFiles != null) {
-				while(configFiles.moreDocuments()) {
-					File configFile = File.createTempFile("liblouisutdml.", ".cfg", tempDir);
-					writeLiblouisutdmlFile(configFiles.read(), configFile);
-					configFileNames.add(configFile.getName());
+				XdmNode dir = (XdmNode)configFiles.read().axisIterator(Axis.CHILD, c_directory).next();
+				File configDir = new File(dir.getBaseURI());
+				if (!configDir.equals(tempDir)) {
+					throw new XProcException(step.getNode(),
+							"All config-files must be placed in temp-dir");
+				}
+				XdmSequenceIterator files = dir.axisIterator(Axis.CHILD, c_file);
+				while (files != null && files.hasNext()) {
+					configFileNames.add(((XdmNode)files.next()).getAttributeValue(_name));
 				}
 			}
 
-			// Write semantic action files
+			// Get semantic action files
 			List<String> semanticFileNames = new ArrayList<String>();
 			if (semanticFiles != null) {
-				while(semanticFiles.moreDocuments()) {
-					File semanticFile = File.createTempFile("liblouisutdml.", ".sem", tempDir);
-					writeLiblouisxmlFile(semanticFiles.read(), semanticFile);
-					semanticFileNames.add(semanticFile.getName());
+				XdmNode dir = (XdmNode)semanticFiles.read().axisIterator(Axis.CHILD, c_directory).next();
+				File semanticDir = new File(dir.getBaseURI());
+				if (!semanticDir.equals(tempDir)) {
+					throw new XProcException(step.getNode(),
+							"All semantic-files must be placed in temp-dir");
+				}
+				XdmSequenceIterator files = dir.axisIterator(Axis.CHILD, c_file);
+				while (files != null && files.hasNext()) {
+					semanticFileNames.add(((XdmNode)files.next()).getAttributeValue(_name));
 				}
 			}
+
+			// Create liblouistutdml.ini
+			unpackIniFile(tempDir);
 
 			// Write XML document to file
 			XdmNode xml = source.read();
@@ -124,16 +144,16 @@ public class XML2BRL extends DefaultStep {
 			bodyTempFile.delete();
 
 			// Convert using xml2brl
-			File textFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-			Liblouisutdml.file2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, textFile, null,
+			File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
+			Liblouisutdml.file2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, brailleFile, null,
 					LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
 			//xmlFile.delete();
 
-			// Read the text document and wrap it in a new XML document
-			long totalLength = textFile.length();
+			// Read the braille document and wrap it in a new XML document
+			long totalLength = brailleFile.length();
 			long bodyLength = bodyTempFile.exists() ? bodyTempFile.length() : totalLength;
 			long frontLength = totalLength - bodyLength;
-			InputStream textStream = new FileInputStream(textFile);
+			InputStream brailleStream = new FileInputStream(brailleFile);
 			byte[] buffer;
 
 			TreeWriter treeWriter = new TreeWriter(runtime);
@@ -144,37 +164,37 @@ public class XML2BRL extends DefaultStep {
 				treeWriter.addStartElement(lblxml_section);
 				treeWriter.startContent();
 				buffer = new byte[(int)frontLength];
-				textStream.read(buffer);
+				brailleStream.read(buffer);
 				treeWriter.addText(new String(buffer, "UTF-8"));
 				treeWriter.addEndElement();
 				treeWriter.addStartElement(lblxml_section);
 				treeWriter.startContent();
 				buffer = new byte[(int)bodyLength];
-				textStream.read(buffer);
+				brailleStream.read(buffer);
 				treeWriter.addText(new String(buffer, "UTF-8"));
 				treeWriter.addEndElement();
 			} else {
 				buffer = new byte[(int)totalLength];
-				textStream.read(buffer);
+				brailleStream.read(buffer);
 				treeWriter.addText(new String(buffer, "UTF-8"));
 			}
 			treeWriter.addEndElement();
 			treeWriter.endDocument();
 
-			textStream.close();
-			//textFile.delete();
+			brailleStream.close();
+			//brailleFile.delete();
 
 			result.write(treeWriter.getResult());
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new XProcException(step.getNode(), e);
 		}
 	}
 
 	private static void unpackIniFile(File toDir) throws Exception {
-		File to = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
-		to.createNewFile();
-		FileOutputStream writer = new FileOutputStream(to);
+		File toFile = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
+		toFile.createNewFile();
+		FileOutputStream writer = new FileOutputStream(toFile);
 		iniFile.openConnection();
 		InputStream reader = iniFile.openStream();
 		byte[] buffer = new byte[153600];
@@ -185,12 +205,5 @@ public class XML2BRL extends DefaultStep {
 		}
 		writer.close();
 		reader.close();
-	}
-
-	private static void writeLiblouisutdmlFile(XdmNode node, File toFile) throws Exception {
-		OutputStream textStream = new FileOutputStream(toFile);
-		OutputStreamWriter writer = new OutputStreamWriter(textStream, "UTF-8");
-		writer.write(node.getStringValue());
-		writer.close();
 	}
 }

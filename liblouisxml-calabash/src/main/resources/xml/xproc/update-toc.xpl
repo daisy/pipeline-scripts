@@ -7,8 +7,8 @@
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
-    <p:input port="config-files" sequence="true"/>
-    <p:input port="semantic-files" sequence="true"/>
+    <p:input port="config-files" sequence="false"/>
+    <p:input port="semantic-files" sequence="false"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     

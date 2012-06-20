@@ -6,9 +6,9 @@
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
-    <p:input port="config-files" sequence="true"/>
-    <p:input port="semantic-files" sequence="true"/>
-    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
+    <p:input port="config-files" sequence="false"/>
+    <p:input port="semantic-files" sequence="false"/>
+    <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
 </p:declare-step>
