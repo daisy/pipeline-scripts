@@ -40,9 +40,12 @@ public class XML2BRL extends DefaultStep {
 		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "output");
 	private static final QName lblxml_section
 		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "section");
-	//private static final QName lblxml_page
+	// private static final QName lblxml_page
 	//	= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "page");
 
+	private static final QName _paged = new QName("paged");
+	private static final QName _page_height = new QName("page-height");
+	private static final QName _line_width = new QName("line-width");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName c_directory = new QName("http://www.w3.org/ns/xproc-step", "directory");
 	private static final QName c_file = new QName("http://www.w3.org/ns/xproc-step", "file");
@@ -98,6 +101,21 @@ public class XML2BRL extends DefaultStep {
 
 		try {
 
+			// Get options
+			Map<String,String> settings = new HashMap<String,String>();
+			RuntimeValue paged = getOption(_pages);
+			RuntimeValue pageHeight = getOption(_page_height);
+			RuntimeValue lineWidth = getOption(_line_width);
+			if (paged != null && paged.getString().equals("false")) {
+				settings.put("braillePages", "no");
+			}
+			if (pageHeight!=null) {
+				settings.put("linesPerPage", pageHeight.getString());
+			}
+			if (lineWidth != null) {
+				settings.put("cellsPerLine", lineWidth.getString());
+			}
+
 			File tempDir = new File(new URI(getOption(_temp_dir).getString()));
 
 			// Get configuration files
@@ -145,8 +163,8 @@ public class XML2BRL extends DefaultStep {
 
 			// Convert using xml2brl
 			File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-			Liblouisutdml.file2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, brailleFile, null,
-					LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
+			Liblouisutdml.file2brl(configFileNames, semanticFileNames, Arrays.asList(tables), settings, xmlFile, brailleFile, null,
+			 		LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
 			//xmlFile.delete();
 
 			// Read the braille document and wrap it in a new XML document

@@ -8,6 +8,9 @@
     <p:input port="source" sequence="false" primary="true"/>
     <p:input port="config-files" sequence="false"/>
     <p:input port="semantic-files" sequence="false"/>
+    <p:option name="paged" required="false"/>
+    <p:option name="page-height" required="false"/>
+    <p:option name="line-width" required="false"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
