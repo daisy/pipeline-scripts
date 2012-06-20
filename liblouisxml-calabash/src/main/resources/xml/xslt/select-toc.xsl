@@ -13,7 +13,9 @@
     <xsl:template match="/*">
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
-            <xsl:apply-templates select="$toc" mode="move"/>
+            <lblxml:no-pagenum>
+                <xsl:sequence select="$toc/lblxml:toc-title"/>
+            </lblxml:no-pagenum>
             <xsl:apply-templates select="child::node()"/>
         </xsl:copy>
     </xsl:template>

@@ -38,6 +38,8 @@
                                 </xsl:when>
                                 <xsl:when test="$child-display='toc-item'">
                                     <xsl:variable name="ref" as="attribute()?" select="z:ref/@ref"/>
+                                    <!-- Check if $ref really points to an element, and then flatten that element
+                                         (or apply "display:inline" to all descendants) -->
                                     <xsl:if test="$ref">
                                         <lblxml:toc-item>
                                             <xsl:attribute name="brl:style" select="my:get-toc-item-style(.)"/>

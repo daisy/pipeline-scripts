@@ -68,7 +68,7 @@
     <p:identity name="misc-cfg">
         <p:input port="source">
             <p:inline><lblxml:config-file>
-style toc
+style no-pagenum
     braillePageNumberFormat blank
 
 style preformatted-line
@@ -80,11 +80,11 @@ style preformatted-line
             </lblxml:config-file></p:inline>
         </p:input>
     </p:identity>
-    
+
     <p:identity name="misc-sem">
         <p:input port="source">
             <p:inline><lblxml:semantic-file>
-toc &amp;xpath(//lblxml:toc[not(preceding::*)])
+no-pagenum &amp;xpath(//lblxml:no-pagenum)
 skip &amp;xpath(//lblxml:toc[preceding::*])
 preformatted-line &amp;xpath(//lblxml:preformatted//lblxml:line)
             </lblxml:semantic-file></p:inline>

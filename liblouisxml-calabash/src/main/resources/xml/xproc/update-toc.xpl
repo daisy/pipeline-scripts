@@ -9,15 +9,12 @@
     <p:input port="source" sequence="false" primary="true"/>
     <p:input port="config-files" sequence="true"/>
     <p:input port="semantic-files" sequence="true"/>
-    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
+    <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="xml2brl.xpl"/>
     
     <p:xslt>
-        <p:input port="source">
-            <p:pipe step="update-toc" port="source"/>
-        </p:input>
         <p:input port="stylesheet">
             <p:document href="../xslt/select-toc.xsl"/>
         </p:input>
