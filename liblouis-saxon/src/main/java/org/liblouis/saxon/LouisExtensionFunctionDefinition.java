@@ -31,7 +31,7 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.liblouis.Louis;
+import org.daisy.pipeline.liblouis.Louis;
 
 public class LouisExtensionFunctionDefinition extends
 		ExtensionFunctionDefinition {
@@ -85,8 +85,7 @@ public class LouisExtensionFunctionDefinition extends
 				}
 
 				return SingletonIterator.makeIterator(new StringValue(Louis
-						.translate(table.getStringValue(),
-								toTranslate.getStringValue())));
+						.translate(table.getStringValue(), toTranslate.getStringValue())));
 			}
 
 			private static final long serialVersionUID = 1L;

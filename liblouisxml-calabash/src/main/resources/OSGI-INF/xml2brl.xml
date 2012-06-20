@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouisxml Step" activate="start">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouisxml Step" activate="activate">
    <implementation class="org.daisy.common.xproc.calabash.steps.liblouisxml.XML2BRLProvider"/>
    <service>
       <provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>

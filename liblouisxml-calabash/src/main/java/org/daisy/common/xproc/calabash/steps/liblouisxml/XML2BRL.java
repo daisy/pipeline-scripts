@@ -17,8 +17,8 @@ import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 import net.sf.saxon.s9api.XdmNode;
 
-import org.liblouis.LiblouisTableRegistry;
-import org.liblouis.Liblouisxml;
+import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
+import org.daisy.pipeline.liblouis.Liblouisutdml;
 
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.io.ReadablePipe;
@@ -95,11 +95,10 @@ public class XML2BRL extends DefaultStep {
 			// Write config files
 			List<String> configFileNames = new ArrayList<String>();
 			unpackIniFile(tempDir);
-			configFileNames.add("canonical.cfg");
 			if (configFiles != null) {
 				while(configFiles.moreDocuments()) {
-					File configFile = File.createTempFile("liblouisxml.", ".cfg", tempDir);
-					writeLiblouisxmlFile(configFiles.read(), configFile);
+					File configFile = File.createTempFile("liblouisutdml.", ".cfg", tempDir);
+					writeLiblouisutdmlFile(configFiles.read(), configFile);
 					configFileNames.add(configFile.getName());
 				}
 			}
@@ -108,7 +107,7 @@ public class XML2BRL extends DefaultStep {
 			List<String> semanticFileNames = new ArrayList<String>();
 			if (semanticFiles != null) {
 				while(semanticFiles.moreDocuments()) {
-					File semanticFile = File.createTempFile("liblouisxml.", ".sem", tempDir);
+					File semanticFile = File.createTempFile("liblouisutdml.", ".sem", tempDir);
 					writeLiblouisxmlFile(semanticFiles.read(), semanticFile);
 					semanticFileNames.add(semanticFile.getName());
 				}
@@ -116,7 +115,7 @@ public class XML2BRL extends DefaultStep {
 
 			// Write XML document to file
 			XdmNode xml = source.read();
-			File xmlFile = File.createTempFile("liblouisxml.", ".xml", tempDir);
+			File xmlFile = File.createTempFile("liblouisutdml.", ".xml", tempDir);
 			Serializer serializer = new Serializer(xmlFile);
 			serializer.serializeNode(xml);
 			serializer.close();
@@ -125,8 +124,8 @@ public class XML2BRL extends DefaultStep {
 			bodyTempFile.delete();
 
 			// Convert using xml2brl
-			File textFile = File.createTempFile("liblouisxml.", ".txt", tempDir);
-			Liblouisxml.xml2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, textFile, null,
+			File textFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
+			Liblouisutdml.file2brl(configFileNames, semanticFileNames, Arrays.asList(tables), null, xmlFile, textFile, null,
 					LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
 			//xmlFile.delete();
 
@@ -188,7 +187,7 @@ public class XML2BRL extends DefaultStep {
 		reader.close();
 	}
 
-	private static void writeLiblouisxmlFile(XdmNode node, File toFile) throws Exception {
+	private static void writeLiblouisutdmlFile(XdmNode node, File toFile) throws Exception {
 		OutputStream textStream = new FileOutputStream(toFile);
 		OutputStreamWriter writer = new OutputStreamWriter(textStream, "UTF-8");
 		writer.write(node.getStringValue());

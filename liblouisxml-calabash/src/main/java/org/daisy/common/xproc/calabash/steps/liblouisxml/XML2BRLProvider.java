@@ -15,7 +15,7 @@ public class XML2BRLProvider implements XProcStepProvider {
 		return new XML2BRL(runtime, step);
 	}
 
-	public void start(ComponentContext context) {
+	public void activate(ComponentContext context) {
 		Bundle bundle = context.getBundleContext().getBundle();
 		XML2BRL.setIniFile(bundle.getEntry("/lbx_files/liblouisutdml.ini"));
 	}

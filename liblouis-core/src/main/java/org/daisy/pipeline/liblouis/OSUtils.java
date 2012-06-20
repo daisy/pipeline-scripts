@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 public class OSUtils {
 

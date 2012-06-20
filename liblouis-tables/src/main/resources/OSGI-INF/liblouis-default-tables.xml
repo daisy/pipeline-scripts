@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Default Liblouis Tables">
-    <implementation class="org.liblouis.LiblouisTableSet"/>
-    <service>
-        <provide interface="org.liblouis.LiblouisTableSet"/>
-    </service>
-    <property name="identifier" type="String" value="org.liblouis.DefaultLiblouisTableSet"/>
-    <property name="directory" type="String" value="/tables"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Default Liblouis Tables" activate="activate">
+    <scr:implementation class="org.daisy.pipeline.liblouis.LiblouisTableSet"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.liblouis.LiblouisTableSet"/>
+    </scr:service>
+    <scr:property name="identifier" type="String" value="org.daisy.pipeline.liblouis.DefaultLiblouisTableSet"/>
+    <scr:property name="directory" type="String" value="/tables"/>
 </scr:component>

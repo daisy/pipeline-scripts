@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Liblouisxml {
+public class Liblouisutdml {
 
 	/**
 	 * @param configFiles (or null): array of filenames
@@ -26,7 +26,7 @@ public class Liblouisxml {
 	 * @throws Exception
 	 */
 
-	public static void xml2brl(
+	public static void file2brl(
 			List<String> configFiles,
 			List<String> semanticFiles,
 			List<String> tables,
@@ -39,7 +39,6 @@ public class Liblouisxml {
 
         List<String> command = new ArrayList<String>();
 
-        //command.add(Activator.getNativePath() + File.separator + "xml2brl");
         command.add(Activator.getNativePath() + File.separator + "file2brl"
         				+ (OSUtils.isWindows() ? ".exe" : ""));
         command.add("-f");
@@ -78,9 +77,9 @@ public class Liblouisxml {
             }
             stderr.close();
             if (!error.isEmpty()) {
-                throw new RuntimeException("Liblouisxml error:\n" + error);
+                throw new RuntimeException("Liblouisutdml error:\n" + error);
             } else {
-            	throw new RuntimeException("Liblouisxml abnormal termination");
+            	throw new RuntimeException("Liblouisutdml abnormal termination");
             }
         }
 	}

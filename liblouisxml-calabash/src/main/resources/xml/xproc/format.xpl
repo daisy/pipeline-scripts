@@ -40,9 +40,9 @@
         </p:input>
     </p:xslt>
     
-    <p:xslt name="create-automatic-styles">
+    <p:xslt name="create-styles-xml">
         <p:input port="stylesheet">
-            <p:document href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-automatic-styles.xsl"/>
+            <p:document href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-styles-xml.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -51,16 +51,16 @@
     
     <lblxml:create-liblouisxml-files name="create-liblouisxml-files">
         <p:input port="styles">
-            <p:pipe step="create-automatic-styles" port="secondary"/>
+            <p:pipe step="create-styles-xml" port="secondary"/>
         </p:input>
     </lblxml:create-liblouisxml-files>
     
     <lblxml:format-toc name="format-toc">
         <p:input port="source">
-            <p:pipe step="create-automatic-styles" port="result"/>
+            <p:pipe step="create-styles-xml" port="result"/>
         </p:input>
         <p:input port="toc-styles">
-            <p:pipe step="create-automatic-styles" port="secondary"/>
+            <p:pipe step="create-styles-xml" port="secondary"/>
         </p:input>
         <p:input port="config-files">
             <p:pipe step="create-liblouisxml-files" port="config"/>

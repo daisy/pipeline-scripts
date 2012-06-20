@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,7 +17,7 @@ public class Activator {
 		return nativePath;
 	}
 
-	public void start(ComponentContext context) {
+	public void activate(ComponentContext context) {
 		nativePath = context.getBundleContext().getDataFile("native");
 		if (!nativePath.exists()) {
 			nativePath.mkdir();

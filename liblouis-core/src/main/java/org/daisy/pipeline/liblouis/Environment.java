@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

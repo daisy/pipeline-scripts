@@ -28,7 +28,7 @@
           <Include-Resource>{maven-resources}</Include-Resource>
           <_include></_include>
           <instructions>
-            <Import-Package>org.liblouis</Import-Package>
+            <Import-Package>org.daisy.pipeline.liblouis</Import-Package>
             <Service-Component>OSGI-INF/liblouis-default-tables.xml</Service-Component>
           </instructions>
         </configuration>

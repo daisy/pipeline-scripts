@@ -4,5 +4,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" uri="../xml/xslt/style-functions.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-automatic-styles.xsl" uri="../xml/xslt/create-automatic-styles.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-styles-xml.xsl" uri="../xml/xslt/create-styles-xml.xsl"/>
 </catalog>

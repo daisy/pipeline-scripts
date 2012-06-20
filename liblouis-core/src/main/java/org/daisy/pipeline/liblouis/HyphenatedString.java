@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;

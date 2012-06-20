@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis Binaries" activate="start">
-    <implementation class="org.liblouis.Activator"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="Liblouis Binaries">
+    <implementation class="org.daisy.pipeline.liblouis.Activator"/>
 </scr:component>

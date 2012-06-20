@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import java.io.File;
 import java.io.FileOutputStream;

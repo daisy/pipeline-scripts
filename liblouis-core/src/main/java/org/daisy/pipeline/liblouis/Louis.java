@@ -1,4 +1,4 @@
-package org.liblouis;
+package org.daisy.pipeline.liblouis;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ import com.sun.jna.ptr.IntByReference;
 
 public class Louis {
 
-	private static final String TABLE_SET_ID = "org.liblouis.DefaultLiblouisTableSet";
+	private static final String TABLE_SET_ID = "org.daisy.pipeline.liblouis.DefaultLiblouisTableSet";
 
 	private static final int OUT_IN_RATIO = 2;
 	private static final char TXT_SOFT_HYPHEN = '\u00AD';

@@ -14,12 +14,12 @@
     
     <p:import href="xml2brl.xpl"/>
     
-    <p:xslt name="move-toc">
+    <p:xslt>
         <p:input port="source">
             <p:pipe step="update-toc" port="source"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="../xslt/move-toc.xsl"/>
+            <p:document href="../xslt/select-toc.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -43,7 +43,7 @@
             <p:pipe step="xml2brl" port="result"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="../xslt/section-to-preformatted.xsl"/>
+            <p:document href="../xslt/read-xml2brl-output.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
