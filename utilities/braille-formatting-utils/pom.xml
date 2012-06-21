@@ -7,9 +7,9 @@
 
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>modules-parent</artifactId>
+    <artifactId>braille-modules-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath/>
+    <relativePath>../..</relativePath>
   </parent>
 
   <groupId>org.daisy.pipeline.modules</groupId>

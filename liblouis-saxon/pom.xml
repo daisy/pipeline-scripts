@@ -7,9 +7,8 @@
 
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>modules-parent</artifactId>
+    <artifactId>braille-modules-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath/>
   </parent>
 
   <groupId>org.daisy.pipeline.modules</groupId>
@@ -21,14 +20,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.daisy.example.libs</groupId>
-      <artifactId>saxon-he-osgi</artifactId>
-      <version>9.4.0</version>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>liblouis-core</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
@@ -37,9 +34,7 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <configuration combine.self="override">
-          <Include-Resource>{maven-resources}</Include-Resource>
-          <_include></_include>
+        <configuration>
           <instructions>
             <Service-Component>OSGI-INF/liblouis-saxon.xml</Service-Component>
           </instructions>
