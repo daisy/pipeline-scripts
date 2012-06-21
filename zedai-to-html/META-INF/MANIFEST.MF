@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: ZedAI to HTML
-Bundle-SymbolicName: org.daisy.pipeline.modules.zedai-to-html
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: DAISY Consortium
