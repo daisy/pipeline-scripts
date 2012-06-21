@@ -103,7 +103,7 @@ public class XML2BRL extends DefaultStep {
 
 			// Get options
 			Map<String,String> settings = new HashMap<String,String>();
-			RuntimeValue paged = getOption(_pages);
+			RuntimeValue paged = getOption(_paged);
 			RuntimeValue pageHeight = getOption(_page_height);
 			RuntimeValue lineWidth = getOption(_line_width);
 			if (paged != null && paged.getString().equals("false")) {
