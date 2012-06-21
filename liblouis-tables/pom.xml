@@ -18,15 +18,49 @@
 
   <name>DAISY Pipeline 2 module :: liblouis-tables</name>
 
+  <scm>
+    <connection>scm:svn:http://liblouis.googlecode.com/svn/trunk/tables</connection>
+  </scm>
+
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <targetPath>tables</targetPath>
+        <directory>${basedir}/target/resources/tables</directory>
+        <excludes>
+          <exclude>lang2table</exclude>
+          <exclude>Makefile.am</exclude>
+          <exclude>maketablelist.sh</exclude>
+          <exclude>README</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-scm-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>checkout</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <configuration>
+              <connectionType>connection</connectionType>
+              <checkoutDirectory>${basedir}/target/resources/tables</checkoutDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
             <Import-Package>org.daisy.pipeline.liblouis</Import-Package>
-            <!--<Import-Package>org.daisy.pipeline.liblouis;version="[1.0,2)"</Import-Package>-->
             <Service-Component>OSGI-INF/liblouis-default-tables.xml</Service-Component>
           </instructions>
         </configuration>
