@@ -127,7 +127,7 @@
                                         then $margin-bottom + $padding-bottom else $margin-bottom), ';',
                 'page-break-before:', brl:get-property-or-default($other-style, 'page-break-before'), ';',
                 'page-break-after:', brl:get-property-or-default($other-style, 'page-break-after'), ';',
-                'page-break-inner:', brl:get-property-or-default($other-style, 'page-break-inner'), ';',
+                'page-break-inside:', brl:get-property-or-default($other-style, 'page-break-inside'), ';',
                 'orphans:', brl:get-property-or-default($other-style, 'orphans'))"/>
             <xsl:if test="$border-top!='none'">
                 <xsl:sequence select="my:create-border($border-top, $left + $margin-left,
@@ -160,7 +160,8 @@
                         <xsl:with-param name="margin-right" select="$margin-right + $padding-right"/>
                         <xsl:with-param name="margin-top" select="if ($border-top='none') then 0 else $padding-top"/>
                         <xsl:with-param name="margin-bottom" select="if ($border-bottom='none') then 0 else $padding-bottom"/>
-                        <xsl:with-param name="other-style" select="$other-style"/>
+                        <xsl:with-param name="other-style" select="brl:remove-style-values($other-style,
+                            ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
                     </xsl:call-template>
                 </xsl:otherwise>
             </xsl:choose>
