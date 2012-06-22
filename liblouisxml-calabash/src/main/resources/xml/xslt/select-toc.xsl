@@ -8,7 +8,9 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
-    <xsl:variable name="toc" as="element()" select="//lblxml:toc[1]"/>
+    <xsl:param name="select" select="1"/>
+    
+    <xsl:variable name="toc" as="element()" select="/descendant::lblxml:toc[number($select)]"/>
     
     <xsl:template match="/*">
         <xsl:copy>

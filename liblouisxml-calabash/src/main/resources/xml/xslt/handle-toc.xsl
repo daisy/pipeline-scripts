@@ -4,8 +4,7 @@
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
     xmlns:my="http://github.com/bertfrees"
-    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
-    exclude-result-prefixes="xs brl lblxml my z"
+    exclude-result-prefixes="xs brl lblxml my"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -26,21 +25,19 @@
             <xsl:choose>
                 <xsl:when test="$display='toc'">
                     <lblxml:toc>
-                        <xsl:for-each select="child::*">
-                            <xsl:variable name="child-display" as="xs:string"
+                        <xsl:for-each select="descendant::*">
+                            <xsl:variable name="descendant-display" as="xs:string"
                                 select="brl:get-property-or-default(string(@brl:style), 'display')"/>
                             <xsl:choose>
-                                <xsl:when test="$child-display='toc-title'">
+                                <xsl:when test="$descendant-display='toc-title'">
                                     <lblxml:toc-title>
                                         <xsl:attribute name="brl:style" select="my:get-toc-title-style(.)"/>
                                         <xsl:value-of select="string(.)"/>
                                     </lblxml:toc-title>
                                 </xsl:when>
-                                <xsl:when test="$child-display='toc-item'">
-                                    <xsl:variable name="ref" as="attribute()?" select="z:ref/@ref"/>
-                                    <!-- Check if $ref really points to an element, and then flatten that element
-                                         (or apply "display:inline" to all descendants) -->
-                                    <xsl:if test="$ref">
+                                <xsl:when test="$descendant-display='toc-item'">
+                                    <xsl:variable name="ref" as="attribute()?" select="@ref"/>
+                                    <xsl:if test="$ref and //*[@xml:id=string($ref)]">
                                         <lblxml:toc-item>
                                             <xsl:attribute name="brl:style" select="my:get-toc-item-style(.)"/>
                                             <xsl:copy-of select="$ref"/>
@@ -56,6 +53,30 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:copy>
+    </xsl:template>
+    
+    <!-- Flatten elements that are referenced in a toc-item -->
+    <xsl:template match="*[@xml:id]">
+        <xsl:variable name="id" select="string(@xml:id)"/>
+        <xsl:copy>
+            <xsl:choose>
+                <xsl:when test="some $ref in //*[@ref=$id] satisfies
+                    (brl:get-property-or-default(string($ref/@brl:style), 'display') = 'toc-item')">
+                    <xsl:apply-templates select="@*|node()" mode="flatten"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="@*|node()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="element()" mode="flatten">
+        <xsl:apply-templates select="node()" mode="flatten"/>
+    </xsl:template>
+    
+    <xsl:template match="@*|text()|comment()|processing-instruction()" mode="flatten">
+        <xsl:copy/>
     </xsl:template>
     
     <xsl:function name="my:get-toc-title-style" as="xs:string">

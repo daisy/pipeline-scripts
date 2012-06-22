@@ -13,49 +13,57 @@
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
-    <!-- TODO: support multiple TOCs / indexes -->
-    
     <p:import href="update-toc.xpl"/>
     <p:import href="store-files.xpl"/>
     
     <p:choose>
         <p:when test="//lblxml:toc">
             
-            <p:xslt>
-                <p:input port="source">
-                    <p:pipe step="format-toc" port="toc-styles"/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/create-toc-styles-cfg-file.xsl"/>
-                </p:input>
-                <p:with-param name="toc-title-style" select="string(//lblxml:toc[1]//lblxml:toc-title/@brl:style)">
+            <p:for-each name="config-files">
+                <p:iteration-source select="//lblxml:toc">
                     <p:pipe step="format-toc" port="source"/>
-                </p:with-param>
-                <p:with-param name="toc-item-styles" select="distinct-values(//lblxml:toc[1]//lblxml:toc-item/@brl:style)">
+                </p:iteration-source>
+                <p:output port="result"/>
+                <p:xslt>
+                    <p:input port="source">
+                        <p:pipe step="format-toc" port="toc-styles"/>
+                    </p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/create-toc-styles-cfg-file.xsl"/>
+                    </p:input>
+                    <p:with-param name="toc-title-style" select="string(.//lblxml:toc-title/@brl:style)">
+                        <p:pipe step="config-files" port="current"/>
+                    </p:with-param>
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//lblxml:toc-item/@brl:style)">
+                        <p:pipe step="config-files" port="current"/>
+                    </p:with-param>
+                </p:xslt>
+                <lblxml:store-files>
+                    <p:input port="directory">
+                        <p:pipe step="format-toc" port="config-files"/>
+                    </p:input>
+                </lblxml:store-files>
+            </p:for-each>
+            
+            <p:for-each name="semantic-files">                
+                <p:iteration-source select="//lblxml:toc">
                     <p:pipe step="format-toc" port="source"/>
-                </p:with-param>
-            </p:xslt>
-            
-            <lblxml:store-files name="config-files">
-                <p:input port="directory">
-                    <p:pipe step="format-toc" port="config-files"/>
-                </p:input>
-            </lblxml:store-files>
-            
-            <p:xslt template-name="initial">
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/create-toc-styles-sem-file.xsl"/>
-                </p:input>
-                <p:with-param name="toc-item-styles" select="distinct-values(//lblxml:toc[1]//lblxml:toc-item/@brl:style)">
-                    <p:pipe step="format-toc" port="source"/>
-                </p:with-param>
-            </p:xslt>
-            
-            <lblxml:store-files name="semantic-files">
-                <p:input port="directory">
-                    <p:pipe step="format-toc" port="semantic-files"/>
-                </p:input>
-            </lblxml:store-files>
+                </p:iteration-source>
+                <p:output port="result"/>                
+                <p:xslt template-name="initial">
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/create-toc-styles-sem-file.xsl"/>
+                    </p:input>
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//lblxml:toc-item/@brl:style)">
+                        <p:pipe step="semantic-files" port="current"/>
+                    </p:with-param>
+                </p:xslt>
+                <lblxml:store-files>
+                    <p:input port="directory">
+                        <p:pipe step="format-toc" port="semantic-files"/>
+                    </p:input>
+                </lblxml:store-files>
+            </p:for-each>
             
             <lblxml:update-toc>
                 <p:input port="source">
