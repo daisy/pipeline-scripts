@@ -14,20 +14,44 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="z:head|
-						 z:object[contains(string(@srctype), 'image')]">
+	<xsl:template match="z:head">
+		<!-- skip -->
+	</xsl:template>
+
+    <xsl:template match="z:object[contains(string(@srctype), 'image')]">
 		<xsl:copy>
-			<xsl:attribute name="brl:style" select="'display:none'"/>
+			<xsl:attribute name="brl:style" select="'display:block;
+			                                         margin-left:4;
+			                                         margin-top:1;
+			                                         margin-bottom:1;'"/>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+    </xsl:template>
+	
+	<xsl:template match="z:section[@role='halftitlepage' or @role='titlepage']/z:h">
+		<xsl:copy>
+			<xsl:attribute name="brl:style" select="'display:block;
+			                                         text-align:center;
+			                                         margin-top:1;
+			                                         margin-bottom:1;
+			                                         margin-left:3;
+			                                         margin-right:3;
+			                                         padding-left:1;
+			                                         padding-right:1;
+			                                         border-left:⠇;
+			                                         border-right:⠸;
+			                                         border-top:⠒;
+			                                         border-bottom:⠒;'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="z:section|
-		                 z:frontmatter">
+	                     z:frontmatter">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:block;
-				                                     page-break-after:always;
-				                                     page-break-before:always'"/>
+			                                         page-break-after:always;
+			                                         page-break-before:always'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
@@ -35,13 +59,13 @@
 	<xsl:template match="z:toc">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:toc;
-													 border-top:⠶;
-													 border-bottom:⠛;
-													 padding-top:1;
-													 padding-bottom:1;
-													 margin-top:1;
-													 margin-bottom:1;
-													 page-break-inside:avoid'"/>
+			                                         border-top:⠶;
+			                                         border-bottom:⠛;
+			                                         padding-top:1;
+			                                         padding-bottom:1;
+			                                         margin-top:1;
+			                                         margin-bottom:1;
+			                                         page-break-inside:avoid'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
@@ -49,17 +73,17 @@
 	<xsl:template match="z:toc/z:h">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:toc-title;
-				                                     text-align:center;
-				                                     margin-bottom:1;'"/>
+			                                         text-align:center;
+			                                         margin-bottom:1;'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="z:toc/z:entry">
+	<xsl:template match="z:toc/z:entry/z:ref">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:toc-item;
-				                                     margin-left:2;
-				                                     text-indent:-2'"/>
+			                                         margin-left:2;
+			                                         text-indent:-2'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
@@ -67,14 +91,16 @@
 	<xsl:template match="z:h">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:block;
-				                                     text-align:center;
-													 margin-top:1;
-													 margin-bottom:1;
-													 margin-left:4;
-													 margin-right:4;
-													 border-top:⠒;
-													 border-bottom:⠒;
-													 page-break-after:avoid'"/>
+			                                         text-align:center;
+			                                         margin-top:1;
+			                                         margin-bottom:1;
+			                                         margin-left:3;
+			                                         margin-right:3;
+			                                         padding-left:3;
+			                                         padding-right:3;
+			                                         border-top:⠒;
+			                                         border-bottom:⠒;
+			                                         page-break-after:avoid'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
@@ -82,7 +108,7 @@
 	<xsl:template match="z:p">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:block;
-					                                 text-indent:2'"/>
+			                                         text-indent:2'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
@@ -90,16 +116,16 @@
 	<xsl:template match="z:verse[@role='poem']">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:block;
-				                                     margin-left:4'"/>
+			                                         margin-left:4'"/>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="z:block|
-						 z:lngroup|
-						 z:ln|
-						 z:object|
-						 z:verse">
+	                     z:lngroup|
+	                     z:ln|
+	                     z:object|
+	                     z:verse">
 		<xsl:copy>
 			<xsl:attribute name="brl:style" select="'display:block'"/>
 			<xsl:apply-templates select="@*|node()" />

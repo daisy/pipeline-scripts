@@ -122,47 +122,20 @@
                 <entry><ref ref="chapter_1">I. Down the Rabbit-Hole</ref></entry>
                 <entry><ref ref="chapter_2">II. The Pool of Tears</ref></entry>
                 <entry><ref ref="chapter_3">III. A Caucus-Race and a Long Tale</ref></entry>
-                
-                <!--
-                <entry> I. Down the Rabbit-Hole <ref ref="p1">1</ref>
-                </entry>
-                <entry> II. The Pool of Tears <ref ref="p15">15</ref>
-                </entry>
-                <entry> III. A Caucus-Race and a Long Tale <ref ref="p29">29</ref>
-                </entry>
-                -->
-                
-                <!--
-                <d:tocentry><d:label>IV. The <name>Rabbit</name>Sends in a Little Bill</d:label>
-                    <d:pageref ref="p41">41</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>V. Advice from a Caterpillar</d:label>
-                    <d:pageref ref="p59">59</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>VI. Pig and Pepper</d:label>
-                    <d:pageref ref="p76">76</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>VII. A Mad Tea-Party</d:label>
-                    <d:pageref ref="p95">95</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>VIII. The Queen's Croquet-Ground</d:label>
-                    <d:pageref ref="p112">112</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>IX. The Mock Turtle's Story</d:label>
-                    <d:pageref ref="p130">130</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>X. The Lobster Quadrille</d:label>
-                    <d:pageref ref="p147">147</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>XI. Who Stole the Tarts?</d:label>
-                    <d:pageref ref="p162">162</d:pageref>
-                </d:tocentry>
-                <d:tocentry><d:label>XII. Alice's Evidence</d:label>
-                    <d:pageref ref="p176">176</d:pageref>
-                </d:tocentry>
-                -->
             </toc>
-
+            <toc>
+                <h>List of images</h>
+                <entry><ref ref="img_1">The King and Queen inspecting the tarts</ref></entry>
+                <entry><ref ref="img_2">White Rabbit checking watch</ref></entry>
+                <entry><ref ref="img_3">Alice finding tiny door behind curtain</ref></entry>
+                <entry><ref ref="img_4">Alice taking “Drink Me” bottle</ref></entry>
+                <entry><ref ref="img_5">Alice stretched tall</ref></entry>
+                <entry><ref ref="img_6">Giant Alice watching Rabbit run away</ref></entry>
+                <entry><ref ref="img_7">Alice in pool of tears</ref></entry>
+                <entry><ref ref="img_8">Alice with Mouse in pool of tears</ref></entry>
+                <entry><ref ref="img_9">Mouse telling story to birds and Alice</ref></entry>
+                <entry><ref ref="img_10">Dodo presenting thimble</ref></entry>
+            </toc>
         </frontmatter>
         <bodymatter>
             <section>

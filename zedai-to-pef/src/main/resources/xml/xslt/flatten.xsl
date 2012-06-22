@@ -8,11 +8,11 @@
 	
 	<xsl:output method="xml" encoding="utf-8" indent="yes" />
 	
-	<xsl:template match="node()|@*">
+	<xsl:template match="@*|node()">
 		<xsl:copy>
 			<xsl:choose>
-				<xsl:when test="my:flatten(.)">
-					<xsl:apply-templates select="@*|element()|text()" mode="flatten"/>
+				<xsl:when test="self::z:p">
+					<xsl:apply-templates select="@*|node()" mode="flatten"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="@*|node()"/>
@@ -22,26 +22,11 @@
 	</xsl:template>
 	
 	<xsl:template match="element()" mode="flatten">
-		<xsl:apply-templates mode="flatten"/>
+		<xsl:apply-templates select="node()" mode="flatten"/>
 	</xsl:template>
 	
-	<xsl:template match="text()|@*" mode="flatten">
+	<xsl:template match="@*|text()|comment()|processing-instruction()" mode="flatten">
 		<xsl:copy/>
 	</xsl:template>
-	
-	<xsl:function name="my:flatten" as="xs:boolean">
-		<xsl:param name="element" as="element()"/>
-		<xsl:choose>
-			<xsl:when test="$element/self::z:h">
-				<xsl:value-of select="true()"/>
-			</xsl:when>
-			<xsl:when test="$element/self::z:p">
-				<xsl:value-of select="true()"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="false()"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
 
 </xsl:stylesheet>
