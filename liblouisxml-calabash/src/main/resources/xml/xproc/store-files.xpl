@@ -15,7 +15,6 @@
     
     <p:for-each name="files">
         <p:output port="result"/>
-        <p:identity name="source"/>
         <px:tempfile delete-on-exit="false" name="tempfile">
             <p:with-option name="href" select="/c:directory/@xml:base">
                 <p:pipe step="store-files" port="directory"/>
@@ -23,7 +22,7 @@
         </px:tempfile>
         <p:store method="text">
             <p:input port="source">
-                <p:pipe step="source" port="result"/>
+                <p:pipe step="files" port="current"/>
             </p:input>
             <p:with-option name="href" select="/c:result">
                 <p:pipe step="tempfile" port="result"/>
