@@ -63,6 +63,8 @@ public class Liblouisutdml {
         command.add(input.getAbsolutePath());
         command.add(output.getAbsolutePath());
 
+        System.out.println(StringUtils.join(command, " "));
+
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.environment().put("LOUIS_TABLEPATH", tablePath);
         builder.directory(tempDir);
@@ -79,7 +81,7 @@ public class Liblouisutdml {
             if (!error.isEmpty()) {
                 throw new RuntimeException("Liblouisutdml error:\n" + error);
             } else {
-            	throw new RuntimeException("Liblouisutdml abnormal termination");
+            	throw new RuntimeException("Liblouisutdml abnormal termination.");
             }
         }
 	}
