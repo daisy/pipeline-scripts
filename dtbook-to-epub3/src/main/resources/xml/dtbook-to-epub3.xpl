@@ -21,14 +21,14 @@
         </p:documentation>
     </p:input>
 
-    <p:option name="language" required="false" px:dir="output" px:type="string" select="''">
+    <p:option name="language" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Language code</h2>
             <p px:role="desc">Language code of the input document.</p>
         </p:documentation>
     </p:option>
 
-    <p:option name="output-dir" required="true" px:dir="output" px:type="anyDirURI">
+    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Output directory</h2>
             <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
