@@ -86,7 +86,7 @@
                 This just ensures a value for dc:publisher if there is none present in the source doc
             -->
             <xsl:if
-                test="string-length(normalize-space(dtb:meta[lower-case(@name)='dc:publisher']/@content)) = 0">
+                test="string-length(normalize-space(dtb:meta[lower-case(@name)='dc:publisher'][1]/@content)) = 0">
                 <meta property="dc:publisher" content="Anonymous"/>
             </xsl:if>
 
