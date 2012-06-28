@@ -180,14 +180,14 @@
                                             string-length($daisy-dir)+1
                                     )
                                 )"/>
+                <cx:message>
+                    <p:with-option name="message" select="concat('compiling media overlay for ',substring-after($result-uri,$publication-dir))"/>
+                </cx:message>
                 <px:mediaoverlay-rearrange>
                     <p:input port="mediaoverlay">
                         <p:pipe port="result" step="mediaoverlay-joined"/>
                     </p:input>
                 </px:mediaoverlay-rearrange>
-                <cx:message>
-                    <p:with-option name="message" select="concat('compiled a media overlay for ',$result-uri)"/>
-                </cx:message>
                 <p:choose>
                     <p:when test="$result-uri = concat($publication-dir,'navigation.smil')">
                         <p:viewport match="//mo:text">

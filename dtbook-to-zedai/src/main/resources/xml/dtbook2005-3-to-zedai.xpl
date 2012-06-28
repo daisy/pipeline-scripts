@@ -234,7 +234,7 @@
         <p:input port="stylesheet">
             <p:document href="normalize-section-block.xsl"/>
         </p:input>
-        <p:log href="file:/tmp/d2z-intermediate.xml" port="result"/>
+        <!--<p:log href="file:/tmp/d2z-intermediate.xml" port="result"/>-->
     </p:xslt>
 
     
