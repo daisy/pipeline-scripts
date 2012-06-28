@@ -32,12 +32,11 @@ syntax: regexp
 # ignore all temp/ directories
 (^|/)temp/
 
-# ignore BndTools runtime directories
-(^|/)runtimefw/
-
 # ignore Maven target directories
 (^|/)target/
-# ignore metadata dirs 
+
+# Eclipse metadata
 (^|/).metadata/
-
-
+(^|/).classpath
+(^|/).project
+(^|/).settings
