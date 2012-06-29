@@ -482,10 +482,9 @@
     <cx:message message="Validating ZedAI"/>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
         <p:input port="schema">
-            <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng" xml:base="file:/Users/Romain/Work/daisy-pipeline/modules/dtbook-to-zedai/src/main/resources/xml/"/>
+            <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>
     </p:validate-with-relax-ng>
-<!--    <p:identity name="validate-zedai"/>-->
     <cx:message message="Conversion complete."/>
     <p:sink/>
 
