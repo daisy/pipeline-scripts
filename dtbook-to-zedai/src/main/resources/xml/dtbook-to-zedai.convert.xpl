@@ -8,7 +8,7 @@
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="cx p c cxo px pxi z tmp">
+    exclude-inline-prefixes="#all">
 
     <p:documentation>
         Transforms DTBook XML into ZedAI XML.
@@ -482,9 +482,10 @@
     <cx:message message="Validating ZedAI"/>
     <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
         <p:input port="schema">
-            <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
+            <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng" xml:base="file:/Users/Romain/Work/daisy-pipeline/modules/dtbook-to-zedai/src/main/resources/xml/"/>
         </p:input>
     </p:validate-with-relax-ng>
+<!--    <p:identity name="validate-zedai"/>-->
     <cx:message message="Conversion complete."/>
     <p:sink/>
 
@@ -561,7 +562,9 @@
             <p:when test="//tmp:wrapper/text()">
                 <p:output port="result"/>
                 <px:fileset-create>
-                    <p:with-option name="base" select="$output-dir"/>
+                    <p:with-option name="base" select="$output-dir">
+                        <p:empty/><!--required since the XPath context can be a sequence here, causing err:XD0008 -->
+                    </p:with-option>
                 </px:fileset-create>
                 <px:fileset-add-entry>
                     <p:with-option name="href" select="$css-file"/>
