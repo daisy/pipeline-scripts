@@ -9,4 +9,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:liblouisxml-calabash" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille-formatting-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille-css-calabash" />
 </catalog>

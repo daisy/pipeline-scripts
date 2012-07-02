@@ -4,6 +4,7 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
     xmlns:brlutls="http://xmlcalabash.com/ns/extensions/brailleutils"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
@@ -40,6 +41,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/liblouisxml-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille-css-calabash/xproc/library.xpl"/>
     
     <p:variable name="input-uri" select="base-uri(/)"/>
     
@@ -103,12 +105,22 @@
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:variable>
         
-        <!-- flatten some elements -->
+        <!-- add styling -->
         
-        <p:xslt>
+        <css:apply-stylesheet>
             <p:input port="source">
                 <p:pipe port="source" step="zedai-to-pef"/>
             </p:input>
+            <!-- FIXME this is a very hackish solution -->
+            <p:with-option name="stylesheet"
+                select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-25), 'css/test.css')">
+                <p:document href="zedai-to-pef.xpl"/>
+            </p:with-option>
+        </css:apply-stylesheet>
+        
+        <!-- flatten some elements -->
+        
+        <p:xslt>
             <p:input port="stylesheet">
                 <p:document href="../xslt/flatten.xsl"/>
             </p:input>
@@ -122,17 +134,6 @@
         <p:xslt>
             <p:input port="stylesheet">
                 <p:document href="../xslt/translate.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        
-        <!-- add styling -->
-        
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/add-styling.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>

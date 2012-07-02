@@ -10,9 +10,9 @@
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" />
     
-    <xsl:variable name="INTEGER_NUMBER" select="'^(0|-?[1-9][0-9]*)$'"/>
-    <xsl:variable name="NATURAL_NUMBER" select="'^(0|[1-9][0-9]*)$'"/>
-    <xsl:variable name="POSITIVE_NUMBER" select="'^[1-9][0-9]*$'"/>
+    <xsl:variable name="INTEGER_NUMBER" select="'^(0|-?[1-9][0-9]*)(\.0*)?$'"/>
+    <xsl:variable name="NATURAL_NUMBER" select="'^(0|[1-9][0-9]*)(\.0*)?$'"/>
+    <xsl:variable name="POSITIVE_NUMBER" select="'^[1-9][0-9]*(\.0*)?$'"/>
 
     <xsl:template match="/">
         <xsl:call-template name="create-config-file">
@@ -60,8 +60,8 @@
                     <xsl:text>&#xa;</xsl:text>
                     
                     <xsl:variable name="text-align" as="xs:string" select="brl:get-property-or-default(.,'text-align')"/>
-                    <xsl:variable name="margin-left" as="xs:string" select="brl:get-property-or-default(.,'margin-left-absolute')"/>
-                    <xsl:variable name="margin-right" as="xs:string" select="brl:get-property-or-default(.,'margin-right-absolute')"/>
+                    <xsl:variable name="margin-left-absolute" as="xs:string" select="brl:get-property-or-default(.,'margin-left-absolute')"/>
+                    <xsl:variable name="margin-right-absolute" as="xs:string" select="brl:get-property-or-default(.,'margin-right-absolute')"/>
                     <xsl:variable name="margin-top" as="xs:string" select="brl:get-property-or-default(.,'margin-top')"/>
                     <xsl:variable name="margin-bottom" as="xs:string" select="brl:get-property-or-default(.,'margin-bottom')"/>
                     <xsl:variable name="text-indent" as="xs:string" select="brl:get-property-or-default(.,'text-indent')"/>
@@ -94,34 +94,32 @@
                     
                     <!-- leftMargin -->
                     
-                    <xsl:if test="matches($margin-left, $NATURAL_NUMBER)">
-                        <xsl:value-of select="concat('   leftMargin ', $margin-left, '&#xa;')"/>
+                    <xsl:if test="matches($margin-left-absolute, $NATURAL_NUMBER)">
+                        <xsl:value-of select="concat('   leftMargin ', format-number(number($margin-left-absolute), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- rightMargin -->
                     
-                    <xsl:if test="matches($margin-right, $NATURAL_NUMBER)">
-                        <xsl:value-of select="concat('   rightMargin ', $margin-right, '&#xa;')"/>
+                    <xsl:if test="matches($margin-right-absolute, $NATURAL_NUMBER)">
+                        <xsl:value-of select="concat('   rightMargin ', format-number(number($margin-right-absolute), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesBefore -->
                     
-                    <xsl:variable name="linesBefore" as="xs:string" select="$margin-top"/>
-                    <xsl:if test="matches($linesBefore, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   linesBefore ', $linesBefore, '&#xa;')"/>
+                    <xsl:if test="matches($margin-top, $POSITIVE_NUMBER)">
+                        <xsl:value-of select="concat('   linesBefore ', format-number(number($margin-top), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesAfter -->
                     
-                    <xsl:variable name="linesAfter" as="xs:string" select="$margin-bottom"/>
-                    <xsl:if test="matches($linesAfter, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   linesAfter ', $linesAfter, '&#xa;')"/>
+                    <xsl:if test="matches($margin-bottom, $POSITIVE_NUMBER)">
+                        <xsl:value-of select="concat('   linesAfter ', format-number(number($margin-bottom), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- firstLineIndent -->
                     
                     <xsl:if test="matches($text-indent, $INTEGER_NUMBER)">
-                        <xsl:value-of select="concat('   firstLineIndent ', $text-indent, '&#xa;')"/>
+                        <xsl:value-of select="concat('   firstLineIndent ', format-number(number($text-indent), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- newPageBefore -->
@@ -158,7 +156,7 @@
                     <!-- orphanControl -->
                     
                     <xsl:if test="matches($orphans, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   orphanControl ', $orphans, '&#xa;')"/>
+                        <xsl:value-of select="concat('   orphanControl ', format-number(number($orphans), '0'), '&#xa;')"/>
                     </xsl:if>
                     
                     <xsl:text>&#xa;</xsl:text>
