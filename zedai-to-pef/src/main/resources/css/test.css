@@ -59,10 +59,14 @@ verse {
 	display: block;
 }
 
-
-/*
-
-attribute selectors don't work yet
+block[role="imprint"] {
+    display: block;
+	text-align: center;
+	margin-top: 1;
+	margin-bottom: 1;
+	margin-left: 3;
+	margin-right: 3;
+}
 
 verse[role="poem"] {
 	display: block;
@@ -91,5 +95,3 @@ section[role="titlepage"] > h {
 	border-top: ⠒;
 	border-bottom: ⠒;
 }
-
-*/
