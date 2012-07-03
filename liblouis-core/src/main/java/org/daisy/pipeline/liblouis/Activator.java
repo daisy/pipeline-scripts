@@ -10,6 +10,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
 
 import com.sun.jna.NativeLibrary;
+import com.sun.jna.Platform;
 
 public class Activator {
 
@@ -26,16 +27,16 @@ public class Activator {
 			nativePath.mkdir();
 			Bundle bundle = context.getBundleContext().getBundle();
 			String directory = null;
-			switch (OSUtils.getOSType()) {
-				case MAC:
+			switch(Platform.getOSType()) {
+				case Platform.MAC:
 					directory = "/native/mac";
 					break;
-				case LINUX:
+				case Platform.LINUX:
 					directory = "/native/linux";
 					break;
 				default:
 					throw new RuntimeException(
-							"No liblouis binaries for platform " + OSUtils.getOSType().name());
+							"No liblouis binaries for this platform");
 			}
 			if (bundle.getEntry(directory) == null) {
 				throw new RuntimeException(directory + " doesn't exist" );

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.jna.Platform;
+
 public class Liblouisutdml {
 
 	/**
@@ -40,7 +42,7 @@ public class Liblouisutdml {
         List<String> command = new ArrayList<String>();
 
         command.add(Activator.getNativePath() + File.separator + "file2brl"
-        				+ (OSUtils.isWindows() ? ".exe" : ""));
+        				+ (Platform.isWindows() ? ".exe" : ""));
         command.add("-f");
         command.add((configPath != null ? configPath.getAbsolutePath() : ".") + File.separator +
         		(configFiles != null ? StringUtils.join(configFiles, ",") : ""));
