@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
-    <utfx:stylesheet src="../src/moveout-imggroup.xsl"/>
+    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-imggroup.xsl"/>
 
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'

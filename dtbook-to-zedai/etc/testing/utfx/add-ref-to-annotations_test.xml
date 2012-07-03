@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/ns/z3998/authoring/">
+    
+    <utfx:stylesheet src="../../dtbook-to-zedai/add-ref-to-annotations.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Floating annotations</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <section xml:id="sec1">
+                    <annotation>Annotation</annotation>
+                </section>    
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="sec1">
+                    <annotation ref="sec1">Annotation</annotation>
+                    <annotation role="production">Please review annotations and their targets (@ref). Source document contained one or more annotations with no explicit references.</annotation>
+                </section>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Floating annotations #2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <section xml:id="sec1">
+                    <p>There are no annotations here.</p>
+                </section>    
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="sec1">
+                    <p>There are no annotations here.</p>
+                </section>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+</utfx:tests>

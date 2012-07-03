@@ -5,7 +5,7 @@
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
     xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp">
 
-    <utfx:stylesheet src="../src/moveout-code.xsl"/>
+    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-code.xsl"/>
 
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'

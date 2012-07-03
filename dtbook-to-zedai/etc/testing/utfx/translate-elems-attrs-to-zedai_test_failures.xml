@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:rend="http://www.daisy.org/ns/z3998/authoring/features/rend/"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
+
+    <utfx:stylesheet src="../../dtbook-to-zedai/translate-elems-attrs-to-zedai.xsl"/>
+
+    <!-- These tests fail because of limitations in UTF-X -->
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Head</utfx:name>
+        <!-- blank @about in meta for mods records because that filename is a parameter -->
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <head/>
+            </utfx:source>
+            <utfx:expected>
+                <head>
+                    <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+                        <meta property="z3998:name" content="book"/>
+                        <meta property="z3998:version" content="1.0"/>
+                    </meta>
+                    <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+                    <meta property="dc:identifier" content="@@"/>
+                    <meta property="dc:publisher" content="Anonymous"/>
+                    <meta property="dc:date">CANNOT TEST</meta>
+                </head>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Frontmatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <frontmatter>
+                    <doctitle/>
+                    <docauthor/>
+                </frontmatter>
+            </utfx:source>
+            <utfx:expected>
+                <frontmatter>
+                    <section xml:id="CANNOT TEST">
+                        <p role="title"/>
+                        <p role="author"/>
+                    </section>
+                </frontmatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: levels #1</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level1>
+                    <level2>
+                        <level3>
+                            <level4>
+                                <level5>
+                                    <level6/>
+                                </level5>
+                            </level4>
+                        </level3>
+                    </level2>
+                </level1>
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="CANNOT TEST">
+                    <section xml:id="CANNOT TEST">
+                        <section xml:id="CANNOT TEST">
+                            <section xml:id="CANNOT TEST">
+                                <section xml:id="CANNOT TEST">
+                                    <section xml:id="CANNOT TEST"/>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: levels #2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level/>
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="CANNOT TEST"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: linegroup</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <tmp:annotation-block><linegroup><line/><line/><pagenum>4</pagenum></linegroup></tmp:annotation-block>
+                <caption><linegroup><line/><line/></linegroup></caption>
+                <level><linegroup><line/><line/></linegroup></level>
+                <level1><linegroup><line/><line/></linegroup></level1>
+                <level2><linegroup><line/><line/></linegroup></level2>
+                <level3><linegroup><line/><line/></linegroup></level3>
+                <level4><linegroup><line/><line/></linegroup></level4>
+                <level5><linegroup><line/><line/></linegroup></level5>
+                <level6><linegroup><line/><line/></linegroup></level6>
+                <td id="td1"><linegroup><line/><line/></linegroup></td>
+                <prodnote><linegroup><line/><line/></linegroup></prodnote>
+                <sidebar><linegroup><line/><line/></linegroup></sidebar>
+                <th id="th1"><linegroup><line/><line/></linegroup></th>
+            </utfx:source>
+            <utfx:expected>
+                <annotation><block><p><ln/><ln/></p><pagebreak value="4"/></block></annotation>
+                <caption><block><p><ln/><ln/></p></block></caption>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <section xml:id="CANNOT TEST"><block><p><ln/><ln/></p></block></section>
+                <td xml:id="td1"><block><p><ln/><ln/></p></block></td>
+                <annotation by="republisher"><block><p><ln/><ln/></p></block></annotation>
+                <aside role="sidebar"><block><p><ln/><ln/></p></block></aside>
+                <th xml:id="th1"><block><p><ln/><ln/></p></block></th>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: dd</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level><list/><dd/></level>
+                <level><dl/><dd/></level>
+                <level><div/><dd/></level>
+                <level><poem/><dd/></level>
+                <level><linegroup/><dd/></level>
+                <level><table id="table1"/><dd/></level>
+                <level><dd/><sidebar/></level>
+                <level><dd/><note/></level>
+                <level><dd/><epigraph/></level>
+                <level><span/><dd/></level>
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="CANNOT TEST"><list/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><list type="unordered"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block role="poem"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><table xml:id="table1"/><p><definition/></p></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><aside role="sidebar"/></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><note/></section>
+                <section xml:id="CANNOT TEST"><p><definition/></p><block role="epigraph"/></section>
+                <section xml:id="CANNOT TEST"><span/><definition/></section>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: dt</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level><list/><dt/></level>
+                <level><dl/><dt/></level>
+                <level><div/><dt/></level>
+                <level><poem/><dt/></level>
+                <level><linegroup/><dt/></level>
+                <level><table id="table1"/><dt/></level>
+                <level><dt/><sidebar/></level>
+                <level><dt/><note/></level>
+                <level><dt/><epigraph/></level>
+                <level><span/><dt/></level>
+            </utfx:source>
+            <utfx:expected>
+                <section xml:id="CANNOT TEST"><list/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><list type="unordered"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block role="poem"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><block/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><table xml:id="table1"/><p><term/></p></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><aside role="sidebar"/></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><note/></section>
+                <section xml:id="CANNOT TEST"><p><term/></p><block role="epigraph"/></section>
+                <section xml:id="CANNOT TEST"><span/><term/></section>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+</utfx:tests>

@@ -5,7 +5,7 @@
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
-    <utfx:stylesheet src="../src/group-deflist-contents.xsl"/>
+    <utfx:stylesheet src="../../dtbook-to-zedai/group-deflist-contents.xsl"/>
 
     <utfx:test>
         <utfx:name>Simple Definition List</utfx:name>

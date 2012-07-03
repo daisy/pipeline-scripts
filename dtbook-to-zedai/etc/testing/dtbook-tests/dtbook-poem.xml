@@ -45,12 +45,12 @@
 
                     <epigraph>Testing epigraphs</epigraph>
 
-                    <img src="pic.jpg" alt="a picture says a thousand words"/>
+                    <img src="image.jpg" alt="a picture says a thousand words"/>
 
                     <imggroup>
 
-                        <img id="p1" src="pic.jpg" alt="alt text"/>
-                        <img id="p2" src="pic2.jpg" alt="alt text"/>
+                        <img id="p1" src="image.jpg" alt="alt text"/>
+                        <img id="p2" src="image.jpg" alt="alt text"/>
                         <caption imgref="p1 p2">so many pictures should say many thousands of words,
                             right?</caption>
 
