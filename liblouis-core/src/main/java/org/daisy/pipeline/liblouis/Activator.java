@@ -9,6 +9,8 @@ import java.util.Enumeration;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
 
+import com.sun.jna.NativeLibrary;
+
 public class Activator {
 
 	private static File nativePath = null;
@@ -17,6 +19,7 @@ public class Activator {
 		return nativePath;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void activate(ComponentContext context) {
 		nativePath = context.getBundleContext().getDataFile("native");
 		if (!nativePath.exists()) {
@@ -56,6 +59,7 @@ public class Activator {
 				}
 			}
 		}
+		NativeLibrary.addSearchPath("louis", nativePath.getAbsolutePath());
 	}
 
 	private static void unpack(URL url, File file) throws Exception {
