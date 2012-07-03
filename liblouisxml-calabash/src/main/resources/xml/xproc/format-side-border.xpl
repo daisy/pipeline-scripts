@@ -4,6 +4,7 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    exclude-inline-prefixes="lblxml brl"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
@@ -16,18 +17,38 @@
     
     <p:viewport match="//lblxml:side-border" name="format">
         
-        <p:rename match="/*" new-name="lblxml:no-pagenum"/>
-        <p:delete match="/*/@*"/>
-        <p:wrap match="/*" >
-            <p:with-option name="wrapper" select="name(/*)">
+        <p:rename match="/*">
+            <p:with-option name="new-name" select="name(/*)">
                 <p:pipe step="format-side-border" port="source"/>
             </p:with-option>
-            <p:with-option name="wrapper-namespace" select="namespace-uri(/*)">
+            <p:with-option name="new-namespace" select="namespace-uri(/*)">
                 <p:pipe step="format-side-border" port="source"/>
             </p:with-option>
-        </p:wrap>
+        </p:rename>
         
-        <lblxml:xml2brl name="xml2brl">
+        <p:delete match="/*/@*"/>
+        
+        <p:insert match="/*" position="first-child">
+            <p:input port="insertion">
+                <p:inline>
+                    <lblxml:preformatted>
+                        <lblxml:line>&#xA0;</lblxml:line>
+                    </lblxml:preformatted>
+                </p:inline>
+            </p:input>
+        </p:insert>
+        
+        <p:insert match="/*" position="last-child">
+            <p:input port="insertion">
+                <p:inline>
+                    <lblxml:preformatted>
+                        <lblxml:line>&#xA0;</lblxml:line>
+                    </lblxml:preformatted>
+                </p:inline>
+            </p:input>
+        </p:insert>
+        
+        <lblxml:xml2brl name="xml2brl" paged="false">
             <p:input port="config-files">
                 <p:pipe step="format-side-border" port="config-files"/>
             </p:input>
@@ -60,6 +81,15 @@
             </p:with-param>
             <p:with-param name="border-right" select="/*/@border-right">
                 <p:pipe step="format" port="current"/>
+            </p:with-param>
+            <p:with-param name="keep-empty-trailing-lines" select="'true'">
+                <p:empty/>
+            </p:with-param>
+            <p:with-param name="skip-first-line" select="'true'">
+                <p:empty/>
+            </p:with-param>
+            <p:with-param name="skip-last-line" select="'true'">
+                <p:empty/>
             </p:with-param>
         </p:xslt>
     </p:viewport>

@@ -88,6 +88,8 @@ section[role="titlepage"] > h {
 	margin-bottom: 1;
 	margin-left: 3;
 	margin-right: 3;
+	padding-top: 1;
+	padding-bottom: 1;
 	padding-left: 1;
 	padding-right: 1;
 	border-left: ⠇;
