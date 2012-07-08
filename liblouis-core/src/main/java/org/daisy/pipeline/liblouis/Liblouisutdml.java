@@ -68,6 +68,7 @@ public class Liblouisutdml {
         System.out.println(StringUtils.join(command, " "));
 
         ProcessBuilder builder = new ProcessBuilder(command);
+        System.out.println("export LOUIS_TABLEPATH=\"" + tablePath + "\"");
         builder.environment().put("LOUIS_TABLEPATH", tablePath);
         builder.directory(tempDir);
         Process process = builder.start();

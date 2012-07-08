@@ -29,7 +29,11 @@ public class Activator {
 			String directory = null;
 			switch(Platform.getOSType()) {
 				case Platform.MAC:
-					directory = "/native/mac";
+					if (Platform.is64Bit()) {
+						directory = "/native/darwin-x86_64";
+					} else {
+						directory = "/native/darwin-i386";
+					}
 					break;
 				case Platform.LINUX:
 					directory = "/native/linux";
@@ -45,12 +49,12 @@ public class Activator {
 			if (paths != null) {
 				System.out.println("Unpacking liblouis binaries...");
 				while (paths.hasMoreElements()) {
-					URL tableURL = bundle.getEntry(paths.nextElement());
-					String url = tableURL.toExternalForm();
+					URL binaryURL = bundle.getEntry(paths.nextElement());
+					String url = binaryURL.toExternalForm();
 					String fileName = url.substring(url.lastIndexOf('/')+1, url.length());
 					File file = new File(nativePath.getAbsolutePath() + File.separator + fileName);
 					try {
-						unpack(tableURL, file);
+						unpack(binaryURL, file);
 						chmod775(file);
 						System.out.println(fileName);
 					} catch (Exception e) {
@@ -61,6 +65,7 @@ public class Activator {
 			}
 		}
 		NativeLibrary.addSearchPath("louis", nativePath.getAbsolutePath());
+		
 	}
 
 	private static void unpack(URL url, File file) throws Exception {
