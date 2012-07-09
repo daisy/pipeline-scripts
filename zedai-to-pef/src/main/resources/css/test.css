@@ -33,7 +33,7 @@ toc > entry > ref {
 }
 
 h {
-    display: block;
+	display: block;
 	text-align: center;
 	margin-top: 1;
 	margin-bottom: 1;
@@ -60,7 +60,7 @@ verse {
 }
 
 block[role="imprint"] {
-    display: block;
+	display: block;
 	text-align: center;
 	margin-top: 1;
 	margin-bottom: 1;
