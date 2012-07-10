@@ -39,7 +39,7 @@
     <!-- <p:option name="pef-rows"/> -->
     <!-- <p:option name="pef-columns"/> -->
     
-    <p:import href="http://www.daisy.org/pipeline/modules/liblouisxml-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/liblouis-formatter/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille-css-calabash/xproc/library.xpl"/>
     
@@ -111,7 +111,7 @@
             <p:input port="source">
                 <p:pipe port="source" step="zedai-to-pef"/>
             </p:input>
-            <!-- FIXME this is a very hackish solution -->
+            <!-- FIXME this is a very ugly solution -->
             <p:with-option name="stylesheet"
                 select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-25), 'css/test.css')">
                 <p:document href="zedai-to-pef.xpl"/>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Identity Liblouis Tables" activate="activate">
+    <scr:implementation class="org.daisy.pipeline.liblouis.LiblouisTableSet"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.liblouis.LiblouisTableSet"/>
+    </scr:service>
+    <scr:property name="identifier" type="String"
+        value="org.daisy.pipeline.liblouis.IdentityLiblouisTableSet"/>
+    <scr:property name="directory" type="String" value="/tables"/>
+</scr:component>

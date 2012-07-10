@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Braille CSS step">
-   <implementation class="org.daisy.common.xproc.calabash.steps.braillecss.ApplyStylesheetProvider"/>
+   <implementation class="org.daisy.braillecss.calabash.ApplyStylesheetProvider"/>
    <service>
       <provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
    </service>
