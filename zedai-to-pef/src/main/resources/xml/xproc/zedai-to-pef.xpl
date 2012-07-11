@@ -39,6 +39,7 @@
     <!-- <p:option name="pef-rows"/> -->
     <!-- <p:option name="pef-columns"/> -->
     
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/liblouis-formatter/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille-css-calabash/xproc/library.xpl"/>
@@ -104,6 +105,14 @@
         <p:variable name="temp-dir-uri" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:variable>
+        
+        <!-- Create temporary directory -->
+        
+        <px:mkdir>
+            <p:with-option name="href" select="$temp-dir-uri">
+                <p:empty/>
+            </p:with-option>
+        </px:mkdir>
         
         <!-- add styling -->
         
