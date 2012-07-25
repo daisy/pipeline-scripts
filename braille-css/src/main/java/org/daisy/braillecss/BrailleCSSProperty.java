@@ -100,29 +100,6 @@ public interface BrailleCSSProperty extends CSSProperty {
 			return text;
 		}
 	}
-	
-	public enum Orphans implements BrailleCSSProperty {
-		integer(""), INHERIT("inherit");
-
-		private String text;
-
-		private Orphans(String text) {
-			this.text = text;
-		}
-
-		public boolean inherited() {
-			return false;
-		}
-
-		public boolean equalsInherit() {
-			return this == INHERIT;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
 
 	public enum Padding implements BrailleCSSProperty {
 		integer(""), INHERIT("inherit");
@@ -135,75 +112,6 @@ public interface BrailleCSSProperty extends CSSProperty {
 
 		public boolean inherited() {
 			return false;
-		}
-
-		public boolean equalsInherit() {
-			return this == INHERIT;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
-
-	public enum PageBreakAfter implements BrailleCSSProperty {
-		AUTO("auto"), ALWAYS("always"), AVOID("avoid"), INHERIT("inherit");
-
-		private String text;
-
-		private PageBreakAfter(String text) {
-			this.text = text;
-		}
-
-		public boolean inherited() {
-			return false;
-		}
-
-		public boolean equalsInherit() {
-			return this == INHERIT;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
-	
-	public enum PageBreakBefore implements BrailleCSSProperty {
-		AUTO("auto"), ALWAYS("always"), RIGHT("right"), INHERIT("inherit");
-
-		private String text;
-
-		private PageBreakBefore(String text) {
-			this.text = text;
-		}
-
-		public boolean inherited() {
-			return false;
-		}
-
-		public boolean equalsInherit() {
-			return this == INHERIT;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
-
-	public enum TextAlign implements BrailleCSSProperty {
-		LEFT("left"), RIGHT("right"), CENTER("center"), INHERIT("inherit");
-
-		private String text;
-
-		private TextAlign(String text) {
-			this.text = text;
-		}
-
-		public boolean inherited() {
-			return true;
 		}
 
 		public boolean equalsInherit() {

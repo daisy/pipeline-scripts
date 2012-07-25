@@ -9,7 +9,11 @@ import java.util.Set;
 
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.CSSProperty;
+import cz.vutbr.web.css.CSSProperty.TextAlign;
+import cz.vutbr.web.css.CSSProperty.Orphans;
+import cz.vutbr.web.css.CSSProperty.PageBreak;
 import cz.vutbr.web.css.CSSProperty.PageBreakInside;
+import cz.vutbr.web.css.CSSProperty.Widows;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFactory;
@@ -18,11 +22,7 @@ import org.daisy.braillecss.BrailleCSSProperty.Border;
 import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
-import org.daisy.braillecss.BrailleCSSProperty.Orphans;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
-import org.daisy.braillecss.BrailleCSSProperty.PageBreakAfter;
-import org.daisy.braillecss.BrailleCSSProperty.PageBreakBefore;
-import org.daisy.braillecss.BrailleCSSProperty.TextAlign;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
 import org.slf4j.Logger;
@@ -44,6 +44,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	private static final Term<?> DEFAULT_UA_MARGIN = tf.createInteger(0);
 	private static final Term<?> DEFAULT_UA_PADDING = tf.createInteger(0);
 	private static final Term<?> DEFAULT_UA_ORPHANS = tf.createInteger(2);
+	private static final Term<?> DEFAULT_UA_WIDOWS = tf.createInteger(2);
 
 	private final static SupportedBrailleCSS instance;
 	static {
@@ -121,7 +122,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 				TOTAL_SUPPORTED_DECLARATIONS, 1.0f);
 
 		// text spacing
-		props.put("-brl-text-align", DEFAULT_UA_TEXT_ALIGN);
+		props.put("text-align", DEFAULT_UA_TEXT_ALIGN);
 		props.put("-brl-text-indent", TextIndent.integer);
 		values.put("-brl-text-indent", DEFAULT_UA_TEXT_IDENT);
 
@@ -155,13 +156,15 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		// elements
 		props.put("-brl-list-style-type", ListStyleType.NONE);
 
-		// miscellaneous
-		props.put("-brl-page-break-before", PageBreakBefore.AUTO);
-		props.put("-brl-page-break-after", PageBreakAfter.AUTO);
+		// paged
+		props.put("page-break-before", PageBreak.AUTO);
+		props.put("page-break-after", PageBreak.AUTO);
 		props.put("page-break-inside", PageBreakInside.AUTO);
 
-		props.put("-brl-orphans", Orphans.integer);
-		values.put("-brl-orphans", DEFAULT_UA_ORPHANS);
+		props.put("orphans", Orphans.integer);
+		values.put("orphans", DEFAULT_UA_ORPHANS);
+		props.put("widows", Widows.integer);
+		values.put("widows", DEFAULT_UA_WIDOWS);
 
 		this.defaultCSSproperties = props;
 		this.defaultCSSvalues = values;

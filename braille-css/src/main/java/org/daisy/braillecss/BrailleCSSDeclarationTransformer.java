@@ -10,9 +10,6 @@ import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
-import org.daisy.braillecss.BrailleCSSProperty.PageBreakAfter;
-import org.daisy.braillecss.BrailleCSSProperty.PageBreakBefore;
-import org.daisy.braillecss.BrailleCSSProperty.TextAlign;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
 import cz.vutbr.web.css.CSSProperty;
@@ -142,14 +139,14 @@ public class BrailleCSSDeclarationTransformer {
 	@SuppressWarnings("unused")
 	private boolean processBrlMarginLeft(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdentOrInteger(Margin.class, Margin.integer, true,
+		return genericOneIdentOrInteger(Margin.class, Margin.integer, false,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
 	private boolean processBrlMarginRight(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdentOrInteger(Margin.class, Margin.integer, true,
+		return genericOneIdentOrInteger(Margin.class, Margin.integer, false,
 				d, properties, values);
 	}
 	
@@ -186,24 +183,6 @@ public class BrailleCSSDeclarationTransformer {
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean processBrlPageBreakAfter(Declaration d,
-			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdent(PageBreakAfter.class, d, properties);
-	}
-
-	@SuppressWarnings("unused")
-	private boolean processBrlPageBreakBefore(Declaration d,
-			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdent(PageBreakBefore.class, d, properties);
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean processBrlTextAlign(Declaration d,
-			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdent(TextAlign.class, d, properties);
 	}
 	
 	@SuppressWarnings("unused")
