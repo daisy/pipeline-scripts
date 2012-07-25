@@ -2,9 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs brl lblxml my"
+    exclude-result-prefixes="xs brl louis my"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -24,29 +24,29 @@
             <xsl:apply-templates select="@*"/>
             <xsl:choose>
                 <xsl:when test="$display='toc'">
-                    <lblxml:toc>
+                    <louis:toc>
                         <xsl:for-each select="descendant::*">
                             <xsl:variable name="descendant-display" as="xs:string"
                                 select="brl:get-property-or-default(string(@brl:style), 'display')"/>
                             <xsl:choose>
                                 <xsl:when test="$descendant-display='toc-title'">
-                                    <lblxml:toc-title>
+                                    <louis:toc-title>
                                         <xsl:attribute name="brl:style" select="my:get-toc-title-style(.)"/>
                                         <xsl:value-of select="string(.)"/>
-                                    </lblxml:toc-title>
+                                    </louis:toc-title>
                                 </xsl:when>
                                 <xsl:when test="$descendant-display='toc-item'">
                                     <xsl:variable name="ref" as="attribute()?" select="@ref"/>
                                     <xsl:if test="$ref and //*[@xml:id=string($ref)]">
-                                        <lblxml:toc-item>
+                                        <louis:toc-item>
                                             <xsl:attribute name="brl:style" select="my:get-toc-item-style(.)"/>
                                             <xsl:copy-of select="$ref"/>
-                                        </lblxml:toc-item>
+                                        </louis:toc-item>
                                     </xsl:if>
                                 </xsl:when>
                             </xsl:choose>
                         </xsl:for-each>
-                    </lblxml:toc>
+                    </louis:toc>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="node()"/>

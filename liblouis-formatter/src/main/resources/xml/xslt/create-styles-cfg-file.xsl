@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-result-prefixes="xs brl lblxml"
+    xmlns:louis="http://liblouis.org/liblouis"
+    exclude-result-prefixes="xs brl louis"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
@@ -26,7 +26,7 @@
         <xsl:param name="toc-title-style" as="xs:string" select="''"/>
         <xsl:param name="toc-item-styles" as="xs:string*"/>
         
-        <lblxml:config-file>
+        <louis:config-file>
             <xsl:for-each select="//brl:style">
                 
                 <xsl:variable name="display" as="xs:string" select="brl:get-property-or-default(.,'display')"/>
@@ -163,7 +163,7 @@
                     
                 </xsl:if>
             </xsl:for-each>
-        </lblxml:config-file>
+        </louis:config-file>
     </xsl:template>
     
 </xsl:stylesheet>

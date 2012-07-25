@@ -4,5 +4,5 @@
    <service>
       <provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
    </service>
-   <property name="type" type="String" value="{http://xmlcalabash.com/ns/extensions/liblouisxml}translate-file"/>
+   <property name="type" type="String" value="{http://liblouis.org/liblouis}translate-file"/>
 </scr:component>

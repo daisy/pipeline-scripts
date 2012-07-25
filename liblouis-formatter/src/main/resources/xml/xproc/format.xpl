@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="lblxml:format" name="format"
+<p:declare-step type="louis:format" name="format"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-inline-prefixes="lblxml px p"
+    xmlns:louis="http://liblouis.org/liblouis"
+    exclude-inline-prefixes="louis px p"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
-    <p:import href="create-liblouisxml-files.xpl"/>
+    <p:import href="create-liblouis-files.xpl"/>
     <p:import href="format-side-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/liblouis-calabash/xproc/library.xpl"/>
@@ -63,7 +63,7 @@
         </p:with-option>
     </p:add-attribute>
     
-    <lblxml:create-liblouisxml-files name="create-liblouisxml-files">
+    <louis:create-liblouis-files name="create-liblouis-files">
         <p:input port="source">
             <p:pipe step="create-styles-xml" port="result"/>
         </p:input>
@@ -73,47 +73,47 @@
         <p:input port="directory">
             <p:pipe step="temp-directory" port="result"/>
         </p:input>
-    </lblxml:create-liblouisxml-files>
+    </louis:create-liblouis-files>
     
-    <lblxml:format-side-border>
+    <louis:format-side-border>
         <p:input port="source">
             <p:pipe step="create-styles-xml" port="result"/>
         </p:input>
         <p:input port="config-files">
-            <p:pipe step="create-liblouisxml-files" port="config"/>
+            <p:pipe step="create-liblouis-files" port="config"/>
         </p:input>
         <p:input port="semantic-files">
-            <p:pipe step="create-liblouisxml-files" port="semantic"/>
+            <p:pipe step="create-liblouis-files" port="semantic"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </lblxml:format-side-border>
+    </louis:format-side-border>
     
-    <lblxml:format-toc name="format-toc">
+    <louis:format-toc name="format-toc">
         <p:input port="toc-styles">
             <p:pipe step="create-styles-xml" port="secondary"/>
         </p:input>
         <p:input port="config-files">
-            <p:pipe step="create-liblouisxml-files" port="config"/>
+            <p:pipe step="create-liblouis-files" port="config"/>
         </p:input>
         <p:input port="semantic-files">
-            <p:pipe step="create-liblouisxml-files" port="semantic"/>
+            <p:pipe step="create-liblouis-files" port="semantic"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </lblxml:format-toc>
+    </louis:format-toc>
     
-    <lblxml:translate-file name="xml2brl">
+    <louis:translate-file name="xml2brl">
         <p:input port="source">
             <p:pipe step="format-toc" port="result"/>
         </p:input>
         <p:input port="config-files">
-            <p:pipe step="create-liblouisxml-files" port="config"/>
+            <p:pipe step="create-liblouis-files" port="config"/>
         </p:input>
         <p:input port="semantic-files">
-            <p:pipe step="create-liblouisxml-files" port="semantic"/>
+            <p:pipe step="create-liblouis-files" port="semantic"/>
         </p:input>
         <!-- FIXME this is a very ugly solution -->
         <p:with-option name="ini-file"
@@ -123,6 +123,6 @@
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </lblxml:translate-file>
+    </louis:translate-file>
     
 </p:declare-step>

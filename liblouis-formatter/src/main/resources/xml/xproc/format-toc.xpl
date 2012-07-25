@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="lblxml:format-toc" name="format-toc"
+<p:declare-step type="louis:format-toc" name="format-toc"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
@@ -17,10 +17,10 @@
     <p:import href="store-files.xpl"/>
     
     <p:choose>
-        <p:when test="//lblxml:toc">
+        <p:when test="//louis:toc">
             
             <p:for-each name="config-files">
-                <p:iteration-source select="//lblxml:toc">
+                <p:iteration-source select="//louis:toc">
                     <p:pipe step="format-toc" port="source"/>
                 </p:iteration-source>
                 <p:output port="result"/>
@@ -31,41 +31,41 @@
                     <p:input port="stylesheet">
                         <p:document href="../xslt/create-toc-styles-cfg-file.xsl"/>
                     </p:input>
-                    <p:with-param name="toc-title-style" select="string(.//lblxml:toc-title/@brl:style)">
+                    <p:with-param name="toc-title-style" select="string(.//louis:toc-title/@brl:style)">
                         <p:pipe step="config-files" port="current"/>
                     </p:with-param>
-                    <p:with-param name="toc-item-styles" select="distinct-values(.//lblxml:toc-item/@brl:style)">
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//louis:toc-item/@brl:style)">
                         <p:pipe step="config-files" port="current"/>
                     </p:with-param>
                 </p:xslt>
-                <lblxml:store-files>
+                <louis:store-files>
                     <p:input port="directory">
                         <p:pipe step="format-toc" port="config-files"/>
                     </p:input>
-                </lblxml:store-files>
+                </louis:store-files>
             </p:for-each>
             
-            <p:for-each name="semantic-files">                
-                <p:iteration-source select="//lblxml:toc">
+            <p:for-each name="semantic-files">
+                <p:iteration-source select="//louis:toc">
                     <p:pipe step="format-toc" port="source"/>
                 </p:iteration-source>
-                <p:output port="result"/>                
+                <p:output port="result"/>
                 <p:xslt template-name="initial">
                     <p:input port="stylesheet">
                         <p:document href="../xslt/create-toc-styles-sem-file.xsl"/>
                     </p:input>
-                    <p:with-param name="toc-item-styles" select="distinct-values(.//lblxml:toc-item/@brl:style)">
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//louis:toc-item/@brl:style)">
                         <p:pipe step="semantic-files" port="current"/>
                     </p:with-param>
                 </p:xslt>
-                <lblxml:store-files>
+                <louis:store-files>
                     <p:input port="directory">
                         <p:pipe step="format-toc" port="semantic-files"/>
                     </p:input>
-                </lblxml:store-files>
+                </louis:store-files>
             </p:for-each>
             
-            <lblxml:update-toc>
+            <louis:update-toc>
                 <p:input port="source">
                     <p:pipe step="format-toc" port="source"/>
                 </p:input>
@@ -78,7 +78,7 @@
                 <p:with-option name="temp-dir" select="$temp-dir">
                     <p:empty/>
                 </p:with-option>
-            </lblxml:update-toc>
+            </louis:update-toc>
         </p:when>
         
         <p:otherwise>

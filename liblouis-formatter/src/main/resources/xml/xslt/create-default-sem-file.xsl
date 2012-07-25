@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-result-prefixes="xs lblxml"
+    xmlns:louis="http://liblouis.org/liblouis"
+    exclude-result-prefixes="xs louis"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
@@ -18,11 +18,11 @@
         <xsl:variable name="distinct-element-names" as="xs:string*"
             select="distinct-values($element-names)"/>
         
-        <lblxml:semantic-file>
+        <louis:semantic-file>
             
             <xsl:text>namespaces </xsl:text>
             <xsl:text>brl=http://www.daisy.org/ns/pipeline/braille,</xsl:text>
-            <xsl:text>lblxml=http://xmlcalabash.com/ns/extensions/liblouisxml&#xa;</xsl:text>
+            <xsl:text>louis=http://liblouis.org/liblouis&#xa;</xsl:text>
             <xsl:text>document </xsl:text>
             <xsl:value-of select="$root-element-name"/>
             <xsl:text>&#xa;</xsl:text>
@@ -35,7 +35,7 @@
             <!-- </xsl:for-each> -->
             
             <xsl:text>&#xa;</xsl:text>
-        </lblxml:semantic-file>
+        </louis:semantic-file>
         
     </xsl:template>
     

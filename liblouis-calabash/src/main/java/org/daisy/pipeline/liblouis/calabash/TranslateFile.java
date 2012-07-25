@@ -36,12 +36,11 @@ public class TranslateFile extends DefaultStep {
 	private static final String TABLE_SET_ID
 		= "org.daisy.pipeline.liblouis.IdentityLiblouisTableSet";
 
-	private static final QName lblxml_output
-		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "output");
-	private static final QName lblxml_section
-		= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "section");
-	// private static final QName lblxml_page
-	//	= new QName("lblxml", "http://xmlcalabash.com/ns/extensions/liblouisxml", "page");
+	private static final String LOUIS_NS = "http://liblouis.org/liblouis";
+	private static final String LOUIS_PREFIX = "louis";
+	private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
+	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
+	// private static final QName louis_page = new QName(LOUIS_PREFIX, LOUIS_NS, "page");
 
 	private static final QName _ini_file = new QName("ini-file");
 	private static final QName _paged = new QName("paged");
@@ -170,16 +169,16 @@ public class TranslateFile extends DefaultStep {
 
 			TreeWriter treeWriter = new TreeWriter(runtime);
 			treeWriter.startDocument(step.getNode().getBaseURI());
-			treeWriter.addStartElement(lblxml_output);
+			treeWriter.addStartElement(louis_output);
 			treeWriter.startContent();
 			if (frontLength > 0) {
-				treeWriter.addStartElement(lblxml_section);
+				treeWriter.addStartElement(louis_section);
 				treeWriter.startContent();
 				buffer = new byte[(int)frontLength];
 				brailleStream.read(buffer);
 				treeWriter.addText(new String(buffer, "UTF-8"));
 				treeWriter.addEndElement();
-				treeWriter.addStartElement(lblxml_section);
+				treeWriter.addStartElement(louis_section);
 				treeWriter.startContent();
 				buffer = new byte[(int)bodyLength];
 				brailleStream.read(buffer);

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="lblxml:translate-file"
+<p:declare-step type="louis:translate-file"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>

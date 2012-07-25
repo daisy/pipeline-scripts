@@ -2,9 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs brl lblxml my"
+    exclude-result-prefixes="xs brl louis my"
     version="2.0">
     
     <xsl:param name="width"/>
@@ -21,11 +21,11 @@
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/encoding-functions.xsl" />
     
     <xsl:template match="/*">        
-        <lblxml:preformatted>
+        <louis:preformatted>
             <xsl:for-each select="tokenize(my:right-trim-formfeeds(string(.)), '&#x0C;')">
                 <xsl:call-template name="page"/>
             </xsl:for-each>
-        </lblxml:preformatted>
+        </louis:preformatted>
     </xsl:template>
     
     <xsl:template name="page">
@@ -52,9 +52,9 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="$keep-page-structure='true'">
-                <lblxml:page>
+                <louis:page>
                     <xsl:sequence select="$page-content"/>
-                </lblxml:page>
+                </louis:page>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="$page-content"/>
@@ -63,7 +63,7 @@
     </xsl:template>
     
     <xsl:template name="line">
-        <lblxml:line>
+        <louis:line>
             <xsl:if test="number($margin-left) &gt; 0">
                 <xsl:value-of select="my:repeat-char('&#xA0;', number($margin-left))"/>
             </xsl:if>
@@ -80,7 +80,7 @@
                     <xsl:text>&#xA0;</xsl:text>
                 </xsl:when>
             </xsl:choose>
-        </lblxml:line>
+        </louis:line>
     </xsl:template>
     
     <xsl:function name="my:right-trim-newlines" as="xs:string">

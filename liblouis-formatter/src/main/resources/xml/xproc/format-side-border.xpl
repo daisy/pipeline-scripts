@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="lblxml:format-side-border" name="format-side-border"
+<p:declare-step type="louis:format-side-border" name="format-side-border"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-inline-prefixes="lblxml brl"
+    xmlns:louis="http://liblouis.org/liblouis"
+    exclude-inline-prefixes="louis"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
@@ -15,7 +14,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/liblouis-calabash/xproc/library.xpl"/>
     
-    <p:viewport match="//lblxml:side-border" name="format">
+    <p:viewport match="//louis:side-border" name="format">
         
         <p:rename match="/*">
             <p:with-option name="new-name" select="name(/*)">
@@ -31,9 +30,9 @@
         <p:insert match="/*" position="first-child">
             <p:input port="insertion">
                 <p:inline>
-                    <lblxml:preformatted>
-                        <lblxml:line>&#xA0;</lblxml:line>
-                    </lblxml:preformatted>
+                    <louis:preformatted>
+                        <louis:line>&#xA0;</louis:line>
+                    </louis:preformatted>
                 </p:inline>
             </p:input>
         </p:insert>
@@ -41,14 +40,14 @@
         <p:insert match="/*" position="last-child">
             <p:input port="insertion">
                 <p:inline>
-                    <lblxml:preformatted>
-                        <lblxml:line>&#xA0;</lblxml:line>
-                    </lblxml:preformatted>
+                    <louis:preformatted>
+                        <louis:line>&#xA0;</louis:line>
+                    </louis:preformatted>
                 </p:inline>
             </p:input>
         </p:insert>
         
-        <lblxml:translate-file name="xml2brl" paged="false">
+        <louis:translate-file name="xml2brl" paged="false">
             <p:input port="config-files">
                 <p:pipe step="format-side-border" port="config-files"/>
             </p:input>
@@ -66,11 +65,11 @@
             <p:with-option name="temp-dir" select="$temp-dir">
                 <p:empty/>
             </p:with-option>
-        </lblxml:translate-file>
+        </louis:translate-file>
         
         <p:xslt name="preformatted">
             <p:input port="stylesheet">
-                <p:document href="../xslt/read-xml2brl-output.xsl"/>
+                <p:document href="../xslt/read-liblouis-output.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>

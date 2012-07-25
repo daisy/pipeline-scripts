@@ -2,13 +2,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs brl lblxml my"
+    exclude-result-prefixes="xs brl louis my"
     version="2.0">
 
     <!-- Make margin-left and margin-right absolute -->
-    <!-- Turn borders into lblxml:border and lblxml:side-border -->
+    <!-- Turn borders into louis:border and louis:side-border -->
     <!-- Turn padding into margin -->
 
     <xsl:param name="page-width" as="xs:integer" select="40"/>
@@ -118,7 +118,7 @@
         <xsl:param name="border-top" as="xs:string" select="'none'"/>
         <xsl:param name="border-bottom" as="xs:string" select="'none'"/>
         <xsl:param name="other-style" as="xs:string"/>
-        <div>
+        <louis:div>
             <xsl:attribute name="brl:style" select="concat(
                 'display: block;',
                 'margin-top:', my:string(if ($border-left='none' and $border-right='none' and $border-top='none') 
@@ -130,7 +130,7 @@
                 'page-break-inside:', brl:get-property-or-default($other-style, 'page-break-inside'), ';',
                 'orphans:', brl:get-property-or-default($other-style, 'orphans'))"/>
             <xsl:if test="$border-top!='none'">
-                <xsl:sequence select="my:create-border($border-top, $left + $margin-left,
+                <xsl:sequence select="louis:create-border($border-top, $left + $margin-left,
                     $width - $margin-left - $margin-right)"/>
             </xsl:if>
             <xsl:choose>
@@ -166,10 +166,10 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="$border-bottom!='none'">
-                <xsl:sequence select="my:create-border($border-bottom, $left + $margin-left,
+                <xsl:sequence select="louis:create-border($border-bottom, $left + $margin-left,
                     $width - $margin-left - $margin-right)"/>
             </xsl:if>
-        </div>
+        </louis:div>
     </xsl:template>
     
     <xsl:template name="handle-side-border">
@@ -188,7 +188,7 @@
         <xsl:variable name="new-width"
             select="$width - max((-$left, $margin-left)) - max((-$right, $margin-right)) - 
             (if ($border-left='none') then 0 else 1) - (if ($border-right='none') then 0 else 1)"/>
-        <lblxml:side-border>
+        <louis:side-border>
             <xsl:attribute name="width" select="$new-width"/>
             <xsl:attribute name="margin-left" select="my:string(max((0, $left + $margin-left)))"/>
             <xsl:attribute name="margin-right" select="my:string(max((0, $right + $margin-right)))"/>
@@ -207,7 +207,7 @@
                     'text-indent:', brl:get-property-or-inherited(., 'text-indent')
                     ))"/>
             </xsl:call-template>
-        </lblxml:side-border>
+        </louis:side-border>
     </xsl:template>
     
     <xsl:template name="handle-margin">
@@ -247,24 +247,24 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:function name="my:create-border" as="element()">
+    <xsl:function name="louis:create-border" as="element()">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="left"/>
         <xsl:param name="width"/>
         <xsl:choose>
             <xsl:when test="$width = $page-width">
-                <lblxml:border>
+                <louis:border>
                     <xsl:attribute name="style" select="$style"/>
-                </lblxml:border>
+                </louis:border>
             </xsl:when>
             <xsl:otherwise>
-                <lblxml:preformatted>
-                    <lblxml:line>
+                <louis:preformatted>
+                    <louis:line>
                         <xsl:value-of select="concat(
                             my:repeat-char('&#xA0;', $left), 
                             my:repeat-char($style, $width))"/>
-                    </lblxml:line>
-                </lblxml:preformatted>
+                    </louis:line>
+                </louis:preformatted>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>

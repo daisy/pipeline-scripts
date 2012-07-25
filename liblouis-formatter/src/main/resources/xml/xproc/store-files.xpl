@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="lblxml:store-files" name="store-files"
+<p:declare-step type="louis:store-files" name="store-files"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-    exclude-inline-prefixes="lblxml px p"
+    xmlns:louis="http://liblouis.org/liblouis"
+    exclude-inline-prefixes="louis px p"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>

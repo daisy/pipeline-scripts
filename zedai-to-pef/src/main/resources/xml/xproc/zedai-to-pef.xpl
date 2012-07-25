@@ -5,7 +5,7 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
     xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
-    xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
+    xmlns:louis="http://liblouis.org/liblouis"
     xmlns:brlutls="http://xmlcalabash.com/ns/extensions/brailleutils"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
@@ -151,9 +151,9 @@
         
         <!-- format with liblouisxml -->
         
-        <lblxml:format>
+        <louis:format>
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
-        </lblxml:format>
+        </louis:format>
         
         <!-- convert to pef with brailleutils -->
         
