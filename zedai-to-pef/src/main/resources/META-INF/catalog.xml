@@ -8,6 +8,6 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:brailleutils-calabash" />
   <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-formatter" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille-formatting-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille-css" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille-css-calabash" />
 </catalog>

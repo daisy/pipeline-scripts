@@ -15,13 +15,13 @@
         <louis:semantic-file>
             
             <xsl:variable name="border-styles" as="xs:string*">
-                <xsl:for-each select="//louis:border/@style">
+                <xsl:for-each select="//louis:border/@louis:style">
                     <xsl:sequence select="string(.)"/>
                 </xsl:for-each>
             </xsl:variable>
             
             <xsl:for-each select="distinct-values($border-styles)">
-                <xsl:text>boxline &amp;xpath(//louis:border[@style='</xsl:text>
+                <xsl:text>boxline &amp;xpath(//louis:border[@louis:style='</xsl:text>
                 <xsl:value-of select="."/>
                 <xsl:text>']) </xsl:text>
                 <xsl:value-of select="brl:unicode-braille-to-nabcc(.)"/>

@@ -21,7 +21,6 @@
         <louis:semantic-file>
             
             <xsl:text>namespaces </xsl:text>
-            <xsl:text>brl=http://www.daisy.org/ns/pipeline/braille,</xsl:text>
             <xsl:text>louis=http://liblouis.org/liblouis&#xa;</xsl:text>
             <xsl:text>document </xsl:text>
             <xsl:value-of select="$root-element-name"/>

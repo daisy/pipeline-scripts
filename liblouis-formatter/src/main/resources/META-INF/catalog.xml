@@ -6,5 +6,6 @@
     uri="../xml/xproc/library.xpl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-calabash" />
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille-css" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille-formatting-utils" />
 </catalog>

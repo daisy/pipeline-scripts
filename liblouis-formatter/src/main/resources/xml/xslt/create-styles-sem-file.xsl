@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:louis="http://liblouis.org/liblouis"
-    exclude-result-prefixes="xs brl louis"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+    exclude-result-prefixes="xs louis css"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille-css/xslt/parsing-helper.xsl" />
     
     <xsl:template match="/">
         
         <louis:semantic-file>
-            <xsl:for-each select="//brl:style">
-                <xsl:variable name="display" select="brl:get-property-or-default(., 'display')"/>
-                <xsl:if test="$display='block' or 
+            <xsl:for-each select="//louis:style">
+                <xsl:variable name="display" as="xs:string?" select="string(@display)"/>
+                <xsl:if test="$display and
+                             ($display='block' or 
                               $display='list-item' or
                               $display='toc' or 
-                              $display='none'">
+                              $display='none')">
                     <xsl:choose>
                         <xsl:when test="$display='none'">
                             <xsl:text>skip</xsl:text>
@@ -32,7 +33,7 @@
                             <xsl:value-of select="@name"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:text> &amp;xpath(//*[@brl:style='#</xsl:text>
+                    <xsl:text> &amp;xpath(//*[@louis:style='#</xsl:text>
                     <xsl:value-of select="@name"/>
                     <xsl:text>'])&#xa;</xsl:text>
                 </xsl:if>

@@ -7,5 +7,6 @@
     <nextCatalog catalog="./liblouis-calabash/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./liblouis-formatter/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./zedai-to-pef/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./braille-css/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/braille-formatting-utils/src/main/resources/META-INF/catalog.xml"/>
 </catalog>

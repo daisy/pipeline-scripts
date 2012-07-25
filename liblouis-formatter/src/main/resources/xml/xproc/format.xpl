@@ -43,9 +43,18 @@
         </p:input>
     </p:xslt>
     
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/normalize-css.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
     <p:xslt name="create-styles-xml">
         <p:input port="stylesheet">
-            <p:document href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/create-styles-xml.xsl"/>
+            <p:document href="../xslt/create-styles-xml.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>

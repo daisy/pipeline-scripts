@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:louis="http://liblouis.org/liblouis"
-    exclude-result-prefixes="xs brl louis"
+    exclude-result-prefixes="xs louis"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
-    
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" />
-    
-    <xsl:variable name="INTEGER_NUMBER" select="'^(0|-?[1-9][0-9]*)(\.0*)?$'"/>
-    <xsl:variable name="NATURAL_NUMBER" select="'^(0|[1-9][0-9]*)(\.0*)?$'"/>
-    <xsl:variable name="POSITIVE_NUMBER" select="'^[1-9][0-9]*(\.0*)?$'"/>
 
     <xsl:template match="/">
         <xsl:call-template name="create-config-file">
@@ -27,9 +20,9 @@
         <xsl:param name="toc-item-styles" as="xs:string*"/>
         
         <louis:config-file>
-            <xsl:for-each select="//brl:style">
+            <xsl:for-each select="//louis:style[@display]">
                 
-                <xsl:variable name="display" as="xs:string" select="brl:get-property-or-default(.,'display')"/>
+                <xsl:variable name="display" as="xs:string?" select="string(@display)"/>
                 <xsl:variable name="style-name" as="xs:string?">
                     <xsl:if test="index-of($display-values, $display)">
                         <xsl:choose>
@@ -59,16 +52,16 @@
                     <xsl:sequence select="$style-name"/>
                     <xsl:text>&#xa;</xsl:text>
                     
-                    <xsl:variable name="text-align" as="xs:string" select="brl:get-property-or-default(.,'text-align')"/>
-                    <xsl:variable name="margin-left-absolute" as="xs:string" select="brl:get-property-or-default(.,'margin-left-absolute')"/>
-                    <xsl:variable name="margin-right-absolute" as="xs:string" select="brl:get-property-or-default(.,'margin-right-absolute')"/>
-                    <xsl:variable name="margin-top" as="xs:string" select="brl:get-property-or-default(.,'margin-top')"/>
-                    <xsl:variable name="margin-bottom" as="xs:string" select="brl:get-property-or-default(.,'margin-bottom')"/>
-                    <xsl:variable name="text-indent" as="xs:string" select="brl:get-property-or-default(.,'text-indent')"/>
-                    <xsl:variable name="page-break-before" as="xs:string" select="brl:get-property-or-default(.,'page-break-before')"/>
-                    <xsl:variable name="page-break-after" as="xs:string" select="brl:get-property-or-default(.,'page-break-after')"/>
-                    <xsl:variable name="page-break-inside" as="xs:string" select="brl:get-property-or-default(.,'page-break-inside')"/>
-                    <xsl:variable name="orphans" as="xs:string" select="brl:get-property-or-default(.,'orphans')"/>
+                    <xsl:variable name="text-align" as="xs:string" select="string(@text-align)"/>
+                    <xsl:variable name="louis-abs-margin-left" as="xs:string" select="string(@louis-abs-margin-left)"/>
+                    <xsl:variable name="louis-abs-margin-right" as="xs:string" select="string(@louis-abs-margin-right)"/>
+                    <xsl:variable name="margin-top" as="xs:string" select="string(@margin-top)"/>
+                    <xsl:variable name="margin-bottom" as="xs:string" select="string(@margin-bottom)"/>
+                    <xsl:variable name="text-indent" as="xs:string" select="string(@text-indent)"/>
+                    <xsl:variable name="page-break-before" as="xs:string" select="string(@page-break-before)"/>
+                    <xsl:variable name="page-break-after" as="xs:string" select="string(@page-break-after)"/>
+                    <xsl:variable name="page-break-inside" as="xs:string" select="string(@page-break-inside)"/>
+                    <xsl:variable name="orphans" as="xs:string" select="string(@orphans)"/>
                     
                     <!-- format -->
                     
@@ -94,32 +87,32 @@
                     
                     <!-- leftMargin -->
                     
-                    <xsl:if test="matches($margin-left-absolute, $NATURAL_NUMBER)">
-                        <xsl:value-of select="concat('   leftMargin ', format-number(number($margin-left-absolute), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($louis-abs-margin-left)">
+                        <xsl:value-of select="concat('   leftMargin ', louis:format-number($louis-abs-margin-left), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- rightMargin -->
                     
-                    <xsl:if test="matches($margin-right-absolute, $NATURAL_NUMBER)">
-                        <xsl:value-of select="concat('   rightMargin ', format-number(number($margin-right-absolute), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($louis-abs-margin-right)">
+                        <xsl:value-of select="concat('   rightMargin ', louis:format-number($louis-abs-margin-right), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesBefore -->
                     
-                    <xsl:if test="matches($margin-top, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   linesBefore ', format-number(number($margin-top), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($margin-top)">
+                        <xsl:value-of select="concat('   linesBefore ', louis:format-number($margin-top), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- linesAfter -->
                     
-                    <xsl:if test="matches($margin-bottom, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   linesAfter ', format-number(number($margin-bottom), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($margin-bottom)">
+                        <xsl:value-of select="concat('   linesAfter ', louis:format-number($margin-bottom), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- firstLineIndent -->
                     
-                    <xsl:if test="matches($text-indent, $INTEGER_NUMBER)">
-                        <xsl:value-of select="concat('   firstLineIndent ', format-number(number($text-indent), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($text-indent)">
+                        <xsl:value-of select="concat('   firstLineIndent ', louis:format-number($text-indent), '&#xa;')"/>
                     </xsl:if>
                     
                     <!-- newPageBefore -->
@@ -155,8 +148,8 @@
                     
                     <!-- orphanControl -->
                     
-                    <xsl:if test="matches($orphans, $POSITIVE_NUMBER)">
-                        <xsl:value-of select="concat('   orphanControl ', format-number(number($orphans), '0'), '&#xa;')"/>
+                    <xsl:if test="louis:is-numeric($orphans)">
+                        <xsl:value-of select="concat('   orphanControl ', louis:format-number($orphans), '&#xa;')"/>
                     </xsl:if>
                     
                     <xsl:text>&#xa;</xsl:text>
@@ -165,5 +158,15 @@
             </xsl:for-each>
         </louis:config-file>
     </xsl:template>
+    
+    <xsl:function name="louis:is-numeric" as="xs:boolean">
+        <xsl:param name="value"/>
+        <xsl:sequence select="matches($value, '^(0|-?[1-9][0-9]*)(\.0*)?$')"/>
+    </xsl:function>
+    
+    <xsl:function name="louis:format-number" as="xs:string">
+        <xsl:param name="value"/>
+        <xsl:sequence select="format-number(number($value), '0')"/>
+    </xsl:function>
     
 </xsl:stylesheet>

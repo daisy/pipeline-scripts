@@ -38,9 +38,7 @@ import org.w3c.dom.Node;
 
 public class ApplyStylesheet extends DefaultStep {
 
-	private static final String BRL_NS = "http://www.daisy.org/ns/pipeline/braille";
-	private static final String BRL_PREFIX = "brl";
-	private static final QName BRL_STYLE = new QName(BRL_PREFIX, BRL_NS, "style");
+	private static final QName _style = new QName("style");
 	
 	static {
 		CSSFactory.registerSupportedCSS(SupportedBrailleCSS.getInstance());
@@ -120,7 +118,7 @@ public class ApplyStylesheet extends DefaultStep {
 				if (data != null) {
 					String style = String.valueOf(data).replaceAll("\\s+", "").trim();
 					if (style.length() > 0) {
-						addAttribute(BRL_STYLE, style);
+						addAttribute(_style, style);
 					}
 				}
                 receiver.startContent();

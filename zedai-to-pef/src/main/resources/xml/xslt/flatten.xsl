@@ -3,13 +3,12 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
-	xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
-	xmlns:my="http://github.com/bertfrees"
-	exclude-result-prefixes="xs z my">
+	xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+	exclude-result-prefixes="xs z css">
 	
 	<xsl:output method="xml" encoding="utf-8" indent="yes" />
 	
-	<xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/style-functions.xsl" />
+	<xsl:include href="http://www.daisy.org/pipeline/modules/braille-css/xslt/parsing-helper.xsl" />
 	
 	<xsl:template match="/*">
 		<xsl:copy>
@@ -19,8 +18,8 @@
 	
 	<xsl:template match="element()">
 		<xsl:choose>
-			<xsl:when test="contains(string(@brl:style), 'display')">
-				<xsl:variable name="display" as="xs:string" select="brl:get-property-or-default(string(@brl:style), 'display')"/>
+			<xsl:when test="contains(string(@style), 'display')">
+				<xsl:variable name="display" as="xs:string" select="css:get-property-value(., 'display', true(), true(), false())"/>
 				<xsl:choose>
 					<xsl:when test="$display != 'inline'">
 						<xsl:copy>
