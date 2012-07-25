@@ -5,7 +5,6 @@
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
-    <p:option name="stylesheet" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
 </p:declare-step>

@@ -13,8 +13,6 @@ import com.xmlcalabash.util.TreeWriter;
 
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.NodeData;
-import cz.vutbr.web.css.StyleSheet;
-import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -44,8 +42,6 @@ public class ApplyStylesheet extends DefaultStep {
 		CSSFactory.registerSupportedCSS(SupportedBrailleCSS.getInstance());
 		CSSFactory.registerNodeDataInstance(BrailleCSSNodeData.class);
 	}
-
-	private static final QName _stylesheet = new QName("stylesheet");
 
 	private ReadablePipe sourcePipe = null;
 	private WritablePipe resultPipe = null;
@@ -79,9 +75,7 @@ public class ApplyStylesheet extends DefaultStep {
 			
 			XdmNode source = sourcePipe.read();
 			Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-			StyleSheet css = CSSFactory.parse(new URI(getOption(_stylesheet).getString()).toURL(), null);
-			Analyzer analyzer = new Analyzer(css);
-			final StyleMap map = analyzer.evaluateDOM(doc, "all", false);
+			final StyleMap map = CSSFactory.assignDOM(doc, source.getBaseURI().toURL(), "embossed", false);
 			resultPipe.write((new MyTreeWriter(doc, map, runtime)).getResult());
 			
 		} catch (Exception e) {
@@ -99,68 +93,68 @@ public class ApplyStylesheet extends DefaultStep {
 			super(xproc);
 			this.styleMap = styleMap;
 			startDocument(new URI(document.getBaseURI()));
-            traverse(document.getDocumentElement());
-            endDocument();
+			traverse(document.getDocumentElement());
+			endDocument();
 		}
 		
 		private void traverse(Node node) throws XPathException, URISyntaxException {
 			
-	        if (node.getNodeType() == Node.ELEMENT_NODE) {
-	            addStartElement((Element)node);
-	            NamedNodeMap attributes = node.getAttributes();
-	            for (int i=0; i<attributes.getLength(); i++) {
-	            	Node attr = attributes.item(i);
-	            	if (!"xmlns".equals(attr.getPrefix())) {
-	            		addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
-	            	}
-	            }
-	            NodeData data = styleMap.get((Element)node);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				addStartElement((Element)node);
+				NamedNodeMap attributes = node.getAttributes();
+				for (int i=0; i<attributes.getLength(); i++) {
+					Node attr = attributes.item(i);
+					if (!"xmlns".equals(attr.getPrefix())) {
+					addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
+				}
+			}
+			NodeData data = styleMap.get((Element)node);
 				if (data != null) {
 					String style = String.valueOf(data).replaceAll("\\s+", "").trim();
 					if (style.length() > 0) {
 						addAttribute(_style, style);
 					}
 				}
-                receiver.startContent();
-                for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-		            traverse(child);
-		        }
-	            addEndElement();
-	        } else if (node.getNodeType() == Node.COMMENT_NODE) {
-	            addComment(node.getNodeValue());
-	        } else if (node.getNodeType() == Node.TEXT_NODE) {
-	            addText(node.getNodeValue());
-	        } else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-	            addPI(node.getLocalName(), node.getNodeValue());
-	        } else {
-	            throw new UnsupportedOperationException("Unexpected node type");
-	        }
+				receiver.startContent();
+				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
+					traverse(child);
+				}
+				addEndElement();
+			} else if (node.getNodeType() == Node.COMMENT_NODE) {
+				addComment(node.getNodeValue());
+			} else if (node.getNodeType() == Node.TEXT_NODE) {
+				addText(node.getNodeValue());
+			} else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+				addPI(node.getLocalName(), node.getNodeValue());
+			} else {
+				throw new UnsupportedOperationException("Unexpected node type");
+			}
 		}
 		
 		public void addStartElement(Element element) {
 			
 			NodeInfo inode = ((NodeOverNodeInfo)element).getUnderlyingNodeInfo();
 			NamespaceBinding[] inscopeNS = null;
-	        if (seenRoot) {
-	            inscopeNS = inode.getDeclaredNamespaces(null);
-	        } else {
-	            int count = 0;
-	            Iterator<NamespaceBinding> nsiter = NamespaceIterator.iterateNamespaces(inode);
-	            while (nsiter.hasNext()) {
-	                count++;
-	                nsiter.next();
-	            }
-	            inscopeNS = new NamespaceBinding[count];
-	            nsiter = NamespaceIterator.iterateNamespaces(inode);
-	            count = 0;
-	            while (nsiter.hasNext()) {
-	                inscopeNS[count] = nsiter.next();
-	                count++;
-	            }
-	            seenRoot = true;
-	        }
-	        receiver.setSystemId(element.getBaseURI());
-	        addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
+			if (seenRoot) {
+				inscopeNS = inode.getDeclaredNamespaces(null);
+			} else {
+			int count = 0;
+			Iterator<NamespaceBinding> nsiter = NamespaceIterator.iterateNamespaces(inode);
+			while (nsiter.hasNext()) {
+				count++;
+				nsiter.next();
+			}
+			inscopeNS = new NamespaceBinding[count];
+			nsiter = NamespaceIterator.iterateNamespaces(inode);
+			count = 0;
+			while (nsiter.hasNext()) {
+				inscopeNS[count] = nsiter.next();
+				count++;
+			}
+			seenRoot = true;
+			}
+			receiver.setSystemId(element.getBaseURI());
+			addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
 		}
 	}
 }

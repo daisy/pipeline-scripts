@@ -4,9 +4,11 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
+    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
     xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
+    exclude-inline-prefixes="px d xd z css louis pef"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -40,6 +42,14 @@
         <p:documentation>
             <h2 px:role="name">temp-dir</h2>
             <p px:role="desc">Path to directory for storing temporary files.</p>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="default-stylesheet" required="false" px:type="string" select="'bana.css'">
+        <p:documentation>
+            <h2 px:role="name">default-stylesheet</h2>
+            <p px:role="desc">The default css stylesheet to apply when there aren't any provided with the input file.</p>
+            <pre><code class="example">bana.css</code></pre>
         </p:documentation>
     </p:option>
     
@@ -110,7 +120,7 @@
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:variable>
         
-        <!-- Create temporary directory -->
+        <!-- create temporary directory -->
         
         <px:mkdir>
             <p:with-option name="href" select="$temp-dir-uri">
@@ -120,16 +130,49 @@
         
         <!-- add styling -->
         
-        <css:apply-stylesheet>
-            <p:input port="source">
+        <p:choose>
+            <p:xpath-context>
                 <p:pipe port="source" step="zedai-to-pef"/>
-            </p:input>
-            <!-- FIXME this is a very ugly solution -->
-            <p:with-option name="stylesheet"
-                select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-25), 'css/test.css')">
-                <p:document href="zedai-to-pef.xpl"/>
-            </p:with-option>
-        </css:apply-stylesheet>
+            </p:xpath-context>
+            
+            <p:when test="not(//z:head/link[@rel='stylesheet' and @media='embossed' and @type='text/css'])">
+                
+                <!-- FIXME this is an ugly solution -->
+                <p:variable name="default-stylesheet-uri"
+                    select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-25), 'css/', $default-stylesheet)">
+                    <p:document href="zedai-to-pef.xpl"/>
+                </p:variable>
+                
+                <p:add-attribute match="/link" attribute-name="href" name="link">
+                    <p:input port="source">
+                        <p:inline>
+                            <link rel="stylesheet" media="embossed" type="text/css"/>
+                        </p:inline>
+                    </p:input>
+                    <p:with-option name="attribute-value" select="$default-stylesheet-uri">
+                        <p:empty/>
+                    </p:with-option>
+                </p:add-attribute>
+                
+                <p:insert match="//z:head" position="first-child">
+                    <p:input port="source">
+                        <p:pipe port="source" step="zedai-to-pef"/>
+                    </p:input>
+                    <p:input port="insertion">
+                        <p:pipe step="link" port="result"/>
+                    </p:input>
+                </p:insert>
+            </p:when>
+            <p:otherwise>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="source" step="zedai-to-pef"/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
+        
+        <css:apply-stylesheet/>
         
         <!-- flatten some elements -->
         
