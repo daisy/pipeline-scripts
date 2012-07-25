@@ -6,7 +6,7 @@
     xmlns:xd="http://www.daisy.org/ns/pipeline/doc"
     xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:brlutls="http://xmlcalabash.com/ns/extensions/brailleutils"
+    xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
     <p:documentation xd:target="parent">
@@ -157,9 +157,9 @@
         
         <!-- convert to pef with brailleutils -->
         
-        <brlutls:text2pef name="text-to-pef">
+        <pef:text2pef name="text-to-pef">
             <p:with-option name="temp-dir" select="$temp-dir-uri"/>
-        </brlutls:text2pef>
+        </pef:text2pef>
         
         <!-- store -->
         
