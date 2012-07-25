@@ -9,9 +9,17 @@
     xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
-    <p:documentation xd:target="parent">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">ZedAI to PEF</h1>
         <p px:role="desc">Transforms a ZedAI (DAISY 4 XML) document into an PEF.</p>
+        <dl px:role="author">
+            <dt>Name:</dt>
+            <dd px:role="name">Bert Frees</dd>
+            <dt>Organization:</dt>
+            <dd px:role="organization" href="http://www.sbs-online.ch/">SBS</dd>
+            <dt>E-mail:</dt>
+            <dd><a px:role="contact" href="mailto:bertfrees@gmail.com">bertfrees@gmail.com</a></dd>
+        </dl>
     </p:documentation>
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
@@ -24,20 +32,16 @@
     <p:option name="output-dir" required="true" px:output="result" px:sequence="false" px:type="anyDirURI">
         <p:documentation>
             <h2 px:role="name">output-dir</h2>
-            <p>Path to output directory for the PEF.</p>
+            <p px:role="desc">Path to output directory for the PEF.</p>
         </p:documentation>
     </p:option>
     
     <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI">
         <p:documentation>
             <h2 px:role="name">temp-dir</h2>
-            <p>Path to directory for storing temporary files.</p>
+            <p px:role="desc">Path to directory for storing temporary files.</p>
         </p:documentation>
     </p:option>
-    
-    <!-- <p:option name="liblouis-tables"/> -->
-    <!-- <p:option name="pef-rows"/> -->
-    <!-- <p:option name="pef-columns"/> -->
     
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/liblouis-formatter/xproc/library.xpl"/>
