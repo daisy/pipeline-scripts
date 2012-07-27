@@ -1,8 +1,9 @@
 <!--*- nxml -*-->
 <xproc-config xmlns="http://xmlcalabash.com/ns/configuration"
 	      xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-	      xmlns:lblxml="http://xmlcalabash.com/ns/extensions/liblouisxml"
-	      xmlns:brlutls="http://xmlcalabash.com/ns/extensions/brailleutils"
+	      xmlns:louis="http://liblouis.org/liblouis"
+	      xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
+	      xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
 >
 
 <implementation type="px:copy" class-name="com.xmlcalabash.extensions.fileutils.Copy"/>
@@ -12,16 +13,13 @@
 <implementation type="px:tempfile" class-name="com.xmlcalabash.extensions.fileutils.Tempfile"/>
 <implementation type="px:zip" class-name="com.xmlcalabash.extensions.Zip"/>
 
-<implementation type="brlutls:emboss-pef"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Emboss"/>
-<implementation type="brlutls:pef-to-text"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.PEF2Text"/>
-<implementation type="brlutls:text-to-pef"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Text2PEF"/>
-<implementation type="brlutls:validate-pef"
-                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Validate"/>
+<implementation type="pef:text-to-pef"
+                class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Text2PEFProvider.Text2PEF"/>
 
-<implementation type="lblxml:xml2brl"
-                class-name="org.daisy.common.xproc.calabash.steps.liblouisxml.XML2BRL"/>
+<implementation type="louis:translate-file"
+                class-name="org.daisy.pipeline.liblouis.calabash.TranslateFileProvider.TranslateFile"/>
+
+<implementation type="css:apply-stylesheet"
+                class-name="org.daisy.braillecss.calabash.ApplyStylesheetProvider.ApplyStylesheet"/>
 
 </xproc-config>
