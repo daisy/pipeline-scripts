@@ -14,9 +14,11 @@ public class LiblouisTableSet {
 
 	private static final String IDENTIFIER = "identifier";
 	private static final String DIRECTORY = "directory";
+	private static final String MANIFEST = "manifest";
 
 	private String identifier = null;
 	private File path = null;
+	private URL manifest = null;
 
 	public String getIdentifier() {
 		return identifier;
@@ -26,10 +28,11 @@ public class LiblouisTableSet {
 		return path;
 	}
 
-	public File[] listTables() {
-		return getPath().listFiles();
+	public URL getManifest() {
+		return manifest;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void activate(ComponentContext context, Map<?, ?> properties) {
 		if (properties.get(IDENTIFIER) == null
 				|| properties.get(IDENTIFIER).toString().isEmpty()) {
@@ -42,11 +45,11 @@ public class LiblouisTableSet {
 		identifier = properties.get(IDENTIFIER).toString();
 		String directory = properties.get(DIRECTORY).toString();
 		path = context.getBundleContext().getDataFile("tables");
+		Bundle bundle = context.getBundleContext().getBundle();
 		if (!path.exists()) {
 			path.mkdir();
-			Bundle bundle = context.getBundleContext().getBundle();
 			if (bundle.getEntry(directory) == null) {
-				throw new IllegalArgumentException("Table directory could not be resolved");
+				throw new IllegalArgumentException("Table directory at location " + directory + " could not be found");
 			}
 			Enumeration<String> tablePaths = bundle.getEntryPaths(directory);
 			if (tablePaths != null) {
@@ -64,6 +67,13 @@ public class LiblouisTableSet {
 						e.printStackTrace();
 					}
 				}
+			}
+		}
+		if (properties.get(MANIFEST) != null) {
+			String manifestPath = properties.get(MANIFEST).toString();
+			manifest = bundle.getEntry(manifestPath);
+			if (manifest == null) {
+				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
 			}
 		}
 	}
