@@ -6,4 +6,5 @@
     </scr:service>
     <scr:property name="identifier" type="String" value="org.daisy.pipeline.liblouis.DefaultLiblouisTableSet"/>
     <scr:property name="directory" type="String" value="/tables"/>
+    <scr:property name="manifest" type="String" value="/manifest.xml"/>
 </scr:component>

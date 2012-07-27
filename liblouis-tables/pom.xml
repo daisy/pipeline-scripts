@@ -19,7 +19,7 @@
   <name>DAISY Pipeline 2 module :: liblouis-tables</name>
 
   <scm>
-    <connection>scm:svn:http://liblouis.googlecode.com/svn/trunk/tables</connection>
+    <connection>scm:svn:https://liblouis.googlecode.com/svn/trunk/tables</connection>
   </scm>
 
   <build>
@@ -29,13 +29,7 @@
       </resource>
       <resource>
         <targetPath>tables</targetPath>
-        <directory>${basedir}/target/resources/tables</directory>
-        <excludes>
-          <exclude>lang2table</exclude>
-          <exclude>Makefile.am</exclude>
-          <exclude>maketablelist.sh</exclude>
-          <exclude>README</exclude>
-        </excludes>
+        <directory>${basedir}/target/generated-resources/tables</directory>
       </resource>
     </resources>
     <plugins>
@@ -50,7 +44,8 @@
             </goals>
             <configuration>
               <connectionType>connection</connectionType>
-              <checkoutDirectory>${basedir}/target/resources/tables</checkoutDirectory>
+              <checkoutDirectory>${basedir}/target/generated-resources/tables</checkoutDirectory>
+              <excludes>lang2table,Makefile.am,maketablelist.sh,README</excludes>
             </configuration>
           </execution>
         </executions>
