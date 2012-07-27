@@ -8,10 +8,29 @@
 	
 	<xsl:output method="xml" encoding="utf-8" indent="yes" />
 
-	<xsl:param name="liblouis_tables" as="xs:string" select="'unicode.dis,en-us-g2.ctb'"/>
+	<xsl:variable name="table" select="louis:find-table(string(/*/@xml:lang))"/>
+
+	<xsl:template match="/">
+		<xsl:choose>
+			<xsl:when test="$table">
+				<xsl:apply-templates/>
+			</xsl:when>
+			<xsl:when test="not(/*/@xml:lang)">
+				<xsl:message terminate="yes">
+					<xsl:text>This document has no xml:lang attribute</xsl:text>
+				</xsl:message>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate="yes">
+					<xsl:value-of select="concat(
+						'No liblouis table found that matches xml:lang=&quot;', string(/*/@xml:lang), '&quot;')"/>
+				</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 	<xsl:template match="text()" priority="1">
-		<xsl:value-of select="louis:translate($liblouis_tables, .)"/>
+		<xsl:value-of select="louis:translate($table, .)"/>
 	</xsl:template>
 	
 	<xsl:template match="node()|@*">
