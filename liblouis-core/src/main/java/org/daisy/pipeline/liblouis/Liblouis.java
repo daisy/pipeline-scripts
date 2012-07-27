@@ -5,14 +5,7 @@ import java.util.Map;
 
 import org.liblouis.Translator;
 
-public class Louis {
-
-	private static final String TABLE_SET_ID = "org.daisy.pipeline.liblouis.DefaultLiblouisTableSet";
-
-	static {
-		Environment.setVariable("LOUIS_TABLEPATH",
-				LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), true);
-	}
+public class Liblouis {
 
 	private static Map<String,Translator> translatorMap = new HashMap<String,Translator>();
 
@@ -28,9 +21,15 @@ public class Louis {
 
 	public static String translate(String tables, String text) {
 		try {
+			tables = "unicode.dis," + tables;
+			text = squeeze(text);
 			return getTranslator(tables).translate(text).getBraille();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static String squeeze(final String in) {
+		return in.replaceAll("(?:\\p{Z}|\\s)+", " ");
 	}
 }
