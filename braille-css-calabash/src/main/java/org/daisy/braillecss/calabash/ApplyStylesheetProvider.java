@@ -113,8 +113,11 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 					NamedNodeMap attributes = node.getAttributes();
 					for (int i=0; i<attributes.getLength(); i++) {
 						Node attr = attributes.item(i);
-						if (!"xmlns".equals(attr.getPrefix())) {
+						if ("http://www.w3.org/2000/xmlns/".equals(attr.getNamespaceURI())) {
+						} else if ("http://www.w3.org/XML/1998/namespace".equals(attr.getNamespaceURI())) {
 							addAttribute(new QName("xml", attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
+						} else {
+							addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
 						}
 					}
 					NodeData data = styleMap.get((Element)node);
