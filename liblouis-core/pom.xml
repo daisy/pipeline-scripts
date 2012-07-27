@@ -28,10 +28,6 @@
       <artifactId>org.osgi.compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>liblouis-java</artifactId>
-    </dependency>
-    <dependency>
       <groupId>net.java.dev.jna</groupId>
       <!--<artifactId>jna</artifactId>-->
       <artifactId>com.springsource.com.sun.jna</artifactId>
@@ -41,11 +37,45 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-scm-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>checkout</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <configuration>
+              <connectionUrl>scm:git:https://github.com/bertfrees/liblouis-java.git</connectionUrl>
+              <checkoutDirectory>${basedir}/target/generated-sources/liblouis-java</checkoutDirectory>
+              <includes>*/**/*.java</includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/target/generated-sources/liblouis-java/src</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Export-Package>org.daisy.pipeline.liblouis, !org.liblouis</Export-Package>
             <Service-Component>OSGI-INF/liblouis-table-registry.xml, OSGI-INF/activator.xml</Service-Component>
+            <_removeheaders>Embed-Dependency,Include-Resource,Private-Package</_removeheaders>
           </instructions>
         </configuration>
       </plugin>
