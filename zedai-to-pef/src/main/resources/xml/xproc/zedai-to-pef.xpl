@@ -70,7 +70,11 @@
     <!-- TRANSLATION -->
     <!-- =========== -->
     
-    <px:zedai-to-pef.translation name="translation"/>
+    <px:zedai-to-pef.translation name="translation">
+        <p:input port="source">
+            <p:pipe port="result" step="styling"/>
+        </p:input>
+    </px:zedai-to-pef.translation>
     
     <!-- ========== -->
     <!-- FORMATTING -->

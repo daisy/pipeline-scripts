@@ -2,32 +2,39 @@
 <p:declare-step
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    exclude-inline-prefixes="px"
+    xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
+    exclude-inline-prefixes="px css"
     type="px:zedai-to-pef.translation" name="zedai-to-pef.translation" version="1.0">
 
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
     <p:output port="result" primary="true" px:media-type="application/z3998-auth+xml"/>
-    
-    <!-- flatten some elements -->
+
+    <!-- Identify blocks -->
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/flatten.xsl"/>
+            <p:document href="../xslt/identify-blocks.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
         </p:input>
     </p:xslt>
     
-    <!-- translate text nodes with liblouis -->
+    <!-- Translate each block -->
     
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/translate.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
+    <p:viewport match="css:block">
+        
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/simple-translate.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        
+    </p:viewport>
+    
+    <p:unwrap match="css:block"/>
     
 </p:declare-step>
