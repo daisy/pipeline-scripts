@@ -1,34 +1,28 @@
 package org.daisy.pipeline.liblouis;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.jna.Platform;
+import org.liblouis.liblouisutdml;
 
 public class Liblouisutdml {
 
-	/**
-	 * @param configFiles (or null): array of filenames
-	 * @param semanticFiles (or null): array of filenames
-	 * @param tables (or null): array of filenames
-	 * @param otherSettings (or null): key/value pairs
-	 * @param input: an existing file
-	 * @param output: path to the output file
-	 * @param configPath (or null): - a directory that must contain canonical.cfg (liblouisutdml.ini)
-	 *                                  & all files listed in configFiles and semanticFiles
-	 * 								- can be relative to tempDir
-	 * 								- if configPath is null, . (tempDir) is used
-	 * @param tablePath: LOUIS_TABLEPATH
-	 * @param tempDir
-	 * @throws Exception
-	 */
+	private static final liblouisutdml INSTANCE = liblouisutdml.getInstance();
 
-	public static void file2brl(
+	/**
+	 * @param configFiles: array of file names (or null)
+	 * @param semanticFiles: array of file names (or null)
+	 * @param tables: array of file names (or null)
+	 * @param otherSettings: key/value pairs (or null)
+	 * @param input: the input file
+	 * @param output: path to the output file
+	 * @param configPath: directory that must contain liblouisutdml.ini & all files listed in configFiles and semanticFiles
+	 * @param tempDir: directory where liblouisutdml can store temporary files
+	 */
+	public static void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
 			List<String> tables,
@@ -36,56 +30,40 @@ public class Liblouisutdml {
 			File input,
 			File output,
 			File configPath,
-			String tablePath,
-			File tempDir) throws Exception {
+			File tempDir) {
 
-        List<String> command = new ArrayList<String>();
+		String configFileList = configPath.getAbsolutePath() + File.separator +
+				(configFiles != null ? StringUtils.join(configFiles, ",") : "");
+		String inputFileName = input.getAbsolutePath();
+		String outputFileName = output.getAbsolutePath();
 
-        command.add(Activator.getNativePath() + File.separator + "file2brl"
-        				+ (Platform.isWindows() ? ".exe" : ""));
-        command.add("-f");
-        command.add((configPath != null ? configPath.getAbsolutePath() : ".") + File.separator +
-        		(configFiles != null ? StringUtils.join(configFiles, ",") : ""));
-
-        Map<String,String> settings = new HashMap<String,String>();
-        if (semanticFiles != null) {
+		Map<String,String> settings = new HashMap<String,String>();
+		if (semanticFiles != null) {
 			settings.put("semanticFiles", StringUtils.join(semanticFiles, ","));
 		}
 		if (tables != null) {
 			settings.put("literaryTextTable", StringUtils.join(tables, ","));
 		}
-		if (otherSettings!= null && !otherSettings.isEmpty()) {
+		if (otherSettings != null) {
 			settings.putAll(otherSettings);
 		}
+		List<String> settingsList = new ArrayList<String>();
+		for (String key : settings.keySet()) {
+			settingsList.add(key + " " + settings.get(key));
+		}
 
-        for (String key : settings.keySet()) {
-        	command.add("-C" + key + "=" + settings.get(key));
-        }
+		System.out.println("translateFile");
+		System.out.println("	configFiles: " + configFileList);
+		System.out.println("	inputFile: " + inputFileName);
+		System.out.println("	outputFile: " + outputFileName);
+		System.out.println("	settings: " + StringUtils.join(settingsList, " "));
 
-        command.add(input.getAbsolutePath());
-        command.add(output.getAbsolutePath());
-
-        System.out.println(StringUtils.join(command, " "));
-
-        ProcessBuilder builder = new ProcessBuilder(command);
-        System.out.println("export LOUIS_TABLEPATH=\"" + tablePath + "\"");
-        builder.environment().put("LOUIS_TABLEPATH", tablePath);
-        builder.directory(tempDir);
-        Process process = builder.start();
-
-        if (process.waitFor() != 0) {
-            BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String error = "";
-            String line = null;
-            while ((line = stderr.readLine()) != null) {
-                error += line + "\n";
-            }
-            stderr.close();
-            if (!error.isEmpty()) {
-                throw new RuntimeException("Liblouisutdml error:\n" + error);
-            } else {
-            	throw new RuntimeException("Liblouisutdml abnormal termination.");
-            }
-        }
+		try {
+			INSTANCE.setWriteablePath(tempDir.getAbsolutePath());
+			INSTANCE.translateFile(configFileList, inputFileName, outputFileName, null, StringUtils.join(settingsList, "\n"), 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Liblouisutdml error");
+		}
 	}
 }

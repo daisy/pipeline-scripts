@@ -39,8 +39,7 @@ public class Activator {
 					directory = "/native/linux";
 					break;
 				default:
-					throw new RuntimeException(
-							"No liblouis binaries for this platform");
+					throw new RuntimeException("No liblouis binaries for this platform");
 			}
 			if (bundle.getEntry(directory) == null) {
 				throw new RuntimeException(directory + " doesn't exist" );
@@ -64,8 +63,26 @@ public class Activator {
 				}
 			}
 		}
-		NativeLibrary.addSearchPath("louis", nativePath.getAbsolutePath());
-		
+
+		try {
+
+			switch(Platform.getOSType()) {
+				case Platform.MAC:
+					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.dylib");
+					break;
+				case Platform.LINUX:
+					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.so.6");;
+					break;
+				case Platform.WINDOWS:
+				default:
+					throw new RuntimeException("No liblouis binaries for this platform");
+			}
+
+			NativeLibrary.addSearchPath("louis", nativePath.getAbsolutePath());
+
+		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void unpack(URL url, File file) throws Exception {

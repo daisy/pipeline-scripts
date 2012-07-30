@@ -40,9 +40,6 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 	public static class TranslateFile extends DefaultStep {
 	
-		private static final String TABLE_SET_ID
-			= "org.daisy.pipeline.liblouis.IdentityLiblouisTableSet";
-	
 		private static final String LOUIS_NS = "http://liblouis.org/liblouis";
 		private static final String LOUIS_PREFIX = "louis";
 		private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
@@ -163,8 +160,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-				Liblouisutdml.file2brl(configFileNames, semanticFileNames, null, settings, xmlFile, brailleFile, null,
-					LiblouisTableRegistry.getLouisTablePath(TABLE_SET_ID), tempDir);
+				Liblouisutdml.translateFile(configFileNames, semanticFileNames, null, settings, xmlFile, brailleFile, tempDir, tempDir);
 				//xmlFile.delete();
 	
 				// Read the braille document and wrap it in a new XML document
