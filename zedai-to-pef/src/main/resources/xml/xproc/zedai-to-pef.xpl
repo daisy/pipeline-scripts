@@ -49,6 +49,7 @@
     </p:option>
     
     <p:import href="zedai-to-pef.styling.xpl"/>
+    <p:import href="zedai-to-pef.pre-formatting.xpl"/>
     <p:import href="zedai-to-pef.translation.xpl"/>
     <p:import href="zedai-to-pef.formatting.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
@@ -66,13 +67,23 @@
         </p:with-option>
     </px:zedai-to-pef.styling>
     
+    <!-- ============== -->
+    <!-- PRE-FORMATTING -->
+    <!-- ============== -->
+    
+    <px:zedai-to-pef.pre-formatting name="pre-formatting">
+        <p:input port="source">
+            <p:pipe port="result" step="styling"/>
+        </p:input>
+    </px:zedai-to-pef.pre-formatting>
+    
     <!-- =========== -->
     <!-- TRANSLATION -->
     <!-- =========== -->
     
     <px:zedai-to-pef.translation name="translation">
         <p:input port="source">
-            <p:pipe port="result" step="styling"/>
+            <p:pipe port="result" step="pre-formatting"/>
         </p:input>
     </px:zedai-to-pef.translation>
     

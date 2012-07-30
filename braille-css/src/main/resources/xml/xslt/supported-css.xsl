@@ -34,6 +34,7 @@
     <xsl:variable name="AVOID" select="'avoid'"/>
     <xsl:variable name="BLOCK" select="'block'"/>
     <xsl:variable name="CENTER" select="'center'"/>
+    <xsl:variable name="DECIMAL" select="'decimal'"/>
     <xsl:variable name="DOT_PATTERN" select="'[\u2800-\u28FF]'"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
     <xsl:variable name="INLINE" select="'inline'"/>
@@ -41,12 +42,16 @@
     <xsl:variable name="JUSTIFY" select="'justify'"/>
     <xsl:variable name="LEFT" select="'left'"/>
     <xsl:variable name="LIST_ITEM" select="'list-item'"/>
+    <xsl:variable name="LOWER_ALPHA" select="'lower-alpha'"/>
+    <xsl:variable name="LOWER_ROMAN" select="'lower-roman'"/>
     <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
     <xsl:variable name="NONE" select="'none'"/>
     <xsl:variable name="RIGHT" select="'right'"/>
     <xsl:variable name="TOC" select="'toc'"/>
     <xsl:variable name="TOC_ITEM" select="'tic-item'"/>
     <xsl:variable name="TOC_TITLE" select="'toc-title'"/>
+    <xsl:variable name="UPPER_ALPHA" select="'upper-alpha'"/>
+    <xsl:variable name="UPPER_ROMAN" select="'upper-roman'"/>
     
     <xsl:variable name="valid-properties" as="xs:string*"
         select="(concat('^', $BLOCK, '|', $INLINE, '|', $LIST_ITEM, '|', $NONE, '|', $TOC, '|', $TOC_ITEM, '|', $TOC_TITLE, '$'),
@@ -63,7 +68,7 @@
                  concat('^', $DOT_PATTERN, '|', $NONE, '$'),
                  concat('^', $DOT_PATTERN, '|', $NONE, '$'),
                  concat('^', $INTEGER, '|', $INHERIT, '$'),
-                 concat('^', $DOT_PATTERN, '|', $NONE, '|', $INHERIT, '$'),
+                 concat('^', $DOT_PATTERN, '|', $DECIMAL, '|', $LOWER_ALPHA, '|', $LOWER_ROMAN, '|', $NONE, '|', $UPPER_ALPHA, '|', $UPPER_ROMAN, '|', $INHERIT, '$'),
                  concat('^', $CENTER, '|', $JUSTIFY, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, '$'),
                  concat('^', $ALWAYS, '|', $AUTO, '|', $AVOID, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, '$'),
                  concat('^', $ALWAYS, '|', $AUTO, '|', $AVOID, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, '$'),

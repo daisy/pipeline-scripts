@@ -56,7 +56,8 @@ public interface BrailleCSSProperty extends CSSProperty {
 	}
 
 	public enum ListStyleType implements BrailleCSSProperty {
-		dot_pattern(""), NONE("none"), INHERIT("inherit");
+		dot_pattern(""), DECIMAL("decimal"), LOWER_ALPHA("lower-alpha"), LOWER_ROMAN("lower-roman"),
+		NONE("none"), UPPER_ALPHA("upper-alpha"), UPPER_ROMAN("upper-roman"), INHERIT("inherit");
 
 		private String text;
 
