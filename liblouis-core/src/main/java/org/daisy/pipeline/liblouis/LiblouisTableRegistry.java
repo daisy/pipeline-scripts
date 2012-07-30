@@ -18,12 +18,14 @@ public class LiblouisTableRegistry {
 		System.out.println("Adding table set to registry: " + tableSet.getIdentifier());
 		tableSets.put(tableSet.getIdentifier(), tableSet);
 		exportLouisTablePath();
+		TableFinder.cache.clear();
 	}
 
 	public void removeTableSet(LiblouisTableSet tableSet) {
 		System.out.println("Removing table set from registry: " + tableSet.getIdentifier());
 		tableSets.remove(tableSet.getIdentifier());
 		exportLouisTablePath();
+		TableFinder.cache.clear();
 	}
 
 	private static void exportLouisTablePath() {
@@ -53,6 +55,9 @@ public class LiblouisTableRegistry {
 			if ("".equals(locale.toString())) {
 				return null;
 			}
+			if (cache.containsKey(locale)) {
+				return cache.get(locale);
+			}
 			for (String id : tableSets.keySet()) {
 				if (!tableMap.containsKey(id)) {
 					tableMap.put(id, readManifest(tableSets.get(id)));
@@ -61,24 +66,33 @@ public class LiblouisTableRegistry {
 			if (!"".equals(locale.getVariant())) {
 				for (String id : tableSets.keySet()) {
 					Map<String,String> map = tableMap.get(id);
-					if (map.containsKey(locale.toString())) {
-						return map.get(locale.toString());
+					String key = locale.toString();
+					if (map.containsKey(key)) {
+						String table = map.get(key);
+						cache.put(locale, table);
+						return table;
 					}
 				}
 			}
 			if (!"".equals(locale.getCountry())) {
 				for (String id : tableSets.keySet()) {
 					Map<String,String> map = tableMap.get(id);
-					if (map.containsKey(locale.getLanguage() + "_" + locale.getCountry())) {
-						return map.get(locale.getLanguage() + "_" + locale.getCountry());
+					String key = locale.getLanguage() + "_" + locale.getCountry();
+					if (map.containsKey(key)) {
+						String table = map.get(key);
+						cache.put(locale, table);
+						return table;
 					}
 				}
 			}
 			if (!"".equals(locale.getLanguage())) {
 				for (String id : tableSets.keySet()) {
 					Map<String,String> map = tableMap.get(id);
-					if (map.containsKey(locale.getLanguage())) {
-						return map.get(locale.getLanguage());
+					String key = locale.getLanguage();
+					if (map.containsKey(key)) {
+						String table = map.get(key);
+						cache.put(locale, table);
+						return table;
 					}
 				}
 			}
@@ -87,6 +101,8 @@ public class LiblouisTableRegistry {
 
 		private static final Map<String,Map<String,String>> tableMap
 				= new HashMap<String,Map<String,String>>();
+
+		private static final Map<Locale,String> cache = new HashMap<Locale,String>();
 
 		private static Map<String,String> readManifest(LiblouisTableSet tableSet) {
 			Map<String,String> map = new HashMap<String,String>();
