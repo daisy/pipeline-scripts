@@ -35,6 +35,20 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>native/**</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>native/${platform}/**</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-scm-plugin</artifactId>
@@ -81,5 +95,43 @@
       </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>linux</id>
+      <properties>
+        <platform>linux</platform>
+      </properties>
+      <activation>
+        <os>
+          <family>linux</family>
+        </os>
+      </activation>
+    </profile>
+    <profile>
+      <id>darwin-i386</id>
+      <properties>
+        <platform>darwin-i386</platform>
+      </properties>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>i386</arch>
+        </os>
+      </activation>
+    </profile>
+    <profile>
+      <id>darwin-x86_64</id>
+      <properties>
+        <platform>darwin-x86_64</platform>
+      </properties>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+    </profile>
+  </profiles>
 
 </project>
