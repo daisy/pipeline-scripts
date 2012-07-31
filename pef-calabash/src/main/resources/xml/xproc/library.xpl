@@ -1,7 +1,7 @@
 <p:library
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
+    xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
     version="1.0">
     
     <p:declare-step type="pef:text2pef">

@@ -1,4 +1,4 @@
-package org.daisy.common.xproc.calabash.steps.brailleutils;
+package org.daisy.pipeline.pef;
 
 import java.io.File;
 import java.io.FileOutputStream;

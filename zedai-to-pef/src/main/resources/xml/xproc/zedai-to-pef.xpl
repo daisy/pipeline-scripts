@@ -52,7 +52,6 @@
     <p:import href="zedai-to-pef.pre-formatting.xpl"/>
     <p:import href="zedai-to-pef.translation.xpl"/>
     <p:import href="zedai-to-pef.formatting.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     
     <!-- ======= -->
     <!-- STYLING -->
@@ -92,6 +91,9 @@
     <!-- ========== -->
     
     <px:zedai-to-pef.formatting name="formatting">
+        <p:input port="source">
+            <p:pipe port="result" step="translation"/>
+        </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>

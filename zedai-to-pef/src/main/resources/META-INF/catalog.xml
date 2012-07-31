@@ -2,12 +2,13 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
-  <uri name="http://www.daisy.org/pipeline/modules/zedai-to-pef/xproc/zedai-to-pef.xpl"
+  <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.xpl"
        uri="../xml/xproc/zedai-to-pef.xpl" px:script="true"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:brailleutils-calabash" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-saxon" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:liblouis-formatter" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille-css" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille-css-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-formatter" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:utilities" />
 </catalog>

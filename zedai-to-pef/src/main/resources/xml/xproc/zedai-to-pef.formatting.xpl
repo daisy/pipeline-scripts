@@ -4,7 +4,7 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
+    xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
     exclude-inline-prefixes="px d louis pef"
     type="px:zedai-to-pef.formatting" name="zedai-to-pef.formatting" version="1.0">
 
@@ -13,8 +13,8 @@
     <p:option name="temp-dir" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/liblouis-formatter/xproc/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/brailleutils-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
     
     <!-- Create temporary directory -->
     

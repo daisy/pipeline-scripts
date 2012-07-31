@@ -11,7 +11,7 @@
     <p:output port="result" primary="true" px:media-type="application/z3998-auth+xml"/>
     <p:option name="default-stylesheet" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille-css-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/xproc/library.xpl"/>
 
     <p:choose>
         <p:xpath-context>

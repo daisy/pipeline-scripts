@@ -12,7 +12,7 @@
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/number-lists.xsl"/>
+            <p:document href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/number-lists.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>

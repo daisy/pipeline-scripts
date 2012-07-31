@@ -8,7 +8,7 @@
     
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille-formatting-utils/xslt/encoding-functions.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" />
     
     <xsl:template match="/">
         

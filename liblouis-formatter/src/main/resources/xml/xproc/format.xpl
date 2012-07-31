@@ -14,7 +14,7 @@
     <p:import href="create-liblouis-files.xpl"/>
     <p:import href="format-side-border.xpl"/>
     <p:import href="format-toc.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/liblouis-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
     <p:xslt>
         <p:input port="stylesheet">

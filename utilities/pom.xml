@@ -6,17 +6,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.daisy.pipeline.modules</groupId>
+    <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
   </parent>
 
-  <groupId>org.daisy.pipeline.modules</groupId>
-  <artifactId>braille-formatting-utils</artifactId>
+  <groupId>org.daisy.pipeline.modules.braille</groupId>
+  <artifactId>utilities</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 module :: braille-formatting-utils</name>
+  <name>DAISY Pipeline 2 module :: braille utilities</name>
 
 </project>

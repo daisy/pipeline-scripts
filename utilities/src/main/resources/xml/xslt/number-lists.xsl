@@ -7,7 +7,7 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille-css/xslt/parsing-helper.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
     
     <xsl:template match="@*|node()">
         <xsl:copy>

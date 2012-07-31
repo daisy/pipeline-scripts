@@ -2,7 +2,7 @@
 <p:declare-step
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-inline-prefixes="px css"
     type="px:zedai-to-pef.translation" name="zedai-to-pef.translation" version="1.0">
 
