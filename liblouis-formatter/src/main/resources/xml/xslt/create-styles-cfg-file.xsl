@@ -16,7 +16,6 @@
     <xsl:template name="create-config-file">
         
         <xsl:param name="display-values" as="xs:string*"/>
-        <xsl:param name="toc-title-style" as="xs:string" select="''"/>
         <xsl:param name="toc-item-styles" as="xs:string*"/>
         
         <louis:config-file>
@@ -26,11 +25,6 @@
                 <xsl:variable name="style-name" as="xs:string?">
                     <xsl:if test="index-of($display-values, $display)">
                         <xsl:choose>
-                            <xsl:when test="$display='toc-title'">
-                                <xsl:if test="concat('#', @name)=$toc-title-style">
-                                    <xsl:sequence select="'contentsheader'"/>
-                                </xsl:if>
-                            </xsl:when>
                             <xsl:when test="$display='toc-item'">
                                 <xsl:variable name="index" select="index-of($toc-item-styles, concat('#', @name))" as="xs:integer?"/>
                                 <xsl:if test="$index">

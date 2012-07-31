@@ -58,9 +58,15 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="louis:preformatted|louis:line|louis:border">
+    <xsl:template match="louis:border">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="louis:preformatted|louis:line|louis:toc">
+        <xsl:copy>
+            <xsl:apply-templates select="node()"/>
         </xsl:copy>
     </xsl:template>
     

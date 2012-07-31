@@ -15,15 +15,11 @@
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <louis:no-pagenum>
-                <xsl:sequence select="$toc/louis:toc-title"/>
+                <louis:toc>
+                    <xsl:text>&#xA0;</xsl:text>
+                </louis:toc>
             </louis:no-pagenum>
             <xsl:apply-templates select="child::node()"/>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="louis:toc" mode="move">
-        <xsl:copy>
-            <xsl:sequence select="louis:toc-title"/>
         </xsl:copy>
     </xsl:template>
     

@@ -20,7 +20,7 @@
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" />
     
-    <xsl:template match="/*">        
+    <xsl:template match="/*">
         <louis:preformatted>
             <xsl:for-each select="tokenize(my:right-trim-formfeeds(string(.)), '&#x0C;')">
                 <xsl:call-template name="page"/>

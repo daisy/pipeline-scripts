@@ -70,6 +70,12 @@
 style no-pagenum
     braillePageNumberFormat blank
 
+style contentsheader
+    leftMargin 0
+    rightMargin 0
+    firstLineIndent 0
+    format leftJustified
+
 style preformatted-line
     leftMargin 0
     rightMargin 0
@@ -84,6 +90,7 @@ style preformatted-line
         <p:input port="source">
             <p:inline><louis:semantic-file>
 no-pagenum &amp;xpath(//louis:no-pagenum)
+contentsheader &amp;xpath(//louis:toc[not(preceding::*)])
 skip &amp;xpath(//louis:toc[preceding::*])
 preformatted-line &amp;xpath(//louis:preformatted//louis:line)
             </louis:semantic-file></p:inline>

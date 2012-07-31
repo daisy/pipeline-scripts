@@ -6,15 +6,13 @@
     
     <xsl:import href="create-styles-cfg-file.xsl" />
 
-    <xsl:param name="toc-title-style" as="xs:string"/>
     <xsl:param name="toc-item-styles" as="xs:string*"/>
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
 
     <xsl:template match="/">
         <xsl:call-template name="create-config-file">
-            <xsl:with-param name="display-values" select="('toc-title', 'toc-item')"/>
-            <xsl:with-param name="toc-title-style" select="$toc-title-style"/>
+            <xsl:with-param name="display-values" select="('toc-item')"/>
             <xsl:with-param name="toc-item-styles" select="$toc-item-styles"/>
         </xsl:call-template>
     </xsl:template>

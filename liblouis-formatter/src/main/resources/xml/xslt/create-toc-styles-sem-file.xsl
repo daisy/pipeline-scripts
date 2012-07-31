@@ -11,7 +11,6 @@
 
     <xsl:template name="initial">
         <louis:semantic-file>
-            <xsl:text>contentsheader &amp;xpath(//louis:toc-title)&#xa;</xsl:text>
             <xsl:for-each select="$toc-item-styles">
                 <xsl:value-of select="concat('heading', position())"/>
                 <xsl:text> &amp;xpath(//louis:toc-item[@louis:style='</xsl:text>

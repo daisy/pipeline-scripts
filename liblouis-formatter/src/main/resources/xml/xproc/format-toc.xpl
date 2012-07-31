@@ -30,9 +30,6 @@
                     <p:input port="stylesheet">
                         <p:document href="../xslt/create-toc-styles-cfg-file.xsl"/>
                     </p:input>
-                    <p:with-param name="toc-title-style" select="string(.//louis:toc-title/@louis:style)">
-                        <p:pipe step="config-files" port="current"/>
-                    </p:with-param>
                     <p:with-param name="toc-item-styles" select="distinct-values(.//louis:toc-item/@louis:style)">
                         <p:pipe step="config-files" port="current"/>
                     </p:with-param>

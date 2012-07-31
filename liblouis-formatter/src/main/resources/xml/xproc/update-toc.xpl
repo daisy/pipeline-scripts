@@ -75,6 +75,9 @@
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
+            <p:with-param name="skip-first-line" select="'true'">
+                <p:empty/>
+            </p:with-param>
         </p:xslt>
         
         <p:delete match="louis:preformatted">

@@ -49,12 +49,11 @@
     <xsl:variable name="RIGHT" select="'right'"/>
     <xsl:variable name="TOC" select="'toc'"/>
     <xsl:variable name="TOC_ITEM" select="'tic-item'"/>
-    <xsl:variable name="TOC_TITLE" select="'toc-title'"/>
     <xsl:variable name="UPPER_ALPHA" select="'upper-alpha'"/>
     <xsl:variable name="UPPER_ROMAN" select="'upper-roman'"/>
     
     <xsl:variable name="valid-properties" as="xs:string*"
-        select="(concat('^', $BLOCK, '|', $INLINE, '|', $LIST_ITEM, '|', $NONE, '|', $TOC, '|', $TOC_ITEM, '|', $TOC_TITLE, '$'),
+        select="(concat('^', $BLOCK, '|', $INLINE, '|', $LIST_ITEM, '|', $NONE, '|', $TOC, '|', $TOC_ITEM, '$'),
                  concat('^', $INTEGER, '$'),
                  concat('^', $INTEGER, '$'),
                  concat('^', $NATURAL_NUMBER, '$'),

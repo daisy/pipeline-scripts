@@ -2,6 +2,10 @@ head {
 	display: none;
 }
 
+body {
+	orphans: 0;
+}
+
 section,
 frontmatter {
 	display: block;
@@ -21,9 +25,10 @@ toc {
 }
 
 toc > h {
-	display: toc-title;
-	text-align: center;
-	margin-bottom: 1;
+	border-top: none;
+	border-bottom: none;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 toc > entry > ref {
