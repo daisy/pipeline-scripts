@@ -3,6 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
@@ -30,7 +31,7 @@
                     <p:input port="stylesheet">
                         <p:document href="../xslt/create-toc-styles-cfg-file.xsl"/>
                     </p:input>
-                    <p:with-param name="toc-item-styles" select="distinct-values(.//louis:toc-item/@louis:style)">
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//*[@css:toc-item]/@louis:style)">
                         <p:pipe step="config-files" port="current"/>
                     </p:with-param>
                 </p:xslt>
@@ -50,7 +51,7 @@
                     <p:input port="stylesheet">
                         <p:document href="../xslt/create-toc-styles-sem-file.xsl"/>
                     </p:input>
-                    <p:with-param name="toc-item-styles" select="distinct-values(.//louis:toc-item/@louis:style)">
+                    <p:with-param name="toc-item-styles" select="distinct-values(.//*[@css:toc-item]/@louis:style)">
                         <p:pipe step="semantic-files" port="current"/>
                     </p:with-param>
                 </p:xslt>

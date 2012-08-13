@@ -90,8 +90,8 @@ style preformatted-line
         <p:input port="source">
             <p:inline><louis:semantic-file>
 no-pagenum &amp;xpath(//louis:no-pagenum)
-contentsheader &amp;xpath(//louis:toc[not(preceding::*)])
-skip &amp;xpath(//louis:toc[preceding::*])
+contentsheader &amp;xpath(//louis:toc[parent::louis:no-pagenum])
+skip &amp;xpath(//louis:toc[not(parent::louis:no-pagenum)])
 preformatted-line &amp;xpath(//louis:preformatted//louis:line)
             </louis:semantic-file></p:inline>
         </p:input>

@@ -7,7 +7,7 @@
     version="2.0">
 
     <!-- Make margin-left and margin-right absolute -->
-    <!-- Turn borders into louis:border and louis:side-border -->
+    <!-- Turn borders into louis:border and louis:vertical-border -->
     <!-- Turn padding into margin -->
 
     <xsl:param name="page-width" as="xs:integer" select="40"/>
@@ -32,23 +32,23 @@
         <xsl:param name="left"/>
         <xsl:param name="right"/>
         <xsl:param name="width"/>
-        <xsl:variable name="display" as="xs:string?" select="css:get-property-value(., 'display', true(), true(), false())"/>
+        <xsl:variable name="display" as="xs:string?"
+            select="if (ancestor::louis:toc) then 'toc-item' else css:get-property-value(., 'display', true(), true(), true())"/>
         <xsl:choose>
-            <xsl:when test="$display and ($display='block' or $display='list-item' or $display='toc') and
-                (contains(string(@style), 'margin') or contains(string(@style), 'border') or contains(string(@style), 'padding'))">
-                <xsl:variable name="margin-left" select="number(css:get-property-value(., 'margin-left', true(), true(), false()))"/>
-                <xsl:variable name="margin-right" select="number(css:get-property-value(., 'margin-right', true(), true(), false()))"/>
-                <xsl:variable name="margin-top" select="number(css:get-property-value(., 'margin-top', true(), true(), false()))"/>
-                <xsl:variable name="margin-bottom" select="number(css:get-property-value(., 'margin-bottom', true(), true(), false()))"/>
-                <xsl:variable name="padding-left" select="number(css:get-property-value(., 'padding-left', true(), true(), false()))"/>
-                <xsl:variable name="padding-right" select="number(css:get-property-value(., 'padding-right', true(), true(), false()))"/>
-                <xsl:variable name="padding-top" select="number(css:get-property-value(., 'padding-top', true(), true(), false()))"/>
-                <xsl:variable name="padding-bottom" select="number(css:get-property-value(., 'padding-bottom', true(), true(), false()))"/>
-                <xsl:variable name="border-left" select="css:get-property-value(., 'border-left', true(), true(), false())"/>
-                <xsl:variable name="border-right" select="css:get-property-value(., 'border-right', true(), true(), false())"/>
-                <xsl:variable name="border-top" select="css:get-property-value(., 'border-top', true(), true(), false())"/>
-                <xsl:variable name="border-bottom" select="css:get-property-value(., 'border-bottom', true(), true(), false())"/>
-                <xsl:variable name="style" select="louis:remove-properties(string(@style),
+            <xsl:when test="$display and matches($display, '^(block|list-item|toc|toc-item)$') and matches(string(@style), 'margin|border|padding')">
+                <xsl:variable name="margin-left" select="number(css:get-property-value(., 'margin-left', true(), true(), true()))"/>
+                <xsl:variable name="margin-right" select="number(css:get-property-value(., 'margin-right', true(), true(), true()))"/>
+                <xsl:variable name="margin-top" select="number(css:get-property-value(., 'margin-top', true(), true(), true()))"/>
+                <xsl:variable name="margin-bottom" select="number(css:get-property-value(., 'margin-bottom', true(), true(), true()))"/>
+                <xsl:variable name="padding-left" select="number(css:get-property-value(., 'padding-left', true(), true(), true()))"/>
+                <xsl:variable name="padding-right" select="number(css:get-property-value(., 'padding-right', true(), true(), true()))"/>
+                <xsl:variable name="padding-top" select="number(css:get-property-value(., 'padding-top', true(), true(), true()))"/>
+                <xsl:variable name="padding-bottom" select="number(css:get-property-value(., 'padding-bottom', true(), true(), true()))"/>
+                <xsl:variable name="border-left" select="css:get-property-value(., 'border-left', true(), true(), true())"/>
+                <xsl:variable name="border-right" select="css:get-property-value(., 'border-right', true(), true(), true())"/>
+                <xsl:variable name="border-top" select="css:get-property-value(., 'border-top', true(), true(), true())"/>
+                <xsl:variable name="border-bottom" select="css:get-property-value(., 'border-bottom', true(), true(), true())"/>
+                <xsl:variable name="style" select="css:remove-properties(string(@style),
                     ('margin-left', 'margin-right', 'margin-top', 'margin-bottom',
                     'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
                     'border-left', 'border-right', 'border-top', 'border-bottom'))"/>
@@ -99,6 +99,23 @@
         </xsl:choose>
     </xsl:template>
     
+    <xsl:template match="louis:toc">
+        <xsl:param name="left"/>
+        <xsl:param name="right"/>
+        <xsl:param name="width"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:attribute name="width" select="louis:to-string($width)"/>
+            <xsl:attribute name="margin-left" select="louis:to-string($left)"/>
+            <xsl:attribute name="margin-right" select="louis:to-string($right)"/>
+            <xsl:apply-templates select="node()">
+                <xsl:with-param name="left" select="$left + $right + $page-width - $width"/>
+                <xsl:with-param name="right" select="0"/>
+                <xsl:with-param name="width" select="$page-width"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    
     <xsl:template name="handle-border">
         <xsl:param name="left"/>
         <xsl:param name="right"/>
@@ -136,13 +153,13 @@
                 'page-break-inside:', $page-break-inside, ';',
                 'orphans:', $orphans)"/>
             <xsl:variable name="child-style"
-                select="louis:remove-properties($style, ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
+                select="css:remove-properties($style, ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
             <xsl:if test="$border-top!='none'">
                 <xsl:sequence select="louis:create-border($border-top, $left + $margin-left, $width - $margin-left - $margin-right)"/>
             </xsl:if>
             <xsl:choose>
                 <xsl:when test="$border-left!='none' or $border-right!='none'">
-                    <xsl:call-template name="handle-side-border">
+                    <xsl:call-template name="handle-vertical-border">
                         <xsl:with-param name="left" select="$left"/>
                         <xsl:with-param name="right" select="$right"/>
                         <xsl:with-param name="width" select="$width"/>
@@ -176,7 +193,7 @@
         </louis:div>
     </xsl:template>
     
-    <xsl:template name="handle-side-border">
+    <xsl:template name="handle-vertical-border">
         <xsl:param name="left"/>
         <xsl:param name="right"/>
         <xsl:param name="width"/>
@@ -192,8 +209,11 @@
         <xsl:variable name="new-width"
             select="$width - max((-$left, $margin-left)) - max((-$right, $margin-right)) - 
             (if ($border-left='none') then 0 else 1) - (if ($border-right='none') then 0 else 1)"/>
-        <louis:side-border>
-            <xsl:attribute name="width" select="$new-width"/>
+        <xsl:if test="descendant::louis:toc">
+            <xsl:message terminate="yes">No toc allowed inside an element with vertical borders</xsl:message>
+        </xsl:if>
+        <louis:vertical-border>
+            <xsl:attribute name="width" select="louis:to-string($new-width)"/>
             <xsl:attribute name="margin-left" select="louis:to-string(max((0, $left + $margin-left)))"/>
             <xsl:attribute name="margin-right" select="louis:to-string(max((0, $right + $margin-right)))"/>
             <xsl:attribute name="border-left" select="$border-left"/>
@@ -208,7 +228,7 @@
                 <xsl:with-param name="margin-bottom" select="$padding-bottom"/>
                 <xsl:with-param name="style" select="$style"/>
             </xsl:call-template>
-        </louis:side-border>
+        </louis:vertical-border>
     </xsl:template>
     
     <xsl:template name="handle-margin">
@@ -272,7 +292,7 @@
     
     <xsl:function name="louis:to-string" as="xs:string">
         <xsl:param name="number" as="xs:double"/>
-        <xsl:sequence select="format-number($number, '0')"/>
+        <xsl:sequence select="format-number($number, '0.0')"/>
     </xsl:function>
     
     <xsl:function name="louis:repeat-char" as="xs:string?">
@@ -283,19 +303,6 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="louis:remove-properties" as="xs:string">
-        <xsl:param name="style" as="xs:string"/>
-        <xsl:param name="remove" as="xs:string*"/>
-        <xsl:variable name="name-value-pairs" as="xs:string*">
-            <xsl:for-each select="tokenize($style,';')">
-                <xsl:if test="not(index-of($remove, normalize-space(substring-before(.,':'))))">
-                    <xsl:sequence select="."/>
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:sequence select="string-join($name-value-pairs,';')"/>
-    </xsl:function>
-    
     <xsl:function name="louis:append-properties" as="xs:string">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="append" as="xs:string"/>
@@ -304,7 +311,7 @@
                 <xsl:sequence select="normalize-space(substring-before(.,':'))"/>
             </xsl:for-each>
         </xsl:variable>
-        <xsl:sequence select="string-join((louis:remove-properties($style, $remove), $append), ';')"/>
+        <xsl:sequence select="string-join((css:remove-properties($style, $remove), $append), ';')"/>
     </xsl:function>
     
 </xsl:stylesheet>

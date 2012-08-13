@@ -35,7 +35,7 @@
     <xsl:variable name="BLOCK" select="'block'"/>
     <xsl:variable name="CENTER" select="'center'"/>
     <xsl:variable name="DECIMAL" select="'decimal'"/>
-    <xsl:variable name="DOT_PATTERN" select="'[\u2800-\u28FF]'"/>
+    <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
     <xsl:variable name="INLINE" select="'inline'"/>
     <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
@@ -75,28 +75,51 @@
                  concat('^', $INTEGER, '|', $INHERIT, '$'),
                  concat('^', $INTEGER, '|', $INHERIT, '$'))"/>
     
+    <xsl:variable name="applies-to" as="xs:string*"
+        select="('.*',
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '|', $TOC_ITEM, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '|', $TOC_ITEM, '$'),
+                 concat('^', $LIST_ITEM, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'))"/>
+    
     <xsl:variable name="default-values" as="xs:string*"
         select="('inline',
-                 '0',
-                 '0',
-                 '0',
-                 '0',
-                 '0',
-                 '0',
-                 '0',
-                 '0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
+                 '0.0',
                  'none',
                  'none',
                  'none',
                  'none',
-                 '0',
+                 '0.0',
                  'none',
                  'left',
                  'auto',
                  'auto',
                  'auto',
-                 '2',
-                 '2')"/>
+                 '2.0',
+                 '2.0')"/>
     
     <xsl:variable name="inherited-properties" as="xs:string*"
         select="('-brl-text-indent',
@@ -114,14 +137,11 @@
         <xsl:sequence select="boolean(index-of($properties, $property))"/>
     </xsl:function>
 
-    <xsl:function name="css:is-valid-property" as="xs:boolean?">
+    <xsl:function name="css:is-valid-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="value" as="xs:string"/>
         <xsl:variable name="index" select="my:index-of($properties, $property)"/>
-        <xsl:if test="$index">
-            <xsl:variable name="regex" select="$valid-properties[$index]"/>
-            <xsl:sequence select="matches($value, $regex)"/>
-        </xsl:if>
+        <xsl:sequence select="if ($index) then matches($value, $valid-properties[$index]) else false()"/>
     </xsl:function>
 
     <xsl:function name="css:get-default-value" as="xs:string?">
@@ -135,6 +155,13 @@
     <xsl:function name="css:is-inherited-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:sequence select="boolean(my:index-of($inherited-properties, $property))"/>
+    </xsl:function>
+    
+    <xsl:function name="css:applies-to" as="xs:boolean">
+        <xsl:param name="property" as="xs:string"/>
+        <xsl:param name="display" as="xs:string"/>
+        <xsl:variable name="index" select="my:index-of($properties, $property)"/>
+        <xsl:sequence select="if ($index) then matches($display, $applies-to[$index]) else false()"/>
     </xsl:function>
     
     <xsl:function name="my:index-of" as="xs:integer?">

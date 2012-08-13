@@ -27,14 +27,14 @@
         select="('inherit',
                  'inherit',
                  'inline',
-                 '0',
-                 '0',
+                 '0.0',
+                 '0.0',
                  'inherit',
                  'inherit',
                  'auto',
                  'auto',
                  'auto',
-                 '0')"/>
+                 '0.0')"/>
     
     <xsl:template match="@*|text()|comment()|processing-instruction()">
         <xsl:copy/>
@@ -48,7 +48,8 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="louis:side-border">
+    <xsl:template match="louis:vertical-border|
+                         *[@css:toc-item]">
         <xsl:copy>
             <xsl:apply-templates select="@*[not(name()='style')]"/>
             <xsl:call-template name="normalized-style-attribute">
@@ -58,15 +59,13 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="louis:border">
+    <xsl:template match="louis:border|
+                         louis:preformatted|
+                         louis:line|
+                         louis:toc|
+                         louis:toc//*[not(@css:toc-item)]">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="louis:preformatted|louis:line|louis:toc">
-        <xsl:copy>
-            <xsl:apply-templates select="node()"/>
         </xsl:copy>
     </xsl:template>
     
@@ -75,16 +74,17 @@
         <xsl:variable name="element" select="." as="element()"/>
         <xsl:variable name="name-value-pairs" as="xs:string*">
             <xsl:for-each select="$liblouis-properties">
+                <xsl:variable name="i" select="position()"/>
                 <xsl:variable name="liblouis-default"
-                    select="$liblouis-defaults[index-of($liblouis-properties, .)]"/>
+                    select="$liblouis-defaults[$i]"/>
                 <xsl:variable name="concretize-inherit"
                     select="$force-inherit or $liblouis-default!='inherit'"/>
                 <xsl:variable name="include-default"
                     select="not(starts-with(., 'louis-')) and $liblouis-default!=css:get-default-value(.)"/>
                 <xsl:variable name="value" as="xs:string?"
                     select="css:get-property-value($element, ., $concretize-inherit, $include-default, false())"/>
-                <xsl:if test="$value and not($value=$liblouis-default)">
-                    <xsl:sequence select="concat(.,':',$value)"/>
+                <xsl:if test="$value and $value!=$liblouis-default">
+                    <xsl:sequence select="concat(., ':', $value)"/>
                 </xsl:if>
             </xsl:for-each>
         </xsl:variable>

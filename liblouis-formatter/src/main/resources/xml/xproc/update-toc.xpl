@@ -75,8 +75,11 @@
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
-            <p:with-param name="skip-first-line" select="'true'">
+            <p:with-param name="crop-top" select="1">
                 <p:empty/>
+            </p:with-param>
+            <p:with-param name="crop-left" select="/*/louis:toc/@margin-right">
+                <p:pipe step="update" port="current"/>
             </p:with-param>
         </p:xslt>
         

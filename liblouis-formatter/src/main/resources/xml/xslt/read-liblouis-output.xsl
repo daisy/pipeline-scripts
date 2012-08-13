@@ -11,8 +11,9 @@
     <xsl:param name="margin-left" select="0"/>
     <xsl:param name="border-left" select="'none'"/>
     <xsl:param name="border-right" select="'none'"/>
-    <xsl:param name="skip-first-line" select="'false'"/>
-    <xsl:param name="skip-last-line" select="'false'"/>
+    <xsl:param name="crop-top" select="0"/>
+    <xsl:param name="crop-bottom" select="0"/>
+    <xsl:param name="crop-left" select="0"/>
     <xsl:param name="keep-empty-trailing-lines" select="'false'"/>
     <xsl:param name="keep-page-structure" select="'false'"/>
 
@@ -33,17 +34,15 @@
             <xsl:choose>
                 <xsl:when test="$keep-empty-trailing-lines='true'">
                     <xsl:for-each select="tokenize(string(.), '\n')">
-                        <xsl:if test="not(
-                            (position()=1 and $skip-first-line='true') or
-                            (position()=last()-1 and $skip-last-line='true') or
-                            (position()=last()))">
+                        <xsl:if test="position() &gt; number($crop-top) and 
+                            position() + number($crop-bottom) &lt; last()">
                             <xsl:call-template name="line"/>
                         </xsl:if>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:for-each select="tokenize(my:right-trim-newlines(string(.)), '\n')">
-                        <xsl:if test="not(position()=1 and $skip-first-line='true')">
+                        <xsl:if test="position() &gt; number($crop-top)">
                             <xsl:call-template name="line"/>
                         </xsl:if>
                     </xsl:for-each>
@@ -63,6 +62,7 @@
     </xsl:template>
     
     <xsl:template name="line">
+        <xsl:variable name="line" select="brl:nabcc-to-unicode-braille(my:space-to-nbsp(substring(., number($crop-left) + 1)))"/>
         <louis:line>
             <xsl:if test="number($margin-left) &gt; 0">
                 <xsl:value-of select="my:repeat-char('&#xA0;', number($margin-left))"/>
@@ -70,13 +70,13 @@
             <xsl:if test="$border-left!='none'">
                 <xsl:value-of select="$border-left"/>
             </xsl:if>
-            <xsl:value-of select="brl:nabcc-to-unicode-braille(my:space-to-nbsp(.))"/>
+            <xsl:value-of select="$line"/>
             <xsl:choose>
                 <xsl:when test="$border-right!='none'">
-                    <xsl:value-of select="my:repeat-char('&#xA0;', number($width) - string-length(.))"/>
+                    <xsl:value-of select="my:repeat-char('&#xA0;', number($width) - string-length($line))"/>
                     <xsl:value-of select="$border-right"/>
                 </xsl:when>
-                <xsl:when test="number($margin-left)=0 and $border-left='none' and string-length(.)=0">
+                <xsl:when test="number($margin-left)=0 and $border-left='none' and string-length($line)=0">
                     <xsl:text>&#xA0;</xsl:text>
                 </xsl:when>
             </xsl:choose>

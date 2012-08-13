@@ -12,13 +12,13 @@
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="create-liblouis-files.xpl"/>
-    <p:import href="format-side-border.xpl"/>
+    <p:import href="format-vertical-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/handle-margin-border-padding.xsl"/>
+            <p:document href="../xslt/handle-toc.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -27,7 +27,7 @@
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/handle-toc.xsl"/>
+            <p:document href="../xslt/handle-margin-border-padding.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -75,7 +75,7 @@
         </p:input>
     </louis:create-liblouis-files>
     
-    <louis:format-side-border>
+    <louis:format-vertical-border>
         <p:input port="source">
             <p:pipe step="create-styles-xml" port="result"/>
         </p:input>
@@ -88,7 +88,7 @@
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </louis:format-side-border>
+    </louis:format-vertical-border>
     
     <louis:format-toc name="format-toc">
         <p:input port="toc-styles">

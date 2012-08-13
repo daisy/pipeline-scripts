@@ -23,21 +23,31 @@
             <xsl:apply-templates select="@*"/>
             <xsl:choose>
                 <xsl:when test="$display='toc'">
-                    <xsl:apply-templates select="*[not(descendant-or-self::*
-                        [css:get-property-value(., 'display', true(), true(), false())='toc-item'])]"/>
-                    <louis:toc>
-                        <xsl:for-each select="descendant::*[css:get-property-value(., 'display', true(), true(), false())='toc-item']">
-                            <xsl:variable name="ref" as="attribute()?" select="@ref"/>
-                            <xsl:if test="$ref and //*[@xml:id=string($ref)]">
-                                <louis:toc-item>
-                                    <xsl:attribute name="style" select="louis:get-toc-item-style(.)"/>
-                                    <xsl:copy-of select="$ref"/>
-                                </louis:toc-item>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </louis:toc>
+                    <xsl:for-each-group select="*|text()[not(normalize-space()='')]"
+                        group-adjacent="boolean(descendant-or-self::*[
+                        css:get-property-value(., 'display', true(), true(), false())='toc-item'])">
+                        <xsl:choose>
+                            <xsl:when test="current-grouping-key()">
+                                <xsl:element name="louis:toc">
+                                    <xsl:for-each select="current-group()">
+                                        <xsl:apply-templates select="."/>
+                                    </xsl:for-each>
+                                </xsl:element>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:for-each select="current-group()">
+                                    <xsl:apply-templates select="."/>
+                                </xsl:for-each>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each-group>
                 </xsl:when>
                 <xsl:when test="$display='toc-item'">
+                    <xsl:variable name="ref" as="attribute()?" select="@ref"/>
+                    <xsl:if test="$ref and //*[@xml:id=string($ref)]">
+                        <xsl:attribute name="css:toc-item" select="'true'"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="node()"/>
@@ -69,20 +79,5 @@
     <xsl:template match="@*|text()|comment()|processing-instruction()" mode="flatten">
         <xsl:copy/>
     </xsl:template>
-    
-    <xsl:function name="louis:get-toc-item-style" as="xs:string">
-        <xsl:param name="element" as="element()"/>
-        <xsl:variable name="valid-property-names" as="xs:string*"
-            select="('display',
-                     'margin-left',
-                     'margin-right',
-                     'text-indent')"/>
-        <xsl:variable name="name-value-pairs" as="xs:string*">
-            <xsl:for-each select="$valid-property-names">
-                <xsl:sequence select="concat(., ':', css:get-property-value($element, ., true(), true(), false()))"/>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:value-of select="string-join($name-value-pairs,';')"/>
-    </xsl:function>
     
 </xsl:stylesheet>

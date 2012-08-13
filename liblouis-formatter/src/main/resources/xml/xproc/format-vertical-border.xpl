@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="louis:format-side-border" name="format-side-border"
+<p:declare-step type="louis:format-vertical-border" name="format-vertical-border"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
@@ -14,14 +14,14 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
-    <p:viewport match="//louis:side-border" name="format">
+    <p:viewport match="louis:vertical-border" name="format">
         
         <p:rename match="/*">
             <p:with-option name="new-name" select="name(/*)">
-                <p:pipe step="format-side-border" port="source"/>
+                <p:pipe step="format-vertical-border" port="source"/>
             </p:with-option>
             <p:with-option name="new-namespace" select="namespace-uri(/*)">
-                <p:pipe step="format-side-border" port="source"/>
+                <p:pipe step="format-vertical-border" port="source"/>
             </p:with-option>
         </p:rename>
         
@@ -49,10 +49,10 @@
         
         <louis:translate-file name="xml2brl" paged="false">
             <p:input port="config-files">
-                <p:pipe step="format-side-border" port="config-files"/>
+                <p:pipe step="format-vertical-border" port="config-files"/>
             </p:input>
             <p:input port="semantic-files">
-                <p:pipe step="format-side-border" port="semantic-files"/>
+                <p:pipe step="format-vertical-border" port="semantic-files"/>
             </p:input>
             <p:with-option name="line-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
@@ -89,10 +89,10 @@
             <p:with-param name="keep-empty-trailing-lines" select="'true'">
                 <p:empty/>
             </p:with-param>
-            <p:with-param name="skip-first-line" select="'true'">
+            <p:with-param name="crop-top" select="1">
                 <p:empty/>
             </p:with-param>
-            <p:with-param name="skip-last-line" select="'true'">
+            <p:with-param name="crop-bottom" select="1">
                 <p:empty/>
             </p:with-param>
         </p:xslt>
