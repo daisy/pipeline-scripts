@@ -3,6 +3,7 @@ package org.daisy.pipeline.liblouis;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
@@ -38,11 +39,17 @@ public class LiblouisTableSet {
 				|| properties.get(IDENTIFIER).toString().isEmpty()) {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty");
 		}
+		
 		if (properties.get(DIRECTORY) == null
 				|| properties.get(DIRECTORY).toString().isEmpty()) {
 			throw new IllegalArgumentException(DIRECTORY + " property must not be empty");
 		}
 		identifier = properties.get(IDENTIFIER).toString();
+		try {
+			new URL(identifier);
+		} catch (MalformedURLException e1) {
+			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL");
+		}
 		String directory = properties.get(DIRECTORY).toString();
 		path = context.getBundleContext().getDataFile("tables");
 		Bundle bundle = context.getBundleContext().getBundle();
