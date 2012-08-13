@@ -21,7 +21,7 @@ public class Liblouis {
 
 	public static String translate(String tables, String text) {
 		try {
-			tables = "unicode.dis," + tables;
+			tables = "unicode.dis," + tables + ",braille-patterns.cti";
 			text = squeeze(text);
 			return getTranslator(tables).translate(text).getBraille();
 		} catch (Exception e) {
