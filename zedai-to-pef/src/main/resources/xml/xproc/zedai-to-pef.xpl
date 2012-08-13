@@ -48,8 +48,16 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-translate.xsl'">
+        <p:documentation>
+            <h2 px:role="name">translator</h2>
+            <p px:role="desc">Identifier (URL) of the translator XSLT to be used. Defaults to a simple generic liblouis-based translator.</p>
+            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xproc/translate.xpl</code></pre>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="zedai-to-pef.styling.xpl"/>
-    <p:import href="zedai-to-pef.pre-formatting.xpl"/>
+    <p:import href="zedai-to-pef.preprocessing.xpl"/>
     <p:import href="zedai-to-pef.translation.xpl"/>
     <p:import href="zedai-to-pef.formatting.xpl"/>
     
@@ -66,15 +74,15 @@
         </p:with-option>
     </px:zedai-to-pef.styling>
     
-    <!-- ============== -->
-    <!-- PRE-FORMATTING -->
-    <!-- ============== -->
+    <!-- ============= -->
+    <!-- PREPROCESSING -->
+    <!-- ============= -->
     
-    <px:zedai-to-pef.pre-formatting name="pre-formatting">
+    <px:zedai-to-pef.preprocessing name="preprocessing">
         <p:input port="source">
             <p:pipe port="result" step="styling"/>
         </p:input>
-    </px:zedai-to-pef.pre-formatting>
+    </px:zedai-to-pef.preprocessing>
     
     <!-- =========== -->
     <!-- TRANSLATION -->
@@ -82,8 +90,11 @@
     
     <px:zedai-to-pef.translation name="translation">
         <p:input port="source">
-            <p:pipe port="result" step="pre-formatting"/>
+            <p:pipe port="result" step="preprocessing"/>
         </p:input>
+        <p:with-option name="translator-xslt" select="$translator">
+            <p:empty/>
+        </p:with-option>
     </px:zedai-to-pef.translation>
     
     <!-- ========== -->

@@ -8,10 +8,11 @@
 
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
     <p:output port="result" primary="true" px:media-type="application/z3998-auth+xml"/>
+    <p:option name="translator-xslt" required="true"/>
 
     <!-- Identify blocks -->
     
-    <p:xslt>
+    <p:xslt name="blocks">
         <p:input port="stylesheet">
             <p:document href="../xslt/identify-blocks.xsl"/>
         </p:input>
@@ -19,20 +20,30 @@
             <p:empty/>
         </p:input>
     </p:xslt>
+
+    <!-- Load translator from URL -->
     
+    <p:load name="stylesheet">
+        <p:with-option name="href" select="$translator-xslt">
+            <p:empty/>
+        </p:with-option>
+    </p:load>
+
     <!-- Translate each block -->
     
     <p:viewport match="css:block">
+        <p:viewport-source>
+            <p:pipe step="blocks" port="result"/>
+        </p:viewport-source>
         
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="../xslt/simple-translate.xsl"/>
+                <p:pipe step="stylesheet" port="result"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
         </p:xslt>
-        
     </p:viewport>
     
     <p:unwrap match="css:block"/>

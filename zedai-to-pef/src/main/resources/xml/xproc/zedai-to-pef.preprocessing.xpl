@@ -3,7 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     exclude-inline-prefixes="px"
-    type="px:zedai-to-pef.pre-formatting" name="zedai-to-pef.pre-formatting" version="1.0">
+    type="px:zedai-to-pef.preprocessing" name="zedai-to-pef.preprocessing" version="1.0">
 
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
