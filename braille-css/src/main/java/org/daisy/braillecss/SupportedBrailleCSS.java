@@ -23,6 +23,7 @@ import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
+import org.daisy.braillecss.BrailleCSSProperty.StringSet;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
 import org.slf4j.Logger;
@@ -166,6 +167,9 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		props.put("widows", Widows.integer);
 		values.put("widows", DEFAULT_UA_WIDOWS);
 
+		// misc
+		props.put("-brl-string-set", StringSet.NONE);
+		
 		this.defaultCSSproperties = props;
 		this.defaultCSSvalues = values;
 	}

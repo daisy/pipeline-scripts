@@ -15,6 +15,15 @@
     <p:import href="format-vertical-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
+
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-print-page.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
     
     <p:xslt>
         <p:input port="stylesheet">

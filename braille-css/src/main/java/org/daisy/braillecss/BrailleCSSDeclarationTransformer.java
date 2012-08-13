@@ -1,7 +1,10 @@
 package org.daisy.braillecss;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,15 +13,21 @@ import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
+import org.daisy.braillecss.BrailleCSSProperty.StringSet;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
+import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.CSSProperty;
 import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
+import cz.vutbr.web.css.TermFactory;
+import cz.vutbr.web.css.TermFunction;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.css.TermInteger;
+import cz.vutbr.web.css.TermList;
 import cz.vutbr.web.css.TermNumber;
+import cz.vutbr.web.css.TermString;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 
 public class BrailleCSSDeclarationTransformer {
@@ -62,6 +71,7 @@ public class BrailleCSSDeclarationTransformer {
 	}
 
 	private Map<String, Method> methods;
+	private static final TermFactory tf = CSSFactory.getTermFactory();
 	
 	private BrailleCSSDeclarationTransformer() {
 		this.methods = parsingMethods();
@@ -183,6 +193,42 @@ public class BrailleCSSDeclarationTransformer {
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean processBrlStringSet(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		
+		if (d.size() == 1 && genericOneIdent(StringSet.class, d, properties))
+			return true;
+		
+		final Set<String> validTermIdents = new HashSet<String>(Arrays.asList("print-page"));
+		final Set<String> validFuncNames = new HashSet<String>(Arrays.asList("content", "attr"));
+		TermList contentList = tf.createList();
+		String stringName = null;
+		for (Term<?> t : d.asList()) {
+			if (stringName == null) {
+				if (t instanceof TermIdent)
+					stringName = ((TermIdent)t).getValue();
+				else
+					return false;
+			} else {
+				if (t instanceof TermString)
+					contentList.add(t);
+				else if (t instanceof TermFunction
+						&& validFuncNames.contains(((TermFunction)t).getFunctionName().toLowerCase()))
+					contentList.add(t);
+				else
+					return false;
+			}
+		}
+		
+		if (contentList.isEmpty())
+			return false;
+
+		properties.put("string-set", StringSet.content_list);
+		values.put("string-set", tf.createPair(stringName, contentList));
+		return true;
 	}
 	
 	@SuppressWarnings("unused")

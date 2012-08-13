@@ -74,6 +74,32 @@
         </xsl:if>
     </xsl:function>
 
+    <xsl:function name="css:evaluate-content-list">
+        <xsl:param name="element" as="element()"/>
+        <xsl:param name="content-list" as="xs:string"/>
+        <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
+        <xsl:variable name="CONTENT">content\(\)</xsl:variable>
+        <xsl:variable name="ATTR">attr\(.+?\)</xsl:variable>
+        <xsl:analyze-string select="$content-list"
+            regex="{concat('(', $STRING, '|', $CONTENT, '|', $ATTR, ')')}">
+            <xsl:matching-substring>
+                <xsl:choose>
+                    <xsl:when test="matches(., concat('^', $STRING, '$'))">
+                        <xsl:sequence select="substring(., 2, string-length(.)-2)"/>
+                    </xsl:when>
+                    <xsl:when test="matches(., concat('^', $ATTR, '$'))">
+                        <xsl:variable name="attr"
+                            select="normalize-space(substring(., 6, string-length(.)-6))"/>
+                        <xsl:sequence select="string($element/@*[name()=$attr])"/>
+                    </xsl:when>
+                    <xsl:when test="matches(., concat('^', $CONTENT, '$'))">
+                        <xsl:sequence select="$element/child::node()"/>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:matching-substring>
+        </xsl:analyze-string>
+    </xsl:function>
+
     <xsl:function name="css:remove-properties" as="xs:string">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="remove" as="xs:string*"/>

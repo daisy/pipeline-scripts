@@ -122,7 +122,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 					}
 					NodeData data = styleMap.get((Element)node);
 					if (data != null) {
-						String style = String.valueOf(data).replaceAll("\\s+", "").trim();
+						String style = String.valueOf(data).replaceAll("\\s+", " ").trim();
 						if (style.length() > 0) {
 							addAttribute(_style, style);
 						}

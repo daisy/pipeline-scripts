@@ -54,7 +54,20 @@
             </p:identity>
         </p:otherwise>
     </p:choose>
-        
+    
+    <!-- Apply stylesheet -->
+    
     <css:apply-stylesheet/>
+    
+    <!-- Handle string-set -->
+    
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-string-set.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
     
 </p:declare-step>

@@ -63,7 +63,8 @@
                          louis:preformatted|
                          louis:line|
                          louis:toc|
-                         louis:toc//*[not(@css:toc-item)]">
+                         louis:toc//*[not(@css:toc-item)]|
+                         louis:print-page">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>

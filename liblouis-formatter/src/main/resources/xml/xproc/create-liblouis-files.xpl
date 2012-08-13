@@ -93,6 +93,7 @@ no-pagenum &amp;xpath(//louis:no-pagenum)
 contentsheader &amp;xpath(//louis:toc[parent::louis:no-pagenum])
 skip &amp;xpath(//louis:toc[not(parent::louis:no-pagenum)])
 preformatted-line &amp;xpath(//louis:preformatted//louis:line)
+pagenum &amp;xpath(//louis:print-page)
             </louis:semantic-file></p:inline>
         </p:input>
     </p:identity>
