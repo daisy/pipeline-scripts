@@ -5,7 +5,8 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
-    exclude-inline-prefixes="px d louis pef"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    exclude-inline-prefixes="px d louis pef dc"
     type="px:zedai-to-pef.formatting" name="zedai-to-pef.formatting" version="1.0">
 
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>

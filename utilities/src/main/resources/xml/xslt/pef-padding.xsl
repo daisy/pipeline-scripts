@@ -2,11 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:brl="http://www.daisy.org/ns/pipeline/braille"
     xmlns:my="http://github.com/bertfrees"
     xmlns="http://www.w3.org/1999/xhtml"
-    exclude-result-prefixes="xs pef dc brl my"
+    exclude-result-prefixes="xs pef my"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>

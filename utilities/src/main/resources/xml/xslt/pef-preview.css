@@ -10,12 +10,14 @@ div#header {
     color: #333;
     margin: 0px 20px;
     border-bottom: 1px solid #DDD;
-    background-color: white;
+    background-image: linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.9));
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.9));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)), to(rgba(255, 255, 255, 0.9)));
 }
 div#main {
     min-height: 100%;
     margin-left: 250px;
-    margin-top: 120px;
+    margin-top: 130px;
     font-size: 25px;
 }
 ul#nav {
@@ -66,7 +68,7 @@ span.bookmark {
     width: 0;
     height: 0;
     position: relative;
-    top: -120px;
+    top: -130px;
 }
 div.page {
     display: inline-block;

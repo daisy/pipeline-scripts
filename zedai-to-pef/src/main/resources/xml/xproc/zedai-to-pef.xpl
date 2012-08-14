@@ -3,9 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    exclude-inline-prefixes="px d z dc"
+    exclude-inline-prefixes="px d"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
