@@ -18,6 +18,7 @@ import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 
 public class Text2PEFProvider implements XProcStepProvider {
@@ -30,6 +31,8 @@ public class Text2PEFProvider implements XProcStepProvider {
 	public static class Text2PEF extends DefaultStep {
 
 		private static final QName _temp_dir = new QName("temp-dir");
+		private static final QName _title = new QName("title");
+		private static final QName _creator = new QName("creator");
 
 		private ReadablePipe source = null;
 		private WritablePipe result = null;
@@ -61,6 +64,8 @@ public class Text2PEFProvider implements XProcStepProvider {
 			try {
 
 				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
+				RuntimeValue title = getOption(_title);
+				RuntimeValue creator = getOption(_creator);
 				XdmNode text = source.read();
 
 				// Write text document to file
@@ -73,6 +78,8 @@ public class Text2PEFProvider implements XProcStepProvider {
 				// Parse text to PEF
 				File pefFile = File.createTempFile("text2pef.", ".pef", tempDir);
 				TextHandler.Builder b = new TextHandler.Builder(textFile, pefFile);
+				if (title != null) { b = b.title(title.getString()); }
+				if (creator != null) { b = b.author(creator.getString()); }
 				b.converterId("org_daisy.EmbosserTableProvider.TableType.NABCC");
 				TextHandler handler = b.build();
 				handler.parse();

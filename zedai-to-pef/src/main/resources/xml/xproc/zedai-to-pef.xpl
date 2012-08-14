@@ -3,7 +3,9 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="px d"
+    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    exclude-inline-prefixes="px d z dc"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -56,10 +58,32 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="preview" required="false" px:type="boolean" select="'false'">
+        <p:documentation>
+            <h2 px:role="name">preview</h2>
+            <p px:role="desc">Whether or not to include a preview of the PEF in HTML (true or false).</p>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="zedai-to-pef.styling.xpl"/>
     <p:import href="zedai-to-pef.preprocessing.xpl"/>
     <p:import href="zedai-to-pef.translation.xpl"/>
     <p:import href="zedai-to-pef.formatting.xpl"/>
+    <p:import href="zedai-to-pef.preview.xpl"/>
+    
+    <!-- Extract metadata -->
+    
+    <p:xslt name="metadata">
+        <p:input port="source">
+            <p:pipe port="source" step="zedai-to-pef"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/zedai-to-metadata.xsl"/>
+        </p:input>
+    </p:xslt>
     
     <!-- ======= -->
     <!-- STYLING -->
@@ -105,6 +129,9 @@
         <p:input port="source">
             <p:pipe port="result" step="translation"/>
         </p:input>
+        <p:input port="metadata">
+            <p:pipe port="result" step="metadata"/>
+        </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
@@ -136,6 +163,7 @@
     <p:sink/>
     
     <p:group>
+        
         <p:variable name="input-uri" select="base-uri(/)">
             <p:pipe step="zedai-to-pef" port="source"/>
         </p:variable>
@@ -143,7 +171,7 @@
             <p:pipe step="output-dir-uri" port="result"/>
         </p:variable>
         
-        <p:store indent="true" encoding="utf-8">
+        <p:store indent="true" encoding="utf-8" omit-xml-declaration="false" >
             <p:input port="source">
                 <p:pipe step="formatting" port="result"/>
             </p:input>
@@ -151,6 +179,37 @@
                 <p:empty/>
             </p:with-option>
         </p:store>
+        
+        <!-- ======= -->
+        <!-- PREVIEW -->
+        <!-- ======= -->
+        
+        <p:choose>
+            <p:when test="$preview='true'">
+                
+                <px:zedai-to-pef.preview>
+                    <p:input port="source">
+                        <p:pipe port="result" step="formatting"/>
+                    </p:input>
+                </px:zedai-to-pef.preview>
+                
+                <p:store indent="true" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
+                    doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
+                    <p:with-option name="href" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef.html')">
+                        <p:empty/>
+                    </p:with-option>
+                </p:store>
+                
+            </p:when>
+            <p:otherwise>
+                <!-- Do nothing-->
+                <p:sink>
+                    <p:input port="source">
+                        <p:pipe port="result" step="formatting"/>
+                    </p:input>
+                </p:sink>
+            </p:otherwise>
+        </p:choose>
     </p:group>
     
 </p:declare-step>

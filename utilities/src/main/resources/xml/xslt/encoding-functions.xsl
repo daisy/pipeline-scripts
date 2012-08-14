@@ -6,8 +6,8 @@
     exclude-result-prefixes="xs brl my"
     version="2.0">
     
-    <xsl:variable name="unicode-table" select="'⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿'"/>
-    <xsl:variable name="nabcc-table" select="'a1b''k2l`cif/msp&quot;e3h9o6r~djg>ntq,*5&lt;-u8v.%{$+x!&amp;;:4|0z7(_?w}#y)='"/>
+    <xsl:variable name="unicode-table" select="'⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿'"/>
+    <xsl:variable name="nabcc-table" select="' a1b''k2l`cif/msp&quot;e3h9o6r~djg>ntq,*5&lt;-u8v.%{$+x!&amp;;:4|0z7(_?w}#y)='"/>
     
     <xsl:function name="brl:unicode-braille-to-escape-sequence" as="xs:string">
         <xsl:param name="unicode-braille" as="xs:string"/>

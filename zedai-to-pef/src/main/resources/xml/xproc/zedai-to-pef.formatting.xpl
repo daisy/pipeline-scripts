@@ -9,6 +9,7 @@
     type="px:zedai-to-pef.formatting" name="zedai-to-pef.formatting" version="1.0">
 
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
+    <p:input port="metadata"/>
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     <p:option name="temp-dir" required="true"/>
     
@@ -65,6 +66,12 @@
     <pef:text2pef name="text-to-pef">
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
+        </p:with-option>
+        <p:with-option name="title" select="string(/*/dc:title)">
+            <p:pipe step="zedai-to-pef.formatting" port="metadata"/>
+        </p:with-option>
+        <p:with-option name="creator" select="string(/*/*[@property='dc:creator'])">
+            <p:pipe step="zedai-to-pef.formatting" port="metadata"/>
         </p:with-option>
     </pef:text2pef>
     

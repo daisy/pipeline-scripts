@@ -4,5 +4,7 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/number-lists.xsl" uri="../xml/xslt/number-lists.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/pef-preview.xsl" uri="../xml/xslt/pef-preview.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/pef-padding.xsl" uri="../xml/xslt/pef-padding.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
 </catalog>
