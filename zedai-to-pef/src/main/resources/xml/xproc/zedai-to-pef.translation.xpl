@@ -14,6 +14,17 @@
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
+    <!-- Handle string-set -->
+    
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-string-set.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+
     <!-- Identify blocks -->
     
     <p:xslt name="blocks">

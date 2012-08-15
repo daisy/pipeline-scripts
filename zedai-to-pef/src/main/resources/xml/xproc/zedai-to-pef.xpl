@@ -48,6 +48,14 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="preprocessor" required="false" px:type="string" select="''">
+        <p:documentation>
+            <h2 px:role="name">preprocessor</h2>
+            <p px:role="desc">Identifier (URL) of a custom preprocessor unit (XProc step).</p>
+            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xproc/preprocessor.xpl</code></pre>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-translate.xsl'">
         <p:documentation>
             <h2 px:role="name">translator</h2>
@@ -104,6 +112,9 @@
         <p:input port="source">
             <p:pipe port="result" step="styling"/>
         </p:input>
+        <p:with-option name="preprocessor" select="$preprocessor">
+            <p:empty/>
+        </p:with-option>
     </px:zedai-to-pef.preprocessing>
     
     <!-- =========== -->
