@@ -40,9 +40,9 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="default-stylesheet" required="false" px:type="string" select="'bana.css'">
+    <p:option name="stylesheet" required="false" px:type="string" select="'bana.css'">
         <p:documentation>
-            <h2 px:role="name">default-stylesheet</h2>
+            <h2 px:role="name">stylesheet</h2>
             <p px:role="desc">The default css stylesheet to apply when there aren't any provided with the input file.</p>
             <pre><code class="example">bana.css</code></pre>
         </p:documentation>
@@ -51,8 +51,8 @@
     <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-translate.xsl'">
         <p:documentation>
             <h2 px:role="name">translator</h2>
-            <p px:role="desc">Identifier (URL) of the translator XSLT to be used. Defaults to a simple generic liblouis-based translator.</p>
-            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xproc/translate.xpl</code></pre>
+            <p px:role="desc">Identifier (URL) of the translator XSLT or XProc to be used. Defaults to a simple generic liblouis-based translator.</p>
+            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xslt/translator.xsl</code></pre>
         </p:documentation>
     </p:option>
     
@@ -91,7 +91,7 @@
         <p:input port="source">
             <p:pipe port="source" step="zedai-to-pef"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet">
+        <p:with-option name="default-stylesheet" select="$stylesheet">
             <p:empty/>
         </p:with-option>
     </px:zedai-to-pef.styling>
@@ -114,7 +114,7 @@
         <p:input port="source">
             <p:pipe port="result" step="preprocessing"/>
         </p:input>
-        <p:with-option name="translator-xslt" select="$translator">
+        <p:with-option name="translator" select="$translator">
             <p:empty/>
         </p:with-option>
     </px:zedai-to-pef.translation>

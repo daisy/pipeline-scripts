@@ -1,6 +1,7 @@
 <!--*- nxml -*-->
 <xproc-config xmlns="http://xmlcalabash.com/ns/configuration"
 	      xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+	      xmlns:cx="http://xmlcalabash.com/ns/extensions"
 	      xmlns:louis="http://liblouis.org/liblouis"
 	      xmlns:pef="http://xmlcalabash.com/ns/extensions/brailleutils"
 	      xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
@@ -12,6 +13,8 @@
 <implementation type="px:mkdir" class-name="com.xmlcalabash.extensions.fileutils.Mkdir"/>
 <implementation type="px:tempfile" class-name="com.xmlcalabash.extensions.fileutils.Tempfile"/>
 <implementation type="px:zip" class-name="com.xmlcalabash.extensions.Zip"/>
+
+<implementation type="cx:eval" class-name="com.xmlcalabash.extensions.Eval"/>
 
 <implementation type="pef:text-to-pef"
                 class-name="org.daisy.common.xproc.calabash.steps.brailleutils.Text2PEFProvider.Text2PEF"/>
