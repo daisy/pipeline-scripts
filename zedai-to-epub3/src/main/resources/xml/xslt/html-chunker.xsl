@@ -37,8 +37,11 @@
     <xsl:variable name="refid" select="substring(.,2)" as="xs:string"/>
     <xsl:variable name="mychunk" select="ancestor::*[.=$chunks][1]"/>
     <xsl:variable name="refchunk" select="key('ids',$refid)/ancestor::*[.=$chunks][1]"/>
+    <xsl:if test="empty($refchunk)">
+      <xsl:message>Unable to resolve link to '<xsl:value-of select="."/>'</xsl:message>
+    </xsl:if>
     <xsl:attribute name="href"
-      select="if ($mychunk = $refchunk) then . else concat(f:get-chunk-name($refchunk),.)"/>
+      select="if (empty($refchunk) or $mychunk = $refchunk) then . else concat(f:get-chunk-name($refchunk),.)"/>
   </xsl:template>
 
   <xsl:template match="node() | @*">
