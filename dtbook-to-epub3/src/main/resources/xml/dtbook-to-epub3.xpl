@@ -34,6 +34,13 @@
             <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
         </p:documentation>
     </p:option>
+    
+    <p:option name="assert-valid" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Assert validity</h2>
+            <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
+        </p:documentation>
+    </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.load.xpl"/>
     <p:import
@@ -92,6 +99,7 @@
             <p:with-option name="opt-output-dir" select="concat($output-dir-uri,'zedai/')"/>
             <p:with-option name="opt-zedai-filename" select="concat($encoded-title,'.xml')"/>
             <p:with-option name="opt-lang" select="$language"/>
+            <p:with-option name="opt-assert-valid" select="$assert-valid"/>
         </px:dtbook-to-zedai-convert>
 
         <!--TODO better handle core media type filtering-->
