@@ -46,7 +46,7 @@
                 <p:with-option name="media-type" select="$media-type"/>
             </px:fileset-add-entry>
             <p:add-attribute match="/*/*" attribute-name="original-href">
-                <p:with-option name="attribute-value" select="p:resolve-uri($href,$zedai-href)"/>
+                <p:with-option name="attribute-value" select="resolve-uri($href,$zedai-href)"/>
             </p:add-attribute>
         </p:for-each>
         <px:fileset-join name="fileset.resources"/>

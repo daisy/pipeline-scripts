@@ -72,7 +72,7 @@
         <p:variable name="fileset-base" select="/*/@xml:base"/>
         <p:viewport match="/*/*">
             <p:add-attribute attribute-name="original-href" match="/*">
-                <p:with-option name="attribute-value" select="p:resolve-uri(/*/@href,$fileset-base)"/>
+                <p:with-option name="attribute-value" select="resolve-uri(/*/@href,$fileset-base)"/>
             </p:add-attribute>
         </p:viewport>
     </p:group>

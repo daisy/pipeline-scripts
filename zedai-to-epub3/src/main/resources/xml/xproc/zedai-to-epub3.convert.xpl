@@ -25,12 +25,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
-    <!--<p:variable name="zedai-base" select="p:base-uri()"/>-->
-    <!--<p:variable name="zedai-basedir" select="replace($zedai-base,'^(.+/)[^/]*','$1')"/>-->
-    <!--<p:variable name="zedai-basename" select="replace($zedai-base,'.*/([^/]+)(\.[^.]+)','$1')"/>-->
-    <!--<p:variable name="output-dir-absolute" select="p:resolve-uri(if (ends-with($output-dir,'/')) then $output-dir else concat($output-dir,'/'))"/>-->
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
-    <!--<p:variable name="epub-file" select="concat($output-dir-absolute,$zedai-basename,'.epub')"/>-->
     <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
 
     <!--=========================================================================-->
@@ -48,7 +43,7 @@
             <p:output port="result" sequence="true"/>
             <p:choose>
                 <p:when test="/*/@media-type = 'application/z3998-auth+xml'">
-                    <p:variable name="zedai-base" select="p:resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:variable name="zedai-base" select="resolve-uri(/*/@href,$fileset-base)"/>
                     <p:split-sequence name="zedai-input.for-each.split">
                         <p:input port="source">
                             <p:pipe port="in-memory.in" step="zedai-to-epub3.convert"/>
@@ -281,13 +276,13 @@
         <p:group name="resources">
             <p:output port="result"/>
             <p:variable name="fileset-base" select="/*/@xml:base"/>
-            <p:variable name="zedai-uri" select="p:resolve-uri(//d:file[@media-type='application/z3998-auth+xml']/@href,$fileset-base)"/>
+            <p:variable name="zedai-uri" select="resolve-uri(//d:file[@media-type='application/z3998-auth+xml']/@href,$fileset-base)"/>
             <p:delete match="d:file[@media-type='application/z3998-auth+xml']"/>
             <p:viewport match="/*/*">
                 <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
-                <p:variable name="original-uri" select="(/*/@original-href, p:resolve-uri(/*/@href,$fileset-base))[1]"/>
+                <p:variable name="original-uri" select="(/*/@original-href, resolve-uri(/*/@href,$fileset-base))[1]"/>
                 <p:xslt>
-                    <p:with-param name="to" select="p:resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:with-param name="to" select="resolve-uri(/*/@href,$fileset-base)"/>
                     <p:with-param name="from" select="$zedai-uri"/>
                     <p:input port="stylesheet">
                         <p:inline>
@@ -372,8 +367,8 @@
             </p:input>
         </p:identity>
         <p:viewport match="//d:file">
-            <p:variable name="file-href" select="p:resolve-uri(/*/@href,$fileset-base)"/>
-            <p:variable name="file-original" select="if (/*/@original-href) then p:resolve-uri(/*/@original-href) else ''"/>
+            <p:variable name="file-href" select="resolve-uri(/*/@href,$fileset-base)"/>
+            <p:variable name="file-original" select="if (/*/@original-href) then resolve-uri(/*/@original-href) else ''"/>
             <p:choose>
                 <p:xpath-context>
                     <p:pipe port="result" step="wrapped-in-memory"/>

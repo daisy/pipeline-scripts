@@ -123,7 +123,7 @@
     </p:import>
 
     <p:variable name="output-dir"
-        select="p:resolve-uri(
+        select="resolve-uri(
                     if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                                          else concat($opt-output-dir, '/')
                 )"/>
@@ -174,7 +174,7 @@
             <p:output port="result" sequence="true"/>
             <p:choose>
                 <p:when test="/*/@media-type = 'application/x-dtbook+xml'">
-                    <p:variable name="dtbook-base" select="p:resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:variable name="dtbook-base" select="resolve-uri(/*/@href,$fileset-base)"/>
                     <p:split-sequence name="dtbook-input.for-each.split">
                         <p:input port="source">
                             <p:pipe port="in-memory.in" step="dtbook-to-zedai.convert"/>
@@ -514,7 +514,7 @@
     <p:group name="result.fileset">
         <p:output port="result"/>
         <p:variable name="dtbook-base"
-            select="replace(p:resolve-uri(/*/@href,/*/@xml:base),'^(.*/)[^/]*$','$1')"/>
+            select="replace(resolve-uri(/*/@href,/*/@xml:base),'^(.*/)[^/]*$','$1')"/>
 
         <p:documentation>Add the ZedAI document to the fileset.</p:documentation>
         <px:fileset-create>
@@ -532,15 +532,12 @@
                 <p:pipe step="validate-zedai" port="result"/>
             </p:iteration-source>
             <p:variable name="src" select="/*/@src"/>
-            <p:variable name="dtbook-source-uri" select="p:resolve-uri($src, $dtbook-base)"/>
-            <!-- TODO: Using fn:resolve-uri for $source-uri instead of p:resolve uri because of a bug in oXygen XML Editor 13.1, build 2011112512
-                (http://lists.w3.org/Archives/Public/xproc-dev/2011Dec/0010.html).
-                Switch to p:resolve-uri when it's fixed? -->
+            <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
             <p:variable name="source-uri"
                 select="(//d:file[resolve-uri(@href,/*/@xml:base) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
                 <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
             </p:variable>
-            <p:variable name="result-uri" select="p:resolve-uri($src, $output-dir)"/>
+            <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
 
             <cx:message>
                 <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
@@ -551,7 +548,7 @@
                 <p:with-option name="base" select="$output-dir"/>
             </px:fileset-create>
             <px:fileset-add-entry>
-                <p:with-option name="href" select="p:resolve-uri($src,$zedai-file)"/>
+                <p:with-option name="href" select="resolve-uri($src,$zedai-file)"/>
             </px:fileset-add-entry>
             <p:add-attribute match="/*/*" attribute-name="original-href">
                 <p:with-option name="attribute-value" select="$source-uri"/>

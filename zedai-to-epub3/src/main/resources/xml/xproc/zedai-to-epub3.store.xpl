@@ -54,7 +54,7 @@
                     <d:file/>
                 </p:inline>
             </p:input>
-            <p:with-option name="attribute-value" select="p:resolve-uri(/*/@xml:base)"/>
+            <p:with-option name="attribute-value" select="resolve-uri(/*/@xml:base)"/>
         </p:add-attribute>
     </p:for-each>
     <p:wrap-sequence wrapper="d:fileset"/>
@@ -67,7 +67,7 @@
             <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
         </p:iteration-source>
         <p:variable name="on-disk" select="(/*/@original-href, '')[1]"/>
-        <p:variable name="target" select="p:resolve-uri(/*/@href, $fileset-base)"/>
+        <p:variable name="target" select="resolve-uri(/*/@href, $fileset-base)"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:choose>
             <p:xpath-context>
