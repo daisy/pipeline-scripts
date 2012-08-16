@@ -4,7 +4,8 @@
   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.load.xpl" uri="../xml/dtbook-to-zedai.load.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl" uri="../xml/dtbook-to-zedai.convert.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.store.xpl" uri="../xml/dtbook-to-zedai.store.xpl"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:metadata-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:metadata-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:validation-utils"/>
 </catalog>
