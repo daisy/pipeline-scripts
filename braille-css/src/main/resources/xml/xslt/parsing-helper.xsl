@@ -77,9 +77,6 @@
     <xsl:function name="css:evaluate-content-list">
         <xsl:param name="element" as="element()"/>
         <xsl:param name="content-list" as="xs:string"/>
-        <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
-        <xsl:variable name="CONTENT">content\(\)</xsl:variable>
-        <xsl:variable name="ATTR">attr\(.+?\)</xsl:variable>
         <xsl:analyze-string select="$content-list"
             regex="{concat('(', $STRING, '|', $CONTENT, '|', $ATTR, ')')}">
             <xsl:matching-substring>

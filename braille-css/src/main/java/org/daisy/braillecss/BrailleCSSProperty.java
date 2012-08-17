@@ -31,7 +31,7 @@ public interface BrailleCSSProperty extends CSSProperty {
 		}
 	}
 
-	public enum Content implements CSSProperty {
+	public enum Content implements BrailleCSSProperty {
 		list_values(""), NONE("none"), INHERIT("inherit");
 
 		private String text;

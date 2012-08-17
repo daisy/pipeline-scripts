@@ -30,12 +30,15 @@
                  'widows')"/>
 
     <xsl:variable name="ALWAYS" select="'always'"/>
+    <xsl:variable name="ATTR" select="'attr\(.+?\)'"/>
     <xsl:variable name="AUTO" select="'auto'"/>
     <xsl:variable name="AVOID" select="'avoid'"/>
     <xsl:variable name="BLOCK" select="'block'"/>
+    <xsl:variable name="CONTENT" select="'content\(\)'"/>
     <xsl:variable name="CENTER" select="'center'"/>
     <xsl:variable name="DECIMAL" select="'decimal'"/>
     <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
+    <xsl:variable name="IDENT" select="'\p{L}|_(\p{L}|_|-)*'"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
     <xsl:variable name="INLINE" select="'inline'"/>
     <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
@@ -47,6 +50,7 @@
     <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
     <xsl:variable name="NONE" select="'none'"/>
     <xsl:variable name="RIGHT" select="'right'"/>
+    <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
     <xsl:variable name="TOC" select="'toc'"/>
     <xsl:variable name="TOC_ITEM" select="'tic-item'"/>
     <xsl:variable name="UPPER_ALPHA" select="'upper-alpha'"/>

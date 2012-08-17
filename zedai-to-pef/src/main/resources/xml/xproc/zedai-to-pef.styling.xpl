@@ -59,4 +59,15 @@
     
     <css:apply-stylesheet/>
     
+    <!-- Handle :before and :after pseudo-elements -->
+    
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-before-after.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
 </p:declare-step>

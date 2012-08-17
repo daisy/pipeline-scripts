@@ -27,7 +27,7 @@
 					<xsl:variable name="identifier" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
 					<xsl:variable name="content-list" select="substring-after(., $identifier)"/>
 					<xsl:variable name="content" select="css:evaluate-content-list($element, $content-list)"/>
-					<xsl:if test="$content[1]">
+					<xsl:if test="$content[1] and matches($identifier, $IDENT)">
 						<xsl:element name="css:string-set">
 							<xsl:attribute name="name" select="$identifier"/>
 							<xsl:sequence select="$content"/>
