@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="en-US">
+    <head>
+        <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+            <meta property="z3998:name" content="book"/>
+            <meta property="z3998:version" content="1.0"/>
+        </meta>
+        <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+        <style media="embossed" type="text/css">
+            head {
+                display: none;
+            }
+            h {
+                display: block;
+                text-align: center;
+                margin-bottom: 1;
+                margin-top: 1;
+            }
+            * {
+                display: block;
+                text-align: left;
+                margin-left: 0;
+            }
+            E             { margin-left: 1; }
+            F > E         { margin-left: 2; }
+            G E           { margin-left: 3; }
+            G + E         { margin-left: 4; }
+            [foo]         { margin-left: 5; }
+            [bar="foo"]   { margin-left: 6; }
+            [baz~="bar"]  { margin-left: 7; }
+            [lang|="foo"] { margin-left: 8; }
+            .foo          { margin-left: 9; }
+            #foo          { margin-left: 10; }
+            
+        </style>
+    </head>
+    <body>
+        <bodymatter>
+            <section>
+                <h>CSS Selectors</h>
+                
+                <h>Matched</h>
+                
+                <E>Type selector E</E>
+                <F><E>Child selector F > E</E></F>
+                <G><F><E>Descendant selector G E</E></F></G>
+                <E>Adjacent selector G + E</E>
+                <E foo="*">Attribute selector [foo]</E>
+                <E bar="foo">Attribute selector [bar="foo"]</E>
+                <E baz="foo bar">Attribute selector [baz~="bar"]</E>
+                <E lang="foo">Attribute selector [lang|="foo"]</E>
+                <E lang="foo-BAR">Attribute selector [lang|="foo"]</E>
+                <E class="foo bar baz">Class selector .foo</E>
+                <E id="foo">Class selector .foo</E>
+                
+                <h>Not matched</h>
+                
+                <F>Type selector F</F>
+                <G>Type selector G</G>
+                <F bar="foo baz">Attribute selector [bar="foo"]</F>
+                <F lang="fooBAR">Attribute selector [lang|="foo"]</F>
+            </section>
+        </bodymatter>
+    </body>
+</document>

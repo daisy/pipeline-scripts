@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="en-US">
+    <head>
+        <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+            <meta property="z3998:name" content="book"/>
+            <meta property="z3998:version" content="1.0"/>
+        </meta>
+        <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+        <style media="embossed" type="text/css">
+            head {
+                display: none;
+            }
+            h {
+                display: block;
+                text-align: center;
+                margin-bottom: 1;
+                margin-top: 1;
+                page-break-before: always;
+            }
+            table {
+                display: block;
+                border-top: ⠶;
+                border-bottom: ⠛;
+            }
+            thead {
+                display: block;
+                border-bottom: ⠒;
+            }
+            tr {
+                display: block;
+            }
+            .stairstep td,
+            .stairstep th { display: block; }
+            .stairstep th:first-child,
+            .stairstep td:first-child { margin-left: 0; }
+            .stairstep th:nth-child(2),
+            .stairstep td:nth-child(2) { margin-left: 3; }
+            .stairstep th:nth-child(3),
+            .stairstep td:nth-child(3) { margin-left: 6; }
+            
+            .linear th::after,
+            .linear td::after { content: ", "; }
+        </style>
+    </head>
+    <body>
+        <bodymatter>
+            <section>
+                <h>Linear format</h>
+                <table class="linear">
+                    <thead>
+                        <tr><th>Fruit</th><th>Popularity</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Apples</td><td>44%</td></tr>
+                        <tr><td>Bananas</td><td>23%</td></tr>
+                        <tr><td>Oranges</td><td>13%</td></tr>
+                        <tr><td>Other</td><td>10%</td></tr>
+                    </tbody>
+                </table>
+                
+                <h>Stairstep format</h>
+                <table class="stairstep">
+                    <thead>
+                        <tr><th>Fruit</th><th>Popularity</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Apples</td><td>44%</td></tr>
+                        <tr><td>Bananas</td><td>23%</td></tr>
+                        <tr><td>Oranges</td><td>13%</td></tr>
+                        <tr><td>Other</td><td>10%</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </bodymatter>
+    </body>
+</document>

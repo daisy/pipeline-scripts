@@ -6,6 +6,11 @@ body {
 	orphans: 0;
 }
 
+pagebreak {
+	display: none;
+	string-set: print-page attr(value);
+}
+
 section,
 frontmatter {
 	display: block;
