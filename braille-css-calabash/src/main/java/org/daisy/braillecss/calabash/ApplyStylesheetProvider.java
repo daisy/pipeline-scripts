@@ -14,6 +14,7 @@ import com.xmlcalabash.util.TreeWriter;
 
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.NodeData;
+import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -45,7 +46,12 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	
 	public static class ApplyStylesheet extends DefaultStep {
 	
+		private static final String CSS_NS = "http://www.daisy.org/ns/pipeline/braille-css";
+		private static final String CSS_PREFIX = "css";
+		
 		private static final QName _style = new QName("style");
+		private static final QName _css_before = new QName(CSS_PREFIX, CSS_NS, "before");
+		private static final QName _css_after = new QName(CSS_PREFIX, CSS_NS, "after");
 		
 		static {
 			CSSFactory.registerSupportedCSS(SupportedBrailleCSS.getInstance());
@@ -125,6 +131,20 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 						String style = String.valueOf(data).replaceAll("\\s+", " ").trim();
 						if (style.length() > 0) {
 							addAttribute(_style, style);
+						}
+					}
+					NodeData beforeData = styleMap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
+					if (beforeData != null) {
+						String beforeStyle = String.valueOf(beforeData).replaceAll("\\s+", " ").trim();
+						if (beforeStyle.length() > 0) {
+							addAttribute(_css_before, beforeStyle);
+						}
+					}
+					NodeData afterData = styleMap.get((Element)node, Selector.PseudoDeclaration.AFTER);
+					if (afterData != null) {
+						String afterStyle = String.valueOf(afterData).replaceAll("\\s+", " ").trim();
+						if (afterStyle.length() > 0) {
+							addAttribute(_css_before, afterStyle);
 						}
 					}
 					receiver.startContent();

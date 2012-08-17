@@ -19,6 +19,7 @@ import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFactory;
 
 import org.daisy.braillecss.BrailleCSSProperty.Border;
+import org.daisy.braillecss.BrailleCSSProperty.Content;
 import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
@@ -169,6 +170,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 
 		// misc
 		props.put("-brl-string-set", StringSet.NONE);
+		props.put("-brl-content", Content.NONE); // NOTE: only allowed on :before and :after pseudo elements
 		
 		this.defaultCSSproperties = props;
 		this.defaultCSSvalues = values;

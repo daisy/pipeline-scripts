@@ -31,6 +31,29 @@ public interface BrailleCSSProperty extends CSSProperty {
 		}
 	}
 
+	public enum Content implements CSSProperty {
+		list_values(""), NONE("none"), INHERIT("inherit");
+
+		private String text;
+
+		private Content(String text) {
+			this.text = text;
+		}
+
+		public boolean inherited() {
+			return false;
+		}
+
+		public boolean equalsInherit() {
+			return this == INHERIT;
+		}
+	
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
+	
 	public enum Display implements BrailleCSSProperty {
 		INLINE("inline"), BLOCK("block"), LIST_ITEM("list-item"), TOC("toc"), 
 		TOC_ITEM("toc-item"), NONE("none"), INHERIT("inherit");

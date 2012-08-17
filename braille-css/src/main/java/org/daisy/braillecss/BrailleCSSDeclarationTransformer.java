@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.daisy.braillecss.BrailleCSSProperty.Border;
+import org.daisy.braillecss.BrailleCSSProperty.Content;
 import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
@@ -124,6 +125,28 @@ public class BrailleCSSDeclarationTransformer {
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(Border.class, Border.dot_pattern,
 				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean processBrlContent(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+
+		if (d.size() == 1 && genericOneIdent(Content.class, d, properties))
+			return true;
+		
+		TermList list = tf.createList();
+		for (Term<?> t : d.asList()) {
+			if (t instanceof TermString)
+				list.add(t);
+			else
+				return false;
+		}
+		if (list.isEmpty())
+			return false;
+
+		properties.put("content", Content.list_values);
+		values.put("content", list);
+		return true;
 	}
 	
 	@SuppressWarnings("unused")
