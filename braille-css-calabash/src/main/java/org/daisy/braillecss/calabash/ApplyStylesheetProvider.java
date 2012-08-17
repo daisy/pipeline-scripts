@@ -144,7 +144,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 					if (afterData != null) {
 						String afterStyle = String.valueOf(afterData).replaceAll("\\s+", " ").trim();
 						if (afterStyle.length() > 0) {
-							addAttribute(_css_before, afterStyle);
+							addAttribute(_css_after, afterStyle);
 						}
 					}
 					receiver.startContent();
