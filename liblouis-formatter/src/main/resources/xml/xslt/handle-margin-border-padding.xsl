@@ -155,7 +155,7 @@
             <xsl:variable name="child-style"
                 select="css:remove-properties($style, ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
             <xsl:if test="$border-top!='none'">
-                <xsl:sequence select="louis:create-border($border-top, $left + $margin-left, $width - $margin-left - $margin-right)"/>
+                <xsl:sequence select="louis:create-border($border-top, $left + $margin-left, $width - $left - $right - $margin-left - $margin-right)"/>
             </xsl:if>
             <xsl:choose>
                 <xsl:when test="$border-left!='none' or $border-right!='none'">
@@ -188,7 +188,7 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="$border-bottom!='none'">
-                <xsl:sequence select="louis:create-border($border-bottom, $left + $margin-left, $width - $margin-left - $margin-right)"/>
+                <xsl:sequence select="louis:create-border($border-bottom, $left + $margin-left, $width - $left - $right - $margin-left - $margin-right)"/>
             </xsl:if>
         </louis:div>
     </xsl:template>
