@@ -3,6 +3,7 @@ package org.daisy.pipeline.liblouis;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -38,6 +39,13 @@ public class Activator {
 				case Platform.LINUX:
 					directory = "/native/linux";
 					break;
+				case Platform.WINDOWS:
+					if (Platform.is64Bit()) {
+						directory = "/native/windows-x86_64";
+					} else {
+						directory = "/native/windows-i386";
+					}
+					break;
 				default:
 					throw new RuntimeException("No liblouis binaries for this platform");
 			}
@@ -54,7 +62,9 @@ public class Activator {
 					File file = new File(nativePath.getAbsolutePath() + File.separator + fileName);
 					try {
 						unpack(binaryURL, file);
-						chmod775(file);
+						if (Platform.getOSType() != Platform.WINDOWS) {
+							chmod775(file);
+						}
 						System.out.println(fileName);
 					} catch (Exception e) {
 						throw new RuntimeException(
@@ -71,16 +81,28 @@ public class Activator {
 					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.dylib");
 					break;
 				case Platform.LINUX:
-					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.so.6");;
+					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.so.6");
 					break;
 				case Platform.WINDOWS:
+					// Hack to set java.library.path programmatically
+					System.setProperty("java.library.path", nativePath.getAbsolutePath());
+					Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+					fieldSysPath.setAccessible(true);
+					fieldSysPath.set(null, null);
+					System.load(nativePath.getAbsolutePath() + "/liblouis.dll");
+					System.load(nativePath.getAbsolutePath() + "/liblouisutdml.dll");
+					break;
 				default:
 					throw new RuntimeException("No liblouis binaries for this platform");
 			}
-
+			
 			NativeLibrary.addSearchPath("louis", nativePath.getAbsolutePath());
 
 		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}

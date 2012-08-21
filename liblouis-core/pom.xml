@@ -132,6 +132,30 @@
         </os>
       </activation>
     </profile>
+    <profile>
+      <id>windows-i386</id>
+      <properties>
+        <platform>windows-i386</platform>
+      </properties>
+      <activation>
+        <os>
+          <family>windows</family>
+          <arch>i386</arch>
+        </os>
+      </activation>
+    </profile>
+    <profile>
+      <id>windows-x86_64</id>
+      <properties>
+        <platform>windows-x86_64</platform>
+      </properties>
+      <activation>
+        <os>
+          <family>windows</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+    </profile>
   </profiles>
 
 </project>
