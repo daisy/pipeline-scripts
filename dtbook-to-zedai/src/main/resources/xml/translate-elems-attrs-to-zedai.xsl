@@ -484,39 +484,19 @@
     </xsl:template>
 
     <xsl:template match="dtb:table">
-        <!-- generate an ID in case we need it -->
-        <xsl:variable name="tableID" select="generate-id()"/>
 
         <!-- in ZedAI, captions don't live inside tables as in DTBook -->
-        <xsl:if test="./dtb:caption">
-            <xsl:choose>
-                <xsl:when test="@id">
-                    <xsl:apply-templates mode="table-caption" select="./dtb:caption">
-                        <xsl:with-param name="refValue" select="@id"/>
-                    </xsl:apply-templates>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates mode="table-caption" select="./dtb:caption">
-                        <xsl:with-param name="refValue" select="$tableID"/>
-                    </xsl:apply-templates>
-                </xsl:otherwise>
-            </xsl:choose>
+        <xsl:if test="dtb:caption">
+            <xsl:apply-templates mode="table-caption" select="dtb:caption">
+                <xsl:with-param name="refValue" select="if (@id) then @id else generate-id()"/>
+            </xsl:apply-templates>
         </xsl:if>
 
         <!-- move @summary into an annotation -->
         <xsl:if test="@summary">
-            <xsl:choose>
-                <xsl:when test="@id">
-                    <annotation ref="{@id}">
-                        <xsl:value-of select="@summary"/>
-                    </annotation>
-                </xsl:when>
-                <xsl:otherwise>
-                    <annotation ref="{$tableID}">
-                        <xsl:value-of select="@summary"/>
-                    </annotation>
-                </xsl:otherwise>
-            </xsl:choose>
+            <annotation ref="{if (@id) then @id else generate-id()}">
+                <xsl:value-of select="@summary"/>
+            </annotation>
         </xsl:if>
         <table>
             <!-- These will be put into CSS by a future XSL step -->
@@ -537,27 +517,34 @@
 
             <!-- generate an ID for use by CSS -->
             <xsl:if test="not(@id)">
-                <xsl:attribute name="xml:id" select="$tableID"/>
+                <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
 
-            <xsl:for-each-group group-adjacent="local-name() = 'col'" select="*">
-                <xsl:choose>
-                    <xsl:when test="current-grouping-key()">
-                        <colgroup>
-                            <xsl:for-each select="current-group()">
-                                <xsl:apply-templates select="."/>
-                            </xsl:for-each>
-                        </colgroup>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:for-each select="current-group()">
-                            <xsl:if test="local-name() != 'caption'">
-                                <xsl:apply-templates select="."/>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:for-each-group>
+            <!--
+                Translation of the table inner content model:
+                 - group any adjacent 'col' in 'colgroup'
+                 - if there is a thead or tfoot, then wrap tr|pagenum in a tbody
+                 - if there is a tfoot, it is re-ordered after the tbody
+            -->
+            <xsl:if test="dtb:col">
+                <colgroup>
+                    <xsl:apply-templates select="dtb:col"/>
+                </colgroup>
+            </xsl:if>
+            <xsl:apply-templates select="dtb:colgroup"/>
+            <xsl:apply-templates select="dtb:thead"/>
+            <xsl:choose>
+                <xsl:when test="(dtb:thead or dtb:tfoot) and (dtb:tr or dtb:pagenum)">
+                    <tbody>
+                        <xsl:apply-templates select="dtb:tr|dtb:pagenum"/>
+                    </tbody>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="dtb:tbody|dtb:tr|dtb:pagenum"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:apply-templates select="dtb:tfoot"/>
+            
         </table>
     </xsl:template>
 
