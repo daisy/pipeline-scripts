@@ -288,6 +288,9 @@
 
     <xsl:template match="dtb:imggroup">
         <block>
+            <xsl:if test="dtb:caption">
+                <xsl:attribute name="role" select="'figure'"/>
+            </xsl:if>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </block>

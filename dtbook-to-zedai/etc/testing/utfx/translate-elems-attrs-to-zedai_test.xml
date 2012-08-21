@@ -340,13 +340,13 @@
                 </imggroup>
             </utfx:source>
             <utfx:expected>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0001">
                         <description ref="img0001">test image</description>
                     </object>
                     <caption ref="img0001">CAPTION</caption>
                 </block>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0002">
                         <description ref="img0002">test image</description>
                     </object>

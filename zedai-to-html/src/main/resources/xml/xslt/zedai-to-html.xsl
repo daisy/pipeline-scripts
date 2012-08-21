@@ -584,6 +584,20 @@
 
   <!--====== Table module =======================================-->
   <!--TODO translate: table module-->
+  <xsl:template match="z:table" mode="#all">
+    <table>
+      <!--TODO handle caption-->
+      <!--The caption element represents the title of the table that is its parent-->
+      <!--When a table element is the only content in a figure element other than the figcaption, the caption element should be omitted in favor of the figcaption.-->
+      
+      <!--TODO handle @summary (non-conforming)-->
+      
+      <!-- @colspan, @rowspan, @headers, @scope -->
+      <!-- th/@scope = row|col|rowgroup|colgroup|auto  -->
+      <!--TODO: handle pagrebreaks-->
+      
+    </table>
+  </xsl:template>
 
   <!--===========================================================-->
   <!-- Translation: Phrase layer                                 -->
