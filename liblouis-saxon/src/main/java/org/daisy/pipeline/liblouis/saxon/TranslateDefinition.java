@@ -38,6 +38,16 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "translate");
 
+	private Liblouis liblouis = null;
+	
+	public void bindLiblouis(Liblouis liblouis) {
+		this.liblouis = liblouis;
+	}
+
+	public void unbindLiblouis(Liblouis liblouis) {
+		this.liblouis = null;
+	}
+	
 	@Override
 	public StructuredQName getFunctionQName() {
 		return funcname;
@@ -83,7 +93,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 					return EmptyIterator.getInstance();
 				}
 
-				return SingletonIterator.makeIterator(new StringValue(Liblouis
+				return SingletonIterator.makeIterator(new StringValue(liblouis
 						.translate(table.getStringValue(), toTranslate.getStringValue())));
 			}
 

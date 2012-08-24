@@ -4,5 +4,11 @@
     <scr:service>
         <scr:provide interface="net.sf.saxon.lib.ExtensionFunctionDefinition"/>
     </scr:service>
+    <scr:reference bind="bindTableFinder"
+        unbind="unbindTableFinder"
+        interface="org.daisy.pipeline.liblouis.LiblouisTableFinder"
+        cardinality="1..1"
+        name="LiblouisTableFinder"
+        policy="dynamic"/>
 </scr:component>
 

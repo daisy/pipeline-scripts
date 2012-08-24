@@ -29,8 +29,7 @@
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
-      <!--<artifactId>jna</artifactId>-->
-      <artifactId>com.springsource.com.sun.jna</artifactId>
+      <artifactId>jna</artifactId>
     </dependency>
   </dependencies>
 
@@ -39,45 +38,49 @@
       <resource>
         <directory>src/main/resources</directory>
         <excludes>
-          <exclude>native/**</exclude>
+          <exclude>native/linux/</exclude>
+          <exclude>native/darwin-i386/</exclude>
+          <exclude>native/darwin-x86_64/</exclude>
+          <exclude>native/windows-i386/</exclude>
+          <exclude>native/windows-x86_64/</exclude>
         </excludes>
       </resource>
       <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>native/${platform}/**</include>
-        </includes>
+        <targetPath>native</targetPath>
+        <directory>src/main/resources/native/${platform}</directory>
+      </resource>
+      <resource>
+        <targetPath>native</targetPath>
+        <directory>${basedir}/target/generated-resources</directory>
       </resource>
     </resources>
     <plugins>
       <plugin>
-        <artifactId>maven-scm-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5</version>
         <executions>
           <execution>
-            <id>checkout</id>
-            <phase>generate-sources</phase>
+            <id>copy-javabindings</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>checkout</goal>
+              <goal>copy</goal>
             </goals>
             <configuration>
-              <connectionUrl>scm:git:https://github.com/bertfrees/liblouis-java.git</connectionUrl>
-              <checkoutDirectory>${basedir}/target/generated-sources/liblouis-java</checkoutDirectory>
-              <includes>*/**/*.java</includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals><goal>add-source</goal></goals>
-            <configuration>
-              <sources>
-                <source>${basedir}/target/generated-sources/liblouis-java/src</source>
-              </sources>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>liblouis-java</artifactId>
+                  <outputDirectory>${basedir}/target/generated-resources</outputDirectory>
+                  <destFileName>liblouis.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.java.dev.jna</groupId>
+                  <artifactId>jna</artifactId>
+                  <outputDirectory>${basedir}/target/generated-resources</outputDirectory>
+                  <destFileName>jna.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
             </configuration>
           </execution>
         </executions>
@@ -87,8 +90,8 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Export-Package>org.daisy.pipeline.liblouis, !org.liblouis</Export-Package>
-            <Service-Component>OSGI-INF/liblouis-table-registry.xml, OSGI-INF/activator.xml</Service-Component>
+            <Export-Package>org.daisy.pipeline.liblouis, !org.daisy.pipeline.liblouis.internal</Export-Package>
+            <Service-Component>OSGI-INF/activator.xml</Service-Component>
             <_removeheaders>Embed-Dependency,Include-Resource,Private-Package</_removeheaders>
           </instructions>
         </configuration>

@@ -11,7 +11,7 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
+import org.daisy.pipeline.liblouis.LiblouisTableFinder;
 
 @SuppressWarnings("serial")
 public class FindTableDefinition extends ExtensionFunctionDefinition {
@@ -19,6 +19,16 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "find-table");
 
+	private LiblouisTableFinder tableFinder = null;
+	
+	public void bindTableFinder(LiblouisTableFinder tableFinder) {
+		this.tableFinder = tableFinder;
+	}
+
+	public void unbindTableFinder(LiblouisTableFinder tableFinder) {
+		this.tableFinder = null;
+	}
+	
 	@Override
 	public StructuredQName getFunctionQName() {
 		return funcname;
@@ -58,7 +68,7 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 				if (locale == null) {
 					return EmptyIterator.getInstance();
 				}
-				String table = LiblouisTableRegistry.TableFinder.find(locale.getStringValue());
+				String table = tableFinder.find(locale.getStringValue());
 				if (table == null) {
 					return EmptyIterator.getInstance();
 				}

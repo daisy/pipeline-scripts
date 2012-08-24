@@ -33,27 +33,37 @@ import com.xmlcalabash.util.TreeWriter;
 
 public class TranslateFileProvider implements XProcStepProvider {
 	
+	private static final String LOUIS_NS = "http://liblouis.org/liblouis";
+	private static final String LOUIS_PREFIX = "louis";
+	private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
+	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
+	// private static final QName louis_page = new QName(LOUIS_PREFIX, LOUIS_NS, "page");
+
+	private static final QName _ini_file = new QName("ini-file");
+	private static final QName _paged = new QName("paged");
+	private static final QName _page_height = new QName("page-height");
+	private static final QName _line_width = new QName("line-width");
+	private static final QName _temp_dir = new QName("temp-dir");
+	private static final QName c_directory = new QName("http://www.w3.org/ns/xproc-step", "directory");
+	private static final QName c_file = new QName("http://www.w3.org/ns/xproc-step", "file");
+	private static final QName _name = new QName("name");
+	
+	private Liblouisutdml liblouisutdml = null;
+	
+	public void bindLiblouisutdml(Liblouisutdml liblouisutdml) {
+		this.liblouisutdml = liblouisutdml;
+	}
+
+	public void unbindLiblouisutdml(Liblouisutdml liblouisutdml) {
+		this.liblouisutdml = null;
+	}
+	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
 		return new TranslateFile(runtime, step);
 	}
 	
-	public static class TranslateFile extends DefaultStep {
-	
-		private static final String LOUIS_NS = "http://liblouis.org/liblouis";
-		private static final String LOUIS_PREFIX = "louis";
-		private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
-		private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
-		// private static final QName louis_page = new QName(LOUIS_PREFIX, LOUIS_NS, "page");
-	
-		private static final QName _ini_file = new QName("ini-file");
-		private static final QName _paged = new QName("paged");
-		private static final QName _page_height = new QName("page-height");
-		private static final QName _line_width = new QName("line-width");
-		private static final QName _temp_dir = new QName("temp-dir");
-		private static final QName c_directory = new QName("http://www.w3.org/ns/xproc-step", "directory");
-		private static final QName c_file = new QName("http://www.w3.org/ns/xproc-step", "file");
-		private static final QName _name = new QName("name");
+	public class TranslateFile extends DefaultStep {
 	
 		private ReadablePipe source = null;
 		private ReadablePipe configFiles = null;
@@ -95,7 +105,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 		public void run() throws SaxonApiException {
 	
 			super.run();
-	
+			
 			try {
 	
 				// Get options
@@ -160,9 +170,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-				Liblouisutdml.translateFile(configFileNames, semanticFileNames, null, settings, xmlFile, brailleFile, tempDir, tempDir);
+				liblouisutdml.translateFile(configFileNames, semanticFileNames, null, settings, xmlFile, brailleFile, tempDir, tempDir);
 				//xmlFile.delete();
-	
+				
 				// Read the braille document and wrap it in a new XML document
 				long totalLength = brailleFile.length();
 				long bodyLength = bodyTempFile.exists() ? bodyTempFile.length() : totalLength;
@@ -204,21 +214,21 @@ public class TranslateFileProvider implements XProcStepProvider {
 				throw new XProcException(step.getNode(), e);
 			}
 		}
+	}
 	
-		private static void unpackIniFile(URL iniFile, File toDir) throws Exception {
-			File toFile = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
-			toFile.createNewFile();
-			FileOutputStream writer = new FileOutputStream(toFile);
-			iniFile.openConnection();
-			InputStream reader = iniFile.openStream();
-			byte[] buffer = new byte[153600];
-			int bytesRead = 0;
-			while ((bytesRead = reader.read(buffer)) > 0) {
-				writer.write(buffer, 0, bytesRead);
-				buffer = new byte[153600];
-			}
-			writer.close();
-			reader.close();
+	private static void unpackIniFile(URL iniFile, File toDir) throws Exception {
+		File toFile = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
+		toFile.createNewFile();
+		FileOutputStream writer = new FileOutputStream(toFile);
+		iniFile.openConnection();
+		InputStream reader = iniFile.openStream();
+		byte[] buffer = new byte[153600];
+		int bytesRead = 0;
+		while ((bytesRead = reader.read(buffer)) > 0) {
+			writer.write(buffer, 0, bytesRead);
+			buffer = new byte[153600];
 		}
+		writer.close();
+		reader.close();
 	}
 }

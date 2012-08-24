@@ -34,7 +34,7 @@ public class LiblouisTableSet {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void activate(ComponentContext context, Map<?, ?> properties) {
+	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		if (properties.get(IDENTIFIER) == null
 				|| properties.get(IDENTIFIER).toString().isEmpty()) {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty");
@@ -66,13 +66,8 @@ public class LiblouisTableSet {
 					String url = tableURL.toExternalForm();
 					String fileName = url.substring(url.lastIndexOf('/')+1, url.length());
 					File file = new File(path.getAbsolutePath() + File.separator + fileName);
-					try {
-						unpack(tableURL, file);
-						System.out.println(fileName);
-					} catch (Exception e) {
-						System.out.println("Exception occured during unpacking of file '" + fileName + "'");
-						e.printStackTrace();
-					}
+					unpack(tableURL, file);
+					System.out.println(" --> " + fileName);
 				}
 			}
 		}
@@ -98,5 +93,36 @@ public class LiblouisTableSet {
 		}
 		writer.close();
 		reader.close();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int hash = 1;
+		hash = prime * hash + ((identifier == null) ? 0 : identifier.hashCode());
+		hash = prime * hash + ((manifest == null) ? 0 : manifest.hashCode());
+		hash = prime * hash + ((path == null) ? 0 : path.hashCode());
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object)
+			return true;
+		if (object == null)
+			return false;
+		if (getClass() != object.getClass())
+			return false;
+		LiblouisTableSet that = (LiblouisTableSet)object;
+		if (!this.identifier.equals(that.identifier))
+			return false;
+		if (!this.path.equals(that.path))
+			return false;
+		if (manifest == null) {
+			if (that.manifest != null)
+				return false;
+		} else if (!manifest.equals(that.manifest))
+			return false;
+		return true;
 	}
 }

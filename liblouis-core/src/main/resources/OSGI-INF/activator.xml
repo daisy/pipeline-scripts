@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="Liblouis Binaries">
-    <implementation class="org.daisy.pipeline.liblouis.Activator"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="Liblouis native libraries and table registry">
+    <implementation class="org.daisy.pipeline.liblouis.LiblouisProvider"/>
+    <scr:reference bind="addTableSet"
+        unbind="removeTableSet"
+        interface="org.daisy.pipeline.liblouis.LiblouisTableSet"
+        cardinality="0..n"
+        name="LiblouisTableSet"
+        policy="dynamic"/>
 </scr:component>
