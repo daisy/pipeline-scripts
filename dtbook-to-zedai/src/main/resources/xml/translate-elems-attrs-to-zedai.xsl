@@ -307,23 +307,12 @@
                 <xsl:when test="@imgref">
                     <xsl:attribute name="ref" select="replace(@imgref, '#', '')"/>
                 </xsl:when>
-                <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="parent::dtb:imggroup">
-                            <xsl:choose>
-                                <xsl:when test="../dtb:img/@id">
-                                    <!-- get the id of the image in the imggroup and use it as a ref -->
-                                    <xsl:attribute name="ref" select="../dtb:img/@id"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <!-- we know that images with no IDs had them generated in the img template, so re-use that ID. -->
-                                    <xsl:attribute name="ref" select="generate-id(../dtb:img)"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:otherwise>
+                <xsl:when test="parent::dtb:imggroup">
+                    <!-- get the id of the image in the imggroup and use it as a ref -->
+                    <!-- we know that images with no IDs had them generated in the img template, so re-use that ID. -->
+                    <xsl:attribute name="ref"
+                        select="../dtb:img/(if (@id) then @id else generate-id())"/>
+                </xsl:when>
             </xsl:choose>
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
@@ -373,33 +362,25 @@
                     </d:body>
                 </d:description>
             </xsl:when>
-            
+
             <!-- when the prodnote is not a longdesc (perhaps more common), create an annotation -->
+            <xsl:when test="@imgref">
+                <xsl:call-template name="createAnnotation">
+                    <xsl:with-param name="byValue" select="'republisher'"/>
+                    <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="parent::dtb:imggroup">
+                <!-- get the id of the image in the imggroup and use it as a ref -->
+                <xsl:call-template name="createAnnotation">
+                    <xsl:with-param name="byValue" select="'republisher'"/>
+                    <xsl:with-param name="refValue" select="../dtb:img/@id"/>
+                </xsl:call-template>
+            </xsl:when>
             <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="@imgref">
-                        <xsl:call-template name="createAnnotation">
-                            <xsl:with-param name="byValue" select="'republisher'"/>
-                            <xsl:with-param name="refValue" select="replace(@imgref, '#', '')"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="parent::dtb:imggroup">
-                                <!-- get the id of the image in the imggroup and use it as a ref -->
-                                <xsl:call-template name="createAnnotation">
-                                    <xsl:with-param name="byValue" select="'republisher'"/>
-                                    <xsl:with-param name="refValue" select="../dtb:img/@id"/>
-                                </xsl:call-template>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:call-template name="createAnnotation">
-                                    <xsl:with-param name="byValue" select="'republisher'"/>
-                                </xsl:call-template>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="createAnnotation">
+                    <xsl:with-param name="byValue" select="'republisher'"/>
+                </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -416,12 +397,10 @@
 
         <note>
             <xsl:call-template name="attrs"/>
-            <xsl:choose>
-                <xsl:when test="@class = 'footnote' or @class = 'endnote'">
-                    <xsl:attribute name="role" select="@class"/>
-                    <xsl:apply-templates/>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="@class=('footnote','endnote')">
+                <xsl:attribute name="role" select="@class"/>
+            </xsl:if>
+            <xsl:apply-templates/>
         </note>
     </xsl:template>
 
@@ -456,17 +435,15 @@
     <xsl:template match="dtb:blockquote|dtb:q">
         <quote>
             <xsl:call-template name="attrs"/>
-            <xsl:if test="@cite">
-                <xsl:choose>
-                    <!-- for internal references, use @ref; otherwise use @xlink:ref -->
-                    <xsl:when test="starts-with(@cite, '#')">
-                        <xsl:attribute name="ref" select="substring(@cite, 2)"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="xlink:href" select="@cite"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
+            <xsl:choose>
+                <!-- for internal references, use @ref; otherwise use @xlink:ref -->
+                <xsl:when test="starts-with(@cite, '#')">
+                    <xsl:attribute name="ref" select="substring(@cite, 2)"/>
+                </xsl:when>
+                <xsl:when test="@cite">
+                    <xsl:attribute name="xlink:href" select="@cite"/>
+                </xsl:when>
+            </xsl:choose>
             <xsl:apply-templates/>
         </quote>
     </xsl:template>
@@ -801,16 +778,8 @@
 
 
     <xsl:template match="dtb:acronym">
-        <abbr>
-            <!-- making an assumption: @pronounce has a default value of 'no' -->
-            <xsl:choose>
-                <xsl:when test="@pronounce = 'yes'">
-                    <xsl:attribute name="role">acronym</xsl:attribute>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="role">initialism</xsl:attribute>
-                </xsl:otherwise>
-            </xsl:choose>
+        <!-- making an assumption: @pronounce has a default value of 'no' -->
+        <abbr role="{if (@pronounce = 'yes') then 'acronym' else 'initialism'}">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </abbr>
@@ -860,9 +829,7 @@
         <span>
             <xsl:call-template name="attrs"/>
             <!-- normalization steps sometimes put role='example' on some spans, so be sure to copy it -->
-            <xsl:if test="@role">
-                <xsl:copy-of select="@role"/>
-            </xsl:if>
+            <xsl:copy-of select="@role"/>
             <xsl:apply-templates/>
         </span>
     </xsl:template>
@@ -882,19 +849,15 @@
 
         <block>
             <xsl:call-template name="attrs"/>
-            <xsl:for-each-group group-adjacent="local-name() = 'line'" select="*">
+            <xsl:for-each-group group-adjacent="boolean(self::dtb:line)" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>
-                            <xsl:for-each select="current-group()">
-                                <xsl:apply-templates select="."/>
-                            </xsl:for-each>
+                            <xsl:apply-templates select="current-group()"/>
                         </p>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:for-each select="current-group()">
-                            <xsl:apply-templates select="."/>
-                        </xsl:for-each>
+                        <xsl:apply-templates select="current-group()"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each-group>
@@ -1017,132 +980,85 @@
 
     <xsl:template match="dtb:poem">
         <block role="poem">
-            <xsl:for-each-group group-adjacent="local-name() = 'line'" select="*">
+            <xsl:for-each-group group-adjacent="boolean(self::dtb:line)" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>
-                            <xsl:for-each select="current-group()">
-                                <xsl:apply-templates select="."/>
-                            </xsl:for-each>
+                            <xsl:apply-templates select="current-group()"/>
                         </p>
-
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:for-each select="current-group()">
-                            <xsl:choose>
-                                <xsl:when test="local-name() = 'title'">
-                                    <p property="title">
-                                        <xsl:call-template name="attrs"/>
-                                        <xsl:apply-templates/>
-                                    </p>
-                                </xsl:when>
-
-                                <xsl:when test="local-name() = 'author'">
-                                    <p property="author">
-                                        <xsl:call-template name="attrs"/>
-                                        <xsl:apply-templates/>
-                                    </p>
-                                </xsl:when>
-
-                                <xsl:otherwise>
-                                    <xsl:apply-templates select="."/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-
+                        <xsl:apply-templates select="current-group()"/>
                     </xsl:otherwise>
                 </xsl:choose>
 
             </xsl:for-each-group>
-
         </block>
+    </xsl:template>
+    <xsl:template match="dtb:poem/dtb:title">
+        <p property="title">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </p>
+    </xsl:template>
+    <xsl:template match="dtb:poem/dtb:author">
+        <p property="author">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </p>
     </xsl:template>
 
 
     <xsl:template match="tmp:code-block">
         <code>
             <xsl:call-template name="attrs"/>
-            <xsl:variable name="wrap-in-p"
-                select="tokenize('em,strong,dfn,cite,abbr,acronym,a,sub,sup,span,bdo,w,annoref,noteref,sent,code-phrase',',')"/>
-            <!-- note that there is likely never a nested code-block -->
-            <xsl:variable name="wrap-in-block" select="tokenize('code-block,q,prodnote',',')"/>
-
-            <xsl:for-each-group group-adjacent="local-name() = $wrap-in-p or self::text()"
-                select="node()[not(self::text()[normalize-space() = ''])]">
+            <xsl:for-each-group group-adjacent="boolean(self::dtb:em|self::dtb:strong|self::dtb:dfn|self::dtb:cite|self::dtb:abbr|self::dtb:acronym|self::dtb:a|self::dtb:sub|self::dtb:sup|self::dtb:span|self::dtb:bdo|self::dtb:w|self::dtb:annoref|self::dtb:noteref|self::dtb:sent|self::dtb:code-phrase|self::text())"
+                select="node() except text()[normalize-space() = '']">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
                         <p>
-                            <xsl:for-each select="current-group()">
-                                <xsl:apply-templates select="."/>
-                            </xsl:for-each>
+                           <xsl:apply-templates select="current-group()"/>
                         </p>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:for-each select="current-group()">
-                            <xsl:choose>
-                                <xsl:when test="local-name() = $wrap-in-block">
-                                    <block>
-                                        <xsl:apply-templates select="."/>
-                                    </block>
-                                </xsl:when>
-                                <xsl:when test="local-name() = 'br'">
-                                    <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:apply-templates select="."/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
+                        <xsl:apply-templates select="current-group()" mode="code-block"/>
                     </xsl:otherwise>
 
                 </xsl:choose>
             </xsl:for-each-group>
         </code>
-
     </xsl:template>
+    <!-- explicitly ignore linebreaks when treating code as a group of block-level items -->
+    <xsl:template match="tmp:code-block/dtb:br" mode="code-block"/>
+    <xsl:template match="tmp:code-block/*[self::dtb:code-block|self::dtb:q|self::dtb:prodnote]" mode="code-block">
+        <block>
+            <xsl:apply-templates select="." />
+        </block>
+    </xsl:template>
+    <xsl:template match="*" mode="code-block">
+        <xsl:apply-templates select="."/>
+    </xsl:template>
+        
+    
 
     <xsl:template match="tmp:code-phrase">
         <code>
             <xsl:call-template name="attrs"/>
-            <xsl:for-each select="child::node()">
-                <xsl:choose>
-
-                    <xsl:when test="local-name() = 'abbr'">
-                        <span role="truncation">
-                            <xsl:call-template name="attrs"/>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:when>
-
-                    <xsl:when test="local-name() = 'acronym'">
-                        <span>
-                            <xsl:choose>
-                                <xsl:when test="@pronounce = 'yes'">
-                                    <xsl:attribute name="role">acronym</xsl:attribute>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="role">initialism</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <xsl:call-template name="attrs"/>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:when>
-                    <xsl:when test="local-name() = 'br'">
-                        <!-- There is no equivalent -->
-                    </xsl:when>
-
-                    <xsl:when test="local-name() = 'em' or local-name() = 'strong'">
-                        <xsl:apply-templates select="."/>
-                    </xsl:when>
-
-                    <xsl:otherwise>
-                        <xsl:apply-templates select="."/>
-                    </xsl:otherwise>
-
-                </xsl:choose>
-            </xsl:for-each>
+            <xsl:apply-templates/>
         </code>
-
     </xsl:template>
+    <xsl:template match="tmp:code-phrase/dtb:abbr">
+        <span role="truncation">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+    <xsl:template match="tmp:code-phrase/dtb:acronym">
+        <span role="{if (@pronounce='yes') then 'acronym' else 'initialism'}">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+    <xsl:template match="tmp:code-phrase/dtb:br"/>
+    
 </xsl:stylesheet>
