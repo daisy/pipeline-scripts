@@ -9,10 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.daisy.pipeline.liblouis.Utilities.FunctionalUtils;
+import org.daisy.pipeline.liblouis.Utilities.FunctionalUtils.Predicate;
+import org.daisy.pipeline.liblouis.Utilities.OSUtils;
+import org.daisy.pipeline.liblouis.Utilities.StringUtils;
+import org.daisy.pipeline.liblouis.internal.Environment;
+import org.daisy.pipeline.liblouis.internal.JarClassLoader;
 import org.daisy.pipeline.liblouis.internal.LiblouisClassLoader;
 import org.daisy.pipeline.liblouis.internal.LiblouisImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisTableFinderImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisutdmlImpl;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -21,11 +28,13 @@ import org.osgi.service.component.ComponentContext;
 public class LiblouisProvider implements LiblouisTableRegistry {
 
 	private BundleContext bundleContext = null;
-	private URL[] nativeURLs = null;
+	private Collection<URL> jarURLs = null;
+	private Collection<URL> nativeURLs = null;
 	private File unpackDirectory = null;
 	private ServiceRegistration liblouisRegistration = null;
 	private ServiceRegistration liblouisutdmlRegistration = null;
 	private LiblouisTableFinderImpl tableFinder = new LiblouisTableFinderImpl();
+	private Environment environment;
 	
 	public void activate(ComponentContext context) {
 		bundleContext = context.getBundleContext();
@@ -43,7 +52,15 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 		while (paths.hasMoreElements()) {
 			urls.add(bundle.getEntry(paths.nextElement()));
 		}
-		nativeURLs = urls.toArray(new URL[urls.size()]);
+		Predicate<URL> isJar = new Predicate<URL>() {
+			public boolean test(URL url) {
+				return url.getPath().endsWith(".jar"); }};
+		jarURLs = FunctionalUtils.filter(urls, isJar);
+		nativeURLs = FunctionalUtils.filter(urls, FunctionalUtils.not(isJar));
+		if (environment == null) {
+			environment = new Environment(new JarClassLoader(jarURLs));
+			environment.setLouisTablePath(getLouisTablePath());
+		}
 		bundleContext.registerService(LiblouisTableFinder.class.getName(), tableFinder, null);
 		loadLiblouis();
 	}
@@ -53,11 +70,11 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 	}
 	
 	private void loadLiblouis() {
-		ClassLoader classLoader = new LiblouisClassLoader(nativeURLs, unpackDirectory);	
+		ClassLoader classLoader = new LiblouisClassLoader(jarURLs, nativeURLs, unpackDirectory);
 		liblouisRegistration = bundleContext.registerService(Liblouis.class.getName(),
-				new LiblouisImpl(classLoader), null);
+				(Liblouis)new LiblouisImpl(classLoader), null);
 		liblouisutdmlRegistration = bundleContext.registerService(Liblouisutdml.class.getName(),
-				new LiblouisutdmlImpl(classLoader), null);
+				(Liblouisutdml)new LiblouisutdmlImpl(classLoader), null);
 	}
 	
 	private void unloadLiblouis() {
@@ -71,6 +88,11 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 		}
 		System.gc();
 	}
+	
+	private void reloadLiblouis() {
+		unloadLiblouis();
+		loadLiblouis();
+	}
 
 	private final Map<String,LiblouisTableSet> tableSets = new HashMap<String,LiblouisTableSet>();
 	
@@ -80,7 +102,10 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 		}
 		tableSets.put(tableSet.getIdentifier(), tableSet);
 		try {
-			Environment.setVariable("LOUIS_TABLEPATH", getLouisTablePath(), true);
+			if (environment != null) {
+				environment.setLouisTablePath(getLouisTablePath());
+				if (OSUtils.isWindows()) reloadLiblouis();
+			}
 			tableFinder.addTableSet(tableSet);
 		} catch (RuntimeException e) {
 			tableSets.remove(tableSet.getIdentifier());
@@ -92,7 +117,8 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 	public void removeTableSet(LiblouisTableSet tableSet) {
 		tableSets.remove(tableSet.getIdentifier());
 		tableFinder.removeTableSet(tableSet);
-		Environment.setVariable("LOUIS_TABLEPATH", getLouisTablePath(), true);
+		if (environment != null)
+			environment.setLouisTablePath(getLouisTablePath());
 		System.out.println("Removed table set from registry: " + tableSet.getIdentifier());
 	}
 

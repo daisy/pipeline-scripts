@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.daisy.pipeline.liblouis.Liblouisutdml;
-import org.daisy.pipeline.liblouis.StringUtils;
+import org.daisy.pipeline.liblouis.Utilities.StringUtils;
 
 public class LiblouisutdmlImpl implements Liblouisutdml {
 
