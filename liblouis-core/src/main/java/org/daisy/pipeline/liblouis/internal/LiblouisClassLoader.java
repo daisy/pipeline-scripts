@@ -14,7 +14,7 @@ public class LiblouisClassLoader extends JarClassLoader {
 		super(jarURLs);
 		
 		try {
-		
+			
 			String liblouisPath = null;
 			String liblouisutdmlPath = null;
 			
@@ -42,6 +42,10 @@ public class LiblouisClassLoader extends JarClassLoader {
 			Method loadLibrary = loadClass("org.liblouis.liblouisutdml")
 					.getMethod("loadLibrary", String.class, String.class);
 			loadLibrary.invoke(null, liblouisPath, liblouisutdmlPath);
+			
+			Method addSearchPath = loadClass("com.sun.jna.NativeLibrary")
+					.getMethod("addSearchPath", String.class, String.class);
+			addSearchPath.invoke(null, "louis", unpackDirectory.getAbsolutePath());
 			
 			System.out.println("Loaded liblouis native libraries");
 			

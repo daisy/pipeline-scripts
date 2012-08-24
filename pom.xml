@@ -104,7 +104,11 @@
       </dependency>
       <dependency>
         <groupId>net.java.dev.jna</groupId>
-        <!--<artifactId>jna</artifactId><version>3.4.0</version>-->
+        <artifactId>jna</artifactId>
+        <version>3.4.0</version>
+      </dependency>
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
         <artifactId>com.springsource.com.sun.jna</artifactId>
         <version>3.2.3</version>
       </dependency>
@@ -128,6 +132,11 @@
        <artifactId>jstyleparser</artifactId>
        <version>1.7.0</version>
       </dependency>
+      <dependency>
+        <groupId>org.liblouis</groupId>
+        <artifactId>liblouis-java</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -143,6 +152,7 @@
       <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
       <url>http://repository.springsource.com/maven/bundles/external</url>
     </repository>
+
   </repositories>
 
 </project>

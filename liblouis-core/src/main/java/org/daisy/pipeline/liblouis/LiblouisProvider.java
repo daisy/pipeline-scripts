@@ -31,10 +31,11 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 	private Collection<URL> jarURLs = null;
 	private Collection<URL> nativeURLs = null;
 	private File unpackDirectory = null;
+	private ServiceRegistration tableFinderRegistration = null;
 	private ServiceRegistration liblouisRegistration = null;
 	private ServiceRegistration liblouisutdmlRegistration = null;
 	private LiblouisTableFinderImpl tableFinder = new LiblouisTableFinderImpl();
-	private Environment environment;
+	private Environment environment = null;
 	
 	public void activate(ComponentContext context) {
 		bundleContext = context.getBundleContext();
@@ -61,12 +62,17 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			environment = new Environment(new JarClassLoader(jarURLs));
 			environment.setLouisTablePath(getLouisTablePath());
 		}
-		bundleContext.registerService(LiblouisTableFinder.class.getName(), tableFinder, null);
+		tableFinderRegistration = bundleContext.registerService(
+				LiblouisTableFinder.class.getName(), (LiblouisTableFinder)tableFinder, null);
 		loadLiblouis();
 	}
 	
 	public void deactivate() {
 		unloadLiblouis();
+		if (tableFinderRegistration != null) {
+			tableFinderRegistration.unregister();
+			tableFinderRegistration = null;
+		}
 	}
 	
 	private void loadLiblouis() {
