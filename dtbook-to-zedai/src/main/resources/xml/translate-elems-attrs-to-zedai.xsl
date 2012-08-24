@@ -266,19 +266,11 @@
                 <!-- when we're using longdesc, just point to it with @desc.
                     the value in @alt will be copied as the diagram markup is created.-->
                 <xsl:when test="@longdesc">
-                    <xsl:attribute name="desc" select="replace(@longdesc, '#', '')"/>
+                    <xsl:attribute name="desc" select="if (starts-with(@longdesc,'#')) then substring(@longdesc, 2) else @longdesc"/>
                 </xsl:when>
                 <!-- if there's no longdesc, then use zedai's description element for the alt text -->
                 <xsl:otherwise>
-                    <description>
-                        <xsl:choose>
-                            <xsl:when test="not(@id)">
-                                <xsl:attribute name="ref" select="$imgID"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:attribute name="ref" select="@id"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                    <description ref="{if (@id) then @id else $imgID}">
                         <xsl:value-of select="@alt"/>
                     </description>
                 </xsl:otherwise>
@@ -776,55 +768,26 @@
     </xsl:template>
 
     <xsl:template match="dtb:cite">
-        <!-- generate an ID, we might need it -->
-        <xsl:variable name="citeID" select="generate-id()"/>
         <citation>
             <xsl:call-template name="attrs"/>
 
             <!-- if no ID, then give a new ID -->
             <xsl:if test="not(@id)">
-                <xsl:attribute name="xml:id" select="$citeID"/>
+                <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
-
-            <xsl:for-each select="child::node()">
-
-                <xsl:choose>
-                    <xsl:when test="local-name() = 'title'">
-                        <span property="title">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="parent::node()/@id">
-                                        <xsl:value-of select="parent::node()/@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:when>
-                    <xsl:when test="local-name() = 'author'">
-                        <span property="author">
-                            <xsl:attribute name="about">
-                                <xsl:choose>
-                                    <xsl:when test="parent::node()/@id">
-                                        <xsl:value-of select="parent::node()/@id"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$citeID"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
-                            <xsl:apply-templates/>
-                        </span>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:apply-templates select="."/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:for-each>
+            
+            <xsl:apply-templates/>
         </citation>
+    </xsl:template>
+    <xsl:template match="dtb:cite/dtb:title">
+        <span property="title" about="{if (../@id) then ../@id else ../generate-id()}">
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+    <xsl:template match="dtb:cite/dtb:author">
+        <span property="author" about="{if (../@id) then ../@id else ../generate-id()}">
+            <xsl:apply-templates/>
+        </span>
     </xsl:template>
 
 
