@@ -1,13 +1,14 @@
 package org.daisy.pipeline.liblouis;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
 
+import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
 
@@ -60,15 +61,10 @@ public class LiblouisTableSet {
 			}
 			Enumeration<String> tablePaths = bundle.getEntryPaths(directory);
 			if (tablePaths != null) {
-				System.out.println("Unpacking liblouis tables...");
-				while (tablePaths.hasMoreElements()) {
-					URL tableURL = bundle.getEntry(tablePaths.nextElement());
-					String url = tableURL.toExternalForm();
-					String fileName = url.substring(url.lastIndexOf('/')+1, url.length());
-					File file = new File(path.getAbsolutePath() + File.separator + fileName);
-					unpack(tableURL, file);
-					System.out.println(" --> " + fileName);
-				}
+				Collection<URL> tableURLs = new ArrayList<URL>();
+				while (tablePaths.hasMoreElements())
+					tableURLs.add(bundle.getEntry(tablePaths.nextElement()));
+				Files.unpack(tableURLs, path);
 			}
 		}
 		if (properties.get(MANIFEST) != null) {
@@ -78,21 +74,6 @@ public class LiblouisTableSet {
 				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
 			}
 		}
-	}
-
-	private static void unpack(URL url, File file) throws Exception {
-		file.createNewFile();
-		FileOutputStream writer = new FileOutputStream(file);
-		url.openConnection();
-		InputStream reader = url.openStream();
-		byte[] buffer = new byte[153600];
-		int bytesRead = 0;
-		while ((bytesRead = reader.read(buffer)) > 0) {
-			writer.write(buffer, 0, bytesRead);
-			buffer = new byte[153600];
-		}
-		writer.close();
-		reader.close();
 	}
 
 	@Override

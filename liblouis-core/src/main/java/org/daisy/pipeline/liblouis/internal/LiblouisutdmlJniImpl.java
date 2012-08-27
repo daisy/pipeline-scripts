@@ -2,30 +2,56 @@ package org.daisy.pipeline.liblouis.internal;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.daisy.pipeline.liblouis.Liblouisutdml;
-import org.daisy.pipeline.liblouis.Utilities.StringUtils;
+import org.daisy.pipeline.liblouis.Utilities.Files;
+import org.daisy.pipeline.liblouis.Utilities.Strings;
 
-public class LiblouisutdmlImpl implements Liblouisutdml {
+public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
+	private final Collection<URL> jarURLs;
+	private final File nativeDirectory;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
+	private boolean loaded = false;
 	
-	public LiblouisutdmlImpl(ClassLoader classLoader) {
+	public LiblouisutdmlJniImpl(Collection<URL> jarURLs, Collection<URL> nativeURLs, File unpackDirectory) {
+		this.jarURLs = jarURLs;
+		for (File file : Files.unpack(nativeURLs, unpackDirectory))
+			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
+		nativeDirectory = unpackDirectory;
+	}
+
+	
+	public void load() {
+		if (loaded) return;
 		try {
+			ClassLoader classLoader = new LiblouisutdmlJniClassLoader(jarURLs, nativeDirectory);
 			Class<?> liblouisutdmlClass = classLoader.loadClass("org.liblouis.liblouisutdml");
 			liblouisutdml = liblouisutdmlClass.getMethod("getInstance").invoke(null);
 			setWriteablePath = liblouisutdmlClass.getMethod("setWriteablePath", String.class);
-			translateFile = liblouisutdmlClass.getMethod("translateFile", String.class, String.class,
-					String.class, String.class, String.class, int.class);
+			translateFile = liblouisutdmlClass.getMethod("translateFile", String.class,
+					String.class, String.class, String.class, String.class, int.class);
 		} catch (Exception e) {
-			throw new RuntimeException("Could not create Liblouisutdml instance", e);
+			throw new RuntimeException("Liblouisutdml instance could not be loaded", e);
 		}
+		loaded = true;
+	}
+	
+	public void unload() {
+		if (!loaded) return;
+		liblouisutdml = null;
+		setWriteablePath = null;
+		translateFile = null;
+		System.gc();
+		loaded = false;
 	}
 	
 	public void translateFile(
@@ -38,17 +64,19 @@ public class LiblouisutdmlImpl implements Liblouisutdml {
 			File configPath,
 			File tempDir) {
 
+		if (!loaded) load();
+		
 		String configFileList = configPath.getAbsolutePath() + File.separator +
-				(configFiles != null ? StringUtils.join(configFiles, ",") : "");
+				(configFiles != null ? Strings.join(configFiles, ",") : "");
 		String inputFileName = input.getAbsolutePath();
 		String outputFileName = output.getAbsolutePath();
 
 		Map<String,String> settings = new HashMap<String,String>();
 		if (semanticFiles != null) {
-			settings.put("semanticFiles", StringUtils.join(semanticFiles, ","));
+			settings.put("semanticFiles", Strings.join(semanticFiles, ","));
 		}
 		if (tables != null) {
-			settings.put("literaryTextTable", StringUtils.join(tables, ","));
+			settings.put("literaryTextTable", Strings.join(tables, ","));
 		}
 		if (otherSettings != null) {
 			settings.putAll(otherSettings);
@@ -62,11 +90,11 @@ public class LiblouisutdmlImpl implements Liblouisutdml {
 		System.out.println("	configFiles: " + configFileList);
 		System.out.println("	inputFile: " + inputFileName);
 		System.out.println("	outputFile: " + outputFileName);
-		System.out.println("	settings: " + StringUtils.join(settingsList, " "));
+		System.out.println("	settings: " + Strings.join(settingsList, " "));
 
 		try {
 			setWriteablePath.invoke(liblouisutdml, tempDir.getAbsolutePath());
-			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName, null, StringUtils.join(settingsList, "\n"), 0);
+			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName, null, Strings.join(settingsList, "\n"), 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Liblouisutdml error", e);

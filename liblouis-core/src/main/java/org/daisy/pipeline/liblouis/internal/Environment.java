@@ -2,12 +2,15 @@ package org.daisy.pipeline.liblouis.internal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Collection;
 
 public class Environment {
 
 	private Method setLouisTablePath;
 	
-	public Environment(ClassLoader classLoader) {
+	public Environment(Collection<URL> jarURLs) {
+		ClassLoader classLoader = new JarClassLoader(jarURLs);
 		try {
 			Class<?> EnvironmentClass = classLoader.loadClass("org.liblouis.util.Environment");
 			setLouisTablePath = EnvironmentClass.getMethod("setLouisTablePath", String.class);
