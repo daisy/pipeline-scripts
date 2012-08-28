@@ -2,10 +2,15 @@ package org.daisy.pipeline.liblouis.calabash;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +25,7 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
+import org.daisy.pipeline.liblouis.Utilities.OS;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -37,7 +43,6 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final String LOUIS_PREFIX = "louis";
 	private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
 	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
-	// private static final QName louis_page = new QName(LOUIS_PREFIX, LOUIS_NS, "page");
 
 	private static final QName _ini_file = new QName("ini-file");
 	private static final QName _paged = new QName("paged");
@@ -107,9 +112,11 @@ public class TranslateFileProvider implements XProcStepProvider {
 			super.run();
 			
 			try {
-	
-				// Get options
+
 				Map<String,String> settings = new HashMap<String,String>();
+				settings.put("lineEnd", "\\n");
+				
+				// Get options
 				RuntimeValue paged = getOption(_paged);
 				RuntimeValue pageHeight = getOption(_page_height);
 				RuntimeValue lineWidth = getOption(_line_width);
@@ -174,38 +181,54 @@ public class TranslateFileProvider implements XProcStepProvider {
 				//xmlFile.delete();
 				
 				// Read the braille document and wrap it in a new XML document
-				long totalLength = brailleFile.length();
-				long bodyLength = bodyTempFile.exists() ? bodyTempFile.length() : totalLength;
-				long frontLength = totalLength - bodyLength;
-				InputStream brailleStream = new FileInputStream(brailleFile);
-				byte[] buffer;
-	
+				ByteBuffer buffer = ByteBuffer.allocate((int)brailleFile.length());
+				byte[] bytes;
+				int available;
+				
+				InputStream totalStream = new FileInputStream(brailleFile);
+				while((available = totalStream.available()) > 0) {
+					bytes = new byte[available];
+					totalStream.read(bytes);
+					buffer.put(bytes);
+				}
+				totalStream.close();
+				int bodyLength = 0;
+				try {
+					// On Windows, a "\r" is always added although the configuration says "lineEnd \n"
+					InputStream bodyStream = new NormalizeEndOfLineInputStream(new FileInputStream(bodyTempFile));
+					while((available = bodyStream.available()) > 0)
+						bodyLength += bodyStream.skip(available);
+					bodyStream.close();
+				} catch (FileNotFoundException e) {
+				}
+				assert buffer.position() >= bodyLength;
+				buffer.flip();
+
 				TreeWriter treeWriter = new TreeWriter(runtime);
 				treeWriter.startDocument(step.getNode().getBaseURI());
 				treeWriter.addStartElement(louis_output);
 				treeWriter.startContent();
-				if (frontLength > 0) {
+				if (bodyLength > 0) {
 					treeWriter.addStartElement(louis_section);
 					treeWriter.startContent();
-					buffer = new byte[(int)frontLength];
-					brailleStream.read(buffer);
-					treeWriter.addText(new String(buffer, "UTF-8"));
+					bytes = new byte[buffer.remaining() - bodyLength];
+					buffer.get(bytes);
+					treeWriter.addText(new String(bytes, "UTF-8"));
 					treeWriter.addEndElement();
 					treeWriter.addStartElement(louis_section);
 					treeWriter.startContent();
-					buffer = new byte[(int)bodyLength];
-					brailleStream.read(buffer);
-					treeWriter.addText(new String(buffer, "UTF-8"));
+					bytes = new byte[buffer.remaining()];
+					buffer.get(bytes);
+					treeWriter.addText(new String(bytes, "UTF-8"));
 					treeWriter.addEndElement();
 				} else {
-					buffer = new byte[(int)totalLength];
-					brailleStream.read(buffer);
-					treeWriter.addText(new String(buffer, "UTF-8"));
+					bytes = new byte[buffer.remaining()];
+					buffer.get(bytes);
+					treeWriter.addText(new String(bytes, "UTF-8"));
 				}
 				treeWriter.addEndElement();
 				treeWriter.endDocument();
 	
-				brailleStream.close();
 				//brailleFile.delete();
 	
 				result.write(treeWriter.getResult());
