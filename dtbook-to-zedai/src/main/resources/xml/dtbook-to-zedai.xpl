@@ -77,11 +77,10 @@
         <p:with-option name="opt-lang" select="$lang"/>
         <p:with-option name="opt-assert-valid" select="$assert-valid"/>
     </px:dtbook-to-zedai-convert>
-
+    
     <px:dtbook-to-zedai-store name="store">
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="convert"/>
         </p:input>
     </px:dtbook-to-zedai-store>
-
 </p:declare-step>

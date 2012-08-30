@@ -297,6 +297,9 @@
     -->
     <p:documentation>Generate CSS from the visual property attributes in the ZedAI
         document</p:documentation>
+    <cx:message message="generating css">
+        <p:log port="result" href="file:/tmp/out/log-zedai.xml"/>
+    </cx:message>
     <p:xslt name="generate-css">
         <p:with-param name="css-file" select="$css-file"/>
         <p:input port="stylesheet">
@@ -472,7 +475,7 @@
                 </p:when>
                 <p:otherwise>
                     <cx:message
-                        message="WARNING: required xml:lang attribute not found, and no 'opt-lang' option was passed to the converter."/>
+                        message="WARNING: required xml:lang attribute not found, and no 'lang' option was passed to the converter."/>
                     <p:identity/>
                 </p:otherwise>
             </p:choose>
@@ -491,6 +494,7 @@
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>
     </px:validate-with-relax-ng-and-report>
+    
     <cx:message message="Conversion complete."/>
     <p:sink/>
 
