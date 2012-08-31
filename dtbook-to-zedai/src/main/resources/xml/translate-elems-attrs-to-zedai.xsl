@@ -466,11 +466,14 @@
 
         <!-- move @summary into an annotation -->
         <xsl:if test="@summary">
-            <annotation ref="{if (@id) then @id else generate-id()}">
+            <description xml:id="{generate-id(@summary)}">
                 <xsl:value-of select="@summary"/>
-            </annotation>
+            </description>
         </xsl:if>
         <table>
+            <xsl:if test="@summary">
+                <xsl:attribute name="desc" select="generate-id(@summary)"/>
+            </xsl:if>
             <!-- These will be put into CSS by a future XSL step -->
             <xsl:if test="@width">
                 <xsl:attribute name="tmp:width" select="@width"/>
