@@ -6,6 +6,14 @@
 
     <xsl:output indent="yes" method="xml"/>
 
+
+    <xsl:template match="/">
+        <xsl:message>Normalize mixed block/inline content</xsl:message>
+        <xsl:apply-templates/>
+        <xsl:message>--Done</xsl:message>
+    </xsl:template>
+    
+    
     <!-- identity template -->
     <xsl:template match="@*|node()">
         <xsl:copy>
