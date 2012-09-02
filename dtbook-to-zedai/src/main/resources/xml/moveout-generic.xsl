@@ -41,6 +41,7 @@
                         <xsl:otherwise>
                             <xsl:element name="{name($this)}"
                                 namespace="{namespace-uri($this)}">
+                                <xsl:copy-of select="$this/namespace::*"/>
                                 <xsl:apply-templates
                                     select="$this/(if (current() is $first) then @* else @* except @id)"/>
                                 <xsl:apply-templates select="current-group()" mode="moveout"/>
