@@ -4,15 +4,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-deflist.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-deflist.xsl"/>
     
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
         <utfx:name>Move Out DL</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            
+            <utfx:source>
                 <dtbook>
                     <bodymatter>
                         <level1>
@@ -24,12 +25,6 @@
                         </level1>
                     </bodymatter>
                 </dtbook>  
-            </utfx:with-param>
-        </utfx:call-template>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            
-            <utfx:source>
-                <empty/>
             </utfx:source>
             
             <utfx:expected>
@@ -48,16 +43,11 @@
     
     <utfx:test>
         <utfx:name>Definition with DL</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
                 <item>
                     <dd>DD <dl><item><dt>nested dl</dt></item></dl> Rest of DD</dd>
                 </item>
-            </utfx:with-param>
-        </utfx:call-template>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
-                <empty/>
             </utfx:source>
             <utfx:expected>
                 <item>

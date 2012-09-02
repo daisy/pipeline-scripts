@@ -6,21 +6,16 @@
     xmlns:tmp="http://www.daisy.org/pipeline/ns/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-epigraph.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-epigraph.xsl"/>
     
     <utfx:test>
         <utfx:name>Definition with EPIGRAPH</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
                 <dtbook><bodymatter><level1><tmp:item>
                     <dd>DD <epigraph>epigraphs should not be inside definitions</epigraph> Rest of
                         DD</dd>
                 </tmp:item></level1></bodymatter></dtbook>
-            </utfx:with-param>
-        </utfx:call-template>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
-                <empty/>
             </utfx:source>
             <utfx:expected>
                <dtbook><bodymatter><level1> <tmp:item>

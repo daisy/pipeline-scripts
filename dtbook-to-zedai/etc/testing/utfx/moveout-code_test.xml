@@ -3,46 +3,29 @@
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp">
+    >
 
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-code.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-code.xsl"/>
 
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
         <utfx:name>Move Out Block-Level Code</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
-                <dtbook>
-                    <bodymatter>
-                        <level1>
-                            <div>
-                                <a href="http://example.org"> Part A <tmp:code-block id="code">This is some code</tmp:code-block> Part B</a>
-                            </div>
-                        </level1>
-                    </bodymatter>
-                </dtbook>  
-            </utfx:with-param>
-        </utfx:call-template>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             
             <utfx:source>
-                <empty/>
+                <book><div xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp">
+                                <a href="http://example.org"> Part A <tmp:code-block id="code">This is some code</tmp:code-block> Part B</a>
+                            </div></book>
             </utfx:source>
              
             <utfx:expected>
-                <dtbook>
-                    <bodymatter>
-                        <level1>
-                            <div>
+                <book><div xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp">
                                 <a href="http://example.org">Part A</a>
                                 <tmp:code-block id="code">This is some code</tmp:code-block>
                                 <a href="http://example.org">Part B</a>
-                            </div>
-                        </level1>
-                    </bodymatter>
-                </dtbook>
+                            </div></book>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

@@ -3,38 +3,31 @@
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
-
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-imggroup.xsl"/>
-
+    
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-imggroup.xsl"/>
+    
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
-        <utfx:name>Move Out Image Groups</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
+        <utfx:name>Move Out Image Groups #0</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
                 <dtbook>
                     <book>
                         <bodymatter>
                             <level1>
                                 <div>
                                     <p>Part A <imggroup id="d1e63">
-                                            <img id="d1e65" src="abc.jpg" alt="abc"/>
-                                            <caption id="d1e67">i am a caption</caption>
-                                        </imggroup> Part B</p>
+                                        <img id="d1e65" src="abc.jpg" alt="abc"/>
+                                        <caption id="d1e67">i am a caption</caption>
+                                    </imggroup> Part B</p>
                                 </div>
                             </level1>
                         </bodymatter>
                     </book>
                 </dtbook>
-            </utfx:with-param>
-        </utfx:call-template>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-
-            <utfx:source>
-                <empty/>
             </utfx:source>
-
             <utfx:expected>
                 <dtbook>
                     <book>
@@ -55,12 +48,51 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-
+    <utfx:test>
+        <utfx:name>Move Out Image Groups #1</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <dtbook>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <div>
+                                    <p>Part A <imggroup id="d1e63">
+                                        <img id="d1e65" src="abc.jpg" alt="abc"/>
+                                        <caption id="d1e67">i am a caption</caption>
+                                    </imggroup> Part B</p>
+                                </div>
+                            </level1>
+                        </bodymatter>
+                    </book>
+                </dtbook>
+            </utfx:source>
+            <utfx:expected>
+                <dtbook>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <div>
+                                    <p>Part A</p>
+                                    <imggroup id="d1e63">
+                                        <img id="d1e65" src="abc.jpg" alt="abc"/>
+                                        <caption id="d1e67">i am a caption</caption>
+                                    </imggroup>
+                                    <p>Part B</p>
+                                </div>
+                            </level1>
+                        </bodymatter>
+                    </book>
+                </dtbook>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
     <utfx:test>
         <utfx:name>Move Out Image Groups #2</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
-                <dtbook>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <book>
                     <bodymatter>
                         <level1>
                             <p>
@@ -70,16 +102,10 @@
                             </p>
                         </level1>
                     </bodymatter>
-                </dtbook>
-            </utfx:with-param>
-        </utfx:call-template>
-
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source>
-                <empty/>
+                </book>
             </utfx:source>
             <utfx:expected>
-                <dtbook>
+                <book>
                     <bodymatter>
                         <level1>
                             <p><span>before</span></p>
@@ -87,8 +113,60 @@
                             <p><span>after</span></p>
                         </level1>
                     </bodymatter>
-                </dtbook>
+                </book>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    
+    <utfx:test>
+        <utfx:name>Move Out Image Groups #3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <book><level1><p id="p">
+                    <imggroup/>
+                    <span>before</span>
+                    <span>after</span>
+                </p></level1></book>
+            </utfx:source>
+            <utfx:expected>
+                <book><level1><imggroup/>
+                    <p id="p">
+                        <span>before</span>
+                        <span>after</span>
+                    </p></level1></book>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Move Out Image Groups #4</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <book><level1><p id="p">
+                    before
+                    <imggroup/>
+                </p></level1></book>
+            </utfx:source>
+            <utfx:expected>
+                <book><level1><p id="p">before</p>
+                    <imggroup/></level1></book>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Move Out Image Groups #5</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <book><level1><p id="p">
+                    before
+                    <imggroup/>
+                    after
+                </p></level1></book>
+            </utfx:source>
+            <utfx:expected>
+                <book><level1><p id="p">before</p>
+                    <imggroup/>
+                    <p>after</p></level1></book>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test> 
 </utfx:tests>

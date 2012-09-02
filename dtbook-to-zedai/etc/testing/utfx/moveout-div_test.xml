@@ -5,20 +5,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-div.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-div.xsl"/>
     
 <utfx:test>
     <utfx:name>Definition with DIV</utfx:name>
-    <utfx:call-template name="main">
-        <utfx:with-param name="document">
+    <utfx:assert-equal normalise-internal-whitespace="yes">
+        <utfx:source>
             <item>
                 <dd>DD <div>I am a div</div> Rest of DD</dd>
             </item>
-        </utfx:with-param>
-    </utfx:call-template>    
-    <utfx:assert-equal normalise-internal-whitespace="yes">
-        <utfx:source>
-            <empty/>
         </utfx:source>
         <utfx:expected>
             <item>
