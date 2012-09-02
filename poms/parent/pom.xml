@@ -193,7 +193,7 @@
                   <parameters>
                     <parameter>
                       <name>outputDir</name>
-                      <value>${project.build.directory}/generated-resources</value>
+		      <value>file:/${project.build.directory}/generated-resources</value>
                     </parameter>
                   </parameters>
                   <outputDir>${project.build.directory}/generated-resources</outputDir>
