@@ -297,9 +297,6 @@
     -->
     <p:documentation>Generate CSS from the visual property attributes in the ZedAI
         document</p:documentation>
-    <cx:message message="generating css">
-        <p:log port="result" href="file:/tmp/out/log-zedai.xml"/>
-    </cx:message>
     <p:xslt name="generate-css">
         <p:with-param name="css-file" select="$css-file"/>
         <p:input port="stylesheet">
