@@ -191,6 +191,7 @@
         <list>
             <xsl:call-template name="attrs"/>
 
+            <!--FIXME convert @start to a numeric value when needed -->
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@depth"/>
 
@@ -435,6 +436,11 @@
     <xsl:template match="dtb:blockquote|dtb:q">
         <quote>
             <xsl:call-template name="attrs"/>
+            
+            <!-- if no ID, then give a new ID if needed to anchor the citation -->
+            <xsl:if test="not(@id) and (dtb:cite or dtb:author or dtb:title)">
+                <xsl:attribute name="xml:id" select="generate-id()"/>
+            </xsl:if>
             <xsl:choose>
                 <!-- for internal references, use @ref; otherwise use @xlink:ref -->
                 <xsl:when test="starts-with(@cite, '#')">
@@ -444,8 +450,51 @@
                     <xsl:attribute name="xlink:href" select="@cite"/>
                 </xsl:when>
             </xsl:choose>
-            <xsl:apply-templates/>
+            <xsl:choose>
+                <xsl:when test="self::dtb:blockquote">
+                    <!--group adjacent author and title in a single citation-->
+                    <xsl:for-each-group select="*" group-adjacent="boolean(self::dtb:author|self::dtb:title)">
+                        <xsl:choose>
+                            <xsl:when test="current-grouping-key()">
+                                <citation about="{concat('#',if (../@id) then ../@id else ../generate-id())}">
+                                    <xsl:apply-templates select="current-group()"/>
+                                </citation>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:apply-templates select="current-group()"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each-group>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates/>
+                </xsl:otherwise>
+            </xsl:choose>
         </quote>
+    </xsl:template>
+    <xsl:template match="dtb:blockquote/dtb:title">
+        <span property="title">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+    <xsl:template match="dtb:blockquote/dtb:author">
+            <name property="author">
+                <xsl:call-template name="attrs"/>
+                <xsl:apply-templates/>
+            </name>
+    </xsl:template>
+    <xsl:template match="dtb:q/dtb:title">
+        <span property="title" about="{concat('#',if (../@id) then ../@id else ../generate-id())}">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+    <xsl:template match="dtb:q/dtb:author">
+        <name property="author" about="{concat('#',if (../@id) then ../@id else ../generate-id())}">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </name>
     </xsl:template>
 
     <xsl:template match="dtb:rearmatter">
@@ -751,8 +800,8 @@
         <citation>
             <xsl:call-template name="attrs"/>
 
-            <!-- if no ID, then give a new ID -->
-            <xsl:if test="not(@id)">
+            <!-- if no ID and one is needed to anchor title|author properties, then give a new ID -->
+            <xsl:if test="not(parent::dtb:q or @id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
             
@@ -760,14 +809,22 @@
         </citation>
     </xsl:template>
     <xsl:template match="dtb:cite/dtb:title">
-        <span property="title" about="{if (../@id) then ../@id else ../generate-id()}">
+        <!-- Anchor to the ancestor quote if it exists, else to the parent cite -->
+        <span property="title" about="{concat('#',if (../parent::dtb:q) then 
+                if (../../@id) then ../../@id else ../../generate-id()
+            else if (../@id) then ../@id else ../generate-id())}">
+            <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </span>
     </xsl:template>
     <xsl:template match="dtb:cite/dtb:author">
-        <span property="author" about="{if (../@id) then ../@id else ../generate-id()}">
+        <!-- Anchor to the ancestor quote if it exists, else to the parent cite -->
+        <name property="author" about="{concat('#',if (../parent::dtb:q) then 
+            if (../../@id) then ../../@id else ../../generate-id()
+            else if (../@id) then ../@id else ../generate-id())}">
+            <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
-        </span>
+        </name>
     </xsl:template>
 
 
@@ -982,7 +1039,10 @@
     </xsl:template>
 
     <xsl:template match="dtb:poem">
-        <block role="poem">
+        <block role="poem" xml:id="{if (@id) then @id else generate-id()}">
+            <xsl:call-template name="attrs"/>
+            <!-- if no ID, then give a new ID -->
+            
             <xsl:for-each-group group-adjacent="boolean(self::dtb:line)" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
@@ -999,15 +1059,19 @@
         </block>
     </xsl:template>
     <xsl:template match="dtb:poem/dtb:title">
-        <p property="title">
+        <!--TODO add @about-->
+        <p property="title" about="{concat('#',if (../@id) then ../@id else ../generate-id())}">
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </p>
     </xsl:template>
     <xsl:template match="dtb:poem/dtb:author">
-        <p property="author">
-            <xsl:call-template name="attrs"/>
-            <xsl:apply-templates/>
+        <p>
+            <name property="author"
+                about="{concat('#',if (../@id) then ../@id else ../generate-id())}">
+                <xsl:call-template name="attrs"/>
+                <xsl:apply-templates/>
+            </name>
         </p>
     </xsl:template>
 

@@ -493,6 +493,72 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <author>author</author>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><name property="author">author</name></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <title>title</title>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><span property="title">title</span></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 4</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <title>title</title>
+                    <author>author</author>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><span property="title">title</span><name property="author">author</name></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <q id="quote">text <cite><author>author</author></cite></q>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    text
+                    <citation><name property="author" about="#quote">author</name></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
     
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 1</utfx:name>
@@ -884,8 +950,8 @@
                     <author>Author</author> Text2 </cite>
             </utfx:source>
             <utfx:expected>
-                <citation xml:id="cite1"> Text1 <span property="title" about="cite1">Title</span>
-                    <span property="author" about="cite1">Author</span> Text2 </citation>
+                <citation xml:id="cite1"> Text1 <span property="title" about="#cite1">Title</span>
+                    <name property="author" about="#cite1">Author</name> Text2 </citation>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -1062,7 +1128,7 @@
         <utfx:name>Translate-DTBook2ZedAI: poem 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <poem>
+                <poem id="poem">
                     <title>TITLE</title>
                     <author>AUTHOR</author>
                     <hd>HD</hd>
@@ -1070,9 +1136,9 @@
                 </poem>
             </utfx:source>
             <utfx:expected>
-                <block role="poem">
-                    <p property="title">TITLE</p>
-                    <p property="author">AUTHOR</p>
+                <block role="poem" xml:id="poem">
+                    <p property="title" about="#poem">TITLE</p>
+                    <p><name  property="author" about="#poem">AUTHOR</name></p>
                     <hd>HD</hd>
                     <p><ln>LINE</ln></p>
                 </block>
@@ -1083,7 +1149,7 @@
         <utfx:name>Translate-DTBook2ZedAI: poem 2</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <poem>
+                <poem id="poem">
                     <title>TITLE</title>
                     <author>AUTHOR</author>
                     <hd>HD A</hd>
@@ -1095,9 +1161,9 @@
                 </poem>
             </utfx:source>
             <utfx:expected>
-                <block role="poem">
-                    <p property="title">TITLE</p>
-                    <p property="author">AUTHOR</p>
+                <block role="poem" xml:id="poem">
+                    <p property="title" about="#poem">TITLE</p>
+                    <p><name property="author" about="#poem">AUTHOR</name></p>
                     <hd>HD A</hd>
                     <p>
                         <ln>LINE 1</ln>
