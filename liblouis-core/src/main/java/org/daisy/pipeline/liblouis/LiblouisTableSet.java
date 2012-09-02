@@ -1,11 +1,11 @@
 package org.daisy.pipeline.liblouis;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
 
 import org.daisy.pipeline.liblouis.Utilities.Files;
@@ -38,42 +38,33 @@ public class LiblouisTableSet {
 	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		if (properties.get(IDENTIFIER) == null
 				|| properties.get(IDENTIFIER).toString().isEmpty()) {
-			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty");
-		}
-		
-		if (properties.get(DIRECTORY) == null
-				|| properties.get(DIRECTORY).toString().isEmpty()) {
-			throw new IllegalArgumentException(DIRECTORY + " property must not be empty");
-		}
+			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
 		identifier = properties.get(IDENTIFIER).toString();
 		try {
-			new URL(identifier);
-		} catch (MalformedURLException e1) {
-			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL");
-		}
+			new URL(identifier); }
+		catch (MalformedURLException e1) {
+			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL"); }
+		if (properties.get(DIRECTORY) == null
+				|| properties.get(DIRECTORY).toString().isEmpty()) {
+			throw new IllegalArgumentException(DIRECTORY + " property must not be empty"); }
 		String directory = properties.get(DIRECTORY).toString();
 		path = context.getBundleContext().getDataFile("tables");
-		Bundle bundle = context.getBundleContext().getBundle();
+		final Bundle bundle = context.getBundleContext().getBundle();
 		if (!path.exists()) {
 			path.mkdir();
-			if (bundle.getEntry(directory) == null) {
+			if (bundle.getEntry(directory) == null)
 				throw new IllegalArgumentException("Table directory at location " + directory + " could not be found");
-			}
-			Enumeration<String> tablePaths = bundle.getEntryPaths(directory);
-			if (tablePaths != null) {
-				Collection<URL> tableURLs = new ArrayList<URL>();
-				while (tablePaths.hasMoreElements())
-					tableURLs.add(bundle.getEntry(tablePaths.nextElement()));
-				Files.unpack(tableURLs, path);
-			}
-		}
+			Files.unpack(
+				Iterators.<String,URL>transform(
+					Iterators.<String>forEnumeration(bundle.getEntryPaths(directory)),
+					new Function<String,URL>() {
+						public URL apply(String s) { return bundle.getEntry(s); }}),
+				path); }
 		if (properties.get(MANIFEST) != null) {
 			String manifestPath = properties.get(MANIFEST).toString();
 			manifest = bundle.getEntry(manifestPath);
-			if (manifest == null) {
-				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
-			}
-		}
+			if (manifest == null)
+				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found"); }
 	}
 
 	@Override
@@ -101,8 +92,8 @@ public class LiblouisTableSet {
 			return false;
 		if (manifest == null) {
 			if (that.manifest != null)
-				return false;
-		} else if (!manifest.equals(that.manifest))
+				return false; }
+		else if (!manifest.equals(that.manifest))
 			return false;
 		return true;
 	}

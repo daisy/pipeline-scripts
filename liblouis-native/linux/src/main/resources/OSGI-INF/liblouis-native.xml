@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
+    <!-- liblouis 64-bit -->
+    <scr:component  name="liblouis.so (64-bit)" activate="activate">
+        <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
+        <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
+        <scr:property name="name" type="String" value="liblouis"/>
+        <scr:property name="path" type="String" value="/native/x86_64/liblouis.so.2"/>
+        <scr:property name="os.family" type="String" value="linux"/>
+        <scr:property name="os.arch" type="String" value="x86_64"/>
+    </scr:component>
+    <!-- liblouisutdml 64-bit -->
+    <scr:component  name="liblouisutdml.so (64-bit)" activate="activate">
+        <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
+        <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
+        <scr:property name="name" type="String" value="liblouisutdml"/>
+        <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.so.6,
+                                                       /native/x86_64/liblouis.so.2,
+                                                       /native/x86_64/libxml2.so.2"/>
+        <scr:property name="os.family" type="String" value="linux"/>
+        <scr:property name="os.arch" type="String" value="x86_64"/>
+    </scr:component>
+</components>

@@ -25,17 +25,13 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
 	public String find(Locale locale) {
-		if ("".equals(locale.toString())) {
+		if ("".equals(locale.toString()))
 			return null;
-		}
-		if (cache.containsKey(locale)) {
+		if (cache.containsKey(locale))
 			return cache.get(locale);
-		}
 		for (LiblouisTableSet set : tableSets) {
-			if (!tableMap.containsKey(set)) {
-				tableMap.put(set, readManifest(set));
-			}
-		}
+			if (!tableMap.containsKey(set))
+				tableMap.put(set, readManifest(set)); }
 		if (!"".equals(locale.getVariant())) {
 			for (LiblouisTableSet set : tableSets) {
 				Map<String,String> map = tableMap.get(set);
@@ -43,10 +39,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				if (map.containsKey(key)) {
 					String table = map.get(key);
 					cache.put(locale, table);
-					return table;
-				}
-			}
-		}
+					return table; }}}
 		if (!"".equals(locale.getCountry())) {
 			for (LiblouisTableSet set : tableSets) {
 				Map<String,String> map = tableMap.get(set);
@@ -54,10 +47,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				if (map.containsKey(key)) {
 					String table = map.get(key);
 					cache.put(locale, table);
-					return table;
-				}
-			}
-		}
+					return table; }}}
 		if (!"".equals(locale.getLanguage())) {
 			for (LiblouisTableSet set : tableSets) {
 				Map<String,String> map = tableMap.get(set);
@@ -65,10 +55,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				if (map.containsKey(key)) {
 					String table = map.get(key);
 					cache.put(locale, table);
-					return table;
-				}
-			}
-		}
+					return table; }}}
 		return null;
 	}
 
@@ -100,15 +87,11 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				properties.loadFromXML(reader);
 				for (String key : properties.stringPropertyNames()) {
 					String locale = parseLocale(key).toString();
-					if (!map.containsKey(locale)) {
-						map.put(locale, properties.getProperty(key));
-					}
-				}
-				reader.close();
-			} catch (Exception e) {
-				throw new RuntimeException("Could not read manifest for table set " + tableSet.getIdentifier(), e);
-			}
-		}
+					if (!map.containsKey(locale))
+						map.put(locale, properties.getProperty(key)); }
+				reader.close(); }
+			catch (Exception e) {
+				throw new RuntimeException("Could not read manifest for table set " + tableSet.getIdentifier(), e); }}
 		return map;
 	}
 
@@ -120,15 +103,12 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				String country = parser.nextToken();
 				if (parser.hasMoreTokens()) {
 					String variant = parser.nextToken();
-					return new Locale(lang, country, variant);
-				} else {
-					return new Locale(lang, country);
-				}
-			} else {
-				return new Locale(lang);
-			}
-		} else {
+					return new Locale(lang, country, variant); }
+				else
+					return new Locale(lang, country); }
+			else
+				return new Locale(lang); }
+		else
 			throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed");
-		}
 	}
 }

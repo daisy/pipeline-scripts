@@ -3,11 +3,10 @@ package org.daisy.pipeline.liblouis.internal;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collection;
 
 public class LiblouisJnaClassLoader extends JarClassLoader {
 	
-	public LiblouisJnaClassLoader(Collection<URL> jarURLs, File nativeDirectory) {
+	public LiblouisJnaClassLoader(Iterable<URL> jarURLs, File nativeDirectory) {
 		
 		super(jarURLs);
 		
@@ -17,15 +16,13 @@ public class LiblouisJnaClassLoader extends JarClassLoader {
 					.getMethod("addSearchPath", String.class, String.class);
 			addSearchPath.invoke(null, "louis", nativeDirectory.getAbsolutePath());
 			
-			System.out.println("Loaded liblouis native library");
+			System.out.println("Loaded liblouis native library"); }
 			
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to load liblouis native library", e);
-		}
+		catch (Exception e) {
+			throw new RuntimeException("Failed to load liblouis native library", e); }
 	}
 	
 	public void finalize() {
 		System.out.println("Unloaded liblouis native library");
-		
 	}
 }

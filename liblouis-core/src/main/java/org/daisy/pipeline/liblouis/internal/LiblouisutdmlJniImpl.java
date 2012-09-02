@@ -4,31 +4,37 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
+import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
 
 public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
-	private final Collection<URL> jarURLs;
+	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
 	private boolean loaded = false;
 	
-	public LiblouisutdmlJniImpl(Collection<URL> jarURLs, Collection<URL> nativeURLs, File unpackDirectory) {
+	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
 		this.jarURLs = jarURLs;
-		for (File file : Files.unpack(nativeURLs, unpackDirectory))
+		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
+		if (!nativeURLsIterator.hasNext())
+			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
+		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
+		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {
+			public void apply(String tablePath) { unload(); }});
 	}
-
 	
 	public void load() {
 		if (loaded) return;
@@ -38,10 +44,9 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			liblouisutdml = liblouisutdmlClass.getMethod("getInstance").invoke(null);
 			setWriteablePath = liblouisutdmlClass.getMethod("setWriteablePath", String.class);
 			translateFile = liblouisutdmlClass.getMethod("translateFile", String.class,
-					String.class, String.class, String.class, String.class, int.class);
-		} catch (Exception e) {
-			throw new RuntimeException("Liblouisutdml instance could not be loaded", e);
-		}
+					String.class, String.class, String.class, String.class, int.class); }
+		catch (Exception e) {
+			throw new RuntimeException("Liblouisutdml instance could not be loaded", e); }
 		loaded = true;
 	}
 	
@@ -72,19 +77,15 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		String outputFileName = output.getAbsolutePath();
 
 		Map<String,String> settings = new HashMap<String,String>();
-		if (semanticFiles != null) {
+		if (semanticFiles != null)
 			settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-		}
-		if (tables != null) {
+		if (tables != null)
 			settings.put("literaryTextTable", Strings.join(tables, ","));
-		}
-		if (otherSettings != null) {
+		if (otherSettings != null)
 			settings.putAll(otherSettings);
-		}
 		List<String> settingsList = new ArrayList<String>();
-		for (String key : settings.keySet()) {
+		for (String key : settings.keySet())
 			settingsList.add(key + " " + settings.get(key));
-		}
 
 		System.out.println("translateFile");
 		System.out.println("	configFiles: " + configFileList);
@@ -94,10 +95,10 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
 		try {
 			setWriteablePath.invoke(liblouisutdml, tempDir.getAbsolutePath());
-			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName, null, Strings.join(settingsList, "\n"), 0);
-		} catch (Exception e) {
+			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName,
+					null,Strings.join(settingsList, "\n"), 0); }
+		catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Liblouisutdml error", e);
-		}
+			throw new RuntimeException("Liblouisutdml error", e); }
 	}
 }

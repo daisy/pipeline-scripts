@@ -22,6 +22,9 @@
     <module>liblouis-saxon</module>
     <module>liblouis-tables</module>
     <module>liblouis-calabash</module>
+    <module>liblouis-native/linux</module>
+    <module>liblouis-native/mac</module>
+    <module>liblouis-native/windows</module>
     <module>braille-css</module>
     <module>braille-css-calabash</module>
     <module>pef-calabash</module>
@@ -51,6 +54,21 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>liblouis-calabash</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-native.linux</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-native.mac</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-native.windows</artifactId>
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
@@ -101,6 +119,11 @@
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.compendium</artifactId>
         <version>4.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.guava-osgi</groupId>
+        <artifactId>guava-osgi</artifactId>
+        <version>11.0.1</version>
       </dependency>
       <dependency>
         <groupId>net.java.dev.jna</groupId>

@@ -27,26 +27,19 @@
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.googlecode.guava-osgi</groupId>
+      <artifactId>guava-osgi</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>native/linux/</exclude>
-          <exclude>native/darwin-i386/</exclude>
-          <exclude>native/darwin-x86_64/</exclude>
-          <exclude>native/windows-i386/</exclude>
-          <exclude>native/windows-x86_64/</exclude>
-        </excludes>
       </resource>
       <resource>
-        <targetPath>native</targetPath>
-        <directory>src/main/resources/native/${platform}</directory>
-      </resource>
-      <resource>
-        <targetPath>native</targetPath>
+        <targetPath>jars</targetPath>
         <directory>${basedir}/target/generated-resources</directory>
       </resource>
     </resources>
@@ -94,67 +87,5 @@
       </plugin>
     </plugins>
   </build>
-  
-  <profiles>
-    <profile>
-      <id>linux</id>
-      <properties>
-        <platform>linux</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>linux</family>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>darwin-i386</id>
-      <properties>
-        <platform>darwin-i386</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>mac</family>
-          <arch>i386</arch>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>darwin-x86_64</id>
-      <properties>
-        <platform>darwin-x86_64</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>mac</family>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>windows-i386</id>
-      <properties>
-        <platform>windows-i386</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>windows</family>
-          <arch>i386</arch>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>windows-x86_64</id>
-      <properties>
-        <platform>windows-x86_64</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>windows</family>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-    </profile>
-  </profiles>
 
 </project>

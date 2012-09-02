@@ -5,30 +5,37 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.daisy.pipeline.liblouis.Liblouis;
+import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Utilities.Files;
+import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
 
 public class LiblouisJnaImpl implements Liblouis {
 
-	private final Collection<URL> jarURLs;
+	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
 	private Constructor<?> Translator;
 	private Method translate;
 	private Method getBraille;
 	private boolean loaded = false;
 	
-	public LiblouisJnaImpl(Collection<URL> jarURLs, Collection<URL> nativeURLs, File unpackDirectory) {
+	public LiblouisJnaImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
 		this.jarURLs = jarURLs;
-		for (File file : Files.unpack(nativeURLs, unpackDirectory))
+		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
+		if (!nativeURLsIterator.hasNext())
+			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
+		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
+		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {
+			public void apply(String tablePath) { unload(); }});
 	}
 	
-	public void load() {
+	private void load() {
 		if (loaded) return;
 		try {
 			ClassLoader classLoader = new LiblouisJnaClassLoader(jarURLs, nativeDirectory);
@@ -36,10 +43,9 @@ public class LiblouisJnaImpl implements Liblouis {
 			Class<?> TranslationResultClass = classLoader.loadClass("org.liblouis.TranslationResult");
 			Translator = TranslatorClass.getConstructor(String.class);
 			translate = TranslatorClass.getMethod("translate", String.class);
-			getBraille = TranslationResultClass.getMethod("getBraille");
-		} catch (Exception e) {
-			throw new RuntimeException("Liblouis instance could not be loaded", e);
-		}
+			getBraille = TranslationResultClass.getMethod("getBraille"); }
+		catch (Exception e) {
+			throw new RuntimeException("Liblouis instance could not be loaded", e); }
 		loaded = true;
 	}
 	
@@ -58,12 +64,11 @@ public class LiblouisJnaImpl implements Liblouis {
 		try {
 			tables = "unicode.dis," + tables + ",braille-patterns.cti";
 			text = squeeze(text);
-			return (String)getBraille.invoke(translate.invoke(getTranslator(tables), text));
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e.getCause());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+			return (String)getBraille.invoke(translate.invoke(getTranslator(tables), text)); }
+		catch (InvocationTargetException e) {
+			throw new RuntimeException(e.getCause()); }
+		catch (Exception e) {
+			throw new RuntimeException(e); }
 	}
 	
 	private Map<String,Object> translatorMap = new HashMap<String,Object>();
@@ -73,12 +78,10 @@ public class LiblouisJnaImpl implements Liblouis {
 			Object translator = translatorMap.get(tables);
 			if (translator == null) {
 				translator = Translator.newInstance(tables);
-				translatorMap.put(tables, translator);
-			}
-			return translator;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+				translatorMap.put(tables, translator); }
+			return translator; }
+		catch (Exception e) {
+			throw new RuntimeException(e); }
 	}
 
 	private static String squeeze(final String in) {
