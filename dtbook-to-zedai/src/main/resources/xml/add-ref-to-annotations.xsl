@@ -6,7 +6,7 @@
 
     <xsl:output indent="yes" method="xml"/>
 
-    <xsl:template match="//z:annotation[not(@ref)]">
+    <xsl:template match="z:annotation[not(@ref)]">
         <xsl:message>Annotations without @ref will be attached to their nearest section parent
             element.</xsl:message>
         <xsl:copy>
@@ -16,7 +16,7 @@
     </xsl:template>
     
     <!-- we know that, in our converted documents, frontmatter always contains a section -->
-    <xsl:template match="//z:frontmatter/z:section[1]">
+    <xsl:template match="z:frontmatter/z:section[1]">
         <xsl:param name="firstSection"/>
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>

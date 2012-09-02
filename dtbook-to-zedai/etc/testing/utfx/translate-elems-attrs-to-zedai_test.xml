@@ -7,7 +7,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
-    <utfx:stylesheet src="../../dtbook-to-zedai/translate-elems-attrs-to-zedai.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/translate-elems-attrs-to-zedai.xsl"/>
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: DTBook</utfx:name>
@@ -340,13 +340,13 @@
                 </imggroup>
             </utfx:source>
             <utfx:expected>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0001">
                         <description ref="img0001">test image</description>
                     </object>
                     <caption ref="img0001">CAPTION</caption>
                 </block>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0002">
                         <description ref="img0002">test image</description>
                     </object>
@@ -540,20 +540,22 @@
         </utfx:assert-equal>
     </utfx:test>
 
-    <utfx:test>
+    <!-- FIXME UTFX does not support generared IDs -->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 4</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <table id="table4" summary="the summary"/>
             </utfx:source>
             <utfx:expected>
-                <annotation ref="table4">the summary</annotation>
-                <table xml:id="table4"/>
+                <description xml:id="generated">the summary</description>
+                <table xml:id="table4" desc="generated"/>
             </utfx:expected>
         </utfx:assert-equal>
-    </utfx:test>
+    </utfx:test>-->
     
-    <utfx:test>
+    <!-- FIXME UTFX does not support generared IDs -->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 5</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
@@ -563,8 +565,115 @@
             </utfx:source>
             <utfx:expected>
                 <caption ref="table5">This is a lovely <span>Caption!</span></caption>
-                <annotation ref="table5">the summary</annotation>
-                <table xml:id="table5"/>
+                <description xml:id="generated">the summary</description>
+                <table xml:id="table5" desc="generated"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    
+    <utfx:test>
+        <!--tests that tbody is not created when not necessary-->
+        <utfx:name>Translate-DTBook2ZedAI: Table 6</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table6">
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table6">
+                    <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                    <pagebreak value="1"/>
+                    <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 7</utfx:name>
+        <!--tests that tbody is added when thead is present--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table7">
+                    <thead id="thead">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </thead>
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table7">
+                    <thead xml:id="thead">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 8</utfx:name>
+        <!--tests that tbody is added when tfoot is present--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table8">
+                    <tfoot id="tfoot">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </tfoot>
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table8">
+                    <tbody>
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                    <tfoot xml:id="tfoot">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </tfoot>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 9</utfx:name>
+        <!--tests that tfoot,tbody are reordered as tbody,tfoot--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table9">
+                    <tfoot id="tfoot">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </tfoot>
+                    <tbody id="tbody">
+                        <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                        <pagenum>1</pagenum>
+                        <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                    </tbody>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table9">
+                    <tbody xml:id="tbody">
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                    <tfoot xml:id="tfoot">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </tfoot>
+                </table>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
