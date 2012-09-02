@@ -3,24 +3,43 @@
 
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tmp="http://www.daisy.org/pipeline/ns/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
     <utfx:stylesheet src="../../src/main/resources/xml/moveout-poem.xsl"/>
     
-    <utfx:test>
+    <!--FIXME UTFX does not support namespaces-->
+    <!--<utfx:test>
         <utfx:name>Definition with POEM</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <item>
+                <tmp:item>
                     <dd>DD <poem>A little poem</poem> Rest of DD</dd>
-                </item>
+                </tmp:item>
             </utfx:source>
             <utfx:expected>
-                <item>
+                <tmp:item>
                     <dd>DD</dd>
                     <poem>A little poem</poem>
                     <dd>Rest of DD</dd>
-                </item>
+                </tmp:item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>poem within p</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <div>
+                    <p>p <poem>A little poem</poem> rest of p</p>
+                </div>
+            </utfx:source>
+            <utfx:expected>
+                <div>
+                    <p>p</p>
+                    <poem>A little poem</poem>
+                    <p>rest of p</p>
+                </div>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

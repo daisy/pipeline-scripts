@@ -3,25 +3,44 @@
 
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tmp="http://www.daisy.org/pipeline/ns/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
     <utfx:stylesheet src="../../src/main/resources/xml/moveout-note.xsl"/>
     
-    <utfx:test>
+    <!--FIXME UTFX does not support namespaces-->
+    <!--<utfx:test>
         <utfx:name>Definition with NOTE</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <item>
+                <tmp:item>
                     <dd>DD <note>notes <span>spans in notes</span></note> Rest of DD <span>spans in
                         definition</span></dd>
-                </item>
+                </tmp:item>
             </utfx:source>
             <utfx:expected>
-                <item>
+                <tmp:item>
                     <dd>DD </dd>
                     <note>notes <span>spans in notes</span></note>
                     <dd>Rest of DD <span>spans in definition</span></dd>
-                </item>
+                </tmp:item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>note within p</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <div>
+                    <p>p <note>notes <span>spans in notes</span></note> rest of p</p>
+                </div>
+            </utfx:source>
+            <utfx:expected>
+                <div>
+                    <p>p</p>
+                    <note>notes <span>spans in notes</span></note>
+                    <p>rest of p</p>
+                </div>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>    

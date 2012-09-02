@@ -3,11 +3,13 @@
 
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tmp="http://www.daisy.org/pipeline/ns/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
     <utfx:stylesheet src="../../src/main/resources/xml/moveout-linegroup.xsl"/>
     
-    <utfx:test>
+    <!--FIXME UTFX does not support namespaces-->
+    <!--<utfx:test>
         <utfx:name>Definition with LINEGROUP</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
@@ -21,6 +23,23 @@
                     <linegroup><line>L1</line><line>L2</line></linegroup>
                     <dd>Rest of DD</dd>
                 </item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>linegroup within p</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <div>
+                    <p>p <linegroup><line>L1</line><line>L2</line></linegroup> rest of p</p>
+                </div>
+            </utfx:source>
+            <utfx:expected>
+                <div>
+                    <p>p</p>
+                    <linegroup><line>L1</line><line>L2</line></linegroup>
+                    <p>rest of p</p>
+                </div>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

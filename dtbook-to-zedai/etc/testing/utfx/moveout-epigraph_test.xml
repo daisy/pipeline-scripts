@@ -8,22 +8,42 @@
     
     <utfx:stylesheet src="../../src/main/resources/xml/moveout-epigraph.xsl"/>
     
-    <utfx:test>
+    <!--FIXME  UTFX does not support namespaces-->
+    <!--<utfx:test>
         <utfx:name>Definition with EPIGRAPH</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <dtbook><bodymatter><level1><tmp:item>
+                <tmp:item>
                     <dd>DD <epigraph>epigraphs should not be inside definitions</epigraph> Rest of
                         DD</dd>
-                </tmp:item></level1></bodymatter></dtbook>
+                </tmp:item>
             </utfx:source>
             <utfx:expected>
-               <dtbook><bodymatter><level1> <tmp:item>
+               <tmp:item>
                     <dd>DD </dd>
                     <epigraph>epigraphs should not be inside definitions</epigraph>
                     <dd>Rest of DD</dd>
-                </tmp:item></level1></bodymatter></dtbook>
+                </tmp:item>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>epigraph within p</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <div>
+                    <p>p <epigraph>epigraphs should not be inside paragraphs</epigraph> rest of
+                        p</p>
+                </div>
+            </utfx:source>
+            <utfx:expected>
+               <div>
+                    <p>p </p>
+                    <epigraph>epigraphs should not be inside paragraphs</epigraph>
+                    <p>rest of p</p>
+                </div>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    
 </utfx:tests>
