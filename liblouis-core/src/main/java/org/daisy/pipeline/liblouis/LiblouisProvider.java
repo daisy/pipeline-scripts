@@ -3,7 +3,6 @@ package org.daisy.pipeline.liblouis;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -182,9 +181,8 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 
 	private String getLouisTablePath() {
 		Collection<String> paths = new ArrayList<String>();
-		for (LiblouisTableSet tableSet : tableSets.values()) {
+		for (LiblouisTableSet tableSet : tableSets.values())
 			paths.add(tableSet.getPath().getAbsolutePath());
-		}
 		return Strings.join(paths.iterator(), ",");
 	}
 }

@@ -7,7 +7,7 @@
         <scr:property name="name" type="String" value="liblouis"/>
         <scr:property name="path" type="String" value="/native/i386/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="i386"/>
+        <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- liblouisutdml 32-bit -->
     <scr:component  name="liblouisutdml.dll (32-bit)" activate="activate">
@@ -17,18 +17,18 @@
         <scr:property name="path" type="String" value="/native/i386/liblouisutdml.dll,
                                                        /native/i386/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="i386"/>
+        <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- file2brl 32-bit -->
     <scr:component  name="file2brl.exe (32-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="liblouisutdml"/>
+        <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/i386/file2brl.exe,
                                                        /native/i386/liblouisutdml.dll,
                                                        /native/i386/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="i386"/>
+        <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- liblouis 64-bit -->
     <scr:component  name="liblouis.dll (64-bit)" activate="activate">

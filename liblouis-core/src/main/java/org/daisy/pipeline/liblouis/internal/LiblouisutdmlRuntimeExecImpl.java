@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
@@ -23,11 +24,13 @@ public class LiblouisutdmlRuntimeExecImpl implements Liblouisutdml {
 	
 	public LiblouisutdmlRuntimeExecImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
-		URL file2brlURL = nativeURLsIterator.next();
-		if (file2brlURL == null)
-			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
-		file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator + Files.fileName(file2brlURL));
-		Files.unpack(file2brlURL, file2brl);
+		try {
+			URL file2brlURL = nativeURLsIterator.next();
+			file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator + Files.fileName(file2brlURL));
+			if (!unpackDirectory.exists()) unpackDirectory.mkdirs();
+			Files.unpack(file2brlURL, file2brl); }
+		catch (NoSuchElementException e) {
+			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory)) {
 			if (!file.getName().matches(".*\\.(dll|exe)$")) Files.chmod775(file); }
 		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {

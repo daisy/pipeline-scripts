@@ -7,7 +7,7 @@
         <scr:property name="name" type="String" value="liblouis"/>
         <scr:property name="path" type="String" value="/native/x86_64/liblouis.so.2"/>
         <scr:property name="os.family" type="String" value="linux"/>
-        <scr:property name="os.arch" type="String" value="x86_64"/>
+        <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
     </scr:component>
     <!-- liblouisutdml 64-bit -->
     <scr:component  name="liblouisutdml.so (64-bit)" activate="activate">
@@ -18,6 +18,6 @@
                                                        /native/x86_64/liblouis.so.2,
                                                        /native/x86_64/libxml2.so.2"/>
         <scr:property name="os.family" type="String" value="linux"/>
-        <scr:property name="os.arch" type="String" value="x86_64"/>
+        <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
     </scr:component>
 </components>
