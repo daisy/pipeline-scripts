@@ -114,6 +114,7 @@
     <!-- Targeted Java Version -->
     <java.version>1.6</java.version>
     <saxon.version>9.4</saxon.version>
+    
   </properties>
 
   <build>
@@ -193,7 +194,7 @@
                   <parameters>
                     <parameter>
                       <name>outputDir</name>
-		      <value>${project.build.directory}/generated-resources</value>
+		      <value>${project.baseUri}/target/generated-resources</value>
                     </parameter>
                   </parameters>
                   <outputDir>${project.build.directory}/generated-resources</outputDir>
