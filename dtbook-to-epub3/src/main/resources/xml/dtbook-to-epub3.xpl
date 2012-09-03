@@ -108,9 +108,8 @@
             'image/gif','image/jpeg','image/png','image/svg+xml',
             'application/pls+xml',
             'audio/mpeg','audio/mp4',
-            'text/css','text/javascript'))]">
-            <p:log port="result"/>
-        </p:delete>
+            'text/css','text/javascript'))]"/>
+        
 
         <px:zedai-to-epub3-convert name="convert.zedai-to-epub3">
             <p:input port="in-memory.in">
