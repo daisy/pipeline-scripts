@@ -168,9 +168,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="a"/>
+                <list enum="a" start="b"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="lower-alpha"/>
+                <list rend:prefix="lower-alpha" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -179,9 +181,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="A"/>
+                <list enum="A" start="B"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="upper-alpha"/>
+                <list rend:prefix="upper-alpha" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -190,9 +194,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="i"/>
+                <list enum="i" start="ii"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="lower-roman"/>
+                <list rend:prefix="lower-roman" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -201,9 +207,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="I"/>
+                <list enum="I" start="II"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="upper-roman"/>
+                <list rend:prefix="upper-roman" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

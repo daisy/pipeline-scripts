@@ -6,16 +6,19 @@
     xmlns:its="http://www.w3.org/2005/11/its" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:d="http://www.daisy.org/ns/z3998/authoring/features/description/"
-    xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="xs dtb">
+    xmlns:f="http://www.daisy.org/ns/pipeline/internal-functions"
+    xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="#all">
 
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
             regarding content model normalization has already been done.</desc>
     </doc>
 
+    
     <xsl:param name="css-filename"/>
 
     <xsl:output indent="yes" method="xml"/>
+    
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
@@ -191,9 +194,26 @@
         <list>
             <xsl:call-template name="attrs"/>
 
-            <!--FIXME convert @start to a numeric value when needed -->
-            <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@depth"/>
+            
+            <!-- convert @start to a numeric value when needed -->
+            <xsl:choose>
+                <xsl:when test="@start and boolean(number(@start)+1)">
+                    <xsl:message select="concat('numeric ',@start)"/>
+                    <xsl:copy-of select="@start"/>
+                </xsl:when>
+                <xsl:when test="@start and @enum=('i','I')">
+                    <xsl:message select="concat('roman ',@start)"/>
+                    <xsl:attribute name="start" select="f:roman-to-decimal(@start)"/>
+                </xsl:when>
+                <xsl:when test="@start and @enum=('a','A')">
+                    <xsl:message select="concat('alpha ',@start)"/>
+                    <xsl:attribute name="start" select="f:alpha-to-decimal(@start)"/>
+                </xsl:when>
+                <xsl:when test="@start">
+                    <xsl:message>Unparsable start attribute '<xsl:value-of select="@start"/>'</xsl:message>
+                </xsl:when>
+            </xsl:choose>
 
             <xsl:if test="@enum = '1'">
                 <xsl:attribute name="rend:prefix">decimal</xsl:attribute>
@@ -1127,5 +1147,22 @@
         </span>
     </xsl:template>
     <xsl:template match="tmp:code-phrase/dtb:br"/>
+    
+    <!--TODO move to external common utils implementation if/when UTFX support catalogs-->  
+    <xsl:function name="f:roman-to-decimal" as="xs:integer">
+        <xsl:param name="roman" as="xs:string"/>
+        <!-- TODO: throw error for strings containing characters other than MDCLXVI (case insensitive), the seven characters still in use. -->
+        <xsl:variable name="hindu-sequence"
+            select="for $char in string-to-codepoints($roman) return
+            number(replace(replace(replace(replace(replace(replace(replace(upper-case(codepoints-to-string($char)),'I','1'),'V','5'),'X','10'),'L','50'),'C','100'),'D','500'),'M','1000'))"/>
+        <xsl:variable name="hindu-sequence-signed"
+            select="for $i in 1 to count($hindu-sequence) return if (subsequence($hindu-sequence,$i+1) &gt; $hindu-sequence[$i]) then -$hindu-sequence[$i] else $hindu-sequence[$i]"/>
+        <xsl:value-of select="sum($hindu-sequence-signed)"/>
+    </xsl:function>
+    <xsl:function name="f:alpha-to-decimal" as="xs:integer">
+        <xsl:param name="alpha" as="xs:string"/>
+        <xsl:message select="$alpha"/>
+        <xsl:sequence select="string-to-codepoints(lower-case($alpha))-96"/>
+    </xsl:function>
     
 </xsl:stylesheet>
