@@ -5,7 +5,7 @@
     xmlns:tmp="http://pipeline.daisy.org/ns/pipeline/tmp"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/rename-annotation.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/rename-annotation.xsl"/>
     
     <utfx:test>
         <utfx:name>Rename Block-Level Annotation</utfx:name>

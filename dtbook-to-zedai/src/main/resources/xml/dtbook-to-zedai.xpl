@@ -35,6 +35,12 @@
             <p px:role="desc">Filename for the generated ZedAI file</p>
         </p:documentation>
     </p:option>
+    <p:option name="assert-valid" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Assert validity</h2>
+            <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
+        </p:documentation>
+    </p:option>
     <p:option name="mods-filename" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">MODS filename</h2>
@@ -69,12 +75,12 @@
         <p:with-option name="opt-mods-filename" select="$mods-filename"/>
         <p:with-option name="opt-css-filename" select="$css-filename"/>
         <p:with-option name="opt-lang" select="$lang"/>
+        <p:with-option name="opt-assert-valid" select="$assert-valid"/>
     </px:dtbook-to-zedai-convert>
-
+    
     <px:dtbook-to-zedai-store name="store">
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="convert"/>
         </p:input>
     </px:dtbook-to-zedai-store>
-
 </p:declare-step>

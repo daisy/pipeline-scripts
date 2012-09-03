@@ -125,10 +125,10 @@
             <p:output port="content" primary="true" sequence="true"/>
 
             <p:iteration-source select="/*/*"/>
-            <p:variable name="original-uri" select="p:resolve-uri(/*/@href,/*/@xml:base)"/>
+            <p:variable name="original-uri" select="resolve-uri(/*/@href,/*/@xml:base)"/>
             <p:variable name="result-uri"
                 select="concat($content-dir,substring(
-                        p:resolve-uri(
+                        resolve-uri(
                             if (matches(/*/@href,'\.[^\./]*$'))
                                 then
                                     replace(/*/@href,'(.*)\.[^\.]*$','$1.xhtml')

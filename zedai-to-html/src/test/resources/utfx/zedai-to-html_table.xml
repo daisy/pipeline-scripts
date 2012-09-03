@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
+    xmlns:z="http://www.daisy.org/ns/z3998/authoring/">
+    
+    <utfx:stylesheet src="../../main/resources/xml/xslt/zedai-to-html.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Table :: Table</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                    <z:table/>
+            </utfx:source>
+            <utfx:expected>
+                    <table/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Cell attributes</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                    <z:th colspan="1" rowspan="1" headers="id" scope="row"/>
+                    <z:td colspan="1" rowspan="1" headers="id"/>
+                    <z:td scope="row"/>
+            </utfx:source>
+            <utfx:expected>
+                <th colspan="1" rowspan="1" headers="id" scope="row"/>
+                <td colspan="1" rowspan="1" headers="id"/>
+                <th scope="row"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <!--TODO
+        td[@scope]
+        @rowspan, @colspan, @scope, @headers
+    -->
+    
+    <utfx:test>
+        <utfx:name>Table :: Table with rows</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr><z:td>R1</z:td></z:tr>
+                    <z:tr><z:td>R2</z:td></z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr><td>R1</td></tr>
+                    <tr><td>R2</td></tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Colgroup with @span</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:colgroup span="1"/>
+                    <z:tr><z:td>R1</z:td></z:tr>
+                    <z:tr><z:td>R2</z:td></z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <colgroup span="1"/>
+                    <tr><td>R1</td></tr>
+                    <tr><td>R2</td></tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Colgroup with col</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:colgroup>
+                        <z:col span="1"/>
+                    </z:colgroup>
+                    <z:tr><z:td>R1</z:td></z:tr>
+                    <z:tr><z:td>R2</z:td></z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <colgroup>
+                        <col span="1"/>
+                    </colgroup>
+                    <tr><td>R1</td></tr>
+                    <tr><td>R2</td></tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with body</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr><z:td>R1</z:td></z:tr>
+                        <z:tr><z:td>R2</z:td></z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr><td>R1</td></tr>
+                        <tr><td>R2</td></tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with header, body, footer</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:thead>
+                        <z:tr><z:th>H</z:th></z:tr>
+                    </z:thead>
+                    <z:tbody>
+                        <z:tr><z:td>R</z:td></z:tr>
+                    </z:tbody>
+                    <z:tfoot>
+                        <z:tr><z:td>F</z:td></z:tr>
+                    </z:tfoot>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <thead>
+                        <tr><th>H</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>R</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><td>F</td></tr>
+                    </tfoot>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <!--<utfx:test>
+        <utfx:name>Table :: In a figure block</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="table">heading</z:hd>
+                    <z:table xml:id="table"/>
+                    <z:caption ref="table">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <strong>heading</strong>
+                        <p>caption</p>
+                    </figcaption>
+                    <table></table>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>Table :: Table with caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table xml:id="table"/>
+                <z:caption ref="table">caption</z:caption>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption>caption</caption>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with heading</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:hd ref="table">heading</z:hd>
+                <z:table xml:id="table"/>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption><p epub:type="bridgehead">heading</p></caption>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with heading and caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:hd ref="table">heading</z:hd>
+                <z:caption ref="table">caption</z:caption>
+                <z:table xml:id="table"/>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption>
+                        <p epub:type="bridgehead">heading</p>
+                        <p>caption</p>
+                    </caption>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with heading and complex caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:hd ref="table">heading</z:hd>
+                <z:caption ref="table">
+                    <z:p>caption par1</z:p>
+                    <z:p>caption par2</z:p>
+                </z:caption>
+                <z:table xml:id="table"/>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption>
+                        <p epub:type="bridgehead">heading</p>
+                        <p>caption par1</p>
+                        <p>caption par2</p>
+                    </caption>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <!--FIXME: cannot be tested until UTFX can ignore @id-->
+    <utfx:test>
+        <utfx:name>Table :: Table with description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:description xml:id="desc">description</z:description>
+                <z:table xml:id="table" desc="desc"/>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption>
+                        <details>
+                            <summary>Description</summary>
+                            <p id="desc">description</p>
+                        </details>
+                    </caption>                    
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Table with caption and description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:description xml:id="desc">description</z:description>
+                <z:caption ref="table">caption</z:caption>
+                <z:table xml:id="table" desc="desc"/>
+            </utfx:source>
+            <utfx:expected>
+                <table id="table">
+                    <caption>
+                        caption 
+                        <details>
+                            <summary>Description</summary>
+                            <p id="desc">description</p>
+                        </details>
+                    </caption>                    
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break among rows - 1</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr>
+                        <z:th>H1</z:th>
+                        <z:th>H2</z:th>
+                    </z:tr>
+                    <z:pagebreak value="42"/>
+                    <z:tr>
+                        <z:td>V1</z:td>
+                        <z:td>V2</z:td>
+                    </z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr>
+                        <th>H1</th>
+                        <th>H2</th>
+                    </tr>
+                    <tr>
+                        <td><span epub:type="pagebreak" title="42"/>V1</td>
+                        <td>V2</td>
+                    </tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break among rows - 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr>
+                        <z:th>H1</z:th>
+                        <z:th>H2</z:th>
+                    </z:tr>
+                    <z:pagebreak value="42"/>
+                    <z:tr>
+                        <z:th>V1</z:th>
+                        <z:th>V2</z:th>
+                    </z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr>
+                        <th>H1</th>
+                        <th>H2</th>
+                    </tr>
+                    <tr>
+                        <th><span epub:type="pagebreak" title="42"/>V1</th>
+                        <th>V2</th>
+                    </tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break among cells - 1</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                    <z:tr>
+                        <z:th>H1</z:th>
+                        <z:pagebreak value="42"/>
+                        <z:th>H2</z:th>
+                    </z:tr>
+            </utfx:source>
+            <utfx:expected>
+                <tr>
+                    <th>H1</th>
+                    <th><span epub:type="pagebreak" title="42"/>H2</th>
+                </tr>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break among cells - 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                    <z:tr>
+                        <z:td>V1</z:td>
+                        <z:pagebreak value="42"/>
+                        <z:td>V2</z:td>
+                    </z:tr>
+            </utfx:source>
+            <utfx:expected>
+                <tr>
+                    <td>V1</td>
+                    <td><span epub:type="pagebreak" title="42"/>V2</td>
+                </tr>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break in the last cell of the row</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr>
+                        <z:th>H1</z:th>
+                        <z:th>H2</z:th>
+                        <z:pagebreak value="42"/>
+                    </z:tr>
+                    <z:tr>
+                        <z:td>V1</z:td>
+                        <z:td>V2</z:td>
+                    </z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr>
+                        <th>H1</th>
+                        <th>H2</th>
+                    </tr>
+                    <tr>
+                        <td><span epub:type="pagebreak" title="42"/>V1</td>
+                        <td>V2</td>
+                    </tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break after the last row</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr>
+                        <z:td>X</z:td>
+                        <z:td>X</z:td>
+                    </z:tr>
+                    <z:pagebreak value="42"/>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break after the last cell</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tr>
+                        <z:td>X</z:td>
+                        <z:td>X</z:td>
+                        <z:pagebreak value="42"/>
+                    </z:tr>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tr>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of the header's rows</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:thead>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:td>X</z:td>
+                        </z:tr>
+                        <z:pagebreak value="42"/>
+                    </z:thead>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>X</td>
+                            <td>X</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of the header's cells</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:thead>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:td>X</z:td>
+                            <z:pagebreak value="42"/>
+                        </z:tr>
+                    </z:thead>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>X</td>
+                            <td>X</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's rows with following body</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                        <z:pagebreak value="42"/>
+                    </z:tbody>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's cells with following body</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:pagebreak value="42"/>
+                        </z:tr>
+                    </z:tbody>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's rows with following footer</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                        <z:pagebreak value="42"/>
+                    </z:tbody>
+                    <z:tfoot>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tfoot>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's cells with following footer</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:pagebreak value="42"/>
+                        </z:tr>
+                    </z:tbody>
+                    <z:tfoot>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tfoot>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><span epub:type="pagebreak" title="42"/>X</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's rows</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                        <z:pagebreak value="42"/>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a body's cells</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:pagebreak value="42"/>
+                        </z:tr>
+                    </z:tbody>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a footer's rows</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                    <z:tfoot>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                        <z:pagebreak value="42"/>
+                    </z:tfoot>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Table :: Page break at the end of a footer's cells</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:table>
+                    <z:tbody>
+                        <z:tr>
+                            <z:td>X</z:td>
+                        </z:tr>
+                    </z:tbody>
+                    <z:tfoot>
+                        <z:tr>
+                            <z:td>X</z:td>
+                            <z:pagebreak value="42"/>
+                        </z:tr>
+                    </z:tfoot>
+                </z:table>
+            </utfx:source>
+            <utfx:expected>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>X</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div epub:type="pagebreak" title="42"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
+
+</utfx:tests>

@@ -7,7 +7,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp">
 
-    <utfx:stylesheet src="../../dtbook-to-zedai/translate-elems-attrs-to-zedai.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/translate-elems-attrs-to-zedai.xsl"/>
 
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: DTBook</utfx:name>
@@ -80,6 +80,24 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    <!--FIXME UTFX does not support generated IDs-->
+    <!--<utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Doctitle in frontmatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <frontmatter>
+                    <doctitle/>
+                </frontmatter>
+            </utfx:source>
+            <utfx:expected>
+                <frontmatter>
+                    <section>
+                        <h role="title"/>
+                    </section>
+                </frontmatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
 
     
     <utfx:test>
@@ -168,9 +186,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="a"/>
+                <list enum="a" start="b"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="lower-alpha"/>
+                <list rend:prefix="lower-alpha" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -179,9 +199,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="A"/>
+                <list enum="A" start="B"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="upper-alpha"/>
+                <list rend:prefix="upper-alpha" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -190,9 +212,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="i"/>
+                <list enum="i" start="ii"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="lower-roman"/>
+                <list rend:prefix="lower-roman" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -201,9 +225,11 @@
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <list enum="I"/>
+                <list enum="I" start="II"/>
             </utfx:source>
             <utfx:expected>
                 <list rend:prefix="upper-roman"/>
+                <list rend:prefix="upper-roman" start="2"/>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -340,13 +366,13 @@
                 </imggroup>
             </utfx:source>
             <utfx:expected>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0001">
                         <description ref="img0001">test image</description>
                     </object>
                     <caption ref="img0001">CAPTION</caption>
                 </block>
-                <block>
+                <block role="figure">
                     <object src="image.png" xml:id="img0002">
                         <description ref="img0002">test image</description>
                     </object>
@@ -457,29 +483,69 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    <utfx:test>
+    <!--FIXME UTFX does not support XSLT keys-->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Noteref</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <noteref idref="#abc123">32</noteref>
+                <note id="note"/>
+                <noteref idref="#note">32</noteref>
             </utfx:source>
             <utfx:expected>
-                <noteref ref="abc123">32</noteref>
+                <note xml:id="note"/>
+                <noteref ref="note">32</noteref>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Noteref Invalid</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <noteref idref="#note">32</noteref>
+            </utfx:source>
+            <utfx:expected>
+                <!--FIXME Noteref '32' to missing ID '#note'-->
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    <utfx:test>
+    <!--FIXME UTFX does not support XSLT keys-->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Annoref</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <annoref idref="#abc123">33</annoref>
+                <tmp:annotation-block id="anno"/>
+                <annoref idref="#anno">33</annoref>
             </utfx:source>
             <utfx:expected>
-                <annoref ref="abc123">33</annoref>
+                <annotation xml:id="anno"/>
+                <annoref ref="anno">33</annoref>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Annoref Invalid</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <annoref idref="#anno">33</annoref>
+            </utfx:source>
+            <utfx:expected>
+                <!--FIXME Annoref '33' to missing ID '#anno'-->
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
 
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Autho </utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <author id="author">name</author>
+            </utfx:source>
+            <utfx:expected>
+                <citation xml:id="author"><name property="author" about="author">name</name></citation>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Quotes </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
@@ -490,6 +556,72 @@
             <utfx:expected>
                 <quote ref="the-ref"/>
                 <quote xlink:href="http://example.org/page#ref"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <author>author</author>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><name property="author">author</name></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <title>title</title>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><span property="title">title</span></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 4</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <blockquote id="quote">
+                    <p>text</p> 
+                    <title>title</title>
+                    <author>author</author>
+                </blockquote>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    <p>text</p> 
+                    <citation about="#quote"><span property="title">title</span><name property="author">author</name></citation>
+                </quote>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Quotes 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <q id="quote">text <cite><author>author</author></cite></q>
+            </utfx:source>
+            <utfx:expected>
+                <quote xml:id="quote">
+                    text
+                    <citation><name property="author" about="#quote">author</name></citation>
+                </quote>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -540,20 +672,22 @@
         </utfx:assert-equal>
     </utfx:test>
 
-    <utfx:test>
+    <!-- FIXME UTFX does not support generared IDs -->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 4</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
                 <table id="table4" summary="the summary"/>
             </utfx:source>
             <utfx:expected>
-                <annotation ref="table4">the summary</annotation>
-                <table xml:id="table4"/>
+                <description xml:id="generated">the summary</description>
+                <table xml:id="table4" desc="generated"/>
             </utfx:expected>
         </utfx:assert-equal>
-    </utfx:test>
+    </utfx:test>-->
     
-    <utfx:test>
+    <!-- FIXME UTFX does not support generared IDs -->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Table 5</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
@@ -563,8 +697,115 @@
             </utfx:source>
             <utfx:expected>
                 <caption ref="table5">This is a lovely <span>Caption!</span></caption>
-                <annotation ref="table5">the summary</annotation>
-                <table xml:id="table5"/>
+                <description xml:id="generated">the summary</description>
+                <table xml:id="table5" desc="generated"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    
+    <utfx:test>
+        <!--tests that tbody is not created when not necessary-->
+        <utfx:name>Translate-DTBook2ZedAI: Table 6</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table6">
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table6">
+                    <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                    <pagebreak value="1"/>
+                    <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 7</utfx:name>
+        <!--tests that tbody is added when thead is present--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table7">
+                    <thead id="thead">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </thead>
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table7">
+                    <thead xml:id="thead">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 8</utfx:name>
+        <!--tests that tbody is added when tfoot is present--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table8">
+                    <tfoot id="tfoot">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </tfoot>
+                    <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                    <pagenum>1</pagenum>
+                    <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table8">
+                    <tbody>
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                    <tfoot xml:id="tfoot">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </tfoot>
+                </table>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Table 9</utfx:name>
+        <!--tests that tfoot,tbody are reordered as tbody,tfoot--> 
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <table id="table9">
+                    <tfoot id="tfoot">
+                        <tr id="tr0"><th id="th1">Col 1</th><th id="th2">Col 2</th></tr>
+                    </tfoot>
+                    <tbody id="tbody">
+                        <tr id="tr1"><td id="td11">-</td><td id="td12">-</td></tr>
+                        <pagenum>1</pagenum>
+                        <tr id="tr2"><td id="td21">-</td><td id="td22">-</td></tr>
+                    </tbody>
+                </table>
+            </utfx:source>
+            <utfx:expected>
+                <table xml:id="table9">
+                    <tbody xml:id="tbody">
+                        <tr xml:id="tr1"><td xml:id="td11">-</td><td xml:id="td12">-</td></tr>
+                        <pagebreak value="1"/>
+                        <tr xml:id="tr2"><td xml:id="td21">-</td><td xml:id="td22">-</td></tr>
+                    </tbody>
+                    <tfoot xml:id="tfoot">
+                        <tr xml:id="tr0"><th xml:id="th1">Col 1</th><th xml:id="th2">Col 2</th></tr>
+                    </tfoot>
+                </table>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -775,8 +1016,8 @@
                     <author>Author</author> Text2 </cite>
             </utfx:source>
             <utfx:expected>
-                <citation xml:id="cite1"> Text1 <span property="title" about="cite1">Title</span>
-                    <span property="author" about="cite1">Author</span> Text2 </citation>
+                <citation xml:id="cite1"> Text1 <span property="title" about="#cite1">Title</span>
+                    <name property="author" about="#cite1">Author</name> Text2 </citation>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -953,7 +1194,7 @@
         <utfx:name>Translate-DTBook2ZedAI: poem 1</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <poem>
+                <poem id="poem">
                     <title>TITLE</title>
                     <author>AUTHOR</author>
                     <hd>HD</hd>
@@ -961,9 +1202,9 @@
                 </poem>
             </utfx:source>
             <utfx:expected>
-                <block role="poem">
-                    <p property="title">TITLE</p>
-                    <p property="author">AUTHOR</p>
+                <block role="poem" xml:id="poem">
+                    <p property="title" about="#poem">TITLE</p>
+                    <p><name  property="author" about="#poem">AUTHOR</name></p>
                     <hd>HD</hd>
                     <p><ln>LINE</ln></p>
                 </block>
@@ -974,7 +1215,7 @@
         <utfx:name>Translate-DTBook2ZedAI: poem 2</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <poem>
+                <poem id="poem">
                     <title>TITLE</title>
                     <author>AUTHOR</author>
                     <hd>HD A</hd>
@@ -986,9 +1227,9 @@
                 </poem>
             </utfx:source>
             <utfx:expected>
-                <block role="poem">
-                    <p property="title">TITLE</p>
-                    <p property="author">AUTHOR</p>
+                <block role="poem" xml:id="poem">
+                    <p property="title" about="#poem">TITLE</p>
+                    <p><name property="author" about="#poem">AUTHOR</name></p>
                     <hd>HD A</hd>
                     <p>
                         <ln>LINE 1</ln>
@@ -1021,8 +1262,6 @@
                     <sup/>
                     <span/>
                     <w/>
-                    <annoref idref="REF"/>
-                    <noteref idref="REF"/>
                     <sent/>
                 </tmp:code-block>
                 <tmp:code-block>
@@ -1042,7 +1281,7 @@
                         <emph/><emph/><term/><citation xml:id="cite1"/>
                         <abbr role="truncation"/><abbr role="initialism"/>
                         <ref xlink:href="abc.html"/><sub/><sup/><span/><w/>
-                        <annoref ref="REF"/><noteref ref="REF"/><s/></p>
+                        <s/></p>
                 </code>
                 <code>
                     <block><annotation by="republisher"/></block><block><quote/></block>

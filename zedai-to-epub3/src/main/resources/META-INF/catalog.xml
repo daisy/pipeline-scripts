@@ -9,4 +9,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:epub3-pub-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:html-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:mediatype-utils" />
 </catalog>

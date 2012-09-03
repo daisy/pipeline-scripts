@@ -1,21 +1,23 @@
 <?xml version="1.0"?>
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <nextCatalog catalog="./dtbook-to-epub3/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./daisy202-to-epub3/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./zedai-to-epub3/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./common-entities/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./daisy202-to-epub3/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./dtbook-to-epub3/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./dtbook-to-zedai/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/common-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/dtbook-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/epub3-nav-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/epub3-ocf-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/epub3-pub-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/file-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/fileset-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/html-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/mediaoverlay-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/metadata-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/mediatype-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/epub3-pub-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/metadata-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/validation-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/zip-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/file-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/dtbook-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/epub3-ocf-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/fileset-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./utilities/epub3-nav-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./zedai-to-epub3/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./zedai-to-html/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./dtbook-to-zedai/src/main/resources/META-INF/catalog.xml"/>
 </catalog>

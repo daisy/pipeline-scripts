@@ -4,21 +4,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/ns/z3998/authoring/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/add-ref-to-annotations.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/add-ref-to-annotations.xsl"/>
     
     <utfx:test>
         <utfx:name>Floating annotations</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <section xml:id="sec1">
-                    <annotation>Annotation</annotation>
-                </section>    
+                <frontmatter>
+                    <section xml:id="sec1">
+                        <annotation>Annotation</annotation>
+                    </section>
+                </frontmatter>
             </utfx:source>
             <utfx:expected>
-                <section xml:id="sec1">
-                    <annotation ref="sec1">Annotation</annotation>
-                    <annotation role="production">Please review annotations and their targets (@ref). Source document contained one or more annotations with no explicit references.</annotation>
-                </section>
+                <frontmatter>
+                    <section xml:id="sec1">
+                        <annotation ref="sec1">Annotation</annotation>
+                        <annotation role="production">Please review annotations and their targets
+                            (@ref). Source document contained one or more annotations with no
+                            explicit references.</annotation>
+                    </section>
+                </frontmatter>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

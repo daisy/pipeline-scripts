@@ -5,7 +5,7 @@
     xmlns:its="http://www.w3.org/2005/11/its" 
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
 
-    <utfx:stylesheet src="../../dtbook-to-zedai/rename-to-span.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/rename-to-span.xsl"/>
 
     <utfx:test>
         <utfx:name>Rename to Span: LIC</utfx:name>

@@ -74,6 +74,11 @@
             Language code of the input document.
         </p:documentation>
     </p:option>
+    <p:option name="opt-assert-valid" required="false" px:type="boolean" select="'true'">
+        <p:documentation>
+            Whether to stop processing and raise an error on validation issues.
+        </p:documentation>
+    </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>
@@ -111,8 +116,14 @@
         </p:documentation>
     </p:import>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/validation-utils/validation-utils-library.xpl">
+        <p:documentation>
+            Collection of utilities for validation and reporting.
+        </p:documentation>
+    </p:import>
+
     <p:variable name="output-dir"
-        select="p:resolve-uri(
+        select="resolve-uri(
                     if (ends-with($opt-output-dir, '/')) then $opt-output-dir 
                                                          else concat($opt-output-dir, '/')
                 )"/>
@@ -163,7 +174,7 @@
             <p:output port="result" sequence="true"/>
             <p:choose>
                 <p:when test="/*/@media-type = 'application/x-dtbook+xml'">
-                    <p:variable name="dtbook-base" select="p:resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:variable name="dtbook-base" select="resolve-uri(/*/@href,$fileset-base)"/>
                     <p:split-sequence name="dtbook-input.for-each.split">
                         <p:input port="source">
                             <p:pipe port="in-memory.in" step="dtbook-to-zedai.convert"/>
@@ -230,6 +241,7 @@
         <p:input port="parameters">
             <p:empty/>
         </p:input>
+        <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:upgrade-dtbook>
 
     <!-- =============================================================== -->
@@ -249,6 +261,7 @@
                 <p:input port="source">
                     <p:pipe port="result" step="upgrade-dtbook"/>
                 </p:input>
+                <p:with-option name="assert-valid" select="$opt-assert-valid"/>
             </px:merge-dtbook>
         </p:when>
         <p:otherwise>
@@ -265,22 +278,15 @@
     <!-- CREATE ZEDAI -->
     <!-- =============================================================== -->
     <p:documentation>Validate the DTBook input</p:documentation>
-    <p:validate-with-relax-ng assert-valid="true" name="validate-dtbook">
+    <px:validate-with-relax-ng-and-report name="validate-dtbook">
         <p:input port="schema">
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
-        <p:input port="source">
-            <p:pipe port="result" step="choose-to-merge-dtbook-files"/>
-        </p:input>
-    </p:validate-with-relax-ng>
+        <p:with-option name="assert-valid" select="$opt-assert-valid"/>
+    </px:validate-with-relax-ng-and-report>
 
     <p:documentation>Transform to ZedAI</p:documentation>
-    <pxi:dtbook2005-3-to-zedai name="transform-to-zedai">
-        <p:input port="source">
-            <p:pipe port="result" step="validate-dtbook"/>
-        </p:input>
-        <!--<p:log port="result" href="file:/tmp/d2z-intermediate.xml"/>-->
-    </pxi:dtbook2005-3-to-zedai>
+    <pxi:dtbook2005-3-to-zedai name="transform-to-zedai"/>
 
     <!-- =============================================================== -->
     <!-- CSS -->
@@ -293,9 +299,6 @@
         document</p:documentation>
     <p:xslt name="generate-css">
         <p:with-param name="css-file" select="$css-file"/>
-        <p:input port="source">
-            <p:pipe step="transform-to-zedai" port="result"/>
-        </p:input>
         <p:input port="stylesheet">
             <p:inline>
                 <!-- This is a wrapper to XML-ify the raw CSS output.  XProc will only accept it this way. -->
@@ -318,7 +321,6 @@
         <p:xpath-context>
             <p:pipe port="result" step="generate-css"/>
         </p:xpath-context>
-
         <p:when test="//tmp:wrapper/text()">
             <p:output port="result"/>
 
@@ -391,6 +393,7 @@
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
+        <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:dtbook-to-mods-meta>
     <p:add-attribute name="generate-mods-metadata" match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$mods-file"/>
@@ -401,10 +404,10 @@
         <p:input port="parameters">
             <p:empty/>
         </p:input>
-
         <p:input port="source">
             <p:pipe step="validate-dtbook" port="result"/>
         </p:input>
+        <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:dtbook-to-zedai-meta>
 
     <p:group name="insert-zedai-meta">
@@ -468,7 +471,7 @@
                 </p:when>
                 <p:otherwise>
                     <cx:message
-                        message="WARNING: required xml:lang attribute not found, and no 'opt-lang' option was passed to the converter."/>
+                        message="WARNING: required xml:lang attribute not found, and no 'lang' option was passed to the converter."/>
                     <p:identity/>
                 </p:otherwise>
             </p:choose>
@@ -479,12 +482,15 @@
     <!-- VALIDATE FINAL OUTPUT -->
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
-    <cx:message message="Validating ZedAI"/>
-    <p:validate-with-relax-ng name="validate-zedai" assert-valid="false">
+    <cx:message message="Validating ZedAI">
+        <!--<p:log port="result" href="file:/tmp/out/log-zedai.xml"/>-->
+    </cx:message>
+    <px:validate-with-relax-ng-and-report name="validate-zedai" assert-valid="true">
         <p:input port="schema">
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>
-    </p:validate-with-relax-ng>
+    </px:validate-with-relax-ng-and-report>
+    
     <cx:message message="Conversion complete."/>
     <p:sink/>
 
@@ -508,7 +514,7 @@
     <p:group name="result.fileset">
         <p:output port="result"/>
         <p:variable name="dtbook-base"
-            select="replace(p:resolve-uri(/*/@href,/*/@xml:base),'^(.*/)[^/]*$','$1')"/>
+            select="replace(resolve-uri(/*/@href,/*/@xml:base),'^(.*/)[^/]*$','$1')"/>
 
         <p:documentation>Add the ZedAI document to the fileset.</p:documentation>
         <px:fileset-create>
@@ -526,15 +532,12 @@
                 <p:pipe step="validate-zedai" port="result"/>
             </p:iteration-source>
             <p:variable name="src" select="/*/@src"/>
-            <p:variable name="dtbook-source-uri" select="p:resolve-uri($src, $dtbook-base)"/>
-            <!-- TODO: Using fn:resolve-uri for $source-uri instead of p:resolve uri because of a bug in oXygen XML Editor 13.1, build 2011112512
-                (http://lists.w3.org/Archives/Public/xproc-dev/2011Dec/0010.html).
-                Switch to p:resolve-uri when it's fixed? -->
+            <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
             <p:variable name="source-uri"
                 select="(//d:file[resolve-uri(@href,/*/@xml:base) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
                 <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
             </p:variable>
-            <p:variable name="result-uri" select="p:resolve-uri($src, $output-dir)"/>
+            <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
 
             <cx:message>
                 <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
@@ -545,7 +548,7 @@
                 <p:with-option name="base" select="$output-dir"/>
             </px:fileset-create>
             <px:fileset-add-entry>
-                <p:with-option name="href" select="p:resolve-uri($src,$zedai-file)"/>
+                <p:with-option name="href" select="resolve-uri($src,$zedai-file)"/>
             </px:fileset-add-entry>
             <p:add-attribute match="/*/*" attribute-name="original-href">
                 <p:with-option name="attribute-value" select="$source-uri"/>

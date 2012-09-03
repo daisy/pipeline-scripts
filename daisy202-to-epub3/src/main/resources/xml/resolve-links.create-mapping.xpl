@@ -67,7 +67,7 @@
             <p:iteration-source select="//*[local-name()='par']"/>
             <p:variable name="par-id" select="/*/@id"/>
             <p:variable name="text-id" select="/*/*[local-name()='text']/@id"/>
-            <p:variable name="text-src" select="p:resolve-uri(/*/*[local-name()='text']/@src,/*/@xml:base)"/>
+            <p:variable name="text-src" select="resolve-uri(/*/*[local-name()='text']/@src,/*/@xml:base)"/>
             <p:identity name="current-smil"/>
             <p:in-scope-names name="vars"/>
             <p:template>

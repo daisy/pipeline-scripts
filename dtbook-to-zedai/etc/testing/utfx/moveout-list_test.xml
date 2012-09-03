@@ -1,62 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
 <utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.daisy.org/z3986/2005/dtbook/">
     
-    <utfx:stylesheet src="../../dtbook-to-zedai/moveout-list.xsl"/>
+    <utfx:stylesheet src="../../src/main/resources/xml/moveout-list.xsl"/>
     
     <!--<xsl:with-param name="valid-parents" select="tokenize('annotation,prodnote,sidebar,div,imggroup,caption,
         li,note,img,blockquote,level,level1,level2,level3,level4,level5,level6,td,th'
     -->
     <utfx:test>
         <utfx:name>Move Out LIST 1</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
-                <dtbook>
-                    <bodymatter>
-                        <level1>
-                            <p>
-                                <span>before</span>
-                                <list>
-                                    <item/>
-                                    <item/>
-                                </list>
-                                <span>after</span>
-                            </p>
-                        </level1>
-                    </bodymatter>
-                </dtbook>  
-            </utfx:with-param>
-        </utfx:call-template>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             
             <utfx:source>
-                <empty/>
+                <dtbook>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <p>
+                                    <span>before</span>
+                                    <list>
+                                        <item/>
+                                        <item/>
+                                    </list>
+                                    <span>after</span>
+                                </p>
+                            </level1>
+                        </bodymatter>
+                    </book>
+                </dtbook>  
             </utfx:source>
             
             
             <utfx:expected>
                 <dtbook>
-                    <bodymatter>
-                        <level1>
-                            <p><span>before</span></p>
-                            
-                            <list>
-                                <item/>
-                                <item/>
-                            </list>
-                            <p><span>after</span></p>
-                        </level1>
-                    </bodymatter>
+                    <book>
+                        <bodymatter>
+                            <level1>
+                                <p><span>before</span></p>
+                                <list>
+                                    <item/>
+                                    <item/>
+                                </list>
+                                <p><span>after</span></p>
+                            </level1>
+                        </bodymatter>
+                    </book>
                 </dtbook>  
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
         <utfx:name>Move Out LIST 2</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
                 <dtbook>
                     <book>
                         <bodymatter>
@@ -81,10 +80,7 @@
                         </bodymatter>
                     </book>
                 </dtbook>
-            </utfx:with-param>
-        </utfx:call-template>
-        <utfx:assert-equal normalise-internal-whitespace="yes">
-            <utfx:source><empty/></utfx:source>
+            </utfx:source>
             <utfx:expected>
                 <dtbook>
                     <book>
@@ -116,23 +112,27 @@
     
     <utfx:test>
         <utfx:name>Definition with LIST</utfx:name>
-        <utfx:call-template name="main">
-            <utfx:with-param name="document">
-                <item>
-                    <dd>DD <list><item>Nested List with One Item</item></list> Rest of DD</dd>
-                </item>
-            </utfx:with-param>
-        </utfx:call-template>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-               <empty/> 
+                <book>
+                    <p>
+                        <tmp:item>
+                            <dd>DD <list><item>Nested List with One Item</item></list> Rest of
+                                DD</dd>
+                        </tmp:item>
+                    </p>
+                </book>
             </utfx:source>
             <utfx:expected>
-                <item>
-                    <dd>DD </dd>
-                    <list><item>Nested List with One Item</item></list>
-                    <dd>Rest of DD</dd>
-                </item>
+                <book>
+                    <p>
+                        <tmp:item>
+                            <dd>DD </dd>
+                            <list><item>Nested List with One Item</item></list>
+                            <dd>Rest of DD</dd>
+                        </tmp:item>
+                    </p>
+                </book>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
