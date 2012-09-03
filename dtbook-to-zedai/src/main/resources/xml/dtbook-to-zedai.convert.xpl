@@ -321,7 +321,6 @@
         <p:xpath-context>
             <p:pipe port="result" step="generate-css"/>
         </p:xpath-context>
-
         <p:when test="//tmp:wrapper/text()">
             <p:output port="result"/>
 
@@ -484,7 +483,7 @@
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
     <cx:message message="Validating ZedAI">
-        <p:log port="result" href="file:/tmp/out/log-zedai.xml"/>
+        <!--<p:log port="result" href="file:/tmp/out/log-zedai.xml"/>-->
     </cx:message>
     <px:validate-with-relax-ng-and-report name="validate-zedai" assert-valid="true">
         <p:input port="schema">
