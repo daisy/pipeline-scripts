@@ -446,7 +446,6 @@
 
     <xsl:template match="dtb:noteref">
         <xsl:variable name="ref" select="substring-after(@idref,'#')"/>
-        <xsl:message select="concat('ref to ',$ref)"/>
         <xsl:choose>
             <xsl:when test="exists(key('ids',$ref))">
                 <noteref ref="{$ref}">
