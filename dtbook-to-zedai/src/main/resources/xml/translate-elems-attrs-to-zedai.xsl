@@ -110,7 +110,7 @@
         <body>
             <xsl:call-template name="attrs"/>
             <!-- insert frontmatter if there is none -->
-            <xsl:if test="not(child::dtb:frontmatter)">
+            <xsl:if test="not(dtb:frontmatter)">
                 <frontmatter>
                     <section>
                         <h role="title">
@@ -146,6 +146,12 @@
         </p>
     </xsl:template>
 
+    <xsl:template match="dtb:frontmatter/dtb:doctitle">
+        <h role="title">
+            <xsl:call-template name="attrs"/>
+            <xsl:apply-templates/>
+        </h>
+    </xsl:template>
     <xsl:template match="dtb:doctitle">
         <p role="title">
             <xsl:call-template name="attrs"/>
@@ -265,6 +271,7 @@
 
         <!-- generate an ID in case we need it -->
         <xsl:variable name="imgID" select="generate-id()"/>
+        <!--TODO add @media-type-->
         <object>
             <xsl:call-template name="attrs"/>
             <xsl:copy-of select="@src"/>

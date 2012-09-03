@@ -80,6 +80,24 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
+    <!--FIXME UTFX does not support generated IDs-->
+    <!--<utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Doctitle in frontmatter</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <frontmatter>
+                    <doctitle/>
+                </frontmatter>
+            </utfx:source>
+            <utfx:expected>
+                <frontmatter>
+                    <section>
+                        <h role="title"/>
+                    </section>
+                </frontmatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
 
     
     <utfx:test>
