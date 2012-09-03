@@ -221,6 +221,10 @@
                 <p:empty/>
             </p:with-option>
         </px:epub3-nav-create-toc>
+        <p:xslt  name="navigation-doc.toc-fixed">
+            <p:input port="stylesheet"><p:document href="../xslt/nav-fixer.xsl"/></p:input>
+            <p:input port="parameters"><p:empty/></p:input>
+        </p:xslt>
         <px:epub3-nav-create-page-list name="navigation-doc.page-list">
             <p:input port="source">
                 <p:pipe port="html-files" step="zedai-to-html"/>
@@ -228,7 +232,7 @@
         </px:epub3-nav-create-page-list>
         <px:epub3-nav-aggregate name="navigation-doc.html-file">
             <p:input port="source">
-                <p:pipe port="result" step="navigation-doc.toc"/>
+                <p:pipe port="result" step="navigation-doc.toc-fixed"/>
                 <p:pipe port="result" step="navigation-doc.page-list"/>
             </p:input>
         </px:epub3-nav-aggregate>
