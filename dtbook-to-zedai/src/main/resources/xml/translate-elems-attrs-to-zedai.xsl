@@ -19,6 +19,7 @@
 
     <xsl:output indent="yes" method="xml"/>
     
+    <xsl:key name="ids" match="@id" use=".."/>
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
@@ -440,17 +441,33 @@
     </xsl:template>
 
     <xsl:template match="dtb:noteref">
-        <noteref ref="{replace(@idref, '#', '')}">
-            <xsl:call-template name="attrs"/>
-            <xsl:value-of select="."/>
-        </noteref>
+        <xsl:variable name="ref" select="substring-after(@idref,'#')"/>
+        <xsl:choose>
+            <xsl:when test="exists(key('ids',$ref))">
+                <noteref ref="{$ref}">
+                    <xsl:call-template name="attrs"/>
+                    <xsl:value-of select="."/>
+                </noteref>
+            </xsl:when>
+            <xsl:otherwise>
+                <annotation role="production">Noteref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="$ref"/>'</annotation>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:annoref">
-        <annoref ref="{replace(@idref, '#', '')}">
-            <xsl:call-template name="attrs"/>
-            <xsl:value-of select="."/>
-        </annoref>
+        <xsl:variable name="ref" select="substring-after(@idref,'#')"/>
+        <xsl:choose>
+            <xsl:when test="exists(key('ids',$ref))">
+                <annoref ref="{$ref}">
+                    <xsl:call-template name="attrs"/>
+                    <xsl:value-of select="."/>
+                </annoref>
+            </xsl:when>
+            <xsl:otherwise>
+                <annotation role="production">Annoref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="$ref"/>'</annotation>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="dtb:blockquote|dtb:q">

@@ -465,25 +465,53 @@
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    <utfx:test>
+    <!--FIXME UTFX does not support XSLT keys-->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Noteref</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <noteref idref="#abc123">32</noteref>
+                <note id="note"/>
+                <noteref idref="#note">32</noteref>
             </utfx:source>
             <utfx:expected>
-                <noteref ref="abc123">32</noteref>
+                <note xml:id="note"/>
+                <noteref ref="note">32</noteref>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Noteref Invalid</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <noteref idref="#note">32</noteref>
+            </utfx:source>
+            <utfx:expected>
+                <annotation role="production">Noteref '32' to missing ID 'note'</annotation>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
-    <utfx:test>
+    <!--FIXME UTFX does not support XSLT keys-->
+    <!--<utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Annoref</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <annoref idref="#abc123">33</annoref>
+                <tmp:annotation-block id="anno"/>
+                <annoref idref="#anno">33</annoref>
             </utfx:source>
             <utfx:expected>
-                <annoref ref="abc123">33</annoref>
+                <annotation xml:id="anno"/>
+                <annoref ref="anno">33</annoref>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>-->
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Annoref Invalid</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <annoref idref="#anno">33</annoref>
+            </utfx:source>
+            <utfx:expected>
+                <annotation role="production">Annoref '33' to missing ID 'anno'</annotation>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -1204,8 +1232,6 @@
                     <sup/>
                     <span/>
                     <w/>
-                    <annoref idref="REF"/>
-                    <noteref idref="REF"/>
                     <sent/>
                 </tmp:code-block>
                 <tmp:code-block>
@@ -1225,7 +1251,7 @@
                         <emph/><emph/><term/><citation xml:id="cite1"/>
                         <abbr role="truncation"/><abbr role="initialism"/>
                         <ref xlink:href="abc.html"/><sub/><sup/><span/><w/>
-                        <annoref ref="REF"/><noteref ref="REF"/><s/></p>
+                        <s/></p>
                 </code>
                 <code>
                     <block><annotation by="republisher"/></block><block><quote/></block>
