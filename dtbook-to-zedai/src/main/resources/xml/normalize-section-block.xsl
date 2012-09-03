@@ -24,32 +24,32 @@
     <xsl:template match="dtb:level | dtb:level1 | dtb:level2 | dtb:level3 | dtb:level4 | dtb:level5">
         <xsl:message>Normalize mixed section and block content model for <xsl:value-of select="local-name(.)"/></xsl:message>
         <xsl:choose>
-            <xsl:when test="local-name() = 'level'">
+            <xsl:when test="self::dtb:level">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level</xsl:with-param>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="local-name() = 'level1'">
+            <xsl:when test="self::dtb:level1">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level2</xsl:with-param>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="local-name() = 'level2'">
+            <xsl:when test="self::dtb:level2">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level3</xsl:with-param>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="local-name() = 'level3'">
+            <xsl:when test="self::dtb:level3">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level4</xsl:with-param>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="local-name() = 'level4'">
+            <xsl:when test="self::dtb:level4">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level5</xsl:with-param>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="local-name() = 'level5'">
+            <xsl:when test="self::dtb:level5">
                 <xsl:call-template name="normalize-level">
                     <xsl:with-param name="child-level-name">level6</xsl:with-param>
                 </xsl:call-template>
@@ -69,24 +69,17 @@
         -->
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
-            <xsl:for-each-group group-adjacent="local-name() = $child-level-name" select="*">
+            <xsl:for-each-group group-adjacent="exists(self::dtb:pagenum|self::dtb:*[local-name() = $child-level-name])" select="*">
                 <xsl:choose>
                     <!-- the target element itself-->
-                    <xsl:when test="current-grouping-key()">
+                    <xsl:when test="current-grouping-key() or position()=1">
                         <xsl:copy-of select="current-group()"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="preceding-sibling::*/local-name() = $child-level-name">
-                                <xsl:element name="{$child-level-name}" namespace="http://www.daisy.org/z3986/2005/dtbook/">
-                                    <xsl:copy-of select="current-group()"/>
-                                </xsl:element>        
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:copy-of select="current-group()"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                            
+                        <xsl:element name="{$child-level-name}"
+                            namespace="http://www.daisy.org/z3986/2005/dtbook/">
+                            <xsl:copy-of select="current-group()"/>
+                        </xsl:element>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each-group>

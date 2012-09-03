@@ -44,26 +44,34 @@
                 <bodymatter>
                     <level1>
                         <h1>H1</h1>
-                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                        <p><sent>S-1</sent><sent>S-2</sent></p>
+                        <level2>
                             <h2>H2</h2>
                             <p><sent>S-1</sent></p>
-                        </level2> <p>ROGUE PARAGRAPH!</p> <level2>
+                        </level2>
+                        <p>ROGUE PARAGRAPH!</p>
+                        <level2>
                             <h2>H2</h2>
                             <p>P-1</p>
-                        </level2> </level1>
+                        </level2>
+                    </level1>
                 </bodymatter>
             </utfx:source>
             <utfx:expected>
                 <bodymatter>
                     <level1>
                         <h1>H1</h1>
-                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                        <p><sent>S-1</sent><sent>S-2</sent></p>
+                        <level2>
                             <h2>H2</h2>
                             <p><sent>S-1</sent></p>
-                        </level2> <level2><p>ROGUE PARAGRAPH!</p></level2> <level2>
+                        </level2>
+                        <level2><p>ROGUE PARAGRAPH!</p></level2>
+                        <level2>
                             <h2>H2</h2>
                             <p>P-1</p>
-                        </level2> </level1>
+                        </level2>
+                    </level1>
                 </bodymatter>
             </utfx:expected>
         </utfx:assert-equal>
@@ -75,7 +83,8 @@
                 <bodymatter>
                     <level1>
                         <h1>H1</h1>
-                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                        <p><sent>S-1</sent><sent>S-2</sent></p>
+                        <level2>
                             <h2>H2</h2>
                             <p><sent>S-1</sent></p>
                         </level2>
@@ -84,14 +93,16 @@
                         <level2>
                             <h2>H2</h2>
                             <p>P-1</p>
-                        </level2> </level1>
+                        </level2>
+                    </level1>
                 </bodymatter>
             </utfx:source>
             <utfx:expected>
                 <bodymatter>
                     <level1>
                         <h1>H1</h1>
-                        <p><sent>S-1</sent><sent>S-2</sent></p> <level2>
+                        <p><sent>S-1</sent><sent>S-2</sent></p>
+                        <level2>
                             <h2>H2</h2>
                             <p><sent>S-1</sent></p>
                         </level2>
@@ -102,7 +113,45 @@
                         <level2>
                             <h2>H2</h2>
                             <p>P-1</p>
-                        </level2> </level1>
+                        </level2>
+                    </level1>
+                </bodymatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: page breaks</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <bodymatter>
+                    <level1>
+                        <h1>Introduction</h1>
+                        <level2>
+                            <h2>A Chapter</h2>
+                            <p>This is a paragraph</p>
+                        </level2>
+                        <pagenum id="p1">1</pagenum>
+                        <level2>
+                            <h2>Next Chapter</h2>
+                            <p>This is a paragraph</p>
+                        </level2>
+                    </level1>
+                </bodymatter>
+            </utfx:source>
+            <utfx:expected>
+                <bodymatter>
+                    <level1>
+                        <h1>Introduction</h1>
+                        <level2>
+                            <h2>A Chapter</h2>
+                            <p>This is a paragraph</p>
+                        </level2>
+                        <pagenum id="p1">1</pagenum>
+                        <level2>
+                            <h2>Next Chapter</h2>
+                            <p>This is a paragraph</p>
+                        </level2>
+                    </level1>
                 </bodymatter>
             </utfx:expected>
         </utfx:assert-equal>
