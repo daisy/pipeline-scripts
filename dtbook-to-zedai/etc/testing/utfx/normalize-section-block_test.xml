@@ -123,36 +123,174 @@
         <utfx:name>Normalize Mixed Section/Block: page breaks</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
-                <bodymatter>
-                    <level1>
-                        <h1>Introduction</h1>
-                        <level2>
-                            <h2>A Chapter</h2>
-                            <p>This is a paragraph</p>
-                        </level2>
-                        <pagenum id="p1">1</pagenum>
-                        <level2>
-                            <h2>Next Chapter</h2>
-                            <p>This is a paragraph</p>
-                        </level2>
-                    </level1>
-                </bodymatter>
+                <level1>
+                    <h1>Introduction</h1>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p1">1</pagenum>
+                    <level2>
+                        <h2>Next Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                </level1>
             </utfx:source>
             <utfx:expected>
-                <bodymatter>
-                    <level1>
-                        <h1>Introduction</h1>
-                        <level2>
-                            <h2>A Chapter</h2>
-                            <p>This is a paragraph</p>
-                        </level2>
-                        <pagenum id="p1">1</pagenum>
-                        <level2>
-                            <h2>Next Chapter</h2>
-                            <p>This is a paragraph</p>
-                        </level2>
-                    </level1>
-                </bodymatter>
+                <level1>
+                    <h1>Introduction</h1>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p1">1</pagenum>
+                    <level2>
+                        <h2>Next Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                </level1>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: page breaks 2</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <pagenum id="p2">2</pagenum>
+                    <p>This is a paragraph</p>
+                </level1>
+            </utfx:source>
+            <utfx:expected>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <pagenum id="p2">2</pagenum>
+                    <p>This is a paragraph</p>
+                </level1>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: page breaks 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p3">3</pagenum>
+                </level1>
+            </utfx:source>
+            <utfx:expected>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p3">3</pagenum>
+                </level1>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: page breaks 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p3">3</pagenum>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p4">4</pagenum>
+                </level1>
+            </utfx:source>
+            <utfx:expected>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p3">3</pagenum>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p4">4</pagenum>
+                </level1>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: page breaks 4</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p3">3</pagenum>
+                    <p>ROGUE PARAGRAPH!</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p4">4</pagenum>
+                </level1>
+            </utfx:source>
+            <utfx:expected>
+                <level1>
+                    <pagenum id="p1">1</pagenum>
+                    <h1>Introduction</h1>
+                    <p>This is a paragraph</p>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <level2>
+                        <pagenum id="p3">3</pagenum>
+                        <p>ROGUE PARAGRAPH!</p>
+                    </level2>
+                    <level2>
+                        <h2>A Chapter</h2>
+                        <p>This is a paragraph</p>
+                    </level2>
+                    <pagenum id="p4">4</pagenum>
+                </level1>
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>

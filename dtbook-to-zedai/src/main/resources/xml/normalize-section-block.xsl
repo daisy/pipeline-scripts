@@ -69,10 +69,10 @@
         -->
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
-            <xsl:for-each-group group-adjacent="exists(self::dtb:pagenum|self::dtb:*[local-name() = $child-level-name])" select="*">
+            <xsl:for-each-group group-adjacent="exists(self::dtb:*[local-name() = $child-level-name])" select="*">
                 <xsl:choose>
                     <!-- the target element itself-->
-                    <xsl:when test="current-grouping-key() or position()=1">
+                    <xsl:when test="current-grouping-key() or position()=1 or (every $e in current-group() satisfies $e/self::dtb:pagenum)">
                         <xsl:copy-of select="current-group()"/>
                     </xsl:when>
                     <xsl:otherwise>
