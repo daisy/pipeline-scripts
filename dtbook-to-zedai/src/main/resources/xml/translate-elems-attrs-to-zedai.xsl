@@ -19,7 +19,7 @@
 
     <xsl:output indent="yes" method="xml"/>
     
-    <xsl:key name="ids" match="@id" use=".."/>
+    <xsl:key name="ids" match="*" use="@id"/>
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
@@ -200,15 +200,12 @@
             <!-- convert @start to a numeric value when needed -->
             <xsl:choose>
                 <xsl:when test="@start and boolean(number(@start)+1)">
-                    <xsl:message select="concat('numeric ',@start)"/>
                     <xsl:copy-of select="@start"/>
                 </xsl:when>
                 <xsl:when test="@start and @enum=('i','I')">
-                    <xsl:message select="concat('roman ',@start)"/>
                     <xsl:attribute name="start" select="f:roman-to-decimal(@start)"/>
                 </xsl:when>
                 <xsl:when test="@start and @enum=('a','A')">
-                    <xsl:message select="concat('alpha ',@start)"/>
                     <xsl:attribute name="start" select="f:alpha-to-decimal(@start)"/>
                 </xsl:when>
                 <xsl:when test="@start">
@@ -442,6 +439,7 @@
 
     <xsl:template match="dtb:noteref">
         <xsl:variable name="ref" select="substring-after(@idref,'#')"/>
+        <xsl:message select="concat('ref to ',$ref)"/>
         <xsl:choose>
             <xsl:when test="exists(key('ids',$ref))">
                 <noteref ref="{$ref}">
@@ -450,7 +448,8 @@
                 </noteref>
             </xsl:when>
             <xsl:otherwise>
-                <annotation role="production">Noteref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="$ref"/>'</annotation>
+                <xsl:message>WARNING Noteref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="@idref"/>'</xsl:message>
+                <xsl:comment>FIXME Noteref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="@idref"/>'</xsl:comment>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -465,7 +464,8 @@
                 </annoref>
             </xsl:when>
             <xsl:otherwise>
-                <annotation role="production">Annoref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="$ref"/>'</annotation>
+                <xsl:message>WARNING Annoref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="@idref"/>'</xsl:message>
+                <xsl:comment>FIXME Annoref '<xsl:value-of select="."/>' to missing ID '<xsl:value-of select="@idref"/>'</xsl:comment>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -833,6 +833,16 @@
         <!-- discard any br elements left after running convert-br-to-ln.xsl -->
     </xsl:template>
 
+
+    <xsl:template match="dtb:author">
+        <!--if standalone author, wrap it in a citation.-->
+        <citation xml:id="{if (@id) then @id else generate-id()}">
+            <xsl:call-template name="attrs"/>
+            <name property="author" about="{if (@id) then @id else generate-id()}">
+                <xsl:apply-templates/>
+            </name>
+        </citation>
+    </xsl:template>
     <xsl:template match="dtb:cite">
         <citation>
             <xsl:call-template name="attrs"/>

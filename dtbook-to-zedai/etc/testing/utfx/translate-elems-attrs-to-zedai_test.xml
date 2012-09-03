@@ -486,7 +486,7 @@
                 <noteref idref="#note">32</noteref>
             </utfx:source>
             <utfx:expected>
-                <annotation role="production">Noteref '32' to missing ID 'note'</annotation>
+                <!--FIXME Noteref '32' to missing ID '#note'-->
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
@@ -511,11 +511,23 @@
                 <annoref idref="#anno">33</annoref>
             </utfx:source>
             <utfx:expected>
-                <annotation role="production">Annoref '33' to missing ID 'anno'</annotation>
+                <!--FIXME Annoref '33' to missing ID '#anno'-->
             </utfx:expected>
         </utfx:assert-equal>
     </utfx:test>
 
+    <utfx:test>
+        <utfx:name>Translate-DTBook2ZedAI: Autho </utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <author id="author">name</author>
+            </utfx:source>
+            <utfx:expected>
+                <citation xml:id="author"><name property="author" about="author">name</name></citation>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    
     <utfx:test>
         <utfx:name>Translate-DTBook2ZedAI: Quotes </utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
