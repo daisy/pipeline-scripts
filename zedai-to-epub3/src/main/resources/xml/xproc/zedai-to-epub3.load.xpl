@@ -12,7 +12,12 @@
         <p:pipe port="result" step="zedai"/>
     </p:output>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For identifying the media type of files.</p:documentation>
+    </p:import>
 
     <!--=========================================================================-->
     <!-- INITIALIZATION                                                          -->
@@ -49,7 +54,7 @@
                 <p:with-option name="attribute-value" select="resolve-uri($href,$zedai-href)"/>
             </p:add-attribute>
         </p:for-each>
-        <px:fileset-join name="fileset.resources"/>
+        <px:mediatype-detect name="fileset.resources"/>
 
         <px:fileset-create>
             <p:with-option name="base" select="$fileset-base"/>

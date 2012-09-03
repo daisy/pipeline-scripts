@@ -148,6 +148,7 @@
         </p:variable>
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
         <p:xslt name="zedai-to-html.html-single">
+            <!--<p:log port="result" href="file:/tmp/out/log-html-single.xml"></p:log>-->
             <p:input port="source">
                 <p:pipe port="result" step="zedai-input"/>
             </p:input>
@@ -259,7 +260,7 @@
     <!--=========================================================================-->
     <!-- GENERATE THE PACKAGE DOCUMENT                                           -->
     <!--=========================================================================-->
-    <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
+    <p:documentation>Generate the EPUB 3 package document</p:documentation>
     <p:group name="package-doc">
         <p:output port="result" primary="true"/>
         <p:output port="opf">

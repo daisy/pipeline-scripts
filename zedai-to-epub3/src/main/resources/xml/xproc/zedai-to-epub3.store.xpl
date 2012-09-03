@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    xmlns:err="http://www.w3.org/ns/xproc-error"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     type="px:zedai-to-epub3-store" name="zedai-to-epub3.store" exclude-inline-prefixes="#all"
     version="1.0">
@@ -41,7 +43,9 @@
 
     <p:variable name="fileset-base" select="/*/@xml:base"/>
 
-    <cx:message message="Storing EPUB3 fileset."/>
+    <cx:message message="Storing EPUB3 fileset.">
+        <!--<p:log port="result" href="file:/tmp/out/log-fileset-in.xml"/>-->
+    </cx:message>
     <p:sink/>
 
     <p:for-each>
@@ -58,14 +62,17 @@
         </p:add-attribute>
     </p:for-each>
     <p:wrap-sequence wrapper="d:fileset"/>
-    <px:fileset-join name="fileset.in-memory"/>
+    <px:fileset-join name="fileset.in-memory">
+        <!--<p:log port="result" href="file:/tmp/out/log-fileset-mem.xml"/>-->
+    </px:fileset-join>
 
 
-    <p:for-each>
-        <p:output port="result" sequence="true"/>
-        <p:iteration-source select="/*/*">
+    <p:documentation>Store files and filters out missing files in the result fileset.</p:documentation>
+    <p:viewport match="d:file" name="store">
+        <p:output port="result"/>
+        <p:viewport-source>
             <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
-        </p:iteration-source>
+        </p:viewport-source>
         <p:variable name="on-disk" select="(/*/@original-href, '')[1]"/>
         <p:variable name="target" select="resolve-uri(/*/@href, $fileset-base)"/>
         <p:variable name="media-type" select="/*/@media-type"/>
@@ -76,7 +83,7 @@
             <p:when test="//d:file[@href=$target]">
                 <p:documentation>File is in memory.</p:documentation>
                 <cx:message>
-                    <p:with-option name="message" select="concat('writing in-memory document to ',$target)"
+                    <p:with-option name="message" select="concat('Writing in-memory document to ',$target)"
                     />
                 </cx:message>
                 <p:split-sequence>
@@ -94,11 +101,6 @@
                             include-content-type="false" name="store.content-doc">
                             <p:with-option name="href" select="$target"/>
                         </p:store>
-                        <p:identity>
-                            <p:input port="source">
-                                <p:pipe port="result" step="store.content-doc"/>
-                            </p:input>
-                        </p:identity>
                     </p:when>
                     <p:when test="$media-type='application/oebps-package+xml'">
                         <p:documentation>In-memory file is the Package Document.</p:documentation>
@@ -106,24 +108,19 @@
                             encoding="utf-8" omit-xml-declaration="false" name="store.package-doc">
                             <p:with-option name="href" select="$target"/>
                         </p:store>
-                        <p:identity>
-                            <p:input port="source">
-                                <p:pipe port="result" step="store.package-doc"/>
-                            </p:input>
-                        </p:identity>
                     </p:when>
                     <p:otherwise>
                         <p:documentation>In-memory file stored as-is.</p:documentation>
                         <p:store name="store.as-is">
                             <p:with-option name="href" select="$target"/>
                         </p:store>
-                        <p:identity>
-                            <p:input port="source">
-                                <p:pipe port="result" step="store.as-is"/>
-                            </p:input>
-                        </p:identity>
                     </p:otherwise>
                 </p:choose>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="current" step="store"/>
+                    </p:input>
+                </p:identity>
             </p:when>
             <p:when test="not($on-disk)">
                 <p:error code="PEZE00">
@@ -140,7 +137,7 @@
                     location.</p:documentation>
                 <p:variable name="target-dir" select="replace($target,'[^/]+$','')"/>
                 <cx:message>
-                    <p:with-option name="message" select="concat('copying disk file to ',$target)"/>
+                    <p:with-option name="message" select="concat('Copying disk file to ',$target)"/>
                 </cx:message>
                 <p:try>
                     <p:group>
@@ -179,20 +176,39 @@
                         <p:sink/>
                     </p:otherwise>
                 </p:choose>
-                <px:copy cx:depends-on="mkdir" name="store.copy">
-                    <p:with-option name="href" select="$on-disk"/>
-                    <p:with-option name="target" select="$target"/>
-                </px:copy>
-                <p:identity>
-                    <p:input port="source">
-                        <p:pipe port="result" step="store.copy"/>
-                    </p:input>
-                </p:identity>
+                <p:try  cx:depends-on="mkdir" name="store.copy">
+                    <p:group>
+                        <p:output port="result"/>
+                        <px:copy name="store.copy.do">
+                            <p:with-option name="href" select="$on-disk"/>
+                            <p:with-option name="target" select="$target"/>
+                        </px:copy>
+                        <p:identity>
+                            <p:input port="source">
+                                <p:pipe port="current" step="store"/>
+                            </p:input>
+                        </p:identity>
+                    </p:group>
+                    <p:catch name="store.copy.catch">
+                        <p:output port="result"/>
+                        <p:identity>
+                            <p:input port="source">
+                                <p:pipe port="error" step="store.copy.catch"/>
+                            </p:input>
+                        </p:identity>
+                        <cx:message>
+                            <p:with-option name="message" select="concat('Copy error: ',/*/*)"/>
+                        </cx:message>
+                        <p:identity>
+                            <p:input port="source">
+                                <p:empty/>
+                            </p:input>
+                        </p:identity>
+                    </p:catch>
+                </p:try>
             </p:otherwise>
         </p:choose>
-    </p:for-each>
-    <p:wrap-sequence wrapper="wrapper" name="store-complete"/>
-    <p:sink/>
+    </p:viewport>
 
     <!--=========================================================================-->
     <!-- BUILD THE EPUB PUBLICATION                                              -->
@@ -204,13 +220,11 @@
         <!--seems to be required to *not* connect non-primary ports on ocf-finalize-->
         <px:epub3-ocf-finalize>
             <p:input port="source">
-                <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
+                <p:pipe port="result" step="store"/>
             </p:input>
         </px:epub3-ocf-finalize>
         <px:epub3-ocf-zip>
-            <p:with-option name="target" select="$epub-file">
-                <p:pipe step="store-complete" port="result"/>
-            </p:with-option>
+            <p:with-option name="target" select="$epub-file"/>
         </px:epub3-ocf-zip>
     </p:group>
     <p:sink/>
