@@ -86,7 +86,7 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			try {
 				if (liblouisutdml == null) {
 					if (OS.isWindows()) {
-						liblouisutdml = new LiblouisutdmlRuntimeExecImpl(
+						liblouisutdml = new LiblouisutdmlProcessBuilderImpl(
 							getBinaryPaths("file2brl"),
 							bundleContext.getDataFile("native/file2brl"),
 							this); }
