@@ -12,12 +12,12 @@ import java.util.Map;
 import org.daisy.pipeline.liblouis.Liblouis;
 import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Utilities.Files;
-import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
 
 public class LiblouisJnaImpl implements Liblouis {
 
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
+	private final LiblouisTableRegistry tableRegistry;
 	private Constructor<?> Translator;
 	private Method translate;
 	private Method getBraille;
@@ -31,8 +31,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
-		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {
-			public void apply(String tablePath) { unload(); }});
+		this.tableRegistry = tableRegistry;
 	}
 	
 	private void load() {
@@ -54,7 +53,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		Translator = null;
 		translate = null;
 		getBraille = null;
-		translatorMap.clear();
+		translatorCache.clear();
 		System.gc(); // ? Doesn't always work immediately, sometimes needs a second garbage collection
 		loaded = false;
 	}
@@ -62,7 +61,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	public String translate(String tables, String text) {
 		if (!loaded) load();
 		try {
-			tables = "unicode.dis," + tables + ",braille-patterns.cti";
+			tables = tableRegistry.resolveTableURL(tables);
 			text = squeeze(text);
 			return (String)getBraille.invoke(translate.invoke(getTranslator(tables), text)); }
 		catch (InvocationTargetException e) {
@@ -71,14 +70,14 @@ public class LiblouisJnaImpl implements Liblouis {
 			throw new RuntimeException(e); }
 	}
 	
-	private Map<String,Object> translatorMap = new HashMap<String,Object>();
+	private Map<String,Object> translatorCache = new HashMap<String,Object>();
 
 	private Object getTranslator(String tables) {
 		try {
-			Object translator = translatorMap.get(tables);
+			Object translator = translatorCache.get(tables);
 			if (translator == null) {
 				translator = Translator.newInstance(tables);
-				translatorMap.put(tables, translator); }
+				translatorCache.put(tables, translator); }
 			return translator; }
 		catch (Exception e) {
 			throw new RuntimeException(e); }

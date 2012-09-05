@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +60,6 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			Collections.<String>list(bundle.getEntryPaths("/jars")),
 			new Function<String,URL>() {
 				public URL apply(String s) { return bundle.getEntry(s); }});
-		new Environment(Iterables.<URL>filter(jars,
-			Predicates.<URL>matchesPattern(".*(jna|liblouis)\\.jar$")), this);
 	}
 	
 	private LiblouisJnaImpl liblouis;
@@ -163,13 +162,31 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 		catch (RuntimeException e) {
 			tableSets.remove(tableSet.getIdentifier());
 			throw e; }
+		urlResolverCache.clear();
 		System.out.println("Added table set to registry: " + tableSet.getIdentifier());
 	}
 
 	public void removeTableSet(LiblouisTableSet tableSet) {
 		tableSets.remove(tableSet.getIdentifier());
 		tableFinder.removeTableSet(tableSet);
+		urlResolverCache.clear();
+		for (VoidFunction<String> f : callbacks) f.apply(getLouisTablePath());
 		System.out.println("Removed table set from registry: " + tableSet.getIdentifier());
+	}
+	
+	private final Map<String,String> urlResolverCache = new HashMap<String,String>();
+	
+	public String resolveTableURL(String table) {
+		String resolved = urlResolverCache.get(table);
+		if (resolved == null) {
+			try {
+				int i = table.lastIndexOf('/') + 1;
+				File path = tableSets.get(table.substring(0, i)).getPath();
+				resolved = path.getAbsolutePath() + File.separator + table.substring(i);
+				urlResolverCache.put(table, resolved); }
+			catch (Exception e) {
+				throw new RuntimeException("Cannot resolve table URL: " + table, e); }}
+		return resolved;
 	}
 	
 	private Collection<VoidFunction<String>> callbacks = new ArrayList<VoidFunction<String>>();

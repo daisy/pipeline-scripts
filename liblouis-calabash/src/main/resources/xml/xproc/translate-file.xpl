@@ -9,6 +9,7 @@
     <p:input port="config-files" sequence="false"/>
     <p:input port="semantic-files" sequence="false"/>
     <p:option name="ini-file" required="true"/>
+    <p:option name="table" required="true"/>
     <p:option name="paged" required="false"/>
     <p:option name="page-height" required="false"/>
     <p:option name="line-width" required="false"/>

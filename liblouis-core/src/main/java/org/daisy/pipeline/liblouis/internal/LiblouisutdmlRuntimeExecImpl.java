@@ -15,12 +15,11 @@ import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
-import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
 
 public class LiblouisutdmlRuntimeExecImpl implements Liblouisutdml {
 	
-	private File file2brl;
-	private String tablePath = "";
+	private final File file2brl;
+	private final LiblouisTableRegistry tableRegistry;
 	
 	public LiblouisutdmlRuntimeExecImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
@@ -33,45 +32,41 @@ public class LiblouisutdmlRuntimeExecImpl implements Liblouisutdml {
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory)) {
 			if (!file.getName().matches(".*\\.(dll|exe)$")) Files.chmod775(file); }
-		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {
-			public void apply(String tablePath) {
-				LiblouisutdmlRuntimeExecImpl.this.tablePath = tablePath; }});
+		this.tableRegistry = tableRegistry;
 	}
 	
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			List<String> tables,
+			String table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
 			File configPath,
 			File tempDir) {
 
-		List<String> command = new ArrayList<String>();
-		
-		command.add(file2brl.getAbsolutePath());
-		command.add("-f");
-		command.add(configPath.getAbsolutePath() + File.separator +
-				(configFiles != null ? Strings.join(configFiles, ",") : ""));
-		Map<String,String> settings = new HashMap<String,String>();
-		if (semanticFiles != null)
-			settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-		if (tables != null)
-			settings.put("literaryTextTable", Strings.join(tables, ","));
-		if (otherSettings != null)
-			settings.putAll(otherSettings);
-		for (String key : settings.keySet())
-			command.add("-C" + key + "=" + settings.get(key));
-		command.add(input.getAbsolutePath());
-		command.add(output.getAbsolutePath());
-
-		System.out.println(Strings.join(command, "\n\t"));
-
 		try {
 			
+			List<String> command = new ArrayList<String>();
+			
+			command.add(file2brl.getAbsolutePath());
+			command.add("-f");
+			command.add(configPath.getAbsolutePath() + File.separator +
+					(configFiles != null ? Strings.join(configFiles, ",") : ""));
+			Map<String,String> settings = new HashMap<String,String>();
+			if (semanticFiles != null)
+				settings.put("semanticFiles", Strings.join(semanticFiles, ","));
+			settings.put("literaryTextTable", tableRegistry.resolveTableURL(table));
+			if (otherSettings != null)
+				settings.putAll(otherSettings);
+			for (String key : settings.keySet())
+				command.add("-C" + key + "=" + settings.get(key));
+			command.add(input.getAbsolutePath());
+			command.add(output.getAbsolutePath());
+	
+			System.out.println(Strings.join(command, "\n\t"));
+			
 			ProcessBuilder builder = new ProcessBuilder(command);
-			builder.environment().put("LOUIS_TABLEPATH", tablePath);
 			builder.directory(tempDir);
 			Process process = builder.start();
 		

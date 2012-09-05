@@ -37,7 +37,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				Map<String,String> map = tableMap.get(set);
 				String key = locale.toString();
 				if (map.containsKey(key)) {
-					String table = map.get(key);
+					String table = set.getIdentifier() + map.get(key);
 					cache.put(locale, table);
 					return table; }}}
 		if (!"".equals(locale.getCountry())) {
@@ -45,7 +45,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				Map<String,String> map = tableMap.get(set);
 				String key = locale.getLanguage() + "_" + locale.getCountry();
 				if (map.containsKey(key)) {
-					String table = map.get(key);
+					String table = set.getIdentifier() + map.get(key);
 					cache.put(locale, table);
 					return table; }}}
 		if (!"".equals(locale.getLanguage())) {
@@ -53,7 +53,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 				Map<String,String> map = tableMap.get(set);
 				String key = locale.getLanguage();
 				if (map.containsKey(key)) {
-					String table = map.get(key);
+					String table = set.getIdentifier() + map.get(key);
 					cache.put(locale, table);
 					return table; }}}
 		return null;

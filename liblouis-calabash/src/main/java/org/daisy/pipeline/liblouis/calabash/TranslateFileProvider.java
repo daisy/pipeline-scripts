@@ -45,6 +45,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
 
 	private static final QName _ini_file = new QName("ini-file");
+	private static final QName _table = new QName("table");
 	private static final QName _paged = new QName("paged");
 	private static final QName _page_height = new QName("page-height");
 	private static final QName _line_width = new QName("line-width");
@@ -177,7 +178,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-				liblouisutdml.translateFile(configFileNames, semanticFileNames, null, settings, xmlFile, brailleFile, tempDir, tempDir);
+				liblouisutdml.translateFile(configFileNames, semanticFileNames, getOption(_table).getString(), settings, xmlFile, brailleFile, tempDir, tempDir);
 				//xmlFile.delete();
 				
 				// Read the braille document and wrap it in a new XML document

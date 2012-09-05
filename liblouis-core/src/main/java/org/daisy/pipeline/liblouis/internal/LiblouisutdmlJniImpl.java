@@ -13,12 +13,12 @@ import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
-import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
 
 public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
+	private final LiblouisTableRegistry tableRegistry;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
@@ -32,8 +32,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
-		tableRegistry.onLouisTablePathUpdate(new VoidFunction<String>() {
-			public void apply(String tablePath) { unload(); }});
+		this.tableRegistry = tableRegistry;
 	}
 	
 	public void load() {
@@ -62,7 +61,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			List<String> tables,
+			String table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
@@ -71,29 +70,29 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
 		if (!loaded) load();
 		
-		String configFileList = configPath.getAbsolutePath() + File.separator +
-				(configFiles != null ? Strings.join(configFiles, ",") : "");
-		String inputFileName = input.getAbsolutePath();
-		String outputFileName = output.getAbsolutePath();
-
-		Map<String,String> settings = new HashMap<String,String>();
-		if (semanticFiles != null)
-			settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-		if (tables != null)
-			settings.put("literaryTextTable", Strings.join(tables, ","));
-		if (otherSettings != null)
-			settings.putAll(otherSettings);
-		List<String> settingsList = new ArrayList<String>();
-		for (String key : settings.keySet())
-			settingsList.add(key + " " + settings.get(key));
-
-		System.out.println("translateFile");
-		System.out.println("	configFiles: " + configFileList);
-		System.out.println("	inputFile: " + inputFileName);
-		System.out.println("	outputFile: " + outputFileName);
-		System.out.println("	settings: " + Strings.join(settingsList, " "));
-
 		try {
+			
+			String configFileList = configPath.getAbsolutePath() + File.separator +
+					(configFiles != null ? Strings.join(configFiles, ",") : "");
+			String inputFileName = input.getAbsolutePath();
+			String outputFileName = output.getAbsolutePath();
+	
+			Map<String,String> settings = new HashMap<String,String>();
+			if (semanticFiles != null)
+				settings.put("semanticFiles", Strings.join(semanticFiles, ","));
+			settings.put("literaryTextTable", tableRegistry.resolveTableURL(table));
+			if (otherSettings != null)
+				settings.putAll(otherSettings);
+			List<String> settingsList = new ArrayList<String>();
+			for (String key : settings.keySet())
+				settingsList.add(key + " " + settings.get(key));
+	
+			System.out.println("translateFile");
+			System.out.println("	configFiles: " + configFileList);
+			System.out.println("	inputFile: " + inputFileName);
+			System.out.println("	outputFile: " + outputFileName);
+			System.out.println("	settings: " + Strings.join(settingsList, " "));
+
 			setWriteablePath.invoke(liblouisutdml, tempDir.getAbsolutePath());
 			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName,
 					null,Strings.join(settingsList, "\n"), 0); }

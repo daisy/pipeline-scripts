@@ -8,6 +8,8 @@ public interface LiblouisTableRegistry {
 
 	public void removeTableSet(LiblouisTableSet tableSet);
 
-    public void onLouisTablePathUpdate(VoidFunction<String> callback);
+	public String resolveTableURL(String table);
+
+	public void onLouisTablePathUpdate(VoidFunction<String> callback);
 
 }

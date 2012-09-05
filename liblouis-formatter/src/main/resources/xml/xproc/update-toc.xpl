@@ -60,6 +60,10 @@
                 select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
                 <p:document href="format.xpl"/>
             </p:with-option>
+            <p:with-option name="table"
+                select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
+                <p:empty/>
+            </p:with-option>
             <p:with-option name="temp-dir" select="$temp-dir">
                 <p:empty/>
             </p:with-option>

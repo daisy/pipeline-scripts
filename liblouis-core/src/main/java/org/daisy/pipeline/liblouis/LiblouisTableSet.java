@@ -41,9 +41,11 @@ public class LiblouisTableSet {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
 		identifier = properties.get(IDENTIFIER).toString();
 		try {
-			new URL(identifier); }
-		catch (MalformedURLException e1) {
+			new URL(identifier);}
+		catch (MalformedURLException e) {
 			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL"); }
+		if (!identifier.endsWith("/"))
+			throw new IllegalArgumentException(IDENTIFIER + " must end with a forward slash");
 		if (properties.get(DIRECTORY) == null
 				|| properties.get(DIRECTORY).toString().isEmpty()) {
 			throw new IllegalArgumentException(DIRECTORY + " property must not be empty"); }
