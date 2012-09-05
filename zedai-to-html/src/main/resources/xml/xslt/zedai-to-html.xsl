@@ -315,10 +315,11 @@
   <!--====== Annotation module ==================================-->
 
   <xsl:template match="z:annotation" mode="#all">
-    <aside>
-      <xsl:call-template name="role">
+    <aside epub:type="annotation">
+        <!--TODO better @role translation-->
+      <!--<xsl:call-template name="role">
         <xsl:with-param name="roles" select="('annotation',@role)"/>
-      </xsl:call-template>
+      </xsl:call-template>-->
       <xsl:apply-templates select="@* except @role"/>
       <xsl:apply-templates/>
     </aside>
