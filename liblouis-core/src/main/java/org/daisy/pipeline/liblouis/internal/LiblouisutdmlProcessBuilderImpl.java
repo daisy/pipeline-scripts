@@ -16,21 +16,18 @@ import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
 
-public class LiblouisutdmlRuntimeExecImpl implements Liblouisutdml {
+public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
 	private final File file2brl;
 	private final LiblouisTableRegistry tableRegistry;
 	
-	public LiblouisutdmlRuntimeExecImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
-		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
+	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
 		try {
-			URL file2brlURL = nativeURLsIterator.next();
-			file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator + Files.fileName(file2brlURL));
-			if (!unpackDirectory.exists()) unpackDirectory.mkdirs();
-			Files.unpack(file2brlURL, file2brl); }
+			file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator
+					+ Files.fileName(nativeURLs.iterator().next())); }
 		catch (NoSuchElementException e) {
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
-		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory)) {
+		for (File file : Files.unpack(nativeURLs.iterator(), unpackDirectory)) {
 			if (!file.getName().matches(".*\\.(dll|exe)$")) Files.chmod775(file); }
 		this.tableRegistry = tableRegistry;
 	}

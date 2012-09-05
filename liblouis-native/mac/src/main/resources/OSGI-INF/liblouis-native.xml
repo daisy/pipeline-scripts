@@ -22,6 +22,20 @@
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
+    <!-- file2brl 32-bit -->
+    <scr:component  name="file2brl (32-bit)" activate="activate">
+        <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
+        <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
+        <scr:property name="name" type="String" value="file2brl"/>
+        <scr:property name="path" type="String" value="/native/i386/file2brl,
+                                                       /native/i386/liblouisutdml.dylib,
+                                                       /native/i386/liblouis.dylib,
+                                                       /native/fat/libxml2.2.dylib,
+                                                       /native/fat/libiconv.2.dylib,
+                                                       /native/fat/libz.1.dylib"/>
+        <scr:property name="os.family" type="String" value="mac"/>
+        <scr:property name="os.arch" type="String" value="x86,i386"/>
+    </scr:component>
     <!-- liblouis 64-bit -->
     <scr:component  name="liblouis.dylib (64-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
@@ -37,6 +51,20 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
         <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.dylib,
+                                                       /native/x86_64/liblouis.dylib,
+                                                       /native/fat/libxml2.2.dylib,
+                                                       /native/fat/libiconv.2.dylib,
+                                                       /native/fat/libz.1.dylib"/>
+        <scr:property name="os.family" type="String" value="mac"/>
+        <scr:property name="os.arch" type="String" value="x86_64"/>
+    </scr:component>
+    <!-- file2brl 64-bit -->
+    <scr:component  name="file2brl (64-bit)" activate="activate">
+        <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
+        <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
+        <scr:property name="name" type="String" value="file2brl"/>
+        <scr:property name="path" type="String" value="/native/x86_64/file2brl,
+                                                       /native/x86_64/liblouisutdml.dylib,
                                                        /native/x86_64/liblouis.dylib,
                                                        /native/fat/libxml2.2.dylib,
                                                        /native/fat/libiconv.2.dylib,

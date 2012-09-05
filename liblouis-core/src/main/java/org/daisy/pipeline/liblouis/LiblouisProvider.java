@@ -20,11 +20,10 @@ import org.daisy.pipeline.liblouis.Utilities.OS;
 import org.daisy.pipeline.liblouis.Utilities.Predicates;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
 import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
-import org.daisy.pipeline.liblouis.internal.Environment;
 import org.daisy.pipeline.liblouis.internal.LiblouisJnaImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisTableFinderImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisutdmlJniImpl;
-import org.daisy.pipeline.liblouis.internal.LiblouisutdmlRuntimeExecImpl;
+import org.daisy.pipeline.liblouis.internal.LiblouisutdmlProcessBuilderImpl;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -128,7 +127,7 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 					return false;
 				if (OS.getFamily() != binary.getOsFamily())
 					return false;
-				if ("file2brl".equals(binary.getName()))
+				if (OS.isWindows() && "file2brl".equals(binary.getName()))
 					return true;
 				return binary.getOsArchs().contains(OS.getArch()); }};
 	
