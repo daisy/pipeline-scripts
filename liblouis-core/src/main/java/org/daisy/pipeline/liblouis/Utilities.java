@@ -58,6 +58,10 @@ public abstract class Utilities {
 			return getFamily() == Family.WINDOWS;
 		}
 		
+		public static boolean isMac() {
+			return getFamily() == Family.MAC;
+		}
+		
 		public static String getArch() {
 			return System.getProperty("os.arch").toLowerCase();
 		}
@@ -117,7 +121,7 @@ public abstract class Utilities {
 
 		public static String fileName(URL url) {
 			String urlString = url.toExternalForm();
-			return urlString.substring(urlString.lastIndexOf('/')+1, urlString.length());
+			return urlString.substring(urlString.lastIndexOf('/')+1);
 		}
 
 		public static void chmod775(File file) {
