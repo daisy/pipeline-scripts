@@ -22,7 +22,7 @@
     <entry key="de_DE">unicode.dis,de-de-g2.ctb,braille-patterns.cti</entry>
     <entry key="dra">unicode.dis,spaces.ctb,dra.ctb,braille-patterns.cti</entry>
     <entry key="el">unicode.dis,gr-gr-g1.utb,braille-patterns.cti</entry>
-    <entry key="en">unicode.dis,en-GB-g2.ctb,braille-patterns.cti</entry>
+    <entry key="en">unicode.dis,en-us-g2.ctb,braille-patterns.cti</entry>
     <entry key="en_AS">unicode.dis,UEBC-g2.ctb,braille-patterns.cti</entry>
     <entry key="en_CA">unicode.dis,en_CA.ctb,braille-patterns.cti</entry>
     <entry key="en_US">unicode.dis,en-us-g2.ctb,braille-patterns.cti</entry>
