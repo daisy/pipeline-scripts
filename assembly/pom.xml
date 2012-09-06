@@ -14,12 +14,13 @@
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>assembly</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   
   <name>DAISY Pipeline 2 :: Braille Modules Assembly</name>
   <description>Builds an installer for the DAISY Pipeline 2 Braille modules.</description>
 
   <properties>
+    <assembly.version>1.0</assembly.version>
     <izpack.version>5.0.0-beta11-SNAPSHOT</izpack.version>
     <izpack.staging>${project.build.directory}/staging</izpack.staging>
   </properties>
@@ -39,11 +40,11 @@
         <configuration>
           <transformationSets>
             <transformationSet>
-              <dir>${basedir}/src/izpack</dir>
+              <dir>${basedir}/src/main/izpack</dir>
               <includes>
                 <include>install.xml</include>
               </includes>
-              <stylesheet>${basedir}/src/izpack/packs.xsl</stylesheet>
+              <stylesheet>${basedir}/src/main/izpack/packs.xsl</stylesheet>
               <outputDir>${izpack.staging}</outputDir>
               <parameters>
                 <parameter>
@@ -192,8 +193,10 @@
               <goal>izpack</goal>
             </goals>
             <configuration>
+              <attach>false</attach>
               <baseDir>${izpack.staging}</baseDir>
               <installFile>${izpack.staging}/install.xml</installFile>
+              <output>${project.build.directory}/braille-modules-${assembly.version}-install.jar</output>
             </configuration>
           </execution>
         </executions>
@@ -205,6 +208,39 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dist-modules</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/modules.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>braille-modules-${assembly.version}-noinstall</finalName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>dist-installer</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/installer.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>braille-modules-${assembly.version}-installer</finalName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>      
     </plugins>
   </build>
   

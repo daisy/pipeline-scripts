@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<assembly>
+  <id>modules</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <baseDirectory>/</baseDirectory>
+  <files>
+    <file>
+      <source>src/main/resources/README-modules.txt</source>
+      <destName>README.txt</destName>
+    </file>
+  </files>
+  <fileSets>
+    <fileSet>
+      <directory>target/staging</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>modules/**</include>
+        <include>system/**</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>
