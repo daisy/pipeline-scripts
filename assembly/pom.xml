@@ -66,12 +66,12 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-bundles</id>
+            <id>copy-module-bundles</id>
             <goals>
               <goal>copy</goal>
             </goals>
             <configuration>
-              <outputDirectory>${izpack.staging}/bundles</outputDirectory>
+              <outputDirectory>${izpack.staging}/modules</outputDirectory>
               <stripVersion>true</stripVersion>
               <artifactItems>
                 <!-- Linux specific -->
@@ -130,6 +130,18 @@
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>zedai-to-pef</artifactId>
                 </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-system-bundles</id>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${izpack.staging}/system/framework</outputDirectory>
+              <stripVersion>true</stripVersion>
+              <artifactItems>
                 <!-- Dependencies -->
                 <artifactItem>
                   <groupId>asm</groupId>
