@@ -5,6 +5,7 @@
     <nextCatalog catalog="./daisy202-to-epub3/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./dtbook-to-epub3/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./dtbook-to-zedai/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./dtbook-validator/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/common-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/dtbook-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/epub3-nav-utils/src/main/resources/META-INF/catalog.xml"/>

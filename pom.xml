@@ -28,6 +28,7 @@
     <module>utilities</module>
     <module>zedai-to-epub3</module>
     <module>zedai-to-html</module>
+    <module>dtbook-validator</module>
   </modules>
 
 </project>
