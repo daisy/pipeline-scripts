@@ -56,7 +56,7 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-translate.xsl'">
+    <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-liblouis-translate.xsl'">
         <p:documentation>
             <h2 px:role="name">translator</h2>
             <p px:role="desc">Identifier (URL) of the translator XSLT or XProc to be used. Defaults to a simple generic liblouis-based translator.</p>

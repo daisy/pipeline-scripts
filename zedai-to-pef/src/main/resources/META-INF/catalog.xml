@@ -6,6 +6,7 @@
        uri="../xml/xproc/zedai-to-pef.xpl" px:script="true"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-formatter" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />

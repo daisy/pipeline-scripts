@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="sv-SE">
+    <head>
+        <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
+            <meta property="z3998:name" content="book"/>
+            <meta property="z3998:version" content="1.0"/>
+        </meta>
+        <meta rel="z3998:rdfa-context" resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
+    </head>
+    <body>
+        <bodymatter>
+            <section>
+                <h>Some Swedish to test Dotify</h>
+                <p>Skillnaden mellan arbets- och vilodagar blev mindre skarp; hon kunde tillåta
+                  sig vilodagar mitt i veckan.</p>
+            </section>
+        </bodymatter>
+    </body>
+</document>

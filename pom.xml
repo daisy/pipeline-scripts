@@ -30,12 +30,18 @@
     <module>pef-calabash</module>
     <module>utilities</module>
     <module>liblouis-formatter</module>
+    <module>dotify-saxon</module>
     <module>zedai-to-pef</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <!-- Braille modules -->
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>dotify-saxon</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>liblouis-core</artifactId>
@@ -159,6 +165,21 @@
         <groupId>org.liblouis</groupId>
         <artifactId>liblouis-java</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.libs</groupId>
+        <artifactId>dotify-translator</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.libs</groupId>
+        <artifactId>texhyphj</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j</artifactId>
+        <version>4.6</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
