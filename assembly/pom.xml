@@ -93,11 +93,11 @@
                 <!-- Other Braille modules -->
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>braille-css</artifactId>
+                  <artifactId>braillecss</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>braille-css-calabash</artifactId>
+                  <artifactId>braillecss-calabash</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
