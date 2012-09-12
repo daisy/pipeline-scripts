@@ -13,7 +13,7 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-core</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>${braille.liblouis-core.version}</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: liblouis-core</name>

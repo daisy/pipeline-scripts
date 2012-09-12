@@ -13,7 +13,7 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>zedai-to-pef</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>${braille.zedai-to-pef.version}</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: zedai-to-pef</name>

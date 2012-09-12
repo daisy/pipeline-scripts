@@ -13,14 +13,14 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>assembly</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${braille.modules.version}</version>
   <packaging>pom</packaging>
   
   <name>DAISY Pipeline 2 :: Braille Modules Assembly</name>
   <description>Builds an installer for the DAISY Pipeline 2 Braille modules.</description>
 
   <properties>
-    <assembly.version>1.0</assembly.version>
+    <assembly.version>${braille.modules.version}</assembly.version>
     <izpack.version>5.0.0-beta11-SNAPSHOT</izpack.version>
     <izpack.staging>${project.build.directory}/staging</izpack.staging>
   </properties>
