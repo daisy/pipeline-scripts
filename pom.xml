@@ -27,7 +27,7 @@
     <braille.liblouis-formatter.version>1.0.0</braille.liblouis-formatter.version>
     <braille.liblouis-native.linux.version>${braille.modules.version}</braille.liblouis-native.linux.version>
     <braille.liblouis-native.mac.version>1.0.0</braille.liblouis-native.mac.version>
-    <braille.liblouis-native.windows.version>1.0.0</braille.liblouis-native.windows.version>
+    <braille.liblouis-native.windows.version>${braille.modules.version}</braille.liblouis-native.windows.version>
     <braille.liblouis-saxon.version>1.0.0</braille.liblouis-saxon.version>
     <braille.liblouis-tables.version>${braille.modules.version}</braille.liblouis-tables.version>
     <braille.pef-calabash.version>1.0.0</braille.pef-calabash.version>

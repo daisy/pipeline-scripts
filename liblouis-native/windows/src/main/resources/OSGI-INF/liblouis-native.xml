@@ -37,7 +37,7 @@
         <scr:property name="name" type="String" value="liblouis"/>
         <scr:property name="path" type="String" value="/native/x86_64/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="x86_64"/>
+        <scr:property name="os.arch" type="String" value="x86_64,amd64,x64"/>
     </scr:component>
     <!-- liblouisutdml 64-bit -->
     <scr:component  name="liblouisutdml.dll (64-bit)" activate="activate">
@@ -47,6 +47,6 @@
         <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.dll,
                                                        /native/x86_64/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="x86_64"/>
+        <scr:property name="os.arch" type="String" value="x86_64,amd64,x64"/>
     </scr:component>
 </components>
