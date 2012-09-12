@@ -5,7 +5,7 @@
         <scr:implementation class="org.daisy.pipeline.liblouis.Binary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/x86_64/liblouis.so.2"/>
+        <scr:property name="path" type="String" value="/native/x86_64/liblouis.so.2.3.0"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
     </scr:component>
@@ -15,7 +15,7 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
         <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.so.6,
-                                                       /native/x86_64/liblouis.so.2,
+                                                       /native/x86_64/liblouis.so.2.3.0,
                                                        /native/x86_64/libxml2.so.2"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
@@ -27,7 +27,7 @@
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/x86_64/file2brl,
                                                        /native/x86_64/liblouisutdml.so.6,
-                                                       /native/x86_64/liblouis.so.2,
+                                                       /native/x86_64/liblouis.so.2.3.0,
                                                        /native/x86_64/libxml2.so.2"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
