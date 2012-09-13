@@ -12,6 +12,8 @@ import java.util.StringTokenizer;
 
 import org.daisy.pipeline.liblouis.LiblouisTableFinder;
 import org.daisy.pipeline.liblouis.LiblouisTableSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 
@@ -91,6 +93,7 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 						map.put(locale, properties.getProperty(key)); }
 				reader.close(); }
 			catch (Exception e) {
+				logger.error("Could not read manifest for table set {}" + tableSet.getIdentifier());
 				throw new RuntimeException("Could not read manifest for table set " + tableSet.getIdentifier(), e); }}
 		return map;
 	}
@@ -111,4 +114,6 @@ public class LiblouisTableFinderImpl implements LiblouisTableFinder {
 		else
 			throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed");
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisTableFinderImpl.class);
 }

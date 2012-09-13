@@ -13,6 +13,8 @@ import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
@@ -35,18 +37,21 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		this.tableRegistry = tableRegistry;
 	}
 	
-	public void load() {
-		if (loaded) return;
-		try {
-			ClassLoader classLoader = new LiblouisutdmlJniClassLoader(jarURLs, nativeDirectory);
-			Class<?> liblouisutdmlClass = classLoader.loadClass("org.liblouis.liblouisutdml");
-			liblouisutdml = liblouisutdmlClass.getMethod("getInstance").invoke(null);
-			setWriteablePath = liblouisutdmlClass.getMethod("setWriteablePath", String.class);
-			translateFile = liblouisutdmlClass.getMethod("translateFile", String.class,
-					String.class, String.class, String.class, String.class, int.class); }
-		catch (Exception e) {
-			throw new RuntimeException("Liblouisutdml instance could not be loaded", e); }
-		loaded = true;
+	public LiblouisutdmlJniImpl load() {
+		if (!loaded) {
+			try {
+				ClassLoader classLoader = new LiblouisutdmlJniClassLoader(jarURLs, nativeDirectory);
+				Class<?> liblouisutdmlClass = classLoader.loadClass("org.liblouis.liblouisutdml");
+				liblouisutdml = liblouisutdmlClass.getMethod("getInstance").invoke(null);
+				setWriteablePath = liblouisutdmlClass.getMethod("setWriteablePath", String.class);
+				translateFile = liblouisutdmlClass.getMethod("translateFile", String.class,
+						String.class, String.class, String.class, String.class, int.class);
+				logger.debug("Loading liblouisutdml service"); }
+			catch (Exception e) {
+				logger.error("Could not load liblouisutdml service");
+				throw new RuntimeException("Could not load liblouisutdml service", e); }
+			loaded = true; }
+		return this;
 	}
 	
 	public void unload() {
@@ -87,17 +92,19 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			for (String key : settings.keySet())
 				settingsList.add(key + " " + settings.get(key));
 	
-			System.out.println("translateFile");
-			System.out.println("	configFiles: " + configFileList);
-			System.out.println("	inputFile: " + inputFileName);
-			System.out.println("	outputFile: " + outputFileName);
-			System.out.println("	settings: " + Strings.join(settingsList, " "));
+			logger.debug("liblouisutdml conversion:" +
+			"\n   configFiles: " + configFileList +
+			"\n   inputFile: " + inputFileName +
+			"\n   outputFile: " + outputFileName +
+			"\n   settings: " + Strings.join(settingsList, " "));
 
 			setWriteablePath.invoke(liblouisutdml, tempDir.getAbsolutePath());
 			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName,
 					null,Strings.join(settingsList, "\n"), 0); }
 		catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Liblouisutdml error", e); }
+			logger.error("Error during liblouisutdml conversion");
+			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisutdmlJniImpl.class);
 }

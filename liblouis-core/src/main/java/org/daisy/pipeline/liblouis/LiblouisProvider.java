@@ -29,6 +29,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiblouisProvider implements LiblouisTableRegistry {
 	
@@ -79,7 +81,8 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 						bundleContext.getDataFile("native/liblouis"),
 						this); }
 				liblouisRegistration = bundleContext.registerService(
-					Liblouis.class.getName(), liblouis, null); }
+					Liblouis.class.getName(), liblouis, null);
+				logger.debug("Publishing liblouis service"); }
 			catch (IllegalArgumentException e) {}
 			catch (NoSuchElementException e) {}}
 		if (liblouisutdmlRegistration == null) {
@@ -97,7 +100,8 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 							bundleContext.getDataFile("native/liblouisutdml"),
 							this); }}
 				liblouisutdmlRegistration = bundleContext.registerService(
-					Liblouisutdml.class.getName(), liblouisutdml, null); }
+					Liblouisutdml.class.getName(), liblouisutdml, null);
+				logger.debug("Publishing liblouisutdml service"); }
 			catch (IllegalArgumentException e) {}
 			catch (NoSuchElementException e) {}}
 		if (tableFinderRegistration == null) {
@@ -108,10 +112,12 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 	private void unpublishServices() {
 		if (liblouisRegistration != null) {
 			liblouisRegistration.unregister();
-			liblouisRegistration = null; }
+			liblouisRegistration = null;
+			logger.debug("Unpublishing liblouis service"); }
 		if (liblouisutdmlRegistration != null) {
 			liblouisutdmlRegistration.unregister();
-			liblouisutdmlRegistration = null; }
+			liblouisutdmlRegistration = null;
+			logger.debug("Unpublishing liblouisutdml service"); }
 		if (tableFinderRegistration != null) {
 			tableFinderRegistration.unregister();
 			tableFinderRegistration = null; }
@@ -132,9 +138,11 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 				return binary.getOsArchs().contains(OS.getArch()); }};
 	
 	public void addBinary(Binary binary) {
+		logger.debug("Registering {} binary", binary.getName());
 		if (binaryFilter.apply(binary)) {
 			binaries.add(binary);
 			publishServices(); }
+		else logger.debug("... binary will not work on {} {}", OS.getFamily().name(), OS.getArch());
 	}
 	
 	public void removeBinary(Binary binary) {
@@ -152,17 +160,19 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 	private final Map<String,LiblouisTableSet> tableSets = new HashMap<String,LiblouisTableSet>();
 	
 	public void addTableSet(LiblouisTableSet tableSet) {
-		if (tableSets.containsKey(tableSet.getIdentifier()))
-			throw new RuntimeException("Table registry already contains table set with identifier " + tableSet.getIdentifier());
+		if (tableSets.containsKey(tableSet.getIdentifier())) {
+			logger.error("Table registry already contains table set with identifier {}", tableSet.getIdentifier());
+			throw new RuntimeException("Table registry already contains table set with identifier " + tableSet.getIdentifier()); }
 		tableSets.put(tableSet.getIdentifier(), tableSet);
 		try {
 			for (VoidFunction<String> f : callbacks) f.apply(getLouisTablePath());
 			tableFinder.addTableSet(tableSet); }
 		catch (RuntimeException e) {
 			tableSets.remove(tableSet.getIdentifier());
+			logger.error("Table set could not be registered: {}", tableSet.getIdentifier());
 			throw e; }
 		urlResolverCache.clear();
-		System.out.println("Added table set to registry: " + tableSet.getIdentifier());
+		logger.debug("Added table set to registry: {}", tableSet.getIdentifier());
 	}
 
 	public void removeTableSet(LiblouisTableSet tableSet) {
@@ -170,7 +180,7 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 		tableFinder.removeTableSet(tableSet);
 		urlResolverCache.clear();
 		for (VoidFunction<String> f : callbacks) f.apply(getLouisTablePath());
-		System.out.println("Removed table set from registry: " + tableSet.getIdentifier());
+		logger.debug("Removed table set from registry: {}", tableSet.getIdentifier());
 	}
 	
 	private final Map<String,String> urlResolverCache = new HashMap<String,String>();
@@ -184,6 +194,7 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 				resolved = path.getAbsolutePath() + File.separator + table.substring(i);
 				urlResolverCache.put(table, resolved); }
 			catch (Exception e) {
+				logger.error("Cannot resolve table URL: {}", table);
 				throw new RuntimeException("Cannot resolve table URL: " + table, e); }}
 		return resolved;
 	}
@@ -201,4 +212,6 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			paths.add(tableSet.getPath().getAbsolutePath());
 		return Strings.join(paths.iterator(), ",");
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisProvider.class);
 }

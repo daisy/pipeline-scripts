@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -15,6 +14,8 @@ import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
 import org.daisy.pipeline.liblouis.Utilities.Files;
 import org.daisy.pipeline.liblouis.Utilities.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
@@ -61,7 +62,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			command.add(input.getAbsolutePath());
 			command.add(output.getAbsolutePath());
 	
-			System.out.println(Strings.join(command, "\n\t"));
+			logger.debug("liblouisutdml conversion:\n" + Strings.join(command, "\n\t"));
 			
 			ProcessBuilder builder = new ProcessBuilder(command);
 			builder.directory(tempDir);
@@ -79,7 +80,9 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 					throw new RuntimeException("What happened?"); }}
 			
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error during liblouisutdml conversion");
 			throw new RuntimeException("Liblouisutdml error", e); }
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisutdmlProcessBuilderImpl.class);
 }

@@ -12,8 +12,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-public abstract class Utilities {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public abstract class Utilities {
+	
     public static interface VoidFunction<T> {
 		public void apply(T object);
 	}
@@ -90,7 +93,7 @@ public abstract class Utilities {
 		
 		public static boolean unpack(URL url, File file) {
 			if (file.exists()) return false;
-			System.out.println("Unpacking " + file.getName() + " ...");
+			logger.debug("Unpacking file {} ...", file.getName());
 			try {
 				file.createNewFile();
 				FileOutputStream writer = new FileOutputStream(file);
@@ -105,6 +108,7 @@ public abstract class Utilities {
 				reader.close();
 				return true; }
 			catch (Exception e) {
+				logger.error("Exception occured during unpacking of file {}", file.getName());
 				throw new RuntimeException(
 						"Exception occured during unpacking of file '" + file.getName() + "'", e); }
 		}
@@ -128,8 +132,11 @@ public abstract class Utilities {
 			try {
 				Runtime.getRuntime().exec(new String[] { "chmod", "775", file.getAbsolutePath() }).waitFor(); }
 			catch (Exception e) {
+				logger.error("Exception occured during chmodding of file {}", file.getName());
 				throw new RuntimeException(
 						"Exception occured during chmodding of file '" + file.getName() + "'", e); }
 		}
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(Utilities.class);
 }

@@ -12,6 +12,8 @@ import java.util.Map;
 import org.daisy.pipeline.liblouis.Liblouis;
 import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.liblouis.Utilities.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiblouisJnaImpl implements Liblouis {
 
@@ -34,18 +36,21 @@ public class LiblouisJnaImpl implements Liblouis {
 		this.tableRegistry = tableRegistry;
 	}
 	
-	private void load() {
-		if (loaded) return;
-		try {
-			ClassLoader classLoader = new LiblouisJnaClassLoader(jarURLs, nativeDirectory);
-			Class<?> TranslatorClass = classLoader.loadClass("org.liblouis.Translator");
-			Class<?> TranslationResultClass = classLoader.loadClass("org.liblouis.TranslationResult");
-			Translator = TranslatorClass.getConstructor(String.class);
-			translate = TranslatorClass.getMethod("translate", String.class);
-			getBraille = TranslationResultClass.getMethod("getBraille"); }
-		catch (Exception e) {
-			throw new RuntimeException("Liblouis instance could not be loaded", e); }
-		loaded = true;
+	public LiblouisJnaImpl load() {
+		if (!loaded) {
+			try {
+				ClassLoader classLoader = new LiblouisJnaClassLoader(jarURLs, nativeDirectory);
+				Class<?> TranslatorClass = classLoader.loadClass("org.liblouis.Translator");
+				Class<?> TranslationResultClass = classLoader.loadClass("org.liblouis.TranslationResult");
+				Translator = TranslatorClass.getConstructor(String.class);
+				translate = TranslatorClass.getMethod("translate", String.class);
+				getBraille = TranslationResultClass.getMethod("getBraille");
+				logger.debug("Loading liblouis service: version {}", TranslatorClass.getMethod("version").invoke(null)); }
+			catch (Exception e) {
+				logger.error("Could not load liblouis service");
+				throw new RuntimeException("Could not load liblouis service", e); }
+			loaded = true; }
+		return this;
 	}
 	
 	public void unload() {
@@ -54,7 +59,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		translate = null;
 		getBraille = null;
 		translatorCache.clear();
-		System.gc(); // ? Doesn't always work immediately, sometimes needs a second garbage collection
+		System.gc();
 		loaded = false;
 	}
 	
@@ -67,6 +72,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
 		catch (Exception e) {
+			logger.error("Error during liblouis translation");
 			throw new RuntimeException(e); }
 	}
 	
@@ -86,4 +92,6 @@ public class LiblouisJnaImpl implements Liblouis {
 	private static String squeeze(final String in) {
 		return in.replaceAll("(?:\\p{Z}|\\s)+", " ");
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);
 }

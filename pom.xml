@@ -23,7 +23,7 @@
     <braille.css-calabash.version>1.0.0</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
     <braille.liblouis-calabash.version>1.0.0</braille.liblouis-calabash.version>
-    <braille.liblouis-core.version>1.0.0</braille.liblouis-core.version>
+    <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
     <braille.liblouis-formatter.version>1.0.0</braille.liblouis-formatter.version>
     <braille.liblouis-native.linux.version>${braille.modules.version}</braille.liblouis-native.linux.version>
     <braille.liblouis-native.mac.version>1.0.0</braille.liblouis-native.mac.version>
@@ -193,6 +193,11 @@
         <groupId>com.ibm.icu</groupId>
         <artifactId>icu4j</artifactId>
         <version>4.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.6.4</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
