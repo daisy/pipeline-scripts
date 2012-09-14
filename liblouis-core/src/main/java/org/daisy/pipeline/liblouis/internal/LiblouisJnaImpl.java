@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.daisy.pipeline.braille.Utilities.Files;
 import org.daisy.pipeline.liblouis.Liblouis;
-import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
-import org.daisy.pipeline.liblouis.Utilities.Files;
+import org.daisy.pipeline.liblouis.LiblouisTableResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +20,13 @@ public class LiblouisJnaImpl implements Liblouis {
 
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
-	private final LiblouisTableRegistry tableRegistry;
+	private final LiblouisTableResolver tableResolver;
 	private Constructor<?> Translator;
 	private Method translate;
 	private Method getBraille;
 	private boolean loaded = false;
 	
-	public LiblouisJnaImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
+	public LiblouisJnaImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
 		this.jarURLs = jarURLs;
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
@@ -33,7 +34,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
-		this.tableRegistry = tableRegistry;
+		this.tableResolver = tableResolver;
 	}
 	
 	public LiblouisJnaImpl load() {
@@ -63,12 +64,15 @@ public class LiblouisJnaImpl implements Liblouis {
 		loaded = false;
 	}
 	
-	public String translate(String tables, String text) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public String translate(URL table, String text) {
 		if (!loaded) load();
 		try {
-			tables = tableRegistry.resolveTableURL(tables);
+			String tab = Files.fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath();
 			text = squeeze(text);
-			return (String)getBraille.invoke(translate.invoke(getTranslator(tables), text)); }
+			return (String)getBraille.invoke(translate.invoke(getTranslator(tab), text)); }
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
 		catch (Exception e) {

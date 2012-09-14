@@ -9,10 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
+import org.daisy.pipeline.braille.Utilities.Files;
+import org.daisy.pipeline.braille.Utilities.Strings;
+import org.daisy.pipeline.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
-import org.daisy.pipeline.liblouis.Utilities.Files;
-import org.daisy.pipeline.liblouis.Utilities.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,13 +21,13 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
-	private final LiblouisTableRegistry tableRegistry;
+	private final LiblouisTableResolver tableResolver;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
 	private boolean loaded = false;
 	
-	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
+	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
 		this.jarURLs = jarURLs;
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
@@ -34,7 +35,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
 			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
 		nativeDirectory = unpackDirectory;
-		this.tableRegistry = tableRegistry;
+		this.tableResolver = tableResolver;
 	}
 	
 	public LiblouisutdmlJniImpl load() {
@@ -63,10 +64,13 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		loaded = false;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			String table,
+			URL table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
@@ -85,7 +89,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-			settings.put("literaryTextTable", tableRegistry.resolveTableURL(table));
+			settings.put("literaryTextTable", Files.fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
 			if (otherSettings != null)
 				settings.putAll(otherSettings);
 			List<String> settingsList = new ArrayList<String>();

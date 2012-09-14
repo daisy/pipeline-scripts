@@ -64,15 +64,12 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 			public SequenceIterator call(SequenceIterator[] arguments,
 					XPathContext context) throws XPathException {
 
-				final StringValue locale = (StringValue) arguments[0].next();
-				if (locale == null) {
-					return EmptyIterator.getInstance();
-				}
-				String table = tableFinder.find(locale.getStringValue());
-				if (table == null) {
-					return EmptyIterator.getInstance();
-				}
-				return SingletonIterator.makeIterator(new StringValue(table));
+				StringValue locale = (StringValue) arguments[0].next();
+				if (locale != null) {
+					String table = tableFinder.find(locale.getStringValue()).toExternalForm();
+					if (table != null)
+						return SingletonIterator.makeIterator(new StringValue(table)); }
+				return EmptyIterator.getInstance();
 			}
 		};
 	}

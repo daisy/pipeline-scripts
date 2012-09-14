@@ -4,24 +4,19 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.daisy.pipeline.liblouis.Utilities.OS;
-import org.daisy.pipeline.liblouis.Utilities.Predicates;
-import org.daisy.pipeline.liblouis.Utilities.Strings;
-import org.daisy.pipeline.liblouis.Utilities.VoidFunction;
+import org.daisy.pipeline.braille.Binary;
+import org.daisy.pipeline.braille.TableRegistry;
+import org.daisy.pipeline.braille.Utilities.OS;
+import org.daisy.pipeline.braille.Utilities.Predicates;
 import org.daisy.pipeline.liblouis.internal.LiblouisJnaImpl;
-import org.daisy.pipeline.liblouis.internal.LiblouisTableFinderImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisutdmlJniImpl;
 import org.daisy.pipeline.liblouis.internal.LiblouisutdmlProcessBuilderImpl;
 
@@ -32,11 +27,11 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LiblouisProvider implements LiblouisTableRegistry {
+public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implements LiblouisTableResolver, LiblouisTableFinder {
 	
 	private BundleContext bundleContext;
 	private boolean initialized = false;
-	
+
 	public void activate(ComponentContext context) {
 		if (!initialized) {
 			bundleContext = context.getBundleContext();
@@ -62,13 +57,11 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			new Function<String,URL>() {
 				public URL apply(String s) { return bundle.getEntry(s); }});
 	}
-	
+
 	private LiblouisJnaImpl liblouis;
 	private Liblouisutdml liblouisutdml;
-	private LiblouisTableFinderImpl tableFinder = new LiblouisTableFinderImpl();
 	private ServiceRegistration liblouisRegistration;
 	private ServiceRegistration liblouisutdmlRegistration;
-	private ServiceRegistration tableFinderRegistration;
 	
 	private void publishServices() {
 		if (!initialized) return;
@@ -104,9 +97,6 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 				logger.debug("Publishing liblouisutdml service"); }
 			catch (IllegalArgumentException e) {}
 			catch (NoSuchElementException e) {}}
-		if (tableFinderRegistration == null) {
-			tableFinderRegistration = bundleContext.registerService(
-				LiblouisTableFinder.class.getName(), tableFinder, null); }
 	}
 	
 	private void unpublishServices() {
@@ -118,9 +108,6 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 			liblouisutdmlRegistration.unregister();
 			liblouisutdmlRegistration = null;
 			logger.debug("Unpublishing liblouisutdml service"); }
-		if (tableFinderRegistration != null) {
-			tableFinderRegistration.unregister();
-			tableFinderRegistration = null; }
 	}
 	
 	private final Set<Binary> binaries = new HashSet<Binary>();
@@ -155,62 +142,6 @@ public class LiblouisProvider implements LiblouisTableRegistry {
 				new Predicate<Binary>() {
 					public boolean apply(Binary binary) {
 						return name.equals(binary.getName()); }})).getPaths();
-	}
-
-	private final Map<String,LiblouisTableSet> tableSets = new HashMap<String,LiblouisTableSet>();
-	
-	public void addTableSet(LiblouisTableSet tableSet) {
-		if (tableSets.containsKey(tableSet.getIdentifier())) {
-			logger.error("Table registry already contains table set with identifier {}", tableSet.getIdentifier());
-			throw new RuntimeException("Table registry already contains table set with identifier " + tableSet.getIdentifier()); }
-		tableSets.put(tableSet.getIdentifier(), tableSet);
-		try {
-			for (VoidFunction<String> f : callbacks) f.apply(getLouisTablePath());
-			tableFinder.addTableSet(tableSet); }
-		catch (RuntimeException e) {
-			tableSets.remove(tableSet.getIdentifier());
-			logger.error("Table set could not be registered: {}", tableSet.getIdentifier());
-			throw e; }
-		urlResolverCache.clear();
-		logger.debug("Added table set to registry: {}", tableSet.getIdentifier());
-	}
-
-	public void removeTableSet(LiblouisTableSet tableSet) {
-		tableSets.remove(tableSet.getIdentifier());
-		tableFinder.removeTableSet(tableSet);
-		urlResolverCache.clear();
-		for (VoidFunction<String> f : callbacks) f.apply(getLouisTablePath());
-		logger.debug("Removed table set from registry: {}", tableSet.getIdentifier());
-	}
-	
-	private final Map<String,String> urlResolverCache = new HashMap<String,String>();
-	
-	public String resolveTableURL(String table) {
-		String resolved = urlResolverCache.get(table);
-		if (resolved == null) {
-			try {
-				int i = table.lastIndexOf('/') + 1;
-				File path = tableSets.get(table.substring(0, i)).getPath();
-				resolved = path.getAbsolutePath() + File.separator + table.substring(i);
-				urlResolverCache.put(table, resolved); }
-			catch (Exception e) {
-				logger.error("Cannot resolve table URL: {}", table);
-				throw new RuntimeException("Cannot resolve table URL: " + table, e); }}
-		return resolved;
-	}
-	
-	private Collection<VoidFunction<String>> callbacks = new ArrayList<VoidFunction<String>>();
-	
-	public void onLouisTablePathUpdate(VoidFunction<String> callback) {
-		callback.apply(getLouisTablePath());
-		callbacks.add(callback);
-	}
-
-	private String getLouisTablePath() {
-		Collection<String> paths = new ArrayList<String>();
-		for (LiblouisTableSet tableSet : tableSets.values())
-			paths.add(tableSet.getPath().getAbsolutePath());
-		return Strings.join(paths.iterator(), ",");
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisProvider.class);

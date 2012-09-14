@@ -1,11 +1,5 @@
 package org.daisy.pipeline.liblouis;
 
-import java.util.Locale;
+import org.daisy.pipeline.braille.TableFinder;
 
-public interface LiblouisTableFinder {
-
-	public String find(String locale);
-
-	public String find(Locale locale);
-	
-}
+public interface LiblouisTableFinder extends TableFinder {}

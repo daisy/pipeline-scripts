@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 
+import org.daisy.pipeline.braille.JarClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

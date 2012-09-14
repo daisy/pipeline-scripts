@@ -1,4 +1,4 @@
-package org.daisy.pipeline.liblouis.internal;
+package org.daisy.pipeline.braille;
 
 import java.net.MalformedURLException;
 import java.net.URL;

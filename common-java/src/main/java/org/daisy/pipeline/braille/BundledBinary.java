@@ -1,4 +1,4 @@
-package org.daisy.pipeline.liblouis;
+package org.daisy.pipeline.braille;
 
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
@@ -9,11 +9,11 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 
-import org.daisy.pipeline.liblouis.Utilities.OS;
+import org.daisy.pipeline.braille.Utilities.OS;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
 
-public class Binary {
+public class BundledBinary implements Binary {
 
 	private static final String NAME = "name";
 	private static final String PATH = "path";
@@ -30,7 +30,7 @@ public class Binary {
 	}
 
 	/**
-	 * First URL is the binary. Following URLs are the dependencies.
+	 * {@inheritDoc}
 	 */
 	public Iterable<URL> getPaths() {
 		return paths;
@@ -95,13 +95,13 @@ public class Binary {
 		if (getClass() != object.getClass())
 			return false;
 		Binary that = (Binary)object;
-		if (!this.name.equals(that.name))
+		if (!this.name.equals(that.getName()))
 			return false;
-		if (!this.paths.equals(that.paths))
+		if (!this.paths.equals(that.getPaths()))
 			return false;
-		if (!this.family.equals(that.family))
+		if (!this.family.equals(that.getOsFamily()))
 			return false;
-		if (!this.archs.equals(that.archs))
+		if (!this.archs.equals(that.getOsArchs()))
 			return false;
 		return true;
 	}

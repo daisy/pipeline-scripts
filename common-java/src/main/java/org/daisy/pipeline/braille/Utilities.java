@@ -1,15 +1,19 @@
-package org.daisy.pipeline.liblouis;
+package org.daisy.pipeline.braille;
 
 import com.google.common.base.Predicate;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -17,20 +21,34 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Utilities {
 	
-    public static interface VoidFunction<T> {
+	public static interface VoidFunction<T> {
 		public void apply(T object);
 	}
-
-    public static interface Function2<T1,T2,T3> {
+	
+	public static interface Function2<T1,T2,T3> {
 		public T3 apply(T1 object1, T2 object2);
 	}
 	
+	public static class Pair<T1,T2> {
+		public final T1 _1;
+		public final T2 _2;
+		public Pair(T1 _1, T2 _2) {
+			this._1 = _1;
+			this._2 = _2;
+		}
+	}
+	
 	public static abstract class Predicates {
+		
 		public static <T> Predicate<T> matchesPattern(final String regex) {
 			return new Predicate<T>() {
 				private Pattern pattern = Pattern.compile(regex);
 				public boolean apply(T object) {
 					return pattern.matcher(object.toString()).matches(); }};
+		}
+		
+		public static <T> Predicate<T> fileHasExtension(final String extension) {
+			return Predicates.<T>matchesPattern(".*\\." + extension + "$");
 		}
 	}
 	
@@ -122,12 +140,7 @@ public abstract class Utilities {
 				if (unpack(url, file)) files.add(file); }
 			return files;
 		}
-
-		public static String fileName(URL url) {
-			String urlString = url.toExternalForm();
-			return urlString.substring(urlString.lastIndexOf('/')+1);
-		}
-
+		
 		public static void chmod775(File file) {
 			try {
 				Runtime.getRuntime().exec(new String[] { "chmod", "775", file.getAbsolutePath() }).waitFor(); }
@@ -135,6 +148,52 @@ public abstract class Utilities {
 				logger.error("Exception occured during chmodding of file {}", file.getName());
 				throw new RuntimeException(
 						"Exception occured during chmodding of file '" + file.getName() + "'", e); }
+		}
+		
+		public static String fileName(URL url) {
+			String urlString = url.toExternalForm();
+			return urlString.substring(urlString.lastIndexOf('/')+1);
+		}
+		
+		public static File fileFromURL(URL url) throws RuntimeException {
+			try { return new File(url.toURI());}
+			catch (URISyntaxException e) { throw new RuntimeException(e); }
+		}
+		
+		public static URL composeURL(URL base, String fileName) throws RuntimeException {
+			try {
+				String b = base.toExternalForm();
+				if (!b.endsWith("/")) b += "/";
+				return new URL(b + fileName); }
+			catch (MalformedURLException e) { throw new RuntimeException(e); }
+		}
+		
+		public static Pair<URL,String> decomposeURL(URL url) throws RuntimeException {
+			try {
+				String u = url.toExternalForm();
+				int i = u.lastIndexOf('/') + 1;
+				return new Pair<URL,String>(new URL(u.substring(0, i)), u.substring(i)); }
+			catch (MalformedURLException e) { throw new RuntimeException(e); }
+		}
+	}
+	
+	public static abstract class Locales {
+		
+		public static Locale parseLocale(String locale) {
+			StringTokenizer parser = new StringTokenizer(locale, "-_");
+			if (parser.hasMoreTokens()) {
+				String lang = parser.nextToken();
+				if (parser.hasMoreTokens()) {
+					String country = parser.nextToken();
+					if (parser.hasMoreTokens()) {
+						String variant = parser.nextToken();
+						return new Locale(lang, country, variant); }
+					else
+						return new Locale(lang, country); }
+				else
+					return new Locale(lang); }
+			else
+				throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed");
 		}
 	}
 	

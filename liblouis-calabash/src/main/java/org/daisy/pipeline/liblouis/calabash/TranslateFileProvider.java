@@ -8,9 +8,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +22,6 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
-import org.daisy.pipeline.liblouis.Utilities.OS;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -178,7 +174,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-				liblouisutdml.translateFile(configFileNames, semanticFileNames, getOption(_table).getString(), settings, xmlFile, brailleFile, tempDir, tempDir);
+				liblouisutdml.translateFile(configFileNames, semanticFileNames, new URL(getOption(_table).getString()),
+						settings, xmlFile, brailleFile, tempDir, tempDir);
 				//xmlFile.delete();
 				
 				// Read the braille document and wrap it in a new XML document

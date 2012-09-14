@@ -10,19 +10,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.daisy.pipeline.liblouis.LiblouisTableRegistry;
+import org.daisy.pipeline.braille.Utilities.Files;
+import org.daisy.pipeline.braille.Utilities.Strings;
+import org.daisy.pipeline.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.liblouis.Liblouisutdml;
-import org.daisy.pipeline.liblouis.Utilities.Files;
-import org.daisy.pipeline.liblouis.Utilities.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
 	private final File file2brl;
-	private final LiblouisTableRegistry tableRegistry;
+	private final LiblouisTableResolver tableResolver;
 	
-	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableRegistry tableRegistry) {
+	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
 		try {
 			file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator
 					+ Files.fileName(nativeURLs.iterator().next())); }
@@ -30,13 +31,16 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
 		for (File file : Files.unpack(nativeURLs.iterator(), unpackDirectory)) {
 			if (!file.getName().matches(".*\\.(dll|exe)$")) Files.chmod775(file); }
-		this.tableRegistry = tableRegistry;
+		this.tableResolver = tableResolver;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			String table,
+			URL table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
@@ -54,7 +58,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-			settings.put("literaryTextTable", tableRegistry.resolveTableURL(table));
+			settings.put("literaryTextTable", Files.fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
 			if (otherSettings != null)
 				settings.putAll(otherSettings);
 			for (String key : settings.keySet())

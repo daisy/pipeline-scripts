@@ -20,6 +20,8 @@
 
 package org.daisy.pipeline.liblouis.saxon;
 
+import java.net.URL;
+
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -78,23 +80,21 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
 
-			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public SequenceIterator call(SequenceIterator[] arguments,
-					XPathContext context) throws XPathException {
+			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
+					throws XPathException {
 
-				StringValue table = (StringValue) arguments[0].next();
-				if (null == table)
-					return EmptyIterator.getInstance();
-				StringValue toTranslate = (StringValue) arguments[1]
-						.next();
-				if (null == toTranslate)
-					return EmptyIterator.getInstance();
-				try {
-					return SingletonIterator.makeIterator(new StringValue(liblouis
-							.translate(table.getStringValue(), toTranslate.getStringValue()))); }
-				catch (Exception e) {
-					throw new XPathException(e);}
+				StringValue tab = (StringValue)arguments[0].next();
+				StringValue text = (StringValue)arguments[1].next();
+				if (tab != null && text != null) {
+					try {
+						URL table = new URL(tab.getStringValue());
+						return SingletonIterator.makeIterator(
+							new StringValue(liblouis.translate(table, text.getStringValue()))); }
+					catch (Exception e) {
+						throw new XPathException(e); }}
+				return EmptyIterator.getInstance();
 			}
 
 			private static final long serialVersionUID = 1L;
