@@ -38,11 +38,37 @@
 
     <!-- Load translator from URL -->
     
-    <p:load name="translator">
-        <p:with-option name="href" select="$translator">
-            <p:empty/>
-        </p:with-option>
-    </p:load>
+    <p:try name="translator">
+        <p:group>
+            <p:output port="result"/>
+            <p:load>
+                <p:with-option name="href" select="$translator">
+                    <p:empty/>
+                </p:with-option>
+            </p:load>
+        </p:group>
+        <p:catch>
+            <!-- If the URL is not a document, it must be a liblouis table -->
+            <p:output port="result"/>
+            <p:add-attribute attribute-name="select" match="/xsl:stylesheet/xsl:variable[@name='table']">
+                <p:input port="source">
+                    <p:inline>
+                        <xsl:stylesheet version="2.0" xmlns:louis="http://liblouis.org/liblouis" exclude-result-prefixes="louis">
+                            <xsl:variable name="table"/>
+                            <xsl:template match="/*">
+                                <xsl:copy>
+                                    <xsl:sequence select="louis:translate($table, string(.))"/>
+                                </xsl:copy>
+                            </xsl:template>
+                        </xsl:stylesheet>
+                    </p:inline>
+                </p:input>
+                <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'>
+                    <p:empty/>
+                </p:with-option>
+            </p:add-attribute>
+        </p:catch>
+    </p:try>
 
     <!-- Translate each block -->
     
