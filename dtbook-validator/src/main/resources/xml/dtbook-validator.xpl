@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="validate-dtbook" type="px:validate-dtbook" 
+<p:declare-step version="1.0" name="dtbook-validator" type="px:dtbook-validator" 
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step" 
     xmlns:cx="http://xmlcalabash.com/ns/extensions" 
@@ -18,49 +18,47 @@
     </p:documentation>
 
     <p:input port="source" primary="true">
-        <p:documentation>
-            A DTBook-2005-3 document
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">source</h1>
+            <p px:role="desc">A DTBook-2005-3 document</p>
         </p:documentation>
     </p:input>
     
     <p:output port="result" primary="true">
-        <p:documentation>
-            A copy of the input document; may include PSVI annotations.
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">result</h1>
+            <p px:role="desc">A copy of the input document; may include PSVI annotations.</p>
         </p:documentation>
         <p:pipe port="result" step="validate-against-relaxng"/>
     </p:output>
     
     <p:output port="relaxng-report" sequence="true">
-        <p:documentation>
-            Raw output from the relax ng validation.
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">relaxng-report</h1>
+            <p px:role="desc">Raw output from the RelaxNG validation.</p>
         </p:documentation>
         <p:pipe port="report" step="validate-against-relaxng"/>
     </p:output>
     
     <p:output port="schematron-report">
-        <p:documentation>
-            Raw output from the schematron validation.
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">schematron-report</h1>
+            <p px:role="desc">Raw output from the schematron validation.</p>
         </p:documentation>
         <p:pipe step="validate-against-schematron" port="report"/>
     </p:output>
     
     <p:output port="html-report">
-        <p:documentation>
-            An HTML-formatted version of both the Relax NG and Schematron reports.
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">html-report</h1>
+            <p px:role="desc">An HTML-formatted version of both the RelaxNG and Schematron reports.</p>
         </p:documentation>
         <p:pipe port="result" step="create-html-report"/>
     </p:output>
     
-    <p:option name="advanced" required="false" px:type="boolean">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Advanced mode</h2>
-            <p px:role="desc">Check the document using Schematron, in addition to Relax NG. Default value is <code>true</code>.</p>
-        </p:documentation>
-    </p:option>
-    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Output directory</h2>
+            <h2 px:role="name">output-dir</h2>
             <p px:role="desc">Directory where your validation report is stored. If left blank, nothing is saved to disk.</p>
         </p:documentation>
     </p:option>
@@ -75,56 +73,42 @@
         </p:documentation>
     </p:import>
     
-    <p:variable name="advanced-mode" select="if ($advanced = 'false') then false() else true()"/>
-    
     <l:relax-ng-report name="validate-against-relaxng" assert-valid="false">
         <p:input port="schema">
             <p:document href="./schema/dtbook-2005-3.rng"/>
         </p:input>
         <p:input port="source">
-            <p:pipe port="source" step="validate-dtbook"/>
+            <p:pipe port="source" step="dtbook-validator"/>
         </p:input>
     </l:relax-ng-report>
 
-    <p:choose name="validate-against-schematron">
-        <p:when test="$advanced-mode">
-            <p:output port="report">
-                <p:pipe port="report" step="run-schematron"/>
-            </p:output>
-            <p:output port="result" primary="true">
-                <p:pipe port="result" step="run-schematron"/>
-            </p:output>
-            <p:validate-with-schematron assert-valid="false" name="run-schematron">
-                <p:input port="schema">
-                    <p:document href="./schema/dtbook.sch"/>
-                </p:input>
-                <p:input port="source">
-                    <p:pipe port="source" step="validate-dtbook"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:validate-with-schematron>  
-        </p:when>
-        <p:otherwise>
-            <p:documentation>Just put empty documents on the result and report ports; it makes life easier in subsequent steps.</p:documentation>
-            <p:output port="result" primary="true">
-                <p:pipe port="result" step="id1"/>
-            </p:output>
-            <p:output port="report">
-                <p:pipe port="result" step="id1"/>
-            </p:output>
-            <p:identity name="id1">
-                <p:input port="source">
-                    <p:empty/>
-                </p:input>
-            </p:identity>
-        </p:otherwise>
-    </p:choose>
+    <p:validate-with-schematron assert-valid="false" name="validate-against-schematron">
+        <p:input port="schema">
+            <p:document href="./schema/dtbook.sch"/>
+        </p:input>
+        <p:input port="source">
+            <p:pipe port="source" step="dtbook-validator"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:validate-with-schematron>
     <p:sink/>
     
-    <p:count name="count" limit="1">
-        <p:documentation>Relax NG validation doesn't always produce a report, so this serves as a 
+    <p:xslt name="htmlify-schematron-report">
+        <p:input port="source">
+            <p:pipe port="report" step="validate-against-schematron"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="schematron-report.xsl"/>
+        </p:input>
+    </p:xslt>
+    
+    <p:count name="count-relaxng-report" limit="1">
+        <p:documentation>RelaxNG validation doesn't always produce a report, so this serves as a 
             test to see if there was a document produced.</p:documentation>
         <p:input port="source">
             <p:pipe step="validate-against-relaxng" port="report"/>
@@ -134,15 +118,20 @@
     
     <p:choose name="htmlify-relaxng-report">
         <p:xpath-context>
-            <p:pipe port="result" step="count"/>
+            <p:pipe port="result" step="count-relaxng-report"/>
         </p:xpath-context>
         
         <p:when test="/c:result = '0'">
-            <p:documentation>If there was no report, just output an empty document.</p:documentation>
+            <p:documentation>Format the results of RelaxNG validation as HTML.</p:documentation>
             <p:output port="result"/>
             <p:identity>
                 <p:input port="source">
-                    <p:empty/>
+                    <p:inline>
+                        <section xmlns="http://www.w3.org/1999/xhtml">
+                            <h2>RelaxNG Validation Results</h2>
+                            <p>No errors detected.</p>
+                        </section>
+                    </p:inline>
                 </p:input>
             </p:identity>
         </p:when>
@@ -163,41 +152,22 @@
         </p:otherwise>
     </p:choose>
     
-    
-    <p:xslt name="htmlify-schematron-report">
-        <p:input port="source">
-            <p:pipe port="report" step="validate-against-schematron"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="schematron-report.xsl"/>
-        </p:input>
-    </p:xslt>
-    
-    
-    <p:wrap-sequence name="combine-reports" wrapper="body" wrapper-namespace="http://www.w3.org/1999/xhtml">
-        <p:documentation>join the reports</p:documentation>
-        <p:input port="source">
-            <p:pipe port="result" step="htmlify-relaxng-report"/>
-            <p:pipe port="result" step="htmlify-schematron-report"/>
-        </p:input>
-    </p:wrap-sequence>
-    
-    <p:insert position="last-child" name="create-html-report">
+    <p:insert position="last-child" match="//xhtml:body" name="create-html-report">
         <p:input port="source">
             <p:inline>
                 <html xmlns="http://www.w3.org/1999/xhtml">
-                    <header>
-                        <title>Validation Report</title>
-                    </header>
-                    <h1>Validation Report</h1>
+                    <head>
+                        <title>Validation Results</title>
+                    </head>
+                    <body>
+                        <h1>Validation Results</h1>
+                    </body>
                 </html>
             </p:inline>
         </p:input>
         <p:input port="insertion">
-            <p:pipe port="result" step="combine-reports"/>
+            <p:pipe port="result" step="htmlify-relaxng-report"/>
+            <p:pipe port="result" step="htmlify-schematron-report"/>
         </p:input>
     </p:insert>
     
@@ -210,11 +180,10 @@
                 </p:input>
                 <p:with-option name="href" select="concat($output-dir,'report.xhtml')"/>
             </p:store>
-
             
             <p:choose>
                 <p:xpath-context>
-                    <p:pipe port="result" step="count"/>
+                    <p:pipe port="result" step="count-relaxng-report"/>
                 </p:xpath-context>
                 <p:when test="/c:result = '0'">
                     <p:sink>

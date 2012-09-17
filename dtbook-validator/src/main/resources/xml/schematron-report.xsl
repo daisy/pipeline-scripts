@@ -12,9 +12,19 @@
     </xsl:template>
     
     <xsl:template match="svrl:schematron-output">
-        <ul>
-            <xsl:apply-templates/>
-        </ul>
+        
+        <!-- TODO refine this test -->
+        <xsl:choose>
+            <xsl:when test="//svrl:failed-assert">
+                <ul>
+                    <xsl:apply-templates/>
+                </ul>    
+            </xsl:when>
+            <xsl:otherwise>
+                <p>No errors detected.</p>        
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
     
     <xsl:template match="svrl:failed-assert">

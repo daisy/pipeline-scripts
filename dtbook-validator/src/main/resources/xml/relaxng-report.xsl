@@ -17,7 +17,7 @@
     </xsl:template>
     
     <!-- note that below, &#160; = &nbsp; -->
-    <!--<xsl:template match="c:error">
+    <xsl:template match="c:error">
         <li>
             (<em>Line: </em><xsl:value-of select="@line"/>, 
             <em>Column: </em><xsl:value-of select="@column"/>) 
@@ -25,5 +25,5 @@
             <xsl:value-of select="./text()"/>
         </li>
     </xsl:template>
-    -->
+    
 </xsl:stylesheet>
