@@ -56,10 +56,10 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="translator" required="false" px:type="string" select="'../xslt/simple-liblouis-translate.xsl'">
+    <p:option name="translator" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">translator</h2>
-            <p px:role="desc">Identifier (URL) of the translator XSLT or XProc to be used. Defaults to a simple generic liblouis-based translator.</p>
+            <p px:role="desc">Identifier (URL) of the translator (XSLT or XProc step or liblouis table) to be used. Defaults to a simple generic liblouis-based translator.</p>
             <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xslt/translator.xsl</code></pre>
         </p:documentation>
     </p:option>
