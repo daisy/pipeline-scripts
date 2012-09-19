@@ -29,7 +29,7 @@
     <braille.liblouis-native.mac.version>1.0.0</braille.liblouis-native.mac.version>
     <braille.liblouis-native.windows.version>${braille.modules.version}</braille.liblouis-native.windows.version>
     <braille.liblouis-saxon.version>1.0.0</braille.liblouis-saxon.version>
-    <braille.liblouis-tables.version>${braille.modules.version}</braille.liblouis-tables.version>
+    <braille.liblouis-tables.version>2.5.0</braille.liblouis-tables.version>
     <braille.pef-calabash.version>1.0.0</braille.pef-calabash.version>
     <braille.utilities.version>1.0.0</braille.utilities.version>
     <braille.zedai-to-pef.version>${braille.modules.version}</braille.zedai-to-pef.version>
