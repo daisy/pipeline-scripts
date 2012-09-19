@@ -19,7 +19,7 @@
   <name>DAISY Pipeline 2 module :: liblouis-tables</name>
 
   <scm>
-    <connection>scm:svn:https://liblouis.googlecode.com/svn/trunk/tables</connection>
+    <connection>scm:svn:https://liblouis.googlecode.com/svn/tags/liblouis_2_5_0/tables</connection>
   </scm>
 
   <build>

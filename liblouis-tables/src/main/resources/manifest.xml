@@ -27,7 +27,7 @@
     <entry key="en_CA">unicode.dis,en_CA.ctb,braille-patterns.cti</entry>
     <entry key="en_US">unicode.dis,en-us-g2.ctb,braille-patterns.cti</entry>
     <entry key="en_GB">unicode.dis,en-GB-g2.ctb,braille-patterns.cti</entry>
-    <entry key="eo">unicode.dis,eo.ctb,braille-patterns.cti</entry>
+    <entry key="eo">unicode.dis,eo-g1.ctb,braille-patterns.cti</entry>
     <entry key="es">unicode.dis,es-g1.ctb,braille-patterns.cti</entry>
     <entry key="et">unicode.dis,et.ctb,braille-patterns.cti</entry>
     <!--<entry key="fa">unicode.dis,,braille-patterns.cti</entry>-->
