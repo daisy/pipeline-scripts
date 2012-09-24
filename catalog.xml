@@ -18,6 +18,7 @@
     <nextCatalog catalog="./utilities/mediatype-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/metadata-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/validation-utils/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./utilities/zedai-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./utilities/zip-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./zedai-to-epub3/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./zedai-to-html/src/main/resources/META-INF/catalog.xml"/>
