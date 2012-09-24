@@ -215,7 +215,6 @@
         </p:wrap-sequence>
         <p:delete match="/*/*/*" name="wrapped-in-memory"/>
         <p:identity>
-            <p:log port="result"/>
             <p:input port="source">
                 <p:pipe port="result" step="fileset.dirty"/>
             </p:input>
