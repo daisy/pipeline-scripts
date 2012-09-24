@@ -235,7 +235,7 @@
                         </p:input>
                     </p:identity>
                     <cx:message>
-                        <p:with-option name="message" select="concat('skipping ',$file-oringinal)"/>
+                        <p:with-option name="message" select="concat('skipping ',$file-original)"/>
                     </cx:message>
                 </p:when>
                 <p:otherwise>
