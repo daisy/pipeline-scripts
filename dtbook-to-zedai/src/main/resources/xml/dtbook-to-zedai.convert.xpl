@@ -237,12 +237,17 @@
     <!-- UPGRADE -->
     <!-- =============================================================== -->
     <p:documentation>Upgrade the DTBook document(s) to 2005-3</p:documentation>
-    <px:upgrade-dtbook name="upgrade-dtbook">
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:with-option name="assert-valid" select="$opt-assert-valid"/>
-    </px:upgrade-dtbook>
+    <p:for-each name="upgrade-dtbook">
+        <p:output port="result"/>
+        <px:upgrade-dtbook>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:with-option name="assert-valid" select="$opt-assert-valid">
+                <p:empty/>
+            </p:with-option>
+        </px:upgrade-dtbook>
+    </p:for-each>
 
     <!-- =============================================================== -->
     <!-- MERGE -->
@@ -482,9 +487,7 @@
     <!-- VALIDATE FINAL OUTPUT -->
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
-    <cx:message message="Validating ZedAI">
-        <!--<p:log port="result" href="file:/tmp/out/log-zedai.xml"/>-->
-    </cx:message>
+    <cx:message message="Validating ZedAI"/>
     <px:validate-with-relax-ng-and-report name="validate-zedai" assert-valid="true">
         <p:input port="schema">
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
@@ -498,24 +501,13 @@
     <!-- =============================================================== -->
     <!-- COMPILE RESULT FILESET -->
     <!-- =============================================================== -->
-    <p:add-attribute match="*" attribute-name="xml:base">
-        <p:input port="source">
-            <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
-        </p:input>
-        <p:with-option name="attribute-value" select="/*/@xml:base">
-            <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
-        </p:with-option>
-    </p:add-attribute>
-    <p:for-each>
-        <p:iteration-source select="/*/*"/>
-        <p:identity/>
-    </p:for-each>
-    <p:split-sequence test="/*/@media-type = 'application/x-dtbook+xml'"/>
     <p:group name="result.fileset">
         <p:output port="result"/>
         <p:variable name="dtbook-base"
-            select="replace(resolve-uri(/*/@href,/*/@xml:base),'^(.*/)[^/]*$','$1')"/>
-
+            select="replace(//d:file[@media-type = 'application/x-dtbook+xml'][1]/resolve-uri(@href,base-uri()),'^(.*/)[^/]*$','$1')">
+            <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
+        </p:variable>
+        
         <p:documentation>Add the ZedAI document to the fileset.</p:documentation>
         <px:fileset-create>
             <p:with-option name="base" select="$output-dir"/>
@@ -534,7 +526,7 @@
             <p:variable name="src" select="/*/@src"/>
             <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
             <p:variable name="source-uri"
-                select="(//d:file[resolve-uri(@href,/*/@xml:base) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
+                select="(//d:file[resolve-uri(@href,base-uri()) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
                 <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
             </p:variable>
             <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
