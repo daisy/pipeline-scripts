@@ -24,6 +24,7 @@
     <module>common-entities</module>
     <module>daisy202-to-epub3</module>
     <module>dtbook-to-epub3</module>
+    <module>dtbook-to-html</module>
     <module>dtbook-to-zedai</module>
     <module>utilities</module>
     <module>zedai-to-epub3</module>
