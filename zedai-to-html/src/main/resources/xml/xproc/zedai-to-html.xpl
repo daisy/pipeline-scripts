@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    type="px:zedai-to-epub3" name="main" version="1.0">
+    type="px:zedai-to-html" name="main" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">ZedAI to HTML</h1>
-        <p px:role="desc">Transforms a ZedAI (ANSI/NISO Z39.98-2012 Authoring and Interchange) document into an HTML document.</p>
+        <p px:role="desc">Transforms ZedAI XML (ANSI/NISO Z39.98-2012 Authoring and Interchange) into HTML.</p>
     </p:documentation>
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
