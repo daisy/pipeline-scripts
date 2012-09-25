@@ -12,7 +12,7 @@
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook to HTML</h1>
-        <p px:role="desc">Converts multiple dtbooks to HTML</p>
+        <p px:role="desc">Transforms DTBook XML into HTML.</p>
     </p:documentation>
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
