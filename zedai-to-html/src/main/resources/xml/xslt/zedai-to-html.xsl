@@ -551,7 +551,6 @@
           <xsl:apply-templates/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates/>
     </a>
   </xsl:template>
 
