@@ -6,10 +6,10 @@
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     exclude-inline-prefixes="px css xsl"
-    type="px:zedai-to-pef.translation" name="zedai-to-pef.translation" version="1.0">
+    type="px:xml-to-pef.translation" name="xml-to-pef.translation" version="1.0">
 
-    <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
-    <p:output port="result" primary="true" px:media-type="application/z3998-auth+xml"/>
+    <p:input port="source" primary="true"/>
+    <p:output port="result" primary="true"/>
     <p:option name="translator" required="true"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>

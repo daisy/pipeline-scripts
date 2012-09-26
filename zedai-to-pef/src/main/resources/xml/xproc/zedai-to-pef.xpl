@@ -40,11 +40,11 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="stylesheet" required="false" px:type="string" select="'bana.css'">
+    <p:option name="stylesheet" required="false" px:type="string" select="'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css'">
         <p:documentation>
             <h2 px:role="name">stylesheet</h2>
             <p px:role="desc">The default css stylesheet to apply when there aren't any provided with the input file.</p>
-            <pre><code class="example">bana.css</code></pre>
+            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css</code></pre>
         </p:documentation>
     </p:option>
     
@@ -71,13 +71,12 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="zedai-to-pef.styling.xpl"/>
-    <p:import href="zedai-to-pef.preprocessing.xpl"/>
-    <p:import href="zedai-to-pef.translation.xpl"/>
-    <p:import href="zedai-to-pef.formatting.xpl"/>
-    <p:import href="zedai-to-pef.preview.xpl"/>
-    
-    <!-- Extract metadata -->
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/xproc/pef-to-html.xpl"/>
+
+    <!-- ================ -->
+    <!-- EXTRACT METADATA -->
+    <!-- ================ -->
     
     <p:xslt name="metadata">
         <p:input port="source">
@@ -91,62 +90,34 @@
         </p:input>
     </p:xslt>
     
-    <!-- ======= -->
-    <!-- STYLING -->
-    <!-- ======= -->
-    
-    <px:zedai-to-pef.styling name="styling">
+    <!-- ============== -->
+    <!-- CONVERT TO PEF -->
+    <!-- ============== -->
+
+    <px:xml-to-pef name="xml-to-pef">
         <p:input port="source">
             <p:pipe port="source" step="zedai-to-pef"/>
-        </p:input>
-        <p:with-option name="default-stylesheet" select="$stylesheet">
-            <p:empty/>
-        </p:with-option>
-    </px:zedai-to-pef.styling>
-    
-    <!-- ============= -->
-    <!-- PREPROCESSING -->
-    <!-- ============= -->
-    
-    <px:zedai-to-pef.preprocessing name="preprocessing">
-        <p:input port="source">
-            <p:pipe port="result" step="styling"/>
-        </p:input>
-        <p:with-option name="preprocessor" select="$preprocessor">
-            <p:empty/>
-        </p:with-option>
-    </px:zedai-to-pef.preprocessing>
-    
-    <!-- =========== -->
-    <!-- TRANSLATION -->
-    <!-- =========== -->
-    
-    <px:zedai-to-pef.translation name="translation">
-        <p:input port="source">
-            <p:pipe port="result" step="preprocessing"/>
-        </p:input>
-        <p:with-option name="translator" select="$translator">
-            <p:empty/>
-        </p:with-option>
-    </px:zedai-to-pef.translation>
-    
-    <!-- ========== -->
-    <!-- FORMATTING -->
-    <!-- ========== -->
-    
-    <px:zedai-to-pef.formatting name="formatting">
-        <p:input port="source">
-            <p:pipe port="result" step="translation"/>
         </p:input>
         <p:input port="metadata">
             <p:pipe port="result" step="metadata"/>
         </p:input>
+        <p:with-option name="default-stylesheet" select="$stylesheet">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="preprocessor" select="$preprocessor">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="translator" select="$translator">
+            <p:empty/>
+        </p:with-option>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </px:zedai-to-pef.formatting>
+    </px:xml-to-pef>
     
-    <!-- Store -->
+    <!-- ========= -->
+    <!-- STORE PEF -->
+    <!-- ========= -->
     
     <p:xslt name="output-dir-uri">
         <p:with-param name="href" select="concat($output-dir,'/')"/>
@@ -182,7 +153,7 @@
         
         <p:store indent="true" encoding="utf-8" omit-xml-declaration="false" >
             <p:input port="source">
-                <p:pipe step="formatting" port="result"/>
+                <p:pipe step="xml-to-pef" port="result"/>
             </p:input>
             <p:with-option name="href" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef.xml')">
                 <p:empty/>
@@ -196,11 +167,11 @@
         <p:choose>
             <p:when test="$preview='true'">
                 
-                <px:zedai-to-pef.preview>
+                <px:pef-to-html>
                     <p:input port="source">
-                        <p:pipe port="result" step="formatting"/>
+                        <p:pipe port="result" step="xml-to-pef"/>
                     </p:input>
-                </px:zedai-to-pef.preview>
+                </px:pef-to-html>
                 
                 <p:store indent="true" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
@@ -208,13 +179,12 @@
                         <p:empty/>
                     </p:with-option>
                 </p:store>
-                
             </p:when>
             <p:otherwise>
                 <!-- Do nothing-->
                 <p:sink>
                     <p:input port="source">
-                        <p:pipe port="result" step="formatting"/>
+                        <p:pipe port="result" step="xml-to-pef"/>
                     </p:input>
                 </p:sink>
             </p:otherwise>

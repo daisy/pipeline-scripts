@@ -4,10 +4,10 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     exclude-inline-prefixes="px cx"
-    type="px:zedai-to-pef.preprocessing" name="zedai-to-pef.preprocessing" version="1.0">
+    type="px:xml-to-pef.preprocessing" name="xml-to-pef.preprocessing" version="1.0">
 
-    <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
-    <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
+    <p:input port="source" primary="true"/>
+    <p:output port="result" primary="true"/>
     <p:option name="preprocessor" required="false" select="''"/>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>

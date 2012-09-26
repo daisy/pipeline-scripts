@@ -10,7 +10,7 @@
     
     <xsl:output method="html" encoding="UTF-8"/>
     
-    <xsl:include href="encoding-functions.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" />
     
     <xsl:template match="/">
         <html>

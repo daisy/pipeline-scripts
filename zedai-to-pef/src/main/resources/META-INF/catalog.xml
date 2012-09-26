@@ -4,12 +4,9 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
   <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.xpl"
        uri="../xml/xproc/zedai-to-pef.xpl" px:script="true"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css" uri="../css/bana.css"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/ueb.css" uri="../css/ueb.css"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-saxon" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-formatter" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-calabash" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:utilities" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-to-html" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:xml-to-pef" />
 </catalog>

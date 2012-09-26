@@ -7,9 +7,9 @@
     xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     exclude-inline-prefixes="px d louis pef dc"
-    type="px:zedai-to-pef.formatting" name="zedai-to-pef.formatting" version="1.0">
+    type="px:xml-to-pef.formatting" name="xml-to-pef.formatting" version="1.0">
 
-    <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
+    <p:input port="source" primary="true"/>
     <p:input port="metadata"/>
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     <p:option name="temp-dir" required="true"/>
@@ -51,11 +51,11 @@
         </p:with-option>
     </px:mkdir>
         
-    <!-- Format with liblouisxml -->
+    <!-- Format with liblouisutdml -->
     
     <louis:format>
         <p:input port="source">
-            <p:pipe step="zedai-to-pef.formatting" port="source"/>
+            <p:pipe step="xml-to-pef.formatting" port="source"/>
         </p:input>
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
@@ -69,10 +69,10 @@
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:with-option>
         <p:with-option name="title" select="string(/*/dc:title)">
-            <p:pipe step="zedai-to-pef.formatting" port="metadata"/>
+            <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
         <p:with-option name="creator" select="string(/*/*[@property='dc:creator'])">
-            <p:pipe step="zedai-to-pef.formatting" port="metadata"/>
+            <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
     </pef:text2pef>
     
