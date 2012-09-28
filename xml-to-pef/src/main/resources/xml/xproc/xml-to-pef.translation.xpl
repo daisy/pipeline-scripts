@@ -85,9 +85,7 @@
             <p:output port="result"/>
             <p:error code="px:brl01">
                 <p:input port="source">
-                    <p:inline>
-                        <message>The option 'translator' must be of the form 'http:/...'.</message>
-                    </p:inline>
+                    <p:inline><message>The option 'translator' must be of the form 'http:/...'.</message></p:inline>
                 </p:input>
             </p:error>
         </p:otherwise>
@@ -95,53 +93,104 @@
     
     <!-- Translate each block -->
     
-    <p:choose>
-        <p:xpath-context>
-            <p:pipe step="translator" port="result"/>
-        </p:xpath-context>
+    <p:try name="translate">
+        <p:group>
+            <p:output port="result"/>
+            <p:choose>
+                <p:xpath-context>
+                    <p:pipe step="translator" port="result"/>
+                </p:xpath-context>
+                
+                <p:when test="/xsl:stylesheet">
+                    <p:viewport match="css:block">
+                        <p:viewport-source>
+                            <p:pipe step="blocks" port="result"/>
+                        </p:viewport-source>
+                        <p:xslt>
+                            <p:input port="stylesheet">
+                                <p:pipe step="translator" port="result"/>
+                            </p:input>
+                            <p:input port="parameters">
+                                <p:empty/>
+                            </p:input>
+                        </p:xslt>
+                    </p:viewport>
+                </p:when>
+                
+                <p:when test="/p:declare-step or /p:pipeline">
+                    <p:viewport match="css:block">
+                        <p:viewport-source>
+                            <p:pipe step="blocks" port="result"/>
+                        </p:viewport-source>
+                        <cx:eval>
+                            <p:input port="pipeline">
+                                <p:pipe step="translator" port="result"/>
+                            </p:input>
+                            <p:input port="options">
+                                <p:empty/>
+                            </p:input>
+                        </cx:eval>
+                    </p:viewport>
+                </p:when>
+                
+                <p:otherwise>
+                    <p:error code="px:brl02">
+                        <p:input port="source">
+                            <p:inline><message>The translator document is neither an XSLT nor an XProc.</message></p:inline>
+                        </p:input>
+                    </p:error>
+                </p:otherwise>
+            </p:choose>
+        </p:group>
         
-        <p:when test="/xsl:stylesheet">
-            <p:viewport match="css:block">
-                <p:viewport-source>
-                    <p:pipe step="blocks" port="result"/>
-                </p:viewport-source>
-                <p:xslt>
-                    <p:input port="stylesheet">
-                        <p:pipe step="translator" port="result"/>
-                    </p:input>
-                    <p:input port="parameters">
-                        <p:empty/>
-                    </p:input>
-                </p:xslt>
-            </p:viewport>
-        </p:when>
-        
-        <p:when test="/p:declare-step or /p:pipeline">
-            <p:viewport match="css:block">
-                <p:viewport-source>
-                    <p:pipe step="blocks" port="result"/>
-                </p:viewport-source>
-                <cx:eval>
-                    <p:input port="pipeline">
-                        <p:pipe step="translator" port="result"/>
-                    </p:input>
-                    <p:input port="options">
-                        <p:empty/>
-                    </p:input>
-                </cx:eval>
-            </p:viewport>
-        </p:when>
-        
-        <p:otherwise>
-            <p:error code="px:brl02">
+        <p:catch name="translate-catch">
+            <p:output port="result"/>
+            <p:insert match="/message" position="last-child" name="translate-error">
                 <p:input port="source">
-                    <p:inline>
-                        <message>The translator document is neither an XSLT nor an XProc.</message>
-                    </p:inline>
+                    <p:inline><message>Translation failed: </message></p:inline>
+                </p:input>
+                <p:input port="insertion">
+                    <p:pipe step="translate-catch" port="error"/>
+                </p:input>
+            </p:insert>
+            <p:error code="px:brl03">
+                <p:input port="source">
+                    <p:pipe step="translate-error" port="result"/>
                 </p:input>
             </p:error>
-        </p:otherwise>
-    </p:choose>
+        </p:catch>
+    </p:try>
+    
+    <!-- Validate output -->
+    
+    <p:try>
+        <p:group>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/validate-braille.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+        </p:group>
+        <p:catch name="validate-catch">
+            <p:insert match="/message" position="last-child" name="validate-error">
+                <p:input port="source">
+                    <p:inline><message>Translated document is not valid: </message></p:inline>
+                </p:input>
+                <p:input port="insertion">
+                    <p:pipe step="validate-catch" port="error"/>
+                </p:input>
+            </p:insert>
+            <p:error code="px:brl04">
+                <p:input port="source">
+                    <p:pipe step="validate-error" port="result"/>
+                </p:input>
+            </p:error>
+        </p:catch>
+    </p:try>
+    <p:sink/>
     
     <p:unwrap match="css:block"/>
     

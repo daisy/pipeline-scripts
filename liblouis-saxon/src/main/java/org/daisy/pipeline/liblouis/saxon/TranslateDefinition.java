@@ -78,23 +78,23 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
 
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			public SequenceIterator call(SequenceIterator[] arguments,
 					XPathContext context) throws XPathException {
 
-				final StringValue table = (StringValue) arguments[0].next();
-				if (null == table) {
+				StringValue table = (StringValue) arguments[0].next();
+				if (null == table)
 					return EmptyIterator.getInstance();
-				}
-
-				final StringValue toTranslate = (StringValue) arguments[1]
+				StringValue toTranslate = (StringValue) arguments[1]
 						.next();
-				if (null == toTranslate) {
+				if (null == toTranslate)
 					return EmptyIterator.getInstance();
-				}
-
-				return SingletonIterator.makeIterator(new StringValue(liblouis
-						.translate(table.getStringValue(), toTranslate.getStringValue())));
+				try {
+					return SingletonIterator.makeIterator(new StringValue(liblouis
+							.translate(table.getStringValue(), toTranslate.getStringValue()))); }
+				catch (Exception e) {
+					throw new XPathException(e);}
 			}
 
 			private static final long serialVersionUID = 1L;

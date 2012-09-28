@@ -73,7 +73,7 @@ public class LiblouisJnaImpl implements Liblouis {
 			throw new RuntimeException(e.getCause()); }
 		catch (Exception e) {
 			logger.error("Error during liblouis translation");
-			throw new RuntimeException(e); }
+			throw new RuntimeException("Error during liblouis translation", e); }
 	}
 	
 	private Map<String,Object> translatorCache = new HashMap<String,Object>();

@@ -48,7 +48,7 @@
 	
 	<xsl:template match="*" mode="no-display">
 		<xsl:copy>
-			<xsl:apply-templates select="@*|node()" mode="no-display"/>
+			<xsl:apply-templates select="@*|*" mode="no-display"/>
 		</xsl:copy>
 	</xsl:template>
 	
