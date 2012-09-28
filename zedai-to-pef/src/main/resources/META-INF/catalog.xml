@@ -4,6 +4,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
   <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.xpl"
        uri="../xml/xproc/zedai-to-pef.xpl" px:script="true"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.convert.xpl"
+       uri="../xml/xproc/zedai-to-pef.convert.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css" uri="../css/bana.css"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/ueb.css" uri="../css/ueb.css"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
