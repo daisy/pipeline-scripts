@@ -192,6 +192,23 @@
     </p:try>
     <p:sink/>
     
-    <p:unwrap match="css:block"/>
+    <!-- Unwrap blocks and re-insert string-set -->
+    
+    <p:unwrap match="css:block">
+        <p:input port="source">
+            <p:pipe step="translate" port="result"/>
+        </p:input>
+    </p:unwrap>
+    
+    <p:viewport match="*[child::css:string-set]">
+        <p:string-replace match="@style" replace="concat(
+            'string-set: ',
+            string(/*/css:string-set/@name),
+            ' &quot;',
+            string(/*/css:string-set),
+            '&quot;; ',
+            string(/*/@style))"/>
+        <p:delete match="css:string-set"/>
+    </p:viewport>
     
 </p:declare-step>

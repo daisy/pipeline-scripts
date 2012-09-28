@@ -20,17 +20,17 @@
   <properties>
     <braille.modules.version>1.1.0-SNAPSHOT</braille.modules.version>
     <braille.css.version>1.0.0</braille.css.version>
-    <braille.css-calabash.version>1.0.0</braille.css-calabash.version>
+    <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
     <braille.liblouis-calabash.version>1.0.0</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
-    <braille.liblouis-formatter.version>1.0.0</braille.liblouis-formatter.version>
+    <braille.liblouis-formatter.version>${braille.modules.version}</braille.liblouis-formatter.version>
     <braille.liblouis-native.linux.version>${braille.modules.version}</braille.liblouis-native.linux.version>
     <braille.liblouis-native.mac.version>1.0.0</braille.liblouis-native.mac.version>
     <braille.liblouis-native.windows.version>${braille.modules.version}</braille.liblouis-native.windows.version>
-    <braille.liblouis-saxon.version>1.0.0</braille.liblouis-saxon.version>
+    <braille.liblouis-saxon.version>${braille.modules.version}</braille.liblouis-saxon.version>
     <braille.liblouis-tables.version>2.5.0</braille.liblouis-tables.version>
-    <braille.pef-calabash.version>1.0.0</braille.pef-calabash.version>
+    <braille.pef-calabash.version>${braille.modules.version}</braille.pef-calabash.version>
     <braille.pef-to-html.version>${braille.modules.version}</braille.pef-to-html.version>
     <braille.utilities.version>${braille.modules.version}</braille.utilities.version>
     <braille.xml-to-pef.version>${braille.modules.version}</braille.xml-to-pef.version>
@@ -191,7 +191,7 @@
       <dependency>
         <groupId>org.daisy.libs</groupId>
        <artifactId>jstyleparser</artifactId>
-       <version>1.7.0-p2-SNAPSHOT</version>
+       <version>1.7.0-p1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.liblouis</groupId>

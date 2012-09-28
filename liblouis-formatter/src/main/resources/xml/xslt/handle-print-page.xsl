@@ -8,21 +8,35 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
+    
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[css:string-set[@name='print-page']]">
-        <xsl:element name="louis:print-page">
-            <xsl:sequence select="string(css:string-set)"/>
-        </xsl:element>
+    <xsl:template match="*[contains(string(@style), 'string-set')]">
+        <xsl:variable name="element" as="element()" select="."/>
+        <xsl:variable name="string-set" as="xs:string?"
+            select="css:get-property-value(., 'string-set', true(), true(), false())"/>
+        <xsl:if test="$string-set and $string-set!='none'">
+            <xsl:for-each select="tokenize($string-set,',')">
+                <xsl:variable name="identifier" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
+                <xsl:variable name="content-list" select="substring-after(., $identifier)"/>
+                <xsl:variable name="content" select="css:evaluate-content-list($element, $content-list)"/>
+                <xsl:if test="exists($content)">
+                    <xsl:if test="$identifier='print-page'">
+                        <xsl:element name="louis:print-page">
+                            <xsl:sequence select="string($content)"/>
+                        </xsl:element>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:if>
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-    
-    <xsl:template match="css:string-set"/>
     
 </xsl:stylesheet>
