@@ -71,8 +71,8 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/xproc/pef-to-html.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/xproc/pef-to-html.convert.xpl"/>
 
     <!-- ================ -->
     <!-- EXTRACT METADATA -->
@@ -94,7 +94,7 @@
     <!-- CONVERT TO PEF -->
     <!-- ============== -->
 
-    <px:xml-to-pef name="xml-to-pef">
+    <px:xml-to-pef.convert name="xml-to-pef">
         <p:input port="source">
             <p:pipe port="source" step="zedai-to-pef"/>
         </p:input>
@@ -113,7 +113,7 @@
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </px:xml-to-pef>
+    </px:xml-to-pef.convert>
     
     <!-- ========= -->
     <!-- STORE PEF -->
@@ -167,11 +167,11 @@
         <p:choose>
             <p:when test="$preview='true'">
                 
-                <px:pef-to-html>
+                <px:pef-to-html.convert>
                     <p:input port="source">
                         <p:pipe port="result" step="xml-to-pef"/>
                     </p:input>
-                </px:pef-to-html>
+                </px:pef-to-html.convert>
                 
                 <p:store indent="true" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >

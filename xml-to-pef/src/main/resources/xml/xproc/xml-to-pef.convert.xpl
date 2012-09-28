@@ -3,7 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     exclude-inline-prefixes="px"
-    type="px:xml-to-pef" name="xml-to-pef" version="1.0">
+    type="px:xml-to-pef.convert" name="xml-to-pef" version="1.0">
 
     <p:input port="source" primary="true"/>
     <p:input port="metadata"/>
