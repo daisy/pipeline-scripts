@@ -175,10 +175,6 @@
                   <artifactId>brailleutils-core</artifactId>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.daisy.libs</groupId>
-                  <artifactId>brailleutils-catalog</artifactId>
-                </artifactItem>
-                <artifactItem>
                   <groupId>org.apache.aries.spifly</groupId>
                   <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
                   <version>0.4-SNAPSHOT</version>
