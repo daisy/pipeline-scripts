@@ -188,12 +188,12 @@
       <dependency>
         <groupId>org.daisy.libs</groupId>
         <artifactId>brailleutils-core</artifactId>
-        <version>1.2.0-beta</version>
+        <version>1.2.0-beta-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.libs</groupId>
         <artifactId>brailleutils-catalog</artifactId>
-        <version>1.2.0-beta</version>
+        <version>1.2.0-beta-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.libs</groupId>
