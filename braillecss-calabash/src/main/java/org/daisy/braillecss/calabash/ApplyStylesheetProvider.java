@@ -135,23 +135,27 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 						addAttribute(_style, style);
 					}
 				}
+				receiver.startContent();
 				NodeData beforeData = styleMap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
 				if (beforeData != null) {
 					String beforeStyle = String.valueOf(beforeData).replaceAll("\\s+", " ").trim();
 					if (beforeStyle.length() > 0) {
-						addAttribute(_css_before, beforeStyle);
+						addStartElement(_css_before);
+						addAttribute(_style, beforeStyle);
+						addEndElement();
 					}
+				}
+				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
+					traverse(child);
 				}
 				NodeData afterData = styleMap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null) {
 					String afterStyle = String.valueOf(afterData).replaceAll("\\s+", " ").trim();
 					if (afterStyle.length() > 0) {
-						addAttribute(_css_after, afterStyle);
+						addStartElement(_css_after);
+						addAttribute(_style, afterStyle);
+						addEndElement();
 					}
-				}
-				receiver.startContent();
-				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-					traverse(child);
 				}
 				addEndElement();
 			} else if (node.getNodeType() == Node.COMMENT_NODE) {

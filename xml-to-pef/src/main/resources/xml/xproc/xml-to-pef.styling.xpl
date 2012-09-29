@@ -21,6 +21,7 @@
             
             <p:add-attribute match="/link" attribute-name="href" name="link">
                 <p:input port="source">
+	
                     <p:inline>
                         <link rel="stylesheet" media="embossed" type="text/css"/>
                     </p:inline>
@@ -51,12 +52,12 @@
     <!-- Apply stylesheet -->
     
     <css:apply-stylesheet/>
-    
-    <!-- Handle :before and :after pseudo-elements -->
+
+    <!-- Handle content on :before and :after pseudo-elements -->
     
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/handle-before-after.xsl"/>
+            <p:document href="../xslt/handle-content.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
