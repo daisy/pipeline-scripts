@@ -16,14 +16,12 @@ import org.slf4j.LoggerFactory;
 public abstract class TableRegistry<T extends TablePath> implements TableResolver, TableFinder {
 
 	public void addTablePath(T tablePath) {
-		if (tablePaths.containsKey(tablePath.getIdentifier())) {
-			logger.error("Table registry already contains table path with identifier {}", tablePath.getIdentifier());
-			throw new RuntimeException("Table registry already contains table path with identifier " + tablePath.getIdentifier()); }
+		if (tablePaths.containsKey(tablePath.getIdentifier()))
+			throw new RuntimeException("Table registry already contains table path with identifier " + tablePath.getIdentifier());
 		try {
 			tableMappings.put(tablePath, readManifest(tablePath)); }
 		catch (RuntimeException e) {
-			logger.error("Table path could not be registered: {}", tablePath.getIdentifier());
-			throw e; }
+			logger.error("Table path could not be registered: " + tablePath.getIdentifier(), e); }
 		tablePaths.put(tablePath.getIdentifier(), tablePath);
 		resolverCache.clear();
 		finderCache.clear();
@@ -59,7 +57,6 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 				resolved = Files.composeURL(path.getPath(), name);
 				resolverCache.put(table, resolved); }
 			catch (RuntimeException e) {
-				logger.error("Cannot resolve table URL: {}", table);
 				throw new RuntimeException("Cannot resolve table URL: " + table, e); }}
 		return resolved;
 	}
@@ -133,7 +130,6 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 							map.put(locale, tableName); }}
 				reader.close(); }
 			catch (Exception e) {
-				logger.error("Could not read manifest for table path {}" + tablePath.getIdentifier());
 				throw new RuntimeException("Could not read manifest for table path " + tablePath.getIdentifier(), e); }}
 		return map;
 	}

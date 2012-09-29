@@ -27,7 +27,6 @@ public class LiblouisutdmlJniClassLoader extends JarClassLoader {
 			loadLibrary.invoke(null, liblouisPath, liblouisutdmlPath);
 			logger.debug("Loading liblouisutdml native libraries"); }
 		catch (Exception e) {
-			logger.error("Failed to load liblouisutdml native libraries");
 			throw new RuntimeException("Failed to load liblouisutdml native libraries", e); }
 	}
 	

@@ -48,7 +48,6 @@ public class LiblouisJnaImpl implements Liblouis {
 				getBraille = TranslationResultClass.getMethod("getBraille");
 				logger.debug("Loading liblouis service: version {}", TranslatorClass.getMethod("version").invoke(null)); }
 			catch (Exception e) {
-				logger.error("Could not load liblouis service");
 				throw new RuntimeException("Could not load liblouis service", e); }
 			loaded = true; }
 		return this;
@@ -76,7 +75,6 @@ public class LiblouisJnaImpl implements Liblouis {
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
 		catch (Exception e) {
-			logger.error("Error during liblouis translation");
 			throw new RuntimeException("Error during liblouis translation", e); }
 	}
 	

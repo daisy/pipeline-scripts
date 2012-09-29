@@ -84,8 +84,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 					throw new RuntimeException("What happened?"); }}
 			
 		catch (Exception e) {
-			logger.error("Error during liblouisutdml conversion");
-			throw new RuntimeException("Liblouisutdml error", e); }
+			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisutdmlProcessBuilderImpl.class);

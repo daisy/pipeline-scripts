@@ -125,11 +125,12 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 				return binary.getOsArchs().contains(OS.getArch()); }};
 	
 	public void addBinary(Binary binary) {
-		logger.debug("Registering {} binary", binary.getName());
 		if (binaryFilter.apply(binary)) {
 			binaries.add(binary);
-			publishServices(); }
-		else logger.debug("... binary will not work on {} {}", OS.getFamily().name(), OS.getArch());
+			publishServices();
+			logger.debug("Registering {} binary", binary.getName()); }
+		else
+			logger.debug(binary.getName() + " binary will not work on " + OS.getFamily().name() + ", " + OS.getArch());
 	}
 	
 	public void removeBinary(Binary binary) {

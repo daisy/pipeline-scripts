@@ -111,7 +111,6 @@ public abstract class Utilities {
 		
 		public static boolean unpack(URL url, File file) {
 			if (file.exists()) return false;
-			logger.debug("Unpacking file {} ...", file.getName());
 			try {
 				file.createNewFile();
 				FileOutputStream writer = new FileOutputStream(file);
@@ -124,9 +123,9 @@ public abstract class Utilities {
 					buffer = new byte[153600]; }
 				writer.close();
 				reader.close();
+				logger.debug("Unpacking file {} ...", file.getName());
 				return true; }
 			catch (Exception e) {
-				logger.error("Exception occured during unpacking of file {}", file.getName());
 				throw new RuntimeException(
 						"Exception occured during unpacking of file '" + file.getName() + "'", e); }
 		}
@@ -143,9 +142,9 @@ public abstract class Utilities {
 		
 		public static void chmod775(File file) {
 			try {
-				Runtime.getRuntime().exec(new String[] { "chmod", "775", file.getAbsolutePath() }).waitFor(); }
+				Runtime.getRuntime().exec(new String[] { "chmod", "775", file.getAbsolutePath() }).waitFor();
+				logger.debug("Chmodding file {} ...", file.getName());}
 			catch (Exception e) {
-				logger.error("Exception occured during chmodding of file {}", file.getName());
 				throw new RuntimeException(
 						"Exception occured during chmodding of file '" + file.getName() + "'", e); }
 		}

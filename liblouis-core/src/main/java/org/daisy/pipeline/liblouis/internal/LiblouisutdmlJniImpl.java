@@ -49,7 +49,6 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 						String.class, String.class, String.class, String.class, int.class);
 				logger.debug("Loading liblouisutdml service"); }
 			catch (Exception e) {
-				logger.error("Could not load liblouisutdml service");
 				throw new RuntimeException("Could not load liblouisutdml service", e); }
 			loaded = true; }
 		return this;
@@ -106,7 +105,6 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName,
 					null,Strings.join(settingsList, "\n"), 0); }
 		catch (Exception e) {
-			logger.error("Error during liblouisutdml conversion");
 			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}
 	

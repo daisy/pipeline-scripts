@@ -34,6 +34,8 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.liblouis.Liblouis;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 
@@ -93,7 +95,8 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 						return SingletonIterator.makeIterator(
 							new StringValue(liblouis.translate(table, text.getStringValue()))); }
 					catch (Exception e) {
-						throw new XPathException(e); }}
+						logger.error("louis:translate failed", e);
+						throw new XPathException("louis:translate failed"); }}
 				return EmptyIterator.getInstance();
 			}
 
@@ -102,4 +105,5 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	}
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
 }

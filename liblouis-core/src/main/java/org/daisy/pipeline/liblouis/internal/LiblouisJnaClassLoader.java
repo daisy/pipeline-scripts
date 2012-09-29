@@ -20,7 +20,6 @@ public class LiblouisJnaClassLoader extends JarClassLoader {
 			addSearchPath.invoke(null, "louis", nativeDirectory.getAbsolutePath());
 			logger.debug("Loading liblouis native library"); }
 		catch (Exception e) {
-			logger.error("Failed to load liblouis native library");
 			throw new RuntimeException("Failed to load liblouis native library", e); }
 	}
 	
