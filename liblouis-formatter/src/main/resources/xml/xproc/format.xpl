@@ -4,17 +4,21 @@
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
-    exclude-inline-prefixes="louis px p"
+    xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
+    exclude-inline-prefixes="louis pef px p"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:option name="temp-dir" required="true"/>
+    <p:option name="title" required="false" select="''"/>
+    <p:option name="creator" required="false" select="''"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="create-liblouis-files.xpl"/>
     <p:import href="format-vertical-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
 
     <p:xslt>
         <p:input port="stylesheet">
@@ -137,5 +141,22 @@
             <p:empty/>
         </p:with-option>
     </louis:translate-file>
+
+    <!-- Convert to pef with brailleutils -->
+    
+    <pef:text2pef name="text-to-pef">
+        <p:with-option name="temp-dir" select="$temp-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="table" select="'org.daisy.pipeline.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="title" select="$title">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="creator" select="$creator">
+            <p:empty/>
+        </p:with-option>
+    </pef:text2pef>
     
 </p:declare-step>

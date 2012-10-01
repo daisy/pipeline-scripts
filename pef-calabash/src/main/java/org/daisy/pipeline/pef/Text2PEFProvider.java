@@ -30,9 +30,8 @@ public class Text2PEFProvider implements XProcStepProvider {
 	
 	public static class Text2PEF extends DefaultStep {
 
-		private static final String DISPLAY_TABLE = "org.daisy.pipeline.pef.TableProvider.TableType.NABCC_8DOT";
-		
 		private static final QName _temp_dir = new QName("temp-dir");
+		private static final QName _table = new QName("table");
 		private static final QName _title = new QName("title");
 		private static final QName _creator = new QName("creator");
 
@@ -82,7 +81,7 @@ public class Text2PEFProvider implements XProcStepProvider {
 				TextHandler.Builder b = new TextHandler.Builder(textFile, pefFile);
 				if (title != null) { b = b.title(title.getString()); }
 				if (creator != null) { b = b.author(creator.getString()); }
-				b.converterId(DISPLAY_TABLE);
+				b.converterId(getOption(_table).getString());
 				TextHandler handler = b.build();
 				handler.parse();
 				textFile.delete();

@@ -1,4 +1,4 @@
-package org.daisy.pipeline.pef;
+package org.daisy.pipeline.liblouis.pef;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -12,13 +12,13 @@ import org.daisy.braille.table.Table;
 
 import com.google.common.collect.ImmutableList;
 
-public class TableProvider extends AbstractConfigurableTableProvider<TableProvider.TableType> {
+public class LiblouisTableProvider extends AbstractConfigurableTableProvider<LiblouisTableProvider.TableType> {
 	
 	enum TableType { NABCC_8DOT };
 
 	private final Collection<Table> tables;
 
-	public TableProvider() {
+	public LiblouisTableProvider() {
 		super(EightDotFallbackMethod.values()[0], '\u2800');
 		tables = new ImmutableList.Builder<Table>()
 				.add(new EmbosserTable<TableType>("Pipeline", "", TableType.NABCC_8DOT, this))

@@ -7,6 +7,7 @@
     <p:declare-step type="pef:text2pef">
         <p:input port="source" sequence="false" primary="true"/>
         <p:output port="result" sequence="false" primary="true"/>
+        <p:option name="table" required="true"/>
         <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI"/>
         <p:option name="title" required="false"/>
         <p:option name="creator" required="false"/>

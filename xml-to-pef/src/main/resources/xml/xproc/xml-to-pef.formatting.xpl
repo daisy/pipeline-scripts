@@ -4,9 +4,8 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    exclude-inline-prefixes="px d louis pef dc"
+    exclude-inline-prefixes="px d louis dc"
     type="px:xml-to-pef.formatting" name="xml-to-pef.formatting" version="1.0">
 
     <p:input port="source" primary="true"/>
@@ -16,7 +15,6 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/xproc/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
     
     <!-- Create temporary directory -->
     
@@ -60,20 +58,12 @@
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:with-option>
-    </louis:format>
-    
-    <!-- Convert to pef with brailleutils -->
-    
-    <pef:text2pef name="text-to-pef">
-        <p:with-option name="temp-dir" select="/*/@href">
-            <p:pipe port="result" step="temp-dir-uri"/>
-        </p:with-option>
         <p:with-option name="title" select="string(/*/dc:title)">
             <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
         <p:with-option name="creator" select="string(/*/*[@property='dc:creator'])">
             <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
-    </pef:text2pef>
-    
+    </louis:format>
+
 </p:declare-step>

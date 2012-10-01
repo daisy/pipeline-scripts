@@ -18,6 +18,17 @@
 
   <name>DAISY Pipeline 2 module :: liblouis-formatter</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>brailleutils-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.guava-osgi</groupId>
+      <artifactId>guava-osgi</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -25,8 +36,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Import-Package>org.daisy.pipeline.liblouis</Import-Package>
+            <Import-Package>*, org.daisy.pipeline.liblouis</Import-Package>
             <Service-Component>OSGI-INF/liblouis-tables-identity.xml</Service-Component>
+            <SPI-Provider>javax.imageio.spi.ServiceRegistry</SPI-Provider>
           </instructions>
         </configuration>
       </plugin>

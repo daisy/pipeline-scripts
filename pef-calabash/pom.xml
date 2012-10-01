@@ -35,10 +35,6 @@
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>calabash-adapter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.googlecode.guava-osgi</groupId>
-      <artifactId>guava-osgi</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
@@ -49,7 +45,6 @@
         <configuration>
           <instructions>
             <Service-Component>OSGI-INF/text2pef.xml</Service-Component>
-            <SPI-Provider>javax.imageio.spi.ServiceRegistry</SPI-Provider>
           </instructions>
         </configuration>
       </plugin>
