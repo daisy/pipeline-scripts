@@ -787,39 +787,39 @@
   -->
   <start>
       <element name="dtbook">
-        <ref name="attlist.dtbook"/>
-        <ref name="dtbookcontent"/>
+        <ref name="dtb.attlist.dtbook"/>
+        <ref name="dtb.dtbookcontent"/>
       </element>
   </start>
   
   
-  <define name="Character">
+  <define name="dtb.Character">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- a single character from [ISO10646]. -->
-  <define name="Charset">
+  <define name="dtb.Charset">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- a character encoding, as per [RFC2045]. -->
-  <define name="ContentType">
+  <define name="dtb.ContentType">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- media type, as per [RFC2046]. -->
   <!-- HB: 2004-03-25 Changed reference from RFC1766 to its revison, RFC 3066. -->
   <!-- jpritchett@rfbd.org:  2007-12-10.  Changed again from 3066 to its revision 4646 -->
-  <define name="LanguageCode">
+  <define name="dtb.LanguageCode">
     <data type="NMTOKEN"/>
   </define>
   <!-- a language code, per [RFC4646]. -->
-  <define name="Number">
+  <define name="dtb.Number">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- one or more digits. -->
-  <define name="LinkTypes">
+  <define name="dtb.LinkTypes">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- space-separated list of link types. -->
-  <define name="MediaDesc">
+  <define name="dtb.MediaDesc">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!--
@@ -827,23 +827,23 @@
     possible values include BRAILLE, PRINT, PROJECTION, SPEECH, ALL,
     or the default SCREEN.
   -->
-  <define name="Text">
+  <define name="dtb.Text">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- used for titles etc. -->
-  <define name="URI">
+  <define name="dtb.URI">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- a Uniform Resource Identifier, see [RFC2396]. -->
   <!-- ================== dtbook External Module Inclusion =================== -->
-  <define name="externalblock">
+  <define name="dtb.externalblock">
     <notAllowed/>
   </define>
   <!--
     placeholder for block element expansion from external modules;
     if changed, string in external subset begins " | blockelementname".
   -->
-  <define name="externalinline">
+  <define name="dtb.externalinline">
     <notAllowed/>
   </define>
   <!--
@@ -851,7 +851,7 @@
     if changed, string in external subset begins " | inlineelementname".
   -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Created new entity %externalFlow; for extension elements that are both block and inline -->
-  <define name="externalFlow">
+  <define name="dtb.externalFlow">
     <notAllowed/>
   </define>
   <!--
@@ -860,7 +860,7 @@
     " | flowelementname".
   -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Created new entity %externalNamespaces; for extension namespace attributes -->
-  <define name="externalNamespaces">
+  <define name="dtb.externalNamespaces">
     <empty/>
   </define>
   <!--
@@ -873,25 +873,25 @@
   <!-- HB: 2004-04-05 % list removed: as content reduced to contain only <list>. -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalFlow; to %dtbookblock; -->
   <!-- jpritchett@rfbd.org:  2007-12-10.  Removed %dtbookblock; (no longer referenced) -->
-  <define name="dtbookblocknoimggroup">
+  <define name="dtb.dtbookblocknoimggroup">
     <choice>
-      <ref name="author"/>
-      <ref name="prodnote"/>
-      <ref name="sidebar"/>
-      <ref name="note"/>
-      <ref name="annotation"/>
-      <ref name="externalblock"/>
+      <ref name="dtb.author"/>
+      <ref name="dtb.prodnote"/>
+      <ref name="dtb.sidebar"/>
+      <ref name="dtb.note"/>
+      <ref name="dtb.annotation"/>
+      <ref name="dtb.externalblock"/>
     </choice>
   </define>
   <!-- block elements unique to dtbook without imggroup. -->
   <!-- HB: 2004-03-25 36f: caption: removed from % inlineinblock. -->
-  <define name="inlineinblock">
+  <define name="dtb.inlineinblock">
     <choice>
-      <ref name="a"/>
-      <ref name="cite"/>
-      <ref name="samp"/>
-      <ref name="kbd"/>
-      <ref name="pagenum"/>
+      <ref name="dtb.a"/>
+      <ref name="dtb.cite"/>
+      <ref name="dtb.samp"/>
+      <ref name="dtb.kbd"/>
+      <ref name="dtb.pagenum"/>
     </choice>
   </define>
   <!-- inlines that may alternatively be in block elements. -->
@@ -901,25 +901,25 @@
     poem | linegroup | byline | dateline | epigraph.
   -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalFlow; to %block; -->
-  <define name="block">
+  <define name="dtb.block">
     <choice>
-      <ref name="p"/>
-      <ref name="list"/>
-      <ref name="dl"/>
-      <ref name="div"/>
-      <ref name="blockquote"/>
-      <ref name="img"/>
-      <ref name="imggroup"/>
-      <ref name="poem"/>
-      <ref name="linegroup"/>
-      <ref name="byline"/>
-      <ref name="dateline"/>
-      <ref name="epigraph"/>
-      <ref name="table"/>
-      <ref name="address"/>
-      <ref name="line"/>
-      <ref name="dtbookblocknoimggroup"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.p"/>
+      <ref name="dtb.list"/>
+      <ref name="dtb.dl"/>
+      <ref name="dtb.div"/>
+      <ref name="dtb.blockquote"/>
+      <ref name="dtb.img"/>
+      <ref name="dtb.imggroup"/>
+      <ref name="dtb.poem"/>
+      <ref name="dtb.linegroup"/>
+      <ref name="dtb.byline"/>
+      <ref name="dtb.dateline"/>
+      <ref name="dtb.epigraph"/>
+      <ref name="dtb.table"/>
+      <ref name="dtb.address"/>
+      <ref name="dtb.line"/>
+      <ref name="dtb.dtbookblocknoimggroup"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!--
@@ -935,22 +935,22 @@
     MM: 2004-08-17 Added %dtbookblocknoimggroup; to % blocknoimggroup, 
     from which it had been accidentally dropped.
   -->
-  <define name="blocknoimggroup">
+  <define name="dtb.blocknoimggroup">
     <choice>
-      <ref name="p"/>
-      <ref name="list"/>
-      <ref name="dl"/>
-      <ref name="div"/>
-      <ref name="blockquote"/>
-      <ref name="poem"/>
-      <ref name="linegroup"/>
-      <ref name="byline"/>
-      <ref name="dateline"/>
-      <ref name="epigraph"/>
-      <ref name="table"/>
-      <ref name="address"/>
-      <ref name="line"/>
-      <ref name="dtbookblocknoimggroup"/>
+      <ref name="dtb.p"/>
+      <ref name="dtb.list"/>
+      <ref name="dtb.dl"/>
+      <ref name="dtb.div"/>
+      <ref name="dtb.blockquote"/>
+      <ref name="dtb.poem"/>
+      <ref name="dtb.linegroup"/>
+      <ref name="dtb.byline"/>
+      <ref name="dtb.dateline"/>
+      <ref name="dtb.epigraph"/>
+      <ref name="dtb.table"/>
+      <ref name="dtb.address"/>
+      <ref name="dtb.line"/>
+      <ref name="dtb.dtbookblocknoimggroup"/>
     </choice>
   </define>
   <!--
@@ -967,14 +967,14 @@
     MM: 2004-07-23 changed blockhead to bridgehead; eliminated poem, linegroup, 
     byline, dateline, and epigraph since already present via %block
   -->
-  <define name="docblockorinline">
+  <define name="dtb.docblockorinline">
     <choice>
-      <ref name="doctitle"/>
-      <ref name="docauthor"/>
-      <ref name="covertitle"/>
-      <ref name="bridgehead"/>
-      <ref name="block"/>
-      <ref name="inlineinblock"/>
+      <ref name="dtb.doctitle"/>
+      <ref name="dtb.docauthor"/>
+      <ref name="dtb.covertitle"/>
+      <ref name="dtb.bridgehead"/>
+      <ref name="dtb.block"/>
+      <ref name="dtb.inlineinblock"/>
     </choice>
   </define>
   <!-- common non-head elements for use with level or levelN -->
@@ -986,7 +986,7 @@
   <!-- jpritchett@rfbd.org:  2006-07-06.  Removed @style -->
   <!-- jpritchett@rfbd.org:  2006-07-06 Added @xml:space -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
-  <define name="coreattrs">
+  <define name="dtb.coreattrs">
     <optional>
       <attribute name="id">
         <data type="ID"/>
@@ -997,7 +997,7 @@
     </optional>
     <optional>
       <attribute name="title">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -1008,7 +1008,7 @@
         </choice>
       </attribute>
     </optional>
-    <ref name="externalNamespaces"/>
+    <ref name="dtb.externalNamespaces"/>
   </define>
   <!--
     coreattrs are attributes permissible for most elements
@@ -1022,10 +1022,10 @@
     HB: 2004-03-25 36a: % i18n: removed lang attribute,
     as redundant with xml:lang.
   -->
-  <define name="i18n">
+  <define name="dtb.i18n">
     <optional>
       <attribute name="xml:lang">
-        <ref name="LanguageCode"/>
+        <ref name="dtb.LanguageCode"/>
       </attribute>
     </optional>
     <optional>
@@ -1050,7 +1050,7 @@
     See [RFC1556] for handling bi-directional text in MIME.
   -->
   <!-- jpritchett@rfbd.org:  2006-07-07  Added comment deprecating @showin -->
-  <define name="showin">
+  <define name="dtb.showin">
     <optional>
       <attribute name="showin">
         <choice>
@@ -1109,13 +1109,13 @@
     having common references to images, with different accompanying text
     descriptions.
   -->
-  <define name="attrs">
-    <ref name="coreattrs"/>
-    <ref name="i18n"/>
+  <define name="dtb.attrs">
+    <ref name="dtb.coreattrs"/>
+    <ref name="dtb.i18n"/>
     <optional>
       <attribute name="smilref"/>
     </optional>
-    <ref name="showin"/>
+    <ref name="dtb.showin"/>
   </define>
   <!--
     %attrs; is part of most attribute lists. It includes
@@ -1139,7 +1139,7 @@
   <!-- jpritchett@rfbd.org:  2006-07-06.  Removed @style -->
   <!-- jpritchett@rfbd.org:  2006-07-06.  Added xml:space.  This allows control of whitespace handling on any element. -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
-  <define name="attrsrqd">
+  <define name="dtb.attrsrqd">
     <attribute name="id">
       <data type="ID"/>
     </attribute>
@@ -1148,7 +1148,7 @@
     </optional>
     <optional>
       <attribute name="title">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -1162,9 +1162,9 @@
     <optional>
       <attribute name="smilref"/>
     </optional>
-    <ref name="i18n"/>
-    <ref name="showin"/>
-    <ref name="externalNamespaces"/>
+    <ref name="dtb.i18n"/>
+    <ref name="dtb.showin"/>
+    <ref name="dtb.externalNamespaces"/>
   </define>
   <!--
     %attrsrqd; includes required id and implied class,
@@ -1186,9 +1186,9 @@
     %showin; (See entity declaration.)
   -->
   <!-- ========================= Document Structure ========================== -->
-  <define name="dtbookcontent">
-    <ref name="head"/>
-    <ref name="book"/>
+  <define name="dtb.dtbookcontent">
+    <ref name="dtb.head"/>
+    <ref name="dtb.book"/>
   </define>
   <!--
     HB: 2004-04-05 dtbook: added attribute xmlns with FIXED value 
@@ -1222,21 +1222,21 @@
   <!-- jpritchett@rfbd.org:  2006-07-07  updated @version to 2005-2 -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
   <!-- jpritchett@rfbd.org:  2007-12-07  updated @version to 2005-3 -->
-  <define name="attlist.dtbook" combine="interleave">
+  <define name="dtb.attlist.dtbook" combine="interleave">
     <optional>
       <attribute name="version" a:defaultValue="2005-3">
         <value type="string" datatypeLibrary="">2005-3</value>
       </attribute>
     </optional>
-    <ref name="i18n"/>
-    <ref name="externalNamespaces"/>
+    <ref name="dtb.i18n"/>
+    <ref name="dtb.externalNamespaces"/>
   </define>
   <!-- ======================== Document Head Metadata ======================= -->
   <!-- HB: 2004-03-25 36: % headmisc: removed style. -->
-  <define name="headmisc">
+  <define name="dtb.headmisc">
     <choice>
-      <ref name="meta"/>
-      <ref name="link"/>
+      <ref name="dtb.meta"/>
+      <ref name="dtb.link"/>
     </choice>
   </define>
   <!-- optional head elements -->
@@ -1247,11 +1247,11 @@
     in xhtml, see [XHTML11STRICT].
   -->
   <!-- HB: 2003-03-25 head: element drop title -->
-  <define name="head">
+  <define name="dtb.head">
     <element name="head">
-      <ref name="attlist.head"/>
+      <ref name="dtb.attlist.head"/>
       <zeroOrMore>
-        <ref name="headmisc"/>
+        <ref name="dtb.headmisc"/>
       </zeroOrMore>
     </element>
   </define>
@@ -1261,11 +1261,11 @@
     whitespace-separated profile URI targets that may provide
     additional information about the current document.
   -->
-  <define name="attlist.head" combine="interleave">
-    <ref name="i18n"/>
+  <define name="dtb.attlist.head" combine="interleave">
+    <ref name="dtb.i18n"/>
     <optional>
       <attribute name="profile">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
   </define>
@@ -1280,9 +1280,9 @@
     relationship information (for example, "next" and "previous") that
     may be rendered by user agents in a variety of ways.
   -->
-  <define name="link">
+  <define name="dtb.link">
     <element name="link">
-      <ref name="attlist.link"/>
+      <ref name="dtb.attlist.link"/>
       <empty/>
     </element>
   </define>
@@ -1292,41 +1292,41 @@
     Each attribute use indicated by a parameter entity is
     defined in the comment following its definition.
   -->
-  <define name="attlist.link" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.link" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="charset">
-        <ref name="Charset"/>
+        <ref name="dtb.Charset"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="href">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="hreflang">
-        <ref name="LanguageCode"/>
+        <ref name="dtb.LanguageCode"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="type">
-        <ref name="ContentType"/>
+        <ref name="dtb.ContentType"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="rel">
-        <ref name="LinkTypes"/>
+        <ref name="dtb.LinkTypes"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="rev">
-        <ref name="LinkTypes"/>
+        <ref name="dtb.LinkTypes"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="media">
-        <ref name="MediaDesc"/>
+        <ref name="dtb.MediaDesc"/>
       </attribute>
     </optional>
   </define>
@@ -1351,9 +1351,9 @@
     The Dublin Core specification is available at:
         http://purl.org/dc/
   -->
-  <define name="meta">
+  <define name="dtb.meta">
     <element name="meta">
-      <ref name="attlist.meta"/>
+      <ref name="dtb.attlist.meta"/>
       <empty/>
     </element>
   </define>
@@ -1372,8 +1372,8 @@
     "scheme" indicates a predetermined format for interpreting
     the content value, such as the Dublin Core.
   -->
-  <define name="attlist.meta" combine="interleave">
-    <ref name="i18n"/>
+  <define name="dtb.attlist.meta" combine="interleave">
+    <ref name="dtb.i18n"/>
     <optional>
       <attribute name="http-equiv">
         <data type="NMTOKEN"/>
@@ -1396,22 +1396,22 @@
     is divided into <frontmatter>, <bodymatter>, and <rearmatter>.
     <head>, which contains metadata, precedes <book>.
   -->
-  <define name="book">
+  <define name="dtb.book">
     <element name="book">
-      <ref name="attlist.book"/>
+      <ref name="dtb.attlist.book"/>
       <optional>
-        <ref name="frontmatter"/>
+        <ref name="dtb.frontmatter"/>
       </optional>
       <optional>
-        <ref name="bodymatter"/>
+        <ref name="dtb.bodymatter"/>
       </optional>
       <optional>
-        <ref name="rearmatter"/>
+        <ref name="dtb.rearmatter"/>
       </optional>
     </element>
   </define>
-  <define name="attlist.book" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.book" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ======================== Book Major Structures ======================== -->
   <!--
@@ -1427,26 +1427,26 @@
   -->
   <!-- HB: 2004-04-08 frontmatter: added covertitle. -->
   <!-- jpritchett@rfbd.org:  2006-07-06 doctitle now required, order of doctitle, covertitle, docauthor fixed. -->
-  <define name="frontmatter">
+  <define name="dtb.frontmatter">
     <element name="frontmatter">
-      <ref name="attlist.frontmatter"/>
-      <ref name="doctitle"/>
+      <ref name="dtb.attlist.frontmatter"/>
+      <ref name="dtb.doctitle"/>
       <optional>
-        <ref name="covertitle"/>
+        <ref name="dtb.covertitle"/>
       </optional>
       <zeroOrMore>
-        <ref name="docauthor"/>
+        <ref name="dtb.docauthor"/>
       </zeroOrMore>
       <zeroOrMore>
         <choice>
-          <ref name="level"/>
-          <ref name="level1"/>
+          <ref name="dtb.level"/>
+          <ref name="dtb.level1"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.frontmatter" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.frontmatter" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: bodymatter consists of the text proper of a book, as contrasted
@@ -1457,19 +1457,19 @@
     HB: 2004-03-25 29: bodymatter: eliminate %block;
     level or level1 container is required.
   -->
-  <define name="bodymatter">
+  <define name="dtb.bodymatter">
     <element name="bodymatter">
-      <ref name="attlist.bodymatter"/>
+      <ref name="dtb.attlist.bodymatter"/>
       <oneOrMore>
         <choice>
-          <ref name="level"/>
-          <ref name="level1"/>
+          <ref name="dtb.level"/>
+          <ref name="dtb.level1"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.bodymatter" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.bodymatter" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: rearmatter contains supplementary material such as
@@ -1480,19 +1480,19 @@
     HB: 2004-03-25 29: rearmatter: eliminate %block;
     level or level1 container is required.
   -->
-  <define name="rearmatter">
+  <define name="dtb.rearmatter">
     <element name="rearmatter">
-      <ref name="attlist.rearmatter"/>
+      <ref name="dtb.attlist.rearmatter"/>
       <oneOrMore>
         <choice>
-          <ref name="level"/>
-          <ref name="level1"/>
+          <ref name="dtb.level"/>
+          <ref name="dtb.level1"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.rearmatter" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.rearmatter" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ================== dtbook Recursive Structure level =================== -->
   <!--
@@ -1520,32 +1520,32 @@
     MM: 2005-03-10 level: Reverted to 2004-08-17 content model as simplified 
     content model was not valid.
   -->
-  <define name="level">
+  <define name="dtb.level">
     <element name="level">
-      <ref name="attlist.level"/>
+      <ref name="dtb.attlist.level"/>
       <choice>
         <group>
-          <ref name="hd"/>
+          <ref name="dtb.hd"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="hd"/>
+            <ref name="dtb.hd"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1560,8 +1560,8 @@
     chapter, section, subsection) of the structure it marks.
     "depth" indicates the nesting depth, starting at 1.
   -->
-  <define name="attlist.level" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="depth"/>
     </optional>
@@ -1591,32 +1591,32 @@
     MM: 2005-03-10 level1: Reverted to 2004-08-17 content model as simplified 
     content model was not valid.
   -->
-  <define name="level1">
+  <define name="dtb.level1">
     <element name="level1">
-      <ref name="attlist.level1"/>
+      <ref name="dtb.attlist.level1"/>
       <choice>
         <group>
-          <ref name="h1"/>
+          <ref name="dtb.h1"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level2"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level2"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level2"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level2"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="h1"/>
+            <ref name="dtb.h1"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level2"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level2"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1624,8 +1624,8 @@
       </choice>
     </element>
   </define>
-  <define name="attlist.level1" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level1" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: level2 contains subdivisions that nest within <level1>
@@ -1648,32 +1648,32 @@
     MM: 2005-03-10 level2: Reverted to 2004-08-17 content model as simplified 
     content model was not valid.
   -->
-  <define name="level2">
+  <define name="dtb.level2">
     <element name="level2">
-      <ref name="attlist.level2"/>
+      <ref name="dtb.attlist.level2"/>
       <choice>
         <group>
-          <ref name="h2"/>
+          <ref name="dtb.h2"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level3"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level3"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level3"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level3"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="h2"/>
+            <ref name="dtb.h2"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level3"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level3"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1681,8 +1681,8 @@
       </choice>
     </element>
   </define>
-  <define name="attlist.level2" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level2" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     HB: 2004-03-25 28: level3: added constraint - at most one <h3> 
@@ -1706,32 +1706,32 @@
     subsubsection) of the subordinate structure it marks.
     At most one heading <h3> may be used.
   -->
-  <define name="level3">
+  <define name="dtb.level3">
     <element name="level3">
-      <ref name="attlist.level3"/>
+      <ref name="dtb.attlist.level3"/>
       <choice>
         <group>
-          <ref name="h3"/>
+          <ref name="dtb.h3"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level4"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level4"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level4"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level4"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="h3"/>
+            <ref name="dtb.h3"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level4"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level4"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1739,8 +1739,8 @@
       </choice>
     </element>
   </define>
-  <define name="attlist.level3" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level3" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     HB: 2004-03-25 28: level4: added constraint - at most one <h4> 
@@ -1763,32 +1763,32 @@
     of the subordinate structure it marks.
     At most one heading <h4> may be used.
   -->
-  <define name="level4">
+  <define name="dtb.level4">
     <element name="level4">
-      <ref name="attlist.level4"/>
+      <ref name="dtb.attlist.level4"/>
       <choice>
         <group>
-          <ref name="h4"/>
+          <ref name="dtb.h4"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level5"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level5"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level5"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level5"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="h4"/>
+            <ref name="dtb.h4"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level5"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level5"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1796,8 +1796,8 @@
       </choice>
     </element>
   </define>
-  <define name="attlist.level4" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level4" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     HB: 2004-03-25 28: level5: added constraint - at most one <h5> 
@@ -1820,32 +1820,32 @@
     of the subordinate structure it marks.
     At most one heading <h5> may be used.
   -->
-  <define name="level5">
+  <define name="dtb.level5">
     <element name="level5">
-      <ref name="attlist.level5"/>
+      <ref name="dtb.attlist.level5"/>
       <choice>
         <group>
-          <ref name="h5"/>
+          <ref name="dtb.h5"/>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level6"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level6"/>
             </choice>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
             <choice>
-              <ref name="docblockorinline"/>
-              <ref name="level6"/>
+              <ref name="dtb.docblockorinline"/>
+              <ref name="dtb.level6"/>
             </choice>
           </oneOrMore>
           <optional>
-            <ref name="h5"/>
+            <ref name="dtb.h5"/>
             <oneOrMore>
               <choice>
-                <ref name="docblockorinline"/>
-                <ref name="level6"/>
+                <ref name="dtb.docblockorinline"/>
+                <ref name="dtb.level6"/>
               </choice>
             </oneOrMore>
           </optional>
@@ -1853,8 +1853,8 @@
       </choice>
     </element>
   </define>
-  <define name="attlist.level5" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level5" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     HB: 2004-03-25 28: level6: added constraint - at most one <h6> 
@@ -1881,45 +1881,45 @@
     of the subordinate structure it marks.
     At most one heading <h6> may be used.
   -->
-  <define name="level6">
+  <define name="dtb.level6">
     <element name="level6">
-      <ref name="attlist.level6"/>
+      <ref name="dtb.attlist.level6"/>
       <choice>
         <group>
-          <ref name="h6"/>
+          <ref name="dtb.h6"/>
           <oneOrMore>
-            <ref name="docblockorinline"/>
+            <ref name="dtb.docblockorinline"/>
           </oneOrMore>
         </group>
         <group>
           <oneOrMore>
-            <ref name="docblockorinline"/>
+            <ref name="dtb.docblockorinline"/>
           </oneOrMore>
           <optional>
-            <ref name="h6"/>
+            <ref name="dtb.h6"/>
             <oneOrMore>
-              <ref name="docblockorinline"/>
+              <ref name="dtb.docblockorinline"/>
             </oneOrMore>
           </optional>
         </group>
       </choice>
     </element>
   </define>
-  <define name="attlist.level6" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.level6" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ============================= Text Markup ============================= -->
-  <define name="phrase">
+  <define name="dtb.phrase">
     <choice>
-      <ref name="em"/>
-      <ref name="strong"/>
-      <ref name="dfn"/>
-      <ref name="code"/>
-      <ref name="samp"/>
-      <ref name="kbd"/>
-      <ref name="cite"/>
-      <ref name="abbr"/>
-      <ref name="acronym"/>
+      <ref name="dtb.em"/>
+      <ref name="dtb.strong"/>
+      <ref name="dtb.dfn"/>
+      <ref name="dtb.code"/>
+      <ref name="dtb.samp"/>
+      <ref name="dtb.kbd"/>
+      <ref name="dtb.cite"/>
+      <ref name="dtb.abbr"/>
+      <ref name="dtb.acronym"/>
     </choice>
   </define>
   <!-- inline text elements -->
@@ -1927,17 +1927,17 @@
     HB: 2004-04-23 % special: eliminated linenum from % special,
     linenum only appears within line.
   -->
-  <define name="special">
+  <define name="dtb.special">
     <choice>
-      <ref name="a"/>
-      <ref name="img"/>
-      <ref name="imggroup"/>
-      <ref name="br"/>
-      <ref name="q"/>
-      <ref name="sub"/>
-      <ref name="sup"/>
-      <ref name="span"/>
-      <ref name="bdo"/>
+      <ref name="dtb.a"/>
+      <ref name="dtb.img"/>
+      <ref name="dtb.imggroup"/>
+      <ref name="dtb.br"/>
+      <ref name="dtb.q"/>
+      <ref name="dtb.sub"/>
+      <ref name="dtb.sup"/>
+      <ref name="dtb.span"/>
+      <ref name="dtb.bdo"/>
     </choice>
   </define>
   <!-- special inline text elements -->
@@ -1945,40 +1945,40 @@
     HB: 2004-04-23 % specialnoa: eliminated linenum from % specialnoa,
     linenum only appears within line.
   -->
-  <define name="specialnoa">
+  <define name="dtb.specialnoa">
     <choice>
-      <ref name="img"/>
-      <ref name="imggroup"/>
-      <ref name="br"/>
-      <ref name="q"/>
-      <ref name="sub"/>
-      <ref name="sup"/>
-      <ref name="span"/>
-      <ref name="bdo"/>
+      <ref name="dtb.img"/>
+      <ref name="dtb.imggroup"/>
+      <ref name="dtb.br"/>
+      <ref name="dtb.q"/>
+      <ref name="dtb.sub"/>
+      <ref name="dtb.sup"/>
+      <ref name="dtb.span"/>
+      <ref name="dtb.bdo"/>
     </choice>
   </define>
   <!-- specialnoa inline text elements for anchor <a> -->
   <!-- =========================== Inline Entities =========================== -->
   <!-- jpritchett@rfbd.org:  2006-08-11.  Add %externalFlow to %dtbookinline; -->
-  <define name="dtbookinline">
+  <define name="dtb.dtbookinline">
     <choice>
-      <ref name="sent"/>
-      <ref name="w"/>
-      <ref name="pagenum"/>
-      <ref name="prodnote"/>
-      <ref name="annoref"/>
-      <ref name="noteref"/>
-      <ref name="externalinline"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.sent"/>
+      <ref name="dtb.w"/>
+      <ref name="dtb.pagenum"/>
+      <ref name="dtb.prodnote"/>
+      <ref name="dtb.annoref"/>
+      <ref name="dtb.noteref"/>
+      <ref name="dtb.externalinline"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!-- dtbook added inline text elements -->
-  <define name="inline">
+  <define name="dtb.inline">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="special"/>
-      <ref name="dtbookinline"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.special"/>
+      <ref name="dtb.dtbookinline"/>
     </choice>
   </define>
   <!-- inline text elements -->
@@ -1987,83 +1987,83 @@
     MM: 2004-07-23 Remove %externalinline; since already present 
     via %dtbookinline;.
   -->
-  <define name="inlinenoa">
+  <define name="dtb.inlinenoa">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="specialnoa"/>
-      <ref name="dtbookinline"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.specialnoa"/>
+      <ref name="dtb.dtbookinline"/>
     </choice>
   </define>
   <!-- inlinenoa excludes nested <a> -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalFlow %inlines;, %inlinew; -->
-  <define name="inlines">
+  <define name="dtb.inlines">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="special"/>
-      <ref name="pagenum"/>
-      <ref name="w"/>
-      <ref name="prodnote"/>
-      <ref name="annoref"/>
-      <ref name="noteref"/>
-      <ref name="externalinline"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.special"/>
+      <ref name="dtb.pagenum"/>
+      <ref name="dtb.w"/>
+      <ref name="dtb.prodnote"/>
+      <ref name="dtb.annoref"/>
+      <ref name="dtb.noteref"/>
+      <ref name="dtb.externalinline"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!-- inlines excludes direct nesting of sentences <sent> -->
-  <define name="inlinew">
+  <define name="dtb.inlinew">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="special"/>
-      <ref name="externalinline"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.special"/>
+      <ref name="dtb.externalinline"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!-- inlinew for word <w> excludes any of the %dtbookinline; -->
-  <define name="inlinenopagenum">
+  <define name="dtb.inlinenopagenum">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="special"/>
-      <ref name="sent"/>
-      <ref name="w"/>
-      <ref name="annoref"/>
-      <ref name="noteref"/>
-      <ref name="externalinline"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.special"/>
+      <ref name="dtb.sent"/>
+      <ref name="dtb.w"/>
+      <ref name="dtb.annoref"/>
+      <ref name="dtb.noteref"/>
+      <ref name="dtb.externalinline"/>
     </choice>
   </define>
   <!-- inlinenopagenum excludes direct <pagenum> in <table> <th> and <td>. -->
-  <define name="inlinenoprodnote">
+  <define name="dtb.inlinenoprodnote">
     <choice>
       <text/>
-      <ref name="phrase"/>
-      <ref name="special"/>
-      <ref name="sent"/>
-      <ref name="w"/>
-      <ref name="pagenum"/>
-      <ref name="annoref"/>
-      <ref name="noteref"/>
-      <ref name="externalinline"/>
+      <ref name="dtb.phrase"/>
+      <ref name="dtb.special"/>
+      <ref name="dtb.sent"/>
+      <ref name="dtb.w"/>
+      <ref name="dtb.pagenum"/>
+      <ref name="dtb.annoref"/>
+      <ref name="dtb.noteref"/>
+      <ref name="dtb.externalinline"/>
     </choice>
   </define>
   <!-- inlinenoprodnote excludes direct <prodnote>, as they shouldn't nest -->
   <!-- =================== Flow (Block or Inline) Entities =================== -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalFlow to %flow;, %flownopagenum; -->
-  <define name="flow">
+  <define name="dtb.flow">
     <choice>
-      <ref name="inlinenoprodnote"/>
-      <ref name="blocknoimggroup"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.inlinenoprodnote"/>
+      <ref name="dtb.blocknoimggroup"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!-- flow elements add inlinenoprodnote to block -->
-  <define name="flownopagenum">
+  <define name="dtb.flownopagenum">
     <choice>
-      <ref name="inlinenopagenum"/>
-      <ref name="blocknoimggroup"/>
-      <ref name="externalFlow"/>
+      <ref name="dtb.inlinenopagenum"/>
+      <ref name="dtb.blocknoimggroup"/>
+      <ref name="dtb.externalFlow"/>
     </choice>
   </define>
   <!--
@@ -2072,9 +2072,9 @@
   -->
   <!-- ========= Br, Line, Linenum, Address, and Div Content Models ========== -->
   <!-- Use: br marks a forced line break. -->
-  <define name="br">
+  <define name="dtb.br">
     <element name="br">
-      <ref name="attlist.br"/>
+      <ref name="dtb.attlist.br"/>
       <empty/>
     </element>
   </define>
@@ -2084,37 +2084,37 @@
     The %coreattrs; only appear, as there is no content
     to which the more general %attrs; apply.
   -->
-  <define name="attlist.br" combine="interleave">
-    <ref name="coreattrs"/>
+  <define name="dtb.attlist.br" combine="interleave">
+    <ref name="dtb.coreattrs"/>
   </define>
   <!--
     Use: line marks a single logical line of text. Often used in
     conjunction with <linenum> in documents with numbered lines.
   -->
-  <define name="line">
+  <define name="dtb.line">
     <element name="line">
-      <ref name="attlist.line"/>
+      <ref name="dtb.attlist.line"/>
       <zeroOrMore>
         <choice>
-          <ref name="inline"/>
-          <ref name="linenum"/>
+          <ref name="dtb.inline"/>
+          <ref name="dtb.linenum"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.line" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.line" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-03-30 poem: added linenum use. -->
   <!-- Use: linenum contains a line number, for example in legal text, or <poem>. -->
-  <define name="linenum">
+  <define name="dtb.linenum">
     <element name="linenum">
-      <ref name="attlist.linenum"/>
+      <ref name="dtb.attlist.linenum"/>
       <text/>
     </element>
   </define>
-  <define name="attlist.linenum" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.linenum" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: address contains a location at which a person or agency
@@ -2124,19 +2124,19 @@
     name, address, region (state. province, etc.), country, location
     code (such as zipcode, provincial code), phone, fax, email, etc.
   -->
-  <define name="address">
+  <define name="dtb.address">
     <element name="address">
-      <ref name="attlist.address"/>
+      <ref name="dtb.attlist.address"/>
       <zeroOrMore>
         <choice>
-          <ref name="inline"/>
-          <ref name="line"/>
+          <ref name="dtb.inline"/>
+          <ref name="dtb.line"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.address" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.address" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: div is a generic container for subdivisions of a book. The
@@ -2149,11 +2149,11 @@
   <!-- HB: 2004-04-08 div: added covertitle. -->
   <!-- MM: 2004-07-30 Dropped 'level' attribute from element div. -->
   <!-- jpritchett@rfbd.org:  2006-07-06 Changed model to %docblockorinline to include bridgehead -->
-  <define name="div">
+  <define name="dtb.div">
     <element name="div">
-      <ref name="attlist.div"/>
+      <ref name="dtb.attlist.div"/>
       <oneOrMore>
-        <ref name="docblockorinline"/>
+        <ref name="dtb.docblockorinline"/>
       </oneOrMore>
     </element>
   </define>
@@ -2163,8 +2163,8 @@
     "class" value can identify the
     actual name (e.g., part, chapter, letter) of the structure it marks.
   -->
-  <define name="attlist.div" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.div" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- === dtbook Block Elements: Title, Author, Prodnote, Sidebar === -->
   <!-- HB: 2004-04-04 35b  title: added <title> for use in <poem> or <cite>. -->
@@ -2172,32 +2172,32 @@
   <!-- jpritchett@rfbd.org:  2006-07-06 Added %coreattrs (id, class, title, xml:space) to attribute list -->
   <!-- jpritchett@rfbd.org 2007-12-17:  Changed %coreattrs to %attrs -->
   <!-- jpritchett@rfbd.org 2007-12-17:  Expanded content model to include inlines -->
-  <define name="title">
+  <define name="dtb.title">
     <element name="title">
-      <ref name="attlist.title"/>
+      <ref name="dtb.attlist.title"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.title" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.title" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: author identifies the writer of a work other than this one.
     Contrast with <docauthor>,  which identifies the author of this work.
     <author> typically occurs within <poem>, <blockquote> or <cite>.
   -->
-  <define name="author">
+  <define name="dtb.author">
     <element name="author">
-      <ref name="attlist.author"/>
+      <ref name="dtb.attlist.author"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.author" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.author" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     HB: 2004-03-25 35d: notice element dropped: its purpose is sufficiently
@@ -2214,11 +2214,11 @@
     3) describe differences between the print book and the audio
     version.
   -->
-  <define name="prodnote">
+  <define name="dtb.prodnote">
     <element name="prodnote">
-      <ref name="attlist.prodnote"/>
+      <ref name="dtb.attlist.prodnote"/>
       <zeroOrMore>
-        <ref name="flow"/>
+        <ref name="dtb.flow"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2240,8 +2240,8 @@
     text. Optionally put the specific admonition in the class attribute
     value, repeating it from the text.
   -->
-  <define name="attlist.prodnote" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.prodnote" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
         <data type="IDREFS"/>
@@ -2259,13 +2259,13 @@
     text and/or narrative flow and is often boxed and printed apart
     from the main text block on a page. It may have a heading <hd>.
   -->
-  <define name="sidebar">
+  <define name="dtb.sidebar">
     <element name="sidebar">
-      <ref name="attlist.sidebar"/>
+      <ref name="dtb.attlist.sidebar"/>
       <zeroOrMore>
         <choice>
-          <ref name="flow"/>
-          <ref name="hd"/>
+          <ref name="dtb.flow"/>
+          <ref name="dtb.hd"/>
         </choice>
       </zeroOrMore>
     </element>
@@ -2276,8 +2276,8 @@
     text. Optionally put the specific admonition in the class attribute
     value, repeating it from the text.
   -->
-  <define name="attlist.sidebar" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.sidebar" combine="interleave">
+    <ref name="dtb.attrs"/>
     <attribute name="render">
       <choice>
         <value>required</value>
@@ -2289,19 +2289,19 @@
     Use: note marks a footnote, endnote, etc. Any local reference to
     <note id="yyy"> is by <noteref idref="#yyy">.
   -->
-  <define name="note">
+  <define name="dtb.note">
     <element name="note">
-      <ref name="attlist.note"/>
+      <ref name="dtb.attlist.note"/>
       <oneOrMore>
         <choice>
-          <ref name="block"/>
-          <ref name="inlineinblock"/>
+          <ref name="dtb.block"/>
+          <ref name="dtb.inlineinblock"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.note" combine="interleave">
-    <ref name="attrsrqd"/>
+  <define name="dtb.attlist.note" combine="interleave">
+    <ref name="dtb.attrsrqd"/>
   </define>
   <!--
     Use: annotation is a comment on or explanation of a portion of
@@ -2310,19 +2310,19 @@
     no explicit reference to it inserted in the text. Any local
     reference to <annotation id="xxx"> is by <annoref idref="#xxx">.
   -->
-  <define name="annotation">
+  <define name="dtb.annotation">
     <element name="annotation">
-      <ref name="attlist.annotation"/>
+      <ref name="dtb.attlist.annotation"/>
       <oneOrMore>
         <choice>
-          <ref name="block"/>
-          <ref name="inlineinblock"/>
+          <ref name="dtb.block"/>
+          <ref name="dtb.inlineinblock"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.annotation" combine="interleave">
-    <ref name="attrsrqd"/>
+  <define name="dtb.attlist.annotation" combine="interleave">
+    <ref name="dtb.attrsrqd"/>
   </define>
   <!-- ====================== Byline, Epigraph, Dateline ===================== -->
   <!--
@@ -2337,16 +2337,16 @@
     or a division of a work.
   -->
   <!-- MM: 2005-04-22 epigraph - changed ATTLIST to %attrs; -->
-  <define name="epigraph">
+  <define name="dtb.epigraph">
     <element name="epigraph">
-      <ref name="attlist.epigraph"/>
+      <ref name="dtb.attlist.epigraph"/>
       <zeroOrMore>
-        <ref name="flow"/>
+        <ref name="dtb.flow"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.epigraph" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.epigraph" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-30-30 byline: element added. -->
   <!--
@@ -2354,16 +2354,16 @@
     to a work. 
   -->
   <!-- MM: 2005-04-22 byline - changed ATTLIST to %attrs; -->
-  <define name="byline">
+  <define name="dtb.byline">
     <element name="byline">
-      <ref name="attlist.byline"/>
+      <ref name="dtb.attlist.byline"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.byline" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.byline" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-30-30 dateline: element added. -->
   <!--
@@ -2371,16 +2371,16 @@
     a work was authored. 
   -->
   <!-- MM: 2005-04-22 dateline - changed ATTLIST to %attrs; -->
-  <define name="dateline">
+  <define name="dtb.dateline">
     <element name="dateline">
-      <ref name="attlist.dateline"/>
+      <ref name="dtb.attlist.dateline"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.dateline" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.dateline" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ============================= Poem, Linegroup ========================= -->
   <!--
@@ -2390,27 +2390,27 @@
     This module defines the <linegroup> and <poem> elements.
   -->
   <!-- Use: linegroup provides means to group a set of lines of a <poem>. -->
-  <define name="linegroup">
+  <define name="dtb.linegroup">
     <element name="linegroup">
-      <ref name="attlist.linegroup"/>
+      <ref name="dtb.attlist.linegroup"/>
       <zeroOrMore>
         <choice>
-          <ref name="hd"/>
-          <ref name="dateline"/>
-          <ref name="epigraph"/>
-          <ref name="byline"/>
-          <ref name="linegroup"/>
-          <ref name="line"/>
-          <ref name="pagenum"/>
-          <ref name="prodnote"/>
-          <ref name="noteref"/>
-          <ref name="annoref"/>
-          <ref name="note"/>
-          <ref name="annotation"/>
-          <ref name="p"/>
-          <ref name="blockquote"/>
-          <ref name="img"/>
-          <ref name="imggroup"/>
+          <ref name="dtb.hd"/>
+          <ref name="dtb.dateline"/>
+          <ref name="dtb.epigraph"/>
+          <ref name="dtb.byline"/>
+          <ref name="dtb.linegroup"/>
+          <ref name="dtb.line"/>
+          <ref name="dtb.pagenum"/>
+          <ref name="dtb.prodnote"/>
+          <ref name="dtb.noteref"/>
+          <ref name="dtb.annoref"/>
+          <ref name="dtb.note"/>
+          <ref name="dtb.annotation"/>
+          <ref name="dtb.p"/>
+          <ref name="dtb.blockquote"/>
+          <ref name="dtb.img"/>
+          <ref name="dtb.imggroup"/>
         </choice>
       </zeroOrMore>
     </element>
@@ -2420,47 +2420,47 @@
     kind of linegroup, such as "stanza", "chorus", or "canto".
   -->
   <!-- MM: 2005-04-22 linegroup - changed ATTLIST to %attrs; -->
-  <define name="attlist.linegroup" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.linegroup" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-03-30 poem: removed notice and hr from content model. -->
   <!-- HB: 2004-03-30 poem: added title and author to content model. -->
   <!-- Use: poem is a complete <poem> or fragment thereof. -->
   <!-- MM: 2005-04-22 poem - changed ATTLIST to %attrs; -->
-  <define name="poem">
+  <define name="dtb.poem">
     <element name="poem">
-      <ref name="attlist.poem"/>
+      <ref name="dtb.attlist.poem"/>
       <zeroOrMore>
         <choice>
-          <ref name="title"/>
-          <ref name="author"/>
-          <ref name="hd"/>
-          <ref name="dateline"/>
-          <ref name="epigraph"/>
-          <ref name="byline"/>
-          <ref name="linegroup"/>
-          <ref name="line"/>
-          <ref name="pagenum"/>
-          <ref name="img"/>
-          <ref name="imggroup"/>
-          <ref name="sidebar"/>
+          <ref name="dtb.title"/>
+          <ref name="dtb.author"/>
+          <ref name="dtb.hd"/>
+          <ref name="dtb.dateline"/>
+          <ref name="dtb.epigraph"/>
+          <ref name="dtb.byline"/>
+          <ref name="dtb.linegroup"/>
+          <ref name="dtb.line"/>
+          <ref name="dtb.pagenum"/>
+          <ref name="dtb.img"/>
+          <ref name="dtb.imggroup"/>
+          <ref name="dtb.sidebar"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.poem" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.poem" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ========================= The Anchor Element ========================== -->
   <!--
     Use: a contains an anchor, which is used to reference another
     location, within the same or another <dtbook>.
   -->
-  <define name="a">
+  <define name="dtb.a">
     <element name="a">
-      <ref name="attlist.a"/>
+      <ref name="dtb.attlist.a"/>
       <zeroOrMore>
-        <ref name="inlinenoa"/>
+        <ref name="dtb.inlinenoa"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2505,41 +2505,41 @@
             external application, whether or not that content is renderable by 
             the DTB player.
   -->
-  <define name="attlist.a" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.a" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="type">
-        <ref name="ContentType"/>
+        <ref name="dtb.ContentType"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="href">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="hreflang">
-        <ref name="LanguageCode"/>
+        <ref name="dtb.LanguageCode"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="rel">
-        <ref name="LinkTypes"/>
+        <ref name="dtb.LinkTypes"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="rev">
-        <ref name="LinkTypes"/>
+        <ref name="dtb.LinkTypes"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="accesskey">
-        <ref name="Character"/>
+        <ref name="dtb.Character"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="tabindex">
-        <ref name="Number"/>
+        <ref name="dtb.Number"/>
       </attribute>
     </optional>
     <optional>
@@ -2556,69 +2556,69 @@
     Use: em indicates emphasis. Usually <em> is rendered in italics.
     Compare with <strong>.
   -->
-  <define name="em">
+  <define name="dtb.em">
     <element name="em">
-      <ref name="attlist.em"/>
+      <ref name="dtb.attlist.em"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.em" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.em" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: strong marks stronger emphasis than <em>. Visually <strong> is
     usually rendered bold.
   -->
-  <define name="strong">
+  <define name="dtb.strong">
     <element name="strong">
-      <ref name="attlist.strong"/>
+      <ref name="dtb.attlist.strong"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.strong" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.strong" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: dfn marks the first occurrence of a word or term that is
     defined or explained there or elsewhere in <book>. Often
     <dfn> is rendered in italics, sometimes in parentheses.
   -->
-  <define name="dfn">
+  <define name="dtb.dfn">
     <element name="dfn">
-      <ref name="attlist.dfn"/>
+      <ref name="dtb.attlist.dfn"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.dfn" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.dfn" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: kbd designates information that the reader is to input
     directly into a computer using the keyboard.
   -->
-  <define name="kbd">
+  <define name="dtb.kbd">
     <element name="kbd">
-      <ref name="attlist.kbd"/>
+      <ref name="dtb.attlist.kbd"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.kbd" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.kbd" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: code designates a fragment of computer code. -->
-  <define name="code">
+  <define name="dtb.code">
     <element name="code">
-      <ref name="attlist.code"/>
+      <ref name="dtb.attlist.code"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2628,7 +2628,7 @@
     
     See http://www.w3.org/TR/xml11/#sec-white-space for information on xml:space.
   -->
-  <define name="attlist.code" combine="interleave">
+  <define name="dtb.attlist.code" combine="interleave">
     <optional>
       <attribute name="id">
         <data type="ID"/>
@@ -2639,7 +2639,7 @@
     </optional>
     <optional>
       <attribute name="title">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -2650,23 +2650,23 @@
         </choice>
       </attribute>
     </optional>
-    <ref name="externalNamespaces"/>
-    <ref name="i18n"/>
+    <ref name="dtb.externalNamespaces"/>
+    <ref name="dtb.i18n"/>
     <optional>
       <attribute name="smilref"/>
     </optional>
-    <ref name="showin"/>
+    <ref name="dtb.showin"/>
   </define>
   <!--
     Use: samp contains a sample of work created by the author for
     use as an example or template. For example, a sample business
     letter, resume, computer program output, or form.
   -->
-  <define name="samp">
+  <define name="dtb.samp">
     <element name="samp">
-      <ref name="attlist.samp"/>
+      <ref name="dtb.attlist.samp"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2676,7 +2676,7 @@
     
     See http://www.w3.org/TR/xml11/#sec-white-space for information on xml:space.
   -->
-  <define name="attlist.samp" combine="interleave">
+  <define name="dtb.attlist.samp" combine="interleave">
     <optional>
       <attribute name="id">
         <data type="ID"/>
@@ -2687,7 +2687,7 @@
     </optional>
     <optional>
       <attribute name="title">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -2698,40 +2698,40 @@
         </choice>
       </attribute>
     </optional>
-    <ref name="externalNamespaces"/>
-    <ref name="i18n"/>
+    <ref name="dtb.externalNamespaces"/>
+    <ref name="dtb.i18n"/>
     <optional>
       <attribute name="smilref"/>
     </optional>
-    <ref name="showin"/>
+    <ref name="dtb.showin"/>
   </define>
   <!-- Use: cite marks a reference (or citation) to another document. -->
   <!-- HB: 2004-03-25 35a: cite: allow title and author. -->
-  <define name="cite">
+  <define name="dtb.cite">
     <element name="cite">
-      <ref name="attlist.cite"/>
+      <ref name="dtb.attlist.cite"/>
       <zeroOrMore>
         <choice>
-          <ref name="inline"/>
-          <ref name="title"/>
-          <ref name="author"/>
+          <ref name="dtb.inline"/>
+          <ref name="dtb.title"/>
+          <ref name="dtb.author"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.cite" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.cite" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: abbr designates an abbreviation, a shortened form of a
     word. For examples: Mr., approx., lbs., rec'd.
     Contrast with <acronym>.
   -->
-  <define name="abbr">
+  <define name="dtb.abbr">
     <element name="abbr">
-      <ref name="attlist.abbr"/>
+      <ref name="dtb.attlist.abbr"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2740,19 +2740,19 @@
     
     "title" value may expand that abbreviation.
   -->
-  <define name="attlist.abbr" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.abbr" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: acronym marks a word formed from key letters (usually
     initials) of a group of words. For examples: UNESCO, NATO, XML, US.
     Contrast with <abbr>.
   -->
-  <define name="acronym">
+  <define name="dtb.acronym">
     <element name="acronym">
-      <ref name="attlist.acronym"/>
+      <ref name="dtb.attlist.acronym"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2765,8 +2765,8 @@
     'no' that the acronym is best presented as a sequence
     of letters (for examples, "XML" or  "US").
   -->
-  <define name="attlist.acronym" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.acronym" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="pronounce">
         <choice>
@@ -2781,32 +2781,32 @@
     character's normal baseline). Can be used recursively and/or
     intermixed with <sup>.
   -->
-  <define name="sub">
+  <define name="dtb.sub">
     <element name="sub">
-      <ref name="attlist.sub"/>
+      <ref name="dtb.attlist.sub"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.sub" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.sub" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: sup marks a superscript character (printed above a
     character's normal baseline). Can be used recursively and/or
     intermixed with <sub>.
   -->
-  <define name="sup">
+  <define name="dtb.sup">
     <element name="sup">
-      <ref name="attlist.sup"/>
+      <ref name="dtb.attlist.sup"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.sup" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.sup" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: span is a generic container for use in inline settings
@@ -2816,26 +2816,26 @@
     to which styles are to be applied. Compare with <div>, which
     is used in a block settings.
   -->
-  <define name="span">
+  <define name="dtb.span">
     <element name="span">
-      <ref name="attlist.span"/>
+      <ref name="dtb.attlist.span"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.span" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.span" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: bdo is used in special cases where the automatic actions
     of the bi-directional algorithm would result in incorrect display.
   -->
-  <define name="bdo">
+  <define name="dtb.bdo">
     <element name="bdo">
-      <ref name="attlist.bdo"/>
+      <ref name="dtb.attlist.bdo"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -2849,11 +2849,11 @@
     "dir" indicates the writing direction: 'ltr' is
     left-to-right, 'rtl' is right-to-left.
   -->
-  <define name="attlist.bdo" combine="interleave">
-    <ref name="coreattrs"/>
+  <define name="dtb.attlist.bdo" combine="interleave">
+    <ref name="dtb.coreattrs"/>
     <optional>
       <attribute name="xml:lang">
-        <ref name="LanguageCode"/>
+        <ref name="dtb.LanguageCode"/>
       </attribute>
     </optional>
     <attribute name="dir">
@@ -2865,32 +2865,32 @@
     <optional>
       <attribute name="smilref"/>
     </optional>
-    <ref name="showin"/>
+    <ref name="dtb.showin"/>
   </define>
   <!-- =================== dtbook Inline Sentence and Word =================== -->
   <!-- Use: sent marks a sentence. -->
-  <define name="sent">
+  <define name="dtb.sent">
     <element name="sent">
-      <ref name="attlist.sent"/>
+      <ref name="dtb.attlist.sent"/>
       <zeroOrMore>
-        <ref name="inlines"/>
+        <ref name="dtb.inlines"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.sent" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.sent" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: w marks a word. -->
-  <define name="w">
+  <define name="dtb.w">
     <element name="w">
-      <ref name="attlist.w"/>
+      <ref name="dtb.attlist.w"/>
       <zeroOrMore>
-        <ref name="inlinew"/>
+        <ref name="dtb.inlinew"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.w" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.w" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ======== Inline Page Number, Footnote and Annotation Reference ======== -->
   <!--
@@ -2902,9 +2902,9 @@
     document, usually inserted at the point within the file immediately
     preceding the first item of content on a new page.
   -->
-  <define name="pagenum">
+  <define name="dtb.pagenum">
     <element name="pagenum">
-      <ref name="attlist.pagenum"/>
+      <ref name="dtb.attlist.pagenum"/>
       <text/>
     </element>
   </define>
@@ -2920,8 +2920,8 @@
     such as large <img> or <table>, put the sequence of <pagenum> on
     the page where that content starts.
   -->
-  <define name="attlist.pagenum" combine="interleave">
-    <ref name="attrsrqd"/>
+  <define name="dtb.attlist.pagenum" combine="interleave">
+    <ref name="dtb.attrsrqd"/>
     <optional>
       <attribute name="page" a:defaultValue="normal">
         <choice>
@@ -2937,9 +2937,9 @@
     or endnote <note>. Contrast with <annoref>. <noteref> and <note>
     are independently skippable.
   -->
-  <define name="noteref">
+  <define name="dtb.noteref">
     <element name="noteref">
-      <ref name="attlist.noteref"/>
+      <ref name="dtb.attlist.noteref"/>
       <text/>
     </element>
   </define>
@@ -2957,14 +2957,14 @@
     "type" provides advisory content MIME type of
     the target, see [RFC2046].
   -->
-  <define name="attlist.noteref" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.noteref" combine="interleave">
+    <ref name="dtb.attrs"/>
     <attribute name="idref">
-      <ref name="URI"/>
+      <ref name="dtb.URI"/>
     </attribute>
     <optional>
       <attribute name="type">
-        <ref name="ContentType"/>
+        <ref name="dtb.ContentType"/>
       </attribute>
     </optional>
   </define>
@@ -2975,9 +2975,9 @@
     print book by bolding, italics, etc.). It should not normally
     be allowed to be turned off in a DTB application.
   -->
-  <define name="annoref">
+  <define name="dtb.annoref">
     <element name="annoref">
-      <ref name="attlist.annoref"/>
+      <ref name="dtb.attlist.annoref"/>
       <text/>
     </element>
   </define>
@@ -2995,14 +2995,14 @@
     "type" provides advisory content MIME
     type of the targeted id, see [RFC2046].
   -->
-  <define name="attlist.annoref" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.annoref" combine="interleave">
+    <ref name="dtb.attrs"/>
     <attribute name="idref">
-      <ref name="URI"/>
+      <ref name="dtb.URI"/>
     </attribute>
     <optional>
       <attribute name="type">
-        <ref name="ContentType"/>
+        <ref name="dtb.ContentType"/>
       </attribute>
     </optional>
   </define>
@@ -3012,11 +3012,11 @@
     <blockquote>, which marks a longer quotation set off from the
     surrounding text.
   -->
-  <define name="q">
+  <define name="dtb.q">
     <element name="q">
-      <ref name="attlist.q"/>
+      <ref name="dtb.attlist.q"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -3025,11 +3025,11 @@
     
     "cite" may provide a URI reference.
   -->
-  <define name="attlist.q" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.q" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="cite">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
   </define>
@@ -3044,11 +3044,11 @@
     refer to a single <img>. Multiple <prodnote> may apply if
     different versions are needed for different media.
   -->
-  <define name="Length">
+  <define name="dtb.Length">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!-- measured in pixels, percent (nn%) -->
-  <define name="MultiLength">
+  <define name="dtb.MultiLength">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!--
@@ -3058,7 +3058,7 @@
     half the available width after any explicit widths have been
     consumed). The lengths are separated by commas or whitespace.
   -->
-  <define name="Pixels">
+  <define name="dtb.Pixels">
     <data type="string" datatypeLibrary=""/>
   </define>
   <!--
@@ -3073,9 +3073,9 @@
     example, the form <caption imgref="yyy">the Caption</caption> for
     the <img id="yyy">.
   -->
-  <define name="img">
+  <define name="dtb.img">
     <element name="img">
-      <ref name="attlist.img"/>
+      <ref name="dtb.attlist.img"/>
       <empty/>
     </element>
   </define>
@@ -3092,27 +3092,27 @@
     The attributes "height" and "width" provide visual sizing
     information, measured in pixels.
   -->
-  <define name="attlist.img" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.img" combine="interleave">
+    <ref name="dtb.attrs"/>
     <attribute name="src">
-      <ref name="URI"/>
+      <ref name="dtb.URI"/>
     </attribute>
     <attribute name="alt">
-      <ref name="Text"/>
+      <ref name="dtb.Text"/>
     </attribute>
     <optional>
       <attribute name="longdesc">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="height">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="width">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
   </define>
@@ -3136,39 +3136,39 @@
     
     4) one or more <pagenum> if the image group spans several pages.
   -->
-  <define name="imggroup">
+  <define name="dtb.imggroup">
     <element name="imggroup">
-      <ref name="attlist.imggroup"/>
+      <ref name="dtb.attlist.imggroup"/>
       <oneOrMore>
         <choice>
-          <ref name="prodnote"/>
-          <ref name="img"/>
-          <ref name="caption"/>
-          <ref name="pagenum"/>
+          <ref name="dtb.prodnote"/>
+          <ref name="dtb.img"/>
+          <ref name="dtb.caption"/>
+          <ref name="dtb.pagenum"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.imggroup" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.imggroup" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-03-25 30: hr: element dropped horizontal rule as purely visual. -->
   <!-- ============================= Paragraphs ============================== -->
   <!-- Use: p contains a paragraph, which may contain subsidiary <list> or <dl>. -->
-  <define name="p">
+  <define name="dtb.p">
     <element name="p">
-      <ref name="attlist.p"/>
+      <ref name="dtb.attlist.p"/>
       <zeroOrMore>
         <choice>
-          <ref name="inline"/>
-          <ref name="list"/>
-          <ref name="dl"/>
+          <ref name="dtb.inline"/>
+          <ref name="dtb.list"/>
+          <ref name="dtb.dl"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.p" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.p" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- =========== Doctitle, Docauthor, Covertitle, and Headings  ============ -->
   <!--
@@ -3176,124 +3176,124 @@
     subtitles,  <frontmatter>. By convention <doctitle> should appear
     Contrast with covertitle.
   -->
-  <define name="doctitle">
+  <define name="dtb.doctitle">
     <element name="doctitle">
-      <ref name="attlist.doctitle"/>
+      <ref name="dtb.attlist.doctitle"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.doctitle" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.doctitle" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: docauthor marks each author or editor of this work. Compare with
     <author>, used to mark the author of another work, within <blockquote>
     or <cite>.
   -->
-  <define name="docauthor">
+  <define name="dtb.docauthor">
     <element name="docauthor">
-      <ref name="attlist.docauthor"/>
+      <ref name="dtb.attlist.docauthor"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.docauthor" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.docauthor" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: covertitle is the short title of a book, often found on the
     spine. It may be the same as the doctitle.
   -->
   <!-- HB: 2004-04-08 covertitle: element added -->
-  <define name="covertitle">
+  <define name="dtb.covertitle">
     <element name="covertitle">
-      <ref name="attlist.covertitle"/>
+      <ref name="dtb.attlist.covertitle"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.covertitle" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.covertitle" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     MM: 2004-09-15 Deleted element levelhd, replacing it with hd in content 
     model of level.
   -->
   <!-- Use: h1 contains the text of the heading for a <level1> structure. -->
-  <define name="h1">
+  <define name="dtb.h1">
     <element name="h1">
-      <ref name="attlist.h1"/>
+      <ref name="dtb.attlist.h1"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h1" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h1" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: h2 contains the text of the heading for a <level2> structure. -->
-  <define name="h2">
+  <define name="dtb.h2">
     <element name="h2">
-      <ref name="attlist.h2"/>
+      <ref name="dtb.attlist.h2"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h2" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h2" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: h3 contains the text of the heading for a <level3> structure. -->
-  <define name="h3">
+  <define name="dtb.h3">
     <element name="h3">
-      <ref name="attlist.h3"/>
+      <ref name="dtb.attlist.h3"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h3" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h3" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: h4 contains the text of the heading for a <level4> structure. -->
-  <define name="h4">
+  <define name="dtb.h4">
     <element name="h4">
-      <ref name="attlist.h4"/>
+      <ref name="dtb.attlist.h4"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h4" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h4" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: h5 contains the text of the heading for a <level5> structure. -->
-  <define name="h5">
+  <define name="dtb.h5">
     <element name="h5">
-      <ref name="attlist.h5"/>
+      <ref name="dtb.attlist.h5"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h5" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h5" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- Use: h6 contains the text of the heading for a <level6> structure. -->
-  <define name="h6">
+  <define name="dtb.h6">
     <element name="h6">
-      <ref name="attlist.h6"/>
+      <ref name="dtb.attlist.h6"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.h6" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.h6" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- HB: 2004-04-02 bridgehead: element added. -->
   <!--
@@ -3309,31 +3309,31 @@
     only when it is clear that none of the structural headings is appropriate.
     See also <hd>.
   -->
-  <define name="bridgehead">
+  <define name="dtb.bridgehead">
     <element name="bridgehead">
-      <ref name="attlist.bridgehead"/>
+      <ref name="dtb.attlist.bridgehead"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.bridgehead" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.bridgehead" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: hd marks the text of a heading in <level>, <poem>, <list>, <linegroup>,
     or <sidebar>.
   -->
-  <define name="hd">
+  <define name="dtb.hd">
     <element name="hd">
-      <ref name="attlist.hd"/>
+      <ref name="dtb.attlist.hd"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.hd" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.hd" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- ========================== Preformatted Text ========================== -->
   <!--
@@ -3347,13 +3347,13 @@
     <q>, which marks short, inline quotations.
   -->
   <!-- HB: 2004-03-25 36i: blockquote allow pagenum. -->
-  <define name="blockquote">
+  <define name="dtb.blockquote">
     <element name="blockquote">
-      <ref name="attlist.blockquote"/>
+      <ref name="dtb.attlist.blockquote"/>
       <zeroOrMore>
         <choice>
-          <ref name="pagenum"/>
-          <ref name="block"/>
+          <ref name="dtb.pagenum"/>
+          <ref name="dtb.block"/>
         </choice>
       </zeroOrMore>
     </element>
@@ -3364,11 +3364,11 @@
     "cite" permits inclusion of the
     URI from which the <blockquote> came.
   -->
-  <define name="attlist.blockquote" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.blockquote" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="cite">
-        <ref name="URI"/>
+        <ref name="dtb.URI"/>
       </attribute>
     </optional>
   </define>
@@ -3378,35 +3378,35 @@
     terms <dt> and definitions <dd>. Any definition can contain another
     definition list.
   -->
-  <define name="dl">
+  <define name="dtb.dl">
     <element name="dl">
-      <ref name="attlist.dl"/>
+      <ref name="dtb.attlist.dl"/>
       <oneOrMore>
         <choice>
-          <ref name="dt"/>
-          <ref name="dd"/>
-          <ref name="pagenum"/>
+          <ref name="dtb.dt"/>
+          <ref name="dtb.dd"/>
+          <ref name="dtb.pagenum"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.dl" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.dl" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: dt marks a term in a definition list <dl> for which a
     definition <dd> follows.
   -->
-  <define name="dt">
+  <define name="dtb.dt">
     <element name="dt">
-      <ref name="attlist.dt"/>
+      <ref name="dtb.attlist.dt"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.dt" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.dt" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: dd marks a definition of the preceding term <dt> within a
@@ -3414,16 +3414,16 @@
     no semantic interpretation, but is visually presented aligned
     with other <dd>.
   -->
-  <define name="dd">
+  <define name="dtb.dd">
     <element name="dd">
-      <ref name="attlist.dd"/>
+      <ref name="dtb.attlist.dd"/>
       <zeroOrMore>
-        <ref name="flow"/>
+        <ref name="dtb.flow"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.dd" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.dd" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: list contains some form of list, ordered, unordered, or preformatted.
@@ -3435,15 +3435,15 @@
     has explicitly distinguished list element types: ol for ordered,
     and ul for unordered, but not pl for preformatted.
   -->
-  <define name="list">
+  <define name="dtb.list">
     <element name="list">
-      <ref name="attlist.list"/>
+      <ref name="dtb.attlist.list"/>
       <oneOrMore>
         <choice>
-          <ref name="hd"/>
-          <ref name="prodnote"/>
-          <ref name="li"/>
-          <ref name="pagenum"/>
+          <ref name="dtb.hd"/>
+          <ref name="dtb.prodnote"/>
+          <ref name="dtb.li"/>
+          <ref name="dtb.pagenum"/>
         </choice>
       </oneOrMore>
     </element>
@@ -3494,8 +3494,8 @@
     make any needed visual distinction for nested unordered lists, or if the
     list type is "pl" preformatted the bullet form may be there.
   -->
-  <define name="attlist.list" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.list" combine="interleave">
+    <ref name="dtb.attrs"/>
     <attribute name="type">
       <choice>
         <value>ol</value>
@@ -3529,19 +3529,19 @@
     such as the heading and page number of each entry in a
     table of contents.
   -->
-  <define name="li">
+  <define name="dtb.li">
     <element name="li">
-      <ref name="attlist.li"/>
+      <ref name="dtb.attlist.li"/>
       <zeroOrMore>
         <choice>
-          <ref name="flow"/>
-          <ref name="lic"/>
+          <ref name="dtb.flow"/>
+          <ref name="dtb.lic"/>
         </choice>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.li" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.li" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!--
     Use: lic ("list item component") allows ordered substructure
@@ -3551,11 +3551,11 @@
     correspondence of <lic> in different <li> is in order of
     occurrence for the current writing direction of the <li>.
   -->
-  <define name="lic">
+  <define name="dtb.lic">
     <element name="lic">
-      <ref name="attlist.lic"/>
+      <ref name="dtb.attlist.lic"/>
       <zeroOrMore>
-        <ref name="inline"/>
+        <ref name="dtb.inline"/>
       </zeroOrMore>
     </element>
   </define>
@@ -3566,8 +3566,8 @@
     component of a list item <li>. For example, in a table of contents
     class values might include "section", and "pagenumber".
   -->
-  <define name="attlist.lic" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.lic" combine="interleave">
+    <ref name="dtb.attrs"/>
   </define>
   <!-- =============================== Tables ================================ -->
   <!--
@@ -3579,7 +3579,7 @@
     Note: The XHTML <table> model has been enhanced from HTML to allow
     a simple <table> of one or more rows <tr>.
   -->
-  <define name="Scope">
+  <define name="dtb.Scope">
     <choice>
       <value>row</value>
       <value>col</value>
@@ -3591,7 +3591,7 @@
     Scope specifies a set of data cells for which the <th> provides
     header information.
   -->
-  <define name="TFrame">
+  <define name="dtb.TFrame">
     <choice>
       <value>void</value>
       <value>above</value>
@@ -3605,7 +3605,7 @@
     </choice>
   </define>
   <!-- TFrame identifies the sides that are visually framed. -->
-  <define name="TRules">
+  <define name="dtb.TRules">
     <choice>
       <value>none</value>
       <value>groups</value>
@@ -3619,7 +3619,7 @@
     If no Trules is present then assume:
     'none' if border is absent or border='0' otherwise 'all'.
   -->
-  <define name="cellhalign">
+  <define name="dtb.cellhalign">
     <optional>
       <attribute name="align">
         <choice>
@@ -3633,12 +3633,12 @@
     </optional>
     <optional>
       <attribute name="char">
-        <ref name="Character"/>
+        <ref name="dtb.Character"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="charoff">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
   </define>
@@ -3660,7 +3660,7 @@
     by user preference. The recommended default alignment for
     <th> is center, and for <td> is left.
   -->
-  <define name="cellvalign">
+  <define name="dtb.cellvalign">
     <optional>
       <attribute name="valign">
         <choice>
@@ -3695,34 +3695,34 @@
     not redundantly tagged.
   -->
   <!-- jpritchett@rfbd.org 2007-12-19:  Added pagenum to content model -->
-  <define name="table">
+  <define name="dtb.table">
     <element name="table">
-      <ref name="attlist.table"/>
+      <ref name="dtb.attlist.table"/>
       <optional>
-        <ref name="caption"/>
+        <ref name="dtb.caption"/>
       </optional>
       <choice>
         <zeroOrMore>
-          <ref name="col"/>
+          <ref name="dtb.col"/>
         </zeroOrMore>
         <zeroOrMore>
-          <ref name="colgroup"/>
+          <ref name="dtb.colgroup"/>
         </zeroOrMore>
       </choice>
       <optional>
-        <ref name="thead"/>
+        <ref name="dtb.thead"/>
       </optional>
       <optional>
-        <ref name="tfoot"/>
+        <ref name="dtb.tfoot"/>
       </optional>
       <choice>
         <oneOrMore>
-          <ref name="tbody"/>
+          <ref name="dtb.tbody"/>
         </oneOrMore>
         <oneOrMore>
           <choice>
-            <ref name="tr"/>
-            <ref name="pagenum"/>
+            <ref name="dtb.tr"/>
+            <ref name="dtb.pagenum"/>
           </choice>
         </oneOrMore>
       </choice>
@@ -3738,41 +3738,41 @@
     explanation in the comment following those parameter entity
     declarations.
   -->
-  <define name="attlist.table" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.table" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="summary">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="width">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="border">
-        <ref name="Pixels"/>
+        <ref name="dtb.Pixels"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="frame">
-        <ref name="TFrame"/>
+        <ref name="dtb.TFrame"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="rules">
-        <ref name="TRules"/>
+        <ref name="dtb.TRules"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="cellspacing">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="cellpadding">
-        <ref name="Length"/>
+        <ref name="dtb.Length"/>
       </attribute>
     </optional>
   </define>
@@ -3783,11 +3783,11 @@
     <table> it must follow immediately after the <table> start tag. If used
     with <imggroup> it is not so constrained.
   -->
-  <define name="caption">
+  <define name="dtb.caption">
     <element name="caption">
-      <ref name="attlist.caption"/>
+      <ref name="dtb.attlist.caption"/>
       <zeroOrMore>
-        <ref name="flow"/>
+        <ref name="dtb.flow"/>
       </zeroOrMore>
     </element>
   </define>
@@ -3801,8 +3801,8 @@
     to images within the same document are allowed.
     Note: imgref is an extension for dtbook.
   -->
-  <define name="attlist.caption" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.caption" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
         <data type="IDREFS"/>
@@ -3815,18 +3815,18 @@
     headers when breaking table across page boundaries, or for static
     headers when <tbody> sections are rendered in scrolling panel.
   -->
-  <define name="thead">
+  <define name="dtb.thead">
     <element name="thead">
-      <ref name="attlist.thead"/>
+      <ref name="dtb.attlist.thead"/>
       <oneOrMore>
-        <ref name="tr"/>
+        <ref name="dtb.tr"/>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.thead" combine="interleave">
-    <ref name="attrs"/>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+  <define name="dtb.attlist.thead" combine="interleave">
+    <ref name="dtb.attrs"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!--
     Use: tfoot marks footer information in a <table>, consisting of
@@ -3835,18 +3835,18 @@
     or for static footers when <tbody> sections are rendered in
     scrolling panel.
   -->
-  <define name="tfoot">
+  <define name="dtb.tfoot">
     <element name="tfoot">
-      <ref name="attlist.tfoot"/>
+      <ref name="dtb.attlist.tfoot"/>
       <oneOrMore>
-        <ref name="tr"/>
+        <ref name="dtb.tr"/>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.tfoot" combine="interleave">
-    <ref name="attrs"/>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+  <define name="dtb.attlist.tfoot" combine="interleave">
+    <ref name="dtb.attrs"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!--
     Use: tbody marks a group of rows in the main body of a <table>. If
@@ -3857,31 +3857,31 @@
     of table rows.
   -->
   <!-- jpritchett@rfbd.org 2007-12-19:  Added pagenum to content model -->
-  <define name="tbody">
+  <define name="dtb.tbody">
     <element name="tbody">
-      <ref name="attlist.tbody"/>
+      <ref name="dtb.attlist.tbody"/>
       <oneOrMore>
         <choice>
-          <ref name="tr"/>
-          <ref name="pagenum"/>
+          <ref name="dtb.tr"/>
+          <ref name="dtb.pagenum"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="attlist.tbody" combine="interleave">
-    <ref name="attrs"/>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+  <define name="dtb.attlist.tbody" combine="interleave">
+    <ref name="dtb.attrs"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!--
     Use: colgroup groups adjacent columns <col> that are semantically
     related.
   -->
-  <define name="colgroup">
+  <define name="dtb.colgroup">
     <element name="colgroup">
-      <ref name="attlist.colgroup"/>
+      <ref name="dtb.attlist.colgroup"/>
       <zeroOrMore>
-        <ref name="col"/>
+        <ref name="dtb.col"/>
       </zeroOrMore>
     </element>
   </define>
@@ -3911,8 +3911,8 @@
     <thead>|<tfoot>|<tbody>. If none, then the values are up to the
     user agent, possibly by user preference.
   -->
-  <define name="attlist.colgroup" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.colgroup" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="span" a:defaultValue="1">
         <data type="NMTOKEN"/>
@@ -3920,19 +3920,19 @@
     </optional>
     <optional>
       <attribute name="width">
-        <ref name="MultiLength"/>
+        <ref name="dtb.MultiLength"/>
       </attribute>
     </optional>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!--
     Use: col elements define the alignment properties for cells in
     one or more columns.
   -->
-  <define name="col">
+  <define name="dtb.col">
     <element name="col">
-      <ref name="attlist.col"/>
+      <ref name="dtb.attlist.col"/>
       <empty/>
     </element>
   </define>
@@ -3957,8 +3957,8 @@
     enclosing ancestor element: <colgroup>, <thead>|<tbody>|<tfoot>.
     If none, it is up to the user agent, possibly by user preference.
   -->
-  <define name="attlist.col" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.col" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="span" a:defaultValue="1">
         <data type="NMTOKEN"/>
@@ -3966,20 +3966,20 @@
     </optional>
     <optional>
       <attribute name="width">
-        <ref name="MultiLength"/>
+        <ref name="dtb.MultiLength"/>
       </attribute>
     </optional>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!-- Use: tr marks one row of a <table> containing <th> or <td> cells. -->
-  <define name="tr">
+  <define name="dtb.tr">
     <element name="tr">
-      <ref name="attlist.tr"/>
+      <ref name="dtb.attlist.tr"/>
       <oneOrMore>
         <choice>
-          <ref name="th"/>
-          <ref name="td"/>
+          <ref name="dtb.th"/>
+          <ref name="dtb.td"/>
         </choice>
       </oneOrMore>
     </element>
@@ -3997,17 +3997,17 @@
     If none, it is up to the user agent, possibly by user preference.
     
   -->
-  <define name="attlist.tr" combine="interleave">
-    <ref name="attrs"/>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+  <define name="dtb.attlist.tr" combine="interleave">
+    <ref name="dtb.attrs"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!-- Use: th indicates a table cell containing header information. -->
-  <define name="th">
+  <define name="dtb.th">
     <element name="th">
-      <ref name="attlist.th"/>
+      <ref name="dtb.attlist.th"/>
       <zeroOrMore>
-        <ref name="flownopagenum"/>
+        <ref name="dtb.flownopagenum"/>
       </zeroOrMore>
     </element>
   </define>
@@ -4039,11 +4039,11 @@
     by default 1, in the writing direction of the table. All spanned
     cells share these attributes.
   -->
-  <define name="attlist.th" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.th" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="abbr">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -4056,7 +4056,7 @@
     </optional>
     <optional>
       <attribute name="scope">
-        <ref name="Scope"/>
+        <ref name="dtb.Scope"/>
       </attribute>
     </optional>
     <optional>
@@ -4069,15 +4069,15 @@
         <data type="NMTOKEN"/>
       </attribute>
     </optional>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
   <!-- Use: td indicates a table cell containing data. -->
-  <define name="td">
+  <define name="dtb.td">
     <element name="td">
-      <ref name="attlist.td"/>
+      <ref name="dtb.attlist.td"/>
       <zeroOrMore>
-        <ref name="flownopagenum"/>
+        <ref name="dtb.flownopagenum"/>
       </zeroOrMore>
     </element>
   </define>
@@ -4109,11 +4109,11 @@
     by default 1, in the writing direction of the table. All spanned
     cells share these attributes.
   -->
-  <define name="attlist.td" combine="interleave">
-    <ref name="attrs"/>
+  <define name="dtb.attlist.td" combine="interleave">
+    <ref name="dtb.attrs"/>
     <optional>
       <attribute name="abbr">
-        <ref name="Text"/>
+        <ref name="dtb.Text"/>
       </attribute>
     </optional>
     <optional>
@@ -4126,7 +4126,7 @@
     </optional>
     <optional>
       <attribute name="scope">
-        <ref name="Scope"/>
+        <ref name="dtb.Scope"/>
       </attribute>
     </optional>
     <optional>
@@ -4139,8 +4139,8 @@
         <data type="NMTOKEN"/>
       </attribute>
     </optional>
-    <ref name="cellhalign"/>
-    <ref name="cellvalign"/>
+    <ref name="dtb.cellhalign"/>
+    <ref name="dtb.cellvalign"/>
   </define>
 </grammar>
 <!-- End dtbook-2005-3.dtd -->
