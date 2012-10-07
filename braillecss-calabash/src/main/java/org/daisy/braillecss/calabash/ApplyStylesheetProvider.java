@@ -2,9 +2,13 @@ package org.daisy.braillecss.calabash;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.transform.URIResolver;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
@@ -15,8 +19,14 @@ import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
 import cz.vutbr.web.css.CSSFactory;
+import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.NodeData;
+import cz.vutbr.web.css.RuleBlock;
+import cz.vutbr.web.css.RuleMargin;
+import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
+import cz.vutbr.web.css.StyleSheet;
+import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -32,6 +42,7 @@ import net.sf.saxon.tree.util.NamespaceIterator;
 
 import org.daisy.braillecss.BrailleCSSNodeData;
 import org.daisy.braillecss.SupportedBrailleCSS;
+import org.daisy.pipeline.braille.Utilities.Strings;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.w3c.dom.Document;
@@ -86,110 +97,112 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			try {
 				XdmNode source = sourcePipe.read();
 				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-				final StyleMap map = CSSFactory.assignDOM(doc, source.getBaseURI().toURL(), "embossed", false);
-				resultPipe.write((new MyTreeWriter(doc, map, runtime)).getResult()); }
+				StyleSheet sheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
+				resultPipe.write((new MyTreeWriter(doc, sheet, runtime)).getResult()); }
 			catch (Exception e) {
 				throw new RuntimeException(e); }
 		}
 	}
 	
-	private static final String CSS_NS = "http://www.daisy.org/ns/pipeline/braille-css";
+	private static final String CSS_URI = "http://www.daisy.org/ns/pipeline/braille-css";
 	private static final String CSS_PREFIX = "css";
 	
 	private static final QName _style = new QName("style");
-	private static final QName _css_before = new QName(CSS_PREFIX, CSS_NS, "before");
-	private static final QName _css_after = new QName(CSS_PREFIX, CSS_NS, "after");
+	private static final QName _name = new QName("name");
+	private static final QName _position = new QName("position");
+	private static final QName _css_before = new QName(CSS_PREFIX, CSS_URI, "before");
+	private static final QName _css_after = new QName(CSS_PREFIX, CSS_URI, "after");
+	private static final QName _css_page = new QName(CSS_PREFIX, CSS_URI, "page");
 	
 	private static class MyTreeWriter extends TreeWriter {
 		
-		private final StyleMap styleMap;
+		private final StyleSheet stylesheet;
+		private final StyleMap stylemap;
 		
-		public MyTreeWriter(Document document, StyleMap styleMap, XProcRuntime xproc)
-				throws XPathException, URISyntaxException {
-			
+		public MyTreeWriter(Document document, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
 			super(xproc);
-			this.styleMap = styleMap;
+			this.stylesheet = stylesheet;
+			stylemap = new Analyzer(stylesheet).evaluateDOM(document, "embossed", false);
 			startDocument(new URI(document.getBaseURI()));
-			traverse(document.getDocumentElement());
+			traverse(document.getDocumentElement(), true);
 			endDocument();
 		}
 		
-		private void traverse(Node node) throws XPathException, URISyntaxException {
+		private void traverse(Node node, boolean root) throws XPathException, URISyntaxException {
 			
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				addStartElement((Element)node);
 				NamedNodeMap attributes = node.getAttributes();
 				for (int i=0; i<attributes.getLength(); i++) {
 					Node attr = attributes.item(i);
-					if ("http://www.w3.org/2000/xmlns/".equals(attr.getNamespaceURI())) {
-					} else if ("http://www.w3.org/XML/1998/namespace".equals(attr.getNamespaceURI())) {
+					if ("http://www.w3.org/2000/xmlns/".equals(attr.getNamespaceURI())) {}
+					else if ("http://www.w3.org/XML/1998/namespace".equals(attr.getNamespaceURI()))
 						addAttribute(new QName("xml", attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
-					} else {
-						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
-					}
-				}
-				NodeData data = styleMap.get((Element)node);
+					else
+						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue()); }
+				NodeData data = stylemap.get((Element)node);
 				if (data != null) {
-					String style = String.valueOf(data).replaceAll("\\s+", " ").trim();
-					if (style.length() > 0) {
-						addAttribute(_style, style);
-					}
-				}
+					String style = Strings.normalizeSpace(data);
+					if (style.length() > 0)
+						addAttribute(_style, style); }
 				receiver.startContent();
-				NodeData beforeData = styleMap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
+				if (root) {
+					Iterable<RulePage> pages =  Iterables.<RulePage>filter(stylesheet, RulePage.class);
+					for (RulePage page : pages) {
+						addStartElement(_css_page);
+						String name = page.getName();
+						String pseudo = page.getPseudo();
+						if (name != null) addAttribute(_name, name);
+						if (pseudo != null) addAttribute(_position, pseudo);
+						String pageStyle = Strings.normalizeSpace(Strings.join(
+								Iterables.<Declaration>filter(page, Declaration.class), " "));
+						if (!"".equals(pageStyle))
+							addAttribute(_style, pageStyle);
+						for (RuleMargin margin : Iterables.<RuleMargin>filter(page, RuleMargin.class)) {
+							addStartElement(new QName(CSS_PREFIX, CSS_URI, margin.getMarginArea().value));
+							String marginStyle = Strings.normalizeSpace(Strings.join(margin, " "));
+							if (!"".equals(marginStyle))
+								addAttribute(_style, marginStyle);
+							addEndElement(); }
+						addEndElement(); }}
+				NodeData beforeData = stylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
 				if (beforeData != null) {
-					String beforeStyle = String.valueOf(beforeData).replaceAll("\\s+", " ").trim();
+					String beforeStyle = Strings.normalizeSpace(beforeData);
 					if (beforeStyle.length() > 0) {
 						addStartElement(_css_before);
 						addAttribute(_style, beforeStyle);
-						addEndElement();
-					}
-				}
-				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-					traverse(child);
-				}
-				NodeData afterData = styleMap.get((Element)node, Selector.PseudoDeclaration.AFTER);
+						addEndElement(); }}
+				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling())
+					traverse(child, false);
+				NodeData afterData = stylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null) {
-					String afterStyle = String.valueOf(afterData).replaceAll("\\s+", " ").trim();
+					String afterStyle = Strings.normalizeSpace(afterData);
 					if (afterStyle.length() > 0) {
 						addStartElement(_css_after);
 						addAttribute(_style, afterStyle);
-						addEndElement();
-					}
-				}
-				addEndElement();
-			} else if (node.getNodeType() == Node.COMMENT_NODE) {
+						addEndElement(); }}
+				addEndElement(); }
+			else if (node.getNodeType() == Node.COMMENT_NODE)
 				addComment(node.getNodeValue());
-			} else if (node.getNodeType() == Node.TEXT_NODE) {
+			else if (node.getNodeType() == Node.TEXT_NODE)
 				addText(node.getNodeValue());
-			} else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+			else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE)
 				addPI(node.getLocalName(), node.getNodeValue());
-			} else {
+			else
 				throw new UnsupportedOperationException("Unexpected node type");
-			}
 		}
 		
 		public void addStartElement(Element element) {
 			NodeInfo inode = ((NodeOverNodeInfo)element).getUnderlyingNodeInfo();
 			NamespaceBinding[] inscopeNS = null;
-			if (seenRoot) {
+			if (seenRoot)
 				inscopeNS = inode.getDeclaredNamespaces(null);
-			} else {
-				int count = 0;
-				Iterator<NamespaceBinding> nsiter = NamespaceIterator.iterateNamespaces(inode);
-				while (nsiter.hasNext()) {
-					count++;
-					nsiter.next();
-				}
-				inscopeNS = new NamespaceBinding[count];
-				nsiter = NamespaceIterator.iterateNamespaces(inode);
-				count = 0;
-				while (nsiter.hasNext()) {
-					inscopeNS[count] = nsiter.next();
-					count++;
-				}
-				seenRoot = true;
-			}
+			else {
+				List<NamespaceBinding> namespaces = new ArrayList<NamespaceBinding>();
+				Iterators.<NamespaceBinding>addAll(namespaces, NamespaceIterator.iterateNamespaces(inode));
+				namespaces.add(NamespaceBinding.makeNamespaceBinding(CSS_PREFIX, CSS_URI));
+				inscopeNS = Iterables.<NamespaceBinding>toArray(namespaces, NamespaceBinding.class);
+				seenRoot = true; }
 			receiver.setSystemId(element.getBaseURI());
 			addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
 		}

@@ -53,9 +53,8 @@ public abstract class Utilities {
 	}
 	
 	public static abstract class Iterators {
-		public static <T> T reduce(Iterator<T> iterator, Function2<? super T,? super T,T> function) {
-			T result = null;
-			if(iterator.hasNext()) result = iterator.next();
+		public static <T1,T2> T1 fold(Iterator<T2> iterator, Function2<T1,T2,T1> function, T1 seed) {
+			T1 result = seed;
 			while(iterator.hasNext()) result = function.apply(result, iterator.next());
 			return result;
 		}
@@ -90,20 +89,25 @@ public abstract class Utilities {
 	
 	public static abstract class Strings {
 		
-		public static String join(Iterator<String> strings, final String separator) {
-			return Iterators.<String>reduce(
-				strings,
-				new Function2<String,String,String>() {
-					public String apply(String s1, String s2) {
-						return s1 + separator + s2; }});
+		public static String join(Iterator<?> strings, final String separator) {
+			return Iterators.<String,Object>fold(
+				(Iterator<Object>)strings,
+				new Function2<String,Object,String>() {
+					public String apply(String s1, Object s2) {
+						return s1 + separator + String.valueOf(s2); }},
+				"");
 		}
 		
-		public static String join(Iterable<String> strings, final String separator) {
+		public static String join(Iterable<?> strings, final String separator) {
 			return join(strings.iterator(), separator);
 		}
 		
-		public static String join(String[] strings, String separator) {
+		public static String join(Object[] strings, String separator) {
 			return join(Arrays.asList(strings), separator);
+		}
+		
+		public static String normalizeSpace(Object object) {
+			return String.valueOf(object).replaceAll("\\s+", " ").trim();
 		}
 	}
 	
