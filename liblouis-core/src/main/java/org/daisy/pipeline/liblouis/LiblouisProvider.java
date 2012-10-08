@@ -128,9 +128,9 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 		if (binaryFilter.apply(binary)) {
 			binaries.add(binary);
 			publishServices();
-			logger.debug("Registering {} binary", binary.getName()); }
+			logger.debug("Registering binary '" + binary + "'"); }
 		else
-			logger.debug(binary.getName() + " binary will not work on " + OS.getFamily().name() + ", " + OS.getArch());
+			logger.debug("Binary '" + binary + "' does not work on platform '" + OS.getFamily() + " (" + OS.getArch() + ")'");
 	}
 	
 	public void removeBinary(Binary binary) {

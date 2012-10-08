@@ -24,6 +24,7 @@ public class BundledBinary implements Binary {
 	private Iterable<URL> paths = null;
 	private OS.Family family = null;
 	private Collection<String> archs = null;
+	private String componentName = null;
 
 	public String getName() {
 		return name;
@@ -47,6 +48,7 @@ public class BundledBinary implements Binary {
 	private static final Splitter commaSplitter = Splitter.on(',').trimResults();
 
 	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+		componentName = properties.get("component.name").toString();
 		if (properties.get(NAME) == null
 				|| properties.get(NAME).toString().isEmpty()) {
 			throw new IllegalArgumentException(NAME + " property must not be empty"); }
@@ -73,6 +75,11 @@ public class BundledBinary implements Binary {
 					if (url == null) throw new IllegalArgumentException(
 						"Binary at location " + s + " could not be found");
 					return url; }});
+	}
+
+	@Override
+	public String toString() {
+		return componentName;
 	}
 
 	@Override
