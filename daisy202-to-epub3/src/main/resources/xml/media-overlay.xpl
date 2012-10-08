@@ -129,7 +129,7 @@
         <p:iteration-source>
             <p:pipe port="daisy-smil" step="mediaoverlay"/>
         </p:iteration-source>
-        <p:variable name="original-uri" select="/*/@xml:base"/>
+        <p:variable name="original-uri" select="base-uri(/*)"/>
         <px:mediaoverlay-upgrade-smil/>
         <cx:message>
             <p:with-option name="message" select="concat('upgraded the SMIL file ',$original-uri)"/>
@@ -154,7 +154,7 @@
         <p:iteration-source>
             <p:pipe port="content" step="mediaoverlay"/>
         </p:iteration-source>
-        <p:variable name="content-result-uri" select="/*/@xml:base"/>
+        <p:variable name="content-result-uri" select="base-uri(/*)"/>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="/*/@original-base"/>
         </p:add-attribute>
@@ -172,11 +172,11 @@
                                 then concat($publication-dir,'navigation.smil')
                                 else concat($content-dir,
                                     substring(
-                                            if (matches(/*/@xml:base,'\.[^/]*$'))
+                                    if (matches(base-uri(/*),'\.[^/]*$'))
                                                 then
-                                                    replace(/*/@xml:base,'^(.*)\.[^/\.]*$','$1.smil')
+                                                replace(base-uri(/*),'^(.*)\.[^/\.]*$','$1.smil')
                                                 else
-                                                    concat(/*/@xml:base,'.smil'),
+                                                concat(base-uri(/*),'.smil'),
                                             string-length($daisy-dir)+1
                                     )
                                 )"/>
@@ -246,7 +246,7 @@
         <p:iteration-source>
             <p:pipe port="mediaoverlay" step="mediaoverlay-iterate"/>
         </p:iteration-source>
-        <p:variable name="uri" select="/*/@xml:base"/>
+        <p:variable name="uri" select="base-uri(/*)"/>
         <p:choose>
             <p:when test="$include-mediaoverlay">
                 <p:identity>

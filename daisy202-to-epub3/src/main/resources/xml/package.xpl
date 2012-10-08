@@ -150,7 +150,7 @@
 
     <p:group name="spine">
         <p:output port="result" sequence="true"/>
-        <p:variable name="base" select="/*/@xml:base">
+        <p:variable name="base" select="base-uri(/*)">
             <p:pipe port="spine" step="package"/>
         </p:variable>
         <p:for-each>

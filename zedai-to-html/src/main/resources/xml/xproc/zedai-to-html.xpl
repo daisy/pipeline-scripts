@@ -59,14 +59,12 @@
         <p:variable name="html-file-uri" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.html')"/>
 
         <px:zedai-load name="load">
-            <!--<p:log port="fileset.out"/>-->
             <p:input port="source">
                 <p:pipe port="source" step="main"/>
             </p:input>
         </px:zedai-load>
 
         <px:zedai-to-html-convert name="convert">
-            <!--<p:log port="fileset.out"/>-->
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="load"/>
             </p:input>

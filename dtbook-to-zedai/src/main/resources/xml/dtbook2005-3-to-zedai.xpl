@@ -228,7 +228,6 @@
     <p:documentation>Normalize mixed section/block content models by ensuring the content consists
         of all section or all block elements.</p:documentation>
     <p:xslt name="normalize-section-block">
-        <!--<p:log href="file:/tmp/out/log-dtbook-normalized.xml" port="result"/>-->
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -250,7 +249,6 @@
 
     <p:documentation>Anchor any floating anotations</p:documentation>
     <p:xslt name="anchor-floating-annotations">
-        <!--<p:log port="result" href="file:/tmp/out/log-zedai.xml"/>-->
         <p:input port="parameters">
             <p:empty/>
         </p:input>

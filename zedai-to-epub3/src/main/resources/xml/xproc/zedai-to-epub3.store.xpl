@@ -41,13 +41,7 @@
         <p:documentation>For packaging and storing the finished EPUB file.</p:documentation>
     </p:import>
 
-    <p:variable name="fileset-base" select="/*/@xml:base"/>
-
-    <cx:message message="Storing EPUB3 fileset.">
-        <!--<p:log port="result" href="file:/tmp/out/log-fileset-in.xml"/>-->
-    </cx:message>
-    <p:sink/>
-
+    <!--TODO wrap in p:group-->
     <p:for-each>
         <p:iteration-source>
             <p:pipe port="in-memory.in" step="zedai-to-epub3.store"/>
@@ -58,23 +52,27 @@
                     <d:file/>
                 </p:inline>
             </p:input>
-            <p:with-option name="attribute-value" select="resolve-uri(/*/@xml:base)"/>
+            <p:with-option name="attribute-value" select="resolve-uri(base-uri(/*))"/>
         </p:add-attribute>
     </p:for-each>
     <p:wrap-sequence wrapper="d:fileset"/>
-    <px:fileset-join name="fileset.in-memory">
-        <!--<p:log port="result" href="file:/tmp/out/log-fileset-mem.xml"/>-->
-    </px:fileset-join>
+    <!--TODO refactor with create-fileset + add seqence entries ?-->
+    <p:add-attribute  match="/*" attribute-name="xml:base" attribute-value="/"/>
+    <p:identity name="fileset.in-memory"/>
 
 
+    <!--TODO wrap in p:group-->
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
+        </p:input>
+    </p:identity>
+    <cx:message message="Storing EPUB3 fileset."/>
     <p:documentation>Store files and filters out missing files in the result fileset.</p:documentation>
     <p:viewport match="d:file" name="store">
         <p:output port="result"/>
-        <p:viewport-source>
-            <p:pipe port="fileset.in" step="zedai-to-epub3.store"/>
-        </p:viewport-source>
-        <p:variable name="on-disk" select="(/*/@original-href, '')[1]"/>
-        <p:variable name="target" select="resolve-uri(/*/@href, $fileset-base)"/>
+        <p:variable name="target" select="/*/resolve-uri(@href, base-uri(.))"/>
+        <p:variable name="on-disk" select="/*/@original-href"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:choose>
             <p:xpath-context>
@@ -88,12 +86,11 @@
                 </cx:message>
                 <p:split-sequence>
                     <p:with-option name="test"
-                        select="concat('/*/@xml:base=&quot;',$target,'&quot;')"/>
+                        select="concat('base-uri(/*)=&quot;',$target,'&quot;')"/>
                     <p:input port="source">
                         <p:pipe port="in-memory.in" step="zedai-to-epub3.store"/>
                     </p:input>
                 </p:split-sequence>
-                <p:delete match="/*/@xml:base"/>
                 <p:choose>
                     <p:when test="$media-type='application/xhtml+xml'">
                         <p:documentation>In-memory file is a Content Document.</p:documentation>

@@ -227,7 +227,7 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="navigation-uri" select="/*/@xml:base">
+        <p:with-option name="navigation-uri" select="base-uri(/*)">
             <p:pipe port="result" step="ncc-navigation"/>
         </p:with-option>
         <p:input port="daisy-smil">

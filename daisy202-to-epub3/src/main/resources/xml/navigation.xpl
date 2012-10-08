@@ -245,7 +245,7 @@
                 <p:iteration-source>
                     <p:pipe port="content" step="navigation"/>
                 </p:iteration-source>
-                <p:variable name="xml-base" select="/*/@xml:base"/>
+                <p:variable name="xml-base" select="base-uri(/*)"/>
                 <px:fileset-create>
                     <p:with-option name="base" select="$publication-dir"/>
                 </px:fileset-create>
@@ -343,7 +343,7 @@
     <p:choose>
         <p:when test="$compatibility-mode='true'">
             <px:fileset-add-entry>
-                <p:with-option name="href" select="/*/@xml:base">
+                <p:with-option name="href" select="base-uri(/*)">
                     <p:pipe port="ncx" step="store-ncx"/>
                 </p:with-option>
                 <p:with-option name="media-type" select="'application/x-dtbncx+xml'"/>
@@ -354,7 +354,7 @@
         </p:otherwise>
     </p:choose>
     <px:fileset-add-entry>
-        <p:with-option name="href" select="/*/@xml:base">
+        <p:with-option name="href" select="base-uri(/*)">
             <p:pipe port="result" step="result-with-xml-base"/>
         </p:with-option>
         <p:with-option name="media-type" select="'application/xhtml+xml'"/>
@@ -367,11 +367,11 @@
         <p:iteration-source>
             <p:pipe port="content" step="navigation"/>
         </p:iteration-source>
-        <p:variable name="nav-base" select="/*/@xml:base">
+        <p:variable name="nav-base" select="base-uri(/*)">
             <p:pipe port="result" step="result-with-xml-base"/>
         </p:variable>
         <p:choose>
-            <p:when test="/*/@xml:base=$nav-base">
+            <p:when test="base-uri(/*)=$nav-base">
                 <p:identity>
                     <p:input port="source">
                         <p:pipe port="result" step="result-with-xml-base"/>

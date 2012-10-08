@@ -88,7 +88,7 @@
         <p:iteration-source>
             <p:pipe port="daisy-smil" step="resources"/>
         </p:iteration-source>
-        <p:variable name="original-base" select="/*/@xml:base"/>
+        <p:variable name="original-base" select="base-uri(/*)"/>
         <p:choose>
             <p:when test="$include-mediaoverlay-resources='true'">
                 <p:xslt>

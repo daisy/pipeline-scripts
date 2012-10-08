@@ -125,7 +125,7 @@
             <p:output port="content" primary="true" sequence="true"/>
 
             <p:iteration-source select="/*/*"/>
-            <p:variable name="original-uri" select="resolve-uri(/*/@href,/*/@xml:base)"/>
+            <p:variable name="original-uri" select="/*/resolve-uri(@href,base-uri(.))"/>
             <p:variable name="result-uri"
                 select="concat($content-dir,substring(
                         resolve-uri(
@@ -134,7 +134,7 @@
                                     replace(/*/@href,'(.*)\.[^\.]*$','$1.xhtml')
                                 else
                                     concat(/*/@href,'.xhtml'),
-                            /*/@xml:base
+                            base-uri(/*)
                         ),
                         string-length($daisy-dir)+1
                     ))"/>
@@ -229,7 +229,7 @@
             <p:output port="store-complete" sequence="true">
                 <p:pipe step="content-flow-iterate.store-content.store-complete" port="result"/>
             </p:output>
-            <p:variable name="result-base" select="/*/@xml:base"/>
+            <p:variable name="result-base" select="base-uri(/*)"/>
             <p:delete match="/*/@xml:base|/*/@original-base"/>
             <p:store indent="true" name="content-flow-iterate.store-content.store-complete">
                 <p:with-option name="href" select="$result-base"/>
@@ -251,7 +251,7 @@
         <p:iteration-source>
             <p:pipe port="content" step="content-flow-iterate"/>
         </p:iteration-source>
-        <p:variable name="uri" select="/*/@xml:base"/>
+        <p:variable name="uri" select="base-uri(/*)"/>
         <p:identity>
             <p:input port="source">
                 <p:inline>

@@ -174,7 +174,7 @@
         </p:xslt>
     </p:viewport>
     <p:add-attribute match="/*" attribute-name="original-base">
-        <p:with-option name="attribute-value" select="/*/@xml:base"/>
+        <p:with-option name="attribute-value" select="base-uri(/*)"/>
     </p:add-attribute>
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>

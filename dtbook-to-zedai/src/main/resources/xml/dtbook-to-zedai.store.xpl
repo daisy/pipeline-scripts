@@ -31,7 +31,7 @@
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
 
-    <p:variable name="fileset-base" select="/*/@xml:base"/>
+    <p:variable name="fileset-base" select="base-uri(/*)"/>
 
     <cx:message message="Storing ZedAI fileset."/>
     <p:sink/>
@@ -46,7 +46,7 @@
                     <d:file/>
                 </p:inline>
             </p:input>
-            <p:with-option name="attribute-value" select="resolve-uri(/*/@xml:base)"/>
+            <p:with-option name="attribute-value" select="resolve-uri(base-uri(/*))"/>
         </p:add-attribute>
     </p:for-each>
     <p:wrap-sequence wrapper="d:fileset"/>
@@ -66,7 +66,7 @@
             <p:when test="$target = //d:file/@href">
                 <p:documentation>File is in memory.</p:documentation>
                 <p:split-sequence>
-                    <p:with-option name="test" select="concat('/*/@xml:base=&quot;',$target,'&quot;')"/>
+                    <p:with-option name="test" select="concat('base-uri(/*)=&quot;',$target,'&quot;')"/>
                     <p:input port="source">
                         <p:pipe port="in-memory.in" step="dtbook-to-zedai.store"/>
                     </p:input>

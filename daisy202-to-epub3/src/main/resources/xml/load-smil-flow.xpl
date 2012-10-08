@@ -60,8 +60,8 @@
             <p:pipe port="result" step="flow-iterate.content-flow"/>
         </p:output>
         <p:iteration-source select="/*/*"/>
-        <p:variable name="original-uri" select="resolve-uri(/*/@href,/*/@xml:base)"/>
-        <p:variable name="xml-base" select="/*/@xml:base"/>
+        <p:variable name="original-uri" select="/*/resolve-uri(@href,base-uri(.))"/>
+        <p:variable name="xml-base" select="base-uri(/*)"/>
         <p:load name="flow-iterate.smils">
             <p:with-option name="href" select="$original-uri"/>
         </p:load>

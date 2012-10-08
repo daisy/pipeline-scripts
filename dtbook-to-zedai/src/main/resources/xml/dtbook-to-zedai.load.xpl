@@ -42,7 +42,7 @@
     <p:identity name="dtbook"/>
 
     <p:for-each>
-        <p:variable name="dtbook-base" select="/*/@xml:base"/>
+        <p:variable name="dtbook-base" select="base-uri(/*)"/>
         <p:variable name="fileset-base" select="replace($dtbook-base,'^(.*/)[^/]*$','$1')"/>
         <p:identity name="for-each.dtbook"/>
         <px:fileset-create name="for-each.fileset">
@@ -69,7 +69,7 @@
     <px:fileset-join/>
     <px:mediatype-detect/>
     <p:group>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:viewport match="/*/*">
             <p:add-attribute attribute-name="original-href" match="/*">
                 <p:with-option name="attribute-value" select="resolve-uri(/*/@href,$fileset-base)"/>

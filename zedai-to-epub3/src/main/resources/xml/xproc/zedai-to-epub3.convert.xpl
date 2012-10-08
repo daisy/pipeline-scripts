@@ -37,18 +37,18 @@
         <p:output port="result" primary="true">
             <p:pipe port="result" step="zedai-input.for-each"/>
         </p:output>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:for-each name="zedai-input.for-each">
             <p:iteration-source select="/*/*"/>
             <p:output port="result" sequence="true"/>
             <p:choose>
                 <p:when test="/*/@media-type = 'application/z3998-auth+xml'">
-                    <p:variable name="zedai-base" select="resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:variable name="zedai-base" select="/*/resolve-uri(@href,base-uri(.))"/>
                     <p:split-sequence name="zedai-input.for-each.split">
                         <p:input port="source">
                             <p:pipe port="in-memory.in" step="zedai-to-epub3.convert"/>
                         </p:input>
-                        <p:with-option name="test" select="concat('/*/@xml:base = &quot;',$zedai-base,'&quot;')"/>
+                        <p:with-option name="test" select="concat('base-uri(/*) = &quot;',$zedai-base,'&quot;')"/>
                     </p:split-sequence>
                     <p:count/>
                     <p:choose>
@@ -70,7 +70,6 @@
                             </p:error>
                         </p:otherwise>
                     </p:choose>
-                    <p:delete match="/*/@xml:base"/>
                 </p:when>
                 <p:otherwise>
                     <p:identity>
@@ -148,7 +147,6 @@
         </p:variable>
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
         <p:xslt name="zedai-to-html.html-single">
-            <!--<p:log port="result" href="file:/tmp/out/log-html-single.xml"></p:log>-->
             <p:input port="source">
                 <p:pipe port="result" step="zedai-input"/>
             </p:input>
@@ -171,7 +169,6 @@
             </p:input>
         </p:xslt>
         <p:xslt name="zedai-to-html.html-chunks">
-            <!--<p:log port="secondary" href="file:/tmp/xproc/html-files.xml"/>-->
             <!--TODO fix links while chunking (see links-to-chunks) -->
             <p:input port="stylesheet">
                 <p:document href="../xslt/html-chunker.xsl"/>
@@ -190,7 +187,7 @@
                 <p:pipe port="secondary" step="zedai-to-html.html-chunks"/>
             </p:iteration-source>
             <p:variable name="result-uri" select="base-uri(/*)"/>
-            <p:add-xml-base name="zedai-to-html.iterate.html"/>
+            <p:identity name="zedai-to-html.iterate.html"/>
             <px:fileset-create>
                 <p:with-option name="base" select="$content-dir"/>
             </px:fileset-create>
@@ -198,6 +195,7 @@
                 <p:with-option name="href" select="$result-uri"/>
             </px:fileset-add-entry>
         </p:for-each>
+        <cx:message message="Converted to XHTML."/>
     </p:group>
 
     <!--=========================================================================-->
@@ -206,7 +204,6 @@
 
     <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
     <p:group name="navigation-doc">
-        <!--<p:log port="html-file" href="file:/tmp/xproc/nav-doc.xml"/>-->
         <p:output port="result" primary="true">
             <p:pipe port="fileset" step="navigation-doc.result"/>
         </p:output>
@@ -257,6 +254,7 @@
                 </p:input>
                 <p:with-option name="attribute-value" select="$nav-base"/>
             </p:add-attribute>
+            <cx:message message="Navigation Document Created."/>
             <p:sink/>
         </p:group>
     </p:group>
@@ -280,14 +278,12 @@
         </p:identity>
         <p:group name="resources">
             <p:output port="result"/>
-            <p:variable name="fileset-base" select="/*/@xml:base"/>
-            <p:variable name="zedai-uri" select="resolve-uri(//d:file[@media-type='application/z3998-auth+xml']/@href,$fileset-base)"/>
+            <p:variable name="zedai-uri" select="(//d:file[@media-type='application/z3998-auth+xml'])[1]/resolve-uri(@href,base-uri(.))"/>
             <p:delete match="d:file[@media-type='application/z3998-auth+xml']"/>
             <p:viewport match="/*/*">
                 <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
-                <p:variable name="original-uri" select="(/*/@original-href, resolve-uri(/*/@href,$fileset-base))[1]"/>
                 <p:xslt>
-                    <p:with-param name="to" select="resolve-uri(/*/@href,$fileset-base)"/>
+                    <p:with-param name="to" select="/*/resolve-uri(@href,base-uri(.))"/>
                     <p:with-param name="from" select="$zedai-uri"/>
                     <p:input port="stylesheet">
                         <p:inline>
@@ -323,7 +319,6 @@
         <p:sink/>
 
         <px:epub3-pub-create-package-doc name="package-doc.create">
-            <!--<p:log port="result" href="file:/tmp/xproc/opf.xml"/>-->
             <p:input port="spine-filesets">
                 <!--TODO include nav doc in the spine ?-->
                 <p:pipe port="result" step="zedai-to-html"/>
@@ -352,11 +347,13 @@
             </p:input>
             <p:with-option name="href" select="$opf-base"/>
         </px:fileset-add-entry>
+        
+        <cx:message message="Package Document Created."/>
     </p:group>
 
     <p:group name="fileset.result">
         <p:output port="result"/>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        
         <p:identity name="fileset.dirty"/>
         <p:wrap-sequence wrapper="wrapper">
             <p:input port="source">
@@ -372,13 +369,13 @@
             </p:input>
         </p:identity>
         <p:viewport match="//d:file">
-            <p:variable name="file-href" select="resolve-uri(/*/@href,$fileset-base)"/>
+            <p:variable name="file-href" select="/*/resolve-uri(@href,base-uri(.))"/>
             <p:variable name="file-original" select="if (/*/@original-href) then resolve-uri(/*/@original-href) else ''"/>
             <p:choose>
                 <p:xpath-context>
                     <p:pipe port="result" step="wrapped-in-memory"/>
                 </p:xpath-context>
-                <p:when test="not($file-original) and not(/*/*[resolve-uri(@xml:base) = $file-href])">
+                <p:when test="not($file-original) and not(/*/*[base-uri(.) = $file-href])">
                     <!-- Fileset contains file reference to a file that is neither stored on disk nor in memory; discard it -->
                     <p:sink/>
                     <p:identity>
@@ -402,15 +399,12 @@
             <p:pipe step="navigation-doc" port="html-file"/>
             <p:pipe step="zedai-to-html" port="html-files"/>
         </p:iteration-source>
-        <p:variable name="doc-base" select="/*/@xml:base"/>
-        <p:variable name="fileset-base" select="/*/@xml:base">
-            <p:pipe port="result" step="fileset.result"/>
-        </p:variable>
+        <p:variable name="doc-base" select="base-uri(/*)"/>
         <p:choose>
             <p:xpath-context>
                 <p:pipe port="result" step="fileset.result"/>
             </p:xpath-context>
-            <p:when test="//d:file[resolve-uri(@href,$fileset-base) = resolve-uri($doc-base)]">
+            <p:when test="//d:file[resolve-uri(@href,base-uri(.)) = $doc-base]">
                 <!-- document is in fileset; keep it -->
                 <p:identity/>
             </p:when>

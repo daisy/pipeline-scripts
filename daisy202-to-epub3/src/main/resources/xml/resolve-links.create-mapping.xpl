@@ -48,7 +48,7 @@
 
     <p:for-each>
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each SMIL</p:documentation>
-        <p:variable name="smil-base" select="/*/@xml:base"/>
+        <p:variable name="smil-base" select="base-uri(/*)"/>
         <p:add-xml-base all="true" relative="false"/>
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each text element where the a@fragment matches the text@id or text/parent@id</p:documentation>
         <!--<p:viewport match="//*[local-name()='par' and @system-required='sidebar-on']">
@@ -67,7 +67,7 @@
             <p:iteration-source select="//*[local-name()='par']"/>
             <p:variable name="par-id" select="/*/@id"/>
             <p:variable name="text-id" select="/*/*[local-name()='text']/@id"/>
-            <p:variable name="text-src" select="resolve-uri(/*/*[local-name()='text']/@src,/*/@xml:base)"/>
+            <p:variable name="text-src" select="/*/*[local-name()='text']/resolve-uri(@src,base-uri(.))"/>
             <p:identity name="current-smil"/>
             <p:in-scope-names name="vars"/>
             <p:template>

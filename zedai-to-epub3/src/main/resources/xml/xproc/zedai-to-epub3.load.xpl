@@ -27,7 +27,6 @@
     <p:group name="zedai">
         <p:output port="result"/>
         <p:identity/>
-        <p:add-xml-base/>
         <!--TODO process xincludes-->
     </p:group>
 
@@ -37,8 +36,8 @@
 
     <p:group name="fileset">
         <p:output port="result"/>
-        <p:variable name="zedai-href" select="/*/@xml:base"/>
-        <p:variable name="fileset-base" select="replace($zedai-href,'[^/]+$','')"/>
+        <p:variable name="zedai-uri" select="base-uri(/*)"/>
+        <p:variable name="fileset-base" select="replace($zedai-uri,'[^/]+$','')"/>
         <p:for-each>
             <p:iteration-source select="//z:object[@src]"/>
             <p:variable name="href" select="/*/@src"/>
@@ -51,7 +50,7 @@
                 <p:with-option name="media-type" select="$media-type"/>
             </px:fileset-add-entry>
             <p:add-attribute match="/*/*" attribute-name="original-href">
-                <p:with-option name="attribute-value" select="resolve-uri($href,$zedai-href)"/>
+                <p:with-option name="attribute-value" select="resolve-uri($href,$zedai-uri)"/>
             </p:add-attribute>
         </p:for-each>
         <px:fileset-join/>
@@ -61,11 +60,11 @@
             <p:with-option name="base" select="$fileset-base"/>
         </px:fileset-create>
         <px:fileset-add-entry>
-            <p:with-option name="href" select="$zedai-href"/>
+            <p:with-option name="href" select="$zedai-uri"/>
             <p:with-option name="media-type" select="'application/z3998-auth+xml'"/>
         </px:fileset-add-entry>
         <p:add-attribute match="/*/*" attribute-name="original-href">
-            <p:with-option name="attribute-value" select="$zedai-href"/>
+            <p:with-option name="attribute-value" select="$zedai-uri"/>
         </p:add-attribute>
         <p:identity name="fileset.zedai"/>
 

@@ -31,7 +31,7 @@
         <p:output port="result" primary="true">
             <p:pipe port="result" step="zedai-input.for-each"/>
         </p:output>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:for-each name="zedai-input.for-each">
             <p:iteration-source select="/*/*"/>
             <p:output port="result" sequence="true"/>
@@ -42,7 +42,7 @@
                         <p:input port="source">
                             <p:pipe port="in-memory.in" step="main"/>
                         </p:input>
-                        <p:with-option name="test" select="concat('/*/@xml:base = &quot;',$zedai-base,'&quot;')"/>
+                        <p:with-option name="test" select="concat('base-uri(/*) = &quot;',$zedai-base,'&quot;')"/>
                     </p:split-sequence>
                     <p:count/>
                     <p:choose>
@@ -122,7 +122,6 @@
         </p:variable>
         <p:variable name="result-basename" select="concat($output-dir,$zedai-basename,'.html')"/>
         <p:xslt name="zedai-to-html.html-single">
-            <!--<p:log port="result" href="file:/tmp/out/log-html-single.xml"></p:log>-->
             <p:input port="source">
                 <p:pipe port="result" step="zedai-input"/>
             </p:input>
@@ -164,7 +163,7 @@
     </p:identity>
     <p:group name="resources">
         <p:output port="result"/>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:variable name="zedai-uri" select="resolve-uri(//d:file[@media-type='application/z3998-auth+xml']/@href,$fileset-base)"/>
         <p:delete match="d:file[@media-type='application/z3998-auth+xml']"/>
         <p:viewport match="/*/*">
@@ -206,7 +205,7 @@
     
     <p:group name="fileset.result">
         <p:output port="result"/>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:identity name="fileset.dirty"/>
         <p:wrap-sequence wrapper="wrapper">
             <p:input port="source">
@@ -226,7 +225,7 @@
                 <p:xpath-context>
                     <p:pipe port="result" step="wrapped-in-memory"/>
                 </p:xpath-context>
-                <p:when test="not($file-original) and not(/*/*[resolve-uri(@xml:base) = $file-href])">
+                <p:when test="not($file-original) and not(/*/*[resolve-uri(base-uri(.)) = $file-href])">
                     <!-- Fileset contains file reference to a file that is neither stored on disk nor in memory; discard it -->
                     <p:sink/>
                     <p:identity>

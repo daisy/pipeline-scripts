@@ -16,7 +16,7 @@
         <xsl:variable name="a-fragment" select="if (contains(@href,'#')) then tokenize(@href,'#')[last()] else ''"/>
         <xsl:variable name="self-id" select="ancestor-or-self::*/@id"/>
         <xsl:choose>
-            <xsl:when test="starts-with(@href,'#') or not(matches($a-href,'^[^/]+:')) and resolve-uri(replace($a-href,'\.html$','.xhtml'),$content-dir) = /*/@xml:base">
+            <xsl:when test="starts-with(@href,'#') or not(matches($a-href,'^[^/]+:')) and resolve-uri(replace($a-href,'\.html$','.xhtml'),$content-dir) = base-uri(/*)">
                 <!-- is link to the same document -->
                 <xsl:choose>
                     <xsl:when test="$a-fragment = ('',$self-id)">

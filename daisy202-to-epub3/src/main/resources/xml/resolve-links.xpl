@@ -54,7 +54,7 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
 
-    <p:variable name="content-base" select="/*/@xml:base"/>
+    <p:variable name="content-base" select="base-uri(/*)"/>
     <p:variable name="content-filename" select="replace(replace($content-base,'^.*/([^/]+)$','$1'),'^([^#]+)#.*$','$1')"/>
     <p:variable name="content-filename-position" select="string-length($content-filename)+1"/>
 
@@ -62,7 +62,7 @@
     <p:viewport match="//html:a">
         <p:variable name="original-uri" select="resolve-uri(tokenize(/*/@href,'#')[1],$content-base)"/>
         <p:variable name="original-fragment" select="if (contains(/*/@href,'#')) then tokenize(/*/@href,'#')[last()] else ''"/>
-        <p:variable name="result" select="/*/*[@xml:base=$original-uri]/*[(@par-id,@text-id)=$original-fragment]/@src">
+        <p:variable name="result" select="/*/*[base-uri(.)=$original-uri]/*[(@par-id,@text-id)=$original-fragment]/@src">
             <p:pipe port="resolve-links-mapping" step="resolve-links"/>
         </p:variable>
 

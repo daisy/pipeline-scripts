@@ -168,7 +168,7 @@
         <p:output port="result" primary="true" sequence="true">
             <p:pipe port="result" step="dtbook-input.for-each"/>
         </p:output>
-        <p:variable name="fileset-base" select="/*/@xml:base"/>
+        <p:variable name="fileset-base" select="base-uri(/*)"/>
         <p:for-each name="dtbook-input.for-each">
             <p:iteration-source select="/*/*"/>
             <p:output port="result" sequence="true"/>
@@ -180,7 +180,7 @@
                             <p:pipe port="in-memory.in" step="dtbook-to-zedai.convert"/>
                         </p:input>
                         <p:with-option name="test"
-                            select="concat('/*/@xml:base = &quot;',$dtbook-base,'&quot;')"/>
+                            select="concat('base-uri(/*) = &quot;',$dtbook-base,'&quot;')"/>
                     </p:split-sequence>
                     <p:count/>
                     <p:choose>
@@ -526,7 +526,7 @@
             <p:variable name="src" select="/*/@src"/>
             <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
             <p:variable name="source-uri"
-                select="(//d:file[resolve-uri(@href,base-uri()) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
+                select="(//d:file[resolve-uri(@href,base-uri(.)) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
                 <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
             </p:variable>
             <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
@@ -608,8 +608,8 @@
             <p:pipe port="result" step="generate-css"/>
             <p:pipe step="generate-mods-metadata" port="result"/>
         </p:iteration-source>
-        <p:variable name="in-memory-base" select="/*/@xml:base"/>
-        <p:variable name="fileset-base" select="/*/@xml:base">
+        <p:variable name="in-memory-base" select="base-uri(/*)"/>
+        <p:variable name="fileset-base" select="base-uri(/*)">
             <p:pipe port="result" step="result.fileset"/>
         </p:variable>
         <p:choose>
