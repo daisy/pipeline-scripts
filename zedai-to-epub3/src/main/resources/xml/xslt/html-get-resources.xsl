@@ -5,7 +5,7 @@
 
     <xsl:output indent="yes" method="xml"/>
     <xsl:template match="/*">
-        <d:fileset xml:base="{replace(base-uri(),'^(.+/)[^/]*','$1')}">
+        <d:fileset xml:base="{replace(base-uri(.),'^(.+/)[^/]*','$1')}">
             <xsl:apply-templates/>
         </d:fileset>
     </xsl:template>

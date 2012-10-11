@@ -504,7 +504,7 @@
     <p:group name="result.fileset">
         <p:output port="result"/>
         <p:variable name="dtbook-base"
-            select="replace(//d:file[@media-type = 'application/x-dtbook+xml'][1]/resolve-uri(@href,base-uri()),'^(.*/)[^/]*$','$1')">
+            select="replace(//d:file[@media-type = 'application/x-dtbook+xml'][1]/resolve-uri(@href,base-uri(.)),'^(.*/)[^/]*$','$1')">
             <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
         </p:variable>
         

@@ -9,7 +9,7 @@
 
   <xsl:output method="xhtml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
 
-  <xsl:param name="base" select="base-uri()"/>
+  <xsl:param name="base" select="base-uri(/)"/>
   
   <xsl:key name="refs" match="z:*[@ref]" use="tokenize(@ref,'\s+')"/>
 
