@@ -283,18 +283,18 @@
             <p:viewport match="/*/*">
                 <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
                 <p:xslt>
-                    <p:with-param name="to" select="/*/resolve-uri(@href,base-uri(.))"/>
-                    <p:with-param name="from" select="$zedai-uri"/>
+                    <p:with-param name="uri" select="/*/resolve-uri(@href,base-uri(.))"/>
+                    <p:with-param name="base" select="$zedai-uri"/>
                     <p:input port="stylesheet">
                         <p:inline>
                             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
                                 <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
-                                <xsl:param name="to" required="yes"/>
-                                <xsl:param name="from" required="yes"/>
+                                <xsl:param name="uri" required="yes"/>
+                                <xsl:param name="base" required="yes"/>
                                 <xsl:template match="/*">
                                     <xsl:copy>
                                         <xsl:copy-of select="@*"/>
-                                        <xsl:attribute name="href" select="pf:file-resolve-relative-uri($to,$from)"/>
+                                        <xsl:attribute name="href" select="pf:relativize-uri($uri,$base)"/>
                                     </xsl:copy>
                                 </xsl:template>
                             </xsl:stylesheet>

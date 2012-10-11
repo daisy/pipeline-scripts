@@ -43,7 +43,7 @@
                     <xsl:param name="href" required="yes"/>
                     <xsl:template match="/*">
                         <xsl:copy>
-                            <xsl:attribute name="href" select="pf:file-uri-ify($href)"/>
+                            <xsl:attribute name="href" select="pf:normalize-uri($href)"/>
                         </xsl:copy>
                     </xsl:template>
                 </xsl:stylesheet>
