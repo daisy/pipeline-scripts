@@ -266,7 +266,7 @@
     <p:group name="package-doc">
         <p:output port="result" primary="true"/>
         <p:output port="opf">
-            <p:pipe port="result" step="package-doc.with-base"/>
+            <p:pipe port="result" step="package-doc.create"/>
         </p:output>
 
         <p:variable name="opf-base" select="concat($content-dir,'package.opf')"/>
@@ -337,9 +337,6 @@
             <p:with-option name="compatibility-mode" select="'false'"/>
             <!--TODO configurability for other META-INF files ?-->
         </px:epub3-pub-create-package-doc>
-        <p:add-attribute match="/*" attribute-name="xml:base" name="package-doc.with-base">
-            <p:with-option name="attribute-value" select="$opf-base"/>
-        </p:add-attribute>
 
         <px:fileset-add-entry media-type="application/oebps-package+xml">
             <p:input port="source">
