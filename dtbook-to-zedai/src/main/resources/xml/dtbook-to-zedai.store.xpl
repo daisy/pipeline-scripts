@@ -31,39 +31,36 @@
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
 
-    <p:variable name="fileset-base" select="base-uri(/*)"/>
-
     <cx:message message="Storing ZedAI fileset."/>
     <p:sink/>
 
+    <px:fileset-create name="fileset.in-memory-base" base="/"/>
     <p:for-each>
         <p:iteration-source>
             <p:pipe port="in-memory.in" step="dtbook-to-zedai.store"/>
         </p:iteration-source>
-        <p:add-attribute attribute-name="href" match="/*">
+        <px:fileset-add-entry>
+            <p:with-option name="href" select="resolve-uri(base-uri(/*))"/>
             <p:input port="source">
-                <p:inline>
-                    <d:file/>
-                </p:inline>
+                <p:pipe port="result" step="fileset.in-memory-base"/>
             </p:input>
-            <p:with-option name="attribute-value" select="resolve-uri(base-uri(/*))"/>
-        </p:add-attribute>
+        </px:fileset-add-entry>
     </p:for-each>
-    <p:wrap-sequence wrapper="d:fileset"/>
     <px:fileset-join name="fileset.in-memory"/>
+    
     
     <p:for-each>
         <p:iteration-source select="/*/*">
             <p:pipe port="fileset.in" step="dtbook-to-zedai.store"/>
         </p:iteration-source>
         <p:variable name="on-disk" select="(/*/@original-href, 'nothing')[1]"/>
-        <p:variable name="target" select="resolve-uri(/*/@href, $fileset-base)"/>
+        <p:variable name="target" select="/*/resolve-uri(@href, base-uri(.))"/>
         <p:variable name="media-type" select="/*/@media-type"/>
         <p:choose>
             <p:xpath-context>
                 <p:pipe port="result" step="fileset.in-memory"/>
             </p:xpath-context>
-            <p:when test="$target = //d:file/@href">
+            <p:when test="$target = //d:file/resolve-uri(@href,base-uri(.))">
                 <p:documentation>File is in memory.</p:documentation>
                 <p:split-sequence>
                     <p:with-option name="test" select="concat('base-uri(/*)=&quot;',$target,'&quot;')"/>

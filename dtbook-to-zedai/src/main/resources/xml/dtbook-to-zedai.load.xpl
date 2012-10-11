@@ -36,9 +36,6 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
   
-    <p:for-each>
-        <p:add-xml-base/>
-    </p:for-each>
     <p:identity name="dtbook"/>
 
     <p:for-each>
@@ -48,7 +45,12 @@
         <px:fileset-create name="for-each.fileset">
             <p:with-option name="base" select="$fileset-base"/>
         </px:fileset-create>
-        <p:for-each>
+        <px:fileset-add-entry name="fileset.dtbook">
+            <p:with-option name="href" select="$dtbook-base"/>
+            <p:with-option name="media-type" select="'application/x-dtbook+xml'"/>
+        </px:fileset-add-entry>
+        <p:for-each name="fileset.resources">
+            <p:output port="result"/>
             <p:iteration-source select="//*[@src]">
                 <p:pipe port="result" step="for-each.dtbook"/>
             </p:iteration-source>
@@ -60,11 +62,12 @@
                 <p:with-option name="href" select="$src"/>
             </px:fileset-add-entry>
         </p:for-each>
-        <px:fileset-join/>
-        <px:fileset-add-entry>
-            <p:with-option name="href" select="$dtbook-base"/>
-            <p:with-option name="media-type" select="'application/x-dtbook+xml'"/>
-        </px:fileset-add-entry>
+        <px:fileset-join>
+            <p:input port="source">
+                <p:pipe port="result" step="fileset.dtbook"/>
+                <p:pipe port="result" step="fileset.resources"/>
+            </p:input>
+        </px:fileset-join>
     </p:for-each>
     <px:fileset-join/>
     <px:mediatype-detect/>
