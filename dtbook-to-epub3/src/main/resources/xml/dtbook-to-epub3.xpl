@@ -42,7 +42,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
     <p:import
         href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
     <p:import
@@ -86,11 +86,11 @@
         </p:variable>
         <p:variable name="epub-file-uri" select="concat($output-dir-uri,$encoded-title,'.epub')"/>
 
-        <px:dtbook-to-zedai-load name="load">
+        <px:dtbook-load name="load">
             <p:input port="source">
                 <p:pipe port="source" step="dtbook-to-epub3"/>
             </p:input>
-        </px:dtbook-to-zedai-load>
+        </px:dtbook-load>
 
         <px:dtbook-to-zedai-convert name="convert.dtbook-to-zedai">
             <p:input port="in-memory.in">

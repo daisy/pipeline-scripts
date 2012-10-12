@@ -60,11 +60,11 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="dtbook-to-zedai.load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
     <p:import href="dtbook-to-zedai.convert.xpl"/>
     <p:import href="dtbook-to-zedai.store.xpl"/>
     
-    <px:dtbook-to-zedai-load name="load"/>
+    <px:dtbook-load name="load"/>
 
     <px:dtbook-to-zedai-convert name="convert">
         <p:input port="in-memory.in">
