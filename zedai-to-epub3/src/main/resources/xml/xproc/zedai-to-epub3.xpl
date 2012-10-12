@@ -22,7 +22,6 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="zedai-to-epub3.load.xpl"/>
     <p:import href="zedai-to-epub3.convert.xpl"/>
     <p:import href="zedai-to-epub3.store.xpl"/>
 
@@ -30,6 +29,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/zedai-load.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
     <p:variable name="input-uri" select="base-uri(/)"/>
@@ -63,11 +63,11 @@
         </p:variable>
         <p:variable name="epub-file-uri" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.epub')"/>
 
-        <px:zedai-to-epub3-load name="load">
+        <px:zedai-load name="load">
             <p:input port="source">
                 <p:pipe port="source" step="zedai-to-epub3"/>
             </p:input>
-        </px:zedai-to-epub3-load>
+        </px:zedai-load>
 
         <px:zedai-to-epub3-convert name="convert">
             <p:input port="in-memory.in">
