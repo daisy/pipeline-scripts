@@ -17,7 +17,8 @@
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">DTBook file(s)</h2>
-            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</p>
+            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple
+                files, a merge will be performed.</p>
         </p:documentation>
     </p:input>
 
@@ -31,14 +32,16 @@
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Output directory</h2>
-            <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
+            <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is
+                stored.</p>
         </p:documentation>
     </p:option>
-    
+
     <p:option name="assert-valid" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Assert validity</h2>
-            <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
+            <p px:role="desc">Whether to stop processing and raise an error on validation
+                issues.</p>
         </p:documentation>
     </p:option>
 
@@ -50,10 +53,8 @@
     <p:import
         href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.store.xpl"/>
 
-    <!--<p:variable name="encoded-title" select="encode-for-uri(replace(//dtbook:meta[@name='dc:Title']/@content,'[/\\?%*:|&quot;&lt;&gt;]',''))"/>-->
-    <!--<p:variable name="encoded-title" select="'book'"/>-->
-    <p:variable name="encoded-title"
-        select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')"/>
+    <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
+    <p:sink/>
 
     <p:xslt name="output-dir-uri">
         <p:with-param name="href" select="concat($output-dir,'/')"/>
@@ -81,10 +82,15 @@
     <p:sink/>
 
     <p:group>
+        <p:variable name="output-name"
+            select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
+            <p:pipe port="matched" step="first-dtbook"/>
+        </p:variable>
+
         <p:variable name="output-dir-uri" select="/*/@href">
             <p:pipe port="result" step="output-dir-uri"/>
         </p:variable>
-        <p:variable name="epub-file-uri" select="concat($output-dir-uri,$encoded-title,'.epub')"/>
+        <p:variable name="epub-file-uri" select="concat($output-dir-uri,$output-name,'.epub')"/>
 
         <px:dtbook-load name="load">
             <p:input port="source">
@@ -97,7 +103,7 @@
                 <p:pipe port="in-memory.out" step="load"/>
             </p:input>
             <p:with-option name="opt-output-dir" select="concat($output-dir-uri,'zedai/')"/>
-            <p:with-option name="opt-zedai-filename" select="concat($encoded-title,'.xml')"/>
+            <p:with-option name="opt-zedai-filename" select="concat($output-name,'.xml')"/>
             <p:with-option name="opt-lang" select="$language"/>
             <p:with-option name="opt-assert-valid" select="$assert-valid"/>
         </px:dtbook-to-zedai-convert>
@@ -109,7 +115,7 @@
             'application/pls+xml',
             'audio/mpeg','audio/mp4',
             'text/css','text/javascript'))]"/>
-        
+
 
         <px:zedai-to-epub3-convert name="convert.zedai-to-epub3">
             <p:input port="in-memory.in">
