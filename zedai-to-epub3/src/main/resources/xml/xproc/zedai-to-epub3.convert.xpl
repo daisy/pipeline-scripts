@@ -26,7 +26,7 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
-    <p:variable name="content-dir" select="concat($epub-dir,'Content/')"/>
+    <p:variable name="content-dir" select="concat($epub-dir,'EPUB/')"/>
 
     <!--=========================================================================-->
     <!-- GET ZEDAI FROM FILESET                                                  -->
@@ -365,7 +365,7 @@
                 <p:pipe port="result" step="fileset.dirty"/>
             </p:input>
         </p:identity>
-        <p:viewport match="//d:file">
+        <p:viewport match="//d:file" name="fileset.clean">
             <p:variable name="file-href" select="/*/resolve-uri(@href,base-uri(.))"/>
             <p:variable name="file-original" select="if (/*/@original-href) then resolve-uri(/*/@original-href) else ''"/>
             <p:choose>
@@ -387,6 +387,15 @@
                 </p:otherwise>
             </p:choose>
         </p:viewport>
+        <px:fileset-create name="fileset.with-epub-base">
+            <p:with-option name="base" select="$epub-dir"/>
+        </px:fileset-create>
+        <px:fileset-join>
+            <p:input port="source">
+                <p:pipe port="result" step="fileset.with-epub-base"/>
+                <p:pipe port="result" step="fileset.clean"/>
+            </p:input>
+        </px:fileset-join>
     </p:group>
 
     <p:for-each name="in-memory.result">
