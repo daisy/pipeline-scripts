@@ -21,14 +21,11 @@
             
             <p:add-attribute match="/link" attribute-name="href" name="link">
                 <p:input port="source">
-	
                     <p:inline>
                         <link rel="stylesheet" media="embossed" type="text/css"/>
                     </p:inline>
                 </p:input>
-                <p:with-option name="attribute-value" select="$default-stylesheet">
-                    <p:empty/>
-                </p:with-option>
+                <p:with-option name="attribute-value" select="$default-stylesheet"/>
             </p:add-attribute>
             
             <p:insert match="//*[name()='head'][1]" position="first-child">

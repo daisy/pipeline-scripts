@@ -24,9 +24,7 @@
     <!-- ======= -->
     
     <px:xml-to-pef.styling>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet">
-            <p:empty/>
-        </p:with-option>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
     </px:xml-to-pef.styling>
     
     <!-- ============= -->
@@ -34,9 +32,7 @@
     <!-- ============= -->
     
     <px:xml-to-pef.preprocessing>
-        <p:with-option name="preprocessor" select="$preprocessor">
-            <p:empty/>
-        </p:with-option>
+        <p:with-option name="preprocessor" select="$preprocessor"/>
     </px:xml-to-pef.preprocessing>
     
     <!-- =========== -->
@@ -44,9 +40,7 @@
     <!-- =========== -->
     
     <px:xml-to-pef.translation>
-        <p:with-option name="translator" select="$translator">
-            <p:empty/>
-        </p:with-option>
+        <p:with-option name="translator" select="$translator"/>
     </px:xml-to-pef.translation>
     
     <!-- ========== -->
@@ -57,9 +51,7 @@
         <p:input port="metadata">
             <p:pipe port="metadata" step="xml-to-pef"/>
         </p:input>
-        <p:with-option name="temp-dir" select="$temp-dir">
-            <p:empty/>
-        </p:with-option>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:xml-to-pef.formatting>
     
 </p:declare-step>

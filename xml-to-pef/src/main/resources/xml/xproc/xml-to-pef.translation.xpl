@@ -73,9 +73,7 @@
                                 </xsl:stylesheet>
                             </p:inline>
                         </p:input>
-                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'>
-                            <p:empty/>
-                        </p:with-option>
+                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
                     </p:add-attribute>
                 </p:catch>
             </p:try>
