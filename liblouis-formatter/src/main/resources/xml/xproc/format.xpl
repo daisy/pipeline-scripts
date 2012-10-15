@@ -4,7 +4,7 @@
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:pef="http://xmlcalabash.com/ns/extensions/pef"
+    xmlns:pef="http://www.daisy.org/ns/2008/pef"
     exclude-inline-prefixes="louis pef px p"
     version="1.0">
     

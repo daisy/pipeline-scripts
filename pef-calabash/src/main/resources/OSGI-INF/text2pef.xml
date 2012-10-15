@@ -4,5 +4,5 @@
    <service>
       <provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
    </service>
-   <property name="type" type="String" value="{http://xmlcalabash.com/ns/extensions/pef}text2pef"/>
+   <property name="type" type="String" value="{http://www.daisy.org/ns/2008/pef}text2pef"/>
 </scr:component>
