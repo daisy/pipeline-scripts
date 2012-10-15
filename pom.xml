@@ -23,7 +23,7 @@
     <braille.css.version>1.0.0</braille.css.version>
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
-    <braille.liblouis-calabash.version>1.0.0</braille.liblouis-calabash.version>
+    <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
     <braille.liblouis-formatter.version>${braille.modules.version}</braille.liblouis-formatter.version>
     <braille.liblouis-native.linux.version>${braille.modules.version}</braille.liblouis-native.linux.version>

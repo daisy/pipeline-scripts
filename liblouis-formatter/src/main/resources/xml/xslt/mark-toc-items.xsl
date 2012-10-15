@@ -8,21 +8,7 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
-    <xsl:param name="select" select="1"/>
-    
-    <xsl:variable name="toc" as="element()" select="/descendant::louis:toc[number($select)]"/>
-    
-    <xsl:template match="/*">
-        <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <louis:no-pagenum>
-                <louis:toc>
-                    <xsl:text>&#xA0;</xsl:text>
-                </louis:toc>
-            </louis:no-pagenum>
-            <xsl:apply-templates select="child::node()"/>
-        </xsl:copy>
-    </xsl:template>
+    <xsl:variable name="toc" select="collection()[2]"/>
     
     <xsl:template match="*[@xml:id]">
         <xsl:variable name="id" as="xs:string" select="@xml:id"/>

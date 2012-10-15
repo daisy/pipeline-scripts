@@ -29,6 +29,7 @@
                         <xsl:choose>
                             <xsl:when test="current-grouping-key()">
                                 <xsl:element name="louis:toc">
+                                    <xsl:attribute name="xml:id" select="generate-id()"/>
                                     <xsl:for-each select="current-group()">
                                         <xsl:apply-templates select="."/>
                                     </xsl:for-each>

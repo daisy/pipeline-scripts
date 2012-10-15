@@ -46,9 +46,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName _page_height = new QName("page-height");
 	private static final QName _line_width = new QName("line-width");
 	private static final QName _temp_dir = new QName("temp-dir");
-	private static final QName c_directory = new QName("http://www.w3.org/ns/xproc-step", "directory");
-	private static final QName c_file = new QName("http://www.w3.org/ns/xproc-step", "file");
-	private static final QName _name = new QName("name");
+	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
+	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
+	private static final QName _href = new QName("href");
 	
 	private Liblouisutdml liblouisutdml = null;
 	
@@ -68,8 +68,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 	public class TranslateFile extends DefaultStep {
 	
 		private ReadablePipe source = null;
-		private ReadablePipe configFiles = null;
-		private ReadablePipe semanticFiles = null;
+		private ReadablePipe styles = null;
+		private ReadablePipe semantics = null;
 		private WritablePipe result = null;
 	
 		/**
@@ -81,13 +81,12 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 		@Override
 		public void setInput(String port, ReadablePipe pipe) {
-			if (port.equals("source")) {
+			if (port.equals("source"))
 				source = pipe;
-			} else if (port.equals("config-files")) {
-				configFiles = pipe;
-			} else if (port.equals("semantic-files")) {
-				semanticFiles = pipe;
-			}
+			else if (port.equals("styles"))
+				styles = pipe;
+			else if (port.equals("semantics"))
+				semantics = pipe;
 		}
 	
 		@Override
@@ -98,8 +97,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 		@Override
 		public void reset() {
 			source.resetReader();
-			configFiles.resetReader();
-			semanticFiles.resetReader();
+			styles.resetReader();
+			semantics.resetReader();
 			result.resetWriter();
 		}
 	
@@ -117,48 +116,47 @@ public class TranslateFileProvider implements XProcStepProvider {
 				RuntimeValue paged = getOption(_paged);
 				RuntimeValue pageHeight = getOption(_page_height);
 				RuntimeValue lineWidth = getOption(_line_width);
-				if (paged != null && paged.getString().equals("false")) {
+				if (paged != null && paged.getString().equals("false"))
 					settings.put("braillePages", "no");
-				}
-				if (pageHeight!=null) {
+				if (pageHeight!=null)
 					settings.put("linesPerPage", pageHeight.getString());
-				}
-				if (lineWidth != null) {
+				if (lineWidth != null)
 					settings.put("cellsPerLine", lineWidth.getString());
-				}
 	
-				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
+				URI tempURI = new URI(getOption(_temp_dir).getString());
 	
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
-				if (configFiles != null) {
-					XdmNode dir = (XdmNode)configFiles.read().axisIterator(Axis.CHILD, c_directory).next();
-					File configDir = new File(dir.getBaseURI());
-					if (!configDir.equals(tempDir)) {
-						throw new XProcException(step.getNode(),
-								"All config-files must be placed in temp-dir");
-					}
-					XdmSequenceIterator files = dir.axisIterator(Axis.CHILD, c_file);
-					while (files != null && files.hasNext()) {
-						configFileNames.add(((XdmNode)files.next()).getAttributeValue(_name));
-					}
-				}
-	
+				if (styles != null) {
+					while(styles.moreDocuments()) {
+						XdmNode fileset = (XdmNode)styles.read().axisIterator(Axis.CHILD, d_fileset).next();
+						URI baseURI = fileset.getBaseURI();
+						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
+						while (files != null && files.hasNext()) {
+							XdmNode file = (XdmNode)files.next();
+							URI fileURI = baseURI.resolve(file.getAttributeValue(_href));
+							String name = tempURI.relativize(fileURI).toString();
+							if (name.contains("/"))
+								throw new XProcException(step.getNode(), "All configuration files must be placed in temp-dir");
+							configFileNames.add(name); }}}
+				
 				// Get semantic action files
 				List<String> semanticFileNames = new ArrayList<String>();
-				if (semanticFiles != null) {
-					XdmNode dir = (XdmNode)semanticFiles.read().axisIterator(Axis.CHILD, c_directory).next();
-					File semanticDir = new File(dir.getBaseURI());
-					if (!semanticDir.equals(tempDir)) {
-						throw new XProcException(step.getNode(),
-								"All semantic-files must be placed in temp-dir");
-					}
-					XdmSequenceIterator files = dir.axisIterator(Axis.CHILD, c_file);
-					while (files != null && files.hasNext()) {
-						semanticFileNames.add(((XdmNode)files.next()).getAttributeValue(_name));
-					}
-				}
+				if (semantics != null) {
+					while(semantics.moreDocuments()) {
+						XdmNode fileset = (XdmNode)semantics.read().axisIterator(Axis.CHILD, d_fileset).next();
+						URI baseURI = fileset.getBaseURI();
+						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
+						while (files != null && files.hasNext()) {
+							XdmNode file = (XdmNode)files.next();
+							URI fileURI = baseURI.resolve(file.getAttributeValue(_href));
+							String name = tempURI.relativize(fileURI).toString();
+							if (name.contains("/"))
+								throw new XProcException(step.getNode(), "All semantic action files must be placed in temp-dir");
+							semanticFileNames.add(name); }}}
 	
+				File tempDir = new File(tempURI);
+				
 				// Create liblouistutdml.ini
 				unpackIniFile(new URI(getOption(_ini_file).getString()).toURL(), tempDir);
 	
@@ -187,8 +185,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 				while((available = totalStream.available()) > 0) {
 					bytes = new byte[available];
 					totalStream.read(bytes);
-					buffer.put(bytes);
-				}
+					buffer.put(bytes); }
 				totalStream.close();
 				int bodyLength = 0;
 				try {
@@ -196,9 +193,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 					InputStream bodyStream = new NormalizeEndOfLineInputStream(new FileInputStream(bodyTempFile));
 					while((available = bodyStream.available()) > 0)
 						bodyLength += bodyStream.skip(available);
-					bodyStream.close();
-				} catch (FileNotFoundException e) {
-				}
+					bodyStream.close(); }
+				catch (FileNotFoundException e) {}
 				assert buffer.position() >= bodyLength;
 				buffer.flip();
 
@@ -218,22 +214,20 @@ public class TranslateFileProvider implements XProcStepProvider {
 					bytes = new byte[buffer.remaining()];
 					buffer.get(bytes);
 					treeWriter.addText(new String(bytes, "UTF-8"));
-					treeWriter.addEndElement();
-				} else {
+					treeWriter.addEndElement(); }
+				else {
 					bytes = new byte[buffer.remaining()];
 					buffer.get(bytes);
-					treeWriter.addText(new String(bytes, "UTF-8"));
-				}
+					treeWriter.addText(new String(bytes, "UTF-8")); }
 				treeWriter.addEndElement();
 				treeWriter.endDocument();
 	
 				//brailleFile.delete();
 	
-				result.write(treeWriter.getResult());
-	
-			} catch (Exception e) {
-				throw new XProcException(step.getNode(), e);
-			}
+				result.write(treeWriter.getResult()); }
+			
+			catch (Exception e) {
+				throw new XProcException(step.getNode(), e); }
 		}
 	}
 	
@@ -247,8 +241,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 		int bytesRead = 0;
 		while ((bytesRead = reader.read(buffer)) > 0) {
 			writer.write(buffer, 0, bytesRead);
-			buffer = new byte[153600];
-		}
+			buffer = new byte[153600]; }
 		writer.close();
 		reader.close();
 	}

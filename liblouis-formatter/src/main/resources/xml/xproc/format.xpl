@@ -1,162 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="louis:format" name="format"
     xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     exclude-inline-prefixes="louis pef px p"
     version="1.0">
     
-    <p:input port="source" sequence="false" primary="true"/>
+    <p:input port="source" sequence="true" primary="true"/>
     <p:option name="temp-dir" required="true"/>
     <p:option name="title" required="false" select="''"/>
     <p:option name="creator" required="false" select="''"/>
     <p:output port="result" sequence="false" primary="true"/>
     
-    <p:import href="create-liblouis-files.xpl"/>
+    <p:import href="generate-liblouis-files.xpl"/>
     <p:import href="format-vertical-border.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
 
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/handle-print-page.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
+    <!-- FIXME this is a dirty hack -->
+    <p:variable name="liblouis-ini-file"
+        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
+        <p:document href="format.xpl"/>
+    </p:variable>
+    <p:variable name="liblouis-table"
+        select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
+        <p:empty/>
+    </p:variable>
+    <p:variable name="pef-table" select="'org.daisy.pipeline.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+        <p:empty/>
+    </p:variable>
+
+    <p:for-each name="handle-css">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:add-xml-base/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-print-page.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-toc.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-margin-border-padding.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/normalize-css.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
     
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/handle-toc.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
+    <p:group name="extract-toc">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:output port="result-toc" sequence="true">
+            <p:pipe step="filter-toc" port="result"/>
+        </p:output>
+        <p:group name="filter-toc">
+            <p:output port="result" sequence="true" primary="true"/>
+            <p:for-each>
+                <p:filter select="//louis:toc"/>
+            </p:for-each>
+            <p:for-each>
+                <p:add-xml-base/>
+            </p:for-each>
+        </p:group>
+        <p:for-each>
+            <p:iteration-source>
+                <p:pipe step="handle-css" port="result"/>
+            </p:iteration-source>
+            <p:delete match="//louis:toc/*|//louis:toc/@*[not(local-name()='id')]"/>
+        </p:for-each>
+    </p:group>
     
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/handle-margin-border-padding.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/normalize-css.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <p:xslt name="create-styles-xml">
-        <p:input port="stylesheet">
-            <p:document href="../xslt/create-styles-xml.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <p:add-attribute attribute-name="xml:base" match="/*" name="temp-directory">
+    <louis:generate-liblouis-files name="liblouis-files">
         <p:input port="source">
-            <p:inline>
-                <c:directory/>
-            </p:inline>
+            <p:pipe step="extract-toc" port="result"/>
         </p:input>
-        <p:with-option name="attribute-value" select="$temp-dir">
+        <p:input port="source-toc">
+            <p:pipe step="extract-toc" port="result-toc"/>
+        </p:input>
+        <p:with-option name="directory" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </p:add-attribute>
+    </louis:generate-liblouis-files>
+
+    <p:for-each>
+        <louis:format-vertical-border>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
+        </louis:format-vertical-border>
+    </p:for-each>
     
-    <louis:create-liblouis-files name="create-liblouis-files">
-        <p:input port="source">
-            <p:pipe step="create-styles-xml" port="result"/>
-        </p:input>
-        <p:input port="styles">
-            <p:pipe step="create-styles-xml" port="secondary"/>
-        </p:input>
-        <p:input port="directory">
-            <p:pipe step="temp-directory" port="result"/>
-        </p:input>
-    </louis:create-liblouis-files>
-    
-    <louis:format-vertical-border>
-        <p:input port="source">
-            <p:pipe step="create-styles-xml" port="result"/>
-        </p:input>
-        <p:input port="config-files">
-            <p:pipe step="create-liblouis-files" port="config"/>
-        </p:input>
-        <p:input port="semantic-files">
-            <p:pipe step="create-liblouis-files" port="semantic"/>
-        </p:input>
-        <p:with-option name="temp-dir" select="$temp-dir">
-            <p:empty/>
-        </p:with-option>
-    </louis:format-vertical-border>
-    
-    <louis:format-toc name="format-toc">
-        <p:input port="toc-styles">
-            <p:pipe step="create-styles-xml" port="secondary"/>
-        </p:input>
-        <p:input port="config-files">
-            <p:pipe step="create-liblouis-files" port="config"/>
-        </p:input>
-        <p:input port="semantic-files">
-            <p:pipe step="create-liblouis-files" port="semantic"/>
+    <louis:format-toc>
+        <p:input port="source-toc">
+            <p:pipe step="liblouis-files" port="result-toc"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
     </louis:format-toc>
     
-    <louis:translate-file name="xml2brl">
-        <p:input port="source">
-            <p:pipe step="format-toc" port="result"/>
-        </p:input>
-        <p:input port="config-files">
-            <p:pipe step="create-liblouis-files" port="config"/>
-        </p:input>
-        <p:input port="semantic-files">
-            <p:pipe step="create-liblouis-files" port="semantic"/>
-        </p:input>
-        <!-- FIXME this is a very ugly solution -->
-        <p:with-option name="ini-file"
-            select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
-            <p:document href="format.xpl"/>
-        </p:with-option>
-        <p:with-option name="table"
-            select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="temp-dir" select="$temp-dir">
-            <p:empty/>
-        </p:with-option>
-    </louis:translate-file>
-
+    <p:for-each name="translate-file">
+        <louis:translate-file>
+            <p:input port="source" select="/*/*[1]"/>
+            <p:input port="styles" select="/*/louis:files/*[1]"/>
+            <p:input port="semantics" select="/*/louis:files/*[2]"/>
+            <p:with-option name="ini-file" select="$liblouis-ini-file"/>
+            <p:with-option name="table" select="$liblouis-table"/>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
+        </louis:translate-file>
+    </p:for-each>
+    
     <!-- Convert to pef with brailleutils -->
     
-    <pef:text2pef name="text-to-pef">
-        <p:with-option name="temp-dir" select="$temp-dir">
+    <p:for-each>
+        <pef:text2pef>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
+            <p:with-option name="table" select="$pef-table"/>
+        </pef:text2pef>
+    </p:for-each>
+    
+    <pef:merge>
+        <p:with-param name="title" select="$title">
             <p:empty/>
-        </p:with-option>
-        <p:with-option name="table" select="'org.daisy.pipeline.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+        </p:with-param>
+        <p:with-param name="creator" select="$creator">
             <p:empty/>
-        </p:with-option>
-        <p:with-option name="title" select="$title">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="creator" select="$creator">
-            <p:empty/>
-        </p:with-option>
-    </pef:text2pef>
+        </p:with-param>
+    </pef:merge>
     
 </p:declare-step>

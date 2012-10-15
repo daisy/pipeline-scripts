@@ -6,8 +6,8 @@
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
-    <p:input port="config-files" sequence="false"/>
-    <p:input port="semantic-files" sequence="false"/>
+    <p:input port="styles" sequence="true"/>
+    <p:input port="semantics" sequence="true"/>
     <p:option name="ini-file" required="true"/>
     <p:option name="table" required="true"/>
     <p:option name="paged" required="false"/>

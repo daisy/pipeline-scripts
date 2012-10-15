@@ -7,20 +7,25 @@
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
-    <p:input port="config-files" sequence="false"/>
-    <p:input port="semantic-files" sequence="false"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
+    <p:variable name="liblouis-ini-file"
+        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
+        <p:document href="format.xpl"/>
+    </p:variable>
+    <p:variable name="liblouis-table"
+        select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'"/>
+    
     <p:viewport match="louis:vertical-border" name="format">
         
         <p:rename match="/*">
-            <p:with-option name="new-name" select="name(/*)">
+            <p:with-option name="new-name" select="name(/*/*[1])">
                 <p:pipe step="format-vertical-border" port="source"/>
             </p:with-option>
-            <p:with-option name="new-namespace" select="namespace-uri(/*)">
+            <p:with-option name="new-namespace" select="namespace-uri(/*/*[1])">
                 <p:pipe step="format-vertical-border" port="source"/>
             </p:with-option>
         </p:rename>
@@ -47,28 +52,19 @@
             </p:input>
         </p:insert>
         
-        <louis:translate-file name="xml2brl" paged="false">
-            <p:input port="config-files">
-                <p:pipe step="format-vertical-border" port="config-files"/>
+        <louis:translate-file paged="false">
+            <p:input port="styles" select="/*/louis:files/*[1]">
+                <p:pipe step="format-vertical-border" port="source"/>
             </p:input>
-            <p:input port="semantic-files">
-                <p:pipe step="format-vertical-border" port="semantic-files"/>
+            <p:input port="semantics" select="/*/louis:files/*[2]">
+                <p:pipe step="format-vertical-border" port="source"/>
             </p:input>
             <p:with-option name="line-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
             </p:with-option>
-            <!-- FIXME this is a very ugly solution -->
-            <p:with-option name="ini-file"
-                select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
-                <p:document href="format.xpl"/>
-            </p:with-option>
-            <p:with-option name="table"
-                select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
-                <p:empty/>
-            </p:with-option>
-            <p:with-option name="temp-dir" select="$temp-dir">
-                <p:empty/>
-            </p:with-option>
+            <p:with-option name="ini-file" select="$liblouis-ini-file"/>
+            <p:with-option name="table" select="$liblouis-table"/>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
         
         <p:xslt name="preformatted">
