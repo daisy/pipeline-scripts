@@ -24,6 +24,7 @@ import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
+import org.daisy.braillecss.BrailleCSSProperty.Page;
 import org.daisy.braillecss.BrailleCSSProperty.StringSet;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
@@ -159,6 +160,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		props.put("-brl-list-style-type", ListStyleType.NONE);
 
 		// paged
+		props.put("page", Page.AUTO);
 		props.put("page-break-before", PageBreak.AUTO);
 		props.put("page-break-after", PageBreak.AUTO);
 		props.put("page-break-inside", PageBreakInside.AUTO);

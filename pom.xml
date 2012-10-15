@@ -20,7 +20,7 @@
   <properties>
     <braille.modules.version>1.1.0-SNAPSHOT</braille.modules.version>
     <braille.common-java.version>${braille.modules.version}</braille.common-java.version>
-    <braille.css.version>1.0.0</braille.css.version>
+    <braille.css.version>${braille.modules.version}</braille.css.version>
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>

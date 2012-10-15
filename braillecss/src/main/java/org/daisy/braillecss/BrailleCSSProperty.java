@@ -148,6 +148,29 @@ public interface BrailleCSSProperty extends CSSProperty {
 		}
 	}
 
+	public enum Page implements CSSProperty {
+		identifier(""), AUTO("auto"), INHERIT("inherit");
+
+		private String text;
+
+		private Page(String text) {
+			this.text = text;
+		}
+
+		public boolean inherited() {
+			return true;
+		}
+
+		public boolean equalsInherit() {
+			return this == INHERIT;
+		}
+
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
+	
 	public enum StringSet implements BrailleCSSProperty {
 		content_list(""), NONE("none"), INHERIT("inherit");
 		

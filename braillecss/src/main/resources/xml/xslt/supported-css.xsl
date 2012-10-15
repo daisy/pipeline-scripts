@@ -27,7 +27,8 @@
                  'page-break-after',
                  'page-break-inside',
                  'orphans',
-                 'widows')"/>
+                 'widows',
+                 'page')"/>
 
     <xsl:variable name="ALWAYS" select="'always'"/>
     <xsl:variable name="ATTR" select="'attr\(.+?\)'"/>
@@ -77,7 +78,8 @@
                  concat('^', $ALWAYS, '|', $AUTO, '|', $AVOID, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, '$'),
                  concat('^', $AUTO, '|', $AVOID, '|', $INHERIT, '$'),
                  concat('^', $INTEGER, '|', $INHERIT, '$'),
-                 concat('^', $INTEGER, '|', $INHERIT, '$'))"/>
+                 concat('^', $INTEGER, '|', $INHERIT, '$'),
+                 concat('^', $IDENT, '|', $AUTO, '$ '))"/>
     
     <xsl:variable name="applies-to" as="xs:string*"
         select="('.*',
@@ -95,6 +97,7 @@
                  concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
                  concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '|', $TOC_ITEM, '$'),
                  concat('^', $LIST_ITEM, '$'),
+                 concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
                  concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
                  concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
                  concat('^', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '$'),
@@ -123,14 +126,16 @@
                  'auto',
                  'auto',
                  '2.0',
-                 '2.0')"/>
+                 '2.0',
+                 'auto')"/>
     
     <xsl:variable name="inherited-properties" as="xs:string*"
         select="('-brl-text-indent',
                  '-brl-list-style-type',
                  'text-align',
                  'orphans',
-                 'widows')"/>
+                 'widows',
+                 'page')"/>
 
     <xsl:function name="css:get-properties" as="xs:string*">
         <xsl:sequence select="$properties"/>

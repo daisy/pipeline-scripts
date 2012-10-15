@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +13,7 @@ import org.daisy.braillecss.BrailleCSSProperty.Display;
 import org.daisy.braillecss.BrailleCSSProperty.ListStyleType;
 import org.daisy.braillecss.BrailleCSSProperty.Margin;
 import org.daisy.braillecss.BrailleCSSProperty.Padding;
+import org.daisy.braillecss.BrailleCSSProperty.Page;
 import org.daisy.braillecss.BrailleCSSProperty.StringSet;
 import org.daisy.braillecss.BrailleCSSProperty.TextIndent;
 
@@ -261,6 +261,13 @@ public class BrailleCSSDeclarationTransformer {
 				d, properties, values);
 	}
 	
+	@SuppressWarnings("unused")
+	private boolean processPage(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		return genericOneIdentOrIdentifier(Page.class, Page.identifier, true,
+				d, properties, values);
+	}
+	
 	/****************************************************************
 	 * GENERIC METHODS
 	 ****************************************************************/
@@ -289,6 +296,20 @@ public class BrailleCSSDeclarationTransformer {
 		} catch (Exception e) {
 		}
 		return false;
+	}
+	
+	private <T extends CSSProperty> boolean genericOneIdentOrIdentifier(
+			Class<T> type, T identifierIdentification, boolean sanify,
+			Declaration d, Map<String, CSSProperty> properties,
+			Map<String, Term<?>> values) {
+
+		if (d.size() != 1)
+			return false;
+
+		return genericTermIdent(type, d.get(0), ALLOW_INH, d.getProperty(),
+				properties)
+				|| genericTerm(TermIdent.class, d.get(0), d.getProperty(),
+						identifierIdentification, sanify, properties, values);
 	}
 	
 	/****************************************************************
