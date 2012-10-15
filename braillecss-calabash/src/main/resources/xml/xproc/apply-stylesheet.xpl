@@ -6,5 +6,6 @@
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:output port="result" sequence="false" primary="true"/>
+    <p:output port="pages" sequence="false"/>
     
 </p:declare-step>

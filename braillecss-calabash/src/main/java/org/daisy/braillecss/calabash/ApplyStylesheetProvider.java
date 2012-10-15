@@ -21,7 +21,6 @@ import com.xmlcalabash.util.TreeWriter;
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.NodeData;
-import cz.vutbr.web.css.RuleBlock;
 import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
@@ -70,6 +69,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	
 		private ReadablePipe sourcePipe = null;
 		private WritablePipe resultPipe = null;
+		private WritablePipe pagesPipe = null;
 		
 		private ApplyStylesheet(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
@@ -82,13 +82,17 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	
 		@Override
 		public void setOutput(String port, WritablePipe pipe) {
-			resultPipe = pipe;
+			if (port.equals("result"))
+				resultPipe = pipe;
+			else if (port.equals("pages"))
+				pagesPipe = pipe;
 		}
 	
 		@Override
 		public void reset() {
 			sourcePipe.resetReader();
 			resultPipe.resetWriter();
+			pagesPipe.resetWriter();
 		}
 	
 		@Override
@@ -98,7 +102,8 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				XdmNode source = sourcePipe.read();
 				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
 				StyleSheet sheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
-				resultPipe.write((new MyTreeWriter(doc, sheet, runtime)).getResult()); }
+				resultPipe.write((new InlineCSSWriter(doc, sheet, runtime)).getResult());
+				pagesPipe.write(new CSSPagesWriter(new URI(doc.getBaseURI()), sheet, runtime).getResult()); }
 			catch (Exception e) {
 				throw new RuntimeException(e); }
 		}
@@ -113,22 +118,21 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	private static final QName _css_before = new QName(CSS_PREFIX, CSS_URI, "before");
 	private static final QName _css_after = new QName(CSS_PREFIX, CSS_URI, "after");
 	private static final QName _css_page = new QName(CSS_PREFIX, CSS_URI, "page");
+	private static final QName _css_pages = new QName(CSS_PREFIX, CSS_URI, "pages");
 	
-	private static class MyTreeWriter extends TreeWriter {
+	private static class InlineCSSWriter extends TreeWriter {
 		
-		private final StyleSheet stylesheet;
 		private final StyleMap stylemap;
 		
-		public MyTreeWriter(Document document, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
+		public InlineCSSWriter(Document document, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
 			super(xproc);
-			this.stylesheet = stylesheet;
 			stylemap = new Analyzer(stylesheet).evaluateDOM(document, "embossed", false);
 			startDocument(new URI(document.getBaseURI()));
-			traverse(document.getDocumentElement(), true);
+			traverse(document.getDocumentElement());
 			endDocument();
 		}
 		
-		private void traverse(Node node, boolean root) throws XPathException, URISyntaxException {
+		private void traverse(Node node) throws XPathException, URISyntaxException {
 			
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				addStartElement((Element)node);
@@ -146,25 +150,6 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 					if (style.length() > 0)
 						addAttribute(_style, style); }
 				receiver.startContent();
-				if (root) {
-					Iterable<RulePage> pages =  Iterables.<RulePage>filter(stylesheet, RulePage.class);
-					for (RulePage page : pages) {
-						addStartElement(_css_page);
-						String name = page.getName();
-						String pseudo = page.getPseudo();
-						if (name != null) addAttribute(_name, name);
-						if (pseudo != null) addAttribute(_position, pseudo);
-						String pageStyle = Strings.normalizeSpace(Strings.join(
-								Iterables.<Declaration>filter(page, Declaration.class), " "));
-						if (!"".equals(pageStyle))
-							addAttribute(_style, pageStyle);
-						for (RuleMargin margin : Iterables.<RuleMargin>filter(page, RuleMargin.class)) {
-							addStartElement(new QName(CSS_PREFIX, CSS_URI, margin.getMarginArea().value));
-							String marginStyle = Strings.normalizeSpace(Strings.join(margin, " "));
-							if (!"".equals(marginStyle))
-								addAttribute(_style, marginStyle);
-							addEndElement(); }
-						addEndElement(); }}
 				NodeData beforeData = stylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
 				if (beforeData != null) {
 					String beforeStyle = Strings.normalizeSpace(beforeData);
@@ -173,7 +158,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 						addAttribute(_style, beforeStyle);
 						addEndElement(); }}
 				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling())
-					traverse(child, false);
+					traverse(child);
 				NodeData afterData = stylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null) {
 					String afterStyle = Strings.normalizeSpace(afterData);
@@ -205,6 +190,34 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				seenRoot = true; }
 			receiver.setSystemId(element.getBaseURI());
 			addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
+		}
+	}
+	
+	private static class CSSPagesWriter extends TreeWriter {
+		public CSSPagesWriter(URI base, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
+			super(xproc);
+			startDocument(base);
+			addStartElement(_css_pages);
+			Iterable<RulePage> pages =  Iterables.<RulePage>filter(stylesheet, RulePage.class);
+			for (RulePage page : pages) {
+				addStartElement(_css_page);
+				String name = page.getName();
+				String pseudo = page.getPseudo();
+				if (name != null) addAttribute(_name, name);
+				if (pseudo != null) addAttribute(_position, pseudo);
+				String pageStyle = Strings.normalizeSpace(Strings.join(
+						Iterables.<Declaration>filter(page, Declaration.class), " "));
+				if (!"".equals(pageStyle))
+					addAttribute(_style, pageStyle);
+				for (RuleMargin margin : Iterables.<RuleMargin>filter(page, RuleMargin.class)) {
+					addStartElement(new QName(CSS_PREFIX, CSS_URI, margin.getMarginArea().value));
+					String marginStyle = Strings.normalizeSpace(Strings.join(margin, " "));
+					if (!"".equals(marginStyle))
+						addAttribute(_style, marginStyle);
+					addEndElement(); }
+				addEndElement(); }
+			addEndElement();
+			endDocument();
 		}
 	}
 }
