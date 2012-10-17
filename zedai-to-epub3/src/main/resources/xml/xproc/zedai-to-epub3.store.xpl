@@ -214,7 +214,8 @@
     <p:documentation>Build the EPUB 3 Publication</p:documentation>
     <p:group name="epub">
         <p:output port="result"/>
-        <!--seems to be required to *not* connect non-primary ports on ocf-finalize-->
+        <!--p:sink seems to be required to *not* connect non-primary ports on ocf-finalize-->
+        <p:sink/>
         <px:epub3-ocf-finalize>
             <p:input port="source">
                 <p:pipe port="result" step="store"/>
