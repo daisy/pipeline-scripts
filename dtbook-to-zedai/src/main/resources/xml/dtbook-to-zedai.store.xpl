@@ -98,6 +98,9 @@
             <p:otherwise>
                 <p:documentation>File is already on disk; copy it to the new location.</p:documentation>
                 <p:sink/>
+                <px:mkdir>
+                    <p:with-option name="href" select="replace($target,'/[^/]*$','')"/>
+                </px:mkdir>
                 <px:copy>
                     <p:with-option name="href" select="$on-disk"/>
                     <p:with-option name="target" select="$target"/>
