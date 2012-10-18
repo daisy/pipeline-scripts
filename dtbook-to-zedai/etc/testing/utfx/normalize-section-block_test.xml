@@ -120,6 +120,39 @@
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
+        <utfx:name>Normalize Mixed Section/Block: mixed 3</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <bodymatter>
+                    <level1>
+                        <h1>h1</h1>
+                        <level2>
+                            <level3>
+                                <h3>h3</h3>
+                                <p>para.</p>
+                            </level3>
+                            <p>Some text.</p>
+                        </level2>
+                    </level1>
+                </bodymatter>
+            </utfx:source>
+            <utfx:expected>
+                <bodymatter>
+                    <level1>
+                        <h1>h1</h1>
+                        <level2>
+                            <level3>
+                                <h3>h3</h3>
+                                <p>para.</p>
+                            </level3>
+                            <level3><p>Some text.</p></level3>
+                        </level2>
+                    </level1>
+                </bodymatter>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
         <utfx:name>Normalize Mixed Section/Block: page breaks</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>

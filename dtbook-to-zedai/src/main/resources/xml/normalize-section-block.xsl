@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/" exclude-result-prefixes="dtb" version="2.0">
 
     <!--Normalizes mixed block/inline content models.-->
@@ -60,20 +61,15 @@
     <!-- zedai section elements must not be interleaved with non-section elements -->
     <xsl:template name="normalize-level">
         
-        <xsl:param name="child-level-name"/>
+        <xsl:param name="child-level-name" as="xs:string"/>
         
-        <!--<xsl:message>CHILD LEVEL NAME: <xsl:value-of select="$child-level-name"/></xsl:message>
-        
-        <xsl:message select="."/>
-        
-        -->
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:for-each-group group-adjacent="exists(self::dtb:*[local-name() = $child-level-name])" select="*">
                 <xsl:choose>
                     <!-- the target element itself-->
                     <xsl:when test="current-grouping-key() or position()=1 or (every $e in current-group() satisfies $e/self::dtb:pagenum)">
-                        <xsl:copy-of select="current-group()"/>
+                        <xsl:apply-templates select="current-group()"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:element name="{$child-level-name}"
