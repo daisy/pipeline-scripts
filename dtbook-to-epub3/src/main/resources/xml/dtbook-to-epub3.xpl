@@ -109,14 +109,13 @@
         </px:dtbook-to-zedai-convert>
 
         <!--TODO better handle core media type filtering-->
-        <p:delete
+        <!--TODO copy/translate CSS ?-->
+        <p:delete name="filtered-zedai-fileset"
             match="d:file[not(@media-type=('application/z3998-auth+xml',
             'image/gif','image/jpeg','image/png','image/svg+xml',
             'application/pls+xml',
-            'audio/mpeg','audio/mp4',
-            'text/css','text/javascript'))]"/>
-
-
+            'audio/mpeg','audio/mp4','text/javascript'))]"/>
+        
         <px:zedai-to-epub3-convert name="convert.zedai-to-epub3">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.dtbook-to-zedai"/>
