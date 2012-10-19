@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Braille Utils text2pef step">
-   <implementation class="org.daisy.pipeline.pef.Text2PEFProvider"/>
+   <implementation class="org.daisy.pipeline.braille.pef.Text2PEFProvider"/>
    <service>
       <provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
    </service>

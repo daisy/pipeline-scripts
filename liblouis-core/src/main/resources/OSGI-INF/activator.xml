@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="Liblouis provider and table registry">
-    <implementation class="org.daisy.pipeline.liblouis.LiblouisProvider"/>
+    <implementation class="org.daisy.pipeline.braille.liblouis.LiblouisProvider"/>
     <scr:service>
-        <scr:provide interface="org.daisy.pipeline.liblouis.LiblouisTableFinder"/>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTableFinder"/>
     </scr:service>
     <scr:reference bind="addTablePath"
         unbind="removeTablePath"
-        interface="org.daisy.pipeline.liblouis.LiblouisTablePath"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"
         cardinality="0..n"
         name="LiblouisTablePath"
         policy="dynamic"/>

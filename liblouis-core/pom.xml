@@ -87,7 +87,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Export-Package>org.daisy.pipeline.liblouis, !org.daisy.pipeline.liblouis.internal</Export-Package>
+            <Export-Package>org.daisy.pipeline.braille.liblouis, !org.daisy.pipeline.braille.liblouis.internal</Export-Package>
             <Service-Component>OSGI-INF/activator.xml</Service-Component>
             <_removeheaders>Embed-Dependency,Include-Resource,Private-Package</_removeheaders>
           </instructions>

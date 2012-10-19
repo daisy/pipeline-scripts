@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Default Liblouis Tables" activate="activate">
-    <scr:implementation class="org.daisy.pipeline.liblouis.LiblouisTablePath"/>
+    <scr:implementation class="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"/>
     <scr:service>
-        <scr:provide interface="org.daisy.pipeline.liblouis.LiblouisTablePath"/>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"/>
     </scr:service>
     <scr:property name="identifier" type="String" value="http://www.liblouis.org/tables/"/>
     <scr:property name="directory" type="String" value="/tables"/>

@@ -28,7 +28,7 @@
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
         <p:empty/>
     </p:variable>
-    <p:variable name="pef-table" select="'org.daisy.pipeline.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+    <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
         <p:empty/>
     </p:variable>
 

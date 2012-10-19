@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis translateFile step">
-   <scr:implementation class="org.daisy.pipeline.liblouis.calabash.TranslateFileProvider"/>
+   <scr:implementation class="org.daisy.pipeline.braille.liblouis.calabash.TranslateFileProvider"/>
    <scr:service>
       <scr:provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
    </scr:service>
    <scr:property name="type" type="String" value="{http://liblouis.org/liblouis}translate-file"/>
    <scr:reference bind="bindLiblouisutdml"
       unbind="unbindLiblouisutdml"
-      interface="org.daisy.pipeline.liblouis.Liblouisutdml"
+      interface="org.daisy.pipeline.braille.liblouis.Liblouisutdml"
       cardinality="1..1"
       name="Liblouisutdml"
       policy="dynamic"/>
