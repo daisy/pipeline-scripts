@@ -244,14 +244,14 @@
             <px:fileset-add-entry media-type="application/xml+xhtml" name="navigation-doc.result.fileset">
                 <p:with-option name="href" select="$nav-base"/>
             </px:fileset-add-entry>
-            <p:add-attribute match="/*" attribute-name="xml:base" name="navigation-doc.result.html-file">
+            <p:add-attribute match="/*" attribute-name="xml:base">
                 <p:input port="source">
                     <p:pipe port="result" step="navigation-doc.html-file"/>
                 </p:input>
                 <p:with-option name="attribute-value" select="$nav-base"/>
             </p:add-attribute>
-            <cx:message message="Navigation Document Created."/>
-            <p:sink/>
+            <p:delete match="/*/@xml:base"/>
+            <cx:message message="Navigation Document Created." name="navigation-doc.result.html-file"/>
         </p:group>
     </p:group>
 
