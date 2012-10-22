@@ -10,6 +10,7 @@
     
     <p:input port="source" sequence="true" primary="true"/>
     <p:input port="directory" sequence="false"/>
+    <p:option name="suffix" select="'.xml'"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
@@ -18,6 +19,9 @@
     <px:tempfile delete-on-exit="false" name="tempfile">
         <p:with-option name="href" select="/d:fileset/@xml:base">
             <p:pipe step="store-file" port="directory"/>
+        </p:with-option>
+        <p:with-option name="suffix" select="$suffix">
+            <p:empty/>
         </p:with-option>
     </px:tempfile>
     <p:store method="text">
@@ -36,6 +40,5 @@
             <p:pipe step="tempfile" port="result"/>
         </p:with-option>
     </px:fileset-add-entry>
-    
     
 </p:declare-step>

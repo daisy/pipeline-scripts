@@ -25,7 +25,7 @@
         </p:with-option>
     </px:fileset-create>
 
-    <louis:store-file name="styles-directory">
+    <louis:store-file name="styles-directory" suffix=".cfg">
         <p:input port="source">
             <p:inline>
 <louis:config-file>
@@ -52,7 +52,7 @@ style preformatted-line
         </p:input>
     </louis:store-file>
     
-    <louis:store-file name="semantics-directory">
+    <louis:store-file name="semantics-directory" suffix=".sem">
         <p:input port="source">
             <p:inline>
 <louis:semantic-file>
@@ -88,7 +88,7 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file">
+        <louis:store-file name="store-file" suffix=".cfg">
             <p:input port="source">
                 <p:pipe step="extract-liblouis-styles" port="secondary"/>
             </p:input>
@@ -110,7 +110,7 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file">
+        <louis:store-file name="store-file" suffix=".sem">
             <p:input port="directory">
                 <p:pipe step="semantics-directory" port="result"/>
             </p:input>
@@ -135,7 +135,7 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file">
+        <louis:store-file name="store-file" suffix=".cfg">
             <p:input port="source">
                 <p:pipe step="extract-liblouis-styles" port="secondary"/>
             </p:input>
@@ -157,7 +157,7 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file">
+        <louis:store-file name="store-file" suffix=".sem">
             <p:input port="directory">
                 <p:pipe step="directory" port="result"/>
             </p:input>

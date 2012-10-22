@@ -68,7 +68,13 @@
     <xsl:template name="print-liblouis-style">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="style-name" as="xs:string"/>
-
+        
+        <xsl:text># --------------------------------------------------------------------------------------------------&#xa;</xsl:text>
+        <xsl:text># </xsl:text>
+        <xsl:value-of select="$style"/>
+        <xsl:text>&#xa;</xsl:text>
+        <xsl:text># --------------------------------------------------------------------------------------------------&#xa;</xsl:text>
+        
         <xsl:text>style </xsl:text>
         <xsl:sequence select="$style-name"/>
         <xsl:text>&#xa;</xsl:text>
