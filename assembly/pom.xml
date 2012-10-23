@@ -78,17 +78,20 @@
                 <!-- Linux specific -->
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>liblouis-native.linux</artifactId>
+                  <artifactId>liblouis-native</artifactId>
+                  <classifier>linux</classifier>
                 </artifactItem>
                 <!-- Mac OS specific -->
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>liblouis-native.mac</artifactId>
+                  <artifactId>liblouis-native</artifactId>
+                  <classifier>mac</classifier>
                 </artifactItem>
                 <!-- Windows specific -->
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>liblouis-native.windows</artifactId>
+                  <artifactId>liblouis-native</artifactId>
+                  <classifier>windows</classifier>
                 </artifactItem>
                 <!-- Other Braille modules -->
                 <artifactItem>

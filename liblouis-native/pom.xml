@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.daisy.pipeline.modules.braille</groupId>
+    <artifactId>braille-modules-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <groupId>org.daisy.pipeline.modules.braille</groupId>
+  <artifactId>liblouis-native</artifactId>
+  <version>${braille.liblouis-native.version}</version>
+  <packaging>bundle</packaging>
+
+  <name>DAISY Pipeline 2 module :: liblouis-native</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>common-java</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Import-Package>org.daisy.pipeline.braille</Import-Package>
+            <Service-Component>OSGI-INF/liblouis-native.xml</Service-Component>
+          </instructions>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-bundle</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>linux-bundle</id>
+            <phase>package</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+            <configuration>
+              <classifier>linux</classifier>
+              <instructions>
+                <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-linux</Bundle-SymbolicName>
+                <Include-Resource>
+                  OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-linux.xml,
+                  native=src/main/resources/native/linux
+                </Include-Resource>
+              </instructions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>mac-bundle</id>
+            <phase>package</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+            <configuration>
+              <classifier>mac</classifier>
+              <instructions>
+                <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-mac</Bundle-SymbolicName>
+                <Include-Resource>
+                  OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-mac.xml,
+                  native=src/main/resources/native/mac
+                </Include-Resource>
+              </instructions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>windows-bundle</id>
+            <phase>package</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+            <configuration>
+              <classifier>windows</classifier>
+              <instructions>
+                <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-windows</Bundle-SymbolicName>
+                <Include-Resource>
+                  OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-windows.xml,
+                  native=src/main/resources/native/windows
+                </Include-Resource>
+              </instructions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
