@@ -23,7 +23,7 @@
     <!-- STYLING -->
     <!-- ======= -->
     
-    <px:xml-to-pef.styling>
+    <px:xml-to-pef.styling name="styling">
         <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
     </px:xml-to-pef.styling>
     
@@ -49,7 +49,10 @@
     
     <px:xml-to-pef.formatting>
         <p:input port="metadata">
-            <p:pipe port="metadata" step="xml-to-pef"/>
+            <p:pipe step="xml-to-pef" port="metadata"/>
+        </p:input>
+        <p:input port="pages">
+            <p:pipe step="styling" port="pages"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:xml-to-pef.formatting>

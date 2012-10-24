@@ -8,6 +8,8 @@
     
     <p:input port="source" sequence="true" primary="true"/>
     <p:input port="source-toc" sequence="true"/>
+    <p:option name="page-width" required="true"/>
+    <p:option name="page-height" required="true"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="true" primary="true"/>
     
@@ -73,6 +75,8 @@
                 <p:pipe step="ref-document" port="result"/>
                 <p:pipe step="generate-toc" port="current"/>
             </p:input>
+            <p:with-option name="page-width" select="$page-width"/>
+            <p:with-option name="page-height" select="$page-height"/>
             <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -148,6 +152,8 @@
                     <p:input port="source-toc">
                         <p:pipe step="format-toc" port="source-toc"/>
                     </p:input>
+                    <p:with-option name="page-width" select="$page-width"/>
+                    <p:with-option name="page-height" select="$page-height"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
                 </louis:format-toc>
             </p:when>

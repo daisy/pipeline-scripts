@@ -59,7 +59,7 @@
             <p:input port="semantics" select="/*/louis:files/*[2]">
                 <p:pipe step="format-vertical-border" port="source"/>
             </p:input>
-            <p:with-option name="line-width" select="/*/@width">
+            <p:with-option name="page-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
             </p:with-option>
             <p:with-option name="ini-file" select="$liblouis-ini-file"/>

@@ -10,6 +10,7 @@
 
     <p:input port="source" primary="true"/>
     <p:input port="metadata"/>
+    <p:input port="pages" />
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     <p:option name="temp-dir" required="true"/>
     
@@ -54,6 +55,9 @@
     <louis:format>
         <p:input port="source">
             <p:pipe step="xml-to-pef.formatting" port="source"/>
+        </p:input>
+        <p:input port="pages">
+            <p:pipe step="xml-to-pef.formatting" port="pages"/>
         </p:input>
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>

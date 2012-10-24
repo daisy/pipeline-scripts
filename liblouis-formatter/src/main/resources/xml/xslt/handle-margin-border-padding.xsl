@@ -6,11 +6,12 @@
     exclude-result-prefixes="xs louis css"
     version="2.0">
 
-    <!-- Make margin-left and margin-right absolute -->
-    <!-- Turn borders into louis:border and louis:vertical-border -->
-    <!-- Turn padding into margin -->
-
-    <xsl:param name="page-width" as="xs:integer" select="40"/>
+    <!--
+      * Make margin-left and margin-right absolute
+      * Turn borders into louis:border and louis:vertical-border
+      * Turn padding into margin
+    -->
+    <xsl:param name="page-width" select="40"/>
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
@@ -20,7 +21,7 @@
         <xsl:apply-templates select="node()">
             <xsl:with-param name="left" select="0"/>
             <xsl:with-param name="right" select="0"/>
-            <xsl:with-param name="width" select="$page-width"/>
+            <xsl:with-param name="width" select="number($page-width)"/>
         </xsl:apply-templates>
     </xsl:template>
     
@@ -35,7 +36,7 @@
         <xsl:variable name="display" as="xs:string?"
             select="if (ancestor::louis:toc) then 'toc-item' else css:get-property-value(., 'display', true(), true(), true())"/>
         <xsl:choose>
-            <xsl:when test="$display and matches($display, '^(block|list-item|toc|toc-item)$') and matches(string(@style), 'margin|border|padding')">
+            <xsl:when test="$display and $display=('block','list-item','toc','toc-item') and matches(string(@style), 'margin|border|padding')">
                 <xsl:variable name="margin-left" select="number(css:get-property-value(., 'margin-left', true(), true(), true()))"/>
                 <xsl:variable name="margin-right" select="number(css:get-property-value(., 'margin-right', true(), true(), true()))"/>
                 <xsl:variable name="margin-top" select="number(css:get-property-value(., 'margin-top', true(), true(), true()))"/>
@@ -109,9 +110,9 @@
             <xsl:attribute name="margin-left" select="louis:to-string($left)"/>
             <xsl:attribute name="margin-right" select="louis:to-string($right)"/>
             <xsl:apply-templates select="node()">
-                <xsl:with-param name="left" select="$left + $right + $page-width - $width"/>
+                <xsl:with-param name="left" select="$left + $right + number($page-width) - $width"/>
                 <xsl:with-param name="right" select="0"/>
-                <xsl:with-param name="width" select="$page-width"/>
+                <xsl:with-param name="width" select="number($page-width)"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
@@ -144,10 +145,10 @@
         <louis:div>
             <xsl:attribute name="style" select="concat(
                 'display: block;',
-                'margin-top:', louis:to-string(if ($border-left='none' and $border-right='none' and $border-top='none') 
-                                         then $margin-top + $padding-top else $margin-top), ';',
-                                         'margin-bottom:', louis:to-string(if ($border-left='none' and $border-right='none' and $border-bottom='none')
-                                        then $margin-bottom + $padding-bottom else $margin-bottom), ';',
+                'margin-top:', louis:to-string(if ($border-left='none' and $border-right='none' and $border-top='none')
+                                               then $margin-top + $padding-top else $margin-top), ';',
+                'margin-bottom:', louis:to-string(if ($border-left='none' and $border-right='none' and $border-bottom='none')
+                                                  then $margin-bottom + $padding-bottom else $margin-bottom), ';',
                 'page-break-before:', $page-break-before, ';',
                 'page-break-after:', $page-break-after, ';',
                 'page-break-inside:', $page-break-inside, ';',
@@ -273,7 +274,7 @@
         <xsl:param name="left"/>
         <xsl:param name="width"/>
         <xsl:choose>
-            <xsl:when test="$width = $page-width">
+            <xsl:when test="$width = number($page-width)">
                 <louis:border>
                     <xsl:attribute name="louis:style" select="$style"/>
                 </louis:border>
@@ -306,11 +307,9 @@
     <xsl:function name="louis:append-properties" as="xs:string">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="append" as="xs:string"/>
-        <xsl:variable name="remove" as="xs:string*">
-            <xsl:for-each select="tokenize($append,';')">
-                <xsl:sequence select="normalize-space(substring-before(.,':'))"/>
-            </xsl:for-each>
-        </xsl:variable>
+        <xsl:variable name="remove" as="xs:string*"
+            select="for $property in tokenize($append,';')
+                      return normalize-space(substring-before($,':'))"/>
         <xsl:sequence select="string-join((css:remove-properties($style, $remove), $append), ';')"/>
     </xsl:function>
     

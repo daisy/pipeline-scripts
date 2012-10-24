@@ -10,9 +10,9 @@
     <p:input port="semantics" sequence="true"/>
     <p:option name="ini-file" required="true"/>
     <p:option name="table" required="true"/>
-    <p:option name="paged" required="false"/>
+    <p:option name="paged" required="false" select="'true'"/>
     <p:option name="page-height" required="false"/>
-    <p:option name="line-width" required="false"/>
+    <p:option name="page-width" required="true"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>
     

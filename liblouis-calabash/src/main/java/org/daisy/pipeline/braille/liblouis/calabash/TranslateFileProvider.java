@@ -29,7 +29,6 @@ import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
-import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
@@ -44,7 +43,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName _table = new QName("table");
 	private static final QName _paged = new QName("paged");
 	private static final QName _page_height = new QName("page-height");
-	private static final QName _line_width = new QName("line-width");
+	private static final QName _page_width = new QName("page-width");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
 	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
@@ -66,19 +65,19 @@ public class TranslateFileProvider implements XProcStepProvider {
 	}
 	
 	public class TranslateFile extends DefaultStep {
-	
+		
 		private ReadablePipe source = null;
 		private ReadablePipe styles = null;
 		private ReadablePipe semantics = null;
 		private WritablePipe result = null;
-	
+		
 		/**
 		 * Creates a new instance of TranslateFile
 		 */
 		private TranslateFile(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
-	
+		
 		@Override
 		public void setInput(String port, ReadablePipe pipe) {
 			if (port.equals("source"))
@@ -88,12 +87,12 @@ public class TranslateFileProvider implements XProcStepProvider {
 			else if (port.equals("semantics"))
 				semantics = pipe;
 		}
-	
+		
 		@Override
 		public void setOutput(String port, WritablePipe pipe) {
 			result = pipe;
 		}
-	
+		
 		@Override
 		public void reset() {
 			source.resetReader();
@@ -101,30 +100,26 @@ public class TranslateFileProvider implements XProcStepProvider {
 			semantics.resetReader();
 			result.resetWriter();
 		}
-	
+		
 		@Override
 		public void run() throws SaxonApiException {
-	
+			
 			super.run();
 			
 			try {
-
+				
 				Map<String,String> settings = new HashMap<String,String>();
 				settings.put("lineEnd", "\\n");
 				
 				// Get options
-				RuntimeValue paged = getOption(_paged);
-				RuntimeValue pageHeight = getOption(_page_height);
-				RuntimeValue lineWidth = getOption(_line_width);
-				if (paged != null && paged.getString().equals("false"))
-					settings.put("braillePages", "no");
-				if (pageHeight!=null)
-					settings.put("linesPerPage", pageHeight.getString());
-				if (lineWidth != null)
-					settings.put("cellsPerLine", lineWidth.getString());
-	
+				settings.put("cellsPerLine", getOption(_page_width).getString());
+				if (getOption(_paged, "true").equals("false"))
+					settings.put("braillePages",  "no");
+				else
+					settings.put("linesPerPage", getOption(_page_height).getString());
+				
 				URI tempURI = new URI(getOption(_temp_dir).getString());
-	
+				
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
 				if (styles != null) {
@@ -154,22 +149,22 @@ public class TranslateFileProvider implements XProcStepProvider {
 							if (name.contains("/"))
 								throw new XProcException(step.getNode(), "All semantic action files must be placed in temp-dir");
 							semanticFileNames.add(name); }}}
-	
+				
 				File tempDir = new File(tempURI);
 				
 				// Create liblouistutdml.ini
 				unpackIniFile(new URI(getOption(_ini_file).getString()).toURL(), tempDir);
-	
+				
 				// Write XML document to file
 				XdmNode xml = source.read();
 				File xmlFile = File.createTempFile("liblouisutdml.", ".xml", tempDir);
 				Serializer serializer = new Serializer(xmlFile);
 				serializer.serializeNode(xml);
 				serializer.close();
-	
+				
 				File bodyTempFile = new File(tempDir + File.separator + "lbx_body.temp");
 				bodyTempFile.delete();
-	
+				
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
 				liblouisutdml.translateFile(configFileNames, semanticFileNames, new URL(getOption(_table).getString()),
@@ -197,7 +192,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 				catch (FileNotFoundException e) {}
 				assert buffer.position() >= bodyLength;
 				buffer.flip();
-
+				
 				TreeWriter treeWriter = new TreeWriter(runtime);
 				treeWriter.startDocument(step.getNode().getBaseURI());
 				treeWriter.addStartElement(louis_output);
@@ -221,9 +216,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 					treeWriter.addText(new String(bytes, "UTF-8")); }
 				treeWriter.addEndElement();
 				treeWriter.endDocument();
-	
+				
 				//brailleFile.delete();
-	
+				
 				result.write(treeWriter.getResult()); }
 			
 			catch (Exception e) {

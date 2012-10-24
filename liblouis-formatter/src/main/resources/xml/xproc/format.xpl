@@ -3,11 +3,13 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:louis="http://liblouis.org/liblouis"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    exclude-inline-prefixes="louis pef px p"
+    exclude-inline-prefixes="louis pef px p css"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
+    <p:input port="pages" sequence="false" />
     <p:option name="temp-dir" required="true"/>
     <p:option name="title" required="false" select="''"/>
     <p:option name="creator" required="false" select="''"/>
@@ -29,6 +31,19 @@
         <p:empty/>
     </p:variable>
     <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+        <p:empty/>
+    </p:variable>
+    <p:variable name="size"
+        select="(for $property in tokenize(/css:pages/css:page[not(@name) and not(@position)][1]/@style, ';')
+                     [normalize-space(substring-before(.,':'))='size']
+                   return normalize-space(substring-after($property,':'))
+                )[matches(., '^[1-9][0-9]*(\.0*)?\s[1-9][0-9]*(\.0*)?$')][1]">
+        <p:pipe step="format" port="pages"/>
+    </p:variable>
+    <p:variable name="page-width" select="if ($size) then tokenize($size, '\s+')[1] else '40'">
+        <p:empty/>
+    </p:variable>
+    <p:variable name="page-height" select="if ($size) then tokenize($size, '\s+')[2] else '25'">
         <p:empty/>
     </p:variable>
 
@@ -55,6 +70,7 @@
             <p:input port="stylesheet">
                 <p:document href="../xslt/handle-margin-border-padding.xsl"/>
             </p:input>
+            <p:with-param name="page-width" select="$page-width"/>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
@@ -113,6 +129,12 @@
         <p:input port="source-toc">
             <p:pipe step="liblouis-files" port="result-toc"/>
         </p:input>
+        <p:with-option name="page-width" select="$page-width">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="page-height" select="$page-height">
+            <p:empty/>
+        </p:with-option>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
@@ -123,6 +145,8 @@
             <p:input port="source" select="/*/*[1]"/>
             <p:input port="styles" select="/*/louis:files/*[1]"/>
             <p:input port="semantics" select="/*/louis:files/*[2]"/>
+            <p:with-option name="page-width" select="$page-width"/>
+            <p:with-option name="page-height" select="$page-height"/>
             <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -133,8 +157,8 @@
     
     <p:for-each>
         <pef:text2pef>
-            <p:with-option name="temp-dir" select="$temp-dir"/>
             <p:with-option name="table" select="$pef-table"/>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>
     </p:for-each>
     

@@ -8,6 +8,9 @@
 
     <p:input port="source" primary="true"/>
     <p:output port="result" primary="true"/>
+    <p:output port="pages">
+        <p:pipe step="apply-stylesheet" port="pages"/>
+    </p:output>
     <p:option name="default-stylesheet" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/xproc/library.xpl"/>
@@ -48,7 +51,7 @@
     
     <!-- Apply stylesheet -->
     
-    <css:apply-stylesheet/>
+    <css:apply-stylesheet name="apply-stylesheet"/>
 
     <!-- Handle content on :before and :after pseudo-elements -->
     
