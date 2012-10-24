@@ -309,7 +309,7 @@
         <xsl:param name="append" as="xs:string"/>
         <xsl:variable name="remove" as="xs:string*"
             select="for $property in tokenize($append,';')
-                      return normalize-space(substring-before($,':'))"/>
+                      return normalize-space(substring-before($property,':'))"/>
         <xsl:sequence select="string-join((css:remove-properties($style, $remove), $append), ';')"/>
     </xsl:function>
     
