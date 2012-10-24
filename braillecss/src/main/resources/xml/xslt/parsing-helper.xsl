@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css" exclude-result-prefixes="xs css"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+    exclude-result-prefixes="xs css"
     version="2.0">
 
     <xsl:include href="supported-css.xsl"/>
@@ -17,15 +18,12 @@
             <xsl:choose>
                 <xsl:when test="not($validate) or css:applies-to($property-name, css:get-property-value($element, 'display', true(), true(), false()))">
                     <xsl:variable name="style" as="xs:string" select="string($element/@style)"/>
-                    <xsl:variable name="property-value" as="xs:string*">
-                        <xsl:if test="contains($style, $property-name)">
-                            <xsl:for-each select="tokenize($style,';')">
-                                <xsl:if test="normalize-space(substring-before(.,':'))=$property-name">
-                                    <xsl:sequence select="normalize-space(substring-after(.,':'))"/>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:if>
-                    </xsl:variable>
+                    <xsl:variable name="property-value" as="xs:string*"
+                        select="if (contains($style, $property-name))
+                                  then (for $property in tokenize($style,';')
+                                      [normalize-space(substring-before(.,':'))=$property-name]
+                                    return normalize-space(substring-after($property,':')))
+                                  else ()"/>
                     <xsl:variable name="property-value-or-default" as="xs:string?">
                         <xsl:choose>
                             <xsl:when test="$property-value[1]">
@@ -48,8 +46,7 @@
                                 <xsl:choose>
                                     <xsl:when test="$element/parent::*">
                                         <xsl:sequence
-                                            select="css:get-property-value($element/parent::*, $property-name, true(), $include-default, $validate)"
-                                        />
+                                            select="css:get-property-value($element/parent::*, $property-name, true(), $include-default, $validate)"/>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:if test="$include-default">
@@ -100,14 +97,8 @@
     <xsl:function name="css:remove-properties" as="xs:string">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="remove" as="xs:string*"/>
-        <xsl:variable name="name-value-pairs" as="xs:string*">
-            <xsl:for-each select="tokenize($style,';')">
-                <xsl:if test="not(index-of($remove, normalize-space(substring-before(.,':'))))">
-                    <xsl:sequence select="."/>
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:sequence select="string-join($name-value-pairs,';')"/>
+        <xsl:sequence select="string-join(tokenize($style,';')
+            [not(normalize-space(substring-before(.,':'))=$remove)],';')"/>
     </xsl:function>
 
 </xsl:stylesheet>
