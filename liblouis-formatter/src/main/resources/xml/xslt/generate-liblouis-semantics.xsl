@@ -9,7 +9,7 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl"/>
     
     <xsl:template match="/">
         <louis:semantics>
@@ -26,9 +26,7 @@
                 <xsl:otherwise>
                     <xsl:text>namespaces </xsl:text>
                     <xsl:text>louis=http://liblouis.org/liblouis&#xa;</xsl:text>
-                    <xsl:text>document </xsl:text>
-                    <xsl:value-of select="local-name(/*)"/>
-                    <xsl:text>&#xa;&#xa;</xsl:text>
+                    <xsl:text>document &amp;xpath(/*)&#xa;</xsl:text>
                     <xsl:for-each select="distinct-values(//louis:border/@louis:style/string())">
                         <xsl:text>boxline &amp;xpath(//louis:border[@louis:style='</xsl:text>
                         <xsl:value-of select="."/>
@@ -36,7 +34,6 @@
                         <xsl:value-of select="brl:unicode-braille-to-nabcc(.)"/>
                         <xsl:text>&#xa;</xsl:text>
                     </xsl:for-each>
-                    <xsl:text>&#xa;</xsl:text>
                     <xsl:for-each select="distinct-values(//*[not(self::louis:border)]/@louis:style/string())">
                         <xsl:if test="starts-with(., '#')">
                             <xsl:value-of select="substring-after(., '#')"/>

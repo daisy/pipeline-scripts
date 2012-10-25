@@ -3,11 +3,14 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    exclude-result-prefixes="xs louis css"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
+    exclude-result-prefixes="xs louis css c"
     version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes" name="louis-styles"/>
+    
+    <xsl:variable name="page-layout" select="collection()[2]"/>
     
     <xsl:variable name="root" select="/*"/>
     <xsl:key name="style-string" match="//*[@style]" use="string(@style)"/>
@@ -32,9 +35,11 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-
-    <xsl:template match="/">
-        <xsl:apply-templates/>
+    
+    <xsl:template match="/*">
+        <xsl:copy>
+            <xsl:apply-templates select="@*[not(name()='style')]|node()"/>
+        </xsl:copy>
         <xsl:result-document href="louis-styles.xml" format="louis-styles">
             <louis:styles>
                 <xsl:choose>
@@ -50,6 +55,10 @@
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise>
+                        <xsl:call-template name="print-liblouis-style">
+                            <xsl:with-param name="style" select="string(@style)"/>
+                            <xsl:with-param name="style-name" select="'document'"/>
+                        </xsl:call-template>
                         <xsl:for-each select="distinct-values(//*[not(@css:toc-item)]/@style/string())">
                             <xsl:variable name="display" select="louis:get-property-value(., 'display')"/>
                             <xsl:if test="$display=('block','list-item','toc')">
@@ -79,17 +88,17 @@
         <xsl:sequence select="$style-name"/>
         <xsl:text>&#xa;</xsl:text>
         
-        <xsl:variable name="display" select="louis:get-property-value(., 'display')"/>
-        <xsl:variable name="text-align" select="louis:get-property-value(., 'text-align')"/>
-        <xsl:variable name="louis-abs-margin-left" select="louis:get-property-value(., 'louis-abs-margin-left')"/>
-        <xsl:variable name="louis-abs-margin-right" select="louis:get-property-value(., 'louis-abs-margin-right')"/>
-        <xsl:variable name="margin-top" select="louis:get-property-value(., 'margin-top')"/>
-        <xsl:variable name="margin-bottom" select="louis:get-property-value(., 'margin-bottom')"/>
-        <xsl:variable name="text-indent" select="louis:get-property-value(., 'text-indent')"/>
-        <xsl:variable name="page-break-before" select="louis:get-property-value(., 'page-break-before')"/>
-        <xsl:variable name="page-break-after" select="louis:get-property-value(., 'page-break-after')"/>
-        <xsl:variable name="page-break-inside" select="louis:get-property-value(., 'page-break-inside')"/>
-        <xsl:variable name="orphans" select="louis:get-property-value(., 'orphans')"/>
+        <xsl:variable name="display" select="louis:get-property-value($style, 'display')"/>
+        <xsl:variable name="text-align" select="louis:get-property-value($style, 'text-align')"/>
+        <xsl:variable name="louis-abs-margin-left" select="louis:get-property-value($style, 'louis-abs-margin-left')"/>
+        <xsl:variable name="louis-abs-margin-right" select="louis:get-property-value($style, 'louis-abs-margin-right')"/>
+        <xsl:variable name="margin-top" select="louis:get-property-value($style, 'margin-top')"/>
+        <xsl:variable name="margin-bottom" select="louis:get-property-value($style, 'margin-bottom')"/>
+        <xsl:variable name="text-indent" select="louis:get-property-value($style, 'text-indent')"/>
+        <xsl:variable name="page-break-before" select="louis:get-property-value($style, 'page-break-before')"/>
+        <xsl:variable name="page-break-after" select="louis:get-property-value($style, 'page-break-after')"/>
+        <xsl:variable name="page-break-inside" select="louis:get-property-value($style, 'page-break-inside')"/>
+        <xsl:variable name="orphans" select="louis:get-property-value($style, 'orphans')"/>
         
         <!-- format -->
         
@@ -178,6 +187,29 @@
         
         <xsl:if test="louis:is-numeric($orphans)">
             <xsl:value-of select="concat('   orphanControl ', louis:format-number($orphans), '&#xa;')"/>
+        </xsl:if>
+        
+        <!-- braillePageNumberFormat -->
+        <xsl:if test="$style-name='document'">
+            <xsl:variable name="braille-page-format"
+                select="$page-layout/c:param-set/c:param[@name='braille-page-format']/@value"/>
+            <xsl:variable name="braillePageNumberFormat">
+                <xsl:choose>
+                    <xsl:when test="$braille-page-format='decimal'">
+                        <xsl:text>normal</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$braille-page-format='lower-roman'">
+                        <xsl:text>roman</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$braille-page-format='prefix-p'">
+                        <xsl:text>p</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>blank</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:value-of select="concat('   braillePageNumberFormat ', $braillePageNumberFormat, '&#xa;')"/>
         </xsl:if>
         
         <xsl:text>&#xa;</xsl:text>

@@ -33,56 +33,73 @@
     <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
         <p:empty/>
     </p:variable>
-    <p:variable name="size"
-        select="(for $property in tokenize(/css:pages/css:page[not(@name) and not(@position)][1]/@style, ';')
-                     [normalize-space(substring-before(.,':'))='size']
-                   return normalize-space(substring-after($property,':'))
-                )[matches(., '^[1-9][0-9]*(\.0*)?\s[1-9][0-9]*(\.0*)?$')][1]">
-        <p:pipe step="format" port="pages"/>
-    </p:variable>
-    <p:variable name="page-width" select="if ($size) then tokenize($size, '\s+')[1] else '40'">
-        <p:empty/>
-    </p:variable>
-    <p:variable name="page-height" select="if ($size) then tokenize($size, '\s+')[2] else '25'">
-        <p:empty/>
-    </p:variable>
-
+    
+    <p:for-each>
+        <p:add-xml-base/>
+    </p:for-each>
+    
+    <p:for-each name="get-page-layout">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:xslt name="page-layout">
+            <p:input port="source">
+                <p:pipe step="get-page-layout" port="current"/>
+                <p:pipe step="format" port="pages"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/get-page-layout.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:wrap-sequence wrapper="wrapper">
+            <p:input port="source">
+                <p:pipe step="get-page-layout" port="current"/>
+                <p:pipe step="page-layout" port="result"/>
+            </p:input>
+        </p:wrap-sequence>
+    </p:for-each>
+    
     <p:for-each name="handle-css">
         <p:output port="result" sequence="true" primary="true"/>
-        <p:add-xml-base/>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/handle-print-page.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/handle-toc.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/handle-margin-border-padding.xsl"/>
-            </p:input>
-            <p:with-param name="page-width" select="$page-width"/>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/normalize-css.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
+        <p:filter select="/*/*[2]" name="page-layout"/>
+        <p:viewport match="/*/*[1]">
+            <p:viewport-source>
+                <p:pipe step="handle-css" port="current"/>
+            </p:viewport-source>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/handle-print-page.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/handle-toc.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/handle-margin-border-padding.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:pipe step="page-layout" port="result"/>
+                </p:input>
+            </p:xslt>
+            <p:xslt>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/normalize-css.xsl"/>
+                </p:input>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+        </p:viewport>
     </p:for-each>
     
     <p:group name="extract-toc">
@@ -129,12 +146,6 @@
         <p:input port="source-toc">
             <p:pipe step="liblouis-files" port="result-toc"/>
         </p:input>
-        <p:with-option name="page-width" select="$page-width">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="page-height" select="$page-height">
-            <p:empty/>
-        </p:with-option>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
@@ -143,10 +154,11 @@
     <p:for-each name="translate-file">
         <louis:translate-file>
             <p:input port="source" select="/*/*[1]"/>
-            <p:input port="styles" select="/*/louis:files/*[1]"/>
-            <p:input port="semantics" select="/*/louis:files/*[2]"/>
-            <p:with-option name="page-width" select="$page-width"/>
-            <p:with-option name="page-height" select="$page-height"/>
+            <p:input port="styles" select="/*/*[2]"/>
+            <p:input port="semantics" select="/*/*[3]"/>
+            <p:input port="page-layout" select="/*/*[4]">
+                <p:pipe step="translate-file" port="current"/>
+            </p:input>
             <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>

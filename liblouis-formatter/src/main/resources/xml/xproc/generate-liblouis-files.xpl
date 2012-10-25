@@ -27,9 +27,7 @@
 
     <louis:store-file name="styles-directory" suffix=".cfg">
         <p:input port="source">
-            <p:inline>
-<louis:config-file>
-style no-pagenum
+            <p:inline><louis:config-file>style no-pagenum
     braillePageNumberFormat blank
 
 style contentsheader
@@ -44,8 +42,7 @@ style preformatted-line
     firstLineIndent 0
     format leftJustified
     skipNumberLines yes
-</louis:config-file>
-            </p:inline>
+</louis:config-file></p:inline>
         </p:input>
         <p:input port="directory">
             <p:pipe step="directory" port="result"/>
@@ -54,16 +51,13 @@ style preformatted-line
     
     <louis:store-file name="semantics-directory" suffix=".sem">
         <p:input port="source">
-            <p:inline>
-<louis:semantic-file>
-skip &amp;xpath(//*[@louis:style='skip'])
+            <p:inline><louis:semantic-file>skip &amp;xpath(//*[@louis:style='skip'])
 no-pagenum &amp;xpath(//louis:no-pagenum)
 contentsheader &amp;xpath(//louis:toc[parent::louis:no-pagenum])
 none &amp;xpath(//louis:toc[not(parent::louis:no-pagenum)])
 preformatted-line &amp;xpath(//louis:preformatted//louis:line)
 pagenum &amp;xpath(//louis:print-page)
-</louis:semantic-file>
-            </p:inline>
+</louis:semantic-file></p:inline>
         </p:input>
         <p:input port="directory">
             <p:pipe step="directory" port="result"/>
@@ -81,6 +75,7 @@ pagenum &amp;xpath(//louis:print-page)
             <p:pipe step="store-file" port="result"/>
         </p:output>
         <p:xslt name="extract-liblouis-styles">
+            <p:input port="source" select="/*/*"/>
             <p:input port="stylesheet">
                 <p:document href="../xslt/extract-liblouis-styles.xsl"/>
             </p:input>
@@ -164,40 +159,49 @@ pagenum &amp;xpath(//louis:print-page)
         </louis:store-file>
     </p:for-each>
     
-    <p:pack name="liblouis-files" wrapper="louis:files">
-        <p:input port="source">
-            <p:pipe step="styles" port="liblouis-files"/>
-        </p:input>
-        <p:input port="alternate">
-            <p:pipe step="semantics" port="liblouis-files"/>
-        </p:input>
-    </p:pack>
+    <p:group name="result">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:pack wrapper="wrapper">
+            <p:input port="source">
+                <p:pipe step="styles" port="result"/>
+            </p:input>
+            <p:input port="alternate">
+                <p:pipe step="styles" port="liblouis-files"/>
+            </p:input>
+        </p:pack>
+        <p:pack wrapper="wrapper">
+            <p:input port="alternate">
+                <p:pipe step="semantics" port="liblouis-files"/>
+            </p:input>
+        </p:pack>
+        <p:pack wrapper="wrapper">
+            <p:input port="alternate" select="/*/*[2]">
+                <p:pipe step="generate-liblouis-files" port="source"/>
+            </p:input>
+        </p:pack>
+        <p:for-each>
+            <p:unwrap match="/*//wrapper"/>
+        </p:for-each>
+    </p:group>
     
-    <p:pack name="result" wrapper="pack">
-        <p:input port="source">
-            <p:pipe step="styles" port="result"/>
-        </p:input>
-        <p:input port="alternate">
-            <p:pipe step="liblouis-files" port="result"/>
-        </p:input>
-    </p:pack>
+    <p:group name="result-toc">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:pack wrapper="wrapper">
+            <p:input port="source">
+                <p:pipe step="toc-styles" port="result"/>
+            </p:input>
+            <p:input port="alternate">
+                <p:pipe step="toc-styles" port="liblouis-files"/>
+            </p:input>
+        </p:pack>
+        <p:pack wrapper="wrapper">
+            <p:input port="alternate">
+                <p:pipe step="toc-semantics" port="liblouis-files"/>
+            </p:input>
+        </p:pack>
+        <p:for-each>
+            <p:unwrap match="/*//wrapper"/>
+        </p:for-each>
+    </p:group>
     
-    <p:pack name="liblouis-toc-files" wrapper="louis:files">
-        <p:input port="source">
-            <p:pipe step="toc-styles" port="liblouis-files"/>
-        </p:input>
-        <p:input port="alternate">
-            <p:pipe step="toc-semantics" port="liblouis-files"/>
-        </p:input>
-    </p:pack>
-    
-    <p:pack name="result-toc" wrapper="pack">
-        <p:input port="source">
-            <p:pipe step="toc-styles" port="result"/>
-        </p:input>
-        <p:input port="alternate">
-            <p:pipe step="liblouis-toc-files" port="result"/>
-        </p:input>
-    </p:pack>
-
 </p:declare-step>

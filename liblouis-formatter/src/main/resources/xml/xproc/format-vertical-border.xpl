@@ -53,15 +53,15 @@
         </p:insert>
         
         <louis:translate-file paged="false">
-            <p:input port="styles" select="/*/louis:files/*[1]">
+            <p:input port="styles" select="/*/*[2]">
                 <p:pipe step="format-vertical-border" port="source"/>
             </p:input>
-            <p:input port="semantics" select="/*/louis:files/*[2]">
+            <p:input port="semantics" select="/*/*[3]">
                 <p:pipe step="format-vertical-border" port="source"/>
             </p:input>
-            <p:with-option name="page-width" select="/*/@width">
+            <p:with-param port="page-layout" name="page-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
-            </p:with-option>
+            </p:with-param>
             <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -70,9 +70,6 @@
         <p:xslt name="preformatted">
             <p:input port="stylesheet">
                 <p:document href="../xslt/read-liblouis-output.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
             </p:input>
             <p:with-param name="width" select="/*/@width">
                 <p:pipe step="format" port="current"/>

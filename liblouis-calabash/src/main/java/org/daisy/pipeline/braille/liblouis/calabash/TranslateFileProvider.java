@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
@@ -44,6 +46,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName _paged = new QName("paged");
 	private static final QName _page_height = new QName("page-height");
 	private static final QName _page_width = new QName("page-width");
+	private static final QName _print_page_position = new QName("print-page-position");
+	private static final QName _braille_page_position = new QName("braille-page-position");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
 	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
@@ -70,6 +74,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 		private ReadablePipe styles = null;
 		private ReadablePipe semantics = null;
 		private WritablePipe result = null;
+		private Hashtable<QName,RuntimeValue> pageLayout = new Hashtable<QName,RuntimeValue> ();
 		
 		/**
 		 * Creates a new instance of TranslateFile
@@ -94,6 +99,19 @@ public class TranslateFileProvider implements XProcStepProvider {
 		}
 		
 		@Override
+		public void setParameter(QName name, RuntimeValue value) {
+			setParameter("page-layout", name, value);
+		}
+		
+		@Override
+		public void setParameter(String port, QName name, RuntimeValue value) {
+			if (port.equals("page-layout"))
+				pageLayout.put(name, value);
+			else
+				super.setParameter(port, name, value);
+		}
+		
+		@Override
 		public void reset() {
 			source.resetReader();
 			styles.resetReader();
@@ -112,11 +130,26 @@ public class TranslateFileProvider implements XProcStepProvider {
 				settings.put("lineEnd", "\\n");
 				
 				// Get options
-				settings.put("cellsPerLine", getOption(_page_width).getString());
-				if (getOption(_paged, "true").equals("false"))
-					settings.put("braillePages",  "no");
-				else
-					settings.put("linesPerPage", getOption(_page_height).getString());
+				if (getOption(_paged) != null)
+					settings.put("braillePages",  getOption(_paged).getBoolean() ? "yes" : "no");
+				if (pageLayout.containsKey(_page_width))
+					settings.put("cellsPerLine", pageLayout.get(_page_width).getString());
+				if (pageLayout.containsKey(_page_height))
+					settings.put("linesPerPage", pageLayout.get(_page_height).getString());
+				if (pageLayout.containsKey(_braille_page_position)) {
+					String position = pageLayout.get(_braille_page_position).getString();
+					if (position.equals("top-right") || position.equals("bottom-right")) {
+						settings.put("braillePageNumberAt", position.replace("-right", ""));
+						settings.put("numberBraillePages", "yes"); }
+					else if (position.equals("none"))
+						settings.put("numberBraillePages", "no"); }
+				if (pageLayout.containsKey(_print_page_position)) {
+					String position = pageLayout.get(_print_page_position).getString();
+					if (position.equals("top-right") || position.equals("bottom-right")) {
+						settings.put("printPageNumberAt", position.replace("-right", ""));
+						settings.put("printPages", "yes"); }
+					else if (position.equals("none"))
+						settings.put("printPages", "no"); }
 				
 				URI tempURI = new URI(getOption(_temp_dir).getString());
 				
