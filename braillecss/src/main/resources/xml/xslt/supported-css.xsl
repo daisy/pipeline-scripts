@@ -125,8 +125,8 @@
                  'auto',
                  'auto',
                  'auto',
-                 '2.0',
-                 '2.0',
+                 '0.0',
+                 '0.0',
                  'auto')"/>
     
     <xsl:variable name="inherited-properties" as="xs:string*"
