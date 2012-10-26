@@ -32,7 +32,7 @@
                                 </xsl:if>
                             </xsl:when>
                             <xsl:when test="css:is-inherited-property($property-name)">
-                                <xsl:sequence select="'inherit'"/>
+                                <xsl:sequence select="$INHERIT"/>
                             </xsl:when>
                             <xsl:when test="$include-default">
                                 <xsl:sequence select="css:get-default-value($property-name)"/>
@@ -42,7 +42,7 @@
                     <xsl:if test="$property-value-or-default">
                         <xsl:choose>
                             <xsl:when
-                                test="$property-value-or-default='inherit' and $concretize-inherit">
+                                test="$property-value-or-default=$INHERIT and $concretize-inherit">
                                 <xsl:choose>
                                     <xsl:when test="$element/parent::*">
                                         <xsl:sequence

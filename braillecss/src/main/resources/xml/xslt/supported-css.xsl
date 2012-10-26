@@ -28,37 +28,24 @@
                  'page-break-inside',
                  'orphans',
                  'widows',
-                 'page')"/>
+                 'page',
+                 'font-style',
+                 'font-weight',
+                 'text-decoration',
+                 'color')"/>
 
-    <xsl:variable name="ALWAYS" select="'always'"/>
     <xsl:variable name="ATTR" select="'attr\(.+?\)'"/>
-    <xsl:variable name="AUTO" select="'auto'"/>
-    <xsl:variable name="AVOID" select="'avoid'"/>
-    <xsl:variable name="BLOCK" select="'block'"/>
+    <xsl:variable name="COLOR" select="'#[0-9A-F]{6}'"/>
     <xsl:variable name="CONTENT" select="'content\(\)'"/>
-    <xsl:variable name="CENTER" select="'center'"/>
-    <xsl:variable name="DECIMAL" select="'decimal'"/>
     <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
     <xsl:variable name="IDENT" select="'\p{L}|_(\p{L}|_|-)*'"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
-    <xsl:variable name="INLINE" select="'inline'"/>
     <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
-    <xsl:variable name="JUSTIFY" select="'justify'"/>
-    <xsl:variable name="LEFT" select="'left'"/>
-    <xsl:variable name="LIST_ITEM" select="'list-item'"/>
-    <xsl:variable name="LOWER_ALPHA" select="'lower-alpha'"/>
-    <xsl:variable name="LOWER_ROMAN" select="'lower-roman'"/>
     <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
-    <xsl:variable name="NONE" select="'none'"/>
-    <xsl:variable name="RIGHT" select="'right'"/>
     <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
-    <xsl:variable name="TOC" select="'toc'"/>
-    <xsl:variable name="TOC_ITEM" select="'toc-item'"/>
-    <xsl:variable name="UPPER_ALPHA" select="'upper-alpha'"/>
-    <xsl:variable name="UPPER_ROMAN" select="'upper-roman'"/>
     
     <xsl:variable name="valid-properties" as="xs:string*"
-        select="(concat('^(', $BLOCK, '|', $INLINE, '|', $LIST_ITEM, '|', $NONE, '|', $TOC, '|', $TOC_ITEM, ')$'),
+        select="(concat('^(', 'block|inline|list-item|none|toc|toc-item', ')$'),
                  concat('^(', $INTEGER, ')$'),
                  concat('^(', $INTEGER, ')$'),
                  concat('^(', $NATURAL_NUMBER, ')$'),
@@ -67,43 +54,51 @@
                  concat('^(', $NATURAL_NUMBER, ')$'),
                  concat('^(', $NATURAL_NUMBER, ')$'),
                  concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', $NONE, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', $NONE, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', $NONE, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', $NONE, ')$'),
+                 concat('^(', $DOT_PATTERN, '|', 'none', ')$'),
+                 concat('^(', $DOT_PATTERN, '|none', ')$'),
+                 concat('^(', $DOT_PATTERN, '|none', ')$'),
+                 concat('^(', $DOT_PATTERN, '|none', ')$'),
                  concat('^(', $INTEGER, '|', $INHERIT, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', $DECIMAL, '|', $LOWER_ALPHA, '|', $LOWER_ROMAN, '|', $NONE, '|', $UPPER_ALPHA, '|', $UPPER_ROMAN, '|', $INHERIT, ')$'),
-                 concat('^(', $CENTER, '|', $JUSTIFY, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, ')$'),
-                 concat('^(', $ALWAYS, '|', $AUTO, '|', $AVOID, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, ')$'),
-                 concat('^(', $ALWAYS, '|', $AUTO, '|', $AVOID, '|', $LEFT, '|', $RIGHT, '|', $INHERIT, ')$'),
-                 concat('^(', $AUTO, '|', $AVOID, '|', $INHERIT, ')$'),
+                 concat('^(', $DOT_PATTERN, '|demical|lower-alpha|lower-roman|none|upper-alpha|upper-roman|', $INHERIT, ')$'),
+                 concat('^(', 'center|justify|left|right|', $INHERIT, ')$'),
+                 concat('^(', 'always|auto|avoid|left|right|', $INHERIT, ')$'),
+                 concat('^(', 'always|auto|avoid|left|right|', $INHERIT, ')$'),
+                 concat('^(', 'auto|avoid|', $INHERIT, ')$'),
                  concat('^(', $INTEGER, '|', $INHERIT, ')$'),
                  concat('^(', $INTEGER, '|', $INHERIT, ')$'),
-                 concat('^(', $IDENT, '|', $AUTO, ')$ '))"/>
+                 concat('^(', $IDENT, '|auto', ')$ '),
+                 concat('^(', 'normal|italic|oblique|', $INHERIT, ')$ '),
+                 concat('^(', 'normal|bold|100|200|300|400|500|600|700|800|900|', $INHERIT, ')$ '),
+                 concat('^(', 'none|underline|overline|line-through|blink', $INHERIT, ')$ '),
+                 concat('^(', $COLOR, '|', $INHERIT, ')$ '))"/>
     
     <xsl:variable name="applies-to" as="xs:string*"
         select="('.*',
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '|', $TOC_ITEM, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, '|', $TOC_ITEM, ')$'),
-                 concat('^(', $LIST_ITEM, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'),
-                 concat('^(', $BLOCK, '|', $LIST_ITEM, '|', $TOC, ')$'))"/>
+                 '^(block|list-item|toc|toc-item)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc|toc-item)$',
+                 '^(list-item)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^(block|list-item|toc)$',
+                 '^inline$',
+                 '^inline$',
+                 '^inline$',
+                 '^inline$')"/>
     
     <xsl:variable name="default-values" as="xs:string*"
         select="('inline',
@@ -127,7 +122,39 @@
                  'auto',
                  '0.0',
                  '0.0',
-                 'auto')"/>
+                 'auto',
+                 'normal',
+                 'normal',
+                 'none',
+                 '#000000')"/>
+    
+    <xsl:variable name="media" as="xs:string*"
+        select="('embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'embossed',
+                 'print',
+                 'print',
+                 'print',
+                 'print')"/>
     
     <xsl:variable name="inherited-properties" as="xs:string*"
         select="('-brl-text-indent',
@@ -135,7 +162,11 @@
                  'text-align',
                  'orphans',
                  'widows',
-                 'page')"/>
+                 'page',
+                 'font-style',
+                 'font-weight',
+                 'text-decoration',
+                 'color')"/>
 
     <xsl:function name="css:get-properties" as="xs:string*">
         <xsl:sequence select="$properties"/>

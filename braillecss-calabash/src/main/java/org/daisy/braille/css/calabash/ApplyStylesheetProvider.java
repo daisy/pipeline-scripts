@@ -25,8 +25,11 @@ import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
+import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.domassign.Analyzer;
+import cz.vutbr.web.domassign.SingleMapNodeData;
 import cz.vutbr.web.domassign.StyleMap;
+import cz.vutbr.web.domassign.SupportedCSS21;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
@@ -41,13 +44,16 @@ import net.sf.saxon.tree.util.NamespaceIterator;
 
 import org.daisy.braille.css.BrailleCSSNodeData;
 import org.daisy.braille.css.SupportedBrailleCSS;
-import org.daisy.pipeline.braille.Utilities.Strings;
+import org.daisy.braille.css.SupportedPrintCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import static org.daisy.pipeline.braille.Utilities.Strings.join;
+import static org.daisy.pipeline.braille.Utilities.Strings.normalizeSpace;
 
 public class ApplyStylesheetProvider implements XProcStepProvider {
 	
@@ -56,10 +62,10 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 		return new ApplyStylesheet(runtime, step);
 	}
 	
-	static {
-		CSSFactory.registerSupportedCSS(SupportedBrailleCSS.getInstance());
-		CSSFactory.registerNodeDataInstance(BrailleCSSNodeData.class);
-	}
+	private static SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
+	private static SupportedCSS printCSS = SupportedPrintCSS.getInstance();
+	private static Class<? extends NodeData> brailleNodeDataImpl = BrailleCSSNodeData.class;
+	private static Class<? extends NodeData> printNodeDataImpl = SingleMapNodeData.class;
 	
 	public void setUriResolver(URIResolver resolver) {
 		CSSFactory.registerURIResolver(resolver);
@@ -101,9 +107,10 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			try {
 				XdmNode source = sourcePipe.read();
 				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-				StyleSheet sheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
-				resultPipe.write((new InlineCSSWriter(doc, sheet, runtime)).getResult());
-				pagesPipe.write(new CSSPagesWriter(new URI(doc.getBaseURI()), sheet, runtime).getResult()); }
+				StyleSheet brailleSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
+				StyleSheet printSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "print");
+				resultPipe.write((new InlineCSSWriter(doc, brailleSheet, printSheet, runtime)).getResult());
+				pagesPipe.write(new CSSPagesWriter(new URI(doc.getBaseURI()), brailleSheet, runtime).getResult()); }
 			catch (Exception e) {
 				throw new RuntimeException(e); }
 		}
@@ -113,20 +120,23 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	private static final String CSS_PREFIX = "css";
 	
 	private static final QName _style = new QName("style");
-	private static final QName _name = new QName("name");
-	private static final QName _position = new QName("position");
 	private static final QName _css_before = new QName(CSS_PREFIX, CSS_URI, "before");
 	private static final QName _css_after = new QName(CSS_PREFIX, CSS_URI, "after");
-	private static final QName _css_page = new QName(CSS_PREFIX, CSS_URI, "page");
-	private static final QName _css_pages = new QName(CSS_PREFIX, CSS_URI, "pages");
 	
 	private static class InlineCSSWriter extends TreeWriter {
 		
-		private final StyleMap stylemap;
+		private final StyleMap brailleStylemap;
+		private final StyleMap printStylemap;
 		
-		public InlineCSSWriter(Document document, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
+		public InlineCSSWriter(Document document, StyleSheet brailleStylesheet,
+				StyleSheet printStylesheet, XProcRuntime xproc) throws Exception {
 			super(xproc);
-			stylemap = new Analyzer(stylesheet).evaluateDOM(document, "embossed", false);
+			CSSFactory.registerSupportedCSS(brailleCSS);
+			CSSFactory.registerNodeDataInstance(brailleNodeDataImpl);
+			brailleStylemap = new Analyzer(brailleStylesheet).evaluateDOM(document, "embossed", false);
+			CSSFactory.registerSupportedCSS(printCSS);
+			CSSFactory.registerNodeDataInstance(printNodeDataImpl);
+			printStylemap = new Analyzer(printStylesheet).evaluateDOM(document, "print", false);
 			startDocument(new URI(document.getBaseURI()));
 			traverse(document.getDocumentElement());
 			endDocument();
@@ -140,28 +150,33 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				for (int i=0; i<attributes.getLength(); i++) {
 					Node attr = attributes.item(i);
 					if ("http://www.w3.org/2000/xmlns/".equals(attr.getNamespaceURI())) {}
+					else if ("style".equals(attr.getLocalName())) {}
 					else if ("http://www.w3.org/XML/1998/namespace".equals(attr.getNamespaceURI()))
 						addAttribute(new QName("xml", attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
 					else
 						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue()); }
-				NodeData data = stylemap.get((Element)node);
-				if (data != null) {
-					String style = Strings.normalizeSpace(data);
-					if (style.length() > 0)
-						addAttribute(_style, style); }
+				String style = "";
+				NodeData brailleData = brailleStylemap.get((Element)node);
+				if (brailleData != null)
+					style += normalizeSpace(brailleData);
+				NodeData printData = printStylemap.get((Element)node);
+				if (printData != null)
+					style += normalizeSpace(printData);
+				if (style.length() > 0)
+					addAttribute(_style, style);
 				receiver.startContent();
-				NodeData beforeData = stylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
+				NodeData beforeData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
 				if (beforeData != null) {
-					String beforeStyle = Strings.normalizeSpace(beforeData);
+					String beforeStyle = normalizeSpace(beforeData);
 					if (beforeStyle.length() > 0) {
 						addStartElement(_css_before);
 						addAttribute(_style, beforeStyle);
 						addEndElement(); }}
 				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling())
 					traverse(child);
-				NodeData afterData = stylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
+				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null) {
-					String afterStyle = Strings.normalizeSpace(afterData);
+					String afterStyle = normalizeSpace(afterData);
 					if (afterStyle.length() > 0) {
 						addStartElement(_css_after);
 						addAttribute(_style, afterStyle);
@@ -193,6 +208,11 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 		}
 	}
 	
+	private static final QName _css_page = new QName(CSS_PREFIX, CSS_URI, "page");
+	private static final QName _css_pages = new QName(CSS_PREFIX, CSS_URI, "pages");
+	private static final QName _name = new QName("name");
+	private static final QName _position = new QName("position");
+	
 	private static class CSSPagesWriter extends TreeWriter {
 		public CSSPagesWriter(URI base, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
 			super(xproc);
@@ -205,13 +225,13 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				String pseudo = page.getPseudo();
 				if (name != null) addAttribute(_name, name);
 				if (pseudo != null) addAttribute(_position, pseudo);
-				String pageStyle = Strings.normalizeSpace(Strings.join(
+				String pageStyle = normalizeSpace(join(
 						Iterables.<Declaration>filter(page, Declaration.class), " "));
 				if (!"".equals(pageStyle))
 					addAttribute(_style, pageStyle);
 				for (RuleMargin margin : Iterables.<RuleMargin>filter(page, RuleMargin.class)) {
 					addStartElement(new QName(CSS_PREFIX, CSS_URI, margin.getMarginArea().value));
-					String marginStyle = Strings.normalizeSpace(Strings.join(margin, " "));
+					String marginStyle = normalizeSpace(join(margin, " "));
 					if (!"".equals(marginStyle))
 						addAttribute(_style, marginStyle);
 					addEndElement(); }

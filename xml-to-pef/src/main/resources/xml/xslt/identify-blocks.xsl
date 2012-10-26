@@ -31,6 +31,7 @@
 							<xsl:otherwise>
 								<xsl:element name="css:block">
 									<xsl:attribute name="xml:lang" select="ancestor::*[@xml:lang][1]/@xml:lang"/>
+									<xsl:call-template name="style-attribute"/>
 									<xsl:for-each select="current-group()">
 										<xsl:sequence select="."/>
 									</xsl:for-each>
@@ -44,6 +45,19 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template name="style-attribute">
+		<xsl:variable name="element" select="if (self::*) then . else parent::*" as="element()"/>
+		<xsl:variable name="style" as="xs:string"
+			select="string-join(
+				(for $name in $properties[not(.='display')][css:applies-to(., 'inline')] return
+					(for $value in css:get-property-value($element, $name, true(), false(), false()) return
+						concat($name, ':', $value))
+				), ';')"/>
+		<xsl:if test="$style!=''">
+			<xsl:attribute name="style" select="$style"/>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="*" mode="no-display">

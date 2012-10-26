@@ -38,7 +38,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 20;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 24;
 
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 
