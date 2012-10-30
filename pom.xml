@@ -30,6 +30,7 @@
     <module>zedai-to-epub3</module>
     <module>zedai-to-html</module>
     <module>dtbook-validator</module>
+    <module>html-to-dtbook</module>
   </modules>
 
 </project>
