@@ -45,7 +45,7 @@
     <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
     
     <xsl:variable name="valid-properties" as="xs:string*"
-        select="(concat('^(', 'block|inline|list-item|none|toc|toc-item', ')$'),
+        select="(concat('^(', 'block|inline|list-item|none|toc|toc-item|page-break', ')$'),
                  concat('^(', $INTEGER, ')$'),
                  concat('^(', $INTEGER, ')$'),
                  concat('^(', $NATURAL_NUMBER, ')$'),

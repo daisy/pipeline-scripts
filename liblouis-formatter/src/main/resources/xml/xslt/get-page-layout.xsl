@@ -2,8 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+    xmlns:louis="http://liblouis.org/liblouis"
     xmlns:c="http://www.w3.org/ns/xproc-step"
-    exclude-result-prefixes="xs css c"
+    exclude-result-prefixes="xs css c louis"
     version="2.0">
 
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -83,6 +84,12 @@
                     </xsl:attribute>
                 </xsl:element>
             </xsl:if>
+            <xsl:element name="c:param">
+                <xsl:attribute name="name" select="'page-break-separator'"/>
+                <xsl:attribute name="value"
+                    select="if (//louis:print-page[@break='true'] and not(//louis:print-page[@break='false']))
+                              then 'true' else 'false'"/>
+            </xsl:element>
         </xsl:element>
     </xsl:template>
 </xsl:stylesheet>

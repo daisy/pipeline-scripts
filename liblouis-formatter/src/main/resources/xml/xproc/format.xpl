@@ -36,6 +36,14 @@
     
     <p:for-each>
         <p:add-xml-base/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-print-page.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
     </p:for-each>
     
     <p:for-each name="get-page-layout">
@@ -67,14 +75,6 @@
             <p:viewport-source>
                 <p:pipe step="handle-css" port="current"/>
             </p:viewport-source>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/handle-print-page.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
             <p:xslt>
                 <p:input port="stylesheet">
                     <p:document href="../xslt/handle-toc.xsl"/>

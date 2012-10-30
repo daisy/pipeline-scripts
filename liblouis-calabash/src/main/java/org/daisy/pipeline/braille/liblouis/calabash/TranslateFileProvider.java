@@ -48,6 +48,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName _page_width = new QName("page-width");
 	private static final QName _print_page_position = new QName("print-page-position");
 	private static final QName _braille_page_position = new QName("braille-page-position");
+	private static final QName _page_break_separator = new QName("page-break-separator");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
 	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
@@ -150,6 +151,12 @@ public class TranslateFileProvider implements XProcStepProvider {
 						settings.put("printPages", "yes"); }
 					else if (position.equals("none"))
 						settings.put("printPages", "no"); }
+				if (pageLayout.containsKey(_page_break_separator)) {
+					boolean separator = pageLayout.get(_page_break_separator).getBoolean();
+					settings.put("pageSeparator", separator ? "yes" : "no");
+					settings.put("pageSeparatorNumber", separator ? "yes" : "no");
+					settings.put("pageSeparator", separator ? "yes" : "no");
+					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
 				
 				URI tempURI = new URI(getOption(_temp_dir).getString());
 				

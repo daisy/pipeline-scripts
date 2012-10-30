@@ -28,6 +28,9 @@
                 <xsl:if test="exists($content)">
                     <xsl:if test="$identifier='print-page'">
                         <xsl:element name="louis:print-page">
+                            <xsl:attribute name="break"
+                                select="if (css:get-property-value($element, 'display', true(), true(), true())='page-break')
+                                          then 'true' else 'false'"/>
                             <xsl:sequence select="string($content)"/>
                         </xsl:element>
                     </xsl:if>

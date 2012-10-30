@@ -23,7 +23,8 @@
     <xsl:template match="@style">
         <xsl:variable name="display" select="louis:get-property-value(., 'display')"/>
         <xsl:attribute name="louis:style"
-            select="if ($display='none') then 'skip' else concat('#', louis:generate-style-name(string()))"/>
+            select="if ($display=('block','toc','toc-item','list-item'))
+                      then concat('#', louis:generate-style-name(string())) else 'skip'"/>
     </xsl:template>
     
     <xsl:template match="@louis:style">
