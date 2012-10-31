@@ -29,7 +29,6 @@ import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.SingleMapNodeData;
 import cz.vutbr.web.domassign.StyleMap;
-import cz.vutbr.web.domassign.SupportedCSS21;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
@@ -107,6 +106,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			try {
 				XdmNode source = sourcePipe.read();
 				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
+				CSSFactory.registerNodeDataInstance(printNodeDataImpl);
 				StyleSheet brailleSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
 				StyleSheet printSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "print");
 				resultPipe.write((new InlineCSSWriter(doc, brailleSheet, printSheet, runtime)).getResult());

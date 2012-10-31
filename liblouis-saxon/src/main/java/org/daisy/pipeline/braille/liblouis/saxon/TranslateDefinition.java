@@ -28,7 +28,6 @@ import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.EmptyIterator;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
@@ -64,13 +63,13 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 
 	@Override
 	public int getMaximumNumberOfArguments() {
-		return 2;
+		return 3;
 	}
 
 	@Override
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] { SequenceType.SINGLE_STRING,
-				SequenceType.SINGLE_STRING };
+				SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING };
 	}
 
 	@Override
@@ -86,18 +85,22 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			@Override
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
 					throws XPathException {
-
-				StringValue tab = (StringValue)arguments[0].next();
-				StringValue text = (StringValue)arguments[1].next();
-				if (tab != null && text != null) {
-					try {
-						URL table = new URL(tab.getStringValue());
+				
+				try {
+					URL table = new URL(((StringValue)arguments[0].next()).getStringValue());
+					String text = ((StringValue)arguments[1].next()).getStringValue();
+					if (arguments.length == 3) {
+						byte[] typeform = ((StringValue)arguments[2].next()).getStringValue().getBytes();
+						for (int i=0; i < typeform.length; i++)
+							typeform[i] -= 48;
 						return SingletonIterator.makeIterator(
-							new StringValue(liblouis.translate(table, text.getStringValue()))); }
-					catch (Exception e) {
-						logger.error("louis:translate failed", e);
-						throw new XPathException("louis:translate failed"); }}
-				return EmptyIterator.getInstance();
+							new StringValue(liblouis.translate(table, text, typeform))); }
+					else
+						return SingletonIterator.makeIterator(
+							new StringValue(liblouis.translate(table, text))); }
+				catch (Exception e) {
+					logger.error("louis:translate failed", e);
+					throw new XPathException("louis:translate failed"); }
 			}
 
 			private static final long serialVersionUID = 1L;

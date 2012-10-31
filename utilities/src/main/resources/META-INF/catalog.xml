@@ -5,5 +5,6 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/mark-transitions.xpl" uri="../xml/xproc/mark-transitions.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/number-lists.xsl" uri="../xml/xslt/number-lists.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" uri="../xml/xslt/get-liblouis-typeform.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
 </catalog>

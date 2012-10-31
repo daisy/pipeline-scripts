@@ -9,9 +9,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.daisy.pipeline.braille.Utilities.Files;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+
+import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
+import static org.daisy.pipeline.braille.Utilities.Files.fileFromURL;
+import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	private final LiblouisTableResolver tableResolver;
 	private Constructor<?> Translator;
 	private Method translate;
+	private Method translateWithTypeform;
 	private Method getBraille;
 	private boolean loaded = false;
 	
@@ -31,8 +35,8 @@ public class LiblouisJnaImpl implements Liblouis {
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
-		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
-			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
+		for (File file : unpack(nativeURLsIterator, unpackDirectory))
+			if (!file.getName().endsWith(".dll")) chmod775(file);
 		nativeDirectory = unpackDirectory;
 		this.tableResolver = tableResolver;
 	}
@@ -45,6 +49,7 @@ public class LiblouisJnaImpl implements Liblouis {
 				Class<?> TranslationResultClass = classLoader.loadClass("org.liblouis.TranslationResult");
 				Translator = TranslatorClass.getConstructor(String.class);
 				translate = TranslatorClass.getMethod("translate", String.class);
+				translateWithTypeform = TranslatorClass.getMethod("translate", String.class, byte[].class);
 				getBraille = TranslationResultClass.getMethod("getBraille");
 				logger.debug("Loading liblouis service: version {}", TranslatorClass.getMethod("version").invoke(null)); }
 			catch (Exception e) {
@@ -69,9 +74,24 @@ public class LiblouisJnaImpl implements Liblouis {
 	public String translate(URL table, String text) {
 		if (!loaded) load();
 		try {
-			String tab = Files.fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath();
-			text = squeeze(text);
-			return (String)getBraille.invoke(translate.invoke(getTranslator(tab), text)); }
+			Object translator = getTranslator(
+					fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+			return (String)getBraille.invoke(translate.invoke(translator, text)); }
+		catch (InvocationTargetException e) {
+			throw new RuntimeException(e.getCause()); }
+		catch (Exception e) {
+			throw new RuntimeException("Error during liblouis translation", e); }
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String translate(URL table, String text, byte[] typeform) {
+		if (!loaded) load();
+		try {
+			Object translator = getTranslator(
+					fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+			return (String)getBraille.invoke(translateWithTypeform.invoke(translator, text, typeform)); }
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
 		catch (Exception e) {
@@ -90,10 +110,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		catch (Exception e) {
 			throw new RuntimeException(e); }
 	}
-
-	private static String squeeze(final String in) {
-		return in.replaceAll("(?:\\p{Z}|\\s)+", " ");
-	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);
+
 }

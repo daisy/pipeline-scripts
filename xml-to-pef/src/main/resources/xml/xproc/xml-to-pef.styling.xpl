@@ -52,7 +52,7 @@
     <!-- Apply stylesheet -->
     
     <css:apply-stylesheet name="apply-stylesheet"/>
-
+    
     <!-- Handle content on :before and :after pseudo-elements -->
     
     <p:xslt>

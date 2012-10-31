@@ -43,7 +43,7 @@
             <p:output port="result"/>
             <p:identity>
                 <p:input port="source">
-                    <p:document href="../xslt/simple-liblouis-translate.xsl"/>
+                    <p:document href="../xslt/simple-liblouis-translate-with-emphasis.xsl"/>
                 </p:input>
             </p:identity>
         </p:when>
