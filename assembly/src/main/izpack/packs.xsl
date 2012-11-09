@@ -15,14 +15,12 @@
       <xsl:for-each select="doc($pom)//pom:execution[string(pom:id)='copy-module-bundles']
           /pom:configuration/pom:artifactItems/pom:artifactItem">
         <xsl:call-template name="pack">
-          <xsl:with-param name="name" select="string(pom:artifactId)"/>
           <xsl:with-param name="path" select="'modules'"/>
         </xsl:call-template>
       </xsl:for-each>
       <xsl:for-each select="doc($pom)//pom:execution[string(pom:id)='copy-system-bundles']
           /pom:configuration/pom:artifactItems/pom:artifactItem">
         <xsl:call-template name="pack">
-          <xsl:with-param name="name" select="string(pom:artifactId)"/>
           <xsl:with-param name="path" select="'system/framework'"/>
         </xsl:call-template>
       </xsl:for-each>
@@ -30,24 +28,34 @@
   </xsl:template>
 
   <xsl:template name="pack">
-    <xsl:param name="name"/>
     <xsl:param name="path"/>
+    <xsl:variable name="groupId" select="pom:groupId"/>
+    <xsl:variable name="artifactId" select="pom:artifactId"/>
+    <xsl:variable name="version" select="if (pom:version) then pom:version
+                                         else doc($pom)/pom:project/pom:dependencyManagement//pom:dependency
+                                             [pom:groupId=$groupId and pom:artifactId=$artifactId]/pom:version"/>
+    <xsl:variable name="classifier" select="pom:classifier"/>
+    <xsl:variable name="filename" select="concat(string-join(($artifactId, $version, $classifier), '-'), '.jar')"/>
+    <xsl:variable name="nicename" select="if ($classifier) then concat($artifactId, ' (', $classifier, ')')
+                                          else $artifactId"/>
     <xsl:element name="pack">
-      <xsl:attribute name="name" select="$name"/>
+      <xsl:attribute name="name" select="$nicename"/>
       <xsl:attribute name="required" select="'no'"/>
-      <xsl:if test="ends-with($name, '.linux')">
+      <xsl:if test="$classifier='linux'">
         <xsl:attribute name="condition" select="'is.linux'"/>
       </xsl:if>
-      <xsl:if test="ends-with($name, '.mac')">
+      <xsl:if test="$classifier='mac'">
         <xsl:attribute name="condition" select="'is.mac'"/>
       </xsl:if>
-      <xsl:if test="ends-with($name, '.windows')">
+      <xsl:if test="$classifier='windows'">
         <xsl:attribute name="condition" select="'is.windows'"/>
       </xsl:if>
-      <xsl:element name="description"/>
+      <xsl:element name="description">
+        <xsl:value-of select="concat('version: ', $version)"/>
+      </xsl:element>
       <xsl:element name="singlefile">
-        <xsl:attribute name="src" select="concat($path, '/', $name, '.jar')"/>
-        <xsl:attribute name="target" select="concat('$INSTALL_PATH', '/', $path, '/', $name, '.jar')"/>
+        <xsl:attribute name="src" select="concat($path, '/', $filename)"/>
+        <xsl:attribute name="target" select="concat('$INSTALL_PATH', '/', $path, '/', $filename)"/>
       </xsl:element>
     </xsl:element>
   </xsl:template>

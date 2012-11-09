@@ -28,6 +28,20 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-help-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>effective-pom</goal>
+            </goals>
+            <configuration>
+              <output>target/tmp/effective-pom.xml</output>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
         <executions>
@@ -40,16 +54,16 @@
         <configuration>
           <transformationSets>
             <transformationSet>
-              <dir>${basedir}/src/main/izpack</dir>
+              <dir>src/main/izpack</dir>
               <includes>
                 <include>install.xml</include>
               </includes>
-              <stylesheet>${basedir}/src/main/izpack/packs.xsl</stylesheet>
+              <stylesheet>src/main/izpack/packs.xsl</stylesheet>
               <outputDir>${izpack.staging}</outputDir>
               <parameters>
                 <parameter>
                   <name>pom</name>
-                  <value>${basedir}/pom.xml</value>
+                  <value>${basedir}/target/tmp/effective-pom.xml</value>
                 </parameter>
               </parameters>
             </transformationSet>
@@ -73,7 +87,6 @@
             </goals>
             <configuration>
               <outputDirectory>${izpack.staging}/modules</outputDirectory>
-              <stripVersion>true</stripVersion>
               <artifactItems>
                 <!-- Linux specific -->
                 <artifactItem>
@@ -160,7 +173,6 @@
             </goals>
             <configuration>
               <outputDirectory>${izpack.staging}/system/framework</outputDirectory>
-              <stripVersion>true</stripVersion>
               <artifactItems>
                 <!-- Dependencies -->
                 <artifactItem>
