@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="html-to-dtbook-convert" type="px:html-to-dtbook-convert" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+<p:declare-step version="1.0" name="html-to-dtbook.convert" type="px:html-to-dtbook-convert" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:html="http://www.w3.org/1999/xhtml" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xpath-version="2.0" exclude-inline-prefixes="#all">
 
@@ -64,7 +64,7 @@
             <p:pipe port="result" step="convert.fileset"/>
         </p:output>
         <p:iteration-source>
-            <p:pipe port="in-memory.in" step="html-to-dtbook-convert"/>
+            <p:pipe port="in-memory.in" step="html-to-dtbook.convert"/>
         </p:iteration-source>
         
         <p:variable name="base-uri" select="base-uri()"/>
@@ -147,10 +147,6 @@
                 <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html5-upgrade.xsl"/>
             </p:input>
         </p:xslt>
-        
-        <p:identity>
-            <p:log port="result" href="file:/home/jostein/Skrivebord/tmp.xhtml"/>
-        </p:identity>
         
         <p:xslt>
             <p:with-param name="uid" select="concat($top-uid,'-',p:iteration-position())"/>

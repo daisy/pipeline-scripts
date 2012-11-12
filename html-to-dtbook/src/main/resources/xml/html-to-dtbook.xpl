@@ -23,10 +23,10 @@
         </p:documentation>
     </p:option>
 
-    <p:output port="debug" sequence="true">
+    <!--<p:output port="debug" sequence="true">
         <p:pipe port="fileset" step="convert"/>
         <p:pipe port="in-memory" step="convert"/>
-    </p:output>
+    </p:output>-->
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
@@ -46,14 +46,13 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
 
-    <p:import href="html-to-dtbook-convert.xpl">
+    <p:import href="html-to-dtbook.convert.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">For converting from HTML to DTBook.</p>
         </p:documentation>
     </p:import>
 
     <px:html-load name="html">
-        <p:log port="result" href="file:/home/jostein/Skrivebord/html-to-dtbook.test/log/html.xml"/>
         <p:with-option name="href" select="$html"/>
     </px:html-load>
 
@@ -64,10 +63,6 @@
         <p:output port="fileset">
             <p:pipe port="fileset.out" step="convert.convert"/>
         </p:output>
-
-        <!--<p:variable name="uid" select="concat('',string-join(tokenize(replace(concat('',current-dateTime()),'[-:]',''),'[T\+\.]')[position() &lt;= 3],'-'))"/>-->
-        <!--<p:variable name="title" select="'TODO'"/>-->
-        <!--<p:variable name="cssURI" select="'[cssURI]'"/>-->
 
         <p:identity name="convert.in-memory.in"/>
 
@@ -116,5 +111,5 @@
             <p:pipe port="in-memory" step="convert"/>
         </p:input>
     </px:dtbook-store>
-
+    
 </p:declare-step>
