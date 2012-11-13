@@ -9,7 +9,6 @@ import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.EmptyIterator;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
@@ -20,9 +19,10 @@ import org.daisy.dotify.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.translator.BrailleTranslatorFactoryMaker;
 import org.daisy.dotify.translator.UnsupportedSpecificationException;
 
-public class TranslateDefinition extends ExtensionFunctionDefinition {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	private static final long serialVersionUID = 1L;
+public class TranslateDefinition extends ExtensionFunctionDefinition {
 
 	private static final StructuredQName funcname = new StructuredQName("dotify",
 			"http://code.google.com/p/dotify/", "translate");
@@ -52,31 +52,28 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
 		return SequenceType.OPTIONAL_STRING;
 	}
-
+	
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
-			
-			private static final long serialVersionUID = 1L;
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
 					throws XPathException {
 				
-				StringValue locale = (StringValue)arguments[0].next();
-				if (locale == null)
-					return EmptyIterator.getInstance();
-				StringValue text = (StringValue)arguments[1].next();
-				if (text == null)
-					return EmptyIterator.getInstance();
 				try {
-					return SingletonIterator.makeIterator(new StringValue(
-						getBrailleTranslator(locale.getStringValue())
-						.translate(text.getStringValue()).getTranslatedRemainder())); }
+					String locale = ((StringValue)arguments[0].next()).getStringValue();
+					String text = ((StringValue)arguments[1].next()).getStringValue();
+					return SingletonIterator.makeIterator(
+						new StringValue(getBrailleTranslator(locale)
+						.translate(text).getTranslatedRemainder())); }
 				catch (Exception e) {
-					throw new RuntimeException("Could not complete translation", e); }
+					logger.error("dotify:translate failed", e);
+					throw new XPathException("dotify:translate failed"); }
 			}
+			
+			private static final long serialVersionUID = 1L;
 		};
 	}
 	
@@ -85,7 +82,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private BrailleTranslator getBrailleTranslator(String locale)
 			throws UnsupportedSpecificationException {
-				
+		
 		BrailleTranslator translator = cache.get(locale);
 		if (translator == null) {
 			// The only supported locale at this time is sv_SE
@@ -95,4 +92,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				cache.put(locale, translator); }
 		return translator;
 	}
+
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
 }
