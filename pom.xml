@@ -23,6 +23,7 @@
     <braille.css.version>${braille.modules.version}</braille.css.version>
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
+    <braille.dtbook-to-pef.version>${braille.modules.version}</braille.dtbook-to-pef.version>
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
     <braille.liblouis-formatter.version>${braille.modules.version}</braille.liblouis-formatter.version>
@@ -52,6 +53,7 @@
     <module>pef-to-html</module>
     <module>xml-to-pef</module>
     <module>zedai-to-pef</module>
+    <module>dtbook-to-pef</module>
   </modules>
 
   <dependencyManagement>
@@ -76,6 +78,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>dotify-saxon</artifactId>
         <version>${braille.dotify-saxon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>dtbook-to-pef</artifactId>
+        <version>${braille.dtbook-to-pef.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
