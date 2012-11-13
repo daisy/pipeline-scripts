@@ -62,10 +62,16 @@
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
         </p:with-option>
-        <p:with-option name="title" select="string(/*/dc:title)">
+        <p:with-option name="title" select="(/*/dc:title/string(),
+                                             /*/*[@property=('dc:title','dcterms:title')]/string(),
+                                             /*/*[@property=('dc:title','dcterms:title')]/@content/string()
+                                            )[1]">
             <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
-        <p:with-option name="creator" select="string(/*/*[@property='dc:creator'])">
+        <p:with-option name="creator" select="(/*/dc:creator/string(),
+                                               /*/*[@property=('dc:creator','dcterms:creator')]/string(),
+                                               /*/*[@property=('dc:creator','dcterms:creator')]/@content/string()
+                                              )[1]">
             <p:pipe step="xml-to-pef.formatting" port="metadata"/>
         </p:with-option>
     </louis:format>
