@@ -207,7 +207,7 @@
                   <artifactId>dotify-translator</artifactId>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.daisy.libs</groupId>
+                  <groupId>se.tpb</groupId>
                   <artifactId>texhyphj</artifactId>
                 </artifactItem>
                 <artifactItem>
