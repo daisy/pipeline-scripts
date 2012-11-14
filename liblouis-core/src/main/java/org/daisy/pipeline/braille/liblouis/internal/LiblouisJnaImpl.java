@@ -74,8 +74,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	public String translate(URL table, String text) {
 		if (!loaded) load();
 		try {
-			Object translator = getTranslator(
-					fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+			Object translator = getTranslator(table);
 			return (String)getBraille.invoke(translate.invoke(translator, text)); }
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
@@ -89,8 +88,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	public String translate(URL table, String text, byte[] typeform) {
 		if (!loaded) load();
 		try {
-			Object translator = getTranslator(
-					fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+			Object translator = getTranslator(table);
 			return (String)getBraille.invoke(translateWithTypeform.invoke(translator, text, typeform)); }
 		catch (InvocationTargetException e) {
 			throw new RuntimeException(e.getCause()); }
@@ -98,14 +96,15 @@ public class LiblouisJnaImpl implements Liblouis {
 			throw new RuntimeException("Error during liblouis translation", e); }
 	}
 	
-	private Map<String,Object> translatorCache = new HashMap<String,Object>();
+	private Map<URL,Object> translatorCache = new HashMap<URL,Object>();
 
-	private Object getTranslator(String tables) {
+	private Object getTranslator(URL table) {
 		try {
-			Object translator = translatorCache.get(tables);
+			Object translator = translatorCache.get(table);
 			if (translator == null) {
-				translator = Translator.newInstance(tables);
-				translatorCache.put(tables, translator); }
+				translator = Translator.newInstance(
+						fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+				translatorCache.put(table, translator); }
 			return translator; }
 		catch (Exception e) {
 			throw new RuntimeException(e); }

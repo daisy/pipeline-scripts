@@ -7,11 +7,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import org.daisy.pipeline.braille.Utilities.Files;
-import org.daisy.pipeline.braille.Utilities.Locales;
-import org.daisy.pipeline.braille.Utilities.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.daisy.pipeline.braille.Utilities.Pair;
+
+import static org.daisy.pipeline.braille.Utilities.Files.composeURL;
+import static org.daisy.pipeline.braille.Utilities.Files.decomposeURL;
+import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 public abstract class TableRegistry<T extends TablePath> implements TableResolver, TableFinder {
 
@@ -47,14 +50,14 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 		URL resolved = resolverCache.get(table);
 		if (resolved == null) {
 			try {
-				Pair<URL,String> components = Files.decomposeURL(table);
+				Pair<URL,String> components = decomposeURL(table);
 				TablePath path = tablePaths.get(components._1);
 				if (path == null)
 					throw new RuntimeException("No table path registered with identifier " + components._1);
 				String name = components._2;
 				if (!path.hasTable(name))
 					throw new RuntimeException("Table path " + path + " has no table named " + name);
-				resolved = Files.composeURL(path.getPath(), name);
+				resolved = composeURL(path.getPath(), name);
 				resolverCache.put(table, resolved); }
 			catch (RuntimeException e) {
 				throw new RuntimeException("Cannot resolve table URL: " + table, e); }}
@@ -68,7 +71,7 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 	 */
 	
 	public URL find(String locale) {
-		return find(Locales.parseLocale(locale));
+		return find(parseLocale(locale));
 	}
 
 	/**
@@ -89,7 +92,7 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 				Map<String,String> map = tableMappings.get(path);
 				String key = locale.toString();
 				if (map.containsKey(key)) {
-					URL table = Files.composeURL(path.getIdentifier(), map.get(key));
+					URL table = composeURL(path.getIdentifier(), map.get(key));
 					finderCache.put(locale, table);
 					return table; }}}
 		if (!"".equals(locale.getCountry())) {
@@ -97,7 +100,7 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 				Map<String,String> map = tableMappings.get(path);
 				String key = locale.getLanguage() + "_" + locale.getCountry();
 				if (map.containsKey(key)) {
-					URL table = Files.composeURL(path.getIdentifier(), map.get(key));
+					URL table = composeURL(path.getIdentifier(), map.get(key));
 					finderCache.put(locale, table);
 					return table; }}}
 		if (!"".equals(locale.getLanguage())) {
@@ -105,7 +108,7 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 				Map<String,String> map = tableMappings.get(path);
 				String key = locale.getLanguage();
 				if (map.containsKey(key)) {
-					URL table = Files.composeURL(path.getIdentifier(), map.get(key));
+					URL table = composeURL(path.getIdentifier(), map.get(key));
 					finderCache.put(locale, table);
 					return table; }}}
 		return null;
@@ -123,7 +126,7 @@ public abstract class TableRegistry<T extends TablePath> implements TableResolve
 				Properties properties = new Properties();
 				properties.loadFromXML(reader);
 				for (String key : properties.stringPropertyNames()) {
-					String locale = Locales.parseLocale(key).toString();
+					String locale = parseLocale(key).toString();
 					if (!map.containsKey(locale)) {
 						String tableName = properties.getProperty(key);
 						if (tablePath.hasTable(tableName))

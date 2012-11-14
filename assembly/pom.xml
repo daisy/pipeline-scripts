@@ -153,6 +153,10 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>texhyph-saxon</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>utilities</artifactId>
                 </artifactItem>
                 <artifactItem>

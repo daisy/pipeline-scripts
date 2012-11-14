@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 
-import org.daisy.pipeline.braille.Utilities.Files;
+import static org.daisy.pipeline.braille.Utilities.Files.fileName;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
@@ -77,7 +77,7 @@ public abstract class BundledTablePath implements TablePath {
 				Iterators.<String,String>transform(
 					Iterators.<String>forEnumeration(bundle.getEntryPaths(directory)),
 					new Function<String,String>() {
-						public String apply(String s) { return Files.fileName(bundle.getEntry(s)); }}),
+						public String apply(String s) { return fileName(bundle.getEntry(s)); }}),
 				tableNameFilter))
 			.build();
 		if (properties.get(MANIFEST) != null) {

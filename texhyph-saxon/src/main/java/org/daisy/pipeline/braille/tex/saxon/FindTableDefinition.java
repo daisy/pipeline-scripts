@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.saxon;
+package org.daisy.pipeline.braille.tex.saxon;
 
 import java.net.URL;
 
@@ -13,21 +13,20 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.liblouis.LiblouisTableFinder;
+import org.daisy.pipeline.braille.tex.TexHyphenatorTableFinder;
 
-@SuppressWarnings("serial")
 public class FindTableDefinition extends ExtensionFunctionDefinition {
 
-	private static final StructuredQName funcname = new StructuredQName("louis",
-			"http://liblouis.org/liblouis", "find-table");
+	private static final StructuredQName funcname = new StructuredQName("tex",
+			"http://code.google.com/p/texhyphj/", "find-table");
 
-	private LiblouisTableFinder tableFinder = null;
+	private TexHyphenatorTableFinder tableFinder = null;
 	
-	public void bindTableFinder(LiblouisTableFinder tableFinder) {
+	public void bindTableFinder(TexHyphenatorTableFinder tableFinder) {
 		this.tableFinder = tableFinder;
 	}
 
-	public void unbindTableFinder(LiblouisTableFinder tableFinder) {
+	public void unbindTableFinder(TexHyphenatorTableFinder tableFinder) {
 		this.tableFinder = null;
 	}
 	
@@ -72,6 +71,10 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 					return SingletonIterator.makeIterator(new StringValue(table.toExternalForm()));
 				return EmptyIterator.getInstance();
 			}
+			
+			private static final long serialVersionUID = 1L;
 		};
 	}
+	
+	private static final long serialVersionUID = 1L;
 }

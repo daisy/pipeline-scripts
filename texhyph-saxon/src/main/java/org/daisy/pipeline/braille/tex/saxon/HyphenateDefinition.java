@@ -1,6 +1,9 @@
-package org.daisy.pipeline.braille.liblouis.saxon;
+package org.daisy.pipeline.braille.tex.saxon;
 
 import java.net.URL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -12,23 +15,21 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.liblouis.Liblouis;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.daisy.pipeline.braille.tex.TexHyphenator;
 
-public class TranslateDefinition extends ExtensionFunctionDefinition {
+public class HyphenateDefinition extends ExtensionFunctionDefinition {
 
-	private static final StructuredQName funcname = new StructuredQName("louis",
-			"http://liblouis.org/liblouis", "translate");
-
-	private Liblouis liblouis = null;
+	private static final StructuredQName funcname = new StructuredQName("tex",
+			"http://code.google.com/p/texhyphj/", "hyphenate");
 	
-	public void bindLiblouis(Liblouis liblouis) {
-		this.liblouis = liblouis;
+	private TexHyphenator hyphenator = null;
+	
+	public void bindHyphenator(TexHyphenator hyphenator) {
+		this.hyphenator = hyphenator;
 	}
 
-	public void unbindLiblouis(Liblouis liblouis) {
-		this.liblouis = null;
+	public void unbindHyphenator(TexHyphenator hyphenator) {
+		this.hyphenator = null;
 	}
 	
 	@Override
@@ -43,13 +44,13 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 
 	@Override
 	public int getMaximumNumberOfArguments() {
-		return 3;
+		return 2;
 	}
 
 	@Override
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] { SequenceType.SINGLE_STRING,
-				SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING };
+				SequenceType.SINGLE_STRING };
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
-
+			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
@@ -69,24 +70,17 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				try {
 					URL table = new URL(((StringValue)arguments[0].next()).getStringValue());
 					String text = ((StringValue)arguments[1].next()).getStringValue();
-					if (arguments.length == 3) {
-						byte[] typeform = ((StringValue)arguments[2].next()).getStringValue().getBytes();
-						for (int i=0; i < typeform.length; i++)
-							typeform[i] -= 48;
-						return SingletonIterator.makeIterator(
-							new StringValue(liblouis.translate(table, text, typeform))); }
-					else
-						return SingletonIterator.makeIterator(
-							new StringValue(liblouis.translate(table, text))); }
+					return SingletonIterator.makeIterator(
+						new StringValue(hyphenator.hyphenate(table, text))); }
 				catch (Exception e) {
-					logger.error("louis:translate failed", e);
-					throw new XPathException("louis:translate failed"); }
+					logger.error("tex:hyphenate failed", e);
+					throw new XPathException("tex:hyphenate failed"); }
 			}
-
+			
 			private static final long serialVersionUID = 1L;
 		};
 	}
 	
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
+	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);
 }

@@ -7,7 +7,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.Map;
 
-import org.daisy.pipeline.braille.Utilities.Files;
+import static org.daisy.pipeline.braille.Utilities.Files.composeURL;
+import static org.daisy.pipeline.braille.Utilities.Files.unpack;
+
 import org.osgi.service.component.ComponentContext;
 
 public abstract class UnpackedTablePath extends BundledTablePath {
@@ -19,11 +21,11 @@ public abstract class UnpackedTablePath extends BundledTablePath {
 		directory = context.getBundleContext().getDataFile("tables");
 		if (!directory.exists()) {
 			directory.mkdir();
-			Files.unpack(
+			unpack(
 				Iterators.<String,URL>transform(
 					tableNames.iterator(),
 					new Function<String,URL>() {
-						public URL apply(String tableName) { return Files.composeURL(path, tableName); }}),
+						public URL apply(String tableName) { return composeURL(path, tableName); }}),
 				directory); }
 		path = directory.toURI().toURL();
 	}

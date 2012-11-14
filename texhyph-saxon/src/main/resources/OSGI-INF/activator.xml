@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="TeX hyphenator provider and table registry">
+    <scr:implementation class="org.daisy.pipeline.braille.tex.TexHyphenatorProvider"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.tex.TexHyphenatorTableFinder"/>
+    </scr:service>
+    <scr:reference bind="addTablePath"
+        unbind="removeTablePath"
+        interface="org.daisy.pipeline.braille.tex.TexHyphenatorTablePath"
+        cardinality="0..n"
+        name="TexHyphenatorTablePath"
+        policy="dynamic"/>
+</scr:component>
