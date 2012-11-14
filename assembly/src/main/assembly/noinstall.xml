@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <assembly>
-  <id>modules</id>
+  <id>noinstall</id>
   <formats>
     <format>zip</format>
   </formats>
   <baseDirectory>/</baseDirectory>
   <files>
     <file>
-      <source>src/main/resources/README-modules.txt</source>
+      <source>src/main/resources/README-noinstall.txt</source>
       <destName>README.txt</destName>
     </file>
   </files>

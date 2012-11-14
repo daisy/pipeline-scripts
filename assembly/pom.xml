@@ -249,17 +249,16 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
-            <id>dist-modules</id>
+            <id>dist-noinstall</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>src/main/assembly/modules.xml</descriptor>
+                <descriptor>src/main/assembly/noinstall.xml</descriptor>
               </descriptors>
-              <appendAssemblyId>false</appendAssemblyId>
-              <finalName>braille-modules-${assembly.version}-noinstall</finalName>
+              <finalName>braille-modules-${assembly.version}</finalName>
             </configuration>
           </execution>
           <execution>
@@ -272,8 +271,7 @@
               <descriptors>
                 <descriptor>src/main/assembly/installer.xml</descriptor>
               </descriptors>
-              <appendAssemblyId>false</appendAssemblyId>
-              <finalName>braille-modules-${assembly.version}-installer</finalName>
+              <finalName>braille-modules-${assembly.version}</finalName>
             </configuration>
           </execution>
         </executions>
