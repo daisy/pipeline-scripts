@@ -105,6 +105,8 @@
     <cx:message>
         <p:with-option name="message" select="concat('dereferenced all links in ',$content-base)"/>
     </cx:message>
+    <!--
+        Is this necessary? Seems to cause http://www.daisy.org/forums/18667
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>
@@ -113,6 +115,7 @@
             <p:document href="nav-unwrap-untitled-toc-levels.xsl"/>
         </p:input>
     </p:xslt>
+    -->
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>
