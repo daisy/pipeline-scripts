@@ -79,6 +79,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.1</version>
         <executions>
           <execution>
             <id>copy-module-bundles</id>
