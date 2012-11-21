@@ -5,8 +5,6 @@
 	xmlns:louis="http://liblouis.org/liblouis"
 	exclude-result-prefixes="xs louis">
 	
-	<xsl:output method="xml" encoding="UTF-8"/>
-	
 	<xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" />
 	
 	<xsl:template match="/*">

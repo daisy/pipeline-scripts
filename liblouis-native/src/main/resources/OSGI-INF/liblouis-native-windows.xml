@@ -5,7 +5,7 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/i386/liblouis.dll"/>
+        <scr:property name="path" type="String" value="/native/i386/2.5.1/liblouis.dll"/>
         <scr:property name="os.family" type="String" value="windows"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:louis="http://liblouis.org/liblouis"
 	exclude-result-prefixes="xs louis">
 	
-	<xsl:output method="xml" encoding="utf-8"/>
-
+	<xsl:param name="hyphenate" select="'false'"/>
+	
 	<xsl:template match="/*">
 		<xsl:choose>
 			<xsl:when test="/*/@xml:lang">
@@ -15,7 +14,7 @@
 				<xsl:choose>
 					<xsl:when test="$table">
 						<xsl:copy>
-							<xsl:sequence select="louis:translate($table, string(/*))"/>
+							<xsl:sequence select="louis:translate($table, string(/*), (), $hyphenate='true')"/>
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>

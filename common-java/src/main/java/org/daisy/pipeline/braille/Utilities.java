@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille;
 
 import com.google.common.base.Predicate;
+import com.google.common.primitives.Booleans;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -117,6 +119,35 @@ public abstract class Utilities {
 		
 		public static String normalizeSpace(Object object) {
 			return String.valueOf(object).replaceAll("\\s+", " ").trim();
+		}
+		
+		public static Pair<String,boolean[]> extractHyphens(String string, char hyphen) {
+			StringBuffer unhyphenatedString = new StringBuffer();
+			List<Boolean> hyphens = new ArrayList<Boolean>();
+			boolean seenHyphen = false;
+			for (int i = 0; i < string.length(); i++) {
+				char c = string.charAt(i);
+				if (c == hyphen)
+					seenHyphen = true;
+				else
+					unhyphenatedString.append(c);
+					hyphens.add(seenHyphen);
+					seenHyphen = false; }
+			hyphens.remove(0);
+			return new Pair<String,boolean[]>(unhyphenatedString.toString(), Booleans.toArray(hyphens));
+		}
+		
+		public static String insertHyphens(String string, boolean hyphens[], char hyphen) {
+			if (string.equals("")) return "";
+			if (hyphens.length != string.length()-1)
+				throw new RuntimeException("hyphens.length must be equal to string.length() - 1");
+			StringBuffer hyphenatedString = new StringBuffer();
+			int i; for (i = 0; i < hyphens.length; i++) {
+				hyphenatedString.append(string.charAt(i));
+				if (hyphens[i])
+					hyphenatedString.append(hyphen); }
+			hyphenatedString.append(string.charAt(i));
+			return hyphenatedString.toString();
 		}
 	}
 	
