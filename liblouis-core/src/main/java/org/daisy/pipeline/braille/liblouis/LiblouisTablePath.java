@@ -1,14 +1,13 @@
 package org.daisy.pipeline.braille.liblouis;
 
 import org.daisy.pipeline.braille.UnpackedTablePath;
-import org.daisy.pipeline.braille.Utilities.Predicates;
 
 import com.google.common.base.Splitter;
 
 public class LiblouisTablePath extends UnpackedTablePath {
 	
 	public LiblouisTablePath() {
-		tableNameFilter = Predicates.fileHasExtension("(cti|ctb|utb|uti|dis)");
+		super();
 	}
 	
 	/* A liblouis table name can be a comma separated list of file names */
