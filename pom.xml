@@ -234,6 +234,13 @@
       <name>Maven Central</name>
       <url>http://repo.maven.apache.org/maven2/</url>
     </repository>
+    <!-- Remove when texhyphj is in sonatype-nexus-snapshots-->
+    <repository>
+      <id>bertfrees-github-snapshots</id>
+      <url>http://bertfrees.github.com/snapshots</url>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
   </repositories>
 
 </project>
