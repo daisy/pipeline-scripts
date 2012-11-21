@@ -8,7 +8,7 @@
 	
 	<xsl:template match="/*">
 		<xsl:variable name="BRAILLE_WHITESPACE_OR_SOFT_HYPHENS">[\s&#x00AD;\p{IsBraillePatterns}]+</xsl:variable>
-		<xsl:analyze-string select="string(.)" regex="{BRAILLE_WHITESPACE_OR_SOFT_HYPHENS}">
+		<xsl:analyze-string select="string(.)" regex="{$BRAILLE_WHITESPACE_OR_SOFT_HYPHENS}">
 			<xsl:non-matching-substring>
 				<xsl:message terminate="yes">
 					<xsl:text>The document can only contain whitespace, Unicode Braille, and soft hyphens. </xsl:text>
