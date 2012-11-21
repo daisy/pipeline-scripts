@@ -27,6 +27,7 @@
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
     <braille.liblouis-formatter.version>${braille.modules.version}</braille.liblouis-formatter.version>
+    <braille.liblouis-mathml.version>${braille.modules.version}</braille.liblouis-mathml.version>
     <braille.liblouis-native.version>${braille.modules.version}</braille.liblouis-native.version>
     <braille.liblouis-saxon.version>${braille.modules.version}</braille.liblouis-saxon.version>
     <braille.liblouis-tables.version>2.5.0</braille.liblouis-tables.version>
@@ -40,19 +41,19 @@
 
   <modules>
     <module>common-java</module>
-    <module>liblouis-core</module>
-    <module>liblouis-saxon</module>
-    <module>liblouis-tables</module>
-    <module>liblouis-calabash</module>
-    <module>liblouis-native</module>
-    <module>braillecss</module>
-    <module>braillecss-calabash</module>
-    <module>pef-calabash</module>
+    <module>liblouis/liblouis-core</module>
+    <module>liblouis/liblouis-saxon</module>
+    <module>liblouis/liblouis-tables</module>
+    <module>liblouis/liblouis-calabash</module>
+    <module>liblouis/liblouis-native</module>
+    <module>braillecss/braillecss-core</module>
+    <module>braillecss/braillecss-calabash</module>
+    <module>pef/pef-calabash</module>
     <module>utilities</module>
-    <module>liblouis-formatter</module>
-    <module>dotify-saxon</module>
-    <module>texhyph-saxon</module>
-    <module>pef-to-html</module>
+    <module>liblouis/liblouis-formatter</module>
+    <module>dotify/dotify-saxon</module>
+    <module>texhyph/texhyph-saxon</module>
+    <module>pef/pef-to-html</module>
     <module>xml-to-pef</module>
     <module>zedai-to-pef</module>
     <module>dtbook-to-pef</module>
@@ -100,6 +101,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>liblouis-formatter</artifactId>
         <version>${braille.liblouis-formatter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-mathml</artifactId>
+        <version>${braille.liblouis-mathml.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
