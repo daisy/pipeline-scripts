@@ -7,11 +7,11 @@
 	<xsl:output method="xml" encoding="utf-8" indent="yes" />
 	
 	<xsl:template match="/*">
-		<xsl:variable name="BRAILLE_OR_WHITESPACE">[\s\p{IsBraillePatterns}]+</xsl:variable>
-		<xsl:analyze-string select="string(.)" regex="{$BRAILLE_OR_WHITESPACE}">
+		<xsl:variable name="BRAILLE_WHITESPACE_OR_SOFT_HYPHENS">[\s&#x00AD;\p{IsBraillePatterns}]+</xsl:variable>
+		<xsl:analyze-string select="string(.)" regex="{BRAILLE_WHITESPACE_OR_SOFT_HYPHENS}">
 			<xsl:non-matching-substring>
 				<xsl:message terminate="yes">
-					<xsl:text>The document can only contain whitespace and Unicode Braille. </xsl:text>
+					<xsl:text>The document can only contain whitespace, Unicode Braille, and soft hyphens. </xsl:text>
 					<xsl:text>However the following text was found: '</xsl:text>
 					<xsl:value-of select="substring(., 1, 20)"/>
 					<xsl:text> ...'.</xsl:text>

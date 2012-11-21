@@ -2,7 +2,8 @@
 <p:declare-step
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    exclude-inline-prefixes="px"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    exclude-inline-prefixes="#all"
     type="px:xml-to-pef.convert" name="xml-to-pef" version="1.0">
 
     <p:input port="source" primary="true"/>
@@ -14,40 +15,41 @@
     <p:option name="translator" required="false" select="''"/>
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="xml-to-pef.styling.xpl"/>
-    <p:import href="xml-to-pef.preprocessing.xpl"/>
-    <p:import href="xml-to-pef.translation.xpl"/>
-    <p:import href="xml-to-pef.formatting.xpl"/>
+    <p:import href="styling.xpl"/>
+    <p:import href="preprocessing.xpl"/>
+    <p:import href="translation.xpl"/>
+    <p:import href="formatting.xpl"/>
     
     <!-- ======= -->
     <!-- STYLING -->
     <!-- ======= -->
     
-    <px:xml-to-pef.styling name="styling">
+    <pxi:styling name="styling">
         <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
-    </px:xml-to-pef.styling>
+    </pxi:styling>
     
     <!-- ============= -->
     <!-- PREPROCESSING -->
     <!-- ============= -->
     
-    <px:xml-to-pef.preprocessing>
+    <pxi:preprocessing>
         <p:with-option name="preprocessor" select="$preprocessor"/>
-    </px:xml-to-pef.preprocessing>
+    </pxi:preprocessing>
     
     <!-- =========== -->
     <!-- TRANSLATION -->
     <!-- =========== -->
     
-    <px:xml-to-pef.translation>
+    <pxi:translation>
         <p:with-option name="translator" select="$translator"/>
-    </px:xml-to-pef.translation>
+        <p:with-option name="hyphenator" select="'liblouis'"/>
+    </pxi:translation>
     
     <!-- ========== -->
     <!-- FORMATTING -->
     <!-- ========== -->
     
-    <px:xml-to-pef.formatting>
+    <pxi:formatting>
         <p:input port="metadata">
             <p:pipe step="xml-to-pef" port="metadata"/>
         </p:input>
@@ -55,6 +57,6 @@
             <p:pipe step="styling" port="pages"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir"/>
-    </px:xml-to-pef.formatting>
+    </pxi:formatting>
     
 </p:declare-step>

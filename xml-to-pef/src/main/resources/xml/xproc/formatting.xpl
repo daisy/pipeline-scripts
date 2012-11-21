@@ -2,11 +2,12 @@
 <p:declare-step
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    exclude-inline-prefixes="px d louis dc"
-    type="px:xml-to-pef.formatting" name="xml-to-pef.formatting" version="1.0">
+    exclude-inline-prefixes="#all"
+    type="pxi:formatting" name="formatting" version="1.0">
 
     <p:input port="source" primary="true"/>
     <p:input port="metadata"/>
@@ -54,10 +55,10 @@
     
     <louis:format>
         <p:input port="source">
-            <p:pipe step="xml-to-pef.formatting" port="source"/>
+            <p:pipe step="formatting" port="source"/>
         </p:input>
         <p:input port="pages">
-            <p:pipe step="xml-to-pef.formatting" port="pages"/>
+            <p:pipe step="formatting" port="pages"/>
         </p:input>
         <p:with-option name="temp-dir" select="/*/@href">
             <p:pipe port="result" step="temp-dir-uri"/>
@@ -66,13 +67,13 @@
                                              /*/*[@property=('dc:title','dcterms:title')]/string(),
                                              /*/*[@property=('dc:title','dcterms:title')]/@content/string()
                                             )[1]">
-            <p:pipe step="xml-to-pef.formatting" port="metadata"/>
+            <p:pipe step="formatting" port="metadata"/>
         </p:with-option>
         <p:with-option name="creator" select="(/*/dc:creator/string(),
                                                /*/*[@property=('dc:creator','dcterms:creator')]/string(),
                                                /*/*[@property=('dc:creator','dcterms:creator')]/@content/string()
                                               )[1]">
-            <p:pipe step="xml-to-pef.formatting" port="metadata"/>
+            <p:pipe step="formatting" port="metadata"/>
         </p:with-option>
     </louis:format>
 
