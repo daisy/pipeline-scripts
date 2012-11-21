@@ -15,9 +15,9 @@
 			<xsl:apply-templates select="@*"/>
 			<xsl:choose>
 				<xsl:when test="css:get-property-value(., 'display', true(), true(), false())='none'">
-					<xsl:apply-templates select="node()" mode="no-display"/>
+					<xsl:apply-templates select="node()" mode="display-none"/>
 				</xsl:when>
-				<xsl:when test="my:is-block(.)">
+				<xsl:otherwise>
 					<xsl:for-each-group select="*|text()"
 						group-adjacent="boolean(self::*[my:is-block(.)])">
 						<xsl:choose>
@@ -39,9 +39,6 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each-group>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="node()"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:copy>
@@ -60,9 +57,9 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template match="*" mode="no-display">
+	<xsl:template match="*" mode="display-none">
 		<xsl:copy>
-			<xsl:apply-templates select="@*|*" mode="no-display"/>
+			<xsl:apply-templates select="@*|*" mode="display-none"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -84,7 +81,7 @@
 		<xsl:param name="element" as="element()"/>
 		<xsl:sequence select="boolean($element/descendant-or-self::*[
 			self::css:string-set or
-			not(matches(css:get-property-value(., 'display', true(), true(), false()), 'inline'))])"/>
+			css:get-property-value(., 'display', true(), true(), false()) != 'inline'])"/>
 	</xsl:function>
 
 </xsl:stylesheet>
