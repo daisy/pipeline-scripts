@@ -18,6 +18,7 @@
     </p:output>
 
     <p:option name="output-dir" required="true"/>
+    <p:option name="chunk" select="'false'"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -120,7 +121,7 @@
             select="replace(replace(//*[@media-type='application/z3998-auth+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
             <p:pipe port="fileset.in" step="main"/>
         </p:variable>
-        <p:variable name="result-basename" select="concat($output-dir,$zedai-basename,'.html')"/>
+        <p:variable name="result-basename" select="concat($output-dir,$zedai-basename,'.xhtml')"/>
         <p:xslt name="zedai-to-html.html-single">
             <p:input port="source">
                 <p:pipe port="result" step="zedai-input"/>
@@ -135,13 +136,37 @@
         <p:add-attribute attribute-name="xml:base" match="/*">
             <p:with-option name="attribute-value" select="$result-basename"/>
         </p:add-attribute>
+        <p:choose>
+            <p:when test="$chunk='true'">
+                <p:output port="result" sequence="true">
+                    <p:pipe port="secondary" step="html-chunks"/>
+                </p:output>
+                <p:xslt name="html-chunks">
+                    <p:input port="stylesheet">
+                        <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-chunker.xsl"/>
+                    </p:input>
+                    <p:input port="parameters">
+                        <p:empty/>
+                    </p:input>
+                </p:xslt>
+                <p:sink/>
+            </p:when>
+            <p:otherwise>
+                <p:output port="result" sequence="true"/>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
+        <!--TODO no need to iterate since we do not chunk the result-->
         <p:for-each name="zedai-to-html.iterate">
             <p:output port="fileset" primary="true"/>
             <p:output port="html-files" sequence="true">
                 <p:pipe port="result" step="zedai-to-html.iterate.html"/>
             </p:output>
             <p:variable name="result-uri" select="base-uri(/*)"/>
-            <p:add-xml-base name="zedai-to-html.iterate.html"/>
+            <!--hack to set the base URI-->
+<!--            <p:add-xml-base/>-->
+            <p:delete match="/*/@xml:base" name="zedai-to-html.iterate.html"/>
+            <!--end of hack-->
             <px:fileset-create>
                 <p:with-option name="base" select="$output-dir"/>
             </px:fileset-create>
