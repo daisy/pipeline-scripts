@@ -23,6 +23,7 @@
     <module>poms/bom</module>
     <module>common-entities</module>
     <module>daisy202-to-epub3</module>
+    <module>daisy3-to-epub3</module>
     <module>dtbook-to-epub3</module>
     <module>dtbook-to-html</module>
     <module>dtbook-to-zedai</module>
