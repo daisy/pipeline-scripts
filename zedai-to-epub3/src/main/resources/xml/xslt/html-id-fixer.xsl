@@ -5,6 +5,8 @@
     xmlns:epub="http://www.idpf.org/2007/ops"
     version="2.0">
     
+    <!--FIXME generate safe IDs-->
+    
     <xsl:template match="body|article|aside|nav|section">
         <xsl:copy>
             <xsl:attribute name="id" select="generate-id()"/>
