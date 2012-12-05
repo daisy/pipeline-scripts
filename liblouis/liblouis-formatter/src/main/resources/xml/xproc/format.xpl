@@ -2,6 +2,8 @@
 <p:declare-step type="louis:format" name="format"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
@@ -20,12 +22,7 @@
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
-
-    <!-- FIXME this is a dirty hack -->
-    <p:variable name="liblouis-ini-file"
-        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
-        <p:document href="format.xpl"/>
-    </p:variable>
+    
     <p:variable name="liblouis-table"
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
         <p:empty/>
@@ -110,6 +107,9 @@
         <p:group name="filter-toc">
             <p:output port="result" sequence="true" primary="true"/>
             <p:for-each>
+                <p:iteration-source>
+                    <p:pipe step="handle-css" port="result"/>
+                </p:iteration-source>
                 <p:filter select="//louis:toc"/>
             </p:for-each>
             <p:for-each>
@@ -124,7 +124,7 @@
         </p:for-each>
     </p:group>
     
-    <louis:generate-liblouis-files name="liblouis-files">
+    <pxi:generate-liblouis-files name="liblouis-files">
         <p:input port="source">
             <p:pipe step="extract-toc" port="result"/>
         </p:input>
@@ -134,22 +134,22 @@
         <p:with-option name="directory" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </louis:generate-liblouis-files>
-
+    </pxi:generate-liblouis-files>
+    
     <p:for-each>
-        <louis:format-vertical-border>
+        <pxi:format-vertical-border>
             <p:with-option name="temp-dir" select="$temp-dir"/>
-        </louis:format-vertical-border>
+        </pxi:format-vertical-border>
     </p:for-each>
     
-    <louis:format-toc>
+    <pxi:format-toc>
         <p:input port="source-toc">
             <p:pipe step="liblouis-files" port="result-toc"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </louis:format-toc>
+    </pxi:format-toc>
     
     <p:for-each name="translate-file">
         <louis:translate-file>
@@ -159,7 +159,6 @@
             <p:input port="page-layout" select="/*/*[4]">
                 <p:pipe step="translate-file" port="current"/>
             </p:input>
-            <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>

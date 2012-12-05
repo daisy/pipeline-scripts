@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="louis:format-toc" name="format-toc"
+<p:declare-step type="pxi:format-toc" name="format-toc"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     version="1.0">
@@ -12,12 +13,7 @@
     <p:output port="result" sequence="true" primary="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     
-    <p:variable name="liblouis-ini-file"
-        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
-        <p:document href="format.xpl"/>
-    </p:variable>
     <p:variable name="liblouis-table"
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
         <p:empty/>
@@ -76,7 +72,6 @@
             <p:input port="page-layout" select="/*/*[4]">
                 <p:pipe step="ref-document" port="result"/>
             </p:input>
-            <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
@@ -144,7 +139,7 @@
         </p:variable> 
         <p:choose>
             <p:when test="$new-toc-lengths &gt; $old-toc-lengths">
-                <louis:format-toc>
+                <pxi:format-toc>
                     <p:input port="source">
                         <p:pipe step="insert-toc" port="result"/>
                     </p:input>
@@ -152,7 +147,7 @@
                         <p:pipe step="format-toc" port="source-toc"/>
                     </p:input>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
-                </louis:format-toc>
+                </pxi:format-toc>
             </p:when>
             <p:otherwise>
                 <p:identity>

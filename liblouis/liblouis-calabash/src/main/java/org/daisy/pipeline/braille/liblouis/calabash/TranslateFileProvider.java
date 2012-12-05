@@ -23,6 +23,8 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
+import static org.daisy.pipeline.braille.Utilities.Files.unpack;
+import static org.daisy.pipeline.braille.Utilities.Files.fileName;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -40,8 +42,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final String LOUIS_PREFIX = "louis";
 	private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
 	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
-
-	private static final QName _ini_file = new QName("ini-file");
+	
 	private static final QName _table = new QName("table");
 	private static final QName _paged = new QName("paged");
 	private static final QName _page_height = new QName("page-height");
@@ -59,7 +60,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	public void bindLiblouisutdml(Liblouisutdml liblouisutdml) {
 		this.liblouisutdml = liblouisutdml;
 	}
-
+	
 	public void unbindLiblouisutdml(Liblouisutdml liblouisutdml) {
 		this.liblouisutdml = null;
 	}
@@ -158,7 +159,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 					settings.put("pageSeparator", separator ? "yes" : "no");
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
 				
-				URI tempURI = new URI(getOption(_temp_dir).getString());
+				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
+				File configPath = null;
 				
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
@@ -168,12 +170,19 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							XdmNode file = (XdmNode)files.next();
-							URI fileURI = baseURI.resolve(file.getAttributeValue(_href));
-							String name = tempURI.relativize(fileURI).toString();
-							if (name.contains("/"))
-								throw new XProcException(step.getNode(), "All configuration files must be placed in temp-dir");
-							configFileNames.add(name); }}}
+							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
+							File file = null;
+							try {
+								file = new File(uri); }
+							catch (Exception e) {
+								file = new File(tempDir.getAbsolutePath() + File.separator + fileName(uri.toURL()));
+								unpack(uri.toURL(), file); }
+							if (configPath == null)
+								configPath = new File(file.getParent());
+							else if(!configPath.equals(new File(file.getParent())))
+								throw new XProcException(step.getNode(),
+										"All configuration files and semantic action files must be placed in " + configPath);
+							configFileNames.add(file.getName()); }}}
 				
 				// Get semantic action files
 				List<String> semanticFileNames = new ArrayList<String>();
@@ -183,17 +192,19 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							XdmNode file = (XdmNode)files.next();
-							URI fileURI = baseURI.resolve(file.getAttributeValue(_href));
-							String name = tempURI.relativize(fileURI).toString();
-							if (name.contains("/"))
-								throw new XProcException(step.getNode(), "All semantic action files must be placed in temp-dir");
-							semanticFileNames.add(name); }}}
-				
-				File tempDir = new File(tempURI);
-				
-				// Create liblouistutdml.ini
-				unpackIniFile(new URI(getOption(_ini_file).getString()).toURL(), tempDir);
+							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
+							File file = null;
+							try {
+								file = new File(uri); }
+							catch (Exception e) {
+								file = new File(tempDir.getAbsolutePath() + File.separator + fileName(uri.toURL()));
+								unpack(uri.toURL(), file); }
+							if (configPath == null)
+								configPath = new File(file.getParent());
+							else if(!configPath.equals(new File(file.getParent())))
+								throw new XProcException(step.getNode(),
+										"All configuration files and semantic action files must be placed in " + configPath);
+							semanticFileNames.add(file.getName()); }}}
 				
 				// Write XML document to file
 				XdmNode xml = source.read();
@@ -208,8 +219,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
 				liblouisutdml.translateFile(configFileNames, semanticFileNames, new URL(getOption(_table).getString()),
-						settings, xmlFile, brailleFile, tempDir, tempDir);
-				//xmlFile.delete();
+						settings, xmlFile, brailleFile, configPath, tempDir);
 				
 				// Read the braille document and wrap it in a new XML document
 				ByteBuffer buffer = ByteBuffer.allocate((int)brailleFile.length());
@@ -257,27 +267,10 @@ public class TranslateFileProvider implements XProcStepProvider {
 				treeWriter.addEndElement();
 				treeWriter.endDocument();
 				
-				//brailleFile.delete();
-				
 				result.write(treeWriter.getResult()); }
 			
 			catch (Exception e) {
 				throw new XProcException(step.getNode(), e); }
 		}
-	}
-	
-	private static void unpackIniFile(URL iniFile, File toDir) throws Exception {
-		File toFile = new File(toDir.getAbsolutePath() + File.separator + "liblouisutdml.ini");
-		toFile.createNewFile();
-		FileOutputStream writer = new FileOutputStream(toFile);
-		iniFile.openConnection();
-		InputStream reader = iniFile.openStream();
-		byte[] buffer = new byte[153600];
-		int bytesRead = 0;
-		while ((bytesRead = reader.read(buffer)) > 0) {
-			writer.write(buffer, 0, bytesRead);
-			buffer = new byte[153600]; }
-		writer.close();
-		reader.close();
 	}
 }

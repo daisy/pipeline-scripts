@@ -4,13 +4,17 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.daisy.pipeline.braille.Utilities.Files;
-import org.daisy.pipeline.braille.Utilities.Strings;
+import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
+import static org.daisy.pipeline.braille.Utilities.Files.fileFromURL;
+import static org.daisy.pipeline.braille.Utilities.Files.unpack;
+import static org.daisy.pipeline.braille.Utilities.Strings.join;
+
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 
@@ -32,8 +36,8 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
-		for (File file : Files.unpack(nativeURLsIterator, unpackDirectory))
-			if (!file.getName().endsWith(".dll")) Files.chmod775(file);
+		for (File file : unpack(nativeURLsIterator, unpackDirectory))
+			if (!file.getName().endsWith(".dll")) chmod775(file);
 		nativeDirectory = unpackDirectory;
 		this.tableResolver = tableResolver;
 	}
@@ -75,35 +79,44 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			File output,
 			File configPath,
 			File tempDir) {
-
+		
 		if (!loaded) load();
 		
 		try {
 			
+			if (configPath == null)
+				configPath = tempDir;
+			if (!Arrays.asList(configPath.list()).contains("liblouisutdml.ini"))
+				throw new RuntimeException("liblouisutdml.ini must be on the configPath");
+			if (configFiles != null)
+				configFiles.remove("liblouisutdml.ini");
+			
 			String configFileList = configPath.getAbsolutePath() + File.separator +
-					(configFiles != null ? Strings.join(configFiles, ",") : "");
+					(configFiles != null ? join(configFiles, ",") : "");
 			String inputFileName = input.getAbsolutePath();
 			String outputFileName = output.getAbsolutePath();
-	
+			
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
-				settings.put("semanticFiles", Strings.join(semanticFiles, ","));
-			settings.put("literaryTextTable", Files.fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+				settings.put("semanticFiles", join(semanticFiles, ","));
+			String tablePath = fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath();
+			settings.put("literaryTextTable", tablePath);
+			settings.put("editTable", tablePath);
 			if (otherSettings != null)
 				settings.putAll(otherSettings);
 			List<String> settingsList = new ArrayList<String>();
 			for (String key : settings.keySet())
 				settingsList.add(key + " " + settings.get(key));
-	
+			
 			logger.debug("liblouisutdml conversion:" +
 			"\n   configFiles: " + configFileList +
 			"\n   inputFile: " + inputFileName +
 			"\n   outputFile: " + outputFileName +
-			"\n   settings: " + Strings.join(settingsList, " "));
-
+			"\n   settings: " + join(settingsList, " "));
+			
 			setWriteablePath.invoke(liblouisutdml, tempDir.getAbsolutePath());
 			translateFile.invoke(liblouisutdml, configFileList, inputFileName, outputFileName,
-					null,Strings.join(settingsList, "\n"), 0); }
+					null, join(settingsList, "\n"), 0); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}

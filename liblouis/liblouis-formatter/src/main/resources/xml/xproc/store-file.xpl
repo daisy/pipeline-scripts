@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="louis:store-file" name="store-file"
+<p:declare-step type="pxi:store-file" name="store-file"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:louis="http://liblouis.org/liblouis"
-    exclude-inline-prefixes="louis px p"
+    exclude-inline-prefixes="#all"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
@@ -24,6 +26,7 @@
             <p:empty/>
         </p:with-option>
     </px:tempfile>
+    
     <p:store method="text">
         <p:input port="source">
             <p:pipe step="store-file" port="source"/>
@@ -32,6 +35,7 @@
             <p:pipe step="tempfile" port="result"/>
         </p:with-option>
     </p:store>
+    
     <px:fileset-add-entry>
         <p:input port="source">
             <p:pipe step="store-file" port="directory"/>

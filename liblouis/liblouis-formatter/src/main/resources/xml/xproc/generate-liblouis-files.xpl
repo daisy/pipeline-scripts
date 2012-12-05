@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="louis:generate-liblouis-files" name="generate-liblouis-files"
+<p:declare-step type="pxi:generate-liblouis-files" name="generate-liblouis-files"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:louis="http://liblouis.org/liblouis"
     version="1.0">
     
@@ -18,14 +19,25 @@
     
     <p:import href="store-file.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
+    
+    <!-- FIXME this is a dirty hack -->
+    <p:variable name="liblouis-ini-file"
+        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
+        <p:document href="format.xpl"/>
+    </p:variable>
     
     <px:fileset-create name="directory">
         <p:with-option name="base" select="$directory">
             <p:empty/>
         </p:with-option>
     </px:fileset-create>
-
-    <louis:store-file name="styles-directory" suffix=".cfg">
+    
+    <px:fileset-add-entry name="liblouis-ini-file">
+        <p:with-option name="href" select="$liblouis-ini-file"/>
+    </px:fileset-add-entry>
+    
+    <pxi:store-file name="styles-directory" suffix=".cfg">
         <p:input port="source">
             <p:inline><louis:config-file>style no-pagenum
     braillePageNumberFormat blank
@@ -47,9 +59,9 @@ style preformatted-line
         <p:input port="directory">
             <p:pipe step="directory" port="result"/>
         </p:input>
-    </louis:store-file>
+    </pxi:store-file>
     
-    <louis:store-file name="semantics-directory" suffix=".sem">
+    <pxi:store-file name="semantics-directory" suffix=".sem">
         <p:input port="source">
             <p:inline><louis:semantic-file>skip &amp;xpath(//*[@louis:style='skip'])
 no-pagenum &amp;xpath(//louis:no-pagenum)
@@ -60,9 +72,9 @@ pagenum &amp;xpath(//louis:print-page)
 </louis:semantic-file></p:inline>
         </p:input>
         <p:input port="directory">
-            <p:pipe step="directory" port="result"/>
+            <p:pipe step="liblouis-ini-file" port="result"/>
         </p:input>
-    </louis:store-file>
+    </pxi:store-file>
     
     <p:for-each name="styles">
         <p:iteration-source>
@@ -83,14 +95,14 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file" suffix=".cfg">
+        <pxi:store-file name="store-file" suffix=".cfg">
             <p:input port="source">
                 <p:pipe step="extract-liblouis-styles" port="secondary"/>
             </p:input>
             <p:input port="directory">
                 <p:pipe step="styles-directory" port="result"/>
             </p:input>
-        </louis:store-file>
+        </pxi:store-file>
     </p:for-each>
     
     <p:for-each name="semantics">
@@ -105,11 +117,11 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file" suffix=".sem">
+        <pxi:store-file name="store-file" suffix=".sem">
             <p:input port="directory">
                 <p:pipe step="semantics-directory" port="result"/>
             </p:input>
-        </louis:store-file>
+        </pxi:store-file>
     </p:for-each>
     
     <p:for-each name="toc-styles">
@@ -130,14 +142,14 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file" suffix=".cfg">
+        <pxi:store-file name="store-file" suffix=".cfg">
             <p:input port="source">
                 <p:pipe step="extract-liblouis-styles" port="secondary"/>
             </p:input>
             <p:input port="directory">
                 <p:pipe step="directory" port="result"/>
             </p:input>
-        </louis:store-file>
+        </pxi:store-file>
     </p:for-each>
     
     <p:for-each name="toc-semantics">
@@ -152,11 +164,11 @@ pagenum &amp;xpath(//louis:print-page)
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <louis:store-file name="store-file" suffix=".sem">
+        <pxi:store-file name="store-file" suffix=".sem">
             <p:input port="directory">
                 <p:pipe step="directory" port="result"/>
             </p:input>
-        </louis:store-file>
+        </pxi:store-file>
     </p:for-each>
     
     <p:group name="result">

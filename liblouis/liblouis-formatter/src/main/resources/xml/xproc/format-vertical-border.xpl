@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="louis:format-vertical-border" name="format-vertical-border"
+<p:declare-step type="pxi:format-vertical-border" name="format-vertical-border"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:louis="http://liblouis.org/liblouis"
-    exclude-inline-prefixes="louis"
+    exclude-inline-prefixes="#all"
     version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
@@ -12,10 +13,6 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
-    <p:variable name="liblouis-ini-file"
-        select="concat(substring(base-uri(/), 0, string-length(base-uri(/))-19), 'lbx_files/liblouisutdml.ini')">
-        <p:document href="format.xpl"/>
-    </p:variable>
     <p:variable name="liblouis-table"
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'"/>
     
@@ -62,12 +59,11 @@
             <p:with-param port="page-layout" name="page-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
             </p:with-param>
-            <p:with-option name="ini-file" select="$liblouis-ini-file"/>
             <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
         
-        <p:xslt name="preformatted">
+        <p:xslt>
             <p:input port="stylesheet">
                 <p:document href="../xslt/read-liblouis-output.xsl"/>
             </p:input>
