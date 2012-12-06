@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
-    <!-- liblouis 64-bit -->
-    <scr:component name="liblouis.so (32-bit)" activate="activate">
+    <!-- liblouis 32-bit -->
+    <scr:component name="liblouis.so (Linux 32-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
@@ -10,7 +10,7 @@
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- liblouisutdml 32-bit -->
-    <scr:component name="liblouisutdml.so (32-bit)" activate="activate">
+    <scr:component name="liblouisutdml.so (Linux 32-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
@@ -21,7 +21,7 @@
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- file2brl 32-bit -->
-    <scr:component name="file2brl (32-bit)" activate="activate">
+    <scr:component name="file2brl (Linux 32-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
@@ -33,7 +33,7 @@
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
     <!-- liblouis 64-bit -->
-    <scr:component name="liblouis.so (64-bit)" activate="activate">
+    <scr:component name="liblouis.so (Linux 64-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
@@ -42,7 +42,7 @@
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
     </scr:component>
     <!-- liblouisutdml 64-bit -->
-    <scr:component name="liblouisutdml.so (64-bit)" activate="activate">
+    <scr:component name="liblouisutdml.so (Linux 64-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
@@ -53,7 +53,7 @@
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
     </scr:component>
     <!-- file2brl 64-bit -->
-    <scr:component name="file2brl (64-bit)" activate="activate">
+    <scr:component name="file2brl (Linux 64-bit)" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>

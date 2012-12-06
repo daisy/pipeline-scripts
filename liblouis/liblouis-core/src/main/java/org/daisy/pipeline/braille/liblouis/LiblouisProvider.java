@@ -120,8 +120,6 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 					return false;
 				if (OS.getFamily() != binary.getOsFamily())
 					return false;
-				if (OS.isWindows() && "file2brl".equals(binary.getName()))
-					return true;
 				return binary.getOsArchs().contains(OS.getArch()); }};
 	
 	public void addBinary(Binary binary) {
