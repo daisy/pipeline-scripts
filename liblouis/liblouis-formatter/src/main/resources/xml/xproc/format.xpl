@@ -18,10 +18,11 @@
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:import href="generate-liblouis-files.xpl"/>
-    <p:import href="format-vertical-border.xpl"/>
+    <p:import href="format-box.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
     <p:variable name="liblouis-table"
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
@@ -120,7 +121,15 @@
             <p:iteration-source>
                 <p:pipe step="handle-css" port="result"/>
             </p:iteration-source>
-            <p:delete match="//louis:toc/*|//louis:toc/@*[not(local-name()='id')]"/>
+            <p:viewport match="//louis:toc" name="tocs">
+                <p:rename match="/*" new-name="louis:include"/>
+                <p:delete match="/*/*|/*/@*"/>
+                <p:add-attribute match="/*" attribute-name="ref">
+                    <p:with-option name="attribute-value" select="/*/@xml:id">
+                        <p:pipe step="tocs" port="current"/>
+                    </p:with-option>
+                </p:add-attribute>
+            </p:viewport>
         </p:for-each>
     </p:group>
     
@@ -137,9 +146,9 @@
     </pxi:generate-liblouis-files>
     
     <p:for-each>
-        <pxi:format-vertical-border>
+        <pxi:format-box>
             <p:with-option name="temp-dir" select="$temp-dir"/>
-        </pxi:format-vertical-border>
+        </pxi:format-box>
     </p:for-each>
     
     <pxi:format-toc>

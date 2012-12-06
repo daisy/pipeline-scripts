@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="pxi:format-vertical-border" name="format-vertical-border"
+<p:declare-step type="pxi:format-box" name="format-box"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
@@ -16,14 +16,14 @@
     <p:variable name="liblouis-table"
         select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'"/>
     
-    <p:viewport match="louis:vertical-border" name="format">
+    <p:viewport match="louis:box" name="format">
         
         <p:rename match="/*">
             <p:with-option name="new-name" select="name(/*/*[1])">
-                <p:pipe step="format-vertical-border" port="source"/>
+                <p:pipe step="format-box" port="source"/>
             </p:with-option>
             <p:with-option name="new-namespace" select="namespace-uri(/*/*[1])">
-                <p:pipe step="format-vertical-border" port="source"/>
+                <p:pipe step="format-box" port="source"/>
             </p:with-option>
         </p:rename>
         
@@ -32,9 +32,7 @@
         <p:insert match="/*" position="first-child">
             <p:input port="insertion">
                 <p:inline>
-                    <louis:preformatted>
-                        <louis:line>&#xA0;</louis:line>
-                    </louis:preformatted>
+                    <louis:line>&#xA0;</louis:line>
                 </p:inline>
             </p:input>
         </p:insert>
@@ -42,19 +40,17 @@
         <p:insert match="/*" position="last-child">
             <p:input port="insertion">
                 <p:inline>
-                    <louis:preformatted>
-                        <louis:line>&#xA0;</louis:line>
-                    </louis:preformatted>
+                    <louis:line>&#xA0;</louis:line>
                 </p:inline>
             </p:input>
         </p:insert>
         
         <louis:translate-file paged="false">
             <p:input port="styles" select="/*/*[2]">
-                <p:pipe step="format-vertical-border" port="source"/>
+                <p:pipe step="format-box" port="source"/>
             </p:input>
             <p:input port="semantics" select="/*/*[3]">
-                <p:pipe step="format-vertical-border" port="source"/>
+                <p:pipe step="format-box" port="source"/>
             </p:input>
             <p:with-param port="page-layout" name="page-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
@@ -89,6 +85,8 @@
                 <p:empty/>
             </p:with-param>
         </p:xslt>
+        
+        <p:rename match="/*" new-name="louis:box"/>
     </p:viewport>
     
 </p:declare-step>

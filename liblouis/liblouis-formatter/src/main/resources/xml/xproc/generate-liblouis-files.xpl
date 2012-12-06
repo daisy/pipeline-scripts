@@ -63,12 +63,14 @@ style preformatted-line
     
     <pxi:store-file name="semantics-directory" suffix=".sem">
         <p:input port="source">
-            <p:inline><louis:semantic-file>skip &amp;xpath(//*[@louis:style='skip'])
-no-pagenum &amp;xpath(//louis:no-pagenum)
-contentsheader &amp;xpath(//louis:toc[parent::louis:no-pagenum])
-none &amp;xpath(//louis:toc[not(parent::louis:no-pagenum)])
-preformatted-line &amp;xpath(//louis:preformatted//louis:line)
-pagenum &amp;xpath(//louis:print-page)
+            <p:inline><louis:semantic-file>skip              &amp;xpath(//*[@louis:style='skip'])
+no-pagenum        &amp;xpath(//louis:no-pagenum)
+contentsheader    &amp;xpath(//louis:toc)
+none              &amp;xpath(//louis:include)
+none              &amp;xpath(//louis:box)
+preformatted-line &amp;xpath(//louis:line)
+preformatted-line &amp;xpath(//louis:border)
+pagenum           &amp;xpath(//louis:print-page)
 </louis:semantic-file></p:inline>
         </p:input>
         <p:input port="directory">

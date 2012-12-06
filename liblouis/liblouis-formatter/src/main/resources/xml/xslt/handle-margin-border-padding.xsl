@@ -8,7 +8,7 @@
 
     <!--
       * Make margin-left and margin-right absolute
-      * Turn borders into louis:border and louis:vertical-border
+      * Turn borders into louis:border and louis:box
       * Turn padding into margin
     -->
     <xsl:param name="page-width" select="40"/>
@@ -213,7 +213,7 @@
         <xsl:if test="descendant::louis:toc">
             <xsl:message terminate="yes">No toc allowed inside an element with vertical borders</xsl:message>
         </xsl:if>
-        <louis:vertical-border>
+        <louis:box>
             <xsl:attribute name="width" select="louis:to-string($new-width)"/>
             <xsl:attribute name="margin-left" select="louis:to-string(max((0, $left + $margin-left)))"/>
             <xsl:attribute name="margin-right" select="louis:to-string(max((0, $right + $margin-right)))"/>
@@ -229,7 +229,7 @@
                 <xsl:with-param name="margin-bottom" select="$padding-bottom"/>
                 <xsl:with-param name="style" select="$style"/>
             </xsl:call-template>
-        </louis:vertical-border>
+        </louis:box>
     </xsl:template>
     
     <xsl:template name="handle-margin">
@@ -273,22 +273,11 @@
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="left"/>
         <xsl:param name="width"/>
-        <xsl:choose>
-            <xsl:when test="$width = number($page-width)">
-                <louis:border>
-                    <xsl:attribute name="louis:style" select="$style"/>
-                </louis:border>
-            </xsl:when>
-            <xsl:otherwise>
-                <louis:preformatted>
-                    <louis:line>
-                        <xsl:value-of select="concat(
-                            louis:repeat-char('&#xA0;', $left), 
-                            louis:repeat-char($style, $width))"/>
-                    </louis:line>
-                </louis:preformatted>
-            </xsl:otherwise>
-        </xsl:choose>
+        <louis:border>
+            <xsl:value-of select="concat(
+                louis:repeat-char('&#xA0;', $left), 
+                louis:repeat-char($style, $width))"/>
+        </louis:border>
     </xsl:function>
     
     <xsl:function name="louis:to-string" as="xs:string">
@@ -296,12 +285,10 @@
         <xsl:sequence select="format-number($number, '0.0')"/>
     </xsl:function>
     
-    <xsl:function name="louis:repeat-char" as="xs:string?">
+    <xsl:function name="louis:repeat-char" as="xs:string">
         <xsl:param name="char" as="xs:string"/>
         <xsl:param name="times" />
-        <xsl:if test="$times &gt; 0">
-            <xsl:value-of select="concat($char, louis:repeat-char($char, $times - 1))"/>
-        </xsl:if>
+        <xsl:sequence select="if ($times &gt; 0) then concat($char, louis:repeat-char($char, $times - 1)) else ''"/>
     </xsl:function>
     
     <xsl:function name="louis:append-properties" as="xs:string">

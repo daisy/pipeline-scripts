@@ -27,14 +27,7 @@
                     <xsl:text>namespaces </xsl:text>
                     <xsl:text>louis=http://liblouis.org/liblouis&#xa;</xsl:text>
                     <xsl:text>document &amp;xpath(/*)&#xa;</xsl:text>
-                    <xsl:for-each select="distinct-values(//louis:border/@louis:style/string())">
-                        <xsl:text>boxline &amp;xpath(//louis:border[@louis:style='</xsl:text>
-                        <xsl:value-of select="."/>
-                        <xsl:text>']) </xsl:text>
-                        <xsl:value-of select="brl:unicode-braille-to-nabcc(.)"/>
-                        <xsl:text>&#xa;</xsl:text>
-                    </xsl:for-each>
-                    <xsl:for-each select="distinct-values(//*[not(self::louis:border)]/@louis:style/string())">
+                    <xsl:for-each select="distinct-values(//*/@louis:style/string())">
                         <xsl:if test="starts-with(., '#')">
                             <xsl:value-of select="substring-after(., '#')"/>
                             <xsl:text> &amp;xpath(//*[@louis:style='</xsl:text>

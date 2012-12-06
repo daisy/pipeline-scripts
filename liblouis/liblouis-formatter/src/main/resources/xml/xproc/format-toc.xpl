@@ -90,8 +90,8 @@
                 <p:pipe step="generate-toc" port="current"/>
             </p:with-param>
         </p:xslt>
-        <p:wrap wrapper="louis:toc" match="/*"/>
-        <p:add-attribute attribute-name="xml:id" match="/*">
+        <p:rename match="/*" new-name="louis:include"/>
+        <p:add-attribute attribute-name="ref" match="/*">
             <p:with-option name="attribute-value" select="$toc-id"/>
         </p:add-attribute>
     </p:for-each>
@@ -103,13 +103,13 @@
             <p:pipe step="format-toc" port="source"/>
         </p:iteration-source>
         <p:output port="result" primary="true"/>
-        <p:viewport match="//louis:toc">
-            <p:variable name="toc-id" select="/*/@xml:id"/>
+        <p:viewport match="//louis:include">
+            <p:variable name="toc-id" select="/*/@ref"/>
             <p:split-sequence>
                 <p:input port="source">
                     <p:pipe step="generate-toc" port="result"/>
                 </p:input>
-                <p:with-option name="test" select="concat('/*/@xml:id = &quot;', $toc-id, '&quot;')"/>
+                <p:with-option name="test" select="concat('/*/@ref = &quot;', $toc-id, '&quot;')"/>
             </p:split-sequence>
         </p:viewport>
     </p:for-each>
@@ -117,24 +117,22 @@
     <!-- Decide whether to do another pass -->
     
     <p:wrap-sequence wrapper="tocs" name="old-tocs">
-        <p:input port="source" select="//louis:toc">
+        <p:input port="source" select="//louis:include">
             <p:pipe step="format-toc" port="source"/>
         </p:input>
     </p:wrap-sequence>
     <p:sink/>
     <p:wrap-sequence wrapper="tocs" name="new-tocs">
-        <p:input port="source" select="//louis:toc">
+        <p:input port="source" select="//louis:include">
             <p:pipe step="insert-toc" port="result"/>
         </p:input>
     </p:wrap-sequence>
     <p:sink/>
     <p:group>
-        <p:variable name="old-toc-lengths"
-            select="count(//louis:toc/louis:preformatted/louis:line)">
+        <p:variable name="old-toc-lengths" select="count(//louis:line)">
             <p:pipe step="old-tocs" port="result"/>
         </p:variable>
-        <p:variable name="new-toc-lengths"
-            select="count(//louis:toc/louis:preformatted/louis:line)">
+        <p:variable name="new-toc-lengths" select="count(//louis:line)">
             <p:pipe step="new-tocs" port="result"/>
         </p:variable> 
         <p:choose>

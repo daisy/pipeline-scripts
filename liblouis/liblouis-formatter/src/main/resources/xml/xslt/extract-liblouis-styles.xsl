@@ -27,10 +27,6 @@
                       then concat('#', louis:generate-style-name(string())) else 'skip'"/>
     </xsl:template>
     
-    <xsl:template match="@louis:style">
-        <xsl:copy/>
-    </xsl:template>
-    
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>

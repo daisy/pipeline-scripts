@@ -48,7 +48,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="louis:vertical-border|
+    <xsl:template match="louis:box|
                          *[@css:toc-item]">
         <xsl:copy>
             <xsl:apply-templates select="@*[not(name()='style')]"/>
@@ -60,7 +60,6 @@
     </xsl:template>
     
     <xsl:template match="louis:border|
-                         louis:preformatted|
                          louis:line|
                          louis:toc|
                          louis:toc//*[not(@css:toc-item)]|
