@@ -51,7 +51,7 @@
   <xsl:function name="louis:repeat-char" as="xs:string">
     <xsl:param name="char" as="xs:string"/>
     <xsl:param name="times" />
-    <xsl:sequence select="if ($times &gt; 0) then concat($char, louis:repeat-char($char, $times - 1)) else ''"/>
+    <xsl:sequence select="string-join(for $i in 1 to $times return $char, '')"/>
   </xsl:function>
     
 </xsl:stylesheet>
