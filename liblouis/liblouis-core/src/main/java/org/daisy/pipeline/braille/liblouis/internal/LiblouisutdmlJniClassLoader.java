@@ -18,10 +18,10 @@ public class LiblouisutdmlJniClassLoader extends JarClassLoader {
 			String liblouisPath = null;
 			String liblouisutdmlPath = null;
 			for (String file : nativeDirectory.list()) {
-				if (file.startsWith("liblouis."))
-					liblouisPath = nativeDirectory.getAbsolutePath() + File.separator + file;
-				else if (file.startsWith("liblouisutdml."))
-					liblouisutdmlPath = nativeDirectory.getAbsolutePath() + File.separator + file; }
+				if (file.startsWith("liblouisutdml"))
+					liblouisutdmlPath = nativeDirectory.getAbsolutePath() + File.separator + file;
+				else if (file.startsWith("liblouis"))
+					liblouisPath = nativeDirectory.getAbsolutePath() + File.separator + file;}
 			Method loadLibrary = loadClass("org.liblouis.liblouisutdml")
 					.getMethod("loadLibrary", String.class, String.class);
 			loadLibrary.invoke(null, liblouisPath, liblouisutdmlPath);
