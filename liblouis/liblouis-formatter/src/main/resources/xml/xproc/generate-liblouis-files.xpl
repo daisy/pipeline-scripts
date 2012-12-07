@@ -57,7 +57,7 @@ style preformatted-line
 </louis:config-file></p:inline>
         </p:input>
         <p:input port="directory">
-            <p:pipe step="directory" port="result"/>
+            <p:pipe step="liblouis-ini-file" port="result"/>
         </p:input>
     </pxi:store-file>
     
@@ -74,7 +74,7 @@ pagenum           &amp;xpath(//louis:print-page)
 </louis:semantic-file></p:inline>
         </p:input>
         <p:input port="directory">
-            <p:pipe step="liblouis-ini-file" port="result"/>
+            <p:pipe step="directory" port="result"/>
         </p:input>
     </pxi:store-file>
     
