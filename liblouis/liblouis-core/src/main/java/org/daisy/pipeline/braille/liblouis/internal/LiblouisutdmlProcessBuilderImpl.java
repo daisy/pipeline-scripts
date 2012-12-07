@@ -2,6 +2,8 @@ package org.daisy.pipeline.braille.liblouis.internal;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import static org.daisy.pipeline.braille.Utilities.Files.fileName;
 import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
+import org.daisy.pipeline.braille.Utilities.VoidFunction;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 
@@ -79,27 +82,51 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 				command.add("-C" + key + "=" + settings.get(key));
 			command.add(input.getAbsolutePath());
 			command.add(output.getAbsolutePath());
-	
-			logger.debug("liblouisutdml conversion:\n" + join(command, "\n\t"));
+			
+			logger.debug("\n" + join(command, "\n\t"));
 			
 			ProcessBuilder builder = new ProcessBuilder(command);
 			builder.directory(tempDir);
 			Process process = builder.start();
-		
-			if (process.waitFor() != 0) {
-				BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-				List<String> error = new ArrayList<String>();
-				for (String line = stderr.readLine(); line != null; line = stderr.readLine())
-					error.add(line);
-				stderr.close();
-				if (!error.isEmpty())
-					throw new RuntimeException(join(error, "\n"));
-				else
-					throw new RuntimeException("What happened?"); }}
+			
+			new StreamReaderThread(
+					process.getErrorStream(),
+					new VoidFunction<List<String>>() {
+						public void apply(List<String> error) {
+							logger.debug("\nstderr:\n\t" + join(error, "\n\t")); }}).start();
+			
+			int exitValue = process.waitFor();
+			logger.debug("\nexit value: " + exitValue);
+			if (exitValue != 0)
+				throw new RuntimeException("liblouisutdml exited with value " + exitValue); }
 			
 		catch (Exception e) {
 			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisutdmlProcessBuilderImpl.class);
+	
+	private static class StreamReaderThread extends Thread {
+		
+		private InputStream stream;
+		private VoidFunction<List<String>> callback;
+		
+		public StreamReaderThread(InputStream stream, VoidFunction<List<String>> callback) {
+			this.stream = stream;
+			this.callback = callback;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+				List<String> result = new ArrayList<String>();
+				String line = null;
+				while ((line = reader.readLine()) != null) result.add(line);
+				if (callback != null)
+					callback.apply(result); }
+			catch (IOException e) {
+				throw new RuntimeException(e); }
+		}
+	}
 }
