@@ -486,6 +486,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <xsl:function name="f:description-string" as="xs:string">
+    <xsl:param name="desc" as="element()"/>
+    <xsl:choose>
+      <xsl:when test="some $child in $desc/node() satisfies f:is-phrase($child)">
+        <xsl:sequence select="normalize-space(string($desc))"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="string-join($desc/*/normalize-space(),' ')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
 
   <!--====== Headings module ====================================-->
   <xsl:template match="h" mode="#all">
@@ -583,13 +594,18 @@
 
   <!--====== Object module ======================================-->
   <xsl:template match="object[f:is-image(.)]" mode="#all">
-    <!--FIXME alt text: better translation of object children-->
-    <!--Either:
-     - direct children (implicit description[@by='author'])
+    <!--TODO  add support for DIAGRAM descriptions -->
+    <!--Description is used for @alt; it comes from either:
+     - external desription
      - description child
-     - external desription-->
-    <!--if part of a figure, simply copy
-    else try to get captions-->
+     - direct content (implicit description[@by='author'])
+     -->
+    <xsl:variable name="alt" as="xs:string" select="f:description-string(
+      if (@desc) then id(tokenize(@desc,'\s+'))[not(@xlink:href)][1]
+      else if (description) then description
+      else .
+      )"/>
+    
     <xsl:variable name="captions" select="../(hd|caption|citation)[f:references(.,current())]"/>
     <xsl:variable name="shared-captions"
       select="..[f:has-role(.,'figure')]/(hd|caption|citation)[f:references-all(.,../(object|table))]"/>
@@ -602,7 +618,7 @@
               <xsl:apply-templates select="f:simplify-captions($dedicated-captions)" mode="caption"/>
             </figcaption>
           </xsl:if>
-          <img src="{@src}" alt="{.}">
+          <img src="{@src}" alt="{$alt}">
             <xsl:apply-templates select="@*"/>
           </img>
           <xsl:if test="$dedicated-captions[1] >> .">
@@ -613,7 +629,7 @@
         </figure>
       </xsl:when>
       <xsl:otherwise>
-        <img src="{@src}" alt="{.}">
+        <img src="{@src}" alt="{$alt}">
           <xsl:apply-templates select="@*"/>
         </img>
       </xsl:otherwise>
@@ -1071,9 +1087,9 @@
   <!--===========================================================-->
 
   <xsl:function name="f:has-role" as="xs:boolean">
-    <xsl:param name="elem" as="element()"/>
+    <xsl:param name="elem" as="node()"/>
     <xsl:param name="role" as="xs:string*"/>
-    <xsl:sequence select="tokenize($elem/@role,'\s')=$role"/>
+    <xsl:sequence select="tokenize($elem/@role,'\s+')=$role"/>
   </xsl:function>
   <xsl:function name="f:is-phrase" as="xs:boolean">
     <!--FIXME improve heuristics-->
@@ -1097,17 +1113,17 @@
   <xsl:function name="f:is-captioning" as="xs:boolean">
     <xsl:param name="elem" as="element()"/>
     <xsl:sequence
-      select="$elem/../@associate or $elem/id(tokenize($elem/@ref,'\s'))[self::table|self::object]"/>
+      select="$elem/../@associate or $elem/id(tokenize($elem/@ref,'\s+'))[self::table|self::object]"/>
   </xsl:function>
   <xsl:function name="f:references" as="xs:boolean">
     <xsl:param name="ref" as="element()"/>
     <xsl:param name="elems" as="element()*"/>
-    <xsl:sequence select="$ref/@ref and tokenize($ref/@ref,'\s')=$elems/@xml:id"/>
+    <xsl:sequence select="$ref/@ref and tokenize($ref/@ref,'\s+')=$elems/@xml:id"/>
   </xsl:function>
   <xsl:function name="f:references-all" as="xs:boolean">
     <xsl:param name="ref" as="element()"/>
     <xsl:param name="elems" as="element()*"/>
-    <xsl:sequence select="$ref/@ref and (every $id in $elems/@xml:id satisfies tokenize($ref/@ref,'\s')=$id)"/>
+    <xsl:sequence select="$ref/@ref and (every $id in $elems/@xml:id satisfies tokenize($ref/@ref,'\s+')=$id)"/>
   </xsl:function>
   <xsl:function name="f:simplify-captions" as="node()*">
     <xsl:param name="captions" as="element()*"/>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:epub="http://www.idpf.org/2007/ops" xmlns:z="http://www.daisy.org/ns/z3998/authoring/">
+
+    <utfx:stylesheet src="../../main/resources/xml/xslt/zedai-to-html.xsl"/>
+
+    <utfx:test>
+        <utfx:name>Alttext :: As child content</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png">
+                    <p>description</p>
+                </z:object>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="description"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Alttext :: As complex child content</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png">
+                    <p>Paragraph 1.</p>
+                    <p>Paragraph 2.</p>
+                </z:object>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="Paragraph 1. Paragraph 2."/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Alttext :: As child text</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png"> description </z:object>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="description"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Alttext :: As child description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png">
+                    <z:description>
+                        <p>description</p>
+                    </z:description>
+                </z:object>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="description"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Alttext :: As complex child description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png">
+                    <z:description>
+                        <p>Paragraph 1.</p>
+                        <p>Paragraph 2.</p>
+                    </z:description>
+                </z:object>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="Paragraph 1. Paragraph 2."/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Alttext :: As external description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:object src="image.png" desc="desc"> </z:object>
+                <z:description xml:id="desc">
+                    <p>description</p>
+                </z:description>
+            </utfx:source>
+            <utfx:expected>
+                <img src="image.png" alt="description"/>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+</utfx:tests>

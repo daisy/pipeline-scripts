@@ -93,6 +93,24 @@
         </utfx:assert-equal>
     </utfx:test>
     <utfx:test>
+        <utfx:name>Figure :: With Description</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:object src="image.png" xml:id="image" desc="desc"/>
+                    <z:caption ref="image">caption</z:caption>
+                    <z:description xml:id="desc">description</z:description>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <img src="image.png" id="image" alt="description"/>
+                    <figcaption>caption</figcaption>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
         <utfx:name>Figure :: With Heading</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
