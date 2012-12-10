@@ -8,9 +8,10 @@
   <xsl:import href="zedai-vocab-utils.xsl"/>
 
   <xsl:output method="xhtml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes"/>
+  <xsl:strip-space elements="*"/>
 
   <xsl:param name="base" select="base-uri(/)"/>
-  
+
   <xsl:key name="refs" match="z:*[@ref]" use="tokenize(@ref,'\s+')"/>
 
   <xsl:template match="/">
@@ -288,35 +289,43 @@
       <xsl:apply-templates/>
     </div>
   </xsl:template>
-  <xsl:template match="z:block[@role='figure']" mode="#all">
+  <xsl:template match="z:block[f:has-role(.,'figure')]" mode="#all">
     <figure>
-      <!--FIXME add figcaption-->      
-      <!--include all associated content but the core in the figcaption ?-->
-      <!--handle @aria-describedby-->
-      <!--
-        if count(obj)>1
-          if obj[dedicated caption]
-            nested fig
-            shared cap if needed
-          else
-            single cap + many obj
-        else
-          single cap + obj
-      -->
       <xsl:apply-templates select="@*"/>
-      <xsl:apply-templates select="* except z:caption"/>
+      <!--
+        figure's objects:
+        - tables or objects (images)
+        the figure's top-level caption contains:
+        - all captioning elements without @ref if there is an @associate on the parent
+        - all captioning elements with @ref matching all the IDs of the figure's objects
+      -->
+      <xsl:variable name="objects" select="z:table|z:object"/>
+      <xsl:variable name="captions"
+        select=".[@associate]/(z:hd|z:caption|z:citation)[not(@ref)]
+        | (z:hd|z:caption|z:citation)[f:references-all(.,$objects)]"
+      />
+      <!--we respect the document order: the caption is created either before or after
+          the object depending on whether the first captioning element is found before
+          or after.-->
+      <xsl:if test="$captions[1] &lt;&lt; $objects[1]">
+        <figcaption>
+          <xsl:apply-templates select="f:simplify-captions($captions)" mode="caption"/>
+        </figcaption>
+      </xsl:if>
+      <xsl:apply-templates select="*"/>
+      <xsl:if test="$captions[1] >> $objects[1]">
+        <figcaption>
+          <xsl:apply-templates select="f:simplify-captions($captions)" mode="caption"/>
+        </figcaption>
+      </xsl:if>
     </figure>
-  </xsl:template>
-  <xsl:template match="@associate" mode="#all">
-    <!--FIXME should be used for figures or/else discarded-->
-    <xsl:attribute name="data-associate" select="."/>
   </xsl:template>
 
   <!--====== Annotation module ==================================-->
 
   <xsl:template match="z:annotation" mode="#all">
     <aside epub:type="annotation">
-        <!--TODO better @role translation-->
+      <!--TODO better @role translation-->
       <!--<xsl:call-template name="role">
         <xsl:with-param name="roles" select="('annotation',@role)"/>
       </xsl:call-template>-->
@@ -361,14 +370,7 @@
 
   <!--Captions are handled in the templates of the captioned element-->
   <xsl:template match="z:caption" mode="#all"/>
-  <xsl:template match="z:caption" mode="figcaption" priority="10">
-    <figcaption>
-      <!--TODO translate: @role-->
-      <xsl:apply-templates select="@*" mode="#default"/>
-      <xsl:apply-templates mode="#default"/>
-    </figcaption>
-  </xsl:template>
-  <xsl:template match="z:caption" mode="tablecaption" priority="10">
+  <xsl:template match="z:caption" mode="caption" priority="10">
     <xsl:choose>
       <xsl:when test="some $child in node() satisfies f:is-phrase($child)">
         <p>
@@ -383,7 +385,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-          <xsl:apply-templates mode="#default"/>
+        <xsl:apply-templates mode="#default"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -391,6 +393,14 @@
   <!--====== Cite module ========================================-->
 
   <xsl:template match="z:citation" mode="#all">
+    <xsl:if test="not(f:is-captioning(.))">
+      <xsl:call-template name="citation"/>
+    </xsl:if>
+  </xsl:template>
+  <xsl:template match="z:citation" mode="caption" priority="10">
+      <xsl:call-template name="citation"/>
+  </xsl:template>
+  <xsl:template name="citation">
     <!--TODO normalize: citation (e.g. within a quote) -->
     <cite>
       <xsl:apply-templates select="@*"/>
@@ -448,11 +458,12 @@
   </xsl:template>
 
   <!--====== Description module =================================-->
-  
+
   <!--TODO Support @epub:describedat when standardized -->
-  
+
   <xsl:template match="z:description[@xlink:href]" mode="#all">
-    <xsl:message>[WARNING] Unsupported external description to '<xsl:value-of select="@xlink:href"/>'.</xsl:message>
+    <xsl:message>[WARNING] Unsupported external description to '<xsl:value-of select="@xlink:href"
+      />'.</xsl:message>
   </xsl:template>
   <xsl:template match="z:description" mode="#all"/>
   <xsl:template match="z:description" mode="details" priority="10">
@@ -489,21 +500,36 @@
     </h1>
   </xsl:template>
   <xsl:template match="z:hd" mode="#all">
-    <xsl:call-template name="hd"/>
+    <!--
+    Skip headings referencing tables and objects.
+    They will be treated as captions under the 'caption' mode.
+  -->
+    <xsl:if test="not(f:is-captioning(.))">
+      <xsl:call-template name="hd"/>
+    </xsl:if>
   </xsl:template>
-  <!--Skip table headings unless called from the table template -->
-  <xsl:template match="z:hd[id(@ref)[self::z:table]]" mode="#all"/>
-  <xsl:template match="z:hd" mode="tablecaption" priority="10">
+  <xsl:template match="z:hd" mode="caption" priority="10">
     <xsl:call-template name="hd"/>
   </xsl:template>
   <xsl:template name="hd">
-    <p>
-      <xsl:call-template name="role">
-        <xsl:with-param name="roles" select="('bridgehead',@role)"/>
-      </xsl:call-template>
-      <xsl:apply-templates select="@* except @role" mode="#default"/>
-      <xsl:apply-templates mode="#default"/>
-    </p>
+    <xsl:choose>
+      <!--figure are sectioning roots, it's safe to translate hd into h1-->
+      <xsl:when test="parent::z:block[f:has-role(.,'figure')]">
+        <h1>
+          <xsl:apply-templates select="@*"/>
+          <xsl:apply-templates/>
+        </h1>
+      </xsl:when>
+      <xsl:otherwise>
+        <p>
+          <xsl:call-template name="role">
+            <xsl:with-param name="roles" select="('bridgehead',@role)"/>
+          </xsl:call-template>
+          <xsl:apply-templates select="@* except @role" mode="#default"/>
+          <xsl:apply-templates mode="#default"/>
+        </p>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!--====== List module ========================================-->
@@ -556,25 +582,41 @@
 
   <!--====== Object module ======================================-->
   <xsl:template match="z:object[f:is-image(.)]" mode="#all">
-    <xsl:variable name="caption" select="//z:caption[@ref=current()/@xml:id]"/>
-    <!--FIXME: figure may have been created in the parent block-->
-    <xsl:choose>
-      <xsl:when test="$caption">
-        <figure>
-          <xsl:apply-templates select="@*"/>
-          <img src="{@src}" alt="{.}"/>
-          <xsl:apply-templates select="$caption" mode="figcaption"/>
-        </figure>
-      </xsl:when>
-      <xsl:otherwise>
-        <img src="{@src}" alt="{.}"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <!--TODO better translation of object children-->
+    <!--FIXME alt text: better translation of object children-->
     <!--Either:
      - direct children (implicit description[@by='author'])
      - description child
      - external desription-->
+    <!--if part of a figure, simply copy
+    else try to get captions-->
+    <xsl:variable name="captions" select="../(z:hd|z:caption|z:citation)[f:references(.,current())]"/>
+    <xsl:variable name="shared-captions"
+      select="..[f:has-role(.,'figure')]/(z:hd|z:caption|z:citation)[f:references-all(.,../(z:object|z:table))]"/>
+    <xsl:variable name="dedicated-captions" select="$captions except $shared-captions"/>
+    <xsl:choose>
+      <xsl:when test="$dedicated-captions">
+        <figure>
+          <xsl:if test="$dedicated-captions[1] &lt;&lt; .">
+            <figcaption>
+              <xsl:apply-templates select="f:simplify-captions($dedicated-captions)" mode="caption"/>
+            </figcaption>
+          </xsl:if>
+          <img src="{@src}" alt="{.}">
+            <xsl:apply-templates select="@*"/>
+          </img>
+          <xsl:if test="$dedicated-captions[1] >> .">
+            <figcaption>
+              <xsl:apply-templates select="f:simplify-captions($dedicated-captions)" mode="caption"/>
+            </figcaption>
+          </xsl:if>
+        </figure>
+      </xsl:when>
+      <xsl:otherwise>
+        <img src="{@src}" alt="{.}">
+          <xsl:apply-templates select="@*"/>
+        </img>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   <xsl:template match="z:object" mode="#all">
     <xsl:message select="'object: unsuported media type'"/>
@@ -649,7 +691,9 @@
         <xsl:variable name="descs" select="id(tokenize(@desc,'\s+'))[not(@xlink:href)]"/>
         <xsl:if test="$captions or $descs">
           <caption>
-            <xsl:apply-templates select="if (count($captions)=1 and $captions[self::z:caption]) then $captions/node() else $captions" mode="tablecaption"/>
+            <xsl:apply-templates
+              select="if (count($captions)=1 and $captions[self::z:caption]) then $captions/node() else $captions"
+              mode="caption"/>
             <xsl:if test="$descs">
               <!--TODO add CSS style to move out of the screen ?-->
               <details>
@@ -657,7 +701,7 @@
                 <xsl:apply-templates select="$descs" mode="details"/>
               </details>
             </xsl:if>
-          </caption>          
+          </caption>
         </xsl:if>
       </xsl:if>
       <xsl:apply-templates select="* except z:pagebreak"/>
@@ -677,7 +721,7 @@
     </col>
   </xsl:template>
   <xsl:template match="z:colgroup/@span | z:col/@span" mode="#all">
-      <xsl:copy/>
+    <xsl:copy/>
   </xsl:template>
   <xsl:template match="z:thead" mode="#all">
     <thead>
@@ -725,19 +769,23 @@
     <xsl:copy/>
   </xsl:template>
   <xsl:template name="table-incell-pagebreaks">
-      <xsl:if test="position()=1">
-        <!--pagebreak just before the current row-->
-        <xsl:apply-templates select="../preceding-sibling::*[1][self::z:pagebreak]"/>
-        <!--pagebreak at the end of the previous row-->
-        <xsl:apply-templates select="../preceding-sibling::*[1][self::z:tr]/*[last()][self::z:pagebreak]"/>
-      </xsl:if>
-      <xsl:if test="position()=1 and not(../preceding-sibling::z:tr)">
-        <!--pagebreak at the end of the previous header or body-->
-        <xsl:apply-templates select="../parent::z:tbody/preceding-sibling::*[1][self::z:thead or self::z:tbody]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]"/>
-        <xsl:apply-templates select="../parent::z:tfoot/preceding-sibling::*[1][self::z:tbody]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]"/>
-      </xsl:if>
-      <!--pagebreak before the cell -->
-      <xsl:apply-templates select="preceding-sibling::*[1][self::z:pagebreak]"/>
+    <xsl:if test="position()=1">
+      <!--pagebreak just before the current row-->
+      <xsl:apply-templates select="../preceding-sibling::*[1][self::z:pagebreak]"/>
+      <!--pagebreak at the end of the previous row-->
+      <xsl:apply-templates
+        select="../preceding-sibling::*[1][self::z:tr]/*[last()][self::z:pagebreak]"/>
+    </xsl:if>
+    <xsl:if test="position()=1 and not(../preceding-sibling::z:tr)">
+      <!--pagebreak at the end of the previous header or body-->
+      <xsl:apply-templates
+        select="../parent::z:tbody/preceding-sibling::*[1][self::z:thead or self::z:tbody]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]"/>
+      <xsl:apply-templates
+        select="../parent::z:tfoot/preceding-sibling::*[1][self::z:tbody]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]"
+      />
+    </xsl:if>
+    <!--pagebreak before the cell -->
+    <xsl:apply-templates select="preceding-sibling::*[1][self::z:pagebreak]"/>
   </xsl:template>
   <xsl:template name="table-final-pagebreaks">
     <!--pagebreak after the last row-->
@@ -745,7 +793,9 @@
     <!--pagebreak as the last child of the last row-->
     <xsl:apply-templates select="*[last()][self::z:tr]/*[last()][self::z:pagebreak]" mode="block"/>
     <!--pagebreak at the end of the last header or body-->
-    <xsl:apply-templates select="*[last()][self::z:tbody|self::z:tfoot]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]" mode="block"/>
+    <xsl:apply-templates
+      select="*[last()][self::z:tbody|self::z:tfoot]/(*[last()]|*[last()]/*[last()])[self::z:pagebreak]"
+      mode="block"/>
   </xsl:template>
 
   <!--===========================================================-->
@@ -1019,6 +1069,11 @@
   <!-- Util functions                                            -->
   <!--===========================================================-->
 
+  <xsl:function name="f:has-role" as="xs:boolean">
+    <xsl:param name="elem" as="element()"/>
+    <xsl:param name="role" as="xs:string*"/>
+    <xsl:sequence select="tokenize($elem/@role,'\s')=$role"/>
+  </xsl:function>
   <xsl:function name="f:is-phrase" as="xs:boolean">
     <!--FIXME improve heuristics-->
     <xsl:param name="node" as="node()"/>
@@ -1037,5 +1092,24 @@
     <xsl:param name="node" as="node()"/>
     <xsl:sequence
       select="starts-with($node/@srctype,'image/') or matches($node/@src,'\.(jpg|png|gif|svg)$')"/>
+  </xsl:function>
+  <xsl:function name="f:is-captioning" as="xs:boolean">
+    <xsl:param name="elem" as="element()"/>
+    <xsl:sequence
+      select="$elem/../@associate or $elem/id(tokenize($elem/@ref,'\s'))[self::z:table|self::z:object]"/>
+  </xsl:function>
+  <xsl:function name="f:references" as="xs:boolean">
+    <xsl:param name="ref" as="element()"/>
+    <xsl:param name="elems" as="element()*"/>
+    <xsl:sequence select="$ref/@ref and tokenize($ref/@ref,'\s')=$elems/@xml:id"/>
+  </xsl:function>
+  <xsl:function name="f:references-all" as="xs:boolean">
+    <xsl:param name="ref" as="element()"/>
+    <xsl:param name="elems" as="element()*"/>
+    <xsl:sequence select="$ref/@ref and (every $id in $elems/@xml:id satisfies tokenize($ref/@ref,'\s')=$id)"/>
+  </xsl:function>
+  <xsl:function name="f:simplify-captions" as="node()*">
+    <xsl:param name="captions" as="element()*"/>
+    <xsl:sequence select="if (count($captions)=1 and $captions[self::z:caption]) then $captions/node() else $captions"/>
   </xsl:function>
 </xsl:stylesheet>

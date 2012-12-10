@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="utfx_tests.rnc" type="compact"?>
+<utfx:tests xmlns:utfx="http://utfx.org/test-definition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
+    xmlns:z="http://www.daisy.org/ns/z3998/authoring/">
+    
+    <utfx:stylesheet src="../../main/resources/xml/xslt/zedai-to-html.xsl"/>
+    
+    <utfx:test>
+        <utfx:name>Figure :: Image</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:object src="image.png" xml:id="image"/>
+                    <z:caption ref="image">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <img src="image.png" id="image" alt=""/>
+                    <figcaption>caption</figcaption>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Table</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:table xml:id="table"/>
+                    <z:caption ref="table">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <table id="table"/>
+                    <figcaption>caption</figcaption>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: No Caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:object src="image.png"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <img src="image.png" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Non-captioning children</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd>heading</z:hd>
+                    <z:object src="image.png"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <h1>heading</h1>
+                    <img src="image.png" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Captioning and non-captioning children</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd>heading</z:hd>
+                    <z:object src="image.png" xml:id="image"/>
+                    <z:caption ref="image">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <h1>heading</h1>
+                    <img id="image" src="image.png" alt=""/>
+                    <figcaption>caption</figcaption>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With Heading</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image">heading</z:hd>
+                    <z:object src="image.png" xml:id="image"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <h1>heading</h1>
+                    </figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With Cite</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:citation ref="image">citation</z:citation>
+                    <z:object src="image.png" xml:id="image"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <cite>citation</cite>
+                    </figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With Heading and Caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image">heading</z:hd>
+                    <z:caption ref="image">caption</z:caption>
+                    <z:object src="image.png" xml:id="image"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <h1>heading</h1>
+                        <p>caption</p>
+                    </figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With Heading and Caption Around</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image">heading</z:hd>
+                    <z:object src="image.png" xml:id="image" alt=""/>
+                    <z:caption ref="image">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <h1>heading</h1>
+                        <p>caption</p>
+                    </figcaption>
+                    <img src="image.png" id="image"  alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With heading and complex caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image">heading</z:hd>
+                    <z:caption ref="image">
+                        <z:p>caption par1</z:p>
+                        <z:p>caption par2</z:p>
+                    </z:caption>
+                    <z:object src="image.png" xml:id="image" alt=""/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <h1>heading</h1>
+                        <p>caption par1</p>
+                        <p>caption par2</p>
+                    </figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With caption before</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:caption ref="image">caption</z:caption>
+                    <z:object src="image.png" xml:id="image"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>caption</figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With caption after</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:object src="image.png" xml:id="image"/>
+                    <z:caption ref="image">caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <img src="image.png" id="image" alt=""/>
+                    <figcaption>caption</figcaption>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With associated caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure" associate="image">
+                    <z:caption>caption</z:caption>
+                    <z:object src="image.png" xml:id="image"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>caption</figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: With complex associated caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure" associate="image">
+                    <z:hd>heading</z:hd>
+                    <z:object src="image.png" xml:id="image"/>
+                    <z:caption>caption</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>
+                        <h1>heading</h1>
+                        <p>caption</p>
+                    </figcaption>
+                    <img src="image.png" id="image" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Mulitple objects with shared caption</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:caption ref="image1 image2">caption</z:caption>
+                    <z:object src="image1.png" xml:id="image1"/>
+                    <z:object src="image2.png" xml:id="image2"/>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption>caption</figcaption>
+                    <img src="image1.png" id="image1" alt=""/>
+                    <img src="image2.png" id="image2" alt=""/>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Multiple objects with dedicated captions</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:object src="image1.png" xml:id="image1"/>
+                    <z:caption ref="image1">caption1</z:caption>
+                    <z:object src="image2.png" xml:id="image2"/>
+                    <z:caption ref="image2">caption2</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figure>
+                        <img src="image1.png" id="image1" alt=""/>
+                        <figcaption>caption1</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="image2.png" id="image2" alt=""/>
+                        <figcaption>caption2</figcaption>
+                    </figure>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Multiple objects with dedicated captions and headings</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image1">heading1</z:hd>
+                    <z:object src="image1.png" xml:id="image1"/>
+                    <z:caption ref="image1">caption1</z:caption>
+                    <z:hd ref="image2">heading2</z:hd>
+                    <z:object src="image2.png" xml:id="image2"/>
+                    <z:caption ref="image2">caption2</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figure>
+                        <figcaption>
+                            <h1>heading1</h1>
+                            <p>caption1</p>
+                        </figcaption>
+                        <img src="image1.png" id="image1" alt=""/>
+                    </figure>
+                    <figure>
+                        <figcaption>
+                            <h1>heading2</h1>
+                            <p>caption2</p>
+                        </figcaption>
+                        <img src="image2.png" id="image2" alt=""/>
+                    </figure>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+    <utfx:test>
+        <utfx:name>Figure :: Multiple objects with both shared and dedicated captions</utfx:name>
+        <utfx:assert-equal normalise-internal-whitespace="yes">
+            <utfx:source>
+                <z:block role="figure">
+                    <z:hd ref="image1 image2">heading</z:hd>
+                    <z:object src="image1.png" xml:id="image1"/>
+                    <z:caption ref="image1">caption1</z:caption>
+                    <z:object src="image2.png" xml:id="image2"/>
+                    <z:caption ref="image2">caption2</z:caption>
+                </z:block>
+            </utfx:source>
+            <utfx:expected>
+                <figure>
+                    <figcaption><h1>heading</h1></figcaption>
+                    <figure>
+                        <img src="image1.png" id="image1" alt=""/>
+                        <figcaption>caption1</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="image2.png" id="image2" alt=""/>
+                        <figcaption>caption2</figcaption>
+                    </figure>
+                </figure>
+            </utfx:expected>
+        </utfx:assert-equal>
+    </utfx:test>
+
+</utfx:tests>
