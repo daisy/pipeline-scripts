@@ -25,7 +25,7 @@
     <!-- STEP SIGNATURE                                                          -->
     <!--=========================================================================-->
 
-    <p:input port="source" primary="true" sequence="false" px:media-type="text/xml">
+    <p:input port="source" primary="true" sequence="false" px:media-type="application/oebps-package+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Input OPF</h2>
             <p px:role="desc">The package file of the input DTB.</p>
