@@ -14,9 +14,9 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
-        <scr:property name="path" type="String" value="/native/i386/liblouisutdml.dylib,
-                                                       /native/i386/liblouis.dylib,
-                                                       /native/fat/libxml2.2.dylib,
+        <scr:property name="path" type="String" value="/native/i386/liblouisutdml-2.3.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/i386/liblouis-2.4.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
         <scr:property name="os.family" type="String" value="mac"/>
@@ -28,9 +28,9 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/i386/file2brl,
-                                                       /native/i386/liblouisutdml.dylib,
-                                                       /native/i386/liblouis.dylib,
-                                                       /native/fat/libxml2.2.dylib,
+                                                       /native/i386/liblouisutdml-2.3.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/i386/liblouis-2.4.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
         <scr:property name="os.family" type="String" value="mac"/>
@@ -50,9 +50,9 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
-        <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.dylib,
-                                                       /native/x86_64/liblouis.dylib,
-                                                       /native/fat/libxml2.2.dylib,
+        <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml-2.3.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/x86_64/liblouis-2.4.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
         <scr:property name="os.family" type="String" value="mac"/>
@@ -64,9 +64,9 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/x86_64/file2brl,
-                                                       /native/x86_64/liblouisutdml.dylib,
-                                                       /native/x86_64/liblouis.dylib,
-                                                       /native/fat/libxml2.2.dylib,
+                                                       /native/x86_64/liblouisutdml-2.3.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/x86_64/liblouis-2.4.1-pipeline-SNAPSHOT.dylib,
+                                                       /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
         <scr:property name="os.family" type="String" value="mac"/>
