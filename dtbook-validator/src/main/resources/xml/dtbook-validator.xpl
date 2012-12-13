@@ -79,7 +79,7 @@
     
     <l:relax-ng-report name="validate-against-relaxng" assert-valid="false">
         <p:input port="schema">
-            <p:document href="./schema/dtbook-2005-3-mathml.rng"/>
+            <p:document href="./schema/dtbook-2005-3.mathml-2.integration.rng"/>
         </p:input>
         <p:input port="source">
             <p:pipe port="source" step="dtbook-validator"/>
