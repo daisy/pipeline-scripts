@@ -208,7 +208,7 @@
         <p:input port="source">
             <p:pipe port="result" step="create-html-report"/>
         </p:input>
-        <p:with-option name="replace" select="'TESTING'"/>
+        <p:with-option name="replace" select="'&quot;TESTING&quot;'"/>
     </p:string-replace>
     
     <p:choose name="store-reports">

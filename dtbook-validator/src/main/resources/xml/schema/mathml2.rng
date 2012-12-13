@@ -34,7 +34,18 @@
   checking of MathML syntax rules		
 -->
 <!-- MathML Qualified Names module ............................... -->
+
 <grammar ns="http://www.w3.org/1998/Math/MathML" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="##xsi" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+  <!-- MGylling 2012-12-13 ID types -->
+  <define name="math.id.type">
+    <data type="ID"></data>
+  </define>
+  
+  <define name="math.idref.type">
+    <data type="IDREF"></data>
+  </define>
+    
   <include href="mathml2-qname-1.mod.rng"/>
   <!--
     if %NS.prefixed; is INCLUDE, include all NS attributes, 
@@ -60,12 +71,12 @@
     </optional>
     <optional>
       <attribute name="id">
-        <data type="ID"/>
+        <ref name="math.id.type"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="xref">
-        <data type="IDREF"/>
+        <ref name="math.idref.type"/>
       </attribute>
     </optional>
     <optional>

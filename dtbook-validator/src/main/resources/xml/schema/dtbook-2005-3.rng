@@ -777,7 +777,22 @@
 <grammar ns="http://www.daisy.org/z3986/2005/dtbook/" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
   <!-- MDeMeglio 2012-12-13 separated out smilref attr -->
-  <include href="smilref.rng" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
+  <define name="dtb.smilref.attr" combine="interleave">
+    <attribute name="smilref"/>
+  </define>
+  
+  <!-- MGylling 2012-12-13 ID types -->
+  <define name="id.type">
+    <data type="ID"></data>
+  </define>
+  
+  <define name="idref.type">
+    <data type="IDREF"></data>
+  </define>
+  
+  <define name="idrefs.type">
+    <data type="IDREFS"></data>
+  </define>
   
   <!--
     dtbookContent designates that each dtbook has a <head> of
@@ -992,7 +1007,7 @@
   <define name="dtb.coreattrs">
     <optional>
       <attribute name="id">
-        <data type="ID"/>
+        <ref name="id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -1146,7 +1161,7 @@
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
   <define name="dtb.attrsrqd">
     <attribute name="id">
-      <data type="ID"/>
+      <ref name="id.type"/>
     </attribute>
     <optional>
       <attribute name="class"/>
@@ -2250,7 +2265,7 @@
     <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
-        <data type="IDREFS"/>
+        <ref name="idrefs.type"/>
       </attribute>
     </optional>
     <attribute name="render">
@@ -2637,7 +2652,7 @@
   <define name="dtb.attlist.code" combine="interleave">
     <optional>
       <attribute name="id">
-        <data type="ID"/>
+        <ref name="id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -2686,7 +2701,7 @@
   <define name="dtb.attlist.samp" combine="interleave">
     <optional>
       <attribute name="id">
-        <data type="ID"/>
+        <ref name="id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -3814,7 +3829,7 @@
     <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
-        <data type="IDREFS"/>
+        <ref name="idrefs.type"/>
       </attribute>
     </optional>
   </define>
@@ -4060,7 +4075,7 @@
     </optional>
     <optional>
       <attribute name="headers">
-        <data type="IDREFS"/>
+        <ref name="idrefs.type"/>
       </attribute>
     </optional>
     <optional>
@@ -4130,7 +4145,7 @@
     </optional>
     <optional>
       <attribute name="headers">
-        <data type="IDREFS"/>
+        <ref name="idrefs.type"/>
       </attribute>
     </optional>
     <optional>

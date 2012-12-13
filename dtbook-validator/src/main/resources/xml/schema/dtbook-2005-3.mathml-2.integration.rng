@@ -4,19 +4,47 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     
-    <include href="mathml2.rng" ns="http://www.w3.org/1998/Math/MathML"/>
-    <include href="dtbook-2005-3.rng" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
-    <include href="smilref.rng" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
+    <include href="mathml2.rng" ns="http://www.w3.org/1998/Math/MathML">
+        <define name="math.id.type">
+            <data type="NMTOKEN"></data>
+        </define>
+        
+        <define name="math.idref.type">
+            <data type="NMTOKEN"></data>
+        </define>
+        
+    </include>
     
+    <include href="dtbook-2005-3.rng" ns="http://www.daisy.org/z3986/2005/dtbook/">
+        <define name="id.type">
+            <data type="NMTOKEN"></data>
+        </define>
+        
+        <define name="idref.type">
+            <data type="NMTOKEN"></data>
+        </define>
+        
+        <define name="idrefs.type">
+            <data type="NMTOKENS"></data>
+        </define>
+    </include>
+        
     <define name="dtb.externalFlow" combine="choice" ns="http://www.daisy.org/z3986/2005/dtbook/">
         <ref name="math" ns="http://www.w3.org/1998/Math/MathML"/>
     </define>
     
-    <!-- attlist-math is in the mathml spec. it defines the attributes allowed on the 'math' element. -->
+    <!-- define a namespaced version of @smilref for m:math -->
+    <define name="dtb.smilref.attr.ns" combine="interleave">
+        <attribute name="smilref" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
+    </define>
+    
+    <!-- attlist-math is in the mathml spec. it defines the attributes allowed on the 'math' element. --> 
     <define name="attlist-math" ns="http://www.w3.org/1998/Math/MathML" combine="interleave">
         <optional>
-            <ref name="dtb.smilref.attr" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
+            <ref name="dtb.smilref.attr.ns" />
         </optional>
     </define>
+    
+    
     
 </grammar>
