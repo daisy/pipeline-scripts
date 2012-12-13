@@ -53,7 +53,7 @@
             <h1 px:role="name">html-report</h1>
             <p px:role="desc">An HTML-formatted version of both the RelaxNG and Schematron reports.</p>
         </p:documentation>
-        <p:pipe port="result" step="create-html-report"/>
+        <p:pipe port="result" step="insert-file-name-into-html-report"/>
     </p:output>
     
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
@@ -72,6 +72,10 @@
             Collection of utilities for validation and reporting.
         </p:documentation>
     </p:import>
+    
+    <p:variable name="base-uri" select="base-uri()">
+        <p:pipe port="source" step="dtbook-validator"/>
+    </p:variable>
     
     <l:relax-ng-report name="validate-against-relaxng" assert-valid="false">
         <p:input port="schema">
@@ -158,9 +162,38 @@
                 <html xmlns="http://www.w3.org/1999/xhtml">
                     <head>
                         <title>Validation Results</title>
+                        <style type="text/css">
+                            body {
+                            font-family: helvetica;
+                            }
+                            
+                            .error pre {
+                            white-space: pre-wrap;       /* css-3 */
+                            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                            white-space: -pre-wrap;      /* Opera 4-6 */
+                            white-space: -o-pre-wrap;    /* Opera 7 */
+                            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                            }
+                            li.error div {
+                            display: table;
+                            border: gray thin solid;
+                            padding: 5px;
+                            }
+                            li.error div h3 {
+                            display: table-cell;
+                            padding-right: 10px;
+                            font-size: smaller;
+                            }
+                            li.error div pre {
+                            display: table-cell;
+                            }
+                            li {
+                            padding-bottom: 15px;
+                            }
+                        </style>
                     </head>
                     <body>
-                        <h1>Validation Results</h1>
+                        <h1>Validation Results for <span id="filename">@@</span></h1>
                     </body>
                 </html>
             </p:inline>
@@ -171,12 +204,19 @@
         </p:input>
     </p:insert>
     
+    <p:string-replace match="//xhtml:span[@id='filename']/text()" name="insert-file-name-into-html-report">
+        <p:input port="source">
+            <p:pipe port="result" step="create-html-report"/>
+        </p:input>
+        <p:with-option name="replace" select="'TESTING'"/>
+    </p:string-replace>
+    
     <p:choose name="store-reports">
         <p:documentation>Save the reports to disk</p:documentation>
         <p:when test="not(empty($output-dir))">
             <p:store name="store-html">
                 <p:input port="source">
-                    <p:pipe port="result" step="create-html-report"/>
+                    <p:pipe port="result" step="insert-file-name-into-html-report"/>
                 </p:input>
                 <p:with-option name="href" select="concat($output-dir,'report.xhtml')"/>
             </p:store>

@@ -776,6 +776,9 @@
 <!-- jpritchett@rfbd.org:  2006-07-06.  Removed definition of %StyleSheet, since it is no longer needed -->
 <grammar ns="http://www.daisy.org/z3986/2005/dtbook/" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
+  <!-- MDeMeglio 2012-12-13 separated out smilref attr -->
+  <include href="smilref.rng" ns="http://www.daisy.org/z3986/2005/dtbook/"/>
+  
   <!--
     dtbookContent designates that each dtbook has a <head> of
     metainformation preceding the <book> content.
@@ -1109,11 +1112,13 @@
     having common references to images, with different accompanying text
     descriptions.
   -->
+  
   <define name="dtb.attrs">
     <ref name="dtb.coreattrs"/>
     <ref name="dtb.i18n"/>
     <optional>
-      <attribute name="smilref"/>
+      <ref name="dtb.smilref.attr"/>
+      <!--<attribute name="smilref"/>-->
     </optional>
     <ref name="dtb.showin"/>
   </define>
@@ -1160,7 +1165,8 @@
       </attribute>
     </optional>
     <optional>
-      <attribute name="smilref"/>
+      <!--<attribute name="smilref"/>-->
+      <ref name="dtb.smilref.attr"/>
     </optional>
     <ref name="dtb.i18n"/>
     <ref name="dtb.showin"/>
@@ -2653,7 +2659,8 @@
     <ref name="dtb.externalNamespaces"/>
     <ref name="dtb.i18n"/>
     <optional>
-      <attribute name="smilref"/>
+      <!--<attribute name="smilref"/>-->
+      <ref name="dtb.smilref.attr"/>
     </optional>
     <ref name="dtb.showin"/>
   </define>
@@ -2701,7 +2708,8 @@
     <ref name="dtb.externalNamespaces"/>
     <ref name="dtb.i18n"/>
     <optional>
-      <attribute name="smilref"/>
+      <!--<attribute name="smilref"/>-->
+      <ref name="dtb.smilref.attr"/>
     </optional>
     <ref name="dtb.showin"/>
   </define>
@@ -2863,7 +2871,8 @@
       </choice>
     </attribute>
     <optional>
-      <attribute name="smilref"/>
+      <!--<attribute name="smilref"/>-->
+      <ref name="dtb.smilref.attr"/>
     </optional>
     <ref name="dtb.showin"/>
   </define>

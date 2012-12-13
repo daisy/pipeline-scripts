@@ -18,11 +18,12 @@
     
     <!-- note that below, &#160; = &nbsp; -->
     <xsl:template match="c:error">
-        <li>
-            (<em>Line: </em><xsl:value-of select="@line"/>, 
-            <em>Column: </em><xsl:value-of select="@column"/>) 
-            &#160;
-            <xsl:value-of select="./text()"/>
+        <li class="error">
+            <p><xsl:value-of select="./text()"/></p>
+            <div>
+                <h3>Location</h3>
+                <pre><em>Line <xsl:value-of select="@line"/>, Column <xsl:value-of select="@column"/></em></pre>
+            </div>
         </li>
     </xsl:template>
     

@@ -15,10 +15,15 @@
         
         <!-- TODO refine this test -->
         <xsl:choose>
-            <xsl:when test="//svrl:failed-assert">
+            <xsl:when test="svrl:failed-assert">
                 <ul>
                     <xsl:apply-templates/>
                 </ul>    
+            </xsl:when>
+            <xsl:when test="svrl:successful-report">
+                <ul>
+                    <xsl:apply-templates/>
+                </ul>
             </xsl:when>
             <xsl:otherwise>
                 <p>No errors detected.</p>        
@@ -27,11 +32,18 @@
         
     </xsl:template>
     
-    <xsl:template match="svrl:failed-assert">
-        <!-- TODO a way to get line numbers? -->
-        <li>
-            <xsl:value-of select="svrl:text/text()"/>
+    <!-- failed asserts and successful reports are both notable events in SVRL -->
+    
+    <xsl:template match="svrl:failed-assert | svrl:successful-report">
+        <!-- TODO can we output the line number too? -->
+        <li class="error">
+            <p><xsl:value-of select="svrl:text/text()"/></p>
+            <div>
+                <h3>Location (XPath)</h3>
+                <pre><xsl:value-of select="@location"/></pre>
+            </div>
         </li>
     </xsl:template>
+    
     
 </xsl:stylesheet>
