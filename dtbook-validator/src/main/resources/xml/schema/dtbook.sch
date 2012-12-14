@@ -10,22 +10,21 @@
         e.g. page="front|normal|special
        -->
     
-    <!-- idref targets must exist 
-    TODO what about external document targets?
-    check what the pipeline1 had to say about this
-    
-    1. check idref is nonempty and longer than just '#'
-    2. check that target exists
-    3. check that noterefs reference notes, prodnoterefs reference prodnotes, etc
-    
-    optimize id-searching by storing all the IDs
-    e.g.
-    <sch:key name="notes" match="dtb:note[@id]" path="@id"/>
-    
-    -->
+    <!-- TODO beautify this file. it's a mix of older and newer schematron patterns. -->
     
     <xsl:key name="notes" match="dtb:note[@id]" use="@id"/>
     <xsl:key name="annotations" match="dtb:annotation[@id]" use="@id"/>
+    
+    <!-- because we override the ID datatype with NMTOKEN in the dtbook-mathml-integration schema,
+        we need to double check that all @id values are unique
+    -->
+    <let name="id-set" value="//*[@id]"/>
+    <pattern id="id-unique">
+        <rule context="*[@id]">
+            <assert test="count($id-set[@id = current()/@id]) = 1">Duplicate ID '<value-of
+                select="current()/@id"/>'</assert>
+        </rule>
+    </pattern>
     
     <!-- ****************************************************** -->
     <!-- Patterns in this section were imported from Pipeline 1 -->
@@ -257,7 +256,9 @@
     <!-- end Pipeline 1 pattern imports -->
     <!-- ****************************************************** -->
     
+    <!-- ****************************************************** -->
     <!-- MathML rules -->
+    <!-- ****************************************************** -->
     <pattern> 
         <rule context="//m:math">
             
@@ -265,11 +266,11 @@
                 The math element has optional attributes alttext and altimg. To be valid with the MathML in DAISY spec, 
                 the alttext and altimg attributes must be part of the math element.
              -->
-            <assert test="//node()[@alttext]">@alttext must be present</assert>
-            <assert test="not(empty(//node()[@alttext]))">@alttext must be non-empty</assert>
+            <assert test="//node()[@alttext]">alttext attribute must be present</assert>
+            <assert test="not(empty(//node()[@alttext]))">alttext attribute must be non-empty</assert>
             
-            <assert test="//node()[@altimg]">@altimg must be present</assert>
-            <assert test="not(empty(//node()[@altimg]))">@altimg must be non-empty</assert>
+            <assert test="//node()[@altimg]">altimg attribute must be present</assert>
+            <assert test="not(empty(//node()[@altimg]))">altimg attribute must be non-empty</assert>
             
             <!-- Note that there is not a test for the rule 
                 "@smilref may be present and if so must be non-empty"
@@ -277,6 +278,45 @@
             -->
         </rule>
     </pattern>
+    
+    <!-- because we override the IDREF datatype with NMTOKEN in the dtbook-mathml-integration schema,
+        we need to double check MathML @xref values (which were originally of type IDREF)
+        
+        Note that we don't need to perform these checks on DTBook elements because of the 
+        Pipeline 1 patterns here that look at annoref and noteref already, which are the only 2 elements
+        to use an attribute originally of the type IDREF.
+    -->
+    <pattern id="xref">        
+        <rule context="m:*[@xref]">    
+            <assert test="some $elem in //* satisfies ($elem/@id eq @xref)">
+                xref attribute does not resolve.</assert>            
+        </rule>
+    </pattern> 
+    
+    <!-- these beautiful patterns don't work in XProc/Calabash, I suspect due to the $@ syntax in the last one
+        see http://code.google.com/p/epub-revision/issues/detail?id=194 ; we pulled these patterns from EPUB
+    -->
+    <!--<pattern id="idref-mathml-xref" is-a="idref-any">
+        <param name="element" value="m:*"/>
+        <param name="idref-attr-name" value="xref"/>
+    </pattern>
+    
+    <!-\- get ready for MathML 3 by including this pattern -\->
+    <pattern id="idref-mathml-indenttarget" is-a="idref-any">
+        <param name="element" value="m:*"/>
+        <param name="idref-attr-name" value="indenttarget"/>
+    </pattern>
+    
+    <pattern abstract="true" id="idref-any">
+        <rule context="$element[@$idref-attr-name]">
+            <assert test="some $elem in $id-set satisfies $elem/@id eq current()/@$idref-attr-name"
+                >The <name path="@$idref-attr-name"/> attribute must refer to an element in the same document (the ID '<value-of 
+                    select="current()/@$idref-attr-name"/>' does not exist).</assert>
+        </rule>
+    </pattern>
+    
+    -->
+    
     
     <!--
         If any of the content elements listed in Chapter 4 of the MathML specification with the exception of those 
@@ -434,4 +474,8 @@
             <assert test="node()/ancestor::m:annotation-xml/ancestor::m:semantics">'annotation-xml' must have 'semantics' as an ancestor.</assert>
         </rule>
     </pattern>
+    <!-- ****************************************************** -->
+    <!-- end MathML rules -->
+    <!-- ****************************************************** -->
+    
 </schema>

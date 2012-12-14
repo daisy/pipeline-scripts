@@ -6,27 +6,75 @@
     
     <include href="mathml2.rng" ns="http://www.w3.org/1998/Math/MathML">
         <define name="math.id.type">
-            <data type="NMTOKEN"></data>
+            <data type="NCName"></data>
         </define>
         
         <define name="math.idref.type">
-            <data type="NMTOKEN"></data>
+            <data type="NCName"></data>
         </define>
         
     </include>
     
     <include href="dtbook-2005-3.rng" ns="http://www.daisy.org/z3986/2005/dtbook/">
         <define name="id.type">
-            <data type="NMTOKEN"></data>
+            <data type="NCName"></data>
         </define>
         
         <define name="idref.type">
-            <data type="NMTOKEN"></data>
+            <data type="NCName"></data>
         </define>
         
         <define name="idrefs.type">
-            <data type="NMTOKENS"></data>
+            <list>
+                <oneOrMore>
+                    <data type="NCName"/>
+                </oneOrMore>
+            </list>
         </define>
+        
+        <!-- override DTBook's pagenum definition with this more complete version from Pipeline 1 validation schema-->
+        <!-- TODO modularize -->
+        <define name="dtb.pagenum">
+            <element name="pagenum">
+                <zeroOrMore>
+                    <attribute>	
+                        <anyName>
+                            <except>
+                                <name ns="">page</name>
+                            </except>
+                        </anyName>	
+                    </attribute>
+                </zeroOrMore>
+                <choice>
+                    <group>
+                        <attribute name="page">
+                            <value type="string">front</value>
+                        </attribute>
+                        <choice>
+                            <ref name="dtb.datatype.romannumeral"/>
+                            <ref name="dtb.datatype.positiveInteger"/>
+                        </choice>
+                    </group>
+                    <group>
+                        <attribute name="page">
+                            <value type="string">normal</value>
+                        </attribute>
+                        <ref name="dtb.datatype.positiveInteger"/>
+                    </group>
+                    <group>
+                        <attribute name="page">
+                            <value type="string">special</value>
+                        </attribute>
+                        <text/>
+                    </group>  			
+                    <!-- LE20061128: Missing page attribute equals page="normal" -->
+                    <ref name="dtb.datatype.positiveInteger"/>
+                </choice>
+            </element>
+        </define>
+        
+        
+        
     </include>
         
     <define name="dtb.externalFlow" combine="choice" ns="http://www.daisy.org/z3986/2005/dtbook/">
@@ -45,6 +93,20 @@
         </optional>
     </define>
     
+    <!-- datatypes used in the pagenum override above. TODO modularize -->
+    <define name="dtb.datatype.romannumeral">
+        <!-- jpritchett (2007-10-25):  Added leading/trailing whitespace to the pattern -->
+        <data type="string">
+            <param name="pattern">\s*[Mm]*([Dd]?[Cc]{0,3}|[Cc][DdMm])([Ll]?[Xx]{0,3}|[Xx][LlCc])([Vv]?[Ii]{0,3}|[Ii][VvXx])\s*</param>
+        </data>
+        <!-- 
+		^(?i:(?=[MDCLXVI])((M{0,3})((C[DM])|(D?C{0,3}))?((X[LC])|(L?XX{0,2}))?((I[VX])|(V?(II{0,2}))|V)?))$
+		-->
+    </define>
+    
+    <define name="dtb.datatype.positiveInteger">
+        <data type="positiveInteger"/>
+    </define>
     
     
 </grammar>

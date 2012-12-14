@@ -2926,6 +2926,7 @@
     document, usually inserted at the point within the file immediately
     preceding the first item of content on a new page.
   -->
+  
   <define name="dtb.pagenum">
     <element name="pagenum">
       <ref name="dtb.attlist.pagenum"/>
@@ -2944,7 +2945,8 @@
     such as large <img> or <table>, put the sequence of <pagenum> on
     the page where that content starts.
   -->
-  <define name="dtb.attlist.pagenum" combine="interleave">
+  
+    <define name="dtb.attlist.pagenum" combine="interleave">
     <ref name="dtb.attrsrqd"/>
     <optional>
       <attribute name="page" a:defaultValue="normal">
@@ -2956,6 +2958,7 @@
       </attribute>
     </optional>
   </define>
+  
   <!--
     Use: noteref marks one or more characters that reference a footnote
     or endnote <note>. Contrast with <annoref>. <noteref> and <note>
@@ -4166,5 +4169,6 @@
     <ref name="dtb.cellhalign"/>
     <ref name="dtb.cellvalign"/>
   </define>
+    
 </grammar>
 <!-- End dtbook-2005-3.dtd -->

@@ -167,7 +167,7 @@
                             font-family: helvetica;
                             }
                             
-                            .error pre {
+                            pre {
                             white-space: pre-wrap;       /* css-3 */
                             white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
                             white-space: -pre-wrap;      /* Opera 4-6 */
@@ -193,7 +193,9 @@
                         </style>
                     </head>
                     <body>
-                        <h1>Validation Results for <span id="filename">@@</span></h1>
+                        <h1>Validation Results</h1>
+                        <p>Input document:</p>
+                        <pre id="filename"></pre>
                     </body>
                 </html>
             </p:inline>
@@ -204,11 +206,11 @@
         </p:input>
     </p:insert>
     
-    <p:string-replace match="//xhtml:span[@id='filename']/text()" name="insert-file-name-into-html-report">
+    <p:string-replace match="//*[@id='filename']/text()" name="insert-file-name-into-html-report">
         <p:input port="source">
             <p:pipe port="result" step="create-html-report"/>
         </p:input>
-        <p:with-option name="replace" select="'&quot;TESTING&quot;'"/>
+        <p:with-option name="replace" select="concat('&quot;', $base-uri, '&quot;')"/>
     </p:string-replace>
     
     <p:choose name="store-reports">
@@ -240,7 +242,6 @@
                         <p:with-option name="href" select="concat($output-dir,'relax-ng-report.xml')"/>
                     </p:store>
                 </p:otherwise>
-                
             </p:choose>
             
             <p:store name="store-schematron">
