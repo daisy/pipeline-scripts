@@ -42,7 +42,7 @@
     
     <pxi:translation>
         <p:with-option name="translator" select="$translator"/>
-        <p:with-option name="hyphenator" select="'liblouis'"/>
+        <p:with-option name="hyphenator" select="'none'"/>
     </pxi:translation>
     
     <!-- ========== -->

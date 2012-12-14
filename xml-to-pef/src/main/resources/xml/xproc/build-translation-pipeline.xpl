@@ -42,9 +42,7 @@
         <p:when test="$translator=''">
             <p:output port="result"/>
             <p:load>
-                <p:with-option name="href" select="if ($hyphenator='liblouis')
-                    then '../xslt/simple-liblouis-translate-and-hyphenate.xsl'
-                    else '../xslt/simple-liblouis-translate.xsl'"/>
+                <p:with-option name="href" select="'../xslt/simple-liblouis-translate.xsl'"/>
             </p:load>
         </p:when>
         <p:when test="matches($translator, '^http:/.*')">
