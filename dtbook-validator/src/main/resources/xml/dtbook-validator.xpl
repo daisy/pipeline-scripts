@@ -195,7 +195,7 @@
                     <body>
                         <h1>Validation Results</h1>
                         <p>Input document:</p>
-                        <pre id="filename"></pre>
+                        <pre id="filename">@@</pre>
                     </body>
                 </html>
             </p:inline>
@@ -220,7 +220,7 @@
                 <p:input port="source">
                     <p:pipe port="result" step="insert-file-name-into-html-report"/>
                 </p:input>
-                <p:with-option name="href" select="concat($output-dir,'report.xhtml')"/>
+                <p:with-option name="href" select="concat($output-dir,'/report.xhtml')"/>
             </p:store>
             
             <p:choose>
@@ -239,7 +239,7 @@
                         <p:input port="source">
                             <p:pipe port="report" step="validate-against-relaxng"/>
                         </p:input>
-                        <p:with-option name="href" select="concat($output-dir,'relax-ng-report.xml')"/>
+                        <p:with-option name="href" select="concat($output-dir,'/relax-ng-report.xml')"/>
                     </p:store>
                 </p:otherwise>
             </p:choose>
@@ -248,7 +248,7 @@
                 <p:input port="source">
                     <p:pipe port="report" step="validate-against-schematron"/>
                 </p:input>
-                <p:with-option name="href" select="concat($output-dir,'schematron-report.xml')"/>
+                <p:with-option name="href" select="concat($output-dir,'/schematron-report.xml')"/>
             </p:store>
         </p:when>
     </p:choose>
