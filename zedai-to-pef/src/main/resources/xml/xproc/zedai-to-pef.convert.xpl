@@ -6,7 +6,7 @@
     exclude-inline-prefixes="#all"
     type="px:zedai-to-pef.convert" name="zedai-to-pef.convert" version="1.0">
     
-    <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml"/>
+    <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
 
     <p:option name="temp-dir" required="true"/>

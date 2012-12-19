@@ -73,15 +73,22 @@
             <p px:role="desc">Whether or not to include a preview of the PEF in HTML (true or false).</p>
         </p:documentation>
     </p:option>
+
+    <p:option name="brf" required="false" px:type="boolean" select="'false'">
+        <p:documentation>
+            <h2 px:role="name">brf</h2>
+            <p px:role="desc">Whether or not to include a BRF too (true or false).</p>
+        </p:documentation>
+    </p:option>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/xproc/pef-to-html.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.store.xpl"/>
     
     <!-- ============ -->
     <!-- ZEDAI TO PEF -->
     <!-- ============ -->
 
-    <px:zedai-to-pef.convert name="pef">
+    <px:zedai-to-pef.convert>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="preprocessor" select="$preprocessor"/>
         <p:with-option name="translator" select="$translator"/>
@@ -91,66 +98,14 @@
     <!-- ========= -->
     <!-- STORE PEF -->
     <!-- ========= -->
-    
-    <p:xslt name="output-dir-uri">
-        <p:with-param name="href" select="concat($output-dir,'/')"/>
-        <p:input port="source">
-            <p:inline>
-                <d:file/>
-            </p:inline>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
-                    <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
-                    <xsl:param name="href" required="yes"/>
-                    <xsl:template match="/*">
-                        <xsl:copy>
-                            <xsl:attribute name="href" select="pf:normalize-uri($href)"/>
-                        </xsl:copy>
-                    </xsl:template>
-                </xsl:stylesheet>
-            </p:inline>
-        </p:input>
-    </p:xslt>
-    <p:sink/>
-    
-    <p:group>
-        <p:variable name="output-dir-uri" select="/*/@href">
-            <p:pipe step="output-dir-uri" port="result"/>
-        </p:variable>
-        <p:store indent="true" encoding="utf-8" omit-xml-declaration="false">
-            <p:input port="source">
-                <p:pipe step="pef" port="result"/>
-            </p:input>
-            <p:with-option name="href" select="concat($output-dir-uri,replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef.xml')">
-                <p:pipe step="zedai-to-pef" port="source"/>
-            </p:with-option>
-        </p:store>
-        
-        <!-- ======= -->
-        <!-- PREVIEW -->
-        <!-- ======= -->
-        
-        <p:identity>
-            <p:input port="source">
-                <p:pipe step="pef" port="result"/>
-            </p:input>
-        </p:identity>
-        <p:choose>
-            <p:when test="$preview='true'">
-                <px:pef-to-html.convert/>
-                <p:store indent="true" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
-                    doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-                    <p:with-option name="href" select="concat($output-dir-uri,replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1'),'.pef.html')">
-                        <p:pipe step="zedai-to-pef" port="source"/>
-                    </p:with-option>
-                </p:store>
-            </p:when>
-            <p:otherwise>
-                <p:sink/>
-            </p:otherwise>
-        </p:choose>
-    </p:group>
+
+    <px:xml-to-pef.store>
+        <p:with-option name="output-dir" select="$output-dir"/>
+        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+            <p:pipe step="zedai-to-pef" port="source"/>
+        </p:with-option>
+        <p:with-option name="preview" select="$preview"/>
+        <p:with-option name="brf" select="$brf"/>
+    </px:xml-to-pef.store>
     
 </p:declare-step>

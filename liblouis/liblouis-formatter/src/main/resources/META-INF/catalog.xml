@@ -10,4 +10,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:utilities" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-utils" />
 </catalog>

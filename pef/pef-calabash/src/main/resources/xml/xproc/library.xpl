@@ -21,7 +21,5 @@
         <p:option name="pad" required="false"/>
     </p:declare-step>
     
-    <p:import href="merge.xpl"/>
-    
 </p:library>
 

@@ -4,10 +4,10 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/xproc/dtbook-to-pef.xpl"
        uri="../xml/xproc/dtbook-to-pef.xpl" px:script="true"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
+  <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/xproc/dtbook-to-pef.convert.xpl"
+    uri="../xml/xproc/dtbook-to-pef.convert.xpl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-to-zedai" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-to-html" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:zedai-to-pef" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:xml-to-pef" />
 </catalog>
