@@ -30,7 +30,7 @@
     <braille.liblouis-mathml.version>${braille.modules.version}</braille.liblouis-mathml.version>
     <braille.liblouis-native.version>${braille.modules.version}</braille.liblouis-native.version>
     <braille.liblouis-saxon.version>${braille.modules.version}</braille.liblouis-saxon.version>
-    <braille.liblouis-tables.version>2.5.0</braille.liblouis-tables.version>
+    <braille.liblouis-tables.version>2.5.2-SNAPSHOT</braille.liblouis-tables.version>
     <braille.pef-calabash.version>${braille.modules.version}</braille.pef-calabash.version>
     <braille.pef-to-html.version>${braille.modules.version}</braille.pef-to-html.version>
     <braille.pef-utils.version>${braille.modules.version}</braille.pef-utils.version>

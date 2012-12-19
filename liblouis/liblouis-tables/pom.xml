@@ -14,13 +14,13 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-tables</artifactId>
-  <version>${braille.liblouis-tables.version}</version>
+  <version>2.5.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: liblouis-tables</name>
 
   <scm>
-    <connection>scm:svn:https://liblouis.googlecode.com/svn/tags/liblouis_2_5_0/tables</connection>
+    <connection>scm:svn:https://liblouis.googlecode.com/svn/tags/liblouis_2_5_2/tables</connection>
   </scm>
 
   <build>
