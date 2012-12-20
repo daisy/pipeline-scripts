@@ -33,7 +33,7 @@
       <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
-      <groupId>se.tpb</groupId>
+      <groupId>com.googlecode.texhyphj</groupId>
       <artifactId>texhyphj</artifactId>
     </dependency>
     <dependency>

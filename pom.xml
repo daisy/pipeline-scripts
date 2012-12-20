@@ -224,9 +224,9 @@
         <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>se.tpb</groupId>
+        <groupId>com.googlecode.texhyphj</groupId>
         <artifactId>texhyphj</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>com.ibm.icu</groupId>
