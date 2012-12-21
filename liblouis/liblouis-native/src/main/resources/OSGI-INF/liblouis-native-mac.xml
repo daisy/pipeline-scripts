@@ -60,8 +60,8 @@
     </scr:component>
     <!-- file2brl 64-bit -->
     <scr:component  name="file2brl (MacOSX 64-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.liblouis.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.liblouis.Binary"/></scr:service>
+        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
+        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/x86_64/file2brl,
                                                        /native/x86_64/liblouisutdml-2.3.1-pipeline-SNAPSHOT.dylib,
