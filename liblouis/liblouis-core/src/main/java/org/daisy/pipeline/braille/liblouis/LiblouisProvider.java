@@ -17,7 +17,6 @@ import org.daisy.pipeline.braille.TableRegistry;
 import org.daisy.pipeline.braille.Utilities.OS;
 import org.daisy.pipeline.braille.Utilities.Predicates;
 import org.daisy.pipeline.braille.liblouis.internal.LiblouisJnaImpl;
-import org.daisy.pipeline.braille.liblouis.internal.LiblouisutdmlJniImpl;
 import org.daisy.pipeline.braille.liblouis.internal.LiblouisutdmlProcessBuilderImpl;
 
 import org.osgi.framework.Bundle;
@@ -43,8 +42,6 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 	public void deactivate() {
 		unpublishServices();
 		if (liblouis != null) liblouis.unload();
-		if (liblouisutdml != null && !OS.isWindows())
-			((LiblouisutdmlJniImpl)liblouisutdml).unload();
 	}
 	
 	private Iterable<URL> jars = null;
@@ -81,17 +78,10 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 		if (liblouisutdmlRegistration == null) {
 			try {
 				if (liblouisutdml == null) {
-					if (OS.isWindows()) {
-						liblouisutdml = new LiblouisutdmlProcessBuilderImpl(
-							getBinaryPaths("file2brl"),
-							bundleContext.getDataFile("native/file2brl"),
-							this); }
-					else {
-						liblouisutdml = new LiblouisutdmlJniImpl(
-							Iterables.<URL>filter(jars, Predicates.<URL>matchesPattern(".*liblouisutdml\\.jar$")),
-							getBinaryPaths("liblouisutdml"),
-							bundleContext.getDataFile("native/liblouisutdml"),
-							this); }}
+					liblouisutdml = new LiblouisutdmlProcessBuilderImpl(
+						getBinaryPaths("file2brl"),
+						bundleContext.getDataFile("native/file2brl"),
+						this); }
 				liblouisutdmlRegistration = bundleContext.registerService(
 					Liblouisutdml.class.getName(), liblouisutdml, null);
 				logger.debug("Publishing liblouisutdml service"); }
