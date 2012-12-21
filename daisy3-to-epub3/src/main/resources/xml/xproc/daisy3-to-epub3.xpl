@@ -38,13 +38,13 @@
             <p px:role="desc">Output directory for the produced EPUB.</p>
             <pre><code class="example">file:/home/user/epub3/</code></pre></p:documentation>
     </p:option>
-    <!--<p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean">
+    <p:option name="mediaoverlays" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include Media Overlays</h2>
             <p px:role="desc">Whether or not to include media overlays and associated audio files
                 (true or false).</p>
         </p:documentation>
-    </p:option>-->
+    </p:option>
     <!--<p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Compatibility Mode</h2>
@@ -87,31 +87,61 @@
     <p:variable name="epub-dir" select="concat($output-dir-checked,'epub/')"/>
     <p:variable name="content-dir" select="concat($output-dir-checked,'epub/EPUB/')"/>
     <p:variable name="epub-file" select="concat($output-dir-checked,'result.epub')"/>
-
+    <p:variable name="type" xmlns:opf="http://openebook.org/namespaces/oeb-package/1.0/"
+        select="for $daisy-type in /opf:package/opf:metadata/opf:x-metadata/opf:meta[@name='dtb:multimediaType']/@content
+                return
+                    if ($daisy-type=('audioFullText','audioPartText','textPartAudio')) then 'text+mo'
+                    else if ($daisy-type='textNCX') then 'text'
+                    else ''"/>
+    
 
     <!--=========================================================================-->
     <!-- LOAD THE DAISY 3 FILESET                                                -->
     <!--=========================================================================-->
     <pxi:load name="load"/>
     <p:sink/>
+    
+    <!--=========================================================================-->
+    <!-- CHECK THE DTB TYPE                                                      -->
+    <!--=========================================================================-->
+
+    <!--TODO fail if DTB type is not supported (e.g. audio-only books) -->
+
 
     <!--=========================================================================-->
     <!-- CREATE A MAP OF CONTENT IDs TO AUDIO FRAGMENTS                          -->
     <!--=========================================================================-->
 
     <!--TODO conditionally, if the MO option is set-->
-    <pxi:list-audio-clips name="audio-clips">
-        <p:input port="fileset.in">
-            <p:pipe port="fileset" step="load"/>
-        </p:input>
-        <p:input port="dtbooks">
-            <p:pipe port="dtbooks" step="load"/>
-        </p:input>
-        <p:input port="smils">
-            <p:pipe port="smils" step="load"/>
-        </p:input>
-        <p:with-option name="content-dir" select="$content-dir"/>
-    </pxi:list-audio-clips>
+    <p:choose name="audio-clips">
+        <p:when test="$mediaoverlays and $type='text+mo'">
+            <p:output port="fileset.out" primary="true"/>
+            <p:output port="audio-clips" sequence="true">
+                <p:pipe port="audio-clips" step="audio-clips.inner"/>
+            </p:output>
+            <pxi:list-audio-clips name="audio-clips.inner">
+                <p:input port="fileset.in">
+                    <p:pipe port="fileset" step="load"/>
+                </p:input>
+                <p:input port="dtbooks">
+                    <p:pipe port="dtbooks" step="load"/>
+                </p:input>
+                <p:input port="smils">
+                    <p:pipe port="smils" step="load"/>
+                </p:input>
+                <p:with-option name="content-dir" select="$content-dir"/>
+            </pxi:list-audio-clips>        
+        </p:when>
+        <p:otherwise>
+            <p:output port="fileset.out" primary="true"/>
+            <p:output port="audio-clips" sequence="true">
+                <p:empty/>
+            </p:output>
+            <p:identity>
+                <p:input port="source"><p:empty/></p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
     <p:sink/>
 
     <!--=========================================================================-->
@@ -154,16 +184,33 @@
     <!-- GENERATE MEDIA OVERLAYS                                                 -->
     <!--=========================================================================-->
     
-    <!--TODO conditionally, if the MO option is set--> 
-    <pxi:create-mediaoverlays name="media-overlays">
-        <p:input port="content-docs">
-            <p:pipe port="in-memory.out" step="content-docs"/>
-        </p:input>
-        <p:input port="audio-map">
-            <p:pipe port="audio-clips" step="audio-clips"/>
-        </p:input>
-        <p:with-option name="content-dir" select="$content-dir"/>
-    </pxi:create-mediaoverlays>
+    <!--TODO conditionally, if the MO option is set-->
+    <p:choose name="media-overlays">
+        <p:when test="$mediaoverlays and $type='text+mo'">
+            <p:output port="fileset.out" primary="true"/>
+            <p:output port="in-memory.out" sequence="true">
+                <p:pipe port="in-memory.out" step="media-overlays.inner"/>
+            </p:output>
+            <pxi:create-mediaoverlays name="media-overlays.inner">
+                <p:input port="content-docs">
+                    <p:pipe port="in-memory.out" step="content-docs"/>
+                </p:input>
+                <p:input port="audio-map">
+                    <p:pipe port="audio-clips" step="audio-clips"/>
+                </p:input>
+                <p:with-option name="content-dir" select="$content-dir"/>
+            </pxi:create-mediaoverlays>        
+        </p:when>
+        <p:otherwise>
+            <p:output port="fileset.out" primary="true"/>
+            <p:output port="in-memory.out" sequence="true">
+                <p:empty/>
+            </p:output>
+            <p:identity>
+                <p:input port="source"><p:empty/></p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
     <p:sink/>
 
     <!--=========================================================================-->
