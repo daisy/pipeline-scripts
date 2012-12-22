@@ -18,7 +18,7 @@
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
 
   <properties>
-    <braille.modules.version>1.1.0</braille.modules.version>
+    <braille.modules.version>1.1.0-SNAPSHOT</braille.modules.version>
     <braille.common-java.version>${braille.modules.version}</braille.common-java.version>
     <braille.css.version>${braille.modules.version}</braille.css.version>
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
