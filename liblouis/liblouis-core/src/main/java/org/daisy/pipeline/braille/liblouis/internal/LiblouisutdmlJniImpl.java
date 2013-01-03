@@ -99,7 +99,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", join(semanticFiles, ","));
-			String tablePath = fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath();
+			String tablePath = "\"" + fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath() + "\"";
 			settings.put("literaryTextTable", tablePath);
 			settings.put("editTable", tablePath);
 			if (otherSettings != null)
