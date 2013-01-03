@@ -150,9 +150,9 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				for (int i=0; i<attributes.getLength(); i++) {
 					Node attr = attributes.item(i);
 					if ("http://www.w3.org/2000/xmlns/".equals(attr.getNamespaceURI())) {}
+					else if (attr.getPrefix() != null)
+						addAttribute(new QName(attr.getPrefix(), attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
 					else if ("style".equals(attr.getLocalName())) {}
-					else if ("http://www.w3.org/XML/1998/namespace".equals(attr.getNamespaceURI()))
-						addAttribute(new QName("xml", attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue());
 					else
 						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue()); }
 				String style = "";
