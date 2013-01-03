@@ -223,6 +223,14 @@
                   <groupId>com.ibm.icu</groupId>
                   <artifactId>icu4j</artifactId>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>liblouis-java</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.java.dev.jna</groupId>
+                  <artifactId>jna</artifactId>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>

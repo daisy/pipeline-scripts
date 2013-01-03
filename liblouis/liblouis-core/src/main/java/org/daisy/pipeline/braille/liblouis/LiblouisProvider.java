@@ -41,7 +41,6 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 	
 	public void deactivate() {
 		unpublishServices();
-		if (liblouis != null) liblouis.unload();
 	}
 	
 	private Iterable<URL> jars = null;
@@ -66,7 +65,6 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 			try {
 				if (liblouis == null) {
 					liblouis = new LiblouisJnaImpl(
-						Iterables.<URL>filter(jars, Predicates.<URL>matchesPattern(".*(jna|liblouis)\\.jar$")),
 						getBinaryPaths("liblouis"),
 						bundleContext.getDataFile("native/liblouis"),
 						this); }
