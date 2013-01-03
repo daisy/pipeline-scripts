@@ -7,7 +7,8 @@
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    exclude-inline-prefixes="louis pef px p css"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    exclude-inline-prefixes="#all"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
@@ -35,6 +36,23 @@
     
     <p:for-each>
         <p:add-xml-base/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:inline>
+                    <xsl:stylesheet version="2.0">
+                        <xsl:template match="/*">
+                            <xsl:copy>
+                                <xsl:copy-of select="document('')/*/namespace::*[name()='louis']"/>
+                                <xsl:sequence select="@*|node()"/>
+                            </xsl:copy>
+                        </xsl:template>
+                    </xsl:stylesheet>
+                </p:inline>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
         <p:xslt>
             <p:input port="stylesheet">
                 <p:document href="../xslt/handle-print-page.xsl"/>
