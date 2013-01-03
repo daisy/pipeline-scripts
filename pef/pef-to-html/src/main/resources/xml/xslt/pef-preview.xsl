@@ -10,7 +10,7 @@
     
     <xsl:output method="html" encoding="UTF-8"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" />
+    <xsl:param name="table"/>
     
     <xsl:template match="/">
         <html>
@@ -67,7 +67,7 @@
                             </div>
                             <div class="text-page">
                                 <xsl:for-each select="pef:row">
-                                    <div class="row"><xsl:sequence select="brl:unicode-braille-to-nabcc(string(.))"/></div>
+                                    <div class="row"><xsl:sequence select="pef:encode($table, string(.))"/></div>
                                 </xsl:for-each>
                             </div>
                         </div>

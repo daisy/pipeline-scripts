@@ -7,6 +7,8 @@
 
     <p:input port="source" primary="true" px:media-type="application/x-pef+xml"/>
     <p:output port="result" primary="true" px:media-type="text/html"/>
+    
+    <p:option name="table" required="true"/>
 
     <!-- Pad pages with whitespace -->
     
@@ -25,6 +27,7 @@
         <p:input port="stylesheet">
             <p:document href="../xslt/pef-preview.xsl"/>
         </p:input>
+        <p:with-param name="table" select="$table"/>
         <p:input port="parameters">
             <p:empty/>
         </p:input>

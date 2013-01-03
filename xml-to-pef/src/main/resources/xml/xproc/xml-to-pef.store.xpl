@@ -94,7 +94,9 @@
         </p:identity>
         <p:choose>
             <p:when test="$preview='true'">
-                <px:pef-to-html.convert/>
+                <px:pef-to-html.convert>
+                    <p:with-option name="table" select="$brf-table"/>
+                </px:pef-to-html.convert>
                 <p:store indent="true" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
                     <p:with-option name="href" select="concat($output-dir-uri, $name, '.pef.html')">

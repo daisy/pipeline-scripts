@@ -32,6 +32,7 @@
     <braille.liblouis-saxon.version>${braille.modules.version}</braille.liblouis-saxon.version>
     <braille.liblouis-tables.version>2.5.2</braille.liblouis-tables.version>
     <braille.pef-calabash.version>${braille.modules.version}</braille.pef-calabash.version>
+    <braille.pef-saxon.version>${braille.modules.version}</braille.pef-saxon.version>
     <braille.pef-to-html.version>${braille.modules.version}</braille.pef-to-html.version>
     <braille.pef-utils.version>${braille.modules.version}</braille.pef-utils.version>
     <braille.texhyph-saxon.version>${braille.modules.version}</braille.texhyph-saxon.version>
@@ -50,6 +51,7 @@
     <module>braillecss/braillecss-core</module>
     <module>braillecss/braillecss-calabash</module>
     <module>pef/pef-calabash</module>
+    <module>pef/pef-saxon</module>
     <module>pef/pef-utils</module>
     <module>utilities</module>
     <module>liblouis/liblouis-formatter</module>
@@ -128,6 +130,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>pef-calabash</artifactId>
         <version>${braille.pef-calabash.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>pef-saxon</artifactId>
+        <version>${braille.pef-saxon.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>

@@ -4,5 +4,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/pef-to-html/xproc/pef-to-html.convert.xpl"
        uri="../xml/xproc/pef-to-html.convert.xpl"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:utilities" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-saxon" />
 </catalog>
