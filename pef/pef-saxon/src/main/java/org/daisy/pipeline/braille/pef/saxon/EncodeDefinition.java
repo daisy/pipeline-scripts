@@ -51,8 +51,6 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 		return SequenceType.OPTIONAL_STRING;
 	}
 	
-	private final TableCatalog catalog = TableCatalog.newInstance();
-	private final Map<String,BrailleConverter> tables = new HashMap<String,BrailleConverter>();
 	
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
@@ -65,14 +63,10 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 					throws XPathException {
 				
 				try {
-					String tableId = ((StringValue)arguments[0].next()).getStringValue();
+					String table = ((StringValue)arguments[0].next()).getStringValue();
 					String braille = ((StringValue)arguments[1].next()).getStringValue();
-					BrailleConverter table = tables.get(tableId);
-					if (table == null)
-						table = catalog.get(tableId).newBrailleConverter();
-					tables.put(tableId, table);
 					return SingletonIterator.makeIterator(
-							new StringValue(table.toText(braille))); }
+							new StringValue(getTable(table).toText(braille))); }
 				catch (Exception e) {
 					logger.error("pef:encode failed", e);
 					throw new XPathException("pef:encode failed"); }
@@ -80,6 +74,21 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 			
 			private static final long serialVersionUID = 1L;
 		};
+	}
+
+	private TableCatalog catalog = null;
+	private final Map<String,BrailleConverter> tables = new HashMap<String,BrailleConverter>();
+	
+	private BrailleConverter getTable(String id) {
+		if (catalog == null)
+			catalog = TableCatalog.newInstance();
+		BrailleConverter table = tables.get(id);
+		if (table == null)
+			table = catalog.get(id).newBrailleConverter();
+		if (table == null)
+			throw new RuntimeException("No table could be found for ID: " + id);
+		tables.put(id, table);
+		return table;
 	}
 	
 	private static final long serialVersionUID = 1L;
