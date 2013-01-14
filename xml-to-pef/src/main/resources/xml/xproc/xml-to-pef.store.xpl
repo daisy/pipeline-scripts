@@ -55,9 +55,7 @@
             <p:input port="source">
                 <p:pipe step="xml-to-pef.store" port="source"/>
             </p:input>
-            <p:with-option name="href" select="concat($output-dir-uri, $name, '.pef.xml')">
-                <p:empty/>
-            </p:with-option>
+            <p:with-option name="href" select="concat($output-dir-uri, $name, '.pef')"/>
         </p:store>
 
         <!-- ============ -->
