@@ -22,7 +22,7 @@
             <p:output port="result" sequence="true"/>
             <p:identity>
                 <p:input port="source">
-                    <p:document href="../xslt/tex-hyphenate.xsl"/>
+                    <p:document href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/tex-hyphenate.xsl"/>
                 </p:input>
             </p:identity>
         </p:when>
@@ -42,7 +42,7 @@
         <p:when test="$translator=''">
             <p:output port="result"/>
             <p:load>
-                <p:with-option name="href" select="'../xslt/simple-liblouis-translate.xsl'"/>
+                <p:with-option name="href" select="'http://www.daisy.org/pipeline/modules/braille/utilities/xslt/simple-liblouis-translate.xsl'"/>
             </p:load>
         </p:when>
         <p:when test="matches($translator, '^http:/.*')">
