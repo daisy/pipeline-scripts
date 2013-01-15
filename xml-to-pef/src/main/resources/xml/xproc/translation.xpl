@@ -114,13 +114,21 @@
     </p:try>
     <p:sink/>
     
-    <!-- Unwrap blocks and re-insert string-set -->
+    <!-- Unwrap blocks, normalize space  -->
     
-    <p:unwrap match="css:block">
+    <p:xslt>
         <p:input port="source">
             <p:pipe step="translate" port="result"/>
         </p:input>
-    </p:unwrap>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/normalize-space.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
+    <!-- Re-insert string-set -->
     
     <p:viewport match="*[child::css:string-set]">
         <p:string-replace match="@style" replace="concat(
