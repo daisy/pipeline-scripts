@@ -8,12 +8,12 @@
     exclude-result-prefixes="#all">
     
     <xsl:template match="/">
-        <section>
+        <div>
             <h2>Relax NG Validation Results</h2>
             <ul>
                 <xsl:apply-templates/>
             </ul>
-        </section>
+        </div>
     </xsl:template>
     
     <!-- note that below, &#160; = &nbsp; -->

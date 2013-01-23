@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  DTBook DTD v2005-3  2007-12-19
-  file: dtbook-2005-3.dtd   
+  DTBook DTD v2005-2  2006-09-08
+  file: dtbook-2005-2.dtd   
   
   The following identifiers apply to this DTD:    
-    "-//NISO//DTD dtbook 2005-3//EN"
-    "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd">
--->
-<!--
-  jpritchett@rfbd.org:  2007-12-19  Changes that update to version 2005-3, per committee decisions
-  Issue numbers noted in change log below refer to Z39.86 issue tracker at 
-  http://www.daisy.org/z3986/issues/ 
+    "-//NISO//DTD dtbook 2005-2//EN"
+    "http://www.daisy.org/z3986/2005/dtbook-2005-2.dtd">
 -->
 <!--
   jpritchett@rfbd.org:  2006-09-08  Changes that update to version 2005-2, per committee decisions 
@@ -55,8 +50,8 @@
   text being narrated. The textual content can be searched in context to
   locate material desired for narration.
   
-  More detailed documentation of this dtbook dtd [DTBOOKV20053DTD] is
-  available as an html document. See [DTBOOKV20053DOC].
+  More detailed documentation of this dtbook dtd [DTBOOKV20052DTD] is
+  available as an html document. See [DTBOOKV20052DOC].
   
   1.1. Prior Related Work
   
@@ -90,7 +85,7 @@
   1.2. Evolution from HTML and XHTML
   
   
-  Dtbook-2005-3 has 83 element types. It shares 46 element types with the
+  Dtbook-2005-2 has 83 element types. It shares 46 element types with the
   HTML4.0 Strict DTD [HTML401STRICT] (as adjusted to use the lower-case
   names consonant with the XHTML Strict DTD [XHTML11STRICT]). It omits
   31 element types from them, and has 32 unique element types.
@@ -135,14 +130,14 @@
   is in the same directory as the dtbook file itself.
   
       <!DOCTYPE dtbook SYSTEM
-          "dtbook-2005-3.dtd">
+          "dtbook-2005-2.dtd">
   
   A more general form provides the PUBLIC URI from which the SYSTEM
   filename can be substituted, should that system copy be missing:
   
       <!DOCTYPE dtbook PUBLIC
-          "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd"
-          "dtbook-2005-3.dtd">
+          "http://www.daisy.org/z3986/2005/dtbook-2005-2.dtd"
+          "dtbook-2005-2.dtd">
   
   That assumes the URI can be reached, which may not be true for
   portable dtbook players.
@@ -150,13 +145,13 @@
   The still more general form recommended for xml applications [XML12] is:
   
       <!DOCTYPE dtbook PUBLIC
-          "-//NISO//DTD dtbook 2005-3//EN"
-          "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd">
+          "-//NISO//DTD dtbook 2005-2//EN"
+          "http://www.daisy.org/z3986/2005/dtbook-2005-2.dtd">
   
   where the Formal Public Identifier (FPI) on the second line is converted
   to the URI where it may be publicly found:
   
-  http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd
+  http://www.daisy.org/z3986/2005/dtbook-2005-2.dtd
   
   The [OASIS-TR9401] Entity Management Catalog provides an indirect
   means to provide that mapping from FPI to the dtd.
@@ -166,7 +161,7 @@
   be found.
   
   Note that the reference above is to a particular version of the DTD,
-  distinguished by the string "2005-3".
+  distinguished by the string "2005-2".
   
   2.4. Digital Talking Book File MIME Type
   
@@ -294,14 +289,14 @@
   
       http://www.daisy.org/dtbook/guidelines/draft/principles.htm
   
-  [DTBOOKV20053DTD] The dtbook DTD version 2005-3 (this DTD) is available at:
+  [DTBOOKV20052DTD] The dtbook DTD version 2005-2 (this DTD) is available at:
   
-      http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd
+      http://www.daisy.org/z3986/2005/dtbook-2005-2.dtd
   
   Note that some browsers do not permit downloading a file with suffix dtd.
   
-  [DTBOOKV20053DOC] Digital Talking Book Expanded Document Type Definition
-  Documentation for Version 2005-3 of this DTD is available as an
+  [DTBOOKV20052DOC] Digital Talking Book Expanded Document Type Definition
+  Documentation for Version 2005-2 of this DTD is available as an
   HTML 4.0 document:
   
       http://www.daisy.org/z3986/2005/dtbook/dtbookdoc.html
@@ -428,10 +423,10 @@
   
   
   
-  [RFC4646] "Tags for Identifying Languages,"
-  A. Phillips, Ed., September 2006
+  [RFC3066] "Tags for the Identification of Languages,"
+  H. Alvestrand, January 2001
   
-      http://www.faqs.org/rfcs/rfc4646.html
+      http://www.faqs.org/rfcs/rfc3066.html
   
   
   [SMIL2.0] The Synchronized Multimedia Integration Language SMIL 2.0
@@ -465,7 +460,7 @@
   
   
   
-  [XML12] This dtbook-2005-3.dtd is an application of the Extensible Markup
+  [XML12] This dtbook-2005-2.dtd is an application of the Extensible Markup
   Language XML 1.0 (Second Edition) W3C Recommendation 6 October 2000.
   It is available at:
   
@@ -749,15 +744,6 @@
 <!-- jpritchett@rfbd.org:  2006-07-07.  (Issue 117) Added %externalNamespaces; to %coreattrs;, %attrsrqd;, and dtbook -->
 <!-- jpritchett@rfbd.org:  2006-08-11.  (Issue 113) Added %externalFlow; to %dtbookinline; -->
 <!-- jpritchett@rfbd.org:  2006-09-08.  (Issues 50/68) Rewrote attribute lists of code and samp to prevent duplication of @xml:lang -->
-<!-- jpritchett@rfbd.org:  2007-12-07.  Changed pid, sid, version, and filename for 2005-3 throughout, including documentary comments -->
-<!-- jpritchett@rfbd.org:  2007-12-10.  (Issue 194) Removed superfluous %dtbookblock entity -->
-<!-- jpritchett@rfbd.org:  2007-12-10.  (Issue 191) Updated RFC reference from 3066 to 4646 -->
-<!-- jpritchett@rfbd.org:  2007-12-17.  (Issue 148) Updated comments regarding caption/@imgrefs to reflect type of IDREFS, not %URI; -->
-<!-- jpritchett@rfbd.org:  2007-12-17.  (Issue 156) Changed attlist for title to %attrs; -->
-<!-- jpritchett@rfbd.org:  2007-12-17.  (Issue 157) Added @smilref and @showin to bdo -->
-<!-- jpritchett@rfbd.org:  2007-12-17.  (Issue 195) Expanded title content model to include inlines -->
-<!-- jpritchett@rfbd.org:  2007-12-17.  (Issue 200) Added pagenum to imggroup content model -->
-<!-- jpritchett@rfbd.org:  2007-12-19.  (Issue 199) Added pagenum to table and tbody content models -->
 <!-- ================= Comment Classification Conventions ================== -->
 <!--
   Some comments start with a pattern followed by a colon:
@@ -774,43 +760,25 @@
 <!-- =================== Imported Parameter Entity Names =================== -->
 <!-- Many parameter entities come from the [XHTML11STRICT] strict DTD. -->
 <!-- jpritchett@rfbd.org:  2006-07-06.  Removed definition of %StyleSheet, since it is no longer needed -->
-<grammar ns="http://www.daisy.org/z3986/2005/dtbook/" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-  
+<grammar ns="http://www.daisy.org/z3986/2005/dtbook/"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
   <!-- MDeMeglio 2012-12-13 separated out smilref attr -->
   <define name="dtb.smilref.attr" combine="interleave">
     <attribute name="smilref"/>
   </define>
-  
+
   <!-- MGylling 2012-12-13 ID types -->
-  <define name="id.type">
-    <data type="ID"></data>
+  <define name="dtb.id.type">
+    <data type="ID"/>
   </define>
-  
-  <define name="idref.type">
-    <data type="IDREF"></data>
+
+  <define name="dtb.idrefs.type">
+    <data type="IDREFS"/>
   </define>
-  
-  <define name="idrefs.type">
-    <data type="IDREFS"></data>
-  </define>
-  
-  <!--
-    dtbookContent designates that each dtbook has a <head> of
-    metainformation preceding the <book> content.
-  -->
-  <!--
-    Use: dtbook is the root element in the Digital Talking Book DTD.
-    <dtbook> contains metadata in <head> and the contents itself
-    in <book>.
-  -->
-  <start>
-      <element name="dtbook">
-        <ref name="dtb.attlist.dtbook"/>
-        <ref name="dtb.dtbookcontent"/>
-      </element>
-  </start>
-  
-  
+
   <define name="dtb.Character">
     <data type="string" datatypeLibrary=""/>
   </define>
@@ -824,11 +792,10 @@
   </define>
   <!-- media type, as per [RFC2046]. -->
   <!-- HB: 2004-03-25 Changed reference from RFC1766 to its revison, RFC 3066. -->
-  <!-- jpritchett@rfbd.org:  2007-12-10.  Changed again from 3066 to its revision 4646 -->
   <define name="dtb.LanguageCode">
     <data type="NMTOKEN"/>
   </define>
-  <!-- a language code, per [RFC4646]. -->
+  <!-- a language code, per [RFC3066]. -->
   <define name="dtb.Number">
     <data type="string" datatypeLibrary=""/>
   </define>
@@ -890,7 +857,7 @@
   <!-- ======================== dtbook Content Models ======================== -->
   <!-- HB: 2004-04-05 % list removed: as content reduced to contain only <list>. -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalFlow; to %dtbookblock; -->
-  <!-- jpritchett@rfbd.org:  2007-12-10.  Removed %dtbookblock; (no longer referenced) -->
+  <!-- block elements unique to dtbook. -->
   <define name="dtb.dtbookblocknoimggroup">
     <choice>
       <ref name="dtb.author"/>
@@ -1007,7 +974,7 @@
   <define name="dtb.coreattrs">
     <optional>
       <attribute name="id">
-        <ref name="id.type"/>
+        <ref name="dtb.id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -1127,7 +1094,6 @@
     having common references to images, with different accompanying text
     descriptions.
   -->
-  
   <define name="dtb.attrs">
     <ref name="dtb.coreattrs"/>
     <ref name="dtb.i18n"/>
@@ -1161,7 +1127,7 @@
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
   <define name="dtb.attrsrqd">
     <attribute name="id">
-      <ref name="id.type"/>
+      <ref name="dtb.id.type"/>
     </attribute>
     <optional>
       <attribute name="class"/>
@@ -1180,8 +1146,8 @@
       </attribute>
     </optional>
     <optional>
-      <!--<attribute name="smilref"/>-->
       <ref name="dtb.smilref.attr"/>
+      <!--<attribute name="smilref"/>-->
     </optional>
     <ref name="dtb.i18n"/>
     <ref name="dtb.showin"/>
@@ -1211,6 +1177,21 @@
     <ref name="dtb.head"/>
     <ref name="dtb.book"/>
   </define>
+  <!--
+    dtbookContent designates that each dtbook has a <head> of
+    metainformation preceding the <book> content.
+  -->
+  <!--
+    Use: dtbook is the root element in the Digital Talking Book DTD.
+    <dtbook> contains metadata in <head> and the contents itself
+    in <book>.
+  -->
+  <start>
+    <element name="dtbook">
+      <ref name="dtb.attlist.dtbook"/>
+      <ref name="dtb.dtbookcontent"/>
+    </element>
+  </start>
   <!--
     HB: 2004-04-05 dtbook: added attribute xmlns with FIXED value 
     'http://www.loc.gov/nls/z3986/2004/dtbook'
@@ -1242,11 +1223,10 @@
   <!-- MG: 2005-06-26 version: updated to 2005-1 -->
   <!-- jpritchett@rfbd.org:  2006-07-07  updated @version to 2005-2 -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
-  <!-- jpritchett@rfbd.org:  2007-12-07  updated @version to 2005-3 -->
   <define name="dtb.attlist.dtbook" combine="interleave">
     <optional>
-      <attribute name="version" a:defaultValue="2005-3">
-        <value type="string" datatypeLibrary="">2005-3</value>
+      <attribute name="version" a:defaultValue="2005-2">
+        <value type="string" datatypeLibrary="">2005-2</value>
       </attribute>
     </optional>
     <ref name="dtb.i18n"/>
@@ -2191,18 +2171,15 @@
   <!-- HB: 2004-04-04 35b  title: added <title> for use in <poem> or <cite>. -->
   <!-- Use: title contains the title of a <poem> or <cite> (citation) -->
   <!-- jpritchett@rfbd.org:  2006-07-06 Added %coreattrs (id, class, title, xml:space) to attribute list -->
-  <!-- jpritchett@rfbd.org 2007-12-17:  Changed %coreattrs to %attrs -->
-  <!-- jpritchett@rfbd.org 2007-12-17:  Expanded content model to include inlines -->
   <define name="dtb.title">
     <element name="title">
       <ref name="dtb.attlist.title"/>
-      <zeroOrMore>
-        <ref name="dtb.inline"/>
-      </zeroOrMore>
+      <text/>
     </element>
   </define>
   <define name="dtb.attlist.title" combine="interleave">
-    <ref name="dtb.attrs"/>
+    <ref name="dtb.i18n"/>
+    <ref name="dtb.coreattrs"/>
   </define>
   <!--
     Use: author identifies the writer of a work other than this one.
@@ -2265,7 +2242,7 @@
     <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
-        <ref name="idrefs.type"/>
+        <ref name="dtb.idrefs.type"/>
       </attribute>
     </optional>
     <attribute name="render">
@@ -2486,7 +2463,6 @@
     </element>
   </define>
   <!-- jpritchett@rfbd.org:  2006-07-07  Corrected reference to RFC2046 in comment regarding @type -->
-  <!-- jpritchett@rfbd.org:  2007-12-10  Updated reference from RFC3066 to RFC4646 -->
   <!--
     Attuse: a
     
@@ -2507,7 +2483,7 @@
     
         "type" is advisory content MIME type of the target, see [RFC2046];
     
-        "hreflang" is the language code of the href target, see [RFC4646];
+        "hreflang" is the language code of the href target, see [RFC3066];
     
         "rel" is a list of forward link type(s), the relationship(s)
             expressed by the href value to the target, space-separated
@@ -2652,7 +2628,7 @@
   <define name="dtb.attlist.code" combine="interleave">
     <optional>
       <attribute name="id">
-        <ref name="id.type"/>
+        <ref name="dtb.id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -2674,8 +2650,8 @@
     <ref name="dtb.externalNamespaces"/>
     <ref name="dtb.i18n"/>
     <optional>
-      <!--<attribute name="smilref"/>-->
       <ref name="dtb.smilref.attr"/>
+      <!--<attribute name="smilref"/>-->
     </optional>
     <ref name="dtb.showin"/>
   </define>
@@ -2701,7 +2677,7 @@
   <define name="dtb.attlist.samp" combine="interleave">
     <optional>
       <attribute name="id">
-        <ref name="id.type"/>
+        <ref name="dtb.id.type"/>
       </attribute>
     </optional>
     <optional>
@@ -2723,8 +2699,8 @@
     <ref name="dtb.externalNamespaces"/>
     <ref name="dtb.i18n"/>
     <optional>
-      <!--<attribute name="smilref"/>-->
       <ref name="dtb.smilref.attr"/>
+      <!--<attribute name="smilref"/>-->
     </optional>
     <ref name="dtb.showin"/>
   </define>
@@ -2862,8 +2838,7 @@
       </zeroOrMore>
     </element>
   </define>
-  <!-- jpritchett@rfbd.org:  2006-07-07  Changed @lang to @xml:lang -->
-  <!-- jpritchett@rfbd.org 2007-12-17:  Added @smilref and @showin -->
+  <!-- jpritchett@rfd.org:  2006-07-07  Changed @lang to @xml:lang -->
   <!--
     Attuse: bdo
     
@@ -2885,11 +2860,6 @@
         <value>rtl</value>
       </choice>
     </attribute>
-    <optional>
-      <!--<attribute name="smilref"/>-->
-      <ref name="dtb.smilref.attr"/>
-    </optional>
-    <ref name="dtb.showin"/>
   </define>
   <!-- =================== dtbook Inline Sentence and Word =================== -->
   <!-- Use: sent marks a sentence. -->
@@ -2926,39 +2896,55 @@
     document, usually inserted at the point within the file immediately
     preceding the first item of content on a new page.
   -->
-  
-  <define name="dtb.pagenum">
+  <!-- MDeMeglio 2013-01-18: replaced the old pagenum definition (a direct translation of the DTD) with
+    one that enforces front/normal/special rules -->
+  <define name="dtb.pagenum" combine="choice">
     <element name="pagenum">
-      <ref name="dtb.attlist.pagenum"/>
-      <text/>
+      <ref name="dtb.attrsrqd"/>
+      <choice>
+        <group>
+          <attribute name="page">
+            <value type="string">front</value>
+          </attribute>
+          <choice>
+            <ref name="dtb.datatype.romannumeral"/>
+            <ref name="dtb.datatype.positiveInteger"/>
+          </choice>
+        </group>
+        <group>
+          <attribute name="page">
+            <value type="string">normal</value>
+          </attribute>
+          <ref name="dtb.datatype.positiveInteger"/>
+        </group>
+        <group>
+          <attribute name="page">
+            <value type="string">special</value>
+          </attribute>
+          <text/>
+        </group>
+        <!-- LE20061128: Missing page attribute equals page="normal" -->
+        <ref name="dtb.datatype.positiveInteger"/>
+      </choice>
     </element>
   </define>
-  <!--
-    Attuse: pagenum
-    
-    "page" allows three kinds of page numbering
-    schemes to be identified:
-    "front" (for roman-numeral pages at the start of a book), 
-    "normal" (for pages identified by arabic numerals),
-    or "special" (for all other kinds of pages)
-    For multi-page continuous content,
-    such as large <img> or <table>, put the sequence of <pagenum> on
-    the page where that content starts.
-  -->
-  
-    <define name="dtb.attlist.pagenum" combine="interleave">
-    <ref name="dtb.attrsrqd"/>
-    <optional>
-      <attribute name="page" a:defaultValue="normal">
-        <choice>
-          <value>front</value>
-          <value>normal</value>
-          <value>special</value>
-        </choice>
-      </attribute>
-    </optional>
+
+  <!-- datatypes used by pagenum. -->
+  <define name="dtb.datatype.romannumeral">
+    <!-- jpritchett (2007-10-25): Added leading/trailing whitespace to the pattern -->
+    <data type="string">
+      <param name="pattern"
+        >\s*[Mm]*([Dd]?[Cc]{0,3}|[Cc][DdMm])([Ll]?[Xx]{0,3}|[Xx][LlCc])([Vv]?[Ii]{0,3}|[Ii][VvXx])\s*</param>
+    </data>
+    <!--
+^(?i:(?=[MDCLXVI])((M{0,3})((C[DM])|(D?C{0,3}))?((X[LC])|(L?XX{0,2}))?((I[VX])|(V?(II{0,2}))|V)?))$
+-->
   </define>
-  
+
+  <define name="dtb.datatype.positiveInteger">
+    <data type="positiveInteger"/>
+  </define>
+
   <!--
     Use: noteref marks one or more characters that reference a footnote
     or endnote <note>. Contrast with <annoref>. <noteref> and <note>
@@ -3092,12 +3078,11 @@
     0 for no <table> border, positive integer for <table> border width
     in pixels.
   -->
-  <!-- jpritchett@rfbd.org 2007-12-17:  Corrected description of caption/@imgref -->
   <!--
     Use: img marks a visual image. An <img> will always contain an alt and
     generally contain a longdesc, a pointer to a related <prodnote>. The
     <img> may be referenced by a <caption> or <prodnote>, using, for
-    example, the form <caption imgref="yyy">the Caption</caption> for
+    example, the form <caption imgref="#yyy">the Caption</caption> for
     the <img id="yyy">.
   -->
   <define name="dtb.img">
@@ -3143,7 +3128,6 @@
       </attribute>
     </optional>
   </define>
-  <!-- jpritchett@rfbd.org 2007-12-17:  Added pagenum to content model -->
   <!--
     Use: imggroup provides a container for one or more <img> and associated
     <caption>(s) and <prodnote>(s). A <prodnote> may contain a description
@@ -3160,8 +3144,6 @@
     media (e.g., large print, braille, or print).  If several <prodnote>
     refer to a single <img id="xxx">, each prodnote has the same <prodnote
     imgref="xxx">.
-    
-    4) one or more <pagenum> if the image group spans several pages.
   -->
   <define name="dtb.imggroup">
     <element name="imggroup">
@@ -3171,7 +3153,6 @@
           <ref name="dtb.prodnote"/>
           <ref name="dtb.img"/>
           <ref name="dtb.caption"/>
-          <ref name="dtb.pagenum"/>
         </choice>
       </oneOrMore>
     </element>
@@ -3708,12 +3689,14 @@
     default value is from the user agent, and may be affected
     by user preference. The recommended default is middle.
   -->
-  <!-- jpritchett@rfbd.org 2007-12-19:  Edited comment to reflect new content models -->
   <!--
     Use: table contains cells of tabular data arranged in rows and
     columns. A <table> may have a <caption>. It may have descriptions of
     the columns in <col>s or groupings of several <col> in <colgroup>.
-    A simple <table> may be made up of just rows <tr>. Note the logical order of
+    A simple <table> may be made up of just rows <tr>. A long table
+    crossing several pages of the print book should have separate
+    <pagenum> values for each of the pages containing that <table>
+    indicated on the page where it starts. Note the logical order of
     optional <thead>, optional <tfoot>, then one or more of either
     <tbody> or just rows <tr>. This order accommodates simple or large,
     complex tables. The <thead> and <tfoot> information usually helps
@@ -3721,7 +3704,6 @@
     <table> the <thead> and <tfoot> are repeated on each page, but
     not redundantly tagged.
   -->
-  <!-- jpritchett@rfbd.org 2007-12-19:  Added pagenum to content model -->
   <define name="dtb.table">
     <element name="table">
       <ref name="dtb.attlist.table"/>
@@ -3747,10 +3729,7 @@
           <ref name="dtb.tbody"/>
         </oneOrMore>
         <oneOrMore>
-          <choice>
-            <ref name="dtb.tr"/>
-            <ref name="dtb.pagenum"/>
-          </choice>
+          <ref name="dtb.tr"/>
         </oneOrMore>
       </choice>
     </element>
@@ -3818,21 +3797,19 @@
       </zeroOrMore>
     </element>
   </define>
-  <!-- jpritchett@rfbd.org:  2007-12-17 Corrected description of @imgref -->
   <!--
     Attuse: caption
     
     "imgref" value (or space-separated
     id values) identifies the id values of the <img>(s) to which the
-    caption applies. Only references
-    to images within the same document are allowed.
+    caption applies. Any internal id reference is preceded by '#id'.
     Note: imgref is an extension for dtbook.
   -->
   <define name="dtb.attlist.caption" combine="interleave">
     <ref name="dtb.attrs"/>
     <optional>
       <attribute name="imgref">
-        <ref name="idrefs.type"/>
+        <ref name="dtb.idrefs.type"/>
       </attribute>
     </optional>
   </define>
@@ -3883,15 +3860,11 @@
     Use multiple <tbody> sections when rules are needed between groups
     of table rows.
   -->
-  <!-- jpritchett@rfbd.org 2007-12-19:  Added pagenum to content model -->
   <define name="dtb.tbody">
     <element name="tbody">
       <ref name="dtb.attlist.tbody"/>
       <oneOrMore>
-        <choice>
-          <ref name="dtb.tr"/>
-          <ref name="dtb.pagenum"/>
-        </choice>
+        <ref name="dtb.tr"/>
       </oneOrMore>
     </element>
   </define>
@@ -4078,7 +4051,7 @@
     </optional>
     <optional>
       <attribute name="headers">
-        <ref name="idrefs.type"/>
+        <ref name="dtb.idrefs.type"/>
       </attribute>
     </optional>
     <optional>
@@ -4148,7 +4121,7 @@
     </optional>
     <optional>
       <attribute name="headers">
-        <ref name="idrefs.type"/>
+        <ref name="dtb.idrefs.type"/>
       </attribute>
     </optional>
     <optional>
@@ -4169,6 +4142,5 @@
     <ref name="dtb.cellhalign"/>
     <ref name="dtb.cellvalign"/>
   </define>
-    
 </grammar>
-<!-- End dtbook-2005-3.dtd -->
+<!-- End dtbook-2005-2.dtd -->

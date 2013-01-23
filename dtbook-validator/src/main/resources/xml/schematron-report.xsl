@@ -5,10 +5,10 @@
     xmlns="http://www.w3.org/1999/xhtml"
     exclude-result-prefixes="#all">
     <xsl:template match="/">
-        <section>
+        <div>
             <h2>Schematron Validation Results</h2>
             <xsl:apply-templates/>
-        </section>
+        </div>
     </xsl:template>
     
     <xsl:template match="svrl:schematron-output">
