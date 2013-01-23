@@ -6,6 +6,8 @@
     version="2.0">
 
     <xsl:output indent="yes" method="xml"/>
+    
+    <!-- FIXME: produces invalid Nav Doc when nav labels are empty   -->
 
     <xsl:template match="ncx">
         <html>

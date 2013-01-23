@@ -40,6 +40,14 @@
             <p:with-param name="mo-dir" select="$mo-dir"/>
             <p:with-param name="audio-dir" select="$audio-dir"/>
         </p:xslt>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="clean-mediaoverlay.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
         <!--Hack to set the base URI-->
         <p:add-attribute attribute-name="xml:base" match="/*">
             <p:with-option name="attribute-value" select="$mo-uri"/>

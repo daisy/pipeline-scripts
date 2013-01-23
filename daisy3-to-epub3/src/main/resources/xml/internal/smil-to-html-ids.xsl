@@ -21,7 +21,7 @@
         </d:idmap>
     </xsl:template>
 
-    <xsl:template match="smil:text[@id]|smil:par[@id]">
+    <xsl:template match="smil:text[@id]|smil:*[@id][count(smil:text)=1]">
         <xsl:variable name="dtbook-ref"
             select="resolve-uri(substring-before(descendant-or-self::smil:text/@src,'#'),base-uri(.))"/>
         <xsl:variable name="idref" select="substring-after(descendant-or-self::smil:text/@src,'#')"/>
