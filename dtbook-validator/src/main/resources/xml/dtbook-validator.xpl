@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-validator" type="px:dtbook-validator"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:p="http://www.w3.org/ns/xproc" 
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:l="http://xproc.org/library" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" 
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:l="http://xproc.org/library" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml" 
+    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+    xmlns:m="http://www.w3.org/1998/Math/MathML"
     exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -65,6 +70,13 @@
                 nothing is saved to disk.</p>
         </p:documentation>
     </p:option>
+    
+    <p:option name="mathml-version" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">mathml-version</h2>
+            <p px:role="desc">Version of MathML in the DTBook file. Defaults to 3.0.</p>
+        </p:documentation>
+    </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
@@ -78,49 +90,54 @@
     <p:variable name="base-uri" select="base-uri()">
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
+    
+    <p:variable name="opt-mathml-version"
+        select="if (string-length($mathml-version) > 0) 
+        then $mathml-version
+        else '3.0'"/>
 
+    <p:variable name="has-mathml" select="if (count(//m:math) > 0) then true() else false()">
+        <p:pipe port="source" step="dtbook-validator"/>
+    </p:variable>
 
-    <!-- TODO: get the mathml version. not as easy as it sounds. 
-    we can ask for this as a script parameter until we get some sort of
-    fancy automatic version detection going.-->
-    <p:variable name="mathml-version" select="'2'"/>
-
+    
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
     <p:variable name="dtbook-version" select="dtb:dtbook/@version">
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
-
+    
     <p:choose name="detect-version">
-        <p:when test="$dtbook-version = '2005-3' and $mathml-version = '3'">
+        <p:when test="$dtbook-version = '2005-3' and $opt-mathml-version = '3.0'">
             <p:output port="result">
                 <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
             </p:output>
             <p:identity/>
             <p:sink/>
         </p:when>
-        <p:when test="$dtbook-version = '2005-3' and $mathml-version = '2'">
+        <p:when test="$dtbook-version = '2005-3' and $opt-mathml-version = '2.0'">
             <p:output port="result">
                 <p:document href="./schema/rng/dtbook-2005-3.mathml-2.integration.rng"/>
             </p:output>
             <p:identity/>
             <p:sink/>
         </p:when>
-        <p:when test="$dtbook-version = '2005-2' and $mathml-version = '3'">
+        <p:when test="$dtbook-version = '2005-2' and $opt-mathml-version = '3.0'">
             <p:output port="result">
                 <p:document href="./schema/rng/dtbook-2005-2.mathml-3.integration.rng"/>
             </p:output>
             <p:identity/>
             <p:sink/>
         </p:when>
-        <p:when test="$dtbook-version = '2005-2' and $mathml-version = '2'">
+        <p:when test="$dtbook-version = '2005-2' and $opt-mathml-version = '2.0'">
             <p:output port="result">
                 <p:document href="./schema/rng/dtbook-2005-2.mathml-2.integration.rng"/>
             </p:output>
             <p:identity/>
             <p:sink/>
         </p:when>
+        <!-- we aren't supporting mathml on versions of dtbook older than 2005-2 -->
         <p:when test="$dtbook-version = '2005-1'">
             <p:output port="result">
                 <p:document href="./schema/rng/dtbook-2005-1.rng"/>
@@ -128,11 +145,18 @@
             <p:identity/>
             <p:sink/>
         </p:when>
-        <!-- TODO support 2005-1 -->
+        <p:when test="$dtbook-version = '1.1.0'">
+            <p:output port="result">
+                <p:document href="./schema/rng/dtbook-1.1.0.rng"/>
+            </p:output>
+            <p:identity/>
+            <p:sink/>
+        </p:when>
+        <!-- default to dtbook 2005-3 -->
+        <!-- We could also consider generating an error that the version was not detectable. -->
         <p:otherwise>
             <p:output port="result">
-                <!-- TODO this should default to 1.1.0 -->
-                <p:document href="./schema/rng/DOES_NOT_YET_EXIST.rng"/>
+                <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
             </p:output>
             <p:identity/>
             <p:sink/>
@@ -262,7 +286,8 @@
                             <h1>Validation Results</h1>
                             <p>Input document:</p>
                             <pre id="filename">@@</pre>
-                            <p>Validating as DTBook <span id="dtbookversion">@@</span></p>
+                            <p>Validating as DTBook <span id="dtbook-version">@@</span>
+                                <span id="with-mathml"> with MathML <span id="mathml-version">@@</span></span></p>
                         </body>
                     </html>
                 </p:inline>
@@ -278,11 +303,23 @@
             <p:with-option name="replace" select="concat('&quot;', $base-uri, '&quot;')"/>
         </p:string-replace>
 
-        <p:string-replace match="//*[@id='dtbookversion']/text()"
+        <p:string-replace match="//*[@id='dtbook-version']/text()"
             name="insert-dtbook-version-into-html-report">
             <p:with-option name="replace" select="concat('&quot;', $dtbook-version, '&quot;')"/>
         </p:string-replace>
         
+        <p:choose>
+            <p:when test="$has-mathml = true()">
+                <p:string-replace match="//*[@id='mathml-version']/text()"
+                    name="insert-mathml-version-into-html-report">
+                    <p:with-option name="replace" 
+                        select="concat('&quot;', $opt-mathml-version, '&quot;')"/>
+                </p:string-replace>
+            </p:when>
+            <p:otherwise>
+                <p:delete match="//*[@id='with-mathml']"/>
+            </p:otherwise>
+        </p:choose>
     </p:group>
 
 

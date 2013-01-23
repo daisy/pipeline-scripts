@@ -1,4 +1,0 @@
-<c:errors xmlns:c="http://www.w3.org/ns/xproc-step">
-    <c:error line="1" column="196">ro.sync.exml.n.c.i - key: invalid_attribute_value, args
-        ["version", ; must be equal to "2005-3"]</c:error>
-</c:errors>
