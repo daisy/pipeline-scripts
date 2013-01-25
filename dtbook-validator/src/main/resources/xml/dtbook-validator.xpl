@@ -38,7 +38,7 @@
         <p:pipe port="result" step="validate-against-relaxng"/>
     </p:output>
 
-    <p:output port="relaxng-report" sequence="true">
+    <p:output port="relaxng-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">relaxng-report</h1>
             <p px:role="desc">Raw output from the RelaxNG validation.</p>

@@ -28,7 +28,7 @@
     <book>
         <bodymatter>
             <level1>
-                <pagenum id="ghGen2" smilref="MathML_Sample2.smil#ghGen2">278</pagenum> 
+                <pagenum id="ghGen2" smilref="MathML_Sample2.smil#ghGen2">278-banana</pagenum> 
                 <h1 id="ghGen3" smilref="MathML_Sample2.smil#ghGen3">5-9 Powers of Products and Quotients</h1>
                 <sidebar render="optional" id="ghGen4"> 
                     <hd id="ghGen5" smilref="MathML_Sample2.smil#ghGen5">What You'll Learn</hd>
@@ -48,7 +48,10 @@
                     </p>
                     <list type="ol" id="ghGen18">
                         <li id="ghGen19"> <lic id="ghGen20" smilref="MathML_Sample2.smil#ghGen20">1.</lic> <lic> 
-                                <m:math display="inline" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" alttext="Left parenthesis 2 squared right parenthesis cubed " altimg="images/p278-001.png" id="ghGen21" dtbook:smilref="MathML_Sample2.smil#ghGen21">                                    
+                                <m:math display="inline" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" alttext="Left parenthesis 2 squared right parenthesis cubed " altimg="images/p278-001.png" id="ghGen21" dtbook:smilref="MathML_Sample2.smil#ghGen21">
+                                    <m:cn>
+                                        <m:mspace/>
+                                    </m:cn>                                    
                                     <m:mrow>
                                         <m:msup>
                                             <m:mrow>
@@ -476,7 +479,7 @@
                         </sidebar> 
                         
                     </level3>
-                    <level3>
+                    <level2>
                         <h3 id="ghGen231" smilref="MathML_Sample2.smil#ghGen231">1 Example Simplifying a Power of a Product</h3>
                         <p id="ghGen232">
                             <sent>
@@ -766,7 +769,7 @@
                                 <sent id="ghGen368" smilref="MathML_Sample2.smil#ghGen368">The location of a negative sign affects the value of an expression.</sent>
                             </p>
                         </level4>
-                    </level3>
+                    </level2>
                     <level3>
                         <h3 id="ghGen369" smilref="MathML_Sample2.smil#ghGen369">2 Example Working With a Negative Sign</h3>
                         <list type="ol" id="ghGen370">
