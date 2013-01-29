@@ -19,3 +19,4 @@ Thumbs.db
 #vim files
 .*.sw?
 .*~
+dtbook-validator/src/test/dtbook_has_errors_maybe_dont_share.xml
