@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-validator" type="px:dtbook-validator"
+<p:declare-step version="1.0" name="nimas-fileset-validator" type="px:nimas-fileset-validator"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
@@ -9,14 +9,17 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:l="http://xproc.org/library" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml" 
-    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:m="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">NIMAS Fileset Validator</h1>
-        <p px:role="desc">Validates NIMAS filesets.</p>
+        <p px:role="desc">Performs the following: 
+            Validates DTBook + MathML documents, 
+            Validates the package document, 
+            Enforce metadata requirements,
+            Verify that there is a PDF present,
+            Verify that all images linked to from the XML content file exist on disk.</p>
     </p:documentation>
 
     <!-- ***************************************************** -->
@@ -32,7 +35,7 @@
     <p:output port="result" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">result</h1>
-            <p px:role="desc">A validation report.</p>
+            <p px:role="desc">An HTML-formatted validation report.</p>
         </p:documentation>
         <p:pipe port="result" step="validate-against-relaxng"/>
     </p:output>
@@ -40,7 +43,7 @@
     <p:output port="dtbook-relaxng-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">dtbook-relaxng-report</h1>
-            <p px:role="desc">Raw output from the RelaxNG validation of the DTBook file.</p>
+            <p px:role="desc">Raw output from the RelaxNG validation of the DTBook file(s).</p>
         </p:documentation>
         <p:pipe step="validate-dtbook" port="relaxng-report"/>
     </p:output>
@@ -48,35 +51,27 @@
     <p:output port="dtbook-schematron-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">schematron-report</h1>
-            <p px:role="desc">Raw output from the schematron validation of the DTBook file.</p>
+            <p px:role="desc">Raw output from the schematron validation of the DTBook file(s).</p>
         </p:documentation>
         <p:pipe step="validate-dtbook" port="schematron-report"/>
     </p:output>
     
-    <p:output port="package-doc-relaxng-report">
+    <p:output port="opf-relaxng-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">package-doc-relaxng-report</h1>
+            <h1 px:role="name">opf-relaxng-report</h1>
             <p px:role="desc">Raw output from the RelaxNG validation of the package document.</p>
         </p:documentation>
-        <p:pipe step="validate-package-doc" port="relaxng-report"/>
+        <p:pipe step="validate-opf" port="relaxng-report"/>
     </p:output>
     
-    <p:output port="package-doc-schematron-report">
+    <p:output port="opf-schematron-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">package-doc-relaxng-report</h1>
+            <h1 px:role="name">opf-schematron-report</h1>
             <p px:role="desc">Raw output from the RelaxNG validation of the package document.</p>
         </p:documentation>
-        <p:pipe step="validate-package-doc" port="schematron-report"/>
+        <p:pipe step="validate-opf" port="schematron-report"/>
     </p:output>
     
-    <p:output port="html-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">html-report</h1>
-            <p px:role="desc">An HTML-formatted validation summary.</p>
-        </p:documentation>
-        <p:pipe port="result" step="create-html-report"/>
-    </p:output>
-
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -98,154 +93,44 @@
 
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/validation-utils-library.xpl">
-        <p:documentation> Collection of utilities for validation and reporting. </p:documentation>
+        <p:documentation>Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
-
+    
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-validator/dtbook-validator.xpl">
+        <p:documentation>DTBook + MathML validator</p:documentation>
+    </p:import>
+    
+    <p:import href="nimas-fileset-validator.validate-opf.xml">
+        <p:documentation>OPF validation step.</p:documentation>
+    </p:import>
+    
+    <p:import href="nimas-fileset-validator.store-opf.xml">
+        <p:documentation>Stores reports to disk.</p:documentation>
+    </p:import>
+    
     <p:variable name="base-uri" select="base-uri()">
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
-    
-    <p:variable name="opt-mathml-version"
-        select="if (string-length($mathml-version) > 0) 
-        then $mathml-version
-        else '3.0'"/>
-
-    <p:variable name="has-mathml" select="if (count(//m:math) > 0) then true() else false()">
-        <p:pipe port="source" step="dtbook-validator"/>
-    </p:variable>
-
     
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
     
+    <px:nimas-fileset-validator.validate-opf name="validate-opf">
+        <p:input port="source">
+            <p:pipe port="source" step="nimas-fileset-validator"/>
+        </p:input>
+    </px:nimas-fileset-validator.validate-opf>
+    <p:sink/>
     
-    <!-- ***************************************************** -->
-    <!-- REPORTING -->
-    <!-- ***************************************************** -->
+    <!-- find all DTBook documents referenced by the package file -->
+    <p:for-each>
+        <px:validate-dtbook>
+            
+        </px:validate-dtbook>    
+    </p:for-each>
     
-    <p:group name="create-html-report">
-        <p:output port="result"/>
-        <p:insert position="last-child" match="//xhtml:body" name="assemble-html-report">
-            <p:input port="source">
-                <p:inline>
-                    <html xmlns="http://www.w3.org/1999/xhtml">
-                        <head>
-                            <title>Validation Results</title>
-                            <style type="text/css"> 
-                                body { 
-                                    font-family: helvetica; 
-                                } 
-                                pre { 
-                                    white-space: pre-wrap; /* css-3 */ 
-                                    white-space: -moz-pre-wrap; /*Mozilla, since 1999 */ 
-                                    white-space: -pre-wrap; /* Opera 4-6 */
-                                    white-space: -o-pre-wrap; /* Opera 7 */ 
-                                    word-wrap: break-word; /*Internet Explorer 5.5+ */ 
-                                } 
-                                li.error div { 
-                                    display: table; 
-                                    border: gray thin solid; 
-                                    padding: 5px; 
-                                } 
-                                li.error div h3 { 
-                                    display: table-cell; 
-                                    padding-right: 10px; 
-                                    font-size: smaller; 
-                                } 
-                                li.error div pre { 
-                                    display: table-cell; 
-                                } 
-                                li { 
-                                    padding-bottom: 15px; 
-                                } 
-                            </style>
-                        </head>
-                        <body>
-                            <h1>Validation Results</h1>
-                            <p>Input document:</p>
-                            <pre id="filename">@@</pre>
-                            <p>Validating as DTBook <span id="dtbook-version">@@</span>
-                                <span id="with-mathml"> with MathML <span id="mathml-version">@@</span></span></p>
-                        </body>
-                    </html>
-                </p:inline>
-            </p:input>
-            <p:input port="insertion">
-                <p:pipe port="result" step="htmlify-relaxng-report"/>
-                <p:pipe port="result" step="htmlify-schematron-report"/>
-            </p:input>
-        </p:insert>
-
-        <p:string-replace match="//*[@id='filename']/text()"
-            name="insert-file-name-into-html-report">
-            <p:with-option name="replace" select="concat('&quot;', $base-uri, '&quot;')"/>
-        </p:string-replace>
-
-        <p:string-replace match="//*[@id='dtbook-version']/text()"
-            name="insert-dtbook-version-into-html-report">
-            <p:with-option name="replace" select="concat('&quot;', $dtbook-version, '&quot;')"/>
-        </p:string-replace>
-        
-        <p:choose>
-            <p:when test="$has-mathml = true()">
-                <p:string-replace match="//*[@id='mathml-version']/text()"
-                    name="insert-mathml-version-into-html-report">
-                    <p:with-option name="replace" 
-                        select="concat('&quot;', $opt-mathml-version, '&quot;')"/>
-                </p:string-replace>
-            </p:when>
-            <p:otherwise>
-                <p:delete match="//*[@id='with-mathml']"/>
-            </p:otherwise>
-        </p:choose>
-    </p:group>
-
-
-
-
-    <!-- ***************************************************** -->
-    <!-- STORING -->
-    <!-- ***************************************************** -->
-    <p:choose name="store-reports">
-        <p:documentation>Save the reports to disk</p:documentation>
-        <p:when test="not(empty($output-dir))">
-            <p:store name="store-html">
-                <p:input port="source">
-                    <p:pipe port="result" step="create-html-report"/>
-                </p:input>
-                <p:with-option name="href" select="concat($output-dir,'/report.xhtml')"/>
-            </p:store>
-
-            <p:choose>
-                <p:xpath-context>
-                    <p:pipe port="result" step="count-relaxng-report"/>
-                </p:xpath-context>
-                <p:when test="/c:result = '0'">
-                    <p:sink>
-                        <p:input port="source">
-                            <p:empty/>
-                        </p:input>
-                    </p:sink>
-                </p:when>
-                <p:otherwise>
-                    <p:store name="store-relaxng">
-                        <p:input port="source">
-                            <p:pipe port="report" step="validate-against-relaxng"/>
-                        </p:input>
-                        <p:with-option name="href"
-                            select="concat($output-dir,'/relax-ng-report.xml')"/>
-                    </p:store>
-                </p:otherwise>
-            </p:choose>
-
-            <p:store name="store-schematron">
-                <p:input port="source">
-                    <p:pipe port="report" step="validate-against-schematron"/>
-                </p:input>
-                <p:with-option name="href" select="concat($output-dir,'/schematron-report.xml')"/>
-            </p:store>
-        </p:when>
-    </p:choose>
-
+    <!-- Check that a PDF file exists -->
+    
+    
 </p:declare-step>
