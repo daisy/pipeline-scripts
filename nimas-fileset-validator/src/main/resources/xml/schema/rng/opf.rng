@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grammar
+ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+ xmlns="http://relaxng.org/ns/structure/1.0"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:sch="http://www.ascc.net/xml/schematron"
+ xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+ xmlns:zed="http://www.daisy.org/ns/zedval/testmap"
+ xmlns:c="http://www.daisy.org/ns/zedval/chunks"
+>
+  <sch:ns prefix="pkg" uri="http://openebook.org/namespaces/oeb-package/1.0/"/>
+  <sch:ns prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
+  
+  <a:documentation>
+      RelaxNg schema for oeb package 1.2 DTD
+      Last edit by: mgylling 2006-05-14
+	  Original version: mgylling 2005-07-01
+  </a:documentation>
+
+  <include href="mod/attributes.rng" />
+  
+  <start>
+    <ref name="package"/>
+  </start>
+
+  <div c:name="package">
+    <define name="package">
+      <element name="package" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.package"/>
+        <ref name="metadata"/>
+        <ref name="manifest"/>
+        <ref name="spine"/>
+        <optional>
+          <ref name="tours"/>
+        </optional>
+        <optional>
+          <ref name="guide"/>
+        </optional>
+      </element>
+    </define>
+
+    <define name="attlist.package" combine="interleave">
+      <ref name="CommonAttributes"/>
+      <attribute name="unique-identifier">
+        <ref name="datatype.idref"/>
+        <sch:pattern name="opf_DcIdUniqIdref" id="opf_DcIdUniqIdref">
+          <sch:rule context="//pkg:package">
+		    <zed:test id="opf_DcIdUniqIdref"/>
+		    <sch:assert test="//pkg:package/pkg:metadata/pkg:dc-metadata/dc:Identifier[@id=current()/@unique-identifier]"> 
+              [sch][zedid::opf_DcIdUniqIdref]
+		    </sch:assert>   					
+		  </sch:rule>				
+        </sch:pattern>        
+      </attribute>
+      <empty/>
+    </define>
+  </div>
+
+  <define name="metadata">
+    <element name="metadata" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+      <element name="dc-metadata">
+        <ref name="dc-metadata"/>
+      </element>
+      <optional>
+        <element name="x-metadata">
+          <ref name="x-metadata"/>
+        </element>
+      </optional>
+    </element>
+  </define>
+
+  <div c:name="manifest">
+    <define name="manifest">
+      <element name="manifest" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.manifest"/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </element>
+    </define>
+
+    <define name="attlist.manifest" combine="interleave">
+      <ref name="CommonAttributes"/>
+    </define>
+
+    <define name="item">
+      <element name="item" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.item"/>
+        <empty/>
+      </element>
+    </define>
+
+    <define name="attlist.item" combine="interleave">
+      <ref name="InternationalAttributes"/>
+      <ref name="attribute.id.required"/>
+      <ref name="attribute.href.required.z3986-2005.subset">
+        <zed:test id="opf_mnfHrefUri"/>
+      </ref>
+      <attribute name="media-type">
+        <ref name="datatype.mime.z2005list"/>
+      </attribute>
+      <optional>
+        <attribute name="fallback">
+          <ref name="datatype.idref"/>
+        </attribute>
+      </optional>
+
+      <!-- this done in java as not to rely on correctness of mime
+      <sch:pattern name="opf_mnfNcxId" id="opf_mnfNcxId">
+        <sch:rule context="//pkg:package/pkg:manifest">
+		  <zed:test id="opf_mnfNcxId"/>
+		  <sch:assert test="count(pkg:item[@id='ncx' and @media-type='application/x-dtbncx+xml'])=1"> 
+		    [sch][zedid::opf_mnfNcxId]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>
+      -->
+      <!-- this done in java as not to rely on correctness of mime
+      <sch:pattern name="opf_mnfResId" id="opf_mnfResId">
+        <sch:rule context="//pkg:package/pkg:manifest/pkg:item[@media-type='application/x-dtbresource+xml']">
+		  <zed:test id="opf_mnfResId"/>
+		  <sch:assert test="@id='resource'"> 
+		    [sch][zedid::opf_mnfResId]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>      
+      -->
+      <!-- this done in java as not to rely on correctness of mime  
+        each smil file listed in manifest is referenced by spine     
+      <sch:pattern name="opf_SpineRefAllSmilInMnf" id="opf_SpineRefAllSmilInMnf">
+
+        <sch:rule context="//pkg:package/pkg:manifest/pkg:item[@media-type='application/smil']">
+		  <zed:test id="opf_SpineRefAllSmilInMnf"/>
+		  <sch:assert test="//pkg:package/pkg:spine/pkg:itemref[@idref=current()/@id]"> 
+		    [sch][zedid::opf_SpineRefAllSmilInMnf]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>      
+      --> 
+      <!-- this done in java as not to rely on correctness of mime       
+               manifest references at least one SMIL file 
+      <sch:pattern name="opf_mnfOneSmil" id="opf_mnfOneSmil">
+
+        <sch:rule context="//pkg:package/pkg:manifest">
+		  <zed:test id="opf_mnfOneSmil"/>
+		  <sch:assert test="count(pkg:item[@media-type='application/smil'])>0"> 
+		    [sch][zedid::opf_mnfOneSmil]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>		
+	  -->
+	  <!--	this done in java as not to rely on correctness of mime
+      <sch:pattern name="opf_opfInManifest" id="opf_opfInManifest">
+        <sch:rule context="//pkg:package/pkg:manifest">
+		  <zed:test id="opf_opfInManifest"/>
+		  <sch:assert test="count(pkg:item[@media-type='text/xml'])=1"> 
+		    [sch][zedid::opf_opfInManifest]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>
+      -->
+      <!-- this done in java as not to rely on correctness of mime       
+      <sch:pattern name="opf_mnfNcxCount" id="opf_mnfNcxCount">
+        <sch:rule context="//pkg:package/pkg:manifest">
+		  <zed:test id="opf_mnfNcxCount"/>
+		  <sch:assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
+		    [sch][zedid::opf_mnfNcxCount]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>
+      -->
+      <!-- this done in java as not to rely on correctness of mime                    
+      <sch:pattern name="opf_mnfResCount" id="opf_mnfResCount">
+        <sch:rule context="//pkg:package/pkg:manifest">
+		  <zed:test id="opf_mnfResCount"/>
+		  <sch:assert test="count(pkg:item[@media-type='application/x-dtbresource+xml'])&lt;2"> 
+		    [sch][zedid::opf_mnfResCount]
+		  </sch:assert>   					
+		</sch:rule>				
+      </sch:pattern>      
+      -->                                 
+    </define>
+  </div>
+
+  <div c:name="spine">
+    <define name="spine">
+      <element name="spine" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.spine"/>
+        <oneOrMore>
+          <ref name="itemref"/>
+        </oneOrMore>
+      </element>
+    </define>
+
+    <define name="attlist.spine" combine="interleave">
+      <ref name="CommonAttributes"/>
+    </define>
+
+    <define name="itemref">
+      <element name="itemref" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.itemref"/>
+        <empty/>
+      </element>
+    </define>
+
+    <define name="attlist.itemref" combine="interleave">
+      <ref name="CommonAttributes"/>
+      <attribute name="idref">
+        <ref name="datatype.idref"/>
+      </attribute>
+      <!-- this done in java as not to rely on correctness of mime
+      spine itemref idref attributes points to the id of a SMIL file listed in manifest 
+      <sch:pattern name="opf_spnItemRefIdrefSmil" id="opf_spnItemRefIdrefSmil">
+        <sch:rule context="//pkg:package/pkg:spine/pkg:itemref">
+		  <zed:test id="opf_spnItemRefIdrefSmil"/>
+		  <sch:assert test="//pkg:item[@id=current()/@idref and @media-type='application/smil']"> 
+			[sch][zedid::opf_spnItemRefIdrefSmil]
+		  </sch:assert>   					
+		</sch:rule>
+	  </sch:pattern>
+	  -->	  
+    </define>
+  </div>
+
+  <div c:name="tours">
+    <define name="tours">
+      <element name="tours" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.tours"/>
+        <oneOrMore>
+          <ref name="tour"/>
+        </oneOrMore>
+      </element>
+    </define>
+
+    <define name="attlist.tours" combine="interleave">
+      <ref name="CommonAttributes"/>
+    </define>
+
+    <define name="tour">
+      <element name="tour" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.tour"/>
+        <oneOrMore>
+          <ref name="site"/>
+        </oneOrMore>
+      </element>
+    </define>
+
+    <define name="attlist.tour" combine="interleave">
+      <ref name="CommonAttributes"/>
+      <attribute name="title"/>
+    </define>
+  </div>
+
+  <div c:name="site">
+    <define name="site">
+      <element name="site" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.site"/>
+        <empty/>
+      </element>
+    </define>
+
+    <define name="attlist.site" combine="interleave">
+      <ref name="CommonAttributes"/>
+      <attribute name="title"/>
+      <ref name="attribute.href.required"/>
+      <!-- uri test for site@href not in map-->
+    </define>
+  </div>
+
+  <div c:name="guide">
+    <define name="guide">
+      <element name="guide" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.guide"/>
+        <oneOrMore>
+          <ref name="reference"/>
+        </oneOrMore>
+      </element>
+    </define>
+
+    <define name="attlist.guide" combine="interleave">
+      <ref name="CommonAttributes"/>
+    </define>
+
+    <define name="reference">
+      <element name="reference" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+        <ref name="attlist.reference"/>
+        <empty/>
+      </element>
+    </define>
+
+    <define name="attlist.reference" combine="interleave">
+      <ref name="CommonAttributes"/>
+      <attribute name="type">
+        <ref name="datatype.pkg.guide.reference.type.values"/>
+        <!-- above test not in testMap -->
+      </attribute>
+      <attribute name="title"/>
+      <ref name ="attribute.href.required"/>
+      <!-- above test not in testMap -->
+    </define>
+  </div>
+
+  <div c:name="dc-metadata">
+    <define name="dc-metadata">
+      <ref name="attlist.dc-metadata"/>
+      
+      <interleave>
+        <oneOrMore>
+          <element name="dc:Title">
+            <ref name="CommonAttributes"/>          
+            <ref name="datatype.string.non-null"/>
+          </element>
+        </oneOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Creator">
+           <interleave>
+             <ref name="attribute.role.optional"/>
+             <ref name="attribute.file-as.optional"/>
+             <ref name="CommonAttributes"/>
+           </interleave>
+           <text/>
+          </element>
+        </zeroOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Subject">
+          <ref name="CommonAttributes"/>
+           <text/>
+          </element>
+        </zeroOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Description">
+          <ref name="CommonAttributes"/>
+           <text/>
+          </element>
+        </zeroOrMore>
+
+        <oneOrMore>
+          <element name="dc:Publisher">
+            <ref name="CommonAttributes"/>
+            <ref name="datatype.string.non-null"/>  
+          </element>
+        </oneOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Contributor">
+          <ref name="CommonAttributes"/>
+           <interleave>
+             <ref name="attribute.role.optional"/>
+             <ref name="attribute.file-as.optional"/>
+           </interleave>
+           <text/>
+          </element>
+        </zeroOrMore>
+
+        <oneOrMore>
+          <element name="dc:Date">
+          <ref name="CommonAttributes"/>
+          <optional>
+            <attribute name="event">
+              <text/>
+            </attribute>
+          </optional>
+           <ref name="datatype.iso8601">           
+             <zed:test id="opf_DcDateValue"/>
+           </ref>
+          </element>
+        </oneOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Type">
+          <ref name="CommonAttributes"/>
+            <text/>
+          </element>
+        </zeroOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Format">
+          <ref name="CommonAttributes"/>
+            <value>ANSI/NISO Z39.86-2005</value>
+            <zed:test id="opf_DcFormatValue"/>
+          </element>
+        </zeroOrMore>
+
+        <oneOrMore>
+          <a:documentation>One instance of this element, that which is referenced from the package unique-identifier attribute, must include an id.</a:documentation>
+          <element name="dc:Identifier">
+            <interleave>
+              <ref name="attribute.scheme.optional"/>
+              <ref name="CommonAttributes"/>
+            </interleave>
+              <ref name="datatype.string.non-null"/>
+          </element>
+        </oneOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Source">
+          <ref name="CommonAttributes"/>
+            <text/>
+          </element>
+        </zeroOrMore>
+
+        <oneOrMore>
+          <element name="dc:Language">
+            <ref name="CommonAttributes"/>
+            <ref name="datatype.rfc1766">
+              <zed:test id="opf_DcLangValue"/>
+            </ref>
+          </element>
+        </oneOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Relation">
+            <ref name="CommonAttributes"/>
+            <text/>
+          </element>
+        </zeroOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Coverage">
+            <ref name="CommonAttributes"/>
+            <text/>
+          </element>
+        </zeroOrMore>
+
+        <zeroOrMore>
+          <element name="dc:Rights">
+            <ref name="CommonAttributes"/>
+            <text/>
+          </element>
+        </zeroOrMore>
+
+      </interleave>
+    </define>
+
+    <define name="attlist.dc-metadata" combine="interleave">
+      <ref name="CommonAttributes"/>
+    </define>
+
+  </div>
+
+  <div c:name="x-metadata">
+    <define name="x-metadata">
+      <ref name="attlist.x-metadata"/>
+      <oneOrMore>
+        <element name="meta" ns="http://openebook.org/namespaces/oeb-package/1.0/">
+          <ref name="x-meta.attlist"/>
+       </element>
+      </oneOrMore>
+    </define>
+
+    <define name="attlist.x-metadata">
+      <ref name="CommonAttributes"/>
+    </define>
+
+    <define name="x-meta.attlist">
+      <choice>
+        <group>
+          <a:documentation>Optional - recommended. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbSourceDatePresence" id="opf_xMetaDtbSourceDatePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbSourceDatePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:sourceDate'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbSourceDatePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:sourceDate</value>
+          </attribute>
+          <attribute name="content">
+            <ref name="datatype.iso8601"/>
+            <zed:test id="opf_xMetaDtbSourceDateValue"/>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Optional - recommended. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbSourceEditionPresence" id="opf_xMetaDtbSourceEditionPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbSourceEditionPresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:sourceEdition'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbSourceEditionPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:sourceEdition</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Optional - recommended. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbSourcePublisherPresence" id="opf_xMetaDtbSourcePublisherPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbSourcePublisherPresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:sourcePublisher'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbSourcePublisherPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:sourcePublisher</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Optional - recommended. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbSourceRightsPresence" id="opf_xMetaDtbSourceRightsPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbSourceRightsPresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:sourceRights'])&lt;2"> 
+                       [sch][zedid::opf_xMetaDtbSourceRightsPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:sourceRights</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbSourceTitlePresence" id="opf_xMetaDtbSourceTitlePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbSourceTitlePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:sourceTitle'])&lt;2"> 
+                       [sch][zedid::opf_xMetaDtbSourceTitlePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:sourceTitle</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Required. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaMmTypePresence" id="opf_xMetaMmTypePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaMmTypePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:multimediaType'])=1"> 
+						[sch][zedid::opf_xMetaMmTypePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:multimediaType</value>
+          </attribute>
+          <attribute name="content">
+            <choice>
+              <zed:test id="opf_xMetaMmTypeValue"/>
+              <value>audioOnly</value>
+              <value>audioNCX</value>
+              <value>audioPartText</value>
+              <value>audioFullText</value>
+              <value>textPartAudio</value>
+              <value>textNCX</value>
+            </choice>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Required. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaMmContentPresence" id="opf_xMetaMmContentPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaMmTypePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:multimediaContent'])=1"> 
+						[sch][zedid::opf_xMetaMmContentPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:multimediaContent</value>
+          </attribute>
+          <attribute name="content">
+            <choice>
+              <zed:test id="opf_xMetaMmContentValue"/>
+              <value>audio</value>
+              <value>text</value>
+              <value>image</value>
+              <value>audio,text</value>
+              <value>audio,image</value>              
+              <value>audio,text,image</value>
+              <value>audio,image,text</value>              
+              <value>text,audio</value>
+              <value>text,image</value>              
+              <value>text,audio,image</value>
+              <value>text,image,audio</value>                            
+              <value>image,text</value>
+              <value>image,audio</value>              
+              <value>image,text,audio</value>
+              <value>image,audio,text</value>
+            </choice>           
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+
+          <!-- this done in java as not to rely on correctness of mime
+          when dtb:multimediaContent includes the top-level media type "audio", there is at least one audio file in manifest          
+          <sch:pattern name="opf_xMetaMmContentValueManifestAudio" id="opf_xMetaMmContentValueManifestAudio">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata/pkg:meta[@name='dtb:multimediaContent' and contains(@content,'audio')]">
+					<zed:test id="opf_xMetaMmContentValueManifestAudio"/>
+					<sch:assert test="count(//pkg:package/pkg:manifest/pkg:item[@media-type='audio/mpeg4-generic' or @media-type='audio/mpeg' or @media-type='audio/x-wav' ])&gt;0"> 
+						[sch][zedid::opf_xMetaMmContentValueManifestAudio]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+		  -->
+          <!-- this done in java as not to rely on correctness of mime		  
+          when dtb:multimediaContent includes the top-level media type "image", there is at least one image file in manifest		  
+		  <sch:pattern name="opf_xMetaMmContentValueManifestImage" id="opf_xMetaMmContentValueManifestImage">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata/pkg:meta[@name='dtb:multimediaContent' and contains(@content,'image')]">
+					<zed:test id="opf_xMetaMmContentValueManifestImage"/>
+					<sch:assert test="count(//pkg:package/pkg:manifest/pkg:item[@media-type='image/jpeg' or @media-type='image/png' or @media-type='image/svg+xml' ])&gt;0"> 
+						[sch][zedid::opf_xMetaMmContentValueManifestImage]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          -->
+          <!-- this done in java as not to rely on correctness of mime          
+          when dtb:multimediaContent includes the top-level media type "text", there is at least one dtbook file in manifest
+		  <sch:pattern name="opf_xMetaMmContentValueManifestText" id="opf_xMetaMmContentValueManifestText">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata/pkg:meta[@name='dtb:multimediaContent' and contains(@content,'text')]">
+					<zed:test id="opf_xMetaMmContentValueManifestText"/>
+					<sch:assert test="count(//pkg:package/pkg:manifest/pkg:item[@media-type='application/x-dtbook+xml'])&gt;0"> 
+						[sch][zedid::opf_xMetaMmContentValueManifestText]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+		  -->		       
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Repeatable.</a:documentation>
+          <attribute name="name">
+            <value>dtb:narrator</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Repeatable.</a:documentation>
+          <attribute name="name">
+            <value>dtb:producer</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Optional. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbProducedDatePresence" id="opf_xMetaDtbProducedDatePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbProducedDatePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:producedDate'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbProducedDatePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>          
+          <attribute name="name">
+            <value>dtb:producedDate</value>
+          </attribute>
+          <attribute name="content">
+            <zed:test id="opf_xMetaDtbProducedDateValue"/>
+            <ref name="datatype.iso8601"/>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Repeatable.</a:documentation>
+          <attribute name="name">
+            <value>dtb:producer</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbRevisionPresence" id="opf_xMetaDtbRevisionPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbRevisionPresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:revision'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbRevisionPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>          
+          <attribute name="name">
+            <value>dtb:revision</value>
+          </attribute>
+          <attribute name="content">
+            <zed:test id="opf_xMetaDtbRevisionValue"/>
+            <ref name="datatype.nonNegativeInteger"/>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Optional. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbRevisionDatePresence" id="opf_xMetaDtbRevisionDatePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbRevisionDatePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:revisionDate'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbRevisionDatePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:revisionDate</value>
+          </attribute>
+          <attribute name="content">
+            <zed:test id="opf_xMetaDtbRevisionDateValue"/>
+            <ref name="datatype.iso8601"/>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaDtbRevisionDescriptionPresence" id="opf_xMetaDtbRevisionDescriptionPresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaDtbRevisionDescriptionPresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:revisionDescription'])&lt;2"> 
+						[sch][zedid::opf_xMetaDtbRevisionDescriptionPresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>
+          <attribute name="name">
+            <value>dtb:revisionDescription</value>
+          </attribute>
+          <ref name="attribute.content.stringvalue.required"/>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Required. Not repeatable.</a:documentation>
+          <sch:pattern name="opf_xMetaTotTimePresence" id="opf_xMetaTotTimePresence">
+       			<sch:rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+					<zed:test id="opf_xMetaTotTimePresence"/>
+					<sch:assert test="count(pkg:meta[@name='dtb:totalTime'])=1"> 
+						[sch][zedid::opf_xMetaTotTimePresence]
+					</sch:assert>   					
+				</sch:rule>
+		  </sch:pattern>          
+          <attribute name="name">
+            <value>dtb:totalTime</value>
+          </attribute>
+          <attribute name="content">
+            <zed:test id="opf_xMetaTotTimeValue"/>
+            <ref name="datatype.smilclock"/>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+          <a:documentation>Occurrence: Optional, recommended for audio DTBs. Repeatable.</a:documentation>
+          <attribute name="name">
+            <value>dtb:audioFormat</value>
+          </attribute>
+          <attribute name="content">
+            <a:documentation>Values are not case-sensitive.</a:documentation>
+            <choice>
+              <data type="string">
+                <param name="pattern">[M|m][P|p]3</param>
+              </data>
+              <data type="string">
+                <param name="pattern">[W|w][A|a][V|v]</param>
+              </data>
+              <data type="string">
+                <param name="pattern">[M|m][P|p]4-[A|a][A|a][C|c]</param>
+              </data>
+            </choice>
+          </attribute>
+          <ref name="attribute.scheme.optional"/>
+          <ref name="CommonAttributes"/>
+        </group>
+
+        <group>
+         <attribute name="name">
+           <ref name="datatype.string.nondtbns"/>
+           <zed:test id="opf_xMetaDtbPrefixRestriction"/>
+         </attribute>
+         <ref name="attribute.content.stringvalue.required"/>
+         <ref name="attribute.scheme.optional"/>
+         <ref name="CommonAttributes"/>
+       </group>
+      </choice>
+    </define>
+  </div>
+
+  <div c:name="common">
+    <define name="attribute.role.optional">
+      <optional>
+        <attribute name="role">
+          <text/>
+        </attribute>
+      </optional>
+    </define>
+
+    <define name="attribute.file-as.optional">
+      <optional>
+        <attribute name="file-as">
+          <text/>
+        </attribute>
+      </optional>
+    </define>
+
+    <define name="CommonAttributes">
+      <ref name="attribute.id.optional"/>
+      <ref name="InternationalAttributes"/>
+    </define>
+
+    <define name="InternationalAttributes">
+        <ref name="attribute.xml.lang.optional"/>
+    </define>
+  </div>
+
+</grammar>
