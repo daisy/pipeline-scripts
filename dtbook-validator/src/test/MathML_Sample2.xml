@@ -50,8 +50,8 @@
                         <li id="ghGen19"> <lic id="ghGen20" smilref="MathML_Sample2.smil#ghGen20">1.</lic> <lic> 
                                 <m:math display="inline" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" alttext="Left parenthesis 2 squared right parenthesis cubed " altimg="images/p278-001.png" id="ghGen21" dtbook:smilref="MathML_Sample2.smil#ghGen21">
                                     <m:cn>
-                                        <m:mspace/>
-                                    </m:cn>                                    
+                                        <m:mo/>
+                                    </m:cn>
                                     <m:mrow>
                                         <m:msup>
                                             <m:mrow>

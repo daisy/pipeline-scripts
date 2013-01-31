@@ -22,6 +22,7 @@
     
     <p:input port="relax-ng-report"/>
     <p:input port="schematron-report"/>
+    <p:input port="images-report"/>
     <p:option name="output-dir" required="true"/>
     
     <p:store name="store-relaxng">
@@ -40,6 +41,14 @@
             select="concat($output-dir,'/schematron-report.xml')"/>
     </p:store>
     
+    <p:store name="store-images">
+        <p:input port="source">
+            <p:pipe port="images-report" step="dtbook-validator.store"/>
+        </p:input>
+        <p:with-option name="href"
+            select="concat($output-dir,'/images-report.xml')"/>
+    </p:store>
+    
     <p:store name="store-xhtml">
         <p:input port="source">
             <p:pipe port="source" step="dtbook-validator.store"/>
@@ -47,5 +56,7 @@
         <p:with-option name="href"
             select="concat($output-dir,'/report.xhtml')"/>
     </p:store>
+    
+    
     
 </p:declare-step>

@@ -21,7 +21,7 @@
     <p:input port="source" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">source</h1>
-            <p px:role="desc">A DTBook-2005-3 document</p>
+            <p px:role="desc">A DTBook document. Supported versions are 2005-1,-2,-3; and 1.1.0.</p>
         </p:documentation>
     </p:input>
 
@@ -49,6 +49,14 @@
         <p:pipe step="validate-against-schematron" port="report"/>
     </p:output>
 
+    <p:output port="images-report">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">images-report</h1>
+            <p px:role="desc">List of missing images. Generated only if image-checking is enabled.</p>
+        </p:documentation>
+        <p:pipe step="check-images" port="result"/>
+    </p:output>
+    
     <p:output port="html-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">html-report</h1>
@@ -57,7 +65,7 @@
         </p:documentation>
         <p:pipe port="result" step="create-html-report"/>
     </p:output>
-
+    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -66,13 +74,20 @@
         </p:documentation>
     </p:option>
 
-    <p:option name="mathml-version" required="false" px:type="string" select="''">
+    <p:option name="mathml-version" required="false" px:type="string" select="'3.0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">mathml-version</h2>
-            <p px:role="desc">Version of MathML in the DTBook file. Defaults to 3.0.</p>
+            <p px:role="desc">Version of MathML in the DTBook file.</p>
         </p:documentation>
     </p:option>
 
+    <p:option name="check-images" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">check-images</h2>
+            <p px:role="desc">Check to see that referenced images exist on disk.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
@@ -90,6 +105,11 @@
         <p:documentation>Helper step: store validation reports.</p:documentation>
     </p:import>
 
+    <p:import href="dtbook-validator.check-images.xpl">
+        <p:documentation>Helper step: check that referenced images exist on disk.</p:documentation>
+    </p:import>
+    
+    
     <p:variable name="base-uri" select="base-uri()">
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
@@ -98,13 +118,8 @@
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
     
-    <p:variable name="opt-mathml-version"
-        select="if (string-length($mathml-version) > 0) 
-        then $mathml-version
-        else '3.0'"/>
-
     <p:variable name="document-type" select="if (count(//m:math) > 0) 
-        then concat('DTBook ', $dtbook-version, ' with MathML ', $opt-mathml-version) 
+        then concat('DTBook ', $dtbook-version, ' with MathML ', $mathml-version) 
         else concat('DTBook ', $dtbook-version)">
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
@@ -118,7 +133,7 @@
     <!-- fetch the appropriate RNG schema -->
     <px:dtbook-validator.select-schema name="select-rng-schema">
         <p:with-option name="dtbook-version" select="$dtbook-version"/>
-        <p:with-option name="mathml-version" select="$opt-mathml-version"/>
+        <p:with-option name="mathml-version" select="$mathml-version"/>
     </px:dtbook-validator.select-schema>
     <p:sink/>
     
@@ -153,14 +168,22 @@
                     <c:errors/>
                 </p:inline>
             </p:output>
-            <p:identity/>
+            <p:identity>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:identity>
             <p:sink/>
         </p:when>
         <p:otherwise>
             <p:output port="result">
                 <p:pipe port="report" step="validate-against-relaxng"/>
             </p:output>
-            <p:identity/>
+            <p:identity>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:identity>
             <p:sink/>
         </p:otherwise>
     </p:choose>
@@ -180,6 +203,30 @@
     </p:validate-with-schematron>
     <p:sink/>
     
+    <!-- check images -->
+    <p:choose name="check-images">
+        <p:when test="$check-images = 'true'">
+            <p:output port="result"/>
+            <px:dtbook-validator.check-images>
+                <p:input port="source">
+                    <p:pipe port="source" step="dtbook-validator"/>
+                </p:input>
+            </px:dtbook-validator.check-images>
+        </p:when>
+        <p:otherwise>
+            <p:output port="result"/>
+            <p:identity>
+                <p:input port="source">
+                    <!-- generate an empty document -->
+                    <p:inline>
+                        <d:errors/>
+                    </p:inline>
+                </p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
+    <p:sink/>
+    
     <!-- ***************************************************** -->
     <!-- REPORT(S) TO HTML -->
     <!-- ***************************************************** -->
@@ -189,8 +236,9 @@
         <p:with-option name="document-path" select="$base-uri"/>
         <p:input port="source">
             <!-- a sequence of reports -->
-            <!--<p:pipe port="report" step="validate-against-relaxng"/>-->
+            <p:pipe port="report" step="validate-against-relaxng"/>
             <p:pipe port="report" step="validate-against-schematron"/>
+            <p:pipe port="result" step="check-images"/>
         </p:input>
     </px:create-validation-report-wrapper>
     <px:validation-report-to-html name="create-html-report"/>
@@ -199,8 +247,8 @@
     <!-- ***************************************************** -->
     <!-- STORE REPORTS -->
     <!-- ***************************************************** -->
-    <!--<p:choose>
-        <!-\- save reports if we specified an output dir -\->
+    <p:choose>
+        <!-- save reports if we specified an output dir -->
         <p:when test="not(empty($output-dir))">
             <p:xpath-context>
                 <p:pipe port="result" step="count-relaxng-report"/>
@@ -217,7 +265,10 @@
                 <p:input port="schematron-report">
                     <p:pipe step="validate-against-schematron" port="report"/>
                 </p:input>
+                <p:input port="images-report">
+                    <p:pipe step="check-images" port="result"/>
+                </p:input>
             </px:dtbook-validator-store>
         </p:when>
-    </p:choose>-->
+    </p:choose>
 </p:declare-step>
