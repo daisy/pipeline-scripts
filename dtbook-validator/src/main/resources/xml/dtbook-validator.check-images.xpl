@@ -54,20 +54,19 @@
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
     
+    <p:variable name="dtbook-uri" select="base-uri()"/>
+    
     <!-- make a list of image paths:
         <image path="file:/full/path/to/image1.jpg/>
         <image path="file:/full/path/to/image2.jpg/>"
     -->
-    <!-- TODO is there a less-verbose way to do this in XProc? -->
-    <p:variable name="dtbook-uri" select="base-uri()"/>
-    
     <p:for-each name="list-images">
         <p:iteration-source select="//dtb:img | //m:math"/>
+        <p:variable name="refid" select="*/@id"/>
         <p:choose>
             <!-- dtb:img has @src -->
             <p:when test="*/@src">
                 <p:variable name="imgpath" select="*/resolve-uri(@src, base-uri(.))"/>
-                <p:variable name="refid" select="*/@id"/>
                 <p:add-attribute match="image">
                     <p:input port="source">
                         <p:inline>
@@ -76,10 +75,6 @@
                     </p:input>
                     <p:with-option name="attribute-name" select="'path'"/>
                     <p:with-option name="attribute-value" select="$imgpath"/>
-                </p:add-attribute>
-                <p:add-attribute match="image">
-                    <p:with-option name="attribute-name" select="'refid'"/>
-                    <p:with-option name="attribute-value" select="$refid"/>
                 </p:add-attribute>
             </p:when>
             <!-- m:math has @altimg -->
@@ -95,12 +90,12 @@
                     <p:with-option name="attribute-name" select="'path'"/>
                     <p:with-option name="attribute-value" select="$imgpath"/>
                 </p:add-attribute>
-                <p:add-attribute match="image">
-                    <p:with-option name="attribute-name" select="'refid'"/>
-                    <p:with-option name="attribute-value" select="$refid"/>
-                </p:add-attribute>
             </p:otherwise>
         </p:choose>
+        <p:add-attribute match="image">
+            <p:with-option name="attribute-name" select="'refid'"/>
+            <p:with-option name="attribute-value" select="$refid"/>
+        </p:add-attribute>
     </p:for-each>
     
     <p:for-each name="check-each-image">
