@@ -10,6 +10,8 @@
     xmlns:l="http://xproc.org/library" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
     exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -17,9 +19,9 @@
         <p px:role="desc">Performs the following: 
             Validates DTBook + MathML documents, 
             Validates the package document, 
-            Enforce metadata requirements,
-            Verify that there is a PDF present,
-            Verify that all images linked to from the XML content file exist on disk.</p>
+            Enforces metadata requirements,
+            Verifies that there is a PDF present,
+            Verifies that all images linked to from the XML content file exist on disk.</p>
     </p:documentation>
 
     <!-- ***************************************************** -->
@@ -37,41 +39,27 @@
             <h1 px:role="name">result</h1>
             <p px:role="desc">An HTML-formatted validation report.</p>
         </p:documentation>
-        <p:pipe port="result" step="validate-against-relaxng"/>
+        <!-- TODO: change to HTML format step -->
+        <p:pipe step="validate-package-doc" port="result"/>
     </p:output>
-
-    <p:output port="dtbook-relaxng-report">
+    
+    <p:output port="package-doc-validation-report">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">package-relaxng-report</h1>
+            <p px:role="desc">Raw validation output for the package document.</p>
+        </p:documentation>
+        <p:pipe step="validate-package-doc" port="report"/>
+    </p:output>
+    
+    <!--<p:output port="dtbook-validation-report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">dtbook-relaxng-report</h1>
-            <p px:role="desc">Raw output from the RelaxNG validation of the DTBook file(s).</p>
+            <p px:role="desc">Raw validation output for the DTBook file(s).</p>
         </p:documentation>
-        <p:pipe step="validate-dtbook" port="relaxng-report"/>
+        <!-\- TODO change to wrapped report for dtbook(s) -\->
+        <p:pipe step="validate-all-dtbooks" port="relaxng-report"/>
     </p:output>
-
-    <p:output port="dtbook-schematron-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">schematron-report</h1>
-            <p px:role="desc">Raw output from the schematron validation of the DTBook file(s).</p>
-        </p:documentation>
-        <p:pipe step="validate-dtbook" port="schematron-report"/>
-    </p:output>
-    
-    <p:output port="opf-relaxng-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">opf-relaxng-report</h1>
-            <p px:role="desc">Raw output from the RelaxNG validation of the package document.</p>
-        </p:documentation>
-        <p:pipe step="validate-opf" port="relaxng-report"/>
-    </p:output>
-    
-    <p:output port="opf-schematron-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">opf-schematron-report</h1>
-            <p px:role="desc">Raw output from the RelaxNG validation of the package document.</p>
-        </p:documentation>
-        <p:pipe step="validate-opf" port="schematron-report"/>
-    </p:output>
-    
+    -->
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -80,10 +68,10 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="mathml-version" required="false" px:type="string" select="''">
+    <p:option name="mathml-version" required="false" px:type="string" select="'3.0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">mathml-version</h2>
-            <p px:role="desc">Version of MathML in the DTBook file. Defaults to 3.0.</p>
+            <p px:role="desc">Version of MathML in the DTBook file(s). Defaults to 3.0.</p>
         </p:documentation>
     </p:option>
 
@@ -100,37 +88,48 @@
         <p:documentation>DTBook + MathML validator</p:documentation>
     </p:import>
     
-    <p:import href="nimas-fileset-validator.validate-opf.xml">
-        <p:documentation>OPF validation step.</p:documentation>
+    <p:import href="nimas-fileset-validator.validate-package-doc.xpl">
+        <p:documentation>Package doc validation step.</p:documentation>
     </p:import>
     
-    <p:import href="nimas-fileset-validator.store-opf.xml">
+    <!--<p:import href="nimas-fileset-validator.store.xpl">
         <p:documentation>Stores reports to disk.</p:documentation>
     </p:import>
-    
-    <p:variable name="base-uri" select="base-uri()">
-        <p:pipe port="source" step="dtbook-validator"/>
-    </p:variable>
+    -->
     
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
-    
-    <px:nimas-fileset-validator.validate-opf name="validate-opf">
+    <px:nimas-fileset-validator.validate-package-doc name="validate-package-doc">
         <p:input port="source">
             <p:pipe port="source" step="nimas-fileset-validator"/>
         </p:input>
-    </px:nimas-fileset-validator.validate-opf>
-    <p:sink/>
+        <!-- TODO set the math option intelligently based on whether any of the DTBook files contain math -->
+        <p:with-option name="math" select="'false'"/>
+    </px:nimas-fileset-validator.validate-package-doc>
     
-    <!-- find all DTBook documents referenced by the package file -->
-    <p:for-each>
-        <px:validate-dtbook>
-            
-        </px:validate-dtbook>    
+    <!--<p:for-each>
+        <p:iteration-source select="//pkg:item[@media-type = 'application/x-dtbook+xml']">
+            <p:pipe port="source" step="nimas-fileset-validator"/>
+        </p:iteration-source>
+        
+        <p:variable name="dtbook-uri" select="resolve-uri(@href, $base-uri)"/>
+        
+        <p:load name="load-dtbook">
+            <p:with-option name="href" select="$dtbook-uri"/>
+        </p:load>
+        
+        <px:dtbook-validator name="validate-dtbook">
+            <p:input port="source">
+                <p:pipe port="result" step="load-dtbook"/>
+            </p:input>
+            <p:with-option name="check-images" select="'true'"/>
+            <p:with-option name="mathml-version" select="$mathml-version"/>
+            <p:with-option name="output-dir" select="'file:/Users/marisa/Desktop/dpout/'"/>
+        </px:dtbook-validator>
+        
     </p:for-each>
     
-    <!-- Check that a PDF file exists -->
-    
-    
+    -->  
+    <p:sink/>
 </p:declare-step>

@@ -110,6 +110,8 @@
 			<!-- yet undecided which type to use, so allow both for now -->
 			<value>application/xml</value>
 			<value>application/xslt+xml</value>
+			<!-- mdemeglio 20130207 added PDF to accommodate NIMAS -->
+			<value>application/pdf</value>
 		</choice>
 	</define>
 	

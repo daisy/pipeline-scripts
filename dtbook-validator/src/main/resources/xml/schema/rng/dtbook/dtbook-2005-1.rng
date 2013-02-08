@@ -1162,11 +1162,12 @@
   <!-- MM: 2005-04-26 version: updated to 1.2.2 -->
   <!-- MG: 2005-06-26 version: updated to 2005-1 -->
   <define name="dtb.attlist.dtbook" combine="interleave">
-    <optional>
+    <!-- MDeMeglio 2013-02-07 require @version -->
+<!--    <optional>-->
       <attribute name="version" a:defaultValue="2005-1">
         <value type="string" datatypeLibrary="">2005-1</value>
       </attribute>
-    </optional>
+<!--    </optional>-->
     <ref name="dtb.i18n"/>
   </define>
   <!-- ======================== Document Head Metadata ======================= -->

@@ -1224,11 +1224,12 @@
   <!-- jpritchett@rfbd.org:  2006-07-07  updated @version to 2005-2 -->
   <!-- jpritchett@rfbd.org:  2006-07-07.  Added %externalNamespaces; -->
   <define name="dtb.attlist.dtbook" combine="interleave">
-    <optional>
+    <!-- MDeMeglio 2013-02-07 require @version -->
+<!--    <optional>-->
       <attribute name="version" a:defaultValue="2005-2">
         <value type="string" datatypeLibrary="">2005-2</value>
       </attribute>
-    </optional>
+<!--    </optional>-->
     <ref name="dtb.i18n"/>
     <ref name="dtb.externalNamespaces"/>
   </define>

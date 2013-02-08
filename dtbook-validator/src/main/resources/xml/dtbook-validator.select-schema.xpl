@@ -24,7 +24,6 @@
             <h1 px:role="name">result</h1>
             <p px:role="desc">The RNG schema that the document should be validated against.</p>
         </p:documentation>
-        <p:pipe port="result" step="choose-schema"/>
     </p:output>
     
     <p:option name="dtbook-version" required="true" px:type="string">
@@ -48,56 +47,56 @@
     <!-- Based on the DTBook and MathML version, provide the correct RelaxNG schema on the output port -->
     <p:choose name="choose-schema">
         <p:when test="$dtbook-version = '2005-3' and $mathml-version = '3.0'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <p:when test="$dtbook-version = '2005-3' and $mathml-version = '2.0'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-3.mathml-2.integration.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-3.mathml-2.integration.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <p:when test="$dtbook-version = '2005-2' and $mathml-version = '3.0'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-2.mathml-3.integration.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-2.mathml-3.integration.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <p:when test="$dtbook-version = '2005-2' and $mathml-version = '2.0'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-2.mathml-2.integration.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-2.mathml-2.integration.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <!-- we aren't supporting mathml on versions of dtbook older than 2005-2 -->
         <p:when test="$dtbook-version = '2005-1'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-1.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-1.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <p:when test="$dtbook-version = '1.1.0'">
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-1.1.0.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-1.1.0.rng"/>
+                </p:input>
+            </p:identity>
         </p:when>
         <!-- default to dtbook 2005-3 -->
         <!-- We could also consider generating an error that the version was not detectable. -->
         <p:otherwise>
-            <p:output port="result">
-                <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
+            <p:identity>
+                <p:input port="source">
+                    <p:document href="./schema/rng/dtbook-2005-3.mathml-3.integration.rng"/>
+                </p:input>
+            </p:identity>
         </p:otherwise>
     </p:choose>
     

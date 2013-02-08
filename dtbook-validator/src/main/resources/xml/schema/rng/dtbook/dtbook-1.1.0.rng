@@ -997,11 +997,12 @@
     Those values may be adjusted for language changes within it.
   -->
   <define name="dtb.attlist.dtbook" combine="interleave">
-    <optional>
+    <!-- MDeMeglio 2013-02-07 require @version -->
+<!--     <optional>-->
       <attribute name="version" a:defaultValue="1.1.0">
         <value type="string" datatypeLibrary="">1.1.0</value>
       </attribute>
-    </optional>
+<!--    </optional>-->
     <ref name="dtb.i18n"/>
   </define>
   <!-- ======================== Document Head Metadata ======================= -->

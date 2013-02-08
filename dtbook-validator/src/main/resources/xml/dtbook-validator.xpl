@@ -33,40 +33,23 @@
         <p:pipe port="result" step="validate-against-relaxng"/>
      </p:output>
 
-    <p:output port="relaxng-report" sequence="true">
+    <p:output port="report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">relaxng-report</h1>
-            <p px:role="desc">Raw output from the RelaxNG validation.</p>
+            <h1 px:role="name">report</h1>
+            <p px:role="desc">Raw output from all types of validation used (RelaxNG, Schematron, custom).</p>
         </p:documentation>
-        <p:pipe port="result" step="get-relaxng-report"/>
+        <p:pipe port="result" step="wrap-reports"/>
     </p:output>
 
-    <p:output port="schematron-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">schematron-report</h1>
-            <p px:role="desc">Raw output from the schematron validation.</p>
-        </p:documentation>
-        <p:pipe step="validate-against-schematron" port="report"/>
-    </p:output>
-
-    <p:output port="images-report">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">images-report</h1>
-            <p px:role="desc">List of missing images. Generated only if image-checking is enabled.</p>
-        </p:documentation>
-        <p:pipe step="check-images" port="result"/>
-    </p:output>
-    
     <p:output port="html-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">html-report</h1>
-            <p px:role="desc">An HTML-formatted version of both the RelaxNG and Schematron
-                reports.</p>
+            <p px:role="desc">An HTML-formatted version of the validation report.</p>
         </p:documentation>
         <p:pipe port="result" step="create-html-report"/>
     </p:output>
     
-    <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
+    <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
             <p px:role="desc">Directory where your validation report is stored. If left blank,
@@ -230,7 +213,7 @@
     <!-- ***************************************************** -->
     <!-- REPORT(S) TO HTML -->
     <!-- ***************************************************** -->
-    <px:create-validation-report-wrapper>
+    <px:create-validation-report-wrapper name="wrap-reports">
         <p:with-option name="document-type" select="$document-type"/>
         <p:with-option name="document-name" select="$filename"/>
         <p:with-option name="document-path" select="$base-uri"/>
@@ -249,11 +232,7 @@
     <!-- ***************************************************** -->
     <p:choose>
         <!-- save reports if we specified an output dir -->
-        <p:when test="not(empty($output-dir))">
-            <p:xpath-context>
-                <p:pipe port="result" step="count-relaxng-report"/>
-            </p:xpath-context>
-            
+        <p:when test="string-length($output-dir) > 0">
             <px:dtbook-validator-store name="store-reports">
                 <p:with-option name="output-dir" select="$output-dir"/>
                 <p:input port="source">
@@ -270,5 +249,13 @@
                 </p:input>
             </px:dtbook-validator-store>
         </p:when>
+        <p:otherwise>
+            <p:sink>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:sink>
+        </p:otherwise>
     </p:choose>
+    
 </p:declare-step>
