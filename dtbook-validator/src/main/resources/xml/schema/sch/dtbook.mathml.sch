@@ -26,7 +26,7 @@
     <!-- ****************************************************** -->
     <pattern id="dtbook_MetaUid">
         <rule context="dtb:head">
-            <assert test="count(dtb:meta[@name='dtb:uid'])=1"> There must be one and only one
+            <assert test="count(dtb:meta[@name='dtb:uid'])=1"> There must be exactly one
                 dtb:uid metadata item. </assert>
         </rule>
         <rule context="dtb:meta[@name='dtb:uid']">

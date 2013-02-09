@@ -37,29 +37,27 @@
     <p:output port="result" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">result</h1>
-            <p px:role="desc">An HTML-formatted validation report.</p>
+            <p px:role="desc">An HTML-formatted validation report comprising all documents' reports.</p>
         </p:documentation>
-        <!-- TODO: change to HTML format step -->
-        <p:pipe step="validate-package-doc" port="result"/>
+        <p:pipe step="format-as-html" port="result"/>
     </p:output>
     
     <p:output port="package-doc-validation-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">package-relaxng-report</h1>
+            <h1 px:role="name">package-doc-validation-report</h1>
             <p px:role="desc">Raw validation output for the package document.</p>
         </p:documentation>
         <p:pipe step="validate-package-doc" port="report"/>
     </p:output>
     
-    <!--<p:output port="dtbook-validation-report" sequence="true">
+    <p:output port="dtbook-validation-report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">dtbook-relaxng-report</h1>
+            <h1 px:role="name">dtbook-validation-report</h1>
             <p px:role="desc">Raw validation output for the DTBook file(s).</p>
         </p:documentation>
-        <!-\- TODO change to wrapped report for dtbook(s) -\->
-        <p:pipe step="validate-all-dtbooks" port="relaxng-report"/>
+        <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
-    -->
+    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -75,6 +73,13 @@
         </p:documentation>
     </p:option>
 
+    <p:option name="check-images" required="false" px:type="string" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">check-images</h2>
+            <p px:role="desc">Check to see that images referenced by DTBook file(s) exist on disk.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
@@ -92,11 +97,6 @@
         <p:documentation>Package doc validation step.</p:documentation>
     </p:import>
     
-    <!--<p:import href="nimas-fileset-validator.store.xpl">
-        <p:documentation>Stores reports to disk.</p:documentation>
-    </p:import>
-    -->
-    
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
@@ -105,15 +105,19 @@
             <p:pipe port="source" step="nimas-fileset-validator"/>
         </p:input>
         <!-- TODO set the math option intelligently based on whether any of the DTBook files contain math -->
-        <p:with-option name="math" select="'false'"/>
+        <p:with-option name="math" select="'true'"/>
     </px:nimas-fileset-validator.validate-package-doc>
+    <p:sink/>    
     
-    <!--<p:for-each>
+    <p:for-each name="validate-dtbooks">
+        <p:output port="result" sequence="true">
+            <p:pipe port="report" step="validate-dtbook"/>
+        </p:output>
         <p:iteration-source select="//pkg:item[@media-type = 'application/x-dtbook+xml']">
             <p:pipe port="source" step="nimas-fileset-validator"/>
         </p:iteration-source>
         
-        <p:variable name="dtbook-uri" select="resolve-uri(@href, $base-uri)"/>
+        <p:variable name="dtbook-uri" select="*/resolve-uri(@href, base-uri())"/>
         
         <p:load name="load-dtbook">
             <p:with-option name="href" select="$dtbook-uri"/>
@@ -123,13 +127,18 @@
             <p:input port="source">
                 <p:pipe port="result" step="load-dtbook"/>
             </p:input>
-            <p:with-option name="check-images" select="'true'"/>
+            <p:with-option name="check-images" select="$check-images"/>
             <p:with-option name="mathml-version" select="$mathml-version"/>
-            <p:with-option name="output-dir" select="'file:/Users/marisa/Desktop/dpout/'"/>
         </px:dtbook-validator>
-        
+        <p:sink/>
     </p:for-each>
+    <p:sink/>
     
-    -->  
+    <px:validation-report-to-html name="format-as-html">
+        <p:input port="source">
+            <p:pipe port="report" step="validate-package-doc"/>
+            <p:pipe port="result" step="validate-dtbooks"/>
+        </p:input>
+    </px:validation-report-to-html>
     <p:sink/>
 </p:declare-step>

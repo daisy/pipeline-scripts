@@ -8,7 +8,6 @@
     <ns uri="http://www.w3.org/1998/Math/MathML" prefix="m"/>
     <ns prefix="pkg" uri="http://openebook.org/namespaces/oeb-package/1.0/"/>
     
-    
     <!--
         Math-specific metadata must not appear in OPF files for books with no math content.
     -->
@@ -22,4 +21,6 @@
             </assert>
         </rule>
     </pattern>
+    
+    <include href="mod/package-doc-nimas-pdf.sch"/>
 </schema>

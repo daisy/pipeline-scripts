@@ -30,7 +30,7 @@
             <h1 px:role="name">result</h1>
             <p px:role="desc">A copy of the input document; may include PSVI annotations.</p>
         </p:documentation>
-        <p:pipe port="result" step="validate-against-relaxng"/>
+        <p:pipe port="copy-of-document" step="validate-against-relaxng"/>
      </p:output>
 
     <p:output port="report" sequence="true">
@@ -84,10 +84,6 @@
         <p:documentation>Helper step: select schema for given document type.</p:documentation>
     </p:import>
     
-    <p:import href="dtbook-validator.store.xpl">
-        <p:documentation>Helper step: store validation reports.</p:documentation>
-    </p:import>
-
     <p:import href="dtbook-validator.check-images.xpl">
         <p:documentation>Helper step: check that referenced images exist on disk.</p:documentation>
     </p:import>
@@ -120,57 +116,54 @@
     </px:dtbook-validator.select-schema>
     <p:sink/>
     
-    <!-- validate with RNG -->
-    <l:relax-ng-report name="validate-against-relaxng" assert-valid="false">
-        <p:input port="schema">
-            <p:pipe port="result" step="select-rng-schema"/>
-        </p:input>
-        <p:input port="source">
-            <p:pipe port="source" step="dtbook-validator"/>
-        </p:input>
-    </l:relax-ng-report>
-    
-    <!-- see if there was a report generated -->
-    <p:count name="count-relaxng-report" limit="1">
-        <p:documentation>RelaxNG validation doesn't always produce a report, so this serves as a
-            test to see if there was a document produced.</p:documentation>
-        <p:input port="source">
-            <p:pipe port="report" step="validate-against-relaxng"/>
-        </p:input>
-    </p:count>
-    
-    <!-- if there were no errors, relaxng validation comes up empty. we need to have something to pass around, hence this step -->
-    <p:choose name="get-relaxng-report">
-        <p:xpath-context>
-            <p:pipe port="result" step="count-relaxng-report"/>
-        </p:xpath-context>
-        <!-- if there was no relaxng report, then put an empty errors list document as output -->
-        <p:when test="/c:result = '0'">
-            <p:output port="result">
-                <p:inline>
-                    <c:errors/>
-                </p:inline>
-            </p:output>
-            <p:identity>
-                <p:input port="source">
-                    <p:empty/>
-                </p:input>
-            </p:identity>
-            <p:sink/>
-        </p:when>
-        <p:otherwise>
-            <p:output port="result">
-                <p:pipe port="report" step="validate-against-relaxng"/>
-            </p:output>
-            <p:identity>
-                <p:input port="source">
-                    <p:empty/>
-                </p:input>
-            </p:identity>
-            <p:sink/>
-        </p:otherwise>
-    </p:choose>
-    <p:sink/>
+    <p:group name="validate-against-relaxng">
+        <p:output port="result" primary="true"/>
+        <p:output port="copy-of-document">
+            <p:pipe port="result" step="run-relaxng-validation"/>
+        </p:output>
+        <!-- validate with RNG -->
+        <l:relax-ng-report name="run-relaxng-validation" assert-valid="false">
+            <p:input port="schema">
+                <p:pipe port="result" step="select-rng-schema"/>
+            </p:input>
+            <p:input port="source">
+                <p:pipe port="source" step="dtbook-validator"/>
+            </p:input>
+        </l:relax-ng-report>
+        
+        <!-- see if there was a report generated -->
+        <p:count name="count-relaxng-report" limit="1">
+            <p:documentation>RelaxNG validation doesn't always produce a report, so this serves as a
+                test to see if there was a document produced.</p:documentation>
+            <p:input port="source">
+                <p:pipe port="report" step="run-relaxng-validation"/>
+            </p:input>
+        </p:count>
+        
+        <!-- if there were no errors, relaxng validation comes up empty. we need to have something to pass around, hence this step -->
+        <p:choose name="get-relaxng-report">
+            <p:xpath-context>
+                <p:pipe port="result" step="count-relaxng-report"/>
+            </p:xpath-context>
+            <!-- if there was no relaxng report, then put an empty errors list document as output -->
+            <p:when test="/c:result = '0'">
+                <p:identity>
+                    <p:input port="source">
+                        <p:inline>
+                            <c:errors/>
+                        </p:inline>
+                    </p:input>
+                </p:identity>
+            </p:when>
+            <p:otherwise>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="report" step="run-relaxng-validation"/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
+    </p:group>
     
     <!-- validate with schematron -->
     <p:validate-with-schematron assert-valid="false" name="validate-against-schematron">
@@ -187,7 +180,7 @@
     <p:sink/>
     
     <!-- check images -->
-    <p:choose name="check-images">
+    <p:choose name="check-images-exist">
         <p:when test="$check-images = 'true'">
             <p:output port="result"/>
             <px:dtbook-validator.check-images>
@@ -213,17 +206,17 @@
     <!-- ***************************************************** -->
     <!-- REPORT(S) TO HTML -->
     <!-- ***************************************************** -->
-    <px:create-validation-report-wrapper name="wrap-reports">
+    <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-type" select="$document-type"/>
         <p:with-option name="document-name" select="$filename"/>
         <p:with-option name="document-path" select="$base-uri"/>
         <p:input port="source">
             <!-- a sequence of reports -->
-            <p:pipe port="report" step="validate-against-relaxng"/>
+            <p:pipe port="result" step="validate-against-relaxng"/>
             <p:pipe port="report" step="validate-against-schematron"/>
-            <p:pipe port="result" step="check-images"/>
+            <p:pipe port="result" step="check-images-exist"/>
         </p:input>
-    </px:create-validation-report-wrapper>
+    </px:combine-validation-reports>
     <px:validation-report-to-html name="create-html-report"/>
     <p:sink/>
 
@@ -233,21 +226,21 @@
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
-            <px:dtbook-validator-store name="store-reports">
-                <p:with-option name="output-dir" select="$output-dir"/>
+            <p:store name="store-xml-report">
                 <p:input port="source">
-                    <p:pipe step="create-html-report" port="result"/>
+                    <p:pipe port="result" step="wrap-reports"/>
                 </p:input>
-                <p:input port="relax-ng-report">
-                    <p:pipe step="get-relaxng-report" port="result"/>
+                <p:with-option name="href"
+                    select="concat($output-dir,'/dtbook-validation-report.xml')"/>
+            </p:store>
+            
+            <p:store name="store-xhtml-report">
+                <p:input port="source">
+                    <p:pipe port="result" step="create-html-report"/>
                 </p:input>
-                <p:input port="schematron-report">
-                    <p:pipe step="validate-against-schematron" port="report"/>
-                </p:input>
-                <p:input port="images-report">
-                    <p:pipe step="check-images" port="result"/>
-                </p:input>
-            </px:dtbook-validator-store>
+                <p:with-option name="href"
+                    select="concat($output-dir,'/dtbook-validation-report.xhtml')"/>
+            </p:store>
         </p:when>
         <p:otherwise>
             <p:sink>

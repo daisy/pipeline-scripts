@@ -31,7 +31,7 @@
             <h1 px:role="name">result</h1>
             <p px:role="desc">A copy of the input document; may include PSVI annotations.</p>
         </p:documentation>
-        <p:pipe port="result" step="validate-against-relaxng"/>
+        <p:pipe port="copy-of-document" step="validate-against-relaxng"/>
     </p:output>
     
     <p:output port="report">
@@ -70,48 +70,54 @@
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
-    <!-- validate with RNG -->
-    <l:relax-ng-report name="validate-against-relaxng" assert-valid="false">
-        <p:input port="schema">
-            <p:document href="./schema/rng/package-doc-1.2.rng"/>
-        </p:input>
-        <p:input port="source">
-            <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
-        </p:input>
-    </l:relax-ng-report>
-    
-    <!-- see if there was a report generated -->
-    <p:count name="count-relaxng-report" limit="1">
-        <p:documentation>RelaxNG validation doesn't always produce a report, so this serves as a
-            test to see if there was a document produced.</p:documentation>
-        <p:input port="source">
-            <p:pipe port="report" step="validate-against-relaxng"/>
-        </p:input>
-    </p:count>
-    
-    <!-- if there were no errors, relaxng validation comes up empty. we need to have something to pass around, hence this step -->
-    <p:choose name="get-relaxng-report">
-        <p:xpath-context>
-            <p:pipe port="result" step="count-relaxng-report"/>
-        </p:xpath-context>
-        <!-- if there was no relaxng report, then put an empty errors list document as output -->
-        <p:when test="/c:result = '0'">
-            <p:output port="result">
-                <p:inline>
-                    <c:errors/>
-                </p:inline>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
-        </p:when>
-        <p:otherwise>
-            <p:output port="result">
-                <p:pipe port="report" step="validate-against-relaxng"/>
-            </p:output>
-            <p:identity/>
-            <p:sink/>
-        </p:otherwise>
-    </p:choose>
+    <p:group name="validate-against-relaxng">
+        <p:output port="result" primary="true"/>
+        <p:output port="copy-of-document">
+            <p:pipe port="result" step="run-relaxng-validation"/>
+        </p:output>
+        <!-- validate with RNG -->
+        <l:relax-ng-report name="run-relaxng-validation" assert-valid="false">
+            <p:input port="schema">
+                <p:document href="./schema/rng/package-doc-1.2.rng"/>
+            </p:input>
+            <p:input port="source">
+                <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
+            </p:input>
+        </l:relax-ng-report>
+        
+        <!-- see if there was a report generated -->
+        <p:count name="count-relaxng-report" limit="1">
+            <p:documentation>RelaxNG validation doesn't always produce a report, so this serves as a
+                test to see if there was a document produced.</p:documentation>
+            <p:input port="source">
+                <p:pipe port="report" step="run-relaxng-validation"/>
+            </p:input>
+        </p:count>
+        
+        <!-- if there were no errors, relaxng validation comes up empty. we need to have something to pass around, hence this step -->
+        <p:choose name="get-relaxng-report">
+            <p:xpath-context>
+                <p:pipe port="result" step="count-relaxng-report"/>
+            </p:xpath-context>
+            <!-- if there was no relaxng report, then put an empty errors list document as output -->
+            <p:when test="/c:result = '0'">
+                <p:identity>
+                    <p:input port="source">
+                        <p:inline>
+                            <c:errors/>
+                        </p:inline>
+                    </p:input>
+                </p:identity>
+            </p:when>
+            <p:otherwise>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="report" step="run-relaxng-validation"/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
+    </p:group>
     
     <!-- based on the $math option, choose a schematron file -->
     <p:choose name="choose-schematron-file">
@@ -155,17 +161,17 @@
     </px:nimas-fileset-validator.check-pdfs>    
     <p:sink/>
     
-    <px:create-validation-report-wrapper name="wrap-reports">
+    <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>
         <p:with-option name="document-type" select="'OPF 1.2'"/>
         <p:with-option name="document-path" select="$base-uri"/>
         
         <p:input port="source">
             <!-- a sequence of reports -->
-            <p:pipe port="result" step="get-relaxng-report"/>
+            <p:pipe port="result" step="validate-against-relaxng"/>
             <p:pipe port="report" step="validate-against-schematron"/>
             <p:pipe port="result" step="check-pdfs-exist"/>
         </p:input>
-    </px:create-validation-report-wrapper>
+    </px:combine-validation-reports>
     
 </p:declare-step>

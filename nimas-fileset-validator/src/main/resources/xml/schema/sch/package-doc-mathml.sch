@@ -8,7 +8,6 @@
     <ns uri="http://www.w3.org/1998/Math/MathML" prefix="m"/>
     <ns prefix="pkg" uri="http://openebook.org/namespaces/oeb-package/1.0/"/>
     
-    
     <!--
         Math-specific metadata must appear in OPF files for books with math content.
         
@@ -62,10 +61,11 @@
             </assert>
         </rule>
         <rule context="//pkg:package/pkg:manifest/pkg:item[@href = $xslt-fallback]">
-            <assert test="@media-type = 'application/xslt+xml' or @media-type = 'application/xml'">
+            <assert test="@media-type = 'application/xslt+xml'">
                 XSLT fallback manifest item must have media-type equal to 'application/xslt+xml'.
             </assert>
         </rule>
     </pattern>
     
+    <include href="mod/package-doc-nimas-pdf.sch"/>
 </schema>
