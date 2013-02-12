@@ -6,7 +6,7 @@
         <p px:role="desc">Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</p>
     </p:documentation>
 
-    <p:input port="ncc">
+    <p:input port="ncc" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">The DAISY 2.02 NCC</p>
             <pre><code class="example">
@@ -32,11 +32,11 @@
         </p:documentation>
     </p:input>
 
-    <p:output port="result" primary="false">
+    <p:output port="result">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</p>
             <pre><code class="example">
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-base="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-href="file:/home/user/daisy202/ncc.html">...</html>
             </code></pre>
         </p:documentation>
         <p:pipe port="result" step="ncc-navigation.result"/>
@@ -173,7 +173,7 @@
             </p:input>
         </p:xslt>
     </p:viewport>
-    <p:add-attribute match="/*" attribute-name="original-base">
+    <p:add-attribute match="/*" attribute-name="original-href">
         <p:with-option name="attribute-value" select="base-uri(/*)"/>
     </p:add-attribute>
     <p:add-attribute match="/*" attribute-name="xml:base">
