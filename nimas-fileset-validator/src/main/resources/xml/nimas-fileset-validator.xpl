@@ -61,6 +61,14 @@
         <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
 
+    <p:output port="reports-index">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">reports-index</h1>
+            <p px:role="desc">Index to all generated reports. Interesting only in the case that the reports are saved to disk.</p>
+        </p:documentation>
+        <p:pipe step="create-reports-index" port="result"/>
+    </p:output>
+    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -101,6 +109,7 @@
         <p:documentation>Package doc validation step.</p:documentation>
     </p:import>
 
+
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
@@ -112,14 +121,18 @@
         <p:output port="has-mathml" sequence="true">
             <p:pipe port="result" step="look-for-mathml"/>
         </p:output>
-
+        <p:output port="reports-index-dtbooks">
+            <p:pipe port="result" step="create-reports-index-entry-dtbook"/>
+        </p:output>
+        
         <p:iteration-source select="//pkg:item[@media-type = 'application/x-dtbook+xml']">
             <p:pipe port="source" step="nimas-fileset-validator"/>
         </p:iteration-source>
         
         <p:variable name="dtbook-href" select="*/@href"/>
         <p:variable name="dtbook-uri" select="*/resolve-uri($dtbook-href, base-uri())"/>
-        <p:variable name="report-location" select="concat($output-dir, '/', replace($dtbook-href, '/', '_'), '-report.xml')"/>
+        <p:variable name="report-name" select="replace($dtbook-href, '/', '_'), '-report.xml'"/>
+        <p:variable name="report-location" select="concat($output-dir, '/', $report-name)"/>
         
         <p:load name="load-dtbook">
             <p:with-option name="href" select="$dtbook-uri"/>
@@ -174,8 +187,39 @@
                     </p:input>
                 </p:sink>
             </p:otherwise>
-        </p:choose>   
-    
+        </p:choose>  
+        
+        <!-- create an entry for the reports index -->
+        <p:group name="create-reports-index-entry-dtbook">
+            <p:output port="result"/>
+            <p:identity>
+                <p:input port="source">
+                    <p:inline>
+                        <tr xmlns="http://www.w3.org/1999/xhtml">
+                            <td class="report"><a href="@@">@@</a></td>
+                            <td class="file"><a href="@@">@@</a></td>
+                        </tr>
+                    </p:inline>
+                </p:input>
+            </p:identity>    
+            
+            <p:string-replace match="xhtml:td[@class='report']/xhtml:a/@href">
+                <p:with-option name="replace" select="concat('&quot;', $report-name, '&quot;')"/>
+            </p:string-replace>
+            <p:string-replace match="xhtml:td[@class='report']/xhtml:a/text()">
+                <p:with-option name="replace" select="concat('&quot;', $report-name, '&quot;')"/>
+            </p:string-replace>
+            
+            <p:string-replace match="xhtml:td[@class='file']/xhtml:a/@href">
+                <p:with-option name="replace" select="concat('&quot;', $dtbook-uri, '&quot;')"/>
+            </p:string-replace>
+            <p:string-replace match="xhtml:td[@class='file']/xhtml:a/text()">
+                <p:with-option name="replace" select="concat('&quot;', $dtbook-uri, '&quot;')"/>
+            </p:string-replace>
+            
+            
+        </p:group>
+        
     </p:for-each>
     
     <p:wrap-sequence name="wrap-has-mathml" wrapper="results"
@@ -223,9 +267,90 @@
         <p:with-option name="toc" select="'true'"/>
     </px:validation-report-to-html>
     
+    <!-- create report index: each file that was validated has a report -->
+    <p:group name="create-reports-index">
+        <p:output port="result"/>
+        <!-- this document stub gets added to throughout the validation process.
+    it represents a list of all validated documents, plus their validation reports.-->
+        <p:identity name="reports-index-init">
+            <p:input port="source">
+                <p:inline>
+                    <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <title>Validation Report Index</title>
+                            <style>
+                                body { 
+                                font-family: helvetica; 
+                                } 
+                                tr {
+                                line-height: 150%;  
+                                }
+                                td {
+                                padding-left: 30px;
+                                border: thin solid black;
+                                }
+                                table {
+                                border: thin solid black;
+                                border-collapse:collapse;
+                                }
+                                #datetime {
+                                font-style: italic;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Validation Reports Index</h1>
+                            <p id="datetime">@@</p>
+                            
+                            <table id="toc">
+                                <thead>
+                                    <tr>
+                                        <th>Report</th>
+                                        <th>File</th>        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="html-summary">
+                                        <td class="report"><a href="validation-report.xhtml">validation-report.xhtml</a></td>
+                                        <td class="file">Summary report</td>
+                                    </tr>
+                                    <tr id="package-doc">
+                                        <td class="report"><a href="package-doc-validation-report.xml">package-doc-validation-report.xml</a></td>
+                                        <td class="file"><a href="@@">@@</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </body>
+                    </html>
+                </p:inline>
+            </p:input>
+        </p:identity>
+        
+        <p:string-replace match="xhtml:tr[@id='package-doc']/xhtml:td[@class='file']/xhtml:a/@href">
+            <p:with-option name="replace" select="concat('&quot;', base-uri(), '&quot;')"/>
+        </p:string-replace>
+        
+        <p:string-replace match="xhtml:tr[@id='package-doc']/xhtml:td[@class='file']/xhtml:a/text()">
+            <p:with-option name="replace" select="concat('&quot;', base-uri(), '&quot;')"/>
+        </p:string-replace>
+        
+        <p:string-replace match="xhtml:p[@id='datetime']/text()">
+            <p:with-option name="replace" select="concat('&quot;Generated on ', current-date(), ' at ', current-time(), '&quot;')"/>
+        </p:string-replace>
+        
+        
+        <p:insert match="*[@id='toc']/xhtml:tbody" position="last-child">
+            <p:input port="insertion">
+                <p:pipe port="reports-index-dtbooks" step="validate-dtbooks"></p:pipe>
+            </p:input>
+        </p:insert>
+        
+    </p:group>
+    
     <!-- ***************************************************** -->
     <!-- STORE REMAINING REPORTS -->
     <!-- ***************************************************** -->
+    
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
@@ -244,6 +369,14 @@
                 <p:with-option name="href"
                     select="concat($output-dir,'/package-doc-validation-report.xml')"/>
             </p:store>
+            
+            <p:store name="store-reports-index">
+                <p:input port="source">
+                    <p:pipe port="result" step="create-reports-index"/>
+                </p:input>
+                <p:with-option name="href"
+                    select="concat($output-dir,'/reports-index.html')"/>
+            </p:store>
         </p:when>
         <p:otherwise>
             <p:sink>
@@ -253,6 +386,7 @@
             </p:sink>
         </p:otherwise>
     </p:choose>
+    
     
     
 </p:declare-step>
