@@ -151,22 +151,16 @@
     <p:sink/>
     
     <!-- store -->
-    <px:fileset-store name="fileset-store">
+    <px:epub3-store>
+        <p:with-option name="href" select="/*/@result-uri">
+            <p:pipe port="result" step="result-uri"/>
+        </p:with-option>
         <p:input port="fileset.in">
             <p:pipe port="fileset.out" step="convert"/>
         </p:input>
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="convert"/>
         </p:input>
-    </px:fileset-store>
-    <px:epub3-ocf-zip>
-        <p:with-option name="target" select="/*/@result-uri">
-            <p:pipe port="result" step="result-uri"/>
-        </p:with-option>
-        <p:input port="source">
-            <p:pipe port="fileset.out" step="fileset-store"/>
-        </p:input>
-    </px:epub3-ocf-zip>
-    <p:sink/>
+    </px:epub3-store>
 
 </p:declare-step>

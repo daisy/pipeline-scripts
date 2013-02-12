@@ -46,11 +46,7 @@
     <p:for-each>
         <p:variable name="original-uri" select="base-uri(/*)"/>
         <p:variable name="result-uri" select="resolve-uri(concat(replace(substring($original-uri,string-length($daisy-dir)+1),'\.[^/]*$',''),'.xhtml'), $content-dir)"/>
-        <p:identity>
-            <p:log port="result" href="file:/tmp/links-before.xml"/>
-        </p:identity>
         <pxi:daisy202-to-epub3-resolve-links>
-            <p:log port="result" href="file:/tmp/links-after.xml"/>
             <p:input port="resolve-links-mapping">
                 <p:pipe port="resolve-links-mapping" step="content"/>
             </p:input>
@@ -60,7 +56,6 @@
         </p:add-attribute>
         <p:delete match="/*/@xml:base"/>
         <p:xslt>
-            <p:log port="result" href="file:/tmp/links-after-d2e3.xml"/>
             <p:with-param name="content-dir" select="$content-dir"/>
             <p:input port="stylesheet">
                 <p:document href="daisy202-content-to-epub3-content.xsl"/>

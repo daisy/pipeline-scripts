@@ -75,7 +75,6 @@
     <p:import href="../internal/dtbook-to-html.xpl"/>
     <p:import href="../internal/list-audio-clips.xpl"/>
     <p:import href="../internal/create-mediaoverlays.xpl"/>
-    <p:import href="../internal/finalize-epub.xpl"/>
 
 
 
@@ -295,25 +294,47 @@
     <!--=========================================================================-->
 
     <p:group name="finalize">
+        <p:output port="fileset.out" primary="true">
+            <p:pipe port="result" step="finalize.ocf"/>
+        </p:output>
+        <p:output port="in-memory.out" sequence="true">
+            <p:pipe port="result" step="finalize.in-memory"/>
+        </p:output>
+        
         <px:fileset-create name="fileset.with-epub-base">
             <p:with-option name="base" select="$epub-dir"/>
         </px:fileset-create>
-        <px:fileset-join>
+        <px:fileset-join name="fileset.without-ocf">
             <p:input port="source">
                 <p:pipe port="result" step="fileset.with-epub-base"/>
                 <p:pipe port="fileset.out" step="package-doc"/>
             </p:input>
         </px:fileset-join>
-        <pxi:finalize>
-            <p:input port="in-memory.in">
+        <p:sink/>
+        <px:epub3-ocf-finalize name="finalize.ocf">
+            <p:input port="source">
+                <p:pipe port="result" step="fileset.without-ocf"/>
+            </p:input>
+        </px:epub3-ocf-finalize>
+        
+        <p:identity name="finalize.in-memory">
+            <p:input port="source">
                 <p:pipe port="in-memory.out" step="nav-doc"/>
                 <p:pipe port="in-memory.out" step="content-docs"/>
                 <p:pipe port="in-memory.out" step="package-doc"/>
                 <p:pipe port="in-memory.out" step="media-overlays"/>
+                <p:pipe port="in-memory.out" step="finalize.ocf"/>
             </p:input>
-            <p:with-option name="epub-file" select="$epub-file"/>
-        </pxi:finalize>
+        </p:identity>
+        <p:sink/>
     </p:group>
+    
+    <px:epub3-store>
+        <p:with-option name="href" select="$epub-file"/>
+        <p:input port="in-memory.in">
+            <p:pipe port="in-memory.out" step="finalize"/>
+        </p:input>
+    </px:epub3-store>
 
 
 </p:declare-step>

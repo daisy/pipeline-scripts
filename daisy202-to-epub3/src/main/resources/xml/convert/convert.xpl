@@ -367,9 +367,7 @@
             <p:pipe port="in-memory" step="result.for-each"/>
         </p:input>
     </px:mediatype-detect>
-    <p:identity name="result.fileset-without-ocf-files">
-        <p:log port="result" href="file:/tmp/result.fileset-without-ocf-files.xml"/>
-    </p:identity>
+    <p:identity name="result.fileset-without-ocf-files"/>
     <p:sink/>
     
     <p:identity name="result.in-memory">
