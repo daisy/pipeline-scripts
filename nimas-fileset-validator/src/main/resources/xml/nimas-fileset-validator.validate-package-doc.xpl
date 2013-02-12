@@ -67,6 +67,11 @@
     <p:variable name="filename" 
         select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
     
+    <p:variable name="document-type" select="if ($math eq 'true') 
+        then 'OPF 1.2 (MathML detected)' 
+        else 'OPF 1.2'"/>
+    
+    
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
@@ -163,7 +168,7 @@
     
     <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>
-        <p:with-option name="document-type" select="'OPF 1.2'"/>
+        <p:with-option name="document-type" select="$document-type"/>
         <p:with-option name="document-path" select="$base-uri"/>
         
         <p:input port="source">

@@ -11,8 +11,15 @@
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook Validator</h1>
-        <p px:role="desc">Validates DTBook documents (2005-3, 2005-2). Supports inclusion of MathML
-            2 and 3.</p>
+        <p px:role="desc">Validates DTBook documents. Supports inclusion of MathML.</p>
+        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/DTBookValidator">
+            http://code.google.com/p/daisy-pipeline/wiki/DTBookValidator
+        </a>
+        <div px:role="author maintainer">
+            <p px:role="name">Marisa DeMeglio</p>
+            <a px:role="contact" href="mailto:marisa.demeglio@gmail.com">marisa.demeglio@gmail.com</a>
+            <p px:role="organization">DAISY Consortium</p>
+        </div>
     </p:documentation>
 
     <!-- ***************************************************** -->
@@ -21,7 +28,7 @@
     <p:input port="source" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">source</h1>
-            <p px:role="desc">A DTBook document. Supported versions are 2005-1,-2,-3; and 1.1.0.</p>
+            <p px:role="desc">A DTBook document. Supported versions are 2005-1,-2,-3; and 1.1.0.</p>            
         </p:documentation>
     </p:input>
 
