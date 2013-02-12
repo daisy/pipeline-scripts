@@ -46,7 +46,7 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
-    <p:import href="load/load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/daisy2-utils/xproc/daisy2-library.xpl"/>
     <p:import href="convert/convert.xpl"/>
 
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
@@ -124,9 +124,9 @@
     <p:sink/>
 
     <!-- load -->
-    <px:daisy202-load name="load">
+    <px:daisy2-load name="load">
         <p:with-option name="ncc" select="$href"/>
-    </px:daisy202-load>
+    </px:daisy2-load>
 
     <!-- convert -->
     <px:daisy202-to-epub3-convert name="convert">
