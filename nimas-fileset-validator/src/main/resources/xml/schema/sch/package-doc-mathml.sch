@@ -7,6 +7,7 @@
     <ns uri="http://www.daisy.org/z3986/2005/dtbook/" prefix="dtb"/>
     <ns uri="http://www.w3.org/1998/Math/MathML" prefix="m"/>
     <ns prefix="pkg" uri="http://openebook.org/namespaces/oeb-package/1.0/"/>
+    <ns prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
     
     <!--
         Math-specific metadata must appear in OPF files for books with math content.
@@ -68,4 +69,5 @@
     </pattern>
     
     <include href="mod/package-doc-nimas-pdf.sch"/>
+    <include href="mod/package-doc-nimas-meta.sch"/>
 </schema>

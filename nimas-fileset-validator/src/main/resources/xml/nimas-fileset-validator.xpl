@@ -375,7 +375,7 @@
                     <p:pipe port="result" step="create-reports-index"/>
                 </p:input>
                 <p:with-option name="href"
-                    select="concat($output-dir,'/reports-index.html')"/>
+                    select="concat($output-dir,'/reports-index.xhtml')"/>
             </p:store>
         </p:when>
         <p:otherwise>

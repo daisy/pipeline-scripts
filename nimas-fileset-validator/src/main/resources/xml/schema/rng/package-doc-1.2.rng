@@ -376,10 +376,14 @@
           </element>
         </zeroOrMore>
 
+        <!-- MDeMeglio 20130212 added NIMAS 1.1 as an allowed format -->
         <zeroOrMore>
           <element name="dc:Format">
-          <ref name="CommonAttributes"/>
-            <value>ANSI/NISO Z39.86-2005</value>
+            <ref name="CommonAttributes"/>
+            <choice>
+              <value>ANSI/NISO Z39.86-2005</value>
+              <value>NIMAS 1.1</value>
+            </choice>
             <zed:test id="opf_DcFormatValue"/>
           </element>
         </zeroOrMore>
