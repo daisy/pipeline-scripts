@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     type="px:zedai-to-epub3" name="zedai-to-epub3" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -23,7 +22,6 @@
     </p:option>
 
     <p:import href="zedai-to-epub3.convert.xpl"/>
-    <p:import href="zedai-to-epub3.store.xpl"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/epub3-nav-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
@@ -31,9 +29,9 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/zedai-load.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    
+
     <p:variable name="input-uri" select="base-uri(/)"/>
-    
+
     <p:xslt name="output-dir-uri">
         <p:with-param name="href" select="concat($output-dir,'/')"/>
         <p:input port="source">
@@ -75,14 +73,13 @@
             </p:input>
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-epub3-convert>
-
-        <px:zedai-to-epub3-store name="store">
+        
+        <px:epub3-store>
+            <p:with-option name="href" select="$epub-file-uri"/>
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert"/>
             </p:input>
-            <p:with-option name="epub-file" select="$epub-file-uri"/>
-        </px:zedai-to-epub3-store>
-
+        </px:epub3-store>
     </p:group>
 
 </p:declare-step>

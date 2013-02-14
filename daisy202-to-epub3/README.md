@@ -1,4 +1,4 @@
-= daisy202-to-epub3 =
+# daisy202-to-epub3
 
 This module transforms DAISY 2.02 publications into EPUB3 publications.
 

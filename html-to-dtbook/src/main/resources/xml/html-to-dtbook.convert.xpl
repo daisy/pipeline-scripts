@@ -28,7 +28,7 @@
             this step, or as a result from other conversion steps, allowing for easy chaining of scripts. </p:documentation>
         <p:pipe port="in-memory" step="convert"/>
     </p:output>
-    
+
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Output directory</h2>
@@ -52,6 +52,8 @@
         </p:documentation>
     </p:import>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl"/>
 
     <p:variable name="top-uid" select="string-join(tokenize(replace(concat('',current-dateTime()),'[-:]',''),'[T\+\.]')[position() &lt;= 3],'-')"/>
@@ -66,9 +68,9 @@
         <p:iteration-source>
             <p:pipe port="in-memory.in" step="html-to-dtbook.convert"/>
         </p:iteration-source>
-        
+
         <p:variable name="base-uri" select="base-uri()"/>
-        
+
         <!-- basic fix for h1-h6 hierarchy -->
         <p:choose>
             <p:when test="not(//html:h1)">
@@ -120,25 +122,63 @@
                 <p:identity/>
             </p:otherwise>
         </p:choose>
-        
+
         <p:rename match="html:frameset" new-name="div"/>
         <p:viewport match="html:iframe|html:frame">
             <p:rename match="/*" new-name="div"/>
             <p:delete match="/*/node()"/>
             <p:identity name="frame.div"/>
-            <px:html-load name="frame.contents">
-                <p:with-option name="href" select="p:resolve-uri(/*/@src,$base-uri)"/>
-            </px:html-load>
-            <p:insert match="/*" position="last-child">
-                <p:input port="source">
-                    <p:pipe port="result" step="frame.div"/>
-                </p:input>
-                <p:input port="insertion">
-                    <p:pipe port="result" step="frame.contents"/>
-                </p:input>
-            </p:insert>
+            <cx:message>
+                <p:with-option name="message" select="concat('found frame: ',p:resolve-uri(/*/@src,$base-uri))"/>
+            </cx:message>
+            <p:try>
+                <p:group>
+                    <px:html-load name="frame.contents">
+                        <p:with-option name="href" select="p:resolve-uri(/*/@src,$base-uri)"/>
+                    </px:html-load>
+                    <cx:message>
+                        <p:with-option name="message" select="concat('copying frame contents from: ',p:resolve-uri(/*/@src,$base-uri))"/>
+                    </cx:message>
+                    <p:insert match="/*" position="last-child">
+                        <p:input port="source">
+                            <p:pipe port="result" step="frame.div"/>
+                        </p:input>
+                        <p:input port="insertion">
+                            <p:pipe port="result" step="frame.contents"/>
+                        </p:input>
+                    </p:insert>
+                </p:group>
+                <p:catch>
+                    <p:variable name="href" select="p:resolve-uri(/*/@src,$base-uri)"/>
+                    <p:in-scope-names name="vars"/>
+                    <p:template name="frame.link">
+                        <p:input port="template">
+                            <p:inline>
+                                <a target="_blank" href="{$href}">{$href}</a>
+                            </p:inline>
+                        </p:input>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                        <p:input port="parameters">
+                            <p:pipe step="vars" port="result"/>
+                        </p:input>
+                    </p:template>
+                    <cx:message>
+                        <p:with-option name="message" select="concat('linking to frame contents (target is not parsable HTML): ',$href)"/>
+                    </cx:message>
+                    <p:insert match="/*" position="last-child">
+                        <p:input port="source">
+                            <p:pipe port="result" step="frame.div"/>
+                        </p:input>
+                        <p:input port="insertion">
+                            <p:pipe port="result" step="frame.link"/>
+                        </p:input>
+                    </p:insert>
+                </p:catch>
+            </p:try>
         </p:viewport>
-        
+
         <p:xslt>
             <p:input port="parameters">
                 <p:empty/>
@@ -147,7 +187,7 @@
                 <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html5-upgrade.xsl"/>
             </p:input>
         </p:xslt>
-        
+
         <p:xslt>
             <p:with-param name="uid" select="concat($top-uid,'-',p:iteration-position())"/>
             <p:with-param name="title" select="(/*/*[1]/html:title,/*/*[2]//html:h1,/*/*[2]//html:h2,/*/*[2]//html:h3,/*/*[2]//html:h4,/*/*[2]//html:h5,/*/*[2]//html:h6)[1]"/>
@@ -157,17 +197,17 @@
             </p:input>
         </p:xslt>
         <p:identity name="convert.dtbook.original-base"/>
-        
+
         <cx:message>
             <p:with-option name="message" select="concat(replace($base-uri,'.*/',''),' was converted from HTML to DTBook')"/>
         </cx:message>
-        
+
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="concat(p:resolve-uri(replace(replace($base-uri,'^.*/([^/]*)$','$1'),'(.*)\.[^\.]*$','$1'), $output-dir),'.xml')"/>
         </p:add-attribute>
         <p:delete match="/*/@xml:base"/>
         <p:identity name="convert.in-memory"/>
-        
+
         <px:dtbook-fileset>
             <p:input port="source">
                 <p:pipe port="result" step="convert.dtbook.original-base"/>
@@ -204,14 +244,14 @@
             <p:with-option name="attribute-value" select="$output-dir"/>
         </p:add-attribute>
         <p:identity name="convert.fileset"/>
-        
+
     </p:for-each>
-    
+
     <px:fileset-join>
         <p:input port="source">
             <p:pipe port="fileset" step="convert"/>
         </p:input>
     </px:fileset-join>
-    <p:identity name="fileset"/>    
+    <p:identity name="fileset"/>
 
 </p:declare-step>
