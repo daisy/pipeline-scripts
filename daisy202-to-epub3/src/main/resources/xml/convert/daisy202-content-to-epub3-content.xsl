@@ -22,7 +22,7 @@
                     <xsl:when test="$a-fragment = ('',$self-id)">
                         <!-- is link to the same part of the document (or no part of the document); replace the link with a span -->
                         <span xmlns="http://www.w3.org/1999/xhtml">
-                            <xsl:apply-templates select="@*[not(local-name()=('href','target','rel','hreflang','type'))]|node()"/>
+                            <xsl:apply-templates select="(@* except (@href|@target|@rel|@hreflang|@type)) | node()"/>
                         </span>
                     </xsl:when>
                     <xsl:otherwise>
