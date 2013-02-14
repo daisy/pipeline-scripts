@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-to-epub3" type="px:dtbook-to-epub3"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    xmlns:z="http://www.daisy.org/ns/z3986/authoring/"
-    xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="#all">
+<p:declare-step version="1.0" name="dtbook-to-epub3" type="px:dtbook-to-epub3" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+    xmlns:z="http://www.daisy.org/ns/z3986/authoring/" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook to EPUB3</h1>
@@ -17,8 +10,7 @@
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">DTBook file(s)</h2>
-            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple
-                files, a merge will be performed.</p>
+            <p px:role="desc">One or more DTBook files to be transformed. In the case of multiple files, a merge will be performed.</p>
         </p:documentation>
     </p:input>
 
@@ -32,26 +24,21 @@
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Output directory</h2>
-            <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is
-                stored.</p>
+            <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
         </p:documentation>
     </p:option>
 
     <p:option name="assert-valid" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Assert validity</h2>
-            <p px:role="desc">Whether to stop processing and raise an error on validation
-                issues.</p>
+            <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
         </p:documentation>
     </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.store.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
 
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
     <p:sink/>
@@ -65,10 +52,8 @@
         </p:input>
         <p:input port="stylesheet">
             <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                    xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
-                    <xsl:import
-                        href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
+                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
+                    <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
                     <xsl:param name="href" required="yes"/>
                     <xsl:template match="/*">
                         <xsl:copy>
@@ -82,8 +67,7 @@
     <p:sink/>
 
     <p:group>
-        <p:variable name="output-name"
-            select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
+        <p:variable name="output-name" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
             <p:pipe port="matched" step="first-dtbook"/>
         </p:variable>
 
@@ -115,7 +99,7 @@
             'image/gif','image/jpeg','image/png','image/svg+xml',
             'application/pls+xml',
             'audio/mpeg','audio/mp4','text/javascript'))]"/>
-        
+
         <px:zedai-to-epub3-convert name="convert.zedai-to-epub3">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.dtbook-to-zedai"/>
@@ -123,12 +107,12 @@
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-epub3-convert>
 
-        <px:zedai-to-epub3-store name="store">
+        <px:epub3-store name="store">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.zedai-to-epub3"/>
             </p:input>
-            <p:with-option name="epub-file" select="$epub-file-uri"/>
-        </px:zedai-to-epub3-store>
+            <p:with-option name="href" select="$epub-file-uri"/>
+        </px:epub3-store>
 
     </p:group>
 

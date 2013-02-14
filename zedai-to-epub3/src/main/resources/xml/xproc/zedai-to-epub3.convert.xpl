@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:zedai-to-epub3-convert"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:zedai-to-epub3-convert"
     name="zedai-to-epub3.convert" exclude-inline-prefixes="#all" version="1.0">
 
-    <p:documentation>
-        Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.
-    </p:documentation>
+    <p:documentation> Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication. </p:documentation>
 
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
 
     <p:output port="fileset.out" primary="true">
-        <p:pipe port="result" step="fileset.result"/>
+        <p:pipe port="result" step="ocf"/>
     </p:output>
     <p:output port="in-memory.out" sequence="true">
         <p:pipe port="result" step="in-memory.result"/>
@@ -98,8 +95,7 @@
                     <!-- TODO: describe the error on the wiki and insert correct error code -->
                     <p:input port="source">
                         <p:inline>
-                            <message>More than one XML document with the ZedAI media type ('application/z3998-auth+xml') found in the fileset; there can only
-                                be one ZedAI document.</message>
+                            <message>More than one XML document with the ZedAI media type ('application/z3998-auth+xml') found in the fileset; there can only be one ZedAI document.</message>
                         </p:inline>
                     </p:input>
                 </p:error>
@@ -141,8 +137,7 @@
         <p:output port="html-files" sequence="true">
             <p:pipe port="html-files" step="zedai-to-html.iterate"/>
         </p:output>
-        <p:variable name="zedai-basename"
-            select="replace(replace(//*[@media-type='application/z3998-auth+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
+        <p:variable name="zedai-basename" select="replace(replace(//*[@media-type='application/z3998-auth+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
             <p:pipe port="fileset.in" step="zedai-to-epub3.convert"/>
         </p:variable>
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
@@ -340,13 +335,13 @@
             </p:input>
             <p:with-option name="href" select="$opf-base"/>
         </px:fileset-add-entry>
-        
+
         <cx:message message="Package Document Created."/>
     </p:group>
 
-    <p:group name="fileset.result">
+    <p:group name="fileset.without-ocf">
         <p:output port="result"/>
-        
+
         <p:identity name="fileset.dirty"/>
         <p:wrap-sequence wrapper="wrapper">
             <p:input port="source">
@@ -393,10 +388,18 @@
             </p:input>
         </px:fileset-join>
     </p:group>
+    <p:sink/>
+
+    <px:epub3-ocf-finalize name="ocf">
+        <p:input port="source">
+            <p:pipe port="result" step="fileset.without-ocf"/>
+        </p:input>
+    </px:epub3-ocf-finalize>
 
     <p:for-each name="in-memory.result">
         <p:output port="result" sequence="true"/>
         <p:iteration-source>
+            <p:pipe step="ocf" port="in-memory.out"/>
             <p:pipe step="package-doc" port="opf"/>
             <p:pipe step="navigation-doc" port="html-file"/>
             <p:pipe step="zedai-to-html" port="html-files"/>
@@ -404,7 +407,7 @@
         <p:variable name="doc-base" select="base-uri(/*)"/>
         <p:choose>
             <p:xpath-context>
-                <p:pipe port="result" step="fileset.result"/>
+                <p:pipe port="result" step="ocf"/>
             </p:xpath-context>
             <p:when test="//d:file[resolve-uri(@href,base-uri(.)) = $doc-base]">
                 <!-- document is in fileset; keep it -->

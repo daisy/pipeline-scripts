@@ -314,23 +314,38 @@
 			</div>-->
 
 			<!-- Apply templates for all elements up to the next heading -->
-			<xsl:for-each select="$e.up-to-next-heading">
+			<xsl:for-each-group select="$e.up-to-next-heading"
+				group-adjacent="self::text() or self::a or self::abbr or self::acronym or self::annoref or self::bdo or self::br or self::cite or self::code or self::dfn or self::dl or self::em or self::img or self::imggroup or self::kbd or self::list or self::noteref or self::pagenum or self::prodnote or self::q or self::samp or self::sent or self::strong or self::sub or self::sup or self::span or self::w">
 				<xsl:choose>
-					<xsl:when test="self::*">
-						<xsl:apply-templates select=".">
-							<xsl:with-param name="block" select="true()"/>
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:when test="string-length(normalize-space(.)) &gt; 0">
-						<!-- wrap loose text nodes in paragraphs -->
+					<xsl:when test="current-grouping-key()">
+						<!-- wrap loose nodes in paragraphs -->
 						<p>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:for-each select="current-group()">
+								<xsl:choose>
+									<xsl:when test="self::*">
+										<xsl:apply-templates select="."/>
+									</xsl:when>
+									<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+										<xsl:value-of select="normalize-space(.)"/>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:for-each>
 						</p>
 					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="current-group()">
+							<xsl:choose>
+								<xsl:when test="self::*">
+									<xsl:apply-templates select="."/>
+								</xsl:when>
+								<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:otherwise>
 				</xsl:choose>
-				
-			</xsl:for-each>
-			<!--<xsl:apply-templates select="$e.up-to-next-heading" />-->
+			</xsl:for-each-group>
 
 			<!-- If there are no relevant elements until the next heading, add a dummy element (to satisfy DTBook).
 				However if the next relevant sibling is a heading on a lower level, then don't add the dummy element
@@ -517,7 +532,7 @@
 			<xsl:apply-templates/>
 		</list>
 	</xsl:template>
-	
+
 	<xsl:template match="html:p | html:div | html:blockquote">
 		<xsl:element name="{local-name()}">
 			<xsl:call-template name="copy-attributes"/>
@@ -525,9 +540,9 @@
 			<xsl:apply-templates/>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template match="html:a | html:li | html:dl | html:dt | html:dd | html:span | html:strong | html:em | html:sub | html:sup | html:br | html:abbr">
-		<xsl:param name="block" select="false()"/>
+		<!--<xsl:param name="block" select="false()"/>
 		<xsl:choose>
 			<xsl:when test="$block">
 				<p>
@@ -538,14 +553,14 @@
 					</xsl:element>
 				</p>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:element name="{local-name()}">
-					<xsl:call-template name="copy-attributes"/>
-					<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
-					<xsl:apply-templates/>
-				</xsl:element>
-			</xsl:otherwise>
-		</xsl:choose>
+			<xsl:otherwise>-->
+		<xsl:element name="{local-name()}">
+			<xsl:call-template name="copy-attributes"/>
+			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
+			<xsl:apply-templates/>
+		</xsl:element>
+		<!--</xsl:otherwise>
+		</xsl:choose>-->
 	</xsl:template>
 
 	<xsl:template match="html:div[html:span]">
@@ -634,6 +649,8 @@
 			<xsl:apply-templates/>
 		</div>
 	</xsl:template>
+
+	<xsl:template match="html:hr"/>
 
 	<xsl:template match="*">
 		<xsl:if test="local-name() ne 'html'">

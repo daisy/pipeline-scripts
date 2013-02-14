@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:opf="http://www.idpf.org/2007/opf" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
+    xmlns:opf="http://www.idpf.org/2007/opf" xmlns="http://www.idpf.org/2007/opf" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
     <xsl:param name="pub-id" required="yes"/>
 
@@ -11,7 +11,7 @@
     </xsl:template>
 
     <xsl:template match="/*">
-        <opf:metadata>
+        <metadata>
             <dc:identifier id="pub-id">
                 <xsl:value-of select="$pub-id"/>
             </dc:identifier>
@@ -24,13 +24,13 @@
             <dc:date id="date">
                 <xsl:value-of select="//html:head/html:meta[@name='dc:date']/@content"/>
             </dc:date>
-            <opf:meta property="dcterms:modified">
+            <meta property="dcterms:modified">
                 <xsl:value-of
                     select="format-dateTime(
                     adjust-dateTime-to-timezone(current-dateTime(),xs:dayTimeDuration('PT0H')),
                     '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][Z]')"
                 />
-            </opf:meta>
+            </meta>
             <dc:format>EPUB3</dc:format>
             <xsl:for-each select="//html:head/html:meta">
                 <xsl:if
@@ -53,9 +53,9 @@
                                 </xsl:element>
                                 <xsl:if test="@scheme">
                                     <!-- TODO: handle different schemes for different metadata -->
-                                    <!--<opf:meta refines="#{if (@name='dc:identifier') then 'pub-id' else concat('meta_',position())}" property="role" scheme="???">
+                                    <!--<meta refines="#{if (@name='dc:identifier') then 'pub-id' else concat('meta_',position())}" property="role" scheme="???">
                                     <xsl:value-of select="@scheme"/>
-                                </opf:meta>-->
+                                </meta>-->
                                 </xsl:if>
                             </xsl:if>
                         </xsl:when>
@@ -68,7 +68,7 @@
                                         <dc:contributor id="{$id}">
                                             <xsl:value-of select="@content"/>
                                         </dc:contributor>
-                                        <opf:meta refines="#{$id}" property="role" scheme="marc:relators">nrt</opf:meta>
+                                        <meta refines="#{$id}" property="role" scheme="marc:relators">nrt</meta>
                                     </xsl:if>
                                 </xsl:when>
                                 <xsl:when test="@name='ncc:producer'">
@@ -78,7 +78,7 @@
                                         <dc:contributor id="{$id}">
                                             <xsl:value-of select="@content"/>
                                         </dc:contributor>
-                                        <opf:meta refines="#{$id}" property="role" scheme="marc:relators">pro</opf:meta>
+                                        <meta refines="#{$id}" property="role" scheme="marc:relators">pro</meta>
                                     </xsl:if>
                                 </xsl:when>
                                 <xsl:when test="@name='ncc:producedDate'"><!-- TODO --></xsl:when>
@@ -95,20 +95,20 @@
                         <!-- Metadata in other namespaces than dc: and ncc: are dropped. TODO: find a proper way to include metadata from other namespaces? -->
                         <xsl:when test="not(contains(@name,':')) and string-length(@name) &gt; 0">
                             <xsl:if test="string-length(@content) &gt; 0">
-                                <opf:meta property="{@name}">
+                                <meta property="{@name}">
                                     <!-- TODO: try handling schemes for arbitrary metadata? -->
                                     <!--<xsl:if test="@scheme">
                                     <xsl:attribute name="scheme" select="@scheme"/>
                                 </xsl:if>-->
                                     <xsl:value-of select="@content"/>
-                                </opf:meta>
+                                </meta>
                             </xsl:if>
                         </xsl:when>
                     </xsl:choose>
 
                 </xsl:if>
             </xsl:for-each>
-        </opf:metadata>
+        </metadata>
     </xsl:template>
 
 </xsl:stylesheet>
