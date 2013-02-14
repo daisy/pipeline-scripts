@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="nimas-fileset-validator.validate-package-doc" type="px:nimas-fileset-validator.validate-package-doc"
+<p:declare-step version="1.0" name="nimas-fileset-validator.validate-package-doc" type="pxi:nimas-fileset-validator.validate-package-doc"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
@@ -159,18 +159,17 @@
     <p:sink/>
     
     <!-- check that any referenced PDFs exist on disk -->
-    <px:nimas-fileset-validator.check-pdfs name="check-pdfs-exist">
+    <pxi:nimas-fileset-validator.check-pdfs name="check-pdfs-exist">
         <p:input port="source">
             <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
         </p:input>
-    </px:nimas-fileset-validator.check-pdfs>    
+    </pxi:nimas-fileset-validator.check-pdfs>    
     <p:sink/>
     
     <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>
         <p:with-option name="document-type" select="$document-type"/>
         <p:with-option name="document-path" select="$base-uri"/>
-        
         <p:input port="source">
             <!-- a sequence of reports -->
             <p:pipe port="result" step="validate-against-relaxng"/>

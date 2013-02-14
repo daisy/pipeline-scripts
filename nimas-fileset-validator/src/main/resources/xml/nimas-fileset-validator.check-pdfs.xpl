@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="nimas-fileset-validator.check-pdfs" type="px:nimas-fileset-validator.check-pdfs"
+<p:declare-step version="1.0" name="nimas-fileset-validator.check-pdfs" type="pxi:nimas-fileset-validator.check-pdfs"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions"
