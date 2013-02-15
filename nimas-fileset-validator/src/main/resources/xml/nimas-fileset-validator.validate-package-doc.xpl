@@ -130,7 +130,7 @@
             <p:output port="result"/>
             <p:identity>
                 <p:input port="source">
-                    <p:document href="./schema/sch/package-doc-mathml.sch"/>
+                    <p:document href="./schema/sch/package-doc-with-mathml.sch"/>
                 </p:input>
             </p:identity>
         </p:when>
@@ -138,7 +138,7 @@
             <p:output port="result"/>
             <p:identity>
                 <p:input port="source">
-                    <p:document href="./schema/sch/package-doc-no-mathml.sch"/>
+                    <p:document href="./schema/sch/package-doc-without-mathml.sch"/>
                 </p:input>
             </p:identity>
         </p:otherwise>
