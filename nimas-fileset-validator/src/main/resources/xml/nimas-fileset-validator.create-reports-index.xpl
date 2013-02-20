@@ -36,6 +36,9 @@
         </p:documentation>
     </p:output>
 
+    <cx:message message="Nimas fileset validator: Creating reports index."/>
+    <p:sink/>
+    
     <p:group name="reports-index-init">
         <p:output port="result"/>
         <p:identity>

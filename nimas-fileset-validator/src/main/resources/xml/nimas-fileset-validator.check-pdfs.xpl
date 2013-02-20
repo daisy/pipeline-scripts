@@ -47,6 +47,9 @@
     </p:import>
     
     <p:variable name="package-doc-uri" select="base-uri()"/>
+    
+    <cx:message message="Nimas fileset validator: Checking that PDFs exist on disk."/>
+    
     <p:for-each>
         <p:iteration-source select="//pkg:item[@media-type = 'application/pdf']"/>
         <p:variable name="refid" select="*/@id"/>

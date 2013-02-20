@@ -117,6 +117,10 @@
     <p:variable name="package-doc-filename" 
         select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
     
+    
+    <cx:message message="Nimas fileset validator: validating files."/>
+    <p:sink/>
+    
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
@@ -136,6 +140,9 @@
         <p:variable name="dtbook-href" select="*/@href"/>
         <p:variable name="dtbook-uri" select="*/resolve-uri($dtbook-href, base-uri())"/>
         <p:variable name="report-filename" select="concat(replace($dtbook-href, '/', '_'), '-report.xml')"/>
+        
+        <cx:message message="Nimas fileset validator: Loading DTBook document."/>
+        <p:sink/>
         
         <p:load name="load-dtbook">
             <p:with-option name="href" select="$dtbook-uri"/>
@@ -166,6 +173,9 @@
         
         <p:group name="validate-dtbook-group">
             <p:output port="result"/>
+            <cx:message message="Nimas fileset validator: Validating DTBook document."/>
+            <p:sink/>
+            
             <px:dtbook-validator name="validate-dtbook">
                 <p:input port="source">
                     <p:pipe port="result" step="load-dtbook"/>
@@ -237,6 +247,9 @@
         </p:add-attribute>    
     </p:group>
 
+    <cx:message message="Nimas fileset validator: Formatting report as HTML."/>
+    <p:sink/>
+    
     <px:validation-report-to-html name="format-as-html">
         <p:input port="source">
             <p:pipe port="result" step="validate-package-doc"/>
@@ -260,6 +273,12 @@
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
+<!--            <cx:message message="Nimas fileset validator: Storing reports to disk in output directory:"/>-->
+            <cx:message>
+                <p:with-option name="message" select="concat('Nimas fileset validator: Storing reports to disk in output directory: ', $output-dir)"/>
+            </cx:message>
+            <p:sink/>
+            
             <p:for-each>
                 <p:iteration-source>
                     <p:pipe port="result" step="validate-dtbooks"/>

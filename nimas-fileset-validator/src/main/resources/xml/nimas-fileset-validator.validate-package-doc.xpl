@@ -71,6 +71,8 @@
         then 'OPF 1.2 (MathML detected)' 
         else 'OPF 1.2'"/>
     
+    <cx:message message="Nimas fileset validator: Validating package document."/>
+    <p:sink/>
     
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
@@ -80,6 +82,14 @@
         <p:output port="copy-of-document">
             <p:pipe port="result" step="run-relaxng-validation"/>
         </p:output>
+        
+        <cx:message message="(debug) Nimas fileset validator: Validating package document against RNG.">
+            <p:input port="source">
+                <p:empty/>
+            </p:input>
+        </cx:message>
+        <p:sink/>
+        
         <!-- validate with RNG -->
         <l:relax-ng-report name="run-relaxng-validation" assert-valid="false">
             <p:input port="schema">
@@ -144,6 +154,9 @@
         </p:otherwise>
     </p:choose>
     
+    <cx:message message="(debug) Nimas fileset validator: Validating package document against schematron."/>
+    <p:sink/>
+    
     <!-- validate with schematron -->
     <p:validate-with-schematron assert-valid="false" name="validate-against-schematron">
         <p:input port="schema">
@@ -155,6 +168,8 @@
         <p:input port="parameters">
             <p:empty/>
         </p:input>
+        
+        
     </p:validate-with-schematron>
     <p:sink/>
     
@@ -164,6 +179,8 @@
             <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
         </p:input>
     </pxi:nimas-fileset-validator.check-pdfs>    
+    
+    <cx:message message="(debug) Nimas fileset validator: Validating package document; combining reports."/>
     <p:sink/>
     
     <px:combine-validation-reports name="wrap-reports">
