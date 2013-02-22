@@ -115,8 +115,6 @@
             <p:pipe step="translator" port="result"/>
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
-        <p:with-option name="preprocessor" select="$preprocessor"/>
-        <p:with-option name="translator" select="$translator"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:zedai-to-pef.convert>
     
