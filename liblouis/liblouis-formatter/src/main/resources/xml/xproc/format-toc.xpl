@@ -12,6 +12,7 @@
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="true" primary="true"/>
     
+    <p:import href="utils/select-by-position.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
     <!-- Generate toc -->
@@ -69,8 +70,8 @@
             </p:input>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
+        <pxi:select-by-position position="1"/>
         <p:xslt>
-            <p:input port="source" select="/louis:output/louis:section[1]"/>
             <p:input port="stylesheet">
                 <p:document href="../xslt/read-liblouis-output.xsl"/>
             </p:input>

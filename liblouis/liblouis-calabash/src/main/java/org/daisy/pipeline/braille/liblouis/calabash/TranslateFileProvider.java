@@ -3,7 +3,6 @@ package org.daisy.pipeline.braille.liblouis.calabash;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -41,8 +40,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 	private static final String LOUIS_NS = "http://liblouis.org/liblouis";
 	private static final String LOUIS_PREFIX = "louis";
-	private static final QName louis_output = new QName(LOUIS_PREFIX, LOUIS_NS, "output");
-	private static final QName louis_section = new QName(LOUIS_PREFIX, LOUIS_NS, "section");
+	private static final QName louis_result = new QName(LOUIS_PREFIX, LOUIS_NS, "result");
 	
 	private static final QName _table = new QName("table");
 	private static final QName _paged = new QName("paged");
@@ -238,34 +236,35 @@ public class TranslateFileProvider implements XProcStepProvider {
 				assert buffer.position() >= bodyLength;
 				buffer.flip();
 				
-				TreeWriter treeWriter = new TreeWriter(runtime);
-				treeWriter.startDocument(step.getNode().getBaseURI());
-				treeWriter.addStartElement(louis_output);
-				treeWriter.startContent();
 				if (bodyLength > 0) {
-					treeWriter.addStartElement(louis_section);
-					treeWriter.startContent();
 					bytes = new byte[buffer.remaining() - bodyLength];
 					buffer.get(bytes);
-					treeWriter.addText(new String(bytes, "UTF-8"));
-					treeWriter.addEndElement();
-					treeWriter.addStartElement(louis_section);
-					treeWriter.startContent();
+					writeDocument(xml.getBaseURI(), bytes);
 					bytes = new byte[buffer.remaining()];
 					buffer.get(bytes);
-					treeWriter.addText(new String(bytes, "UTF-8"));
-					treeWriter.addEndElement(); }
+					writeDocument(xml.getBaseURI(), bytes); }
 				else {
 					bytes = new byte[buffer.remaining()];
 					buffer.get(bytes);
-					treeWriter.addText(new String(bytes, "UTF-8")); }
-				treeWriter.addEndElement();
-				treeWriter.endDocument();
-				
-				result.write(treeWriter.getResult()); }
+					writeDocument(xml.getBaseURI(), bytes); }}
 			
 			catch (Exception e) {
 				throw new XProcException(step.getNode(), e); }
+		}
+		
+		private void writeDocument(URI baseURI, byte[] textContent) {
+			try {
+				TreeWriter treeWriter = new TreeWriter(runtime);
+				treeWriter.startDocument(baseURI);
+				treeWriter.addStartElement(louis_result);
+				treeWriter.startContent();
+				treeWriter.addText(new String(textContent, "UTF-8"));
+				treeWriter.addEndElement();
+				treeWriter.endDocument();
+				result.write(treeWriter.getResult());
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 }

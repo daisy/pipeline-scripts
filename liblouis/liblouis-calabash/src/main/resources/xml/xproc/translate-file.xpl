@@ -12,6 +12,6 @@
     <p:option name="table" required="false"/>
     <p:option name="paged" required="false"/>
     <p:option name="temp-dir" required="true"/>
-    <p:output port="result" sequence="false" primary="true"/>
+    <p:output port="result" sequence="true" primary="true"/>
     
 </p:declare-step>
