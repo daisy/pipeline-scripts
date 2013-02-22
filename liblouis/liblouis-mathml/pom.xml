@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.daisy.pipeline.modules.braille</groupId>
+    <artifactId>braille-modules-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../</relativePath>
+  </parent>
+  
+  <groupId>org.daisy.pipeline.modules.braille</groupId>
+  <artifactId>liblouis-mathml</artifactId>
+  <version>${braille.liblouis-mathml.version}</version>
+  <packaging>bundle</packaging>
+  
+  <name>DAISY Pipeline 2 module :: liblouis-mathml</name>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Import-Package>*, org.daisy.pipeline.braille.liblouis</Import-Package>
+            <Service-Component>OSGI-INF/liblouis-mathml-config.xml</Service-Component>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

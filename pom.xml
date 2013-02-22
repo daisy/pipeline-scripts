@@ -55,6 +55,7 @@
     <module>pef/pef-utils</module>
     <module>utilities</module>
     <module>liblouis/liblouis-formatter</module>
+    <module>liblouis/liblouis-mathml</module>
     <module>dotify/dotify-saxon</module>
     <module>texhyph/texhyph-saxon</module>
     <module>pef/pef-to-html</module>
