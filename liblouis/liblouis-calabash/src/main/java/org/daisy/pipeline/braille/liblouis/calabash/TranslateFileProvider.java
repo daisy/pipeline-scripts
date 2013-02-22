@@ -5,8 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,8 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
-import static org.daisy.pipeline.braille.Utilities.Files.unpack;
-import static org.daisy.pipeline.braille.Utilities.Files.fileName;
+import static org.daisy.pipeline.braille.Utilities.Files.relativizeURL;
+import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -160,7 +161,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
 				
 				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
-				File configPath = null;
+				URL configPath = null;
 				
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
@@ -170,19 +171,14 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
-							File file = null;
-							try {
-								file = new File(uri); }
-							catch (Exception e) {
-								file = new File(tempDir.getAbsolutePath() + File.separator + fileName(uri.toURL()));
-								unpack(uri.toURL(), file); }
+							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
+							URL path = resolveURL(url, ".");
 							if (configPath == null)
-								configPath = new File(file.getParent());
-							else if(!configPath.equals(new File(file.getParent())))
+								configPath = path;
+							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							configFileNames.add(file.getName()); }}}
+							configFileNames.add(relativizeURL(path, url)); }}}
 				
 				// Get semantic action files
 				List<String> semanticFileNames = new ArrayList<String>();
@@ -192,19 +188,18 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
-							File file = null;
-							try {
-								file = new File(uri); }
-							catch (Exception e) {
-								file = new File(tempDir.getAbsolutePath() + File.separator + fileName(uri.toURL()));
-								unpack(uri.toURL(), file); }
+							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
+							URL path = resolveURL(url, ".");
 							if (configPath == null)
-								configPath = new File(file.getParent());
-							else if(!configPath.equals(new File(file.getParent())))
+								configPath = path;
+							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							semanticFileNames.add(file.getName()); }}}
+							semanticFileNames.add(relativizeURL(path, url)); }}}
+				
+				URL table = null;
+				if (getOption(_table) != null)
+					table = new URL(getOption(_table).getString());
 				
 				// Write XML document to file
 				XdmNode xml = source.read();
@@ -213,12 +208,12 @@ public class TranslateFileProvider implements XProcStepProvider {
 				serializer.serializeNode(xml);
 				serializer.close();
 				
-				File bodyTempFile = new File(tempDir + File.separator + "lbx_body.temp");
+				File bodyTempFile = new File(tempDir, "lbx_body.temp");
 				bodyTempFile.delete();
 				
 				// Convert using file2brl
 				File brailleFile = File.createTempFile("liblouisutdml.", ".txt", tempDir);
-				liblouisutdml.translateFile(configFileNames, semanticFileNames, new URL(getOption(_table).getString()),
+				liblouisutdml.translateFile(configFileNames, semanticFileNames, table,
 						settings, xmlFile, brailleFile, configPath, tempDir);
 				
 				// Read the braille document and wrap it in a new XML document

@@ -9,7 +9,7 @@
     <p:input port="styles" sequence="true"/>
     <p:input port="semantics" sequence="true"/>
     <p:input port="page-layout" kind="parameter" primary="true"/>
-    <p:option name="table" required="true"/>
+    <p:option name="table" required="false"/>
     <p:option name="paged" required="false"/>
     <p:option name="temp-dir" required="true"/>
     <p:output port="result" sequence="false" primary="true"/>

@@ -26,10 +26,6 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
-    <p:variable name="liblouis-table"
-        select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
-        <p:empty/>
-    </p:variable>
     <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
         <p:empty/>
     </p:variable>
@@ -187,7 +183,6 @@
             <p:input port="page-layout" select="/*/*[4]">
                 <p:pipe step="translate-file" port="current"/>
             </p:input>
-            <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
     </p:for-each>

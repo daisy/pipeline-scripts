@@ -10,7 +10,7 @@ public interface Liblouisutdml {
 	/**
 	 * @param configFiles: array of file names (nullable)
 	 * @param semanticFiles: array of file names (nullable)
-	 * @param table: fully qualified table URL
+	 * @param table: fully qualified table URL (nullable)
 	 * @param otherSettings: key/value pairs (nullable)
 	 * @param input: the input file
 	 * @param output: path to the output file
@@ -24,6 +24,6 @@ public interface Liblouisutdml {
 			Map<String,String> otherSettings,
 			File input,
 			File output,
-			File configPath,
+			URL configPath,
 			File tempDir);
 }

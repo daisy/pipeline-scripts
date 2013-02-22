@@ -13,9 +13,6 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
-    <p:variable name="liblouis-table"
-        select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'"/>
-    
     <p:viewport match="louis:box" name="format">
         
         <p:rename match="/*">
@@ -55,7 +52,6 @@
             <p:with-param port="page-layout" name="page-width" select="/*/@width">
                 <p:pipe step="format" port="current"/>
             </p:with-param>
-            <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
         

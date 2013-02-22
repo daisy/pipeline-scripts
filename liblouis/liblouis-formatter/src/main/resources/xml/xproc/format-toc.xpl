@@ -14,11 +14,6 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     
-    <p:variable name="liblouis-table"
-        select="'http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/nabcc.dis,braille-patterns.cti,pagenum.cti'">
-        <p:empty/>
-    </p:variable>
-    
     <!-- Generate toc -->
     
     <p:for-each name="generate-toc">
@@ -72,7 +67,6 @@
             <p:input port="page-layout" select="/*/*[4]">
                 <p:pipe step="ref-document" port="result"/>
             </p:input>
-            <p:with-option name="table" select="$liblouis-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
         <p:xslt>

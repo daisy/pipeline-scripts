@@ -26,12 +26,14 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
 	private final ResourceResolver tableResolver;
+	private final ResourceResolver configResolver;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
 	private boolean loaded = false;
 	
-	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver) {
+	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver, ResourceResolver configResolver) {
+		
 		this.jarURLs = jarURLs;
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
@@ -40,6 +42,7 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			if (!file.getName().endsWith(".dll")) chmod775(file);
 		nativeDirectory = unpackDirectory;
 		this.tableResolver = tableResolver;
+		this.configResolver = configResolver;
 	}
 	
 	public LiblouisutdmlJniImpl load() {
@@ -77,21 +80,28 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			Map<String,String> otherSettings,
 			File input,
 			File output,
-			File configPath,
+			URL configPath,
 			File tempDir) {
 		
 		if (!loaded) load();
 		
 		try {
 			
+			File configPathFile = null;
 			if (configPath == null)
-				configPath = tempDir;
-			if (!Arrays.asList(configPath.list()).contains("liblouisutdml.ini"))
-				throw new RuntimeException("liblouisutdml.ini must be on the configPath");
+				configPathFile = tempDir;
+			else {
+				URL resolvedConfigPath = configResolver.resolve(configPath);
+				if (resolvedConfigPath == null)
+					throw new RuntimeException("Liblouisutdml config path " + configPath + " could not be resolved");
+				configPathFile = asFile(resolvedConfigPath); }
+			
+			if (!Arrays.asList(configPathFile.list()).contains("liblouisutdml.ini"))
+				throw new RuntimeException("liblouisutdml.ini must be placed in " + configPathFile);
 			if (configFiles != null)
 				configFiles.remove("liblouisutdml.ini");
 			
-			String configFileList = configPath.getAbsolutePath() + File.separator +
+			String configFileList = configPathFile.getAbsolutePath() + File.separator +
 					(configFiles != null ? join(configFiles, ",") : "");
 			String inputFileName = input.getAbsolutePath();
 			String outputFileName = output.getAbsolutePath();
@@ -99,12 +109,14 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", join(semanticFiles, ","));
-			URL resolvedTable = tableResolver.resolve(table);
-			if (resolvedTable == null)
-				throw new RuntimeException("Liblouis table " + table + " could not be resolved");
-			String tablePath = "\"" + asFile(resolvedTable).getCanonicalPath() + "\"";
-			settings.put("literaryTextTable", tablePath);
-			settings.put("editTable", tablePath);
+			
+			if (table != null) {
+				URL resolvedTable = tableResolver.resolve(table);
+				if (resolvedTable == null)
+					throw new RuntimeException("Liblouis table " + table + " could not be resolved");
+				String tablePath = "\"" + asFile(resolvedTable).getCanonicalPath() + "\"";
+				settings.put("literaryTextTable", tablePath);
+				settings.put("editTable", tablePath); }
 			if (otherSettings != null)
 				settings.putAll(otherSettings);
 			List<String> settingsList = new ArrayList<String>();

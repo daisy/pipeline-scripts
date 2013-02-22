@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Identity Liblouis Tables" activate="activate">
-    <scr:implementation class="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"/>
-    <scr:service>
-        <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"/>
-    </scr:service>
-    <scr:property name="identifier" type="String" value="http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/tables/"/>
-    <scr:property name="path" type="String" value="/tables"/>
-</scr:component>

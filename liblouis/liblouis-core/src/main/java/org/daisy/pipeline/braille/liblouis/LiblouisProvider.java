@@ -39,6 +39,7 @@ public class LiblouisProvider {
 	}
 	
 	private LiblouisTableRegistry tableRegistry = new LiblouisTableRegistry();
+	private ResourceRegistry<LiblouisutdmlConfigPath> configRegistry = new ResourceRegistry<LiblouisutdmlConfigPath>() {};
 	
 	public void addTablePath(LiblouisTablePath path) {
 		tableRegistry.register(path);
@@ -46,6 +47,14 @@ public class LiblouisProvider {
 	
 	public void removeTablePath(LiblouisTablePath path) {
 		tableRegistry.unregister(path);
+	}
+	
+	public void addConfigPath(LiblouisutdmlConfigPath path) {
+		configRegistry.register(path);
+	}
+	
+	public void removeConfigPath(LiblouisutdmlConfigPath path) {
+		configRegistry.unregister(path);
 	}
 	
 	private LiblouisJnaImpl liblouis;
@@ -78,7 +87,8 @@ public class LiblouisProvider {
 					liblouisutdml = new LiblouisutdmlProcessBuilderImpl(
 						getBinaryPaths("file2brl"),
 						bundleContext.getDataFile("native/file2brl"),
-						tableRegistry); }
+						tableRegistry,
+						configRegistry); }
 				liblouisutdmlRegistration = bundleContext.registerService(
 					Liblouisutdml.class.getName(), liblouisutdml, null);
 				logger.debug("Publishing liblouisutdml service"); }

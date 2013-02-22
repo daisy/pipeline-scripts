@@ -7,6 +7,12 @@
         cardinality="0..n"
         name="LiblouisTablePath"
         policy="dynamic"/>
+    <scr:reference bind="addConfigPath"
+        unbind="removeConfigPath"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigPath"
+        cardinality="0..n"
+        name="LiblouisutdmlConfigPath"
+        policy="dynamic"/>
     <scr:reference bind="addBinary"
         unbind="removeBinary"
         interface="org.daisy.pipeline.braille.Binary"
