@@ -9,29 +9,23 @@
 
     <p:input port="source" primary="true"/>
     <p:output port="result" primary="true"/>
-    <p:output port="pages">
+    <p:output port="page-layout">
         <p:pipe step="apply-stylesheet" port="pages"/>
     </p:output>
-    <p:option name="default-stylesheet" required="true"/>
+    <p:option name="stylesheet" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/xproc/library.xpl"/>
 
     <p:choose>
-        <p:xpath-context>
-            <p:pipe port="source" step="styling"/>
-        </p:xpath-context>
-        
-        <p:when test="not(//*[name()='head'][1]/link[@rel='stylesheet' and @media='embossed' and @type='text/css'])">
-            
+        <p:when test="$stylesheet!=''">
             <p:add-attribute match="/link" attribute-name="href" name="link">
                 <p:input port="source">
                     <p:inline>
                         <link rel="stylesheet" media="embossed" type="text/css"/>
                     </p:inline>
                 </p:input>
-                <p:with-option name="attribute-value" select="$default-stylesheet"/>
+                <p:with-option name="attribute-value" select="$stylesheet"/>
             </p:add-attribute>
-            
             <p:insert match="//*[name()='head'][1]" position="first-child">
                 <p:input port="source">
                     <p:pipe port="source" step="styling"/>
@@ -59,6 +53,17 @@
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="../xslt/handle-content.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    
+    <!-- Number lists -->
+    
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-list-item.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>

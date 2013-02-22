@@ -46,7 +46,7 @@
     <p:option name="stylesheet" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">stylesheet</h2>
-            <p px:role="desc">The default css stylesheet to apply when there aren't any provided with the input file.</p>
+            <p px:role="desc">The default css stylesheet to apply.</p>
             <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css</code></pre>
         </p:documentation>
     </p:option>
@@ -81,14 +81,39 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.convert.xpl"/>
+    <p:import href="zedai-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-preprocessor.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-translator.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.store.xpl"/>
+    
+    <!-- =============== -->
+    <!-- LOAD COMPONENTS -->
+    <!-- =============== -->
+    
+    <px:xml-to-pef.load-preprocessor name="preprocessor">
+        <p:with-option name="preprocessor" select="$preprocessor"/>
+    </px:xml-to-pef.load-preprocessor>
+    <p:sink/>
+    <px:xml-to-pef.load-translator name="translator">
+        <p:with-option name="translator" select="if ($translator!='') then $translator else
+            'http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate.xsl'"/>
+    </px:xml-to-pef.load-translator>
+    <p:sink/>
     
     <!-- ============ -->
     <!-- ZEDAI TO PEF -->
     <!-- ============ -->
-
+    
     <px:zedai-to-pef.convert>
+        <p:input port="source">
+            <p:pipe step="zedai-to-pef" port="source"/>
+        </p:input>
+        <p:input port="preprocessors">
+            <p:pipe step="preprocessor" port="result"/>
+        </p:input>
+        <p:input port="translators">
+            <p:pipe step="translator" port="result"/>
+        </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="preprocessor" select="$preprocessor"/>
         <p:with-option name="translator" select="$translator"/>

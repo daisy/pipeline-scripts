@@ -10,12 +10,12 @@
     type="pxi:translation" name="translation" version="1.0">
     
     <p:input port="source" primary="true"/>
+    <p:input port="translators" sequence="true"/>
     <p:output port="result" primary="true"/>
-    <p:option name="translator" required="true"/>
-    <p:option name="hyphenator" required="true"/>
+    <p:option name="temp-dir" required="true"/>
     
+    <p:import href="utils/chain-steps.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="build-translation-pipeline.xpl"/>
     
     <!-- Handle string-set -->
     
@@ -38,14 +38,17 @@
             <p:empty/>
         </p:input>
     </p:xslt>
+    <p:sink/>
     
     <!-- Build translation pipeline -->
-    
-    <pxi:build-translation-pipeline name="pipeline">
-        <p:with-option name="translator" select="$translator"/>
-        <p:with-option name="hyphenator" select="$hyphenator"/>
-    </pxi:build-translation-pipeline>
-    
+
+    <pxi:chain-steps name="pipeline">
+        <p:input port="steps">
+            <p:pipe step="translation" port="translators"/>
+        </p:input>
+    </pxi:chain-steps>
+    <p:sink/>
+
     <!-- Translate each block -->
     
     <p:try name="translate">

@@ -4,15 +4,16 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     exclude-inline-prefixes="#all"
-    type="px:zedai-to-pef.convert" name="zedai-to-pef.convert" version="1.0">
+    type="px:zedai-to-pef.convert" name="convert" version="1.0">
     
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
+    <p:input port="preprocessors" sequence="true"/>
+    <p:input port="translators" sequence="true"/>
+    
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
 
     <p:option name="temp-dir" required="true"/>
     <p:option name="stylesheet" required="false" select="''"/>
-    <p:option name="preprocessor" required="false" select="''"/>
-    <p:option name="translator" required="false" select="''"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.convert.xpl"/>
 
@@ -28,6 +29,7 @@
             <p:empty/>
         </p:input>
     </p:xslt>
+    <p:sink/>
     
     <!-- ============== -->
     <!-- CONVERT TO PEF -->
@@ -35,24 +37,19 @@
     
     <px:xml-to-pef.convert name="xml-to-pef">
         <p:input port="source">
-            <p:pipe port="source" step="zedai-to-pef.convert"/>
+            <p:pipe step="convert" port="source"/>
+        </p:input>
+        <p:input port="preprocessors">
+            <p:pipe step="convert" port="preprocessors"/>
+        </p:input>
+        <p:input port="translators">
+            <p:pipe step="convert" port="translators"/>
         </p:input>
         <p:input port="metadata">
-            <p:pipe port="result" step="metadata"/>
+            <p:pipe step="metadata" port="result"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="if ($stylesheet!='') then $stylesheet
-            else 'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css'">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="preprocessor" select="$preprocessor">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="translator" select="$translator">
-            <p:empty/>
-        </p:with-option>
-        <p:with-option name="temp-dir" select="$temp-dir">
-            <p:empty/>
-        </p:with-option>
+        <p:with-option name="stylesheet" select="$stylesheet"/>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:xml-to-pef.convert>
     
 </p:declare-step>
