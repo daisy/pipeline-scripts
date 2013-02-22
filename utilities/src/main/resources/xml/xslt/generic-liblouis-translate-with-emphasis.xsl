@@ -5,16 +5,17 @@
 	xmlns:louis="http://liblouis.org/liblouis"
 	exclude-result-prefixes="xs louis">
 	
-	<xsl:param name="hyphenate" select="'false'"/>
+	<xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" />
 	
 	<xsl:template match="/*">
 		<xsl:choose>
 			<xsl:when test="/*/@xml:lang">
-				<xsl:variable name="table" select="louis:find-table(string(/*/@xml:lang))"/>
+				<xsl:variable name="table" select="louis:lookup-table(string(/*/@xml:lang))"/>
 				<xsl:choose>
 					<xsl:when test="$table">
 						<xsl:copy>
-							<xsl:sequence select="louis:translate($table, string(/*), (), $hyphenate='true')"/>
+							<xsl:sequence select="louis:translate($table, string(/*),
+								louis:get-typeform(/*))"/>
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>

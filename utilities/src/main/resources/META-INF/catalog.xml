@@ -2,14 +2,14 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/mark-transitions.xpl" uri="../xml/xproc/mark-transitions.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/number-lists.xsl" uri="../xml/xslt/number-lists.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" uri="../xml/xslt/get-liblouis-typeform.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/simple-dotify-translate.xsl" uri="../xml/xslt/simple-dotify-translate.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/simple-liblouis-translate.xsl" uri="../xml/xslt/simple-liblouis-translate.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/simple-liblouis-translate-and-hyphenate.xsl" uri="../xml/xslt/simple-liblouis-translate-and-hyphenate.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/simple-liblouis-translate-with-emphasis.xsl" uri="../xml/xslt/simple-liblouis-translate-with-emphasis.xsl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/tex-hyphenate.xsl" uri="../xml/xslt/tex-hyphenate.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-dotify-translate.xsl" uri="../xml/xslt/generic-dotify-translate.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate.xsl" uri="../xml/xslt/generic-liblouis-translate.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate-and-hyphenate.xsl" uri="../xml/xslt/generic-liblouis-translate-and-hyphenate.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate-with-emphasis.xsl" uri="../xml/xslt/generic-liblouis-translate-with-emphasis.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-tex-hyphenate.xsl" uri="../xml/xslt/generic-tex-hyphenate.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
 </catalog>

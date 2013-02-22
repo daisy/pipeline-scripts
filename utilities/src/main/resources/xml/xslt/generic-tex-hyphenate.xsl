@@ -37,7 +37,7 @@
 	
 	<xsl:function name="my:get-table">
 		<xsl:param name="lang"/>
-		<xsl:variable name="table" select="tex:find-table($lang)"/>
+		<xsl:variable name="table" select="tex:lookup-table($lang)"/>
 		<xsl:if test="not($table)">
 			<xsl:message terminate="yes">
 				<xsl:value-of select="concat(
