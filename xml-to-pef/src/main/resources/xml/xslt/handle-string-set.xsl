@@ -18,7 +18,7 @@
 	<xsl:template match="*[contains(@style, 'string-set')]">
 		<xsl:copy>
 			<xsl:sequence select="@*"/>
-			<xsl:attribute name="style" select="css:remove-properties(string(@style), ('string-set'))"/>
+			<xsl:attribute name="style" select="css:remove-from-style(string(@style), ('string-set'))"/>
 			<xsl:variable name="element" as="element()" select="."/>
 			<xsl:variable name="string-set" as="xs:string?"
 				select="css:get-property-value(., 'string-set', true(), true(), false())"/>

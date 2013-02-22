@@ -49,7 +49,7 @@
                 <xsl:variable name="border-right" select="css:get-property-value(., 'border-right', true(), true(), true())"/>
                 <xsl:variable name="border-top" select="css:get-property-value(., 'border-top', true(), true(), true())"/>
                 <xsl:variable name="border-bottom" select="css:get-property-value(., 'border-bottom', true(), true(), true())"/>
-                <xsl:variable name="style" select="css:remove-properties(string(@style),
+                <xsl:variable name="style" select="css:remove-from-style(string(@style),
                     ('margin-left', 'margin-right', 'margin-top', 'margin-bottom',
                     'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
                     'border-left', 'border-right', 'border-top', 'border-bottom'))"/>
@@ -154,7 +154,7 @@
                 'page-break-inside:', $page-break-inside, ';',
                 'orphans:', $orphans)"/>
             <xsl:variable name="child-style"
-                select="css:remove-properties($style, ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
+                select="css:remove-from-style($style, ('page-break-after', 'page-break-before', 'page-break-inside', 'orphans'))"/>
             <xsl:if test="$border-top!='none'">
                 <xsl:sequence select="louis:create-border($border-top, $left + $margin-left, $width - $left - $right - $margin-left - $margin-right)"/>
             </xsl:if>
@@ -297,7 +297,7 @@
         <xsl:variable name="remove" as="xs:string*"
             select="for $property in tokenize($append,';')
                       return normalize-space(substring-before($property,':'))"/>
-        <xsl:sequence select="string-join((css:remove-properties($style, $remove), $append), ';')"/>
+        <xsl:sequence select="string-join((css:remove-from-style($style, $remove), $append), ';')"/>
     </xsl:function>
     
 </xsl:stylesheet>

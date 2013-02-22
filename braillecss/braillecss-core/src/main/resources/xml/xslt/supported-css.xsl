@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    xmlns:my="http://github.com/bertfrees"
-    exclude-result-prefixes="xs css my"
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    exclude-result-prefixes="#all"
     version="2.0">
     
     <xsl:variable name="properties" as="xs:string*"
@@ -120,8 +120,8 @@
                  'auto',
                  'auto',
                  'auto',
-                 '0.0',
-                 '0.0',
+                 '2.0',
+                 '2.0',
                  'auto',
                  'normal',
                  'normal',
@@ -180,13 +180,13 @@
     <xsl:function name="css:is-valid-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="value" as="xs:string"/>
-        <xsl:variable name="index" select="my:index-of($properties, $property)"/>
+        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
         <xsl:sequence select="if ($index) then matches($value, $valid-properties[$index]) else false()"/>
     </xsl:function>
 
     <xsl:function name="css:get-default-value" as="xs:string?">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:variable name="index" select="my:index-of($properties, $property)"/>
+        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
         <xsl:if test="$index">
             <xsl:sequence select="$default-values[$index]"/>
         </xsl:if>
@@ -194,17 +194,17 @@
     
     <xsl:function name="css:is-inherited-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(my:index-of($inherited-properties, $property))"/>
+        <xsl:sequence select="boolean(pxi:index-of($inherited-properties, $property))"/>
     </xsl:function>
     
     <xsl:function name="css:applies-to" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="display" as="xs:string"/>
-        <xsl:variable name="index" select="my:index-of($properties, $property)"/>
+        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
         <xsl:sequence select="if ($index) then matches($display, $applies-to[$index]) else false()"/>
     </xsl:function>
     
-    <xsl:function name="my:index-of" as="xs:integer?">
+    <xsl:function name="pxi:index-of" as="xs:integer?">
         <xsl:param name="sequence"/>
         <xsl:param name="property"/>
         <xsl:choose>

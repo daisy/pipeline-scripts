@@ -3,10 +3,13 @@ package org.daisy.braille.css.calabash;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.URIResolver;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
@@ -218,12 +221,14 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			super(xproc);
 			startDocument(base);
 			addStartElement(_css_pages);
-			Iterable<RulePage> pages =  Iterables.<RulePage>filter(stylesheet, RulePage.class);
-			for (RulePage page : pages) {
+			Map<String,RulePage> pages = new HashMap<String,RulePage>();
+			for (RulePage page : Iterables.<RulePage>filter(stylesheet, RulePage.class))
+				pages.put(Objects.firstNonNull(page.getName(), "auto"), page);
+			for (String name : pages.keySet()) {
 				addStartElement(_css_page);
-				String name = page.getName();
+				addAttribute(_name, name);
+				RulePage page = pages.get(name);
 				String pseudo = page.getPseudo();
-				if (name != null) addAttribute(_name, name);
 				if (pseudo != null) addAttribute(_position, pseudo);
 				String pageStyle = normalizeSpace(join(
 						Iterables.<Declaration>filter(page, Declaration.class), " "));

@@ -83,12 +83,11 @@ public class BrailleCSSDeclarationTransformer {
 				.getTotalProperties(), 1.0f);
 		for (String key : css.getDefinedPropertyNames()) {
 			try {
-				if (key.startsWith("-brl-")) {
-					Method m = BrailleCSSDeclarationTransformer.class.getDeclaredMethod(
-							DeclarationTransformer.camelCase("process" + key),
-							Declaration.class, Map.class, Map.class);
-					map.put(key, m);
-				}
+				Method m = BrailleCSSDeclarationTransformer.class.getDeclaredMethod(
+						DeclarationTransformer.camelCase("process-" + key),
+						Declaration.class, Map.class, Map.class);
+				map.put(key, m);
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 			}
 		}
