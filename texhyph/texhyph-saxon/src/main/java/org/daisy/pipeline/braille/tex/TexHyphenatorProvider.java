@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.tex;
 
 import org.daisy.pipeline.braille.TableRegistry;
-import org.daisy.pipeline.braille.TableResolver;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -9,9 +8,7 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TexHyphenatorProvider
-		extends TableRegistry<TexHyphenatorTablePath>
-		implements TexHyphenatorTableFinder, TableResolver {
+public class TexHyphenatorProvider extends TableRegistry<TexHyphenatorTablePath> implements TexHyphenatorTableLookup {
 	
 	private BundleContext bundleContext;
 	

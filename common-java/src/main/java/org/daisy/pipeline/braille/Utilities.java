@@ -1,14 +1,19 @@
 package org.daisy.pipeline.braille;
 
+import com.google.common.base.Functions;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.primitives.Booleans;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,6 +70,11 @@ public abstract class Utilities {
 		public static<T> T reduce(Iterator<T> iterator, Function2<? super T,? super T,? extends T> function) {
 			T seed = iterator.next();
 			return Iterators.<T,T>fold(iterator, function, seed);
+		}
+		
+		public static <T> Pair<Collection<T>,Collection<T>> partition(Iterator<T> iterator, Predicate<? super T> predicate) {
+			Multimap<Boolean,T> map = Multimaps.index(iterator, Functions.forPredicate(predicate));
+			return new Pair<Collection<T>,Collection<T>>(map.get(true), map.get(false));
 		}
 	}
 
@@ -156,6 +166,7 @@ public abstract class Utilities {
 		public static boolean unpack(URL url, File file) {
 			if (file.exists()) return false;
 			try {
+				file.getParentFile().mkdirs();
 				file.createNewFile();
 				FileOutputStream writer = new FileOutputStream(file);
 				url.openConnection();
@@ -179,7 +190,7 @@ public abstract class Utilities {
 			Collection<File> files = new ArrayList<File>();
 			while(urls.hasNext()) {
 				URL url = urls.next();
-				File file = new File(directory.getAbsolutePath() + File.separator + fileName(url));
+				File file = new File(directory.getAbsolutePath(), fileName(url));
 				if (unpack(url, file)) files.add(file); }
 			return files;
 		}
@@ -193,30 +204,41 @@ public abstract class Utilities {
 						"Exception occured during chmodding of file '" + file.getName() + "'", e); }
 		}
 		
-		public static String fileName(URL url) {
-			String urlString = url.toExternalForm();
-			return urlString.substring(urlString.lastIndexOf('/')+1);
-		}
-		
-		public static File fileFromURL(URL url) throws RuntimeException {
-			try { return new File(url.toURI());}
+		private static URI asURI(URL url) {
+			try {
+				return new URI(url.getProtocol(), url.getAuthority(), url.getPath(), url.getQuery(), url.getRef()); }
 			catch (URISyntaxException e) { throw new RuntimeException(e); }
 		}
 		
-		public static URL composeURL(URL base, String fileName) throws RuntimeException {
-			try {
-				String b = base.toExternalForm();
-				if (!b.endsWith("/")) b += "/";
-				return new URL(b + fileName); }
+		public static URL asURL(File file) {
+			try { return file.toURI().toURL(); }
 			catch (MalformedURLException e) { throw new RuntimeException(e); }
 		}
 		
-		public static Pair<URL,String> decomposeURL(URL url) throws RuntimeException {
+		public static File asFile(URL url) {
+			return new File(asURI(url));
+		}
+		
+		public static String fileName(URL url) {
+			String file = url.getFile();
+			return URLDecoder.decode(file.substring(file.lastIndexOf('/')+1));
+		}
+		
+		public static boolean isAbsoluteFile(URL url) {
 			try {
-				String u = url.toExternalForm();
-				int i = u.lastIndexOf('/') + 1;
-				return new Pair<URL,String>(new URL(u.substring(0, i)), u.substring(i)); }
+				new File(asURI(url));
+				return true; }
+			catch (IllegalArgumentException e) {
+				return false; }
+		}
+		
+		public static URL resolveURL(URL base, String url) {
+			try { return new URL(base, url); }
 			catch (MalformedURLException e) { throw new RuntimeException(e); }
+		}
+		
+		public static String relativizeURL(URL base, URL url) {
+			return URLDecoder.decode(asURI(base).relativize(asURI(url)).toString());
 		}
 	}
 	

@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
-import static org.daisy.pipeline.braille.Utilities.Files.fileFromURL;
+import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
-import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 
 import org.slf4j.Logger;
@@ -25,13 +25,13 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 
 	private final Iterable<URL> jarURLs;
 	private final File nativeDirectory;
-	private final LiblouisTableResolver tableResolver;
+	private final ResourceResolver tableResolver;
 	private Object liblouisutdml;
 	private Method setWriteablePath;
 	private Method translateFile;
 	private boolean loaded = false;
 	
-	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
+	public LiblouisutdmlJniImpl(Iterable<URL> jarURLs, Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver) {
 		this.jarURLs = jarURLs;
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
@@ -99,7 +99,10 @@ public class LiblouisutdmlJniImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", join(semanticFiles, ","));
-			String tablePath = "\"" + fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath() + "\"";
+			URL resolvedTable = tableResolver.resolve(table);
+			if (resolvedTable == null)
+				throw new RuntimeException("Liblouis table " + table + " could not be resolved");
+			String tablePath = "\"" + asFile(resolvedTable).getCanonicalPath() + "\"";
 			settings.put("literaryTextTable", tablePath);
 			settings.put("editTable", tablePath);
 			if (otherSettings != null)

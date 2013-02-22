@@ -5,6 +5,6 @@
         <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"/>
     </scr:service>
     <scr:property name="identifier" type="String" value="http://www.liblouis.org/tables/"/>
-    <scr:property name="directory" type="String" value="/tables"/>
+    <scr:property name="path" type="String" value="/tables"/>
     <scr:property name="manifest" type="String" value="/manifest.xml"/>
 </scr:component>

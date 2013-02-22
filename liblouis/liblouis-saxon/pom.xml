@@ -45,7 +45,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>OSGI-INF/liblouis-translate.xml,OSGI-INF/liblouis-find-table.xml</Service-Component>
+            <Service-Component>OSGI-INF/liblouis-translate.xml,OSGI-INF/liblouis-lookup-table.xml</Service-Component>
           </instructions>
         </configuration>
       </plugin>

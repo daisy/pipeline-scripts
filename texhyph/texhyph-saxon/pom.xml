@@ -49,7 +49,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>OSGI-INF/activator.xml,OSGI-INF/tex-hyphenate.xml,OSGI-INF/tex-find-table.xml</Service-Component>
+            <Service-Component>OSGI-INF/activator.xml,OSGI-INF/tex-hyphenate.xml,OSGI-INF/tex-lookup-table.xml</Service-Component>
           </instructions>
         </configuration>
       </plugin>

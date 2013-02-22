@@ -1,22 +1,27 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import org.daisy.pipeline.braille.UnpackedTablePath;
+import java.util.Map;
+
+import org.daisy.pipeline.braille.BundledTablePath;
+import org.osgi.service.component.ComponentContext;
 
 import com.google.common.base.Splitter;
 
-public class LiblouisTablePath extends UnpackedTablePath {
+public class LiblouisTablePath extends BundledTablePath {
 	
-	public LiblouisTablePath() {
-		super();
+	@Override
+	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+		super.activate(context, properties);
+		unpack(context);
 	}
 	
 	/* A liblouis table name can be a comma separated list of file names */
 	@Override
-	public boolean hasTable(String tableName) {
+	protected boolean includes(String tableName) {
 		if ("".equals(tableName))
 			return false;
 		for(String t : Splitter.on(',').split(tableName))
-			if (!tableNames.contains(t)) return false;
+			if (!resources.contains(t)) return false;
 		return true;
 	}
 }

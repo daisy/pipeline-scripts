@@ -1,40 +1,35 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.daisy.pipeline.braille.Binary;
-import org.daisy.pipeline.braille.TableRegistry;
+import org.daisy.pipeline.braille.ResourceRegistry;
 import org.daisy.pipeline.braille.Utilities.OS;
-import org.daisy.pipeline.braille.Utilities.Predicates;
 import org.daisy.pipeline.braille.liblouis.internal.LiblouisJnaImpl;
 import org.daisy.pipeline.braille.liblouis.internal.LiblouisutdmlProcessBuilderImpl;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implements LiblouisTableResolver, LiblouisTableFinder {
+public class LiblouisProvider {
 	
 	private BundleContext bundleContext;
 	private boolean initialized = false;
-
+	
 	public void activate(ComponentContext context) {
 		if (!initialized) {
 			bundleContext = context.getBundleContext();
-			initialize();
 			initialized = true; }
 		publishServices();
 	}
@@ -43,31 +38,35 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 		unpublishServices();
 	}
 	
-	private Iterable<URL> jars = null;
+	private LiblouisTableRegistry tableRegistry = new LiblouisTableRegistry();
 	
-	@SuppressWarnings("unchecked")
-	private void initialize() {
-		final Bundle bundle = bundleContext.getBundle();
-		jars = Iterables.<String,URL>transform(
-			Collections.<String>list(bundle.getEntryPaths("/jars")),
-			new Function<String,URL>() {
-				public URL apply(String s) { return bundle.getEntry(s); }});
+	public void addTablePath(LiblouisTablePath path) {
+		tableRegistry.register(path);
 	}
-
+	
+	public void removeTablePath(LiblouisTablePath path) {
+		tableRegistry.unregister(path);
+	}
+	
 	private LiblouisJnaImpl liblouis;
 	private Liblouisutdml liblouisutdml;
 	private ServiceRegistration liblouisRegistration;
 	private ServiceRegistration liblouisutdmlRegistration;
+	private ServiceRegistration tableLookupRegistration;
 	
 	private void publishServices() {
 		if (!initialized) return;
+		if (tableLookupRegistration == null) {
+			tableLookupRegistration = bundleContext.registerService(
+					LiblouisTableLookup.class.getName(), tableRegistry, null);
+			logger.debug("Publishing liblouis table lookup service"); }
 		if (liblouisRegistration == null) {
 			try {
 				if (liblouis == null) {
 					liblouis = new LiblouisJnaImpl(
 						getBinaryPaths("liblouis"),
 						bundleContext.getDataFile("native/liblouis"),
-						this); }
+						tableRegistry); }
 				liblouisRegistration = bundleContext.registerService(
 					Liblouis.class.getName(), liblouis, null);
 				logger.debug("Publishing liblouis service"); }
@@ -79,7 +78,7 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 					liblouisutdml = new LiblouisutdmlProcessBuilderImpl(
 						getBinaryPaths("file2brl"),
 						bundleContext.getDataFile("native/file2brl"),
-						this); }
+						tableRegistry); }
 				liblouisutdmlRegistration = bundleContext.registerService(
 					Liblouisutdml.class.getName(), liblouisutdml, null);
 				logger.debug("Publishing liblouisutdml service"); }
@@ -88,6 +87,10 @@ public class LiblouisProvider extends TableRegistry<LiblouisTablePath> implement
 	}
 	
 	private void unpublishServices() {
+		if (tableLookupRegistration != null) {
+			tableLookupRegistration.unregister();
+			tableLookupRegistration = null;
+			logger.debug("Unpublishing liblouis table lookup service"); }
 		if (liblouisRegistration != null) {
 			liblouisRegistration.unregister();
 			liblouisRegistration = null;

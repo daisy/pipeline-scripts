@@ -13,22 +13,24 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.liblouis.LiblouisTableFinder;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableLookup;
+
+import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 @SuppressWarnings("serial")
-public class FindTableDefinition extends ExtensionFunctionDefinition {
+public class LookupTableDefinition extends ExtensionFunctionDefinition {
 
 	private static final StructuredQName funcname = new StructuredQName("louis",
-			"http://liblouis.org/liblouis", "find-table");
+			"http://liblouis.org/liblouis", "lookup-table");
 
-	private LiblouisTableFinder tableFinder = null;
+	private LiblouisTableLookup tableLookup = null;
 	
-	public void bindTableFinder(LiblouisTableFinder tableFinder) {
-		this.tableFinder = tableFinder;
+	public void bindTableLookup(LiblouisTableLookup tableLookup) {
+		this.tableLookup = tableLookup;
 	}
 
-	public void unbindTableFinder(LiblouisTableFinder tableFinder) {
-		this.tableFinder = null;
+	public void unbindTableLookup(LiblouisTableLookup tableLookup) {
+		this.tableLookup = null;
 	}
 	
 	@Override
@@ -63,11 +65,11 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
-			public SequenceIterator call(SequenceIterator[] arguments,
-					XPathContext context) throws XPathException {
+			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
+					throws XPathException {
 				
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableFinder.find(locale);
+				URL table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
 					return SingletonIterator.makeIterator(new StringValue(table.toExternalForm()));
 				return EmptyIterator.getInstance();

@@ -7,13 +7,13 @@ import java.util.Map;
 
 import net.davidashen.text.Hyphenator;
 
-import org.daisy.pipeline.braille.TableResolver;
+import org.daisy.pipeline.braille.ResourceResolver;
 
 public class TexHyphenator {
 	
-	private final TableResolver tableResolver;
+	private final ResourceResolver tableResolver;
 	
-	public TexHyphenator(TableResolver tableResolver) {
+	public TexHyphenator(ResourceResolver tableResolver) {
 		this.tableResolver = tableResolver;
 	}
 	
@@ -35,7 +35,10 @@ public class TexHyphenator {
 			Hyphenator hyphenator = hyphenatorCache.get(table);
 			if (hyphenator == null) {
 				hyphenator = new Hyphenator();
-				InputStream stream = tableResolver.resolveTable(table).openStream();
+				URL resolvedTable = tableResolver.resolve(table);
+				if (resolvedTable == null)
+					throw new RuntimeException("Hyphenation table " + table + " could not be resolved");
+				InputStream stream = resolvedTable.openStream();
 				hyphenator.loadTable(stream);
 				stream.close();
 				hyphenatorCache.put(table, hyphenator); }

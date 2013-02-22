@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.Pair;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
-import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 
 import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
-import static org.daisy.pipeline.braille.Utilities.Files.fileFromURL;
+import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.Utilities.Strings.insertHyphens;
@@ -26,9 +26,9 @@ public class LiblouisJnaImpl implements Liblouis {
 
 	private final static char SOFT_HYPHEN = '\u00AD';
 	
-	private final LiblouisTableResolver tableResolver;
+	private final ResourceResolver tableResolver;
 	
-	public LiblouisJnaImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
+	public LiblouisJnaImpl(Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver) {
 		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
 		if (!nativeURLsIterator.hasNext())
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
@@ -76,8 +76,10 @@ public class LiblouisJnaImpl implements Liblouis {
 		try {
 			Translator translator = translatorCache.get(table);
 			if (translator == null) {
-				translator = new Translator(
-						fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath());
+				URL resolvedTable = tableResolver.resolve(table);
+				if (resolvedTable == null)
+					throw new RuntimeException("Liblouis table " + table + " could not be resolved");
+				translator = new Translator(asFile(resolvedTable).getCanonicalPath());
 				translatorCache.put(table, translator); }
 			return translator; }
 		catch (Exception e) {

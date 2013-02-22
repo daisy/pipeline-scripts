@@ -13,21 +13,22 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.tex.TexHyphenatorTableFinder;
+import org.daisy.pipeline.braille.tex.TexHyphenatorTableLookup;
+import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
-public class FindTableDefinition extends ExtensionFunctionDefinition {
+public class LookupTableDefinition extends ExtensionFunctionDefinition {
 
 	private static final StructuredQName funcname = new StructuredQName("tex",
-			"http://code.google.com/p/texhyphj/", "find-table");
+			"http://code.google.com/p/texhyphj/", "lookup-table");
 
-	private TexHyphenatorTableFinder tableFinder = null;
+	private TexHyphenatorTableLookup tableLookup = null;
 	
-	public void bindTableFinder(TexHyphenatorTableFinder tableFinder) {
-		this.tableFinder = tableFinder;
+	public void bindTableLookup(TexHyphenatorTableLookup tableLookup) {
+		this.tableLookup = tableLookup;
 	}
 
-	public void unbindTableFinder(TexHyphenatorTableFinder tableFinder) {
-		this.tableFinder = null;
+	public void unbindTableLookup(TexHyphenatorTableLookup tableLookup) {
+		this.tableLookup = null;
 	}
 	
 	@Override
@@ -66,7 +67,7 @@ public class FindTableDefinition extends ExtensionFunctionDefinition {
 					XPathContext context) throws XPathException {
 				
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableFinder.find(locale);
+				URL table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
 					return SingletonIterator.makeIterator(new StringValue(table.toExternalForm()));
 				return EmptyIterator.getInstance();

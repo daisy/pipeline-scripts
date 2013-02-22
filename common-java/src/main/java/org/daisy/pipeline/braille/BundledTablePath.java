@@ -1,107 +1,59 @@
 package org.daisy.pipeline.braille;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
-import static org.daisy.pipeline.braille.Utilities.Files.fileName;
+import com.google.common.collect.ImmutableMap;
 
-import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
 
-public abstract class BundledTablePath implements TablePath {
+import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
+import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
-	protected static final String IDENTIFIER = "identifier";
-	protected static final String DIRECTORY = "directory";
-	protected static final String MANIFEST = "manifest";
-
-	protected URL identifier = null;
-	protected URL path = null;
-	protected URL manifest = null;
-	protected Collection<String> tableNames = null;
-
-	public URL getIdentifier() {
-		return identifier;
-	}
-
-	public URL getPath() {
-		return path;
-	}
-
-	public URL getManifest() {
-		return manifest;
-	}
+public abstract class BundledTablePath extends BundledResourcePath implements ResourceLookup<Locale> {
 	
-	public URL getTable(String tableName) {
-		if (hasTable(tableName)) {
-			try { return new URL(identifier.toExternalForm() + tableName); }
-			catch (Exception e) {}}
-		throw new RuntimeException("Unable to find table " + tableName);
-	}
+	private static final String MANIFEST = "manifest";
 	
-	public boolean hasTable(String tableName) {
-		return tableNames.contains(tableName);
-	}
-
-	protected Predicate<String> tableNameFilter = Predicates.<String>alwaysTrue();
+	private Map<Locale,URL> lookupMap = null;
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
-		if (properties.get(IDENTIFIER) == null
-				|| properties.get(IDENTIFIER).toString().isEmpty()) {
-			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
-		String id = properties.get(IDENTIFIER).toString();
-		try {
-			identifier = new URL(id);}
-		catch (MalformedURLException e) {
-			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL"); }
-		if (!id.matches("^http:/.*/$"))
-			throw new IllegalArgumentException(IDENTIFIER + " must be of the form 'http:/.../'");
-		if (properties.get(DIRECTORY) == null
-				|| properties.get(DIRECTORY).toString().isEmpty()) {
-			throw new IllegalArgumentException(DIRECTORY + " property must not be empty"); }
-		final Bundle bundle = context.getBundleContext().getBundle();
-		String directory = properties.get(DIRECTORY).toString();
-		path = bundle.getEntry(directory);
-		if (path == null)
-			throw new IllegalArgumentException("Table directory at location " + directory + " could not be found");
-		tableNames = new ImmutableList.Builder<String>()
-			.addAll(Iterators.<String>filter(
-				Iterators.<String,String>transform(
-					Iterators.<String>forEnumeration(bundle.getEntryPaths(directory)),
-					new Function<String,String>() {
-						public String apply(String s) { return fileName(bundle.getEntry(s)); }}),
-				tableNameFilter))
-			.build();
+		super.activate(context, properties);
 		if (properties.get(MANIFEST) != null) {
 			String manifestPath = properties.get(MANIFEST).toString();
-			manifest = bundle.getEntry(manifestPath);
-			if (manifest == null)
-				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found"); }
-	}
-
-	@Override
-	public String toString() {
-		return identifier.toExternalForm();
+			URL manifestURL = context.getBundleContext().getBundle().getEntry(manifestPath);
+			if (manifestURL == null)
+				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
+			lookupMap = readManifest(manifestURL); }
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int hash = 1;
-		hash = prime * hash + ((identifier == null) ? 0 : identifier.hashCode());
-		hash = prime * hash + ((manifest == null) ? 0 : manifest.hashCode());
-		hash = prime * hash + ((path == null) ? 0 : path.hashCode());
-		return hash;
+	public URL lookup(Locale locale) {
+		if (lookupMap == null)
+			return null;
+		return lookupMap.get(locale);
 	}
-
+	
+	private Map<Locale,URL> readManifest(URL url) {
+		Map<Locale,URL> map = new HashMap<Locale,URL>();
+		try {
+			url.openConnection();
+			InputStream reader = url.openStream();
+			Properties properties = new Properties();
+			properties.loadFromXML(reader);
+			for (String key : properties.stringPropertyNames()) {
+				Locale locale = parseLocale(key);
+				if (!map.containsKey(locale)) {
+					map.put(locale, resolveURL(identifier, properties.getProperty(key))); }}
+			reader.close();
+			return new ImmutableMap.Builder<Locale,URL>().putAll(map).build(); }
+		catch (Exception e) {
+			throw new RuntimeException("Could not read manifest for table path " + getIdentifier(), e); }
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (this == object)
@@ -110,16 +62,6 @@ public abstract class BundledTablePath implements TablePath {
 			return false;
 		if (getClass() != object.getClass())
 			return false;
-		TablePath that = (TablePath)object;
-		if (!this.identifier.equals(that.getIdentifier()))
-			return false;
-		if (!this.path.equals(that.getPath()))
-			return false;
-		if (manifest == null) {
-			if (that.getManifest() != null)
-				return false; }
-		else if (!manifest.equals(that.getManifest()))
-			return false;
-		return true;
+		return super.equals((BundledResourcePath)object);
 	}
 }

@@ -14,13 +14,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
-import static org.daisy.pipeline.braille.Utilities.Files.fileFromURL;
+import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Files.fileName;
 import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
+import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.VoidFunction;
-import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 
 import org.slf4j.Logger;
@@ -29,12 +29,11 @@ import org.slf4j.LoggerFactory;
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
 	private final File file2brl;
-	private final LiblouisTableResolver tableResolver;
+	private final ResourceResolver tableResolver;
 	
-	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, LiblouisTableResolver tableResolver) {
+	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver) {
 		try {
-			file2brl = new File(unpackDirectory.getAbsolutePath() + File.separator
-					+ fileName(nativeURLs.iterator().next())); }
+			file2brl = new File(unpackDirectory.getAbsolutePath(), fileName(nativeURLs.iterator().next())); }
 		catch (NoSuchElementException e) {
 			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
 		for (File file : unpack(nativeURLs.iterator(), unpackDirectory)) {
@@ -73,7 +72,10 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			Map<String,String> settings = new HashMap<String,String>();
 			if (semanticFiles != null)
 				settings.put("semanticFiles", join(semanticFiles, ","));
-			String tablePath = "\"" + fileFromURL(tableResolver.resolveTable(table)).getCanonicalPath() + "\"";
+			URL resolvedTable = tableResolver.resolve(table);
+			if (resolvedTable == null)
+				throw new RuntimeException("Liblouis table " + table + " could not be resolved");
+			String tablePath = "\"" + asFile(resolvedTable).getCanonicalPath() + "\"";
 			settings.put("literaryTextTable", tablePath);
 			settings.put("editTable", tablePath);
 			if (otherSettings != null)
