@@ -15,9 +15,9 @@
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:choose>
-                <xsl:when test="$toc//*[@css:toc-item and @ref=$id]">
+                <xsl:when test="$toc//louis:toc-item[@ref=$id]">
                     <louis:toc-item>
-                        <xsl:copy-of select="$toc//*[@css:toc-item and @ref=$id]/@louis:style"/>
+                        <xsl:copy-of select="$toc//louis:toc-item[@ref=$id]/@louis:style"/>
                         <xsl:apply-templates select="node()"/>
                     </louis:toc-item>
                 </xsl:when>

@@ -167,6 +167,13 @@
                  'font-weight',
                  'text-decoration',
                  'color')"/>
+    
+    <xsl:variable name="paged-properties" as="xs:string*"
+        select="('page-break-before',
+                 'page-break-after',
+                 'page-break-inside',
+                 'orphans',
+                 'widows')"/>
 
     <xsl:function name="css:get-properties" as="xs:string*">
         <xsl:sequence select="$properties"/>

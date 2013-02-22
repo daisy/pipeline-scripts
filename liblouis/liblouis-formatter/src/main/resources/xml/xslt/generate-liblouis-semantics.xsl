@@ -9,13 +9,11 @@
 
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl"/>
-    
     <xsl:template match="/">
         <louis:semantics>
             <xsl:choose>
                 <xsl:when test="/louis:toc">
-                    <xsl:for-each select="distinct-values(//*[@css:toc-item]/@louis:style/string())">
+                    <xsl:for-each select="distinct-values(//louis:toc-item/@louis:style/string())">
                         <xsl:value-of select="concat('heading', position())"/>
                         <xsl:text> &amp;xpath(//louis:toc-item[@louis:style='</xsl:text>
                         <xsl:value-of select="."/>

@@ -18,7 +18,10 @@
     
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="generate-liblouis-files.xpl"/>
+    <p:import href="utils/xslt-for-each.xpl"/>
+    <p:import href="utils/extract.xpl"/>
+    <p:import href="split-into-sections.xpl"/>
+    <p:import href="attach-liblouis-config.xpl"/>
     <p:import href="format-box.xpl"/>
     <p:import href="format-toc.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
@@ -34,6 +37,18 @@
     <px:mkdir>
         <p:with-option name="href" select="$temp-dir"/>
     </px:mkdir>
+    
+    <p:xslt name="liblouis-page-layouts">
+        <p:input port="source">
+            <p:pipe step="format" port="page-layout"/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/generate-liblouis-page-layouts.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
     
     <p:for-each>
         <p:iteration-source>
@@ -57,9 +72,12 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="handle-css-string-set">
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="../xslt/handle-print-page.xsl"/>
+                <p:document href="../xslt/handle-css-string-set.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -67,106 +85,112 @@
         </p:xslt>
     </p:for-each>
     
-    <p:for-each name="get-page-layout">
-        <p:output port="result" sequence="true" primary="true"/>
-        <p:xslt name="page-layout">
-            <p:input port="source">
-                <p:pipe step="get-page-layout" port="current"/>
-                <p:pipe step="format" port="page-layout"/>
-            </p:input>
+    <p:for-each name="handle-css-display-none">
+        <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="../xslt/get-page-layout.xsl"/>
+                <p:document href="../xslt/handle-css-display-none.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <p:wrap-sequence wrapper="wrapper">
-            <p:input port="source">
-                <p:pipe step="get-page-layout" port="current"/>
-                <p:pipe step="page-layout" port="result"/>
+    </p:for-each>
+    
+    <pxi:xslt-for-each name="handle-css-toc-item">
+        <p:input port="stylesheet">
+            <p:document href="../xslt/handle-css-toc-item.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </pxi:xslt-for-each>
+    
+    <p:for-each name="handle-css-page">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-css-page.xsl"/>
             </p:input>
-        </p:wrap-sequence>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
     </p:for-each>
     
-    <p:for-each name="handle-css">
-        <p:output port="result" sequence="true" primary="true"/>
-        <p:filter select="/*/*[2]" name="page-layout"/>
-        <p:viewport match="/*/*[1]">
-            <p:viewport-source>
-                <p:pipe step="handle-css" port="current"/>
-            </p:viewport-source>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/handle-toc.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/handle-margin-border-padding.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="page-layout" port="result"/>
-                </p:input>
-            </p:xslt>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/normalize-css.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
-        </p:viewport>
-    </p:for-each>
-    
-    <p:group name="extract-toc">
-        <p:output port="result" sequence="true" primary="true"/>
-        <p:output port="result-toc" sequence="true">
-            <p:pipe step="filter-toc" port="result"/>
-        </p:output>
-        <p:group name="filter-toc">
-            <p:output port="result" sequence="true" primary="true"/>
-            <p:for-each>
-                <p:iteration-source>
-                    <p:pipe step="handle-css" port="result"/>
-                </p:iteration-source>
-                <p:filter select="//louis:toc"/>
-            </p:for-each>
-            <p:for-each>
-                <p:add-xml-base/>
-            </p:for-each>
-        </p:group>
+    <p:for-each name="split-into-sections">
+        <pxi:split-into-sections/>
         <p:for-each>
-            <p:iteration-source>
-                <p:pipe step="handle-css" port="result"/>
-            </p:iteration-source>
-            <p:viewport match="//louis:toc" name="tocs">
-                <p:rename match="/*" new-name="louis:include"/>
-                <p:delete match="/*/*|/*/@*"/>
-                <p:add-attribute match="/*" attribute-name="ref">
-                    <p:with-option name="attribute-value" select="/*/@xml:id">
-                        <p:pipe step="tocs" port="current"/>
-                    </p:with-option>
-                </p:add-attribute>
-            </p:viewport>
+            <p:variable name="i" select="p:iteration-position()"/>
+            <p:add-attribute match="/*" attribute-name="xml:base">
+                <p:with-option name="attribute-value" select="concat(replace(base-uri(/*),'.xml$',''),'/section_', $i,'.xml')"/>
+            </p:add-attribute>
         </p:for-each>
-    </p:group>
+    </p:for-each>
     
-    <pxi:generate-liblouis-files name="liblouis-files">
-        <p:input port="source">
-            <p:pipe step="extract-toc" port="result"/>
+    <p:for-each name="attach-liblouis-page-layout">
+        <p:filter name="liblouis-page-layout">
+            <p:input port="source">
+                <p:pipe step="liblouis-page-layouts" port="result"/>
+            </p:input>
+            <p:with-option name="select"
+                select="concat('//louis:page-layout[@name=&quot;', /*/@css:page, '&quot;]')">
+                <p:pipe step="attach-liblouis-page-layout" port="current"/>
+            </p:with-option>
+        </p:filter>
+        <p:sink/>
+        <p:insert match="/*" position="last-child">
+            <p:input port="source">
+                <p:pipe step="attach-liblouis-page-layout" port="current"/>
+            </p:input>
+            <p:input port="insertion">
+                <p:pipe step="liblouis-page-layout" port="result"/>
+            </p:input>
+        </p:insert>
+    </p:for-each>
+    
+    <p:for-each name="handle-css-box-model">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-css-box-model.xsl"/>
+            </p:input>
+            <p:input port="parameters" select="/*/louis:page-layout/c:param-set">
+                <p:pipe step="handle-css-box-model" port="current"/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="normalize-css">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/normalize-css.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <pxi:xslt-for-each name="group-toc-items">
+        <p:input port="stylesheet">
+            <p:document href="../xslt/group-toc-items.xsl"/>
         </p:input>
-        <p:input port="source-toc">
-            <p:pipe step="extract-toc" port="result-toc"/>
+        <p:input port="parameters">
+            <p:empty/>
         </p:input>
+    </pxi:xslt-for-each>
+    
+    <p:for-each name="extract-toc">
+        <p:output port="result" sequence="true" primary="true">
+            <p:pipe step="extract" port="result"/>
+            <p:pipe step="extract" port="extracted"/>
+        </p:output>
+        <pxi:extract name="extract" match="louis:toc" label="concat('toc_', $p:index)"/>
+    </p:for-each>
+    
+    <pxi:attach-liblouis-config name="attach-liblouis-config">
         <p:with-option name="directory" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </pxi:generate-liblouis-files>
+    </pxi:attach-liblouis-config>
     
     <p:for-each>
         <pxi:format-box>
@@ -175,33 +199,33 @@
     </p:for-each>
     
     <pxi:format-toc>
-        <p:input port="source-toc">
-            <p:pipe step="liblouis-files" port="result-toc"/>
-        </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
     </pxi:format-toc>
     
+    <p:split-sequence name="split-sequence" test="not(/louis:toc)"/>
+    
     <p:for-each name="translate-file">
+        <p:iteration-source>
+            <p:pipe step="split-sequence" port="matched"/>
+        </p:iteration-source>
+        <p:variable name="width" select="/*/louis:page-layout//c:param[@name='page-width']/@value"/>
         <louis:translate-file>
-            <p:input port="source" select="/*/*[1]"/>
-            <p:input port="styles" select="/*/*[2]"/>
-            <p:input port="semantics" select="/*/*[3]"/>
-            <p:input port="page-layout" select="/*/*[4]">
+            <p:input port="styles" select="/*/louis:styles/d:fileset"/>
+            <p:input port="semantics" select="/*/louis:semantics/d:fileset"/>
+            <p:input port="page-layout" select="/*/louis:page-layout/c:param-set">
                 <p:pipe step="translate-file" port="current"/>
             </p:input>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </louis:translate-file>
-    </p:for-each>
-    
-    <!-- Convert to pef with brailleutils -->
-    
-    <p:for-each>
         <pef:text2pef>
             <p:with-option name="table" select="$pef-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>
+        <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="cols">
+            <p:with-option name="attribute-value" select="replace($width,'\.0*$','')"/>
+        </p:add-attribute>
     </p:for-each>
     
     <pef:merge>
