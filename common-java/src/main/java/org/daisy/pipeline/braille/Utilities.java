@@ -139,10 +139,10 @@ public abstract class Utilities {
 				char c = string.charAt(i);
 				if (c == hyphen)
 					seenHyphen = true;
-				else
+				else {
 					unhyphenatedString.append(c);
 					hyphens.add(seenHyphen);
-					seenHyphen = false; }
+					seenHyphen = false; }}
 			hyphens.remove(0);
 			return new Pair<String,boolean[]>(unhyphenatedString.toString(), Booleans.toArray(hyphens));
 		}
