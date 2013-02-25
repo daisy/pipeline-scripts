@@ -21,7 +21,15 @@ public class TexHyphenatorProvider extends TableRegistry<TexHyphenatorTablePath>
 	public void deactivate() {
 		unpublishServices();
 	}
-
+	
+	public void addTablePath(TexHyphenatorTablePath path) {
+		register(path);
+	}
+	
+	public void removeTablePath(TexHyphenatorTablePath path) {
+		unregister(path);
+	}
+	
 	private ServiceRegistration hyphenatorRegistration;
 	
 	private void publishServices() {

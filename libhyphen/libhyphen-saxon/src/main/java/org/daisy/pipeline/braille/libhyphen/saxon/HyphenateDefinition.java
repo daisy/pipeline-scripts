@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.tex.saxon;
+package org.daisy.pipeline.braille.libhyphen.saxon;
 
 import java.net.URL;
 
@@ -15,21 +15,21 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.tex.TexHyphenator;
+import org.daisy.pipeline.braille.libhyphen.Libhyphen;
 
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
-	private static final StructuredQName funcname = new StructuredQName("tex",
-			"http://code.google.com/p/texhyphj/", "hyphenate");
+	private static final StructuredQName funcname = new StructuredQName("hyphen",
+			"http://hunspell.sourceforge.net/Hyphen", "hyphenate");
 	
-	private TexHyphenator hyphenator = null;
+	private Libhyphen libhyphen = null;
 	
-	public void bindHyphenator(TexHyphenator hyphenator) {
-		this.hyphenator = hyphenator;
+	public void bindLibhyphen(Libhyphen libhyphen) {
+		this.libhyphen = libhyphen;
 	}
 	
-	public void unbindHyphenator(TexHyphenator hyphenator) {
-		this.hyphenator = null;
+	public void unbindLibhyphen(Libhyphen libhyphen) {
+		this.libhyphen = null;
 	}
 	
 	public StructuredQName getFunctionQName() {
@@ -66,10 +66,10 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					URL table = new URL(((StringValue)arguments[0].next()).getStringValue());
 					String text = ((StringValue)arguments[1].next()).getStringValue();
 					return SingletonIterator.makeIterator(
-						new StringValue(hyphenator.hyphenate(table, text))); }
+						new StringValue(libhyphen.hyphenate(table, text))); }
 				catch (Exception e) {
-					logger.error("tex:hyphenate failed", e);
-					throw new XPathException("tex:hyphenate failed"); }
+					logger.error("hyphen:hyphenate failed", e);
+					throw new XPathException("hyphen:hyphenate failed"); }
 			}
 			
 			private static final long serialVersionUID = 1L;

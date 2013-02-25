@@ -32,7 +32,6 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		this.liblouis = null;
 	}
 	
-	@Override
 	public StructuredQName getFunctionQName() {
 		return funcname;
 	}
@@ -47,7 +46,6 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		return 4;
 	}
 	
-	@Override
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] {
 				SequenceType.SINGLE_STRING,
@@ -56,17 +54,14 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				SequenceType.SINGLE_BOOLEAN};
 	}
 	
-	@Override
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
 		return SequenceType.OPTIONAL_STRING;
 	}
 	
-	@Override
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			@Override
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
 					throws XPathException {
 				

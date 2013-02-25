@@ -24,6 +24,7 @@
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
     <braille.dtbook-to-pef.version>${braille.modules.version}</braille.dtbook-to-pef.version>
+    <braille.libhyphen-saxon.version>${braille.modules.version}</braille.libhyphen-saxon.version>
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
     <braille.liblouis-formatter.version>${braille.modules.version}</braille.liblouis-formatter.version>
@@ -57,6 +58,7 @@
     <module>liblouis/liblouis-formatter</module>
     <module>liblouis/liblouis-mathml</module>
     <module>dotify/dotify-saxon</module>
+    <module>libhyphen/libhyphen-saxon</module>
     <module>texhyph/texhyph-saxon</module>
     <module>pef/pef-to-html</module>
     <module>xml-to-pef</module>
@@ -91,6 +93,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>dtbook-to-pef</artifactId>
         <version>${braille.dtbook-to-pef.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>libhyphen-saxon</artifactId>
+        <version>${braille.libhyphen-saxon.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -246,6 +253,11 @@
         <artifactId>slf4j-api</artifactId>
         <version>1.6.4</version>
       </dependency>
+      <dependency>
+        <groupId>ch.sbs</groupId>
+        <artifactId>jhyphen</artifactId>
+        <version>0.1.4-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -255,12 +267,16 @@
       <name>Maven Central</name>
       <url>http://repo.maven.apache.org/maven2/</url>
     </repository>
-    <!-- Remove when texhyphj is in sonatype-nexus-snapshots-->
+    <!-- TODO Remove when texhyphj and jhyphen are in sonatype-nexus-snapshots-->
     <repository>
       <id>bertfrees-github-snapshots</id>
       <url>http://bertfrees.github.com/snapshots</url>
-      <releases><enabled>false</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
 

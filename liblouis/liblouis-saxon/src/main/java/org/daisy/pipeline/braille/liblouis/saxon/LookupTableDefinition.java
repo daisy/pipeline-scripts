@@ -19,52 +19,47 @@ import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 @SuppressWarnings("serial")
 public class LookupTableDefinition extends ExtensionFunctionDefinition {
-
+	
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "lookup-table");
-
+	
 	private LiblouisTableLookup tableLookup = null;
 	
 	public void bindTableLookup(LiblouisTableLookup tableLookup) {
 		this.tableLookup = tableLookup;
 	}
-
+	
 	public void unbindTableLookup(LiblouisTableLookup tableLookup) {
 		this.tableLookup = null;
 	}
 	
-	@Override
 	public StructuredQName getFunctionQName() {
 		return funcname;
 	}
-
+	
 	@Override
 	public int getMinimumNumberOfArguments() {
 		return 1;
 	}
-
+	
 	@Override
 	public int getMaximumNumberOfArguments() {
 		return 1;
 	}
-
-	@Override
+	
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] { SequenceType.SINGLE_STRING };
 	}
-
-	@Override
+	
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
 		return SequenceType.OPTIONAL_STRING;
 	}
-
-	@Override
+	
 	public ExtensionFunctionCall makeCallExpression() {
 		
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			@Override
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
 					throws XPathException {
 				

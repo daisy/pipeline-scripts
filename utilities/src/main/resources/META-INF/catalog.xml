@@ -10,5 +10,6 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate-and-hyphenate.xsl" uri="../xml/xslt/generic-liblouis-translate-and-hyphenate.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate-with-emphasis.xsl" uri="../xml/xslt/generic-liblouis-translate-with-emphasis.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-tex-hyphenate.xsl" uri="../xml/xslt/generic-tex-hyphenate.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-libhyphen-hyphenate.xsl" uri="../xml/xslt/generic-libhyphen-hyphenate.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
 </catalog>

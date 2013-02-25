@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.tex.saxon;
+package org.daisy.pipeline.braille.libhyphen.saxon;
 
 import java.net.URL;
 
@@ -13,21 +13,21 @@ import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.tex.TexHyphenatorTableLookup;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTableLookup;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	
-	private static final StructuredQName funcname = new StructuredQName("tex",
-			"http://code.google.com/p/texhyphj/", "lookup-table");
+	private static final StructuredQName funcname = new StructuredQName("hyphen",
+			"http://hunspell.sourceforge.net/Hyphen", "lookup-table");
 	
-	private TexHyphenatorTableLookup tableLookup = null;
+	private LibhyphenTableLookup tableLookup = null;
 	
-	public void bindTableLookup(TexHyphenatorTableLookup tableLookup) {
+	public void bindTableLookup(LibhyphenTableLookup tableLookup) {
 		this.tableLookup = tableLookup;
 	}
 	
-	public void unbindTableLookup(TexHyphenatorTableLookup tableLookup) {
+	public void unbindTableLookup(LibhyphenTableLookup tableLookup) {
 		this.tableLookup = null;
 	}
 	

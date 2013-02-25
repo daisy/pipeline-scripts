@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis translateFile step">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="louis:translate-file">
    <scr:implementation class="org.daisy.pipeline.braille.liblouis.calabash.TranslateFileProvider"/>
    <scr:service>
       <scr:provide interface="org.daisy.common.xproc.calabash.XProcStepProvider"/>
