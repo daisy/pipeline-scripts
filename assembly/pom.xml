@@ -91,10 +91,6 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>common-java</artifactId>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>braillecss</artifactId>
                 </artifactItem>
                 <artifactItem>
@@ -103,7 +99,23 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>common-java</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>dotify-saxon</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>dtbook-to-pef</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>libhyphen-core</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>libhyphen-saxon</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -116,6 +128,10 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>liblouis-formatter</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>liblouis-mathml</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -142,11 +158,11 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>dotify-saxon</artifactId>
+                  <artifactId>pef-calabash</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>pef-calabash</artifactId>
+                  <artifactId>pef-saxon</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -155,6 +171,10 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>pef-utils</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>texhyph-core</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -202,6 +222,10 @@
                   <artifactId>brailleutils-core</artifactId>
                 </artifactItem>
                 <artifactItem>
+                  <groupId>org.daisy.libs</groupId>
+                  <artifactId>brailleutils-catalog</artifactId>
+                </artifactItem>
+                <artifactItem>
                   <groupId>org.apache.aries.spifly</groupId>
                   <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
                   <version>0.4-SNAPSHOT</version>
@@ -230,6 +254,10 @@
                 <artifactItem>
                   <groupId>net.java.dev.jna</groupId>
                   <artifactId>jna</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>ch.sbs</groupId>
+                  <artifactId>jhyphen</artifactId>
                 </artifactItem>
               </artifactItems>
             </configuration>
