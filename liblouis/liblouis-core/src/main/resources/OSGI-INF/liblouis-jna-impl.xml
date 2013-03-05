@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="Liblouis JNA implementation">
+    <implementation class="org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.Liblouis"/>
+    </scr:service>
+    <scr:reference bind="bindTableResolver"
+        unbind="unbindTableResolver"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisTableResolver"
+        cardinality="1..1"
+        name="LiblouisTableResolver"
+        policy="dynamic"/>
+    <scr:reference bind="bindBinary"
+        unbind="unbindBinary"
+        interface="org.daisy.pipeline.braille.Binary"
+        cardinality="1..n"
+        name="LiblouisBinary"
+        policy="dynamic"/>
+</scr:component>

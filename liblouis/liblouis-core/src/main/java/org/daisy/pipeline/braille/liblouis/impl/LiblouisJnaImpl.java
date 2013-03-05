@@ -1,18 +1,16 @@
-package org.daisy.pipeline.braille.liblouis.internal;
+package org.daisy.pipeline.braille.liblouis.impl;
 
-import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
+import org.daisy.pipeline.braille.Binary;
 import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.Pair;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 
-import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.Utilities.Strings.insertHyphens;
 
@@ -23,20 +21,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LiblouisJnaImpl implements Liblouis {
-
+	
 	private final static char SOFT_HYPHEN = '\u00AD';
 	
-	private final ResourceResolver tableResolver;
+	private Binary binary;
+	private ResourceResolver tableResolver;
 	
-	public LiblouisJnaImpl(Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver) {
-		Iterator<URL> nativeURLsIterator = nativeURLs.iterator();
-		if (!nativeURLsIterator.hasNext())
-			throw new IllegalArgumentException("Argument nativeURLs must not be empty");
-		File file = unpack(nativeURLsIterator, unpackDirectory).iterator().next();
-		if (!file.getName().endsWith(".dll")) chmod775(file);
-		Louis.setLibraryPath(file);
-		logger.debug("Loading liblouis service: version {} ({})", Louis.getLibrary().lou_version(), file);
+	protected void activate() {
+		logger.debug("Loading liblouis service: version {}", Louis.getLibrary().lou_version());
+	}
+	
+	protected void deactivate() {
+		logger.debug("Unloading liblouis service");
+	}
+	
+	protected void bindBinary(Binary binary) {
+		if (this.binary == null && "liblouis".equals(binary.getName())) {
+			this.binary = binary;
+			Louis.setLibraryPath(asFile(binary.getPaths().iterator().next()));
+			logger.debug("Registering binary: " + binary); }
+	}
+	
+	protected void unbindBinary(Binary binary) {
+		if (binary.equals(this.binary))
+			this.binary = null;
+	}
+	
+	protected void bindTableResolver(LiblouisTableResolver tableResolver) {
 		this.tableResolver = tableResolver;
+	}
+	
+	protected void unbindTableResolver(LiblouisTableResolver path) {
+		this.tableResolver = null;
 	}
 	
 	/**
@@ -87,5 +103,5 @@ public class LiblouisJnaImpl implements Liblouis {
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);
-
+	
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="Liblouisutdml ProcessBuilder implementation">
+    <implementation class="org.daisy.pipeline.braille.liblouis.impl.LiblouisutdmlProcessBuilderImpl"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.Liblouisutdml"/>
+    </scr:service>
+    <scr:reference bind="bindTableResolver"
+        unbind="unbindTableResolver"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisTableResolver"
+        cardinality="1..1"
+        name="LiblouisTableResolver"
+        policy="dynamic"/>
+    <scr:reference bind="bindConfigResolver"
+        unbind="unbindConfigResolver"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver"
+        cardinality="1..1"
+        name="LiblouisutdmlConfigResolver"
+        policy="dynamic"/>
+    <scr:reference bind="bindBinary"
+        unbind="unbindBinary"
+        interface="org.daisy.pipeline.braille.Binary"
+        cardinality="1..n"
+        name="File2brlBinary"
+        policy="dynamic"/>
+</scr:component>

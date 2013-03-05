@@ -13,21 +13,13 @@
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
-  <artifactId>liblouis-core</artifactId>
-  <version>${braille.liblouis-core.version}</version>
+  <artifactId>libhyphen-core</artifactId>
+  <version>${braille.libhyphen-core.version}</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 module :: liblouis-core</name>
+  <name>DAISY Pipeline 2 module :: libhyphen-core</name>
 
   <dependencies>
-    <dependency>
-      <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.liblouis</groupId>
-      <artifactId>liblouis-java</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
@@ -37,12 +29,12 @@
       <artifactId>org.osgi.compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <groupId>ch.sbs</groupId>
+      <artifactId>jhyphen</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.guava-osgi</groupId>
-      <artifactId>guava-osgi</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -51,15 +43,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <targetPath>jars</targetPath>
-        <directory>${basedir}/target/generated-resources</directory>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
@@ -67,10 +50,9 @@
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/liblouis-jna-impl.xml,
-              OSGI-INF/liblouis-table-registry.xml,
-              OSGI-INF/liblouisutdml-config-registry.xml,
-              OSGI-INF/liblouisutdml-process-builder-impl.xml</Service-Component>
+              OSGI-INF/libhyphen.xml,
+              OSGI-INF/libhyphen-table-registry.xml
+            </Service-Component>
           </instructions>
         </configuration>
       </plugin>

@@ -24,6 +24,8 @@
     <braille.css-calabash.version>${braille.modules.version}</braille.css-calabash.version>
     <braille.dotify-saxon.version>${braille.modules.version}</braille.dotify-saxon.version>
     <braille.dtbook-to-pef.version>${braille.modules.version}</braille.dtbook-to-pef.version>
+    <braille.libhyphen-core.version>${braille.modules.version}</braille.libhyphen-core.version>
+    <braille.libhyphen-native.version>${braille.modules.version}</braille.libhyphen-native.version>
     <braille.libhyphen-saxon.version>${braille.modules.version}</braille.libhyphen-saxon.version>
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
@@ -36,6 +38,7 @@
     <braille.pef-saxon.version>${braille.modules.version}</braille.pef-saxon.version>
     <braille.pef-to-html.version>${braille.modules.version}</braille.pef-to-html.version>
     <braille.pef-utils.version>${braille.modules.version}</braille.pef-utils.version>
+    <braille.texhyph-core.version>${braille.modules.version}</braille.texhyph-core.version>
     <braille.texhyph-saxon.version>${braille.modules.version}</braille.texhyph-saxon.version>
     <braille.utilities.version>${braille.modules.version}</braille.utilities.version>
     <braille.xml-to-pef.version>${braille.modules.version}</braille.xml-to-pef.version>
@@ -58,7 +61,9 @@
     <module>liblouis/liblouis-formatter</module>
     <module>liblouis/liblouis-mathml</module>
     <module>dotify/dotify-saxon</module>
+    <module>libhyphen/libhyphen-core</module>
     <module>libhyphen/libhyphen-saxon</module>
+    <module>texhyph/texhyph-core</module>
     <module>texhyph/texhyph-saxon</module>
     <module>pef/pef-to-html</module>
     <module>xml-to-pef</module>
@@ -93,6 +98,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>dtbook-to-pef</artifactId>
         <version>${braille.dtbook-to-pef.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>libhyphen-core</artifactId>
+        <version>${braille.libhyphen-core.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -153,6 +163,11 @@
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>pef-utils</artifactId>
         <version>${braille.pef-utils.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>texhyph-core</artifactId>
+        <version>${braille.texhyph-core.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>

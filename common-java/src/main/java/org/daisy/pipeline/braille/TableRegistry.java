@@ -8,13 +8,13 @@ import java.util.Map;
 public abstract class TableRegistry<T extends BundledTablePath> extends ResourceRegistry<T> implements ResourceLookup<Locale> {
 	
 	@Override
-	public void register(T path) {
+	protected void register(T path) {
 		super.register(path);
 		lookupCache.clear();
 	}
 	
 	@Override
-	public void unregister(T path) {
+	protected void unregister(T path) {
 		super.unregister(path);
 		lookupCache.clear();
 	}

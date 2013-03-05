@@ -56,11 +56,11 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 	private Liblouisutdml liblouisutdml = null;
 	
-	public void bindLiblouisutdml(Liblouisutdml liblouisutdml) {
+	protected void bindLiblouisutdml(Liblouisutdml liblouisutdml) {
 		this.liblouisutdml = liblouisutdml;
 	}
 	
-	public void unbindLiblouisutdml(Liblouisutdml liblouisutdml) {
+	protected void unbindLiblouisutdml(Liblouisutdml liblouisutdml) {
 		this.liblouisutdml = null;
 	}
 	

@@ -33,8 +33,8 @@
       <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.texhyphj</groupId>
-      <artifactId>texhyphj</artifactId>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>texhyph-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -49,7 +49,10 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>OSGI-INF/activator.xml,OSGI-INF/tex-hyphenate.xml,OSGI-INF/tex-lookup-table.xml</Service-Component>
+            <Service-Component>
+              OSGI-INF/tex-hyphenate.xml,
+              OSGI-INF/tex-lookup-table.xml
+            </Service-Component>
           </instructions>
         </configuration>
       </plugin>

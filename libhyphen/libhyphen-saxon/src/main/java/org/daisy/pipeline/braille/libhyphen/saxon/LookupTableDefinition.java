@@ -23,11 +23,11 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	
 	private LibhyphenTableLookup tableLookup = null;
 	
-	public void bindTableLookup(LibhyphenTableLookup tableLookup) {
+	protected void bindTableLookup(LibhyphenTableLookup tableLookup) {
 		this.tableLookup = tableLookup;
 	}
 	
-	public void unbindTableLookup(LibhyphenTableLookup tableLookup) {
+	protected void unbindTableLookup(LibhyphenTableLookup tableLookup) {
 		this.tableLookup = null;
 	}
 	

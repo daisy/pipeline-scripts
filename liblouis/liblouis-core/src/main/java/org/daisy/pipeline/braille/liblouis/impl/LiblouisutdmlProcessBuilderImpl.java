@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.internal;
+package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,36 +11,62 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
-import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Files.fileName;
-import static org.daisy.pipeline.braille.Utilities.Files.unpack;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
+import org.daisy.pipeline.braille.Binary;
 import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.VoidFunction;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
+import org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
-	private final File file2brl;
-	private final ResourceResolver tableResolver;
-	private final ResourceResolver configResolver;
+	private Binary binary;
+	private File file2brl;
+	private ResourceResolver tableResolver;
+	private ResourceResolver configResolver;
 	
-	public LiblouisutdmlProcessBuilderImpl(Iterable<URL> nativeURLs, File unpackDirectory, ResourceResolver tableResolver, ResourceResolver configResolver) {
-		try {
-			file2brl = new File(unpackDirectory.getAbsolutePath(), fileName(nativeURLs.iterator().next())); }
-		catch (NoSuchElementException e) {
-			throw new IllegalArgumentException("Argument nativeURLs must not be empty"); }
-		for (File file : unpack(nativeURLs.iterator(), unpackDirectory)) {
-			if (!file.getName().matches(".*\\.(dll|exe)$")) chmod775(file); }
+	protected void activate() {
+		logger.debug("Loading liblouisutdml service");
+	}
+	
+	protected void deactivate() {
+		logger.debug("Unloading liblouisutdml service");
+	}
+	
+	protected void bindBinary(Binary binary) {
+		if (this.binary == null && "file2brl".equals(binary.getName())) {
+			this.binary = binary;
+			file2brl = asFile(binary.getPaths().iterator().next());
+			logger.debug("Registering binary: " + binary); }
+	}
+	
+	protected void unbindBinary(Binary binary) {
+		if (binary.equals(this.binary)) {
+			this.binary = null;
+			file2brl = null; }
+	}
+	
+	protected void bindTableResolver(LiblouisTableResolver tableResolver) {
 		this.tableResolver = tableResolver;
+	}
+	
+	protected void unbindTableResolver(LiblouisTableResolver path) {
+		this.tableResolver = null;
+	}
+	
+	protected void bindConfigResolver(LiblouisutdmlConfigResolver configResolver) {
 		this.configResolver = configResolver;
+	}
+	
+	protected void unbindTableResolver(LiblouisutdmlConfigResolver path) {
+		this.configResolver = null;
 	}
 	
 	/**

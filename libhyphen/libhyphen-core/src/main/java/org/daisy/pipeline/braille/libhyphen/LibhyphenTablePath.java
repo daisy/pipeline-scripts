@@ -8,7 +8,7 @@ import org.osgi.service.component.ComponentContext;
 public class LibhyphenTablePath extends BundledTablePath {
 	
 	@Override
-	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		super.activate(context, properties);
 		unpack(context);
 	}

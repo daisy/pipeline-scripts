@@ -6,17 +6,37 @@ import java.util.Map;
 
 import ch.sbs.jhyphen.Hyphenator;
 
+import org.daisy.pipeline.braille.Binary;
 import org.daisy.pipeline.braille.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 
 public class Libhyphen {
 	
 	private static final char SOFT_HYPHEN = '\u00AD';
 	
-	private final ResourceResolver tableResolver;
+	private ResourceResolver tableResolver;
 	
-	public Libhyphen(ResourceResolver tableResolver) {
+	protected void activate() {
+		logger.debug("Loading libhyphen service");
+	}
+	
+	protected void deactivate() {
+		logger.debug("Unloading libhyphen service");
+	}
+	
+	protected void bindBinary(Binary binary) {}
+	
+	protected void unbindBinary(Binary binary) {}
+	
+	protected void bindTableResolver(LibhyphenTableResolver tableResolver) {
 		this.tableResolver = tableResolver;
+	}
+	
+	protected void unbindTableResolver(LibhyphenTableResolver path) {
+		this.tableResolver = null;
 	}
 	
 	/**
@@ -45,4 +65,6 @@ public class Libhyphen {
 		catch (Exception e) {
 			throw new RuntimeException(e); }
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(Libhyphen.class);
 }

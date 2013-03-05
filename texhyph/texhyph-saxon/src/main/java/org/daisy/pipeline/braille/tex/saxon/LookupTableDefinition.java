@@ -23,11 +23,11 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	
 	private TexHyphenatorTableLookup tableLookup = null;
 	
-	public void bindTableLookup(TexHyphenatorTableLookup tableLookup) {
+	protected void bindTableLookup(TexHyphenatorTableLookup tableLookup) {
 		this.tableLookup = tableLookup;
 	}
 	
-	public void unbindTableLookup(TexHyphenatorTableLookup tableLookup) {
+	protected void unbindTableLookup(TexHyphenatorTableLookup tableLookup) {
 		this.tableLookup = null;
 	}
 	

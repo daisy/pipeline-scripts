@@ -25,11 +25,11 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	
 	private LiblouisTableLookup tableLookup = null;
 	
-	public void bindTableLookup(LiblouisTableLookup tableLookup) {
+	protected void bindTableLookup(LiblouisTableLookup tableLookup) {
 		this.tableLookup = tableLookup;
 	}
 	
-	public void unbindTableLookup(LiblouisTableLookup tableLookup) {
+	protected void unbindTableLookup(LiblouisTableLookup tableLookup) {
 		this.tableLookup = null;
 	}
 	

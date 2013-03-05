@@ -50,7 +50,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		if (properties.get(IDENTIFIER) == null
 				|| properties.get(IDENTIFIER).toString().isEmpty()) {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }

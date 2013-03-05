@@ -24,11 +24,11 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private TexHyphenator hyphenator = null;
 	
-	public void bindHyphenator(TexHyphenator hyphenator) {
+	protected void bindHyphenator(TexHyphenator hyphenator) {
 		this.hyphenator = hyphenator;
 	}
 	
-	public void unbindHyphenator(TexHyphenator hyphenator) {
+	protected void unbindHyphenator(TexHyphenator hyphenator) {
 		this.hyphenator = null;
 	}
 	

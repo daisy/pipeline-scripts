@@ -21,7 +21,7 @@ public abstract class BundledTablePath extends BundledResourcePath implements Re
 	private Map<Locale,URL> lookupMap = null;
 	
 	@Override
-	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		super.activate(context, properties);
 		if (properties.get(MANIFEST) != null) {
 			String manifestPath = properties.get(MANIFEST).toString();

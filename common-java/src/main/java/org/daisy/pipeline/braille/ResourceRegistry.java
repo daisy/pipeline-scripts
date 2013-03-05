@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class ResourceRegistry<T extends ResourcePath> implements ResourceResolver {
 	
-	public void register(T path) {
+	protected void register(T path) {
 		if (paths.containsKey(path.getIdentifier()))
 			throw new RuntimeException("Resource registry already contains resource path with identifier " + path.getIdentifier());
 		paths.put(path.getIdentifier(), path);
@@ -19,7 +19,7 @@ public abstract class ResourceRegistry<T extends ResourcePath> implements Resour
 		logger.debug("Adding resource path to registry: {}", path.getIdentifier());
 	}
 	
-	public void unregister(T path) {
+	protected void unregister(T path) {
 		paths.remove(path.getIdentifier());
 		resolverCache.clear();
 		logger.debug("Removing resource path from registry: {}", path.getIdentifier());

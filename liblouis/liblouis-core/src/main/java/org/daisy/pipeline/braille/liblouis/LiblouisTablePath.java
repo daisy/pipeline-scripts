@@ -10,7 +10,7 @@ import com.google.common.base.Splitter;
 public class LiblouisTablePath extends BundledTablePath {
 	
 	@Override
-	public void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		super.activate(context, properties);
 		unpack(context);
 	}

@@ -24,11 +24,11 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private Libhyphen libhyphen = null;
 	
-	public void bindLibhyphen(Libhyphen libhyphen) {
+	protected void bindLibhyphen(Libhyphen libhyphen) {
 		this.libhyphen = libhyphen;
 	}
 	
-	public void unbindLibhyphen(Libhyphen libhyphen) {
+	protected void unbindLibhyphen(Libhyphen libhyphen) {
 		this.libhyphen = null;
 	}
 	

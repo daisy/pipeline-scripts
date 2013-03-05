@@ -6,6 +6,7 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
         <scr:property name="path" type="String" value="/native/i386/liblouis-2.5.1-pipeline-SNAPSHOT.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
@@ -19,6 +20,7 @@
                                                        /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
@@ -33,6 +35,7 @@
                                                        /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
     </scr:component>
@@ -42,6 +45,7 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
         <scr:property name="path" type="String" value="/native/x86_64/liblouis-2.5.1-pipeline-SNAPSHOT.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86_64"/>
     </scr:component>
@@ -55,6 +59,7 @@
                                                        /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86_64"/>
     </scr:component>
@@ -69,6 +74,7 @@
                                                        /native/fat/libxml2-2.7.3.dylib,
                                                        /native/fat/libiconv.2.dylib,
                                                        /native/fat/libz.1.dylib"/>
+        <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="mac"/>
         <scr:property name="os.arch" type="String" value="x86_64"/>
     </scr:component>

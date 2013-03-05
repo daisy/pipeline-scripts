@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis table registry">
+    <implementation class="org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTableResolver"/>
+        <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisTableLookup"/>
+    </scr:service>
+    <scr:reference bind="register"
+        unbind="unregister"
+        interface="org.daisy.pipeline.braille.liblouis.LiblouisTablePath"
+        cardinality="0..n"
+        name="LiblouisTablePath"
+        policy="dynamic"/>
+</scr:component>

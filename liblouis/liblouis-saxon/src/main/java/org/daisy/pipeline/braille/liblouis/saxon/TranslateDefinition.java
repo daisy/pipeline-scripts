@@ -24,11 +24,11 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private Liblouis liblouis = null;
 	
-	public void bindLiblouis(Liblouis liblouis) {
+	protected void bindLiblouis(Liblouis liblouis) {
 		this.liblouis = liblouis;
 	}
 	
-	public void unbindLiblouis(Liblouis liblouis) {
+	protected void unbindLiblouis(Liblouis liblouis) {
 		this.liblouis = null;
 	}
 	

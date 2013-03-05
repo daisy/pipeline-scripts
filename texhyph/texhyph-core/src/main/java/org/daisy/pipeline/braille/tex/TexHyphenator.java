@@ -8,13 +8,27 @@ import java.util.Map;
 import net.davidashen.text.Hyphenator;
 
 import org.daisy.pipeline.braille.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TexHyphenator {
 	
-	private final ResourceResolver tableResolver;
+	private ResourceResolver tableResolver;
 	
-	public TexHyphenator(ResourceResolver tableResolver) {
+	protected void activate() {
+		logger.debug("Loading TeX hyphenation service");
+	}
+	
+	protected void deactivate() {
+		logger.debug("Unloading TeX hyphenation service");
+	}
+	
+	protected void bindTableResolver(TexHyphenatorTableResolver tableResolver) {
 		this.tableResolver = tableResolver;
+	}
+	
+	protected void unbindTableResolver(TexHyphenatorTableResolver path) {
+		this.tableResolver = null;
 	}
 	
 	/**
@@ -46,4 +60,6 @@ public class TexHyphenator {
 		catch (Exception e) {
 			throw new RuntimeException(e); }
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(TexHyphenator.class);
 }

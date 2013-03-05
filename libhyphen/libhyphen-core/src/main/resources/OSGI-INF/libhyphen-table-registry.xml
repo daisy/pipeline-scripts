@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="Libhyphen provider">
-    <scr:implementation class="org.daisy.pipeline.braille.libhyphen.LibhyphenProvider"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Libhyphen table registry">
+    <implementation class="org.daisy.pipeline.braille.libhyphen.LibhyphenTableRegistry"/>
     <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver"/>
         <scr:provide interface="org.daisy.pipeline.braille.libhyphen.LibhyphenTableLookup"/>
     </scr:service>
-    <scr:reference bind="addTablePath"
-        unbind="removeTablePath"
+    <scr:reference bind="register"
+        unbind="unregister"
         interface="org.daisy.pipeline.braille.libhyphen.LibhyphenTablePath"
         cardinality="0..n"
         name="LibhyphenTablePath"
