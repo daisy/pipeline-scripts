@@ -29,6 +29,7 @@
                  'orphans',
                  'widows',
                  'page',
+                 'typeform-indication',
                  'font-style',
                  'font-weight',
                  'text-decoration',
@@ -38,7 +39,8 @@
     <xsl:variable name="COLOR" select="'#[0-9A-F]{6}'"/>
     <xsl:variable name="CONTENT" select="'content\(\)'"/>
     <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
-    <xsl:variable name="IDENT" select="'\p{L}|_(\p{L}|_|-)*'"/>
+    <xsl:variable name="IDENT" select="'(\p{L}|_)(\p{L}|_|-)*'"/>
+    <xsl:variable name="IDENT_LIST" select="concat($IDENT, '(\s+', $IDENT, ')*')"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
     <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
     <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
@@ -67,6 +69,7 @@
                  concat('^(', $INTEGER, '|', $INHERIT, ')$'),
                  concat('^(', $INTEGER, '|', $INHERIT, ')$'),
                  concat('^(', $IDENT, '|auto', ')$ '),
+                 concat('^(', $IDENT_LIST, 'none', ')$ '),
                  concat('^(', 'normal|italic|oblique|', $INHERIT, ')$ '),
                  concat('^(', 'normal|bold|100|200|300|400|500|600|700|800|900|', $INHERIT, ')$ '),
                  concat('^(', 'none|underline|overline|line-through|blink', $INHERIT, ')$ '),
@@ -95,10 +98,11 @@
                  '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
-                 '^inline$',
-                 '^inline$',
-                 '^inline$',
-                 '^inline$')"/>
+                 '.*',
+                 '.*',
+                 '.*',
+                 '.*',
+                 '.*')"/>
     
     <xsl:variable name="default-values" as="xs:string*"
         select="('inline',
@@ -123,6 +127,7 @@
                  '2.0',
                  '2.0',
                  'auto',
+                 'none',
                  'normal',
                  'normal',
                  'none',
@@ -130,6 +135,7 @@
     
     <xsl:variable name="media" as="xs:string*"
         select="('embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed',

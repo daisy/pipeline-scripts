@@ -16,6 +16,7 @@ import org.daisy.braille.css.BrailleCSSProperty.Padding;
 import org.daisy.braille.css.BrailleCSSProperty.Page;
 import org.daisy.braille.css.BrailleCSSProperty.StringSet;
 import org.daisy.braille.css.BrailleCSSProperty.TextIndent;
+import org.daisy.braille.css.BrailleCSSProperty.TypeformIndication;
 
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.CSSProperty;
@@ -218,6 +219,13 @@ public class BrailleCSSDeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
+	private boolean processPage(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		return genericOneIdentOrIdentifier(Page.class, Page.identifier, true,
+				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
 	private boolean processBrlStringSet(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		
@@ -261,10 +269,27 @@ public class BrailleCSSDeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processPage(Declaration d,
+	private boolean processBrlTypeformIndication(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-		return genericOneIdentOrIdentifier(Page.class, Page.identifier, true,
-				d, properties, values);
+		
+		if (d.size() == 1 && genericOneIdent(TypeformIndication.class, d, properties))
+			return true;
+		
+		TermList indicatorList = tf.createList();
+		String stringName = null;
+		for (Term<?> t : d.asList()) {
+			if (t instanceof TermIdent)
+				indicatorList.add(t);
+			else
+				return false;
+		}
+		
+		if (indicatorList.isEmpty())
+			return false;
+		
+		properties.put("typeform-indication", TypeformIndication.indicator_list);
+		values.put("typeform-indication", indicatorList);
+		return true;
 	}
 	
 	/****************************************************************

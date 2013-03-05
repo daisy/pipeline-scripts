@@ -24,7 +24,7 @@
             <xsl:for-each select="tokenize($string-set,',')">
                 <xsl:variable name="identifier" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
                 <xsl:variable name="content-list" select="substring-after(., $identifier)"/>
-                <xsl:variable name="content" select="css:evaluate-content-list($element, $content-list)"/>
+                <xsl:variable name="content" select="css:eval-content-list($element, $content-list)"/>
                 <xsl:if test="exists($content)">
                     <xsl:if test="$identifier='print-page'">
                         <xsl:element name="louis:print-page">

@@ -58,7 +58,7 @@
         </xsl:if>
     </xsl:function>
 
-    <xsl:function name="css:evaluate-content-list">
+    <xsl:function name="css:eval-content-list">
         <xsl:param name="element" as="element()"/>
         <xsl:param name="content-list" as="xs:string"/>
         <xsl:analyze-string select="$content-list"

@@ -27,6 +27,7 @@ import org.daisy.braille.css.BrailleCSSProperty.Padding;
 import org.daisy.braille.css.BrailleCSSProperty.Page;
 import org.daisy.braille.css.BrailleCSSProperty.StringSet;
 import org.daisy.braille.css.BrailleCSSProperty.TextIndent;
+import org.daisy.braille.css.BrailleCSSProperty.TypeformIndication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 24;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 25;
 
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 
@@ -173,6 +174,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		// misc
 		props.put("-brl-string-set", StringSet.NONE);
 		props.put("-brl-content", Content.NONE); // NOTE: only allowed on :before and :after pseudo elements
+		props.put("-brl-typeform-indication", TypeformIndication.NONE);
 		
 		this.defaultCSSproperties = props;
 		this.defaultCSSvalues = values;
