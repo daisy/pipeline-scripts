@@ -211,6 +211,7 @@
             <p:pipe step="split-sequence" port="matched"/>
         </p:iteration-source>
         <p:variable name="width" select="/*/louis:page-layout//c:param[@name='page-width']/@value"/>
+        <p:variable name="height" select="/*/louis:page-layout//c:param[@name='page-height']/@value"/>
         <louis:translate-file>
             <p:input port="styles" select="/*/louis:styles/d:fileset"/>
             <p:input port="semantics" select="/*/louis:semantics/d:fileset"/>
@@ -225,6 +226,9 @@
         </pef:text2pef>
         <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="cols">
             <p:with-option name="attribute-value" select="replace($width,'\.0*$','')"/>
+        </p:add-attribute>
+        <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="rows">
+            <p:with-option name="attribute-value" select="replace($height,'\.0*$','')"/>
         </p:add-attribute>
     </p:for-each>
     

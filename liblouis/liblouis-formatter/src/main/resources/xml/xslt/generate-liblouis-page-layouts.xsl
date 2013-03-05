@@ -98,6 +98,23 @@
                     </xsl:element>
                 </xsl:element>
             </xsl:for-each>
+            <xsl:if test="not(/css:pages/css:page[not(@position) and (not(@name) or string(@name)='auto')])">
+                <xsl:element name="louis:page-layout">
+                    <xsl:attribute name="name" select="'auto'"/>
+                    <xsl:element name="c:param-set">
+                        <xsl:element name="c:param">
+                            <xsl:attribute name="name" select="'page-width'"/>
+                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="value" select="'40'"/>
+                        </xsl:element>
+                        <xsl:element name="c:param">
+                            <xsl:attribute name="name" select="'page-height'"/>
+                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="value" select="'25'"/>
+                        </xsl:element>
+                    </xsl:element>
+                </xsl:element>
+            </xsl:if>
         </xsl:element>
     </xsl:template>
 </xsl:stylesheet>
