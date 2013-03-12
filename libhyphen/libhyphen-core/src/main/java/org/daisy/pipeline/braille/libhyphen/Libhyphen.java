@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
 
 import org.daisy.pipeline.braille.Binary;
@@ -17,6 +18,7 @@ public class Libhyphen {
 	
 	private static final char SOFT_HYPHEN = '\u00AD';
 	
+	private Binary binary;
 	private ResourceResolver tableResolver;
 	
 	protected void activate() {
@@ -27,9 +29,17 @@ public class Libhyphen {
 		logger.debug("Unloading libhyphen service");
 	}
 	
-	protected void bindBinary(Binary binary) {}
+	protected void bindBinary(Binary binary) {
+		if (this.binary == null && "liblouis".equals(binary.getName())) {
+			this.binary = binary;
+			Hyphen.setLibraryPath(asFile(binary.getPaths().iterator().next()));
+			logger.debug("Registering binary: " + binary); }
+	}
 	
-	protected void unbindBinary(Binary binary) {}
+	protected void unbindBinary(Binary binary) {
+		if (binary.equals(this.binary))
+			this.binary = null;
+	}
 	
 	protected void bindTableResolver(LibhyphenTableResolver tableResolver) {
 		this.tableResolver = tableResolver;

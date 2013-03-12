@@ -115,6 +115,11 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>libhyphen-native</artifactId>
+                  <classifier>linux</classifier>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>libhyphen-saxon</artifactId>
                 </artifactItem>
                 <artifactItem>
