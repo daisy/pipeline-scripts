@@ -61,13 +61,13 @@
         <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
 
-    <p:output port="reports-index">
+    <!--<p:output port="reports-index">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">reports-index</h1>
             <p px:role="desc">Index to all generated reports. Interesting only in the case that the reports are saved to disk.</p>
         </p:documentation>
         <p:pipe step="create-reports-index" port="result"/>
-    </p:output>
+    </p:output>-->
     
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -109,10 +109,6 @@
         <p:documentation>Package doc validation step.</p:documentation>
     </p:import>
 
-    <p:import href="nimas-fileset-validator.create-reports-index.xpl">
-        <p:documentation>Helper step</p:documentation>
-    </p:import>
-    
     <p:variable name="base-uri" select="base-uri()"/>
     <p:variable name="package-doc-filename" 
         select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
@@ -141,7 +137,9 @@
         <p:variable name="dtbook-uri" select="*/resolve-uri($dtbook-href, base-uri())"/>
         <p:variable name="report-filename" select="concat(replace($dtbook-href, '/', '_'), '-report.xml')"/>
         
-        <cx:message message="Nimas fileset validator: Loading DTBook document."/>
+        <cx:message>
+            <p:with-option name="message" select="concat('Nimas fileset validator: Loading DTBook document: ', $dtbook-uri)"/>
+        </cx:message>
         <p:sink/>
         
         <p:load name="load-dtbook">
@@ -183,16 +181,22 @@
                 <p:with-option name="check-images" select="$check-images"/>
                 <p:with-option name="mathml-version" select="$mathml-version"/>
             </px:dtbook-validator>
-            <p:sink/>
             
-            <!-- add this report's filename under @extra -->
-            <p:add-attribute match="d:document-validation-report">
+            <!-- add the report path -->
+            <p:insert position="last-child" match="//d:document-info">
+                <p:input port="insertion">
+                    <p:inline>
+                        <d:report-path>@@</d:report-path>
+                    </p:inline>
+                </p:input>
                 <p:input port="source">
                     <p:pipe port="report" step="validate-dtbook"/>
                 </p:input>
-                <p:with-option name="attribute-name" select="'extra'"/>
-                <p:with-option name="attribute-value" select="$report-filename"/>
-            </p:add-attribute>    
+            </p:insert> 
+            <p:string-replace match="d:document-info/d:report-path/text()">
+                <p:with-option name="replace" select="concat('&quot;', $report-filename, '&quot;')"/>
+            </p:string-replace>
+            
         </p:group>
     </p:for-each>
     
@@ -237,14 +241,17 @@
             </p:otherwise>
         </p:choose>
         
-        <!-- add this report's filename under @extra -->
-        <p:add-attribute match="d:document-validation-report">
-            <p:input port="source">
-                <p:pipe port="result" step="validate-package-doc-choose"/>
+        <!-- add the report path -->
+        <p:insert position="last-child" match="d:document-info">
+            <p:input port="insertion">
+                <p:inline>
+                    <d:report-path>@@</d:report-path>
+                </p:inline>
             </p:input>
-            <p:with-option name="attribute-name" select="'extra'"/>
-            <p:with-option name="attribute-value" select="concat($package-doc-filename, '-report.xml')"/>
-        </p:add-attribute>    
+        </p:insert> 
+        <p:string-replace match="d:document-info/d:report-path/text()">
+            <p:with-option name="replace" select="concat('&quot;', $package-doc-filename, '-report.xml&quot;')"/>
+        </p:string-replace>
     </p:group>
 
     <cx:message message="Nimas fileset validator: Formatting report as HTML."/>
@@ -258,14 +265,6 @@
         <p:with-option name="toc" select="'true'"/>
     </px:validation-report-to-html>
     
-    <!-- create report index: each file that was validated has a report -->
-    <pxi:nimas-fileset-validator.create-reports-index name="create-reports-index">
-        <p:input port="source">
-            <p:pipe port="result" step="validate-package-doc"/>
-            <p:pipe port="result" step="validate-dtbooks"/>
-        </p:input>
-    </pxi:nimas-fileset-validator.create-reports-index>
-    
     <!-- ***************************************************** -->
     <!-- STORE REPORTS -->
     <!-- ***************************************************** -->
@@ -273,7 +272,6 @@
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
-<!--            <cx:message message="Nimas fileset validator: Storing reports to disk in output directory:"/>-->
             <cx:message>
                 <p:with-option name="message" select="concat('Nimas fileset validator: Storing reports to disk in output directory: ', $output-dir)"/>
             </cx:message>
@@ -284,20 +282,12 @@
                     <p:pipe port="result" step="validate-dtbooks"/>
                     <p:pipe port="result" step="validate-package-doc"/>
                 </p:iteration-source>
-                <p:variable name="report-filename" select="*/@extra"/>
+                <p:variable name="report-filename" select="/d:document-validation-report/d:document-info/d:report-path/text()"/>
                 <p:store name="store-report">
                     <p:with-option name="href"
                         select="concat($output-dir,'/', $report-filename)"/>
                 </p:store>
             </p:for-each>
-            
-            <p:store name="store-reports-index">
-                <p:input port="source">
-                    <p:pipe port="result" step="create-reports-index"/>
-                </p:input>
-                <p:with-option name="href"
-                    select="concat($output-dir,'/reports-index.xhtml')"/>
-            </p:store>
             
             <p:store name="store-html-report">
                 <p:input port="source">

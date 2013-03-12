@@ -7,5 +7,6 @@
     <ns prefix="dc" uri="http://purl.org/dc/elements/1.1/"/>
     
     <include href="mod/package-doc-common.sch"/>
+    <include href="mod/package-doc-nimas.sch"/>
     <include href="mod/package-doc-with-mathml-mod.sch"/>
 </schema>
