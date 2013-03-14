@@ -47,6 +47,9 @@
         <p:input port="preprocessors">
             <p:pipe step="convert" port="preprocessors"/>
         </p:input>
+        <p:with-option name="temp-dir" select="string(/c:result)">
+            <p:pipe step="temp-dir" port="result"/>
+        </p:with-option>
     </pxi:preprocessing>
     
     <!-- =========== -->

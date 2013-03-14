@@ -17,7 +17,6 @@
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     
-    <!-- (!) FIXME: The following doesn't work inside cx:eval because of p:value-available() -->
     <px:fileset-create base="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/"/>
     <px:fileset-add-entry name="styles">
         <p:with-option name="href" select="concat($math-code, '.cfg')"/>

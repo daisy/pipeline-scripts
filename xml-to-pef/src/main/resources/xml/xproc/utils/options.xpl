@@ -8,15 +8,23 @@
     exclude-inline-prefixes="#all"
     type="pxi:options" name="options" version="1.0">
     
-    <p:input port="parameters" kind="parameter"/>
-    <p:output port="result" primary="true"/>
+    <p:input port="options" kind="parameter" primary="false"/>
+    <p:output port="result" primary="false">
+        <p:pipe step="result" port="result"/>
+    </p:output>
+    
+    <p:parameters name="parameters">
+        <p:input port="parameters">
+            <p:pipe step="options" port="options"/>
+        </p:input>
+    </p:parameters>
     
     <p:rename match="c:param-set" new-name="cx:options">
         <p:input port="source">
-            <p:pipe step="options" port="parameters"/>
+            <p:pipe step="parameters" port="result"/>
         </p:input>
     </p:rename>
     
-    <p:rename match="c:param" new-name="cx:option"/>
+    <p:rename match="c:param" new-name="cx:option" name="result"/>
     
 </p:declare-step>

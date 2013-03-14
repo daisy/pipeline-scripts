@@ -34,9 +34,7 @@
                                             <p:input port="stylesheet">
                                                 <p:inline></p:inline>
                                             </p:input>
-                                            <p:input port="parameters">
-                                                <p:empty/>
-                                            </p:input>
+                                            <p:with-param name="temp-dir" select="$temp-dir"/>
                                         </p:xslt>
                                     </p:inline>
                                 </p:input>
@@ -49,14 +47,12 @@
                             <p:insert match="//p:inline" position="first-child">
                                 <p:input port="source">
                                     <p:inline>
-                                        <cx:eval>
+                                        <pxi:eval>
                                             <p:input port="pipeline">
                                                 <p:inline></p:inline>
                                             </p:input>
-                                            <p:input port="options">
-                                                <p:empty/>
-                                            </p:input>
-                                        </cx:eval>
+                                            <p:with-param name="temp-dir" select="$temp-dir"/>
+                                        </pxi:eval>
                                     </p:inline>
                                 </p:input>
                                 <p:input port="insertion">
@@ -75,6 +71,20 @@
                 </p:for-each>
                 <p:wrap-sequence wrapper="p:pipeline"/>
                 <p:add-attribute match="/*" attribute-name="version" attribute-value="1.0"/>
+                <p:insert match="/*" position="first-child">
+                    <p:input port="insertion">
+                        <p:inline>
+                            <p:import href="eval.xpl"/>
+                        </p:inline>
+                    </p:input>
+                </p:insert>
+                <p:insert match="/*" position="first-child">
+                    <p:input port="insertion">
+                        <p:inline>
+                            <p:option name="temp-dir" required="true"/>
+                        </p:inline>
+                    </p:input>
+                </p:insert>
             </p:group>
         </p:otherwise>
     </p:choose>

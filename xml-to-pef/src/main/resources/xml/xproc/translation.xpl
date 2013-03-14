@@ -3,7 +3,6 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     exclude-inline-prefixes="#all"
@@ -14,8 +13,8 @@
     <p:output port="result" primary="true"/>
     <p:option name="temp-dir" required="true"/>
     
+    <p:import href="utils/eval.xpl"/>
     <p:import href="utils/chain-steps.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
     <!-- Handle string-set -->
     
@@ -58,14 +57,12 @@
                 <p:viewport-source>
                     <p:pipe step="blocks" port="result"/>
                 </p:viewport-source>
-                <cx:eval>
+                <pxi:eval>
                     <p:input port="pipeline">
                         <p:pipe step="pipeline" port="result"/>
                     </p:input>
-                    <p:input port="options">
-                        <p:empty/>
-                    </p:input>
-                </cx:eval>
+                    <p:with-param name="temp-dir" select="$temp-dir"/>
+                </pxi:eval>
             </p:viewport>
         </p:group>
         <p:catch name="translate-catch">
@@ -117,7 +114,7 @@
     </p:try>
     <p:sink/>
     
-    <!-- Unwrap blocks, normalize space  -->
+    <!-- Unwrap blocks, normalize space -->
     
     <p:xslt>
         <p:input port="source">

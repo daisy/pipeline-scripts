@@ -213,8 +213,12 @@
         <p:variable name="width" select="/*/louis:page-layout//c:param[@name='page-width']/@value"/>
         <p:variable name="height" select="/*/louis:page-layout//c:param[@name='page-height']/@value"/>
         <louis:translate-file>
-            <p:input port="styles" select="/*/louis:styles/d:fileset"/>
-            <p:input port="semantics" select="/*/louis:semantics/d:fileset"/>
+            <p:input port="styles" select="/*/louis:styles/d:fileset">
+                <p:pipe step="translate-file" port="current"/>
+            </p:input>
+            <p:input port="semantics" select="/*/louis:semantics/d:fileset">
+                <p:pipe step="translate-file" port="current"/>
+            </p:input>
             <p:input port="page-layout" select="/*/louis:page-layout/c:param-set">
                 <p:pipe step="translate-file" port="current"/>
             </p:input>

@@ -10,6 +10,7 @@
     <p:input port="source" primary="true"/>
     <p:input port="preprocessors" sequence="true"/>
     <p:output port="result" primary="true"/>
+    <p:option name="temp-dir" required="true"/>
     
     <p:import href="utils/eval-steps.xpl"/>
     
@@ -17,6 +18,7 @@
         <p:input port="steps">
             <p:pipe step="preprocessing" port="preprocessors"/>
         </p:input>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
     </pxi:eval-steps>
     
 </p:declare-step>

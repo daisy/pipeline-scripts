@@ -10,9 +10,10 @@
     
     <p:input port="source" sequence="true" primary="true"/>
     <p:input port="steps" sequence="true"/>
+    <p:option name="temp-dir" required="true"/>
     <p:output port="result" primary="true"/>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="eval.xpl"/>
     
     <p:count>
         <p:input port="source">
@@ -36,23 +37,19 @@
                         <p:input port="stylesheet">
                             <p:pipe step="split-steps" port="matched"/>
                         </p:input>
-                        <p:input port="parameters">
-                            <p:empty/>
-                        </p:input>
+                        <p:with-param name="temp-dir" select="$temp-dir"/>
                     </p:xslt>
                 </p:when>
                 <p:when test="/p:pipeline">
-                    <cx:eval>
+                    <pxi:eval>
                         <p:input port="source">
                             <p:pipe step="eval-steps" port="source"/>
                         </p:input>
                         <p:input port="pipeline">
                             <p:pipe step="split-steps" port="matched"/>
                         </p:input>
-                        <p:input port="options">
-                            <p:empty/>
-                        </p:input>
-                    </cx:eval>
+                        <p:with-param name="temp-dir" select="$temp-dir"/>
+                    </pxi:eval>
                 </p:when>
                 <p:otherwise>
                     <p:error code="px:brl02">
@@ -66,6 +63,7 @@
                 <p:input port="steps">
                     <p:pipe step="split-steps" port="not-matched"/>
                 </p:input>
+                <p:with-option name="temp-dir" select="$temp-dir"/>
             </pxi:eval-steps>
         </p:when>
         <p:otherwise>
