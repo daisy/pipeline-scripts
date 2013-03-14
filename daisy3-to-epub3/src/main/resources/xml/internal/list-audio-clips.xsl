@@ -4,9 +4,9 @@
     xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
     xmlns:d="http://www.daisy.org/z3986/2005/dtbook/" xmlns:s="http://www.w3.org/2001/SMIL20/"
     exclude-result-prefixes="#all" version="2.0">
-    
+
     <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
-    
+
     <xsl:param name="audio-base"/>
 
     <xsl:key name="smil-fragments" match="s:par|s:text" use="@id"/>
@@ -42,19 +42,21 @@
     <xsl:template match="s:par">
         <xsl:param name="idref" tunnel="yes"/>
         <xsl:variable name="audios" select="descendant::s:audio"/>
-        
+
         <xsl:if test="count(distinct-values($audios/@src))>1">
             <!--TODO support audio merge-->
             <xsl:message>WARNING: the audio for the fragment <xsl:sequence
                     select="(@src|s:text/@src)[1]"/> spans over multiple files.</xsl:message>
         </xsl:if>
-        
-        <!--TODO normalize clock values-->
-        <clip idref="{$idref}" 
-            src="{pf:relativize-uri(resolve-uri($audios[1]/@src,base-uri(.)),$audio-base)}"
-            clipBegin="{$audios[1]/@clipBegin}"
-            clipEnd="{$audios[@src=$audios[1]/@src][last()]/@clipEnd}"
-        />
+
+        <xsl:if test="count($audios)>0">
+            <!--TODO normalize clock values-->
+            <clip idref="{$idref}"
+                src="{pf:relativize-uri(resolve-uri($audios[1]/@src,base-uri(.)),$audio-base)}"
+                clipBegin="{$audios[1]/@clipBegin}"
+                clipEnd="{$audios[@src=$audios[1]/@src][last()]/@clipEnd}"/>
+        </xsl:if>
+
     </xsl:template>
 
     <xsl:template match="text()|@*"/>
