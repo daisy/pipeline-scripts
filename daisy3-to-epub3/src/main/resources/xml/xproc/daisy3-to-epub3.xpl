@@ -70,7 +70,7 @@
     <p:import
         href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="../internal/load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/daisy3-library.xpl"/>
     <p:import href="../internal/ncx-to-nav.xpl"/>
     <p:import href="../internal/dtbook-to-html.xpl"/>
     <p:import href="../internal/list-audio-clips.xpl"/>
@@ -97,8 +97,31 @@
     <!--=========================================================================-->
     <!-- LOAD THE DAISY 3 FILESET                                                -->
     <!--=========================================================================-->
-    <pxi:load name="load"/>
-    <p:sink/>
+    <px:daisy3-load name="load"/>
+    <px:fileset-load media-types="application/smil" name="smils">
+        <p:input port="fileset">
+            <p:pipe port="fileset.out" step="load"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.out" step="load"/>
+        </p:input>
+    </px:fileset-load>
+    <px:fileset-load media-types="application/x-dtbook+xml" name="dtbooks">
+        <p:input port="fileset">
+            <p:pipe port="fileset.out" step="load"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.out" step="load"/>
+        </p:input>
+    </px:fileset-load>
+    <px:fileset-load media-types="application/x-dtbncx+xml" name="ncx">
+        <p:input port="fileset">
+            <p:pipe port="fileset.out" step="load"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.out" step="load"/>
+        </p:input>
+    </px:fileset-load>
     
     <!--=========================================================================-->
     <!-- CHECK THE DTB TYPE                                                      -->
@@ -120,13 +143,13 @@
             </p:output>
             <pxi:list-audio-clips name="audio-clips.inner">
                 <p:input port="fileset.in">
-                    <p:pipe port="fileset" step="load"/>
+                    <p:pipe port="fileset.out" step="load"/>
                 </p:input>
                 <p:input port="dtbooks">
-                    <p:pipe port="dtbooks" step="load"/>
+                    <p:pipe port="result" step="dtbooks"/>
                 </p:input>
                 <p:input port="smils">
-                    <p:pipe port="smils" step="load"/>
+                    <p:pipe port="result" step="smils"/>
                 </p:input>
                 <p:with-option name="content-dir" select="$content-dir"/>
             </pxi:list-audio-clips>        
@@ -149,10 +172,10 @@
 
     <pxi:dtbook-to-html name="content-docs">
         <p:input port="fileset.in">
-            <p:pipe port="fileset" step="load"/>
+            <p:pipe port="fileset.out" step="load"/>
         </p:input>
         <p:input port="in-memory.in">
-            <p:pipe port="dtbooks" step="load"/>
+            <p:pipe port="result" step="dtbooks"/>
         </p:input>
         <p:with-option name="output-dir" select="$content-dir"/>
     </pxi:dtbook-to-html>
@@ -163,13 +186,13 @@
     <!--=========================================================================-->
     <pxi:ncx-to-nav name="nav-doc">
         <p:input port="source">
-            <p:pipe port="ncx" step="load"/>
+            <p:pipe port="result" step="ncx"/>
         </p:input>
         <p:input port="smils">
-            <p:pipe port="smils" step="load"/>
+            <p:pipe port="result" step="smils"/>
         </p:input>
         <p:input port="dtbooks">
-            <p:pipe port="dtbooks" step="load"/>
+            <p:pipe port="result" step="dtbooks"/>
         </p:input>
         <p:input port="htmls">
             <p:pipe port="in-memory.out" step="content-docs"/>
