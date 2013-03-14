@@ -1149,18 +1149,24 @@
         <utfx:name>Translate-DTBook2ZedAI: a</utfx:name>
         <utfx:assert-equal normalise-internal-whitespace="yes">
             <utfx:source>
+                <a/>
                 <a href="#abc"/>
+                <a href="#abc" id="foo"/>
                 <a href="page.html" external="true"/>
                 <a href="#def" external="false"/>
                 <a href="#para3" rel="REL"/>
                 <a href="#chapter4" rev="REV"/>
+                <a smilref="test.smil#foo"/>
             </utfx:source>
             <utfx:expected>
+                <ref/>
                 <ref ref="abc"/>
+                <ref ref="abc" xml:id="foo"/>
                 <ref xlink:href="page.html"/>
                 <ref ref="def"/>
                 <ref ref="para3" rel="REL"/>
                 <ref ref="chapter4" rev="REV"/>
+                <span/>
             </utfx:expected>
 
         </utfx:assert-equal>

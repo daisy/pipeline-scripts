@@ -1003,7 +1003,8 @@
     </xsl:template>
 
     <xsl:template match="dtb:a">
-        <ref>
+        <xsl:element name="{if (empty(@href) and @smilref) then 'span' else 'ref'}">
+            <xsl:call-template name="attrs"/>
             <xsl:if test="@href">
                 <xsl:choose>
                     <xsl:when test="@external='true'">
@@ -1013,14 +1014,13 @@
                         <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
                     </xsl:otherwise>
                 </xsl:choose>
-
+                
             </xsl:if>
             <xsl:copy-of select="@rev"/>
             <xsl:copy-of select="@rel"/>
-
             <xsl:apply-templates/>
-
-        </ref>
+            
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="dtb:dl">
