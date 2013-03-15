@@ -34,9 +34,18 @@
                         <xsl:sequence select="string(/pef:pef/pef:head/pef:meta/dc:creator)"/>
                     </h2>
                     <div id="view-buttons">
-                        <button id="view-braille" class="active" onclick="toggleView(this)">Braille</button>
-                        <button id="view-text" onclick="toggleView(this)">Text</button>
+                        <button id="view-braille" class="active" onclick="toggleView()">Braille</button>
+                        <button id="view-text" onclick="toggleView()">Text</button>
+                        <button id="view-metadata" onclick="toggleMetadata()">Metadata</button>
                     </div>
+                    <ul id="metadata">
+                        <xsl:for-each select="/pef:pef/pef:head/pef:meta/dc:*[not(local-name()=('title','creator'))]">
+                            <li>
+                                <span class="label"><xsl:sequence select="local-name(.)"/></span>
+                                <xsl:sequence select="string(.)"/>
+                            </li>
+                        </xsl:for-each>
+                    </ul>
                 </div>
                 <ul id="nav">
                     <xsl:for-each select="/pef:pef//pef:page">
