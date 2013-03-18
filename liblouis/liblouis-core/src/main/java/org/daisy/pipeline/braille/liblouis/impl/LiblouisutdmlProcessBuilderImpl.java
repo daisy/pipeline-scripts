@@ -105,7 +105,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			command.add(configPathFile.getAbsolutePath() + File.separator +
 					(configFiles != null ? join(configFiles, ",") : ""));
 			Map<String,String> settings = new HashMap<String,String>();
-			if (semanticFiles != null)
+			if (semanticFiles != null && semanticFiles.size() > 0)
 				settings.put("semanticFiles", join(semanticFiles, ","));
 			if (table != null) {
 				URL resolvedTable = tableResolver.resolve(table);
