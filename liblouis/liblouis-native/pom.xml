@@ -29,6 +29,98 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>i386-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>amd64-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>i386-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>amd64-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>i386-Linux-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>amd64-Linux-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.xmlsoft</groupId>
+                  <artifactId>xml2</artifactId>
+                  <classifier>i386-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.xmlsoft</groupId>
+                  <artifactId>xml2</artifactId>
+                  <classifier>amd64-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+              </artifactItems>
+              <excludes>**/history.xml</excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <copy todir="target/generated-resources/native">
+                  <fileset dir="target/dependency">
+                    <include name="**/*.so"/>
+                    <include name="**/*.dylib"/>
+                    <include name="**/*.dll"/>
+                    <include name="**/file2brl"/>
+                    <include name="**/file2brl.exe"/>
+                  </fileset>
+                  <mapper>
+                    <globmapper handledirsep="yes" from="bin/*" to="*"/>
+                    <regexpmapper handledirsep="yes" from="lib/(.*)/shared/(.*)$" to="\1/\2"/>
+                  </mapper>
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
@@ -54,7 +146,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-linux</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-linux.xml,
-                  native=src/main/resources/native/linux
+                  native/i386=target/generated-resources/native/i386-Linux-gpp,
+                  native/x86_64=target/generated-resources/native/amd64-Linux-gpp
                 </Include-Resource>
               </instructions>
             </configuration>

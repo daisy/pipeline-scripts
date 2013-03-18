@@ -5,7 +5,7 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/i386/liblouis-2.5.1-pipeline-SNAPSHOT.so"/>
+        <scr:property name="path" type="String" value="/native/i386/liblouis.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
@@ -15,8 +15,9 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
-        <scr:property name="path" type="String" value="/native/i386/liblouisutdml-2.3.1-pipeline-SNAPSHOT.so,
-                                                       /native/i386/liblouis-2.4.1-pipeline-SNAPSHOT.so"/>
+        <scr:property name="path" type="String" value="/native/i386/liblouisutdml.so,
+                                                       /native/i386/liblouis.so,
+                                                       /native/i386/libxml2.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
@@ -27,8 +28,9 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/i386/file2brl,
-                                                       /native/i386/liblouisutdml-2.3.1-pipeline-SNAPSHOT.so,
-                                                       /native/i386/liblouis-2.4.1-pipeline-SNAPSHOT.so"/>
+                                                       /native/i386/liblouisutdml.so,
+                                                       /native/i386/liblouis.so,
+                                                       /native/i386/libxml2.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86,i386"/>
@@ -38,7 +40,7 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/x86_64/liblouis-2.5.1-pipeline-SNAPSHOT.so"/>
+        <scr:property name="path" type="String" value="/native/x86_64/liblouis.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
@@ -48,8 +50,9 @@
         <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="liblouisutdml"/>
-        <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml-2.3.1-pipeline-SNAPSHOT.so,
-                                                       /native/x86_64/liblouis-2.4.1-pipeline-SNAPSHOT.so"/>
+        <scr:property name="path" type="String" value="/native/x86_64/liblouisutdml.so,
+                                                       /native/x86_64/liblouis.so,
+                                                       /native/x86_64/libxml2.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
@@ -60,8 +63,9 @@
         <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
         <scr:property name="name" type="String" value="file2brl"/>
         <scr:property name="path" type="String" value="/native/x86_64/file2brl,
-                                                       /native/x86_64/liblouisutdml-2.3.1-pipeline-SNAPSHOT.so,
-                                                       /native/x86_64/liblouis-2.4.1-pipeline-SNAPSHOT.so"/>
+                                                       /native/x86_64/liblouisutdml.so,
+                                                       /native/x86_64/liblouis.so,
+                                                       /native/x86_64/libxml2.so"/>
         <scr:property name="unpack" type="Boolean" value="true"/>
         <scr:property name="os.family" type="String" value="linux"/>
         <scr:property name="os.arch" type="String" value="x86_64,amd64"/>
