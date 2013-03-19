@@ -18,38 +18,47 @@
 
     <p:option name="href" required="true" px:type="anyFileURI" px:media-type="application/xhtml+xml text/html">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">href</h2>
+            <h2 px:role="name">NCC</h2>
             <p px:role="desc">Input NCC.</p>
             <pre><code class="example">file:/home/user/daisy202/ncc.html</code></pre>
         </p:documentation>
     </p:option>
     <p:option name="output" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">output</h2>
+            <h2 px:role="name">Output</h2>
             <p px:role="desc">Output directory for the EPUB.</p>
             <pre><code class="example">file:/home/user/epub3/</code></pre>
         </p:documentation>
     </p:option>
+    <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Temporary directory</h2>
+            <p px:role="desc">Temporary directory for the EPUB files.</p>
+            <pre><code class="example">file:/tmp/</code></pre>
+        </p:documentation>
+    </p:option>
     <p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">mediaoverlay</h2>
+            <h2 px:role="name">Include Media Overlay</h2>
             <p px:role="desc">Whether or not to include media overlays and associated audio files (true or false).</p>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">compatibility-mode</h2>
+            <h2 px:role="name">Backwards compatible</h2>
             <p px:role="desc">Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</p>
         </p:documentation>
     </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy202-utils/xproc/daisy202-library.xpl"/>
     <p:import href="convert/convert.xpl"/>
 
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
+    <p:variable name="tempDir" select="if (ends-with($temp-dir,'/')) then $temp-dir else concat($temp-dir,'/')"/>
 
     <!-- validate options -->
     <p:in-scope-names name="vars"/>
@@ -74,11 +83,24 @@
             </p:template>
             <p:error code="PDE01"/>
         </p:when>
-        <p:when test="not(matches($output,'\w+:/'))">
+        <p:when test="not(matches($output-dir,'\w+:/'))">
             <p:template>
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
-                        <message>output: "{$output}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
+                        <message>output: "{$output-dir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
+                    </p:inline>
+                </p:input>
+                <p:input port="parameters">
+                    <p:pipe step="vars" port="result"/>
+                </p:input>
+            </p:template>
+            <p:error code="PDE05"/>
+        </p:when>
+        <p:when test="not(matches($tempDir,'\w+:/'))">
+            <p:template>
+                <p:input port="template">
+                    <p:inline exclude-inline-prefixes="#all">
+                        <message>output: "{$tempDir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
                     </p:inline>
                 </p:input>
                 <p:input port="parameters">
@@ -133,7 +155,7 @@
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
-        <p:with-option name="output-dir" select="$output"/>
+        <p:with-option name="output-dir" select="$tempDir"/>
     </px:daisy202-to-epub3-convert>
     
     <!-- decide filename -->
@@ -143,12 +165,15 @@
         </p:input>
     </px:fileset-load>
     <p:split-sequence test="position()=1"/>
-    <p:add-attribute match="/*" attribute-name="result-uri">
+    <p:add-attribute match="/*" attribute-name="result-uri" cx:depends-on="mkdir">
         <p:with-option name="attribute-value" select="concat($output-dir,encode-for-uri(replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]','')))"/>
     </p:add-attribute>
     <p:delete match="/*/*"/>
     <p:identity name="result-uri"/>
     <p:sink/>
+    <px:mkdir name="mkdir">
+        <p:with-option name="href" select="$output-dir"/>
+    </px:mkdir>
     
     <!-- store -->
     <px:epub3-store>
