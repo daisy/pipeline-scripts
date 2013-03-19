@@ -74,18 +74,6 @@
                   <classifier>amd64-Linux-gpp-executable</classifier>
                   <type>nar</type>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>org.xmlsoft</groupId>
-                  <artifactId>xml2</artifactId>
-                  <classifier>i386-Linux-gpp-shared</classifier>
-                  <type>nar</type>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.xmlsoft</groupId>
-                  <artifactId>xml2</artifactId>
-                  <classifier>amd64-Linux-gpp-shared</classifier>
-                  <type>nar</type>
-                </artifactItem>
               </artifactItems>
               <excludes>**/history.xml</excludes>
             </configuration>
