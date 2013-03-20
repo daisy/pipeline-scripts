@@ -122,7 +122,7 @@
                 <p:empty/>
             </p:input>
             <p:input port="stylesheet">
-                <p:document href="../xslt/zedai-to-metadata.xsl"/>
+                <p:document href="http://www.daisy.org/pipeline/modules/metadata-utils/zedai-to-metadata.xsl"/>
             </p:input>
         </p:xslt>
     </p:group>
