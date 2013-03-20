@@ -110,7 +110,7 @@
         <p:pipe port="source" step="dtbook-validator"/>
     </p:variable>
 
-    <p:variable name="filename" select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
+    <p:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->

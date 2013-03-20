@@ -65,7 +65,7 @@
         <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
     </p:variable>
     <p:variable name="filename" 
-        select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
+        select="tokenize($base-uri, '/')[last()]"/>
     
     <p:variable name="document-type" select="if ($math eq 'true') 
         then 'OPF 1.2 (MathML detected)' 
@@ -168,7 +168,7 @@
         <p:input port="source">
             <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
         </p:input>
-    </pxi:nimas-fileset-validator.check-pdfs>    
+    </pxi:nimas-fileset-validator.check-pdfs>
     
     <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>

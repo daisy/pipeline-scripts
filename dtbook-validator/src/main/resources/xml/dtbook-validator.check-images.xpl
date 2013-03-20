@@ -49,53 +49,64 @@
         <p:documentation> Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+        <p:documentation>Utilities for representing a fileset.</p:documentation>
+    </p:import>
+    
     <p:variable name="dtbook-uri" select="base-uri()"/>
     
-    <!-- make a list of image paths:
-        <d:files>
-            <d:file path="file:/full/path/to/image1.jpg" ref="file:/full/path/to/dtbook.xml#ID"/>
-            <d:file path="file:/full/path/to/image1.jpg" ref="file:/full/path/to/dtbook.xml#ID"/>
-        </d:files>
-    -->
     <p:for-each name="list-images">
+        <p:output port="result"/>
         <p:iteration-source select="//dtb:img | //m:math"/>
         <p:variable name="refid" select="*/@id"/>
+        
+        
         <p:choose>
             <!-- dtb:img has @src -->
             <p:when test="*/@src">
-                <p:variable name="imgpath" select="*/resolve-uri(@src, base-uri(.))"/>
-                <p:add-attribute match="d:file">
+                <p:variable name="imgpath" select="resolve-uri(*/@src, $dtbook-uri)"/>
+                <px:fileset-add-entry>
+                    <p:with-option name="href" select="$imgpath"/>
+                    <p:with-option name="ref" select="concat($dtbook-uri, '#', $refid)"/>
                     <p:input port="source">
                         <p:inline>
-                            <d:file/>
+                            <d:fileset/>
                         </p:inline>
                     </p:input>
-                    <p:with-option name="attribute-name" select="'path'"/>
-                    <p:with-option name="attribute-value" select="$imgpath"/>
-                </p:add-attribute>
+                </px:fileset-add-entry>
             </p:when>
             <!-- m:math has @altimg -->
             <p:otherwise>
-                <p:variable name="imgpath" select="*/resolve-uri(@altimg, base-uri(.))"/>
-                <p:add-attribute match="d:file">
+                <p:variable name="imgpath" select="resolve-uri(*/@altimg, $dtbook-uri)"/>
+                <px:fileset-add-entry>
+                    <p:with-option name="href" select="$imgpath"/>
+                    <p:with-option name="ref" select="concat($dtbook-uri, '#', $refid)"/>
                     <p:input port="source">
                         <p:inline>
-                            <d:file/>
+                            <d:fileset/>
                         </p:inline>
                     </p:input>
-                    <p:with-option name="attribute-name" select="'path'"/>
-                    <p:with-option name="attribute-value" select="$imgpath"/>
-                </p:add-attribute>
+                </px:fileset-add-entry>
             </p:otherwise>
         </p:choose>
-        <p:add-attribute match="d:file">
-            <p:with-option name="attribute-name" select="'ref'"/>
-            <p:with-option name="attribute-value" select="concat($dtbook-uri, '#', $refid)"/>
-        </p:add-attribute>
-        
     </p:for-each>
     
-    <p:wrap-sequence wrapper="files" wrapper-prefix="d" wrapper-namespace="http://www.daisy.org/ns/pipeline/data"/>
+    <!-- input fileset -->
+    <px:fileset-create name="fileset-init"/>
     
-    <px:check-files-exist name="check-images-exist"/>    
+    <!-- output fileset -->
+    <px:fileset-join name="fileset-join">
+        <p:input port="source">
+            <p:pipe step="fileset-init" port="result"/>
+            <p:pipe step="list-images" port="result"/>
+        </p:input>
+    </px:fileset-join>
+    
+    <px:check-files-exist name="check-images-exist">
+        <p:input port="source">
+            <p:pipe step="fileset-join" port="result"/>
+        </p:input>
+    </px:check-files-exist>  
+    
+    
 </p:declare-step>

@@ -61,14 +61,6 @@
         <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
 
-    <!--<p:output port="reports-index">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">reports-index</h1>
-            <p px:role="desc">Index to all generated reports. Interesting only in the case that the reports are saved to disk.</p>
-        </p:documentation>
-        <p:pipe step="create-reports-index" port="result"/>
-    </p:output>-->
-    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -111,8 +103,7 @@
 
     <p:variable name="base-uri" select="base-uri()"/>
     <p:variable name="package-doc-filename" 
-        select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
-    
+        select="tokenize($base-uri, '/')[last()]"/>
     
     <cx:message message="Nimas fileset validator: validating files."/>
     <p:sink/>
@@ -145,7 +136,6 @@
         <p:load name="load-dtbook">
             <p:with-option name="href" select="$dtbook-uri"/>
         </p:load>
-
         <!-- see if there's MathML -->
         <p:group name="look-for-mathml">
             <p:output port="result"/>
