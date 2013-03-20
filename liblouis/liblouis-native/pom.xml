@@ -52,6 +52,18 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>i386-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
                   <artifactId>louisutdml</artifactId>
                   <classifier>i386-Linux-gpp-shared</classifier>
                   <type>nar</type>
@@ -60,6 +72,18 @@
                   <groupId>org.liblouis</groupId>
                   <artifactId>louisutdml</artifactId>
                   <classifier>amd64-Linux-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>i386-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>x86_64-MacOSX-gpp-shared</classifier>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
@@ -74,8 +98,19 @@
                   <classifier>amd64-Linux-gpp-executable</classifier>
                   <type>nar</type>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>i386-MacOSX-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>x86_64-MacOSX-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
               </artifactItems>
-              <excludes>**/history.xml</excludes>
             </configuration>
           </execution>
         </executions>
@@ -152,7 +187,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-mac</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-mac.xml,
-                  native=src/main/resources/native/mac
+                  native/i386=target/generated-resources/native/i386-MacOSX-gpp,
+                  native/x86_64=target/generated-resources/native/x86_64-MacOSX-gpp
                 </Include-Resource>
               </instructions>
             </configuration>
