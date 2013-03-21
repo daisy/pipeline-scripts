@@ -4,6 +4,7 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:louis="http://liblouis.org/liblouis"
+    xmlns:hyphen="http://hunspell.sourceforge.net/Hyphen"
     exclude-inline-prefixes="p px xsl"
     type="px:xml-to-pef.load-translator" version="1.0">
     
@@ -37,23 +38,52 @@
                             </p:load>
                         </p:group>
                         <p:catch>
-                            <!-- If the URL is not a document, it must be a liblouis table -->
-                            <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
-                                <p:input port="source">
-                                    <p:inline>
-                                        <xsl:stylesheet version="2.0">
-                                            <xsl:variable name="table"/>
-                                            <xsl:variable name="hyphenate" select="'false'"/>
-                                            <xsl:template match="/*">
-                                                <xsl:copy>
-                                                    <xsl:sequence select="louis:translate($table, string(.), (), $hyphenate='true')"/>
-                                                </xsl:copy>
-                                            </xsl:template>
-                                        </xsl:stylesheet>
-                                    </p:inline>
-                                </p:input>
-                                <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
-                            </p:add-attribute>
+                            <p:choose>
+                                <p:when test="matches($translator, '.*(\.cti|\.ctb|\.utb)$')">
+                                    <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
+                                        <p:input port="source">
+                                            <p:inline>
+                                                <xsl:stylesheet version="2.0">
+                                                    <xsl:variable name="table"/>
+                                                    <xsl:template match="/*">
+                                                        <xsl:copy>
+                                                            <xsl:sequence select="louis:translate($table, string(.))"/>
+                                                        </xsl:copy>
+                                                    </xsl:template>
+                                                </xsl:stylesheet>
+                                            </p:inline>
+                                        </p:input>
+                                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
+                                    </p:add-attribute>
+                                </p:when>
+                                <p:when test="matches($translator, '.*\.dic$')">
+                                    <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
+                                        <p:input port="source">
+                                            <p:inline>
+                                                <xsl:stylesheet version="2.0">
+                                                    <xsl:variable name="table"/>
+                                                    <xsl:template match="text()">
+                                                        <xsl:sequence select="hyphen:hyphenate($table, string(.))"/>
+                                                    </xsl:template>
+                                                    <xsl:template match="element()|@*|comment()|processing-instruction()">
+                                                        <xsl:copy>
+                                                            <xsl:apply-templates select="@*|node()"/>
+                                                        </xsl:copy>
+                                                    </xsl:template>
+                                                </xsl:stylesheet>
+                                            </p:inline>
+                                        </p:input>
+                                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
+                                    </p:add-attribute>
+                                </p:when>
+                                <p:otherwise>
+                                    <p:error code="px:brl01">
+                                        <p:input port="source">
+                                            <p:inline><message>Translator could not be loaded.</message></p:inline>
+                                        </p:input>
+                                    </p:error>
+                                </p:otherwise>
+                            </p:choose>
                         </p:catch>
                     </p:try>
                 </p:when>
