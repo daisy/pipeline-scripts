@@ -168,7 +168,7 @@
         </p:with-option>
     </p:add-attribute>
     <p:add-attribute match="/*" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>
+        <p:with-option name="attribute-value" select="concat($content-dir,'navigation.xhtml')"/>
     </p:add-attribute>
     <p:delete match="/*/@xml:base"/>
     <p:identity name="result.navigation"/>
@@ -182,7 +182,7 @@
                 </p:iteration-source>
                 <p:variable name="xml-base" select="base-uri(/*)"/>
                 <px:fileset-create>
-                    <p:with-option name="base" select="$publication-dir"/>
+                    <p:with-option name="base" select="$content-dir"/>
                 </px:fileset-create>
                 <px:fileset-add-entry>
                     <p:with-option name="href" select="$xml-base"/>
@@ -234,7 +234,7 @@
                 </p:input>
             </p:insert>
             <p:add-attribute attribute-name="xml:base" match="/*">
-                <p:with-option name="attribute-value" select="concat($publication-dir,'ncx.xml')"/>
+                <p:with-option name="attribute-value" select="concat($content-dir,'ncx.xml')"/>
             </p:add-attribute>
             <p:delete match="/*/@xml:base"/>
         </p:when>
@@ -249,7 +249,7 @@
     <p:identity name="result.ncx"/>
     
     <px:fileset-create>
-        <p:with-option name="base" select="$publication-dir"/>
+        <p:with-option name="base" select="$content-dir"/>
     </px:fileset-create>
     <p:choose>
         <p:when test="$compatibility-mode='true'">

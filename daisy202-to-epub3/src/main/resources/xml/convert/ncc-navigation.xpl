@@ -164,9 +164,9 @@
         <p:xslt>
             <p:with-param name="base" select="$publication-dir"/>
             <p:with-param name="uri"
-                select="concat(if (starts-with(/*/@href,'#'))
-                                    then concat($publication-dir,'navigation.xhtml')
-                                    else concat($content-dir,replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml')),
+                select="concat(if (matches(/*/@href,'^(ncc\.html)?#','i'))
+                                    then ''
+                                    else replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml'),
                                if (contains(/*/@href,'#')) then concat('#',tokenize(/*/@href,'#')[last()]) else '')"/>
             <p:input port="stylesheet">
                 <p:document href="ncc-navigation.make-new-hrefs.xsl"/>

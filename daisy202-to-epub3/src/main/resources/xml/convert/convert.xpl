@@ -43,7 +43,7 @@
     <p:import href="package.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
-    <p:variable name="publication-dir" select="concat($epub-dir,'OEBPS/')"/>
+    <p:variable name="publication-dir" select="concat($epub-dir,'EPUB/')"/>
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
     <p:variable name="daisy-dir" select="base-uri(/*)">
         <p:pipe port="fileset.in" step="main"/>
@@ -60,70 +60,6 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
-
-    <!-- Make a fileset and a document sequence of all the content documents in reading order -->
-    <p:for-each>
-        <p:iteration-source select="//*[local-name()='text' and @src]"/>
-        <p:add-attribute match="/*" attribute-name="src">
-            <p:with-option name="attribute-value" select="tokenize(resolve-uri(/*/@src,base-uri(/*)),'[\?#]')[1]"/>
-        </p:add-attribute>
-    </p:for-each>
-    <p:wrap-sequence wrapper="wrapper"/>
-    <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
-                    <xsl:template match="/*">
-                        <xsl:copy>
-                            <xsl:copy-of select="@*"/>
-                            <xsl:for-each select="distinct-values(//@src)">
-                                <file src="{.}"/>
-                            </xsl:for-each>
-                        </xsl:copy>
-                    </xsl:template>
-                </xsl:stylesheet>
-            </p:inline>
-        </p:input>
-    </p:xslt>
-    <p:for-each>
-        <p:iteration-source select="/*/*"/>
-        <cx:message>
-            <p:with-option name="message" select="concat('looking for ',/*/@src,' in fileset')"/>
-        </cx:message>
-        <px:fileset-load>
-            <p:with-option name="href" select="/*/@src"/>
-            <p:input port="fileset">
-                <p:pipe port="fileset.in" step="main"/>
-            </p:input>
-            <p:input port="in-memory">
-                <p:pipe port="in-memory.in" step="main"/>
-            </p:input>
-        </px:fileset-load>
-    </p:for-each>
-    <p:identity name="content-flow.in-memory"/>
-    <p:sink/>
-
-    <p:for-each>
-        <p:variable name="base" select="base-uri()"/>
-        <p:add-attribute match="/*" attribute-name="xml:base">
-            <p:input port="source">
-                <p:inline exclude-inline-prefixes="#all">
-                    <d:fileset>
-                        <d:file/>
-                    </d:fileset>
-                </p:inline>
-            </p:input>
-            <p:with-option name="attribute-value" select="replace($base,'[^/]+$','')"/>
-        </p:add-attribute>
-        <p:add-attribute match="/*/*" attribute-name="href">
-            <p:with-option name="attribute-value" select="$base"/>
-        </p:add-attribute>
-    </p:for-each>
-    <px:fileset-join name="content-flow.fileset"/>
-    <p:sink/>
 
     <!-- Make a map of all links from the SMIL files to the HTML files -->
     <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
@@ -209,7 +145,7 @@
             </p:otherwise>
         </p:choose>
     </p:for-each>
-    <pxi:daisy202-to-epub3-content name="content-without-full-navigation">
+    <pxi:daisy202-to-epub3-content name="content-without-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
@@ -230,9 +166,54 @@
             <p:pipe port="result" step="ncc-navigation"/>
         </p:input>
         <p:input port="content">
-            <p:pipe port="content" step="content-without-full-navigation"/>
+            <p:pipe port="content" step="content-without-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-navigation>
+    
+    <!-- Content Documents -->
+    <!-- Nav Doc if it's the only content, or other XHTML otherwise -->
+    <p:count limit="1">
+        <p:input port="source">
+            <p:pipe port="content" step="content-without-navigation"/>
+        </p:input>
+    </p:count>
+    <p:choose name="content-docs">
+        <p:when test="number(/*)=0">
+            <p:output port="content" sequence="true" primary="true"/>
+            <p:output port="fileset">
+                <p:pipe port="result" step="fileset"/>
+            </p:output>
+            <p:identity name="fileset">
+                <p:input port="source">
+                    <p:pipe port="fileset" step="navigation"/>
+                </p:input>
+            </p:identity>
+            <p:identity name="content">
+                <p:input port="source">
+                    <p:pipe port="navigation" step="navigation"/>
+                </p:input>
+            </p:identity>
+        </p:when>
+        <p:otherwise>
+            <p:output port="content" sequence="true" primary="true"/>
+            <p:output port="fileset">
+                <p:pipe port="result" step="fileset"/>
+            </p:output>
+            <p:identity name="fileset">
+                <p:input port="source">
+                    <p:pipe port="fileset" step="content-without-navigation"/>
+                </p:input>
+            </p:identity>
+            <p:identity name="content">
+                <p:input port="source">
+                    <p:pipe port="content" step="content-without-navigation"/>
+                </p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
+    <p:add-xml-base/>
+    <p:identity/>
+    <p:sink/>
 
     <pxi:daisy202-to-epub3-mediaoverlay name="mediaoverlay">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Convert and copy the content files and SMIL-files.</p></p:documentation>
@@ -240,14 +221,11 @@
         <p:with-option name="daisy-dir" select="$daisy-dir"/>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="navigation-uri" select="base-uri(/*)">
-            <p:pipe port="result" step="ncc-navigation"/>
-        </p:with-option>
         <p:input port="daisy-smil">
             <p:pipe port="result" step="smil-flow.in-memory"/>
         </p:input>
         <p:input port="content">
-            <p:pipe port="content" step="content-without-full-navigation"/>
+            <p:pipe port="content" step="content-docs"/>
         </p:input>
     </pxi:daisy202-to-epub3-mediaoverlay>
 
@@ -257,7 +235,7 @@
             <p:pipe port="result" step="smil-flow.in-memory"/>
         </p:input>
         <p:input port="daisy-content">
-            <p:pipe port="content" step="content-without-full-navigation"/>
+            <p:pipe port="content" step="content-docs"/>
         </p:input>
         <p:with-option name="include-mediaoverlay-resources" select="$mediaoverlay"/>
         <p:with-option name="content-dir" select="$content-dir"/>
@@ -266,7 +244,7 @@
     <pxi:daisy202-to-epub3-package name="package">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">Make and store the OPF.</p:documentation>
         <p:input port="spine">
-            <p:pipe port="fileset" step="content-without-full-navigation"/>
+            <p:pipe port="fileset" step="content-docs"/>
         </p:input>
         <p:input port="resources">
             <p:pipe port="fileset" step="resources"/>
