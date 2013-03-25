@@ -46,95 +46,45 @@
 
     <xsl:template match="@class">
         <xsl:copy-of select="."/>
-        <xsl:choose>
-            <xsl:when test=".='title'">
-                <xsl:attribute name="epub:type" select="'title'"/>
-            </xsl:when>
-            <xsl:when test=".='jacket'">
-                <xsl:attribute name="epub:type" select="'cover'"/>
-            </xsl:when>
-            <xsl:when test=".='front'">
-                <xsl:attribute name="epub:type" select="'frontmatter'"/>
-            </xsl:when>
-            <xsl:when test=".='title-page'">
-                <xsl:attribute name="epub:type" select="'titlepage'"/>
-            </xsl:when>
-            <xsl:when test=".='copyright-page'">
-                <xsl:attribute name="epub:type" select="'copyright-page'"/>
-            </xsl:when>
-            <xsl:when test=".='acknowledgments'">
-                <xsl:attribute name="epub:type" select="'acknowledgments'"/>
-            </xsl:when>
-            <xsl:when test=".='prolog'">
-                <xsl:attribute name="epub:type" select="'prologue'"/>
-            </xsl:when>
-            <xsl:when test=".='introduction'">
-                <xsl:attribute name="epub:type" select="'introduction'"/>
-            </xsl:when>
-            <xsl:when test=".='dedication'">
-                <xsl:attribute name="epub:type" select="'dedication'"/>
-            </xsl:when>
-            <xsl:when test=".='foreword'">
-                <xsl:attribute name="epub:type" select="'foreword'"/>
-            </xsl:when>
-            <xsl:when test=".='preface'">
-                <xsl:attribute name="epub:type" select="'preface'"/>
-            </xsl:when>
-            <xsl:when test=".='print-toc'">
-                <xsl:attribute name="epub:type" select="'toc'"/> <!-- is this right? -->
-            </xsl:when>
-            <xsl:when test=".='part'">
-                <xsl:attribute name="epub:type" select="'part'"/>
-            </xsl:when>
-            <xsl:when test=".='chapter'">
-                <xsl:attribute name="epub:type" select="'chapter'"/>
-            </xsl:when>
-            <xsl:when test=".='section'">
-                <xsl:attribute name="epub:type" select="'subchapter'"/> <!-- is this right? -->
-            </xsl:when>
-            <xsl:when test=".='sub-section'">
-                <xsl:attribute name="epub:type" select="'division'"/> <!-- is this right? -->
-            </xsl:when>
-            <xsl:when test=".='minor-head'">
-                <xsl:attribute name="epub:type" select="'bridgehead'"/> <!-- is this right? -->
-            </xsl:when>
-            <xsl:when test=".='bibliography'">
-                <xsl:attribute name="epub:type" select="'bibliography'"/>
-            </xsl:when>
-            <xsl:when test=".='glossary'">
-                <xsl:attribute name="epub:type" select="'glossary'"/> <!-- can glossterm and glossdef be inferred automatically? -->
-            </xsl:when>
-            <xsl:when test=".='appendix'">
-                <xsl:attribute name="epub:type" select="'appendix'"/>
-            </xsl:when>
-            <xsl:when test=".='index'">
-                <xsl:attribute name="epub:type" select="'index'"/>
-            </xsl:when>
-            <xsl:when test=".='index-category'">
-                <!-- <xsl:attribute name="epub:type" select="''"/> ideas? -->
-            </xsl:when>
-            <xsl:when test=".='sidebar'">
-                <xsl:attribute name="epub:type" select="'sidebar'"/>
-            </xsl:when>
-            <xsl:when test=".='optional-prodnote'">
-                <xsl:attribute name="epub:type" select="'colophon'"/> <!-- is this right? -->
-            </xsl:when>
-            <xsl:when test=".='noteref'">
-                <xsl:attribute name="epub:type" select="'noteref'"/>
-            </xsl:when>
-            <xsl:when test=".='group'">
-                <!-- <xsl:attribute name="epub:type" select="''"/> ideas? -->
-            </xsl:when>
-            <xsl:when test=".='page-front'">
-                <xsl:attribute name="epub:type" select="'pagebreak'"/> <!-- no way of distinguishing front/normal/special? -->
-            </xsl:when>
-            <xsl:when test=".='page-normal'">
-                <xsl:attribute name="epub:type" select="'pagebreak'"/> <!-- no way of distinguishing front/normal/special? -->
-            </xsl:when>
-            <xsl:when test=".='page-special'">
-                <xsl:attribute name="epub:type" select="'pagebreak'"/> <!-- no way of distinguishing front/normal/special? -->
-            </xsl:when>
-        </xsl:choose>
+        <!--
+            - I'm unsure about these: group, index-category, print-toc, section, sub-section, minor-head, optional-prodnote
+            - page-front, page-normal, page-special: is there no way of distinguishing front/normal/special?
+            - glossary: could glossterm and glossdef be inferred automatically?
+        -->
+        <xsl:variable name="types" select="for $class in tokenize(.,'\s+') return (
+                                                if ($class='title') then 'title' else
+                                                if ($class='jacket') then 'cover' else
+                                                if ($class='front') then 'frontmatter' else
+                                                if ($class='title-page') then 'titlepage' else
+                                                if ($class='copyright-page') then 'copyright-page' else
+                                                if ($class='acknowledgments') then 'acknowledgments' else
+                                                if ($class='prolog') then 'prologue' else
+                                                if ($class='introduction') then 'introduction' else
+                                                if ($class='dedication') then 'dedication' else
+                                                if ($class='foreword') then 'foreword' else
+                                                if ($class='preface') then 'preface' else
+                                                if ($class='print-toc') then 'toc' else
+                                                if ($class='part') then 'part' else
+                                                if ($class='chapter') then 'chapter' else
+                                                if ($class='section') then 'subchapter' else
+                                                if ($class='sub-section') then 'division' else
+                                                if ($class='minor-head') then 'bridgehead' else
+                                                if ($class='bibliography') then 'bibliography' else
+                                                if ($class='glossary') then 'glossary' else
+                                                if ($class='appendix') then 'appendix' else
+                                                if ($class='index') then 'index' else
+                                                if ($class='index-category') then 'index-category' else
+                                                if ($class='sidebar') then 'sidebar' else
+                                                if ($class='optional-prodnote') then 'colophon' else
+                                                if ($class='noteref') then 'noteref' else
+                                                if ($class='group') then () else
+                                                if ($class='page-front') then 'pagebreak' else
+                                                if ($class='page-normal') then 'pagebreak' else
+                                                if ($class='page-special') then 'pagebreak' else ()
+                                           )"/>
+        <xsl:if test="$types">
+            <xsl:attribute name="epub:type" select="string-join($types,' ')"/>
+        </xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>
