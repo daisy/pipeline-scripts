@@ -75,7 +75,7 @@
                                                 if ($class='index') then 'index' else
                                                 if ($class='index-category') then 'index-category' else
                                                 if ($class='sidebar') then 'sidebar' else
-                                                if ($class='optional-prodnote') then 'colophon' else
+                                                if ($class='optional-prodnote') then 'annotation' else
                                                 if ($class='noteref') then 'noteref' else
                                                 if ($class='group') then () else
                                                 if ($class='page-front') then 'pagebreak' else
