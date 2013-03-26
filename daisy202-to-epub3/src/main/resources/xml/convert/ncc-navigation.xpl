@@ -36,7 +36,7 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">An EPUB3 Navigation Document with contents based purely on the DAISY 2.02 NCC.</p>
             <pre><code class="example">
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-href="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/ncc.xhtml" original-href="file:/home/user/daisy202/ncc.html">...</html>
             </code></pre>
         </p:documentation>
         <p:pipe port="result" step="ncc-navigation.result"/>
@@ -164,9 +164,9 @@
         <p:xslt>
             <p:with-param name="base" select="$publication-dir"/>
             <p:with-param name="uri"
-                select="concat(if (starts-with(/*/@href,'#'))
-                                    then concat($publication-dir,'navigation.xhtml')
-                                    else concat($content-dir,replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml')),
+                select="concat(if (matches(/*/@href,'^(ncc\.html)?#','i'))
+                                    then ''
+                                    else replace(tokenize(/*/@href,'#')[1],'^(.*)\.html$','$1.xhtml'),
                                if (contains(/*/@href,'#')) then concat('#',tokenize(/*/@href,'#')[last()]) else '')"/>
             <p:input port="stylesheet">
                 <p:document href="ncc-navigation.make-new-hrefs.xsl"/>
@@ -177,7 +177,7 @@
         <p:with-option name="attribute-value" select="base-uri(/*)"/>
     </p:add-attribute>
     <p:add-attribute match="/*" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="concat($publication-dir,'navigation.xhtml')"/>
+        <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
     <cx:message>
         <p:with-option name="message" select="'created Navigation Document from NCC'"/>

@@ -36,12 +36,6 @@
             <pre><code class="example">file:/home/user/epub3/epub/Publication/Content/</code></pre>
         </p:documentation>
     </p:option>
-    <p:option name="navigation-uri" required="true">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="name">URI to the EPUB3 Navigation Document</p>
-            <pre><code class="example">file:/home/user/epub3/epub/Publication/navigation.xhtml</code></pre>
-        </p:documentation>
-    </p:option>
     <p:option name="include-mediaoverlay" required="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">Whether or not to include media overlays. Can be either 'true' or 'false'.</p>
@@ -69,7 +63,7 @@
         <p:output port="result"/>
         <p:viewport match="/*//mo:seq[@epub:textref]">
             <p:add-attribute match="/*" attribute-name="epub:textref">
-                <p:with-option name="attribute-value" select="replace(/*/@epub:textref,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
+                <p:with-option name="attribute-value" select="/*/@epub:textref/replace(.,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
             </p:add-attribute>
             <pxi:fix-textrefs/>
         </p:viewport>
@@ -114,31 +108,13 @@
                         <p:pipe port="result" step="mediaoverlay-joined"/>
                     </p:input>
                 </px:mediaoverlay-rearrange>
-                <p:choose>
-                    <p:when test="$result-uri = concat($publication-dir,'navigation.smil')">
-                        <!-- for nav doc; make links relative to publication-dir instead of content-dir -->
-                        <p:viewport match="//mo:text">
-                            <p:add-attribute match="/*" attribute-name="src">
-                                <p:with-option name="attribute-value" select="concat('navigation.xhtml#',tokenize(/*/@src,'#')[last()])"/>
-                            </p:add-attribute>
-                        </p:viewport>
-                        <p:viewport match="//mo:audio">
-                            <p:add-attribute match="/*" attribute-name="src">
-                                <p:with-option name="attribute-value" select="concat(substring-after($content-dir,$publication-dir),/*/@src)"/>
-                            </p:add-attribute>
-                        </p:viewport>
-                    </p:when>
-                    <p:otherwise>
-                        <p:identity/>
-                    </p:otherwise>
-                </p:choose>
                 <p:add-attribute match="/*" attribute-name="xml:base">
                     <p:with-option name="attribute-value" select="$result-uri"/>
                 </p:add-attribute>
                 <p:delete match="/*/@xml:base"/>
                 <p:viewport match="//mo:text">
                     <p:add-attribute match="/*" attribute-name="src">
-                        <p:with-option name="attribute-value" select="replace(/*/@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
+                        <p:with-option name="attribute-value" select="/*/replace(@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
                     </p:add-attribute>
                 </p:viewport>
                 <pxi:fix-textrefs/>
