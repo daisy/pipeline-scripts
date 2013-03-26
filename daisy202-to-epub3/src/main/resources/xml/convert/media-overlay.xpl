@@ -63,10 +63,7 @@
         <p:output port="result"/>
         <p:viewport match="/*//mo:seq[@epub:textref]">
             <p:add-attribute match="/*" attribute-name="epub:textref">
-                <p:with-option name="attribute-value" select="/*/@epub:textref/
-                    (if (matches(.,'^ncc\.html(#.*)?$','i')) 
-                    then replace(.,'^(.+)\.[^\.]*#(.*)$','navigation.xhtml#$2') 
-                    else  replace(.,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2'))"/>
+                <p:with-option name="attribute-value" select="/*/@epub:textref/replace(.,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
             </p:add-attribute>
             <pxi:fix-textrefs/>
         </p:viewport>
@@ -117,10 +114,7 @@
                 <p:delete match="/*/@xml:base"/>
                 <p:viewport match="//mo:text">
                     <p:add-attribute match="/*" attribute-name="src">
-                        <p:with-option name="attribute-value" select="/*/
-                            (if (ends-with(tokenize(@src,'#')[1],'ncc.html')) 
-                            then replace(@src,'^(.*)ncc.html#(.*)$','$1navigation.xhtml#$2') 
-                            else replace(@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2'))"/>
+                        <p:with-option name="attribute-value" select="/*/replace(@src,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
                     </p:add-attribute>
                 </p:viewport>
                 <pxi:fix-textrefs/>

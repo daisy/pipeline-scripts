@@ -26,7 +26,7 @@
             <p px:role="desc">The same sequence of EPUB3 Content Documents as arrived on the "content" port, but with the old Navigation Document replaced by the new one (if it's in the spine).</p>
             <pre><code class="example">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/a.xhtml" original-href="file:/home/user/daisy202/a.html">...</html>
-                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/navigation.xhtml" original-href="file:/home/user/daisy202/ncc.html">...</html>
+                <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/ncc.xhtml" original-href="file:/home/user/daisy202/ncc.html">...</html>
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/b.xhtml" original-href="file:/home/user/daisy202/b.html">...</html>
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/home/user/epub3/epub/Publication/Content/c.xhtml" original-href="file:/home/user/daisy202/c.html">...</html>
             </code></pre>
@@ -168,7 +168,7 @@
         </p:with-option>
     </p:add-attribute>
     <p:add-attribute match="/*" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="concat($content-dir,'navigation.xhtml')"/>
+        <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
     <p:delete match="/*/@xml:base"/>
     <p:identity name="result.navigation"/>
