@@ -50,12 +50,10 @@
     </p:variable>
 
     <!-- Make a fileset and a document sequence of all the SMIL files in reading order -->
-    <px:fileset-filter media-types="application/smil+xml" name="smil-flow.fileset">
-        <p:input port="source">
+    <px:fileset-load media-types="application/smil+xml" name="smil-flow.in-memory">
+        <p:input port="fileset">
             <p:pipe port="fileset.in" step="main"/>
         </p:input>
-    </px:fileset-filter>
-    <px:fileset-load name="smil-flow.in-memory">
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>

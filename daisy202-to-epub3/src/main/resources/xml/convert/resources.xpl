@@ -12,7 +12,7 @@
     <p:input port="daisy-content" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">The EPUB3 Content Documents with @original-href annotated to reference the original DAISY 2.02 content files.</p:documentation>
     </p:input>
-    
+
     <p:output port="fileset" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">A fileset with references to all the resources (audio, images, etc.).</p:documentation>
     </p:output>
@@ -28,7 +28,8 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
 
-    <p:for-each>
+    <p:for-each name="content-resources">
+        <p:output port="result" sequence="true"/>
         <p:iteration-source>
             <p:pipe port="daisy-content" step="resources"/>
         </p:iteration-source>
@@ -48,7 +49,6 @@
             <p:with-option name="message" select="concat('extracted list of resources from ',$original-href)"/>
         </cx:message>
     </p:for-each>
-    <px:fileset-join name="content-resources"/>
     <p:sink/>
     <p:for-each name="smil-resources">
         <p:output port="result" sequence="true"/>
@@ -98,5 +98,5 @@
     <cx:message>
         <p:with-option name="message" select="'determined media type for all auxiliary resources'"/>
     </cx:message>
-    
+
 </p:declare-step>
