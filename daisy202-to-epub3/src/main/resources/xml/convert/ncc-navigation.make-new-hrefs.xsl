@@ -8,7 +8,7 @@
     <xsl:template match="/*">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="href" select="replace(pf:relativize-uri($uri,$base),'^navigation.xhtml','')"/>
+            <xsl:attribute name="href" select="replace(pf:relativize-uri($uri,$base),'^ncc.xhtml','')"/>
             <xsl:copy-of select="node()"/>
         </xsl:copy>
     </xsl:template>

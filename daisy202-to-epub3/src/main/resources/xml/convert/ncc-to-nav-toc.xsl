@@ -58,21 +58,10 @@
         <xsl:variable name="link-href" select="tokenize(child::*[local-name()='a'][1]/@href,'#')[1]"/>
         <xsl:variable name="link-id" select="if (contains(child::*[local-name()='a'][1]/@href,'#')) then tokenize(child::*[local-name()='a'][1]/@href,'#')[last()] else ''"/>
         <xsl:variable name="self-id" select="ancestor-or-self::*/@id"/>
-        <xsl:choose>
-            <xsl:when test="not($link-href='') and $link-href='navigation.xhtml' and not($link-id='') and $self-id=$link-id">
-                <!-- is link to self; remove it -->
-                <span>
-                    <xsl:copy-of select="@id"/>
-                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <a href="{child::*[local-name()='a'][1]/@href}">
-                    <xsl:copy-of select="@id"/>
-                    <xsl:value-of select="child::*[local-name()='a'][1]"/>
-                </a>
-            </xsl:otherwise>
-        </xsl:choose>
+        <a href="{child::*[local-name()='a'][1]/@href}">
+            <xsl:copy-of select="@id"/>
+            <xsl:value-of select="child::*[local-name()='a'][1]"/>
+        </a>
     </xsl:template>
 
 </xsl:stylesheet>
