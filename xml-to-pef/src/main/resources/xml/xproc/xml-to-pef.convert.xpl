@@ -8,7 +8,6 @@
     type="px:xml-to-pef.convert" name="convert" version="1.0">
     
     <p:input port="source" primary="true"/>
-    <p:input port="preprocessors" sequence="true"/>
     <p:input port="translators" sequence="true"/>
     <p:input port="metadata"/>
     
@@ -18,7 +17,6 @@
     <p:option name="temp-dir" required="true"/>
     
     <p:import href="styling.xpl"/>
-    <p:import href="preprocessing.xpl"/>
     <p:import href="translation.xpl"/>
     <p:import href="formatting.xpl"/>
     <p:import href="add-metadata.xpl"/>
@@ -38,19 +36,6 @@
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
     </pxi:styling>
-    
-    <!-- ============= -->
-    <!-- PREPROCESSING -->
-    <!-- ============= -->
-    
-    <pxi:preprocessing>
-        <p:input port="preprocessors">
-            <p:pipe step="convert" port="preprocessors"/>
-        </p:input>
-        <p:with-option name="temp-dir" select="string(/c:result)">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:with-option>
-    </pxi:preprocessing>
     
     <!-- =========== -->
     <!-- TRANSLATION -->

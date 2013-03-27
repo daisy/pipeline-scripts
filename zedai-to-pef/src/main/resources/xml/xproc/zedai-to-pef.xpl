@@ -51,18 +51,10 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="preprocessor" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">preprocessor</h2>
-            <p px:role="desc">Identifier (URL) of a custom preprocessor unit (XProc step).</p>
-            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xproc/preprocessor.xpl</code></pre>
-        </p:documentation>
-    </p:option>
-    
     <p:option name="translator" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">translator</h2>
-            <p px:role="desc">Identifier (URL) of the translator (XSLT or XProc step or liblouis table) to be used. Defaults to a simple generic liblouis-based translator.</p>
+            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Must be a comma separated list of identifiers (URLs). Defaults to a simple generic liblouis-based translator.</p>
             <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xslt/translator.xsl</code></pre>
         </p:documentation>
     </p:option>
@@ -82,7 +74,6 @@
     </p:option>
     
     <p:import href="zedai-to-pef.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-preprocessor.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-translator.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.store.xpl"/>
     
@@ -90,10 +81,6 @@
     <!-- LOAD COMPONENTS -->
     <!-- =============== -->
     
-    <px:xml-to-pef.load-preprocessor name="preprocessor">
-        <p:with-option name="preprocessor" select="$preprocessor"/>
-    </px:xml-to-pef.load-preprocessor>
-    <p:sink/>
     <px:xml-to-pef.load-translator name="translator">
         <p:with-option name="translator" select="if ($translator!='') then $translator else
             'http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate.xsl'"/>
@@ -107,9 +94,6 @@
     <px:zedai-to-pef.convert>
         <p:input port="source">
             <p:pipe step="zedai-to-pef" port="source"/>
-        </p:input>
-        <p:input port="preprocessors">
-            <p:pipe step="preprocessor" port="result"/>
         </p:input>
         <p:input port="translators">
             <p:pipe step="translator" port="result"/>

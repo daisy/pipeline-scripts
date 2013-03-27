@@ -4,7 +4,7 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.convert.xpl" uri="../xml/xproc/xml-to-pef.convert.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.store.xpl" uri="../xml/xproc/xml-to-pef.store.xpl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-preprocessor.xpl" uri="../xml/xproc/xml-to-pef.load-preprocessor.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xslt/block-translator-template.xsl" uri="../xml/xslt/block-translator-template.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-translator.xpl" uri="../xml/xproc/xml-to-pef.load-translator.xpl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-saxon" />

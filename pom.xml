@@ -26,6 +26,7 @@
     <braille.dtbook-to-pef.version>${braille.modules.version}</braille.dtbook-to-pef.version>
     <braille.libhyphen-core.version>${braille.modules.version}</braille.libhyphen-core.version>
     <braille.libhyphen-native.version>${braille.modules.version}</braille.libhyphen-native.version>
+    <braille.libhyphen-ooo-tables.version>3.2.0-SNAPSHOT</braille.libhyphen-ooo-tables.version>
     <braille.libhyphen-saxon.version>${braille.modules.version}</braille.libhyphen-saxon.version>
     <braille.liblouis-calabash.version>${braille.modules.version}</braille.liblouis-calabash.version>
     <braille.liblouis-core.version>${braille.modules.version}</braille.liblouis-core.version>
@@ -44,7 +45,7 @@
     <braille.xml-to-pef.version>${braille.modules.version}</braille.xml-to-pef.version>
     <braille.zedai-to-pef.version>${braille.modules.version}</braille.zedai-to-pef.version>
   </properties>
-
+  
   <modules>
     <module>common-java</module>
     <module>liblouis/liblouis-core</module>
@@ -64,6 +65,7 @@
     <module>libhyphen/libhyphen-core</module>
     <module>libhyphen/libhyphen-native</module>
     <module>libhyphen/libhyphen-saxon</module>
+    <module>libhyphen/libhyphen-ooo-tables</module>
     <module>texhyph/texhyph-core</module>
     <module>texhyph/texhyph-saxon</module>
     <module>pef/pef-to-html</module>
@@ -71,7 +73,7 @@
     <module>zedai-to-pef</module>
     <module>dtbook-to-pef</module>
   </modules>
-
+  
   <dependencyManagement>
     <dependencies>
       <!-- Braille modules -->
@@ -108,7 +110,12 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>libhyphen-native</artifactId>
-        <version>${braille.libhyphen-saxon.version}</version>
+        <version>${braille.libhyphen-native.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>libhyphen-ooo-tables</artifactId>
+        <version>${braille.libhyphen-ooo-tables.version}</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -282,7 +289,7 @@
       <dependency>
         <groupId>org.liblouis</groupId>
         <artifactId>louis</artifactId>
-        <version>2.5.2</version>
+        <version>2.5.3-SNAPSHOT</version>
         <type>nar</type>
       </dependency>
       <dependency>
@@ -312,7 +319,16 @@
       <name>Maven Central</name>
       <url>http://repo.maven.apache.org/maven2/</url>
     </repository>
-    <!-- TODO Remove when texhyphj and jhyphen are in sonatype-nexus-snapshots-->
+    <repository>
+      <id>sonatype-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
     <repository>
       <id>bertfrees-github-snapshots</id>
       <url>http://bertfrees.github.com/snapshots</url>

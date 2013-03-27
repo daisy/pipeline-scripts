@@ -6,8 +6,6 @@
 	xmlns:my="http://github.com/bertfrees"
 	exclude-result-prefixes="#all">
 	
-	<xsl:output method="xml" encoding="utf-8"/>
-	
 	<xsl:template match="/">
 		<xsl:if test="not(/*/@xml:lang)">
 			<xsl:message terminate="yes">

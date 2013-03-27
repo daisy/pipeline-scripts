@@ -5,6 +5,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:hyphen="http://hunspell.sourceforge.net/Hyphen"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-inline-prefixes="p px xsl"
     type="px:xml-to-pef.load-translator" version="1.0">
     
@@ -44,11 +45,10 @@
                                         <p:input port="source">
                                             <p:inline>
                                                 <xsl:stylesheet version="2.0">
+                                                    <xsl:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xslt/block-translator-template.xsl"/>
                                                     <xsl:variable name="table"/>
-                                                    <xsl:template match="/*">
-                                                        <xsl:copy>
-                                                            <xsl:sequence select="louis:translate($table, string(.))"/>
-                                                        </xsl:copy>
+                                                    <xsl:template match="css:block">
+                                                        <xsl:sequence select="louis:translate($table, string(.))"/>
                                                     </xsl:template>
                                                 </xsl:stylesheet>
                                             </p:inline>

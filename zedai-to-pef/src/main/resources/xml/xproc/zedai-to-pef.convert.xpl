@@ -7,7 +7,6 @@
     type="px:zedai-to-pef.convert" name="convert" version="1.0">
     
     <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
-    <p:input port="preprocessors" sequence="true"/>
     <p:input port="translators" sequence="true"/>
     
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
@@ -38,9 +37,6 @@
     <px:xml-to-pef.convert name="xml-to-pef">
         <p:input port="source">
             <p:pipe step="convert" port="source"/>
-        </p:input>
-        <p:input port="preprocessors">
-            <p:pipe step="convert" port="preprocessors"/>
         </p:input>
         <p:input port="translators">
             <p:pipe step="convert" port="translators"/>

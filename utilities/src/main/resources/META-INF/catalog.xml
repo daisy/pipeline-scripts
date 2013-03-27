@@ -6,6 +6,7 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-liblouis-translate-mathml.xpl" uri="../xml/xproc/generic-liblouis-translate-mathml.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" uri="../xml/xslt/get-liblouis-typeform.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/normalize-space.xsl" uri="../xml/xslt/normalize-space.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-dotify-translate.xsl" uri="../xml/xslt/generic-dotify-translate.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate.xsl" uri="../xml/xslt/generic-liblouis-translate.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate-and-hyphenate.xsl" uri="../xml/xslt/generic-liblouis-translate-and-hyphenate.xsl"/>

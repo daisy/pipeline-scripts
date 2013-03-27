@@ -7,7 +7,7 @@
     exclude-result-prefixes="xs louis css z"
     version="2.0">
   
-  <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
+  <xsl:import href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
   
   <!--
     @parameter node: the input node (element or text)

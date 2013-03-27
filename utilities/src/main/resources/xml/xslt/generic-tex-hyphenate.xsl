@@ -3,10 +3,8 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:tex="http://code.google.com/p/texhyphj/"
-	xmlns:my="http://github.com/bertfrees"
+	xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
 	exclude-result-prefixes="#all">
-	
-	<xsl:output method="xml" encoding="utf-8"/>
 	
 	<xsl:template match="/">
 		<xsl:if test="not(/*/@xml:lang)">
@@ -21,7 +19,7 @@
 		<xsl:param name="table"/>
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()">
-				<xsl:with-param name="table" select="if (@xml:lang) then my:get-table(@xml:lang) else $table"/>
+				<xsl:with-param name="table" select="if (@xml:lang) then pxi:get-table(@xml:lang) else $table"/>
 			</xsl:apply-templates>
 		</xsl:copy>
 	</xsl:template>
@@ -35,7 +33,7 @@
 		<xsl:sequence select="."/>
 	</xsl:template>
 	
-	<xsl:function name="my:get-table">
+	<xsl:function name="pxi:get-table">
 		<xsl:param name="lang"/>
 		<xsl:variable name="table" select="tex:lookup-table($lang)"/>
 		<xsl:if test="not($table)">

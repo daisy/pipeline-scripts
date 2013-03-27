@@ -10,60 +10,23 @@
     
     <p:input port="source" primary="true"/>
     <p:input port="translators" sequence="true"/>
-    <p:output port="result" primary="true"/>
+    <p:output port="result" primary="true">
+        <p:pipe step="translate" port="result"/>
+    </p:output>
+    
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="utils/eval.xpl"/>
-    <p:import href="utils/chain-steps.xpl"/>
-    
-    <!-- Handle string-set -->
-    
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/handle-string-set.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <!-- Identify blocks -->
-    
-    <p:xslt name="blocks">
-        <p:input port="stylesheet">
-            <p:document href="../xslt/identify-blocks.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    <p:sink/>
-    
-    <!-- Build translation pipeline -->
-
-    <pxi:chain-steps name="pipeline">
-        <p:input port="steps">
-            <p:pipe step="translation" port="translators"/>
-        </p:input>
-    </pxi:chain-steps>
-    <p:sink/>
-
-    <!-- Translate each block -->
+    <p:import href="utils/eval-steps.xpl"/>
     
     <p:try name="translate">
         <p:group>
             <p:output port="result"/>
-            <p:viewport match="css:block">
-                <p:viewport-source>
-                    <p:pipe step="blocks" port="result"/>
-                </p:viewport-source>
-                <pxi:eval>
-                    <p:input port="pipeline">
-                        <p:pipe step="pipeline" port="result"/>
-                    </p:input>
-                    <p:with-param name="temp-dir" select="$temp-dir"/>
-                </pxi:eval>
-            </p:viewport>
+            <pxi:eval-steps>
+                <p:input port="steps">
+                    <p:pipe step="translation" port="translators"/>
+                </p:input>
+                <p:with-option name="temp-dir" select="$temp-dir"/>
+            </pxi:eval-steps>
         </p:group>
         <p:catch name="translate-catch">
             <p:output port="result"/>
@@ -113,32 +76,5 @@
         </p:catch>
     </p:try>
     <p:sink/>
-    
-    <!-- Unwrap blocks, normalize space -->
-    
-    <p:xslt>
-        <p:input port="source">
-            <p:pipe step="translate" port="result"/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/normalize-space.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <!-- Re-insert string-set -->
-    
-    <p:viewport match="*[child::css:string-set]">
-        <p:string-replace match="@style" replace="concat(
-            'string-set: ',
-            string(/*/css:string-set/@name),
-            ' &quot;',
-            string(/*/css:string-set),
-            '&quot;; ',
-            string(/*/@style))"/>
-        <p:delete match="css:string-set"/>
-    </p:viewport>
     
 </p:declare-step>
