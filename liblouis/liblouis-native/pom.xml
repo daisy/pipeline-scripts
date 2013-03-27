@@ -64,6 +64,24 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>i586-mingw32msvc-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louis</artifactId>
+                  <classifier>x86_64-w64-mingw32-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.xmlsoft</groupId>
+                  <artifactId>xml2</artifactId>
+                  <classifier>i586-mingw32msvc-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
                   <artifactId>louisutdml</artifactId>
                   <classifier>i386-Linux-gpp-shared</classifier>
                   <type>nar</type>
@@ -108,6 +126,12 @@
                   <groupId>org.liblouis</groupId>
                   <artifactId>louisutdml</artifactId>
                   <classifier>x86_64-MacOSX-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.liblouis</groupId>
+                  <artifactId>louisutdml</artifactId>
+                  <classifier>i586-mingw32msvc-gpp-executable</classifier>
                   <type>nar</type>
                 </artifactItem>
               </artifactItems>
@@ -205,7 +229,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-windows</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-windows.xml,
-                  native=src/main/resources/native/windows
+                  native/i386=target/generated-resources/native/i586-mingw32msvc-gpp,
+                  native/x86_64=target/generated-resources/native/x86_64-w64-mingw32-gpp
                 </Include-Resource>
               </instructions>
             </configuration>

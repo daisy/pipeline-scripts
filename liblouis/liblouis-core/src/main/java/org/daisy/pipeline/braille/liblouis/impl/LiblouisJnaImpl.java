@@ -28,7 +28,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	private ResourceResolver tableResolver;
 	
 	protected void activate() {
-		logger.debug("Loading liblouis service: version {}", Louis.getLibrary().lou_version());
+		logger.debug("Loading liblouis service");
 	}
 	
 	protected void deactivate() {
@@ -39,7 +39,8 @@ public class LiblouisJnaImpl implements Liblouis {
 		if (this.binary == null && "liblouis".equals(binary.getName())) {
 			this.binary = binary;
 			Louis.setLibraryPath(asFile(binary.getPaths().iterator().next()));
-			logger.debug("Registering binary: " + binary); }
+			logger.debug("Registering binary: " + binary);
+			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version()); }
 	}
 	
 	protected void unbindBinary(Binary binary) {
