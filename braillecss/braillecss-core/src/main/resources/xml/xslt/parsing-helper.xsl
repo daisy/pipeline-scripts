@@ -4,8 +4,8 @@
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-result-prefixes="xs css"
     version="2.0">
-
-    <xsl:include href="supported-css.xsl"/>
+    
+    <xsl:import href="supported-css.xsl"/>
     
     <xsl:function name="css:get-property-value" as="xs:string?">
         <xsl:param name="element" as="element()"/>
@@ -61,19 +61,18 @@
     <xsl:function name="css:eval-content-list">
         <xsl:param name="element" as="element()"/>
         <xsl:param name="content-list" as="xs:string"/>
-        <xsl:analyze-string select="$content-list"
-            regex="{concat('(', $STRING, '|', $CONTENT, '|', $ATTR, ')')}">
+        <xsl:analyze-string select="$content-list" regex="{$CONTENT}">
             <xsl:matching-substring>
                 <xsl:choose>
                     <xsl:when test="matches(., concat('^', $STRING, '$'))">
                         <xsl:sequence select="substring(., 2, string-length(.)-2)"/>
                     </xsl:when>
-                    <xsl:when test="matches(., concat('^', $ATTR, '$'))">
+                    <xsl:when test="matches(., '^attr\(.+?\)$')">
                         <xsl:variable name="attr"
                             select="normalize-space(substring(., 6, string-length(.)-6))"/>
                         <xsl:sequence select="string($element/@*[name()=$attr])"/>
                     </xsl:when>
-                    <xsl:when test="matches(., concat('^', $CONTENT, '$'))">
+                    <xsl:when test="matches(., '^content\(\)$')">
                         <xsl:sequence select="$element/child::node()"/>
                     </xsl:when>
                 </xsl:choose>
