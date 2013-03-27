@@ -43,12 +43,12 @@ public class BundledBinary implements Binary {
 	 */
 	public Iterable<URL> getPaths() {
 		// lazy unpack!
-		if (unpackDirectory != null && !unpacked)
-			paths = Iterables.transform(
-				Files.unpack(paths.iterator(), unpackDirectory),
-				new Function<File,URL>() { public URL apply(File file) {
-					if (!file.getName().matches(".*\\.(dll|exe)$")) chmod775(file);
-					return asURL(file); }});
+		if (unpackDirectory != null && !unpacked) {
+			Iterable<File> files = Files.unpack(paths.iterator(), unpackDirectory);
+			for (File f : files) if (!f.getName().matches(".*\\.(dll|exe)$")) chmod775(f);
+			paths = Iterables.transform(files,
+					new Function<File,URL>() { public URL apply(File file) { return asURL(file); }}); }
+		unpacked = true;
 		return paths;
 	}
 	
@@ -98,6 +98,7 @@ public class BundledBinary implements Binary {
 			for (int i = 0; true; i++) {
 				unpackDirectory = context.getBundleContext().getDataFile("resources" + i);
 				if (!unpackDirectory.exists()) break; }
+		unpackDirectory.mkdirs();
 	}
 	
 	@Override
