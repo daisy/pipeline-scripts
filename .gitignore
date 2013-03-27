@@ -5,6 +5,8 @@ target/
 .classpath
 .project
 .settings/
+.externalToolBuilders
+maven-eclipse.xml
 
 # OS Files
 .DS_Store
