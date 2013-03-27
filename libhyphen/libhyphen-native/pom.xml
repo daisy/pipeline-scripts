@@ -44,8 +44,19 @@
                   <classifier>amd64-Linux-gpp-shared</classifier>
                   <type>nar</type>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.hunspell</groupId>
+                  <artifactId>hyphen</artifactId>
+                  <classifier>i386-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.hunspell</groupId>
+                  <artifactId>hyphen</artifactId>
+                  <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
               </artifactItems>
-              <excludes>**/history.xml</excludes>
             </configuration>
           </execution>
         </executions>
@@ -78,6 +89,24 @@
                   OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-linux.xml,
                   native/i386=target/dependency/lib/i386-Linux-gpp/shared,
                   native/x86_64=target/dependency/lib/amd64-Linux-gpp/shared
+                </Include-Resource>
+              </instructions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>mac-bundle</id>
+            <phase>package</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+            <configuration>
+              <classifier>mac</classifier>
+              <instructions>
+                <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.libhyphen-native-mac</Bundle-SymbolicName>
+                <Include-Resource>
+                  OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-mac.xml,
+                  native/i386=target/dependency/lib/i386-MacOSX-gpp/shared,
+                  native/x86_64=target/dependency/lib/x86_64-MacOSX-gpp/shared
                 </Include-Resource>
               </instructions>
             </configuration>

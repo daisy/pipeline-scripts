@@ -30,7 +30,7 @@ public class Libhyphen {
 	}
 	
 	protected void bindBinary(Binary binary) {
-		if (this.binary == null && "liblouis".equals(binary.getName())) {
+		if (this.binary == null && "libhyphen".equals(binary.getName())) {
 			this.binary = binary;
 			Hyphen.setLibraryPath(asFile(binary.getPaths().iterator().next()));
 			logger.debug("Registering binary: " + binary); }
