@@ -333,7 +333,7 @@
       <id>bertfrees-github-snapshots</id>
       <url>http://bertfrees.github.com/snapshots</url>
       <releases>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
