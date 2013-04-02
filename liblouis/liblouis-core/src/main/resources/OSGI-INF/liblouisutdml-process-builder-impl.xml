@@ -16,10 +16,10 @@
         cardinality="1..1"
         name="LiblouisutdmlConfigResolver"
         policy="dynamic"/>
-    <scr:reference bind="bindBinary"
-        unbind="unbindBinary"
-        interface="org.daisy.pipeline.braille.Binary"
+    <scr:reference bind="bindExecutable"
+        unbind="unbindExecutable"
+        interface="org.daisy.pipeline.braille.BundledNativePath"
         cardinality="1..n"
-        name="File2brlBinary"
+        name="File2brlExecutable"
         policy="dynamic"/>
 </scr:component>

@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.daisy.pipeline.braille.Binary;
+import org.daisy.pipeline.braille.BundledNativePath;
 import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.Pair;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
@@ -24,7 +24,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	private final static char SOFT_HYPHEN = '\u00AD';
 	
-	private Binary binary;
+	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
 	
 	protected void activate() {
@@ -35,17 +35,19 @@ public class LiblouisJnaImpl implements Liblouis {
 		logger.debug("Unloading liblouis service");
 	}
 	
-	protected void bindBinary(Binary binary) {
-		if (this.binary == null && "liblouis".equals(binary.getName())) {
-			this.binary = binary;
-			Louis.setLibraryPath(asFile(binary.getPaths().iterator().next()));
-			logger.debug("Registering binary: " + binary);
-			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version()); }
+	protected void bindLibrary(BundledNativePath nativePath) {
+		if (this.nativePath == null) {
+			URL libraryPath = nativePath.lookup("liblouis");
+			if (libraryPath != null) {
+				Louis.setLibraryPath(asFile(nativePath.resolve(libraryPath)));
+				this.nativePath = nativePath;
+				logger.debug("Registering liblouis library: " + libraryPath);
+				logger.debug("liblouis version: {}", Louis.getLibrary().lou_version()); }}
 	}
 	
-	protected void unbindBinary(Binary binary) {
-		if (binary.equals(this.binary))
-			this.binary = null;
+	protected void unbindLibrary(BundledNativePath nativePath) {
+		if (nativePath.equals(this.nativePath))
+			this.nativePath = null;
 	}
 	
 	protected void bindTableResolver(LiblouisTableResolver tableResolver) {

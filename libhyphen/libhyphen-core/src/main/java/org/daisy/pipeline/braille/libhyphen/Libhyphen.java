@@ -7,7 +7,7 @@ import java.util.Map;
 import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
 
-import org.daisy.pipeline.braille.Binary;
+import org.daisy.pipeline.braille.BundledNativePath;
 import org.daisy.pipeline.braille.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class Libhyphen {
 	
 	private static final char SOFT_HYPHEN = '\u00AD';
 	
-	private Binary binary;
+	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
 	
 	protected void activate() {
@@ -29,16 +29,18 @@ public class Libhyphen {
 		logger.debug("Unloading libhyphen service");
 	}
 	
-	protected void bindBinary(Binary binary) {
-		if (this.binary == null && "libhyphen".equals(binary.getName())) {
-			this.binary = binary;
-			Hyphen.setLibraryPath(asFile(binary.getPaths().iterator().next()));
-			logger.debug("Registering binary: " + binary); }
+	protected void bindLibrary(BundledNativePath nativePath) {
+		if (this.nativePath == null) {
+			URL libraryPath = nativePath.lookup("libhyphen");
+			if (libraryPath != null) {
+				Hyphen.setLibraryPath(asFile(nativePath.resolve(libraryPath)));
+				this.nativePath = nativePath;
+				logger.debug("Registering libhyphen library: " + libraryPath); }}
 	}
 	
-	protected void unbindBinary(Binary binary) {
-		if (binary.equals(this.binary))
-			this.binary = null;
+	protected void unbindLibrary(BundledNativePath nativePath) {
+		if (nativePath.equals(this.nativePath))
+			this.nativePath = null;
 	}
 	
 	protected void bindTableResolver(LibhyphenTableResolver tableResolver) {

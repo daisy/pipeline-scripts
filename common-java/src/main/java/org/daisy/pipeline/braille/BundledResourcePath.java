@@ -28,6 +28,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	
 	protected static final String IDENTIFIER = "identifier";
 	protected static final String PATH = "path";
+	protected static final String UNPACK = "unpack";
 	//protected static final String INCLUDES = "includes";
 	
 	protected URL identifier = null;
@@ -82,7 +83,6 @@ public abstract class BundledResourcePath implements ResourcePath {
 				files.addAll(entries._2);
 				for (String folder : entries._1) files.addAll(apply(folder));
 				return files; }};
-		
 		resources = new ImmutableList.Builder<String>()
 			.addAll(Collections2.<String>filter(
 				Collections2.<String,String>transform(
@@ -91,6 +91,15 @@ public abstract class BundledResourcePath implements ResourcePath {
 						public String apply(String s) { return relativizeURL(path, bundle.getEntry(s)); }}),
 				includes))
 			.build();
+		if (properties.get(UNPACK) != null && (Boolean)properties.get(UNPACK))
+			unpack(context);
+	}
+	
+	protected void unpack(File directory) {
+		directory.mkdirs();
+		for (String resource: resources)
+			Files.unpack(resolveURL(path, resource), new File(directory, resource));
+		path = asURL(directory);
 	}
 	
 	protected void unpack(ComponentContext context) {
@@ -98,9 +107,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 		for (int i = 0; true; i++) {
 			directory = context.getBundleContext().getDataFile("resources" + i);
 			if (!directory.exists()) break; }
-		for (String resource: resources)
-			Files.unpack(resolveURL(path, resource), new File(directory, resource));
-		path = asURL(directory);
+		unpack(directory);
 	}
 	
 	@Override
@@ -115,7 +122,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 		hash = prime * hash + ((identifier == null) ? 0 : identifier.hashCode());
 		return hash;
 	}
-
+	
 	@Override
 	public boolean equals(Object object) {
 		if (this == object)

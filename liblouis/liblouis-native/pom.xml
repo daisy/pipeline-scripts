@@ -193,8 +193,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-linux</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-linux.xml,
-                  native/i386=target/generated-resources/native/i386-Linux-gpp,
-                  native/x86_64=target/generated-resources/native/amd64-Linux-gpp
+                  native/linux/x86=target/generated-resources/native/i386-Linux-gpp,
+                  native/linux/x86_64=target/generated-resources/native/amd64-Linux-gpp
                 </Include-Resource>
               </instructions>
             </configuration>
@@ -211,8 +211,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-mac</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-mac.xml,
-                  native/i386=target/generated-resources/native/i386-MacOSX-gpp,
-                  native/x86_64=target/generated-resources/native/x86_64-MacOSX-gpp
+                  native/macosx/x86=target/generated-resources/native/i386-MacOSX-gpp,
+                  native/macosx/x86_64=target/generated-resources/native/x86_64-MacOSX-gpp
                 </Include-Resource>
               </instructions>
             </configuration>
@@ -229,8 +229,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.liblouis-native-windows</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/liblouis-native.xml=src/main/resources/OSGI-INF/liblouis-native-windows.xml,
-                  native/i386=target/generated-resources/native/i586-mingw32msvc-gpp,
-                  native/x86_64=target/generated-resources/native/x86_64-w64-mingw32-gpp
+                  native/windows/x86=target/generated-resources/native/i586-mingw32msvc-gpp,
+                  native/windows/x86_64=target/generated-resources/native/x86_64-w64-mingw32-gpp
                 </Include-Resource>
               </instructions>
             </configuration>

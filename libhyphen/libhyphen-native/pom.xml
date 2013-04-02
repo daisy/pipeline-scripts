@@ -87,8 +87,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.libhyphen-native-linux</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-linux.xml,
-                  native/i386=target/dependency/lib/i386-Linux-gpp/shared,
-                  native/x86_64=target/dependency/lib/amd64-Linux-gpp/shared
+                  native/linux/x86=target/dependency/lib/i386-Linux-gpp/shared,
+                  native/linux/x86_64=target/dependency/lib/amd64-Linux-gpp/shared
                 </Include-Resource>
               </instructions>
             </configuration>
@@ -105,8 +105,8 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.libhyphen-native-mac</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-mac.xml,
-                  native/i386=target/dependency/lib/i386-MacOSX-gpp/shared,
-                  native/x86_64=target/dependency/lib/x86_64-MacOSX-gpp/shared
+                  native/macosx/x86=target/dependency/lib/i386-MacOSX-gpp/shared,
+                  native/macosx/x86_64=target/dependency/lib/x86_64-MacOSX-gpp/shared
                 </Include-Resource>
               </instructions>
             </configuration>

@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
-    <scr:component name="libhyphen.dylib (MacOSX 32-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="libhyphen"/>
-        <scr:property name="path" type="String" value="/native/i386/libhyphen.dylib"/>
-        <scr:property name="unpack" type="Boolean" value="true"/>
-        <scr:property name="os.family" type="String" value="mac"/>
-        <scr:property name="os.arch" type="String" value="x86,i386"/>
-    </scr:component>
-    <scr:component name="libhyphen.dylib (MacOSX 64-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="libhyphen"/>
-        <scr:property name="path" type="String" value="/native/x86_64/libhyphen.dylib"/>
-        <scr:property name="unpack" type="Boolean" value="true"/>
-        <scr:property name="os.family" type="String" value="mac"/>
-        <scr:property name="os.arch" type="String" value="x86_64"/>
-    </scr:component>
-</components>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Libhyphen binaries (Mac OS X)" activate="activate">
+    <scr:implementation class="org.daisy.pipeline.braille.BundledNativePath"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.BundledNativePath"/>
+    </scr:service>
+    <scr:property name="identifier" type="String" value="http://hunspell.sourceforge.net/Hyphen/native/macosx/"/>
+    <scr:property name="path" type="String" value="/native/macosx"/>
+    <scr:property name="unpack" type="Boolean" value="true"/>
+    <scr:property name="os.family" type="String" value="macosx"/>
+</scr:component>

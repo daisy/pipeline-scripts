@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
-import org.daisy.pipeline.braille.Binary;
+import org.daisy.pipeline.braille.BundledNativePath;
 import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.Utilities.VoidFunction;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
-	private Binary binary;
 	private File file2brl;
+	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
 	private ResourceResolver configResolver;
 	
@@ -40,16 +40,18 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 		logger.debug("Unloading liblouisutdml service");
 	}
 	
-	protected void bindBinary(Binary binary) {
-		if (this.binary == null && "file2brl".equals(binary.getName())) {
-			this.binary = binary;
-			file2brl = asFile(binary.getPaths().iterator().next());
-			logger.debug("Registering binary: " + binary); }
+	protected void bindExecutable(BundledNativePath nativePath) {
+		if (this.nativePath == null) {
+			URL executablePath = nativePath.lookup("file2brl");
+			if (executablePath != null) {
+				file2brl = asFile(nativePath.resolve(executablePath));
+				this.nativePath = nativePath;
+				logger.debug("Registering file2brl executable: " + executablePath); }}
 	}
 	
-	protected void unbindBinary(Binary binary) {
-		if (binary.equals(this.binary)) {
-			this.binary = null;
+	protected void unbindExecutable(BundledNativePath nativePath) {
+		if (nativePath.equals(this.nativePath)) {
+			this.nativePath = null;
 			file2brl = null; }
 	}
 	

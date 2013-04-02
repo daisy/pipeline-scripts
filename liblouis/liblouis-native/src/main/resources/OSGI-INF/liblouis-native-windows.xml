@@ -1,36 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
-    <!-- liblouis 32-bit -->
-    <scr:component  name="liblouis.dll (Windows 32-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/i386/liblouis.dll"/>
-        <scr:property name="unpack" type="Boolean" value="true"/>
-        <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="x86,i386"/>
-    </scr:component>
-    <!-- file2brl 32-bit -->
-    <scr:component  name="file2brl.exe (Windows 32-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="file2brl"/>
-        <scr:property name="path" type="String" value="/native/i386/file2brl.exe,
-                                                       /native/i386/liblouisutdml.dll,
-                                                       /native/i386/liblouis.dll,
-                                                       /native/i386/libxml2.dll"/>
-        <scr:property name="unpack" type="Boolean" value="true"/>
-        <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="x86,i386,x86_64,amd64,x64"/>
-    </scr:component>
-    <!-- liblouis 64-bit -->
-    <scr:component  name="liblouis.dll (Windows 64-bit)" activate="activate">
-        <scr:implementation class="org.daisy.pipeline.braille.BundledBinary"/>
-        <scr:service><scr:provide interface="org.daisy.pipeline.braille.Binary"/></scr:service>
-        <scr:property name="name" type="String" value="liblouis"/>
-        <scr:property name="path" type="String" value="/native/x86_64/liblouis.dll"/>
-        <scr:property name="unpack" type="Boolean" value="true"/>
-        <scr:property name="os.family" type="String" value="windows"/>
-        <scr:property name="os.arch" type="String" value="x86_64,amd64,x64"/>
-    </scr:component>
-</components>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis binaries (Windows)" activate="activate">
+    <scr:implementation class="org.daisy.pipeline.braille.BundledNativePath"/>
+    <scr:service>
+        <scr:provide interface="org.daisy.pipeline.braille.BundledNativePath"/>
+    </scr:service>
+    <scr:property name="identifier" type="String" value="http://www.liblouis.org/native/windows/"/>
+    <scr:property name="path" type="String" value="/native/windows"/>
+    <scr:property name="unpack" type="Boolean" value="true"/>
+    <scr:property name="os.family" type="String" value="windows"/>
+</scr:component>

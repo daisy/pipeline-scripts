@@ -80,28 +80,41 @@ public abstract class Utilities {
 
 	public static abstract class OS {
 		
-		public static enum Family { LINUX, MAC, WINDOWS }
+		public static enum Family {
+			LINUX ("linux"),
+			MACOSX ("macosx"),
+			WINDOWS ("windows");
+			private final String name;
+			private Family(String name) { this.name = name; }
+			public String toString() { return name; }
+		}
 		
 		public static Family getFamily() {
 			String name = System.getProperty("os.name").toLowerCase();
 			if (name.startsWith("windows"))
 				return Family.WINDOWS;
-			else if (name.startsWith("mac"))
-				return Family.MAC;
-			else
+			else if (name.startsWith("mac os x"))
+				return Family.MACOSX;
+			else if (name.startsWith("linux"))
 				return Family.LINUX;
+			else
+				throw new RuntimeException("Unsupported OS: " + name);
 		}
 		
 		public static boolean isWindows() {
 			return getFamily() == Family.WINDOWS;
 		}
 		
-		public static boolean isMac() {
-			return getFamily() == Family.MAC;
+		public static boolean isMacOSX() {
+			return getFamily() == Family.MACOSX;
 		}
 		
 		public static String getArch() {
 			return System.getProperty("os.arch").toLowerCase();
+		}
+		
+		public static boolean is64Bit() {
+			return getArch().equals("amd64") || getArch().equals("x86_64");
 		}
 	}
 	
