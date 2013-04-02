@@ -1,6 +1,6 @@
 package org.daisy.pipeline.braille;
 
-import com.google.common.base.Functions;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Utilities {
 	
-	public static interface VoidFunction<T> {
-		public void apply(T object);
+	public static interface Function0<T> {
+		public T apply();
 	}
 	
 	public static interface Function2<T1,T2,T3> {
@@ -43,6 +43,13 @@ public abstract class Utilities {
 			this._1 = _1;
 			this._2 = _2;
 		}
+	}
+	
+	public static abstract class Functions {
+		
+		public static Function0<Void> noOp = new Function0<Void> () {
+			public Void apply() { return null; }};
+		
 	}
 	
 	public static abstract class Predicates {
@@ -73,7 +80,7 @@ public abstract class Utilities {
 		}
 		
 		public static <T> Pair<Collection<T>,Collection<T>> partition(Iterator<T> iterator, Predicate<? super T> predicate) {
-			Multimap<Boolean,T> map = Multimaps.index(iterator, Functions.forPredicate(predicate));
+			Multimap<Boolean,T> map = Multimaps.index(iterator, com.google.common.base.Functions.forPredicate(predicate));
 			return new Pair<Collection<T>,Collection<T>>(map.get(true), map.get(false));
 		}
 	}

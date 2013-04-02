@@ -12,7 +12,7 @@ public class LiblouisTablePath extends BundledTablePath {
 	@Override
 	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		super.activate(context, properties);
-		unpack(context);
+		lazyUnpack(context);
 	}
 	
 	/* A liblouis table name can be a comma separated list of file names */

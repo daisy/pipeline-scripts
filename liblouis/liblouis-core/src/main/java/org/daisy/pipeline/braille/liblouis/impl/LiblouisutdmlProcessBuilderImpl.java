@@ -12,12 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Function;
+
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
 import org.daisy.pipeline.braille.BundledNativePath;
 import org.daisy.pipeline.braille.ResourceResolver;
-import org.daisy.pipeline.braille.Utilities.VoidFunction;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver;
@@ -136,9 +137,10 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			
 			new StreamReaderThread(
 					process.getErrorStream(),
-					new VoidFunction<List<String>>() {
-						public void apply(List<String> error) {
-							logger.debug("\nstderr:\n\t" + join(error, "\n\t")); }}).start();
+					new Function<List<String>,Void>() {
+						public Void apply(List<String> error) {
+							logger.debug("\nstderr:\n\t" + join(error, "\n\t"));
+							return null; }}).start();
 			
 			int exitValue = process.waitFor();
 			logger.debug("\nexit value: " + exitValue);
@@ -154,9 +156,9 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	private static class StreamReaderThread extends Thread {
 		
 		private InputStream stream;
-		private VoidFunction<List<String>> callback;
+		private Function<List<String>,Void> callback;
 		
-		public StreamReaderThread(InputStream stream, VoidFunction<List<String>> callback) {
+		public StreamReaderThread(InputStream stream, Function<List<String>,Void> callback) {
 			this.stream = stream;
 			this.callback = callback;
 		}

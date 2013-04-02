@@ -10,6 +10,6 @@ public class LibhyphenTablePath extends BundledTablePath {
 	@Override
 	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
 		super.activate(context, properties);
-		unpack(context);
+		lazyUnpack(context);
 	}
 }

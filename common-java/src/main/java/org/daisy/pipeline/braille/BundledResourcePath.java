@@ -19,6 +19,8 @@ import static org.daisy.pipeline.braille.Utilities.Files;
 import static org.daisy.pipeline.braille.Utilities.Files.asURL;
 import static org.daisy.pipeline.braille.Utilities.Files.relativizeURL;
 import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
+import static org.daisy.pipeline.braille.Utilities.Function0;
+import static org.daisy.pipeline.braille.Utilities.Functions.noOp;
 import static org.daisy.pipeline.braille.Utilities.Pair;
 
 import org.osgi.framework.Bundle;
@@ -40,6 +42,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	}
 	
 	public URL resolve(URL url) {
+		lazyUnpack.apply();
 		String relativeURL = relativizeURL(identifier, url);
 		if (includes(relativeURL) || relativeURL.equals(""))
 			return resolveURL(path, relativeURL);
@@ -92,7 +95,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 				includes))
 			.build();
 		if (properties.get(UNPACK) != null && (Boolean)properties.get(UNPACK))
-			unpack(context);
+			lazyUnpack(context);
 	}
 	
 	protected void unpack(File directory) {
@@ -108,6 +111,18 @@ public abstract class BundledResourcePath implements ResourcePath {
 			directory = context.getBundleContext().getDataFile("resources" + i);
 			if (!directory.exists()) break; }
 		unpack(directory);
+	}
+	
+	private Function0<Void> lazyUnpack = noOp;
+	
+	protected void lazyUnpack(final ComponentContext context) {
+		lazyUnpack = new Function0<Void>() {
+			private boolean unpacked = false;
+			public Void apply() {
+				if (!unpacked) {
+					unpack(context);
+					unpacked = true; }
+				return null; }};
 	}
 	
 	@Override
