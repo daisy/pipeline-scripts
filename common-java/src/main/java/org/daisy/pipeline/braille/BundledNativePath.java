@@ -71,8 +71,9 @@ public class BundledNativePath extends BundledResourcePath implements ResourceLo
 	@Override
 	protected void unpack(File directory) {
 		super.unpack(directory);
-		for (String resource: resources)
-			chmod775(new File(directory, resource));
+		if (!OS.isWindows())
+			for (String resource: resources)
+				chmod775(new File(directory, resource));
 	}
 	
 	@Override

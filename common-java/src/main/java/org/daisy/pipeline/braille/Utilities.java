@@ -216,6 +216,7 @@ public abstract class Utilities {
 		}
 		
 		public static void chmod775(File file) {
+			if (OS.isWindows()) return;
 			try {
 				Runtime.getRuntime().exec(new String[] { "chmod", "775", file.getAbsolutePath() }).waitFor();
 				logger.debug("Chmodding file {} ...", file.getName());}
