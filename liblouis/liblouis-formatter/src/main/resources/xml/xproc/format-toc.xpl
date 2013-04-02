@@ -7,9 +7,6 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    
-    xmlns:dbg="http://www.daisy.org/ns/pipeline/xproc/debug"
-    
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
@@ -19,9 +16,6 @@
     <p:import href="utils/select-by-base.xpl"/>
     <p:import href="utils/select-by-position.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
-    
-    <!-- Debug mode -->
-    <p:import href="http://www.daisy.org/pipeline/modules/debug-utils/library.xpl"/>
     
     <p:split-sequence name="split-sequence" test="/louis:toc"/>
     
