@@ -37,7 +37,7 @@ public class TexHyphenator {
 	 */
 	public String hyphenate(URL table, String text) {
 		try {
-			return getHyphenator(table).hyphenate(text); }
+			return getHyphenator(table).hyphenate(text).replaceAll("\u200B", "\u00AD"); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during TeX hyphenation", e); }
 	}
