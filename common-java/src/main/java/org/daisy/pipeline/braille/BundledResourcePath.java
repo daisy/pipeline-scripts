@@ -42,10 +42,10 @@ public abstract class BundledResourcePath implements ResourcePath {
 	}
 	
 	public URL resolve(URL url) {
-		lazyUnpack.apply();
 		String relativeURL = relativizeURL(identifier, url);
-		if (includes(relativeURL) || relativeURL.equals(""))
-			return resolveURL(path, relativeURL);
+		if (includes(relativeURL) || relativeURL.equals("")) {
+			lazyUnpack.apply();
+			return resolveURL(path, relativeURL); }
 		return null;
 	}
 	
