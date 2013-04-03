@@ -14,7 +14,7 @@ import org.osgi.service.component.ComponentContext;
 import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
-public abstract class BundledTablePath extends BundledResourcePath implements ResourceLookup<Locale> {
+public abstract class BundledTablePath extends BundledResourcePath implements TablePath, ResourceLookup<Locale> {
 	
 	private static final String MANIFEST = "manifest";
 	

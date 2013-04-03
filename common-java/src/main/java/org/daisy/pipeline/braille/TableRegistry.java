@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class TableRegistry<T extends BundledTablePath> extends ResourceRegistry<T> implements ResourceLookup<Locale> {
+public abstract class TableRegistry<T extends TablePath> extends ResourceRegistry<T> implements ResourceLookup<Locale> {
 	
 	@Override
 	protected void register(T path) {

@@ -40,6 +40,10 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-java</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.googlecode.guava-osgi</groupId>
+      <artifactId>guava-osgi</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
