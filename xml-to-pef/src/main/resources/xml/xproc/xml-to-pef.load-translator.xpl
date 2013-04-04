@@ -13,13 +13,13 @@
     <p:option name="translator" required="true"/>
     
     <p:choose>
-        <p:when test="contains($translator, ',')">
+        <p:when test="contains($translator, ',http:/')">
             <px:xml-to-pef.load-translator name="first">
-                <p:with-option name="translator" select="substring-before($translator, ',')"/>
+                <p:with-option name="translator" select="substring-before($translator, ',http:/')"/>
             </px:xml-to-pef.load-translator>
             <p:sink/>
             <px:xml-to-pef.load-translator name="rest">
-                <p:with-option name="translator" select="substring-after($translator, ',')"/>
+                <p:with-option name="translator" select="concat('http:/', substring-after($translator, ',http:/'))"/>
             </px:xml-to-pef.load-translator>
             <p:sink/>
             <p:identity>
