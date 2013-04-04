@@ -4,7 +4,6 @@
   <uri name="http://www.daisy.org/pipeline/modules/html-to-dtbook/html-to-dtbook.convert.xpl" uri="../xml/html-to-dtbook.convert.xpl" px:script="true"/>
   <uri name="http://www.daisy.org/pipeline/modules/html-to-dtbook/xhtml2dtbook.xsl" uri="../xml/xhtml2dtbook.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:html-utils"/>
 </catalog>

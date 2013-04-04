@@ -109,7 +109,9 @@
 		</xsl:if>
 		<dtbook version="2005-3">
 			<xsl:copy-of select="html:html/@xml:lang"/>
-			<xsl:apply-templates/>
+			<xsl:apply-templates>
+				<xsl:with-param name="level" select="'document'" tunnel="yes"/>
+			</xsl:apply-templates>
 		</dtbook>
 	</xsl:template>
 
@@ -293,7 +295,9 @@
 				<!--				<xsl:call-template name="smilref" />-->
 				<xsl:call-template name="copy-heading-attributes"/>
 				<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
-				<xsl:apply-templates/>
+				<xsl:apply-templates>
+					<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+				</xsl:apply-templates>
 			</xsl:element>
 			<!-- DEBUG:		<div class="h-info">
 				<strong>This heading:</strong><br />
@@ -323,7 +327,9 @@
 							<xsl:for-each select="current-group()">
 								<xsl:choose>
 									<xsl:when test="self::*">
-										<xsl:apply-templates select="."/>
+										<xsl:apply-templates select=".">
+											<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+										</xsl:apply-templates>
 									</xsl:when>
 									<xsl:when test="string-length(normalize-space(.)) &gt; 0">
 										<xsl:value-of select="normalize-space(.)"/>
@@ -336,7 +342,9 @@
 						<xsl:for-each select="current-group()">
 							<xsl:choose>
 								<xsl:when test="self::*">
-									<xsl:apply-templates select="."/>
+									<xsl:apply-templates select=".">
+										<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+									</xsl:apply-templates>
 								</xsl:when>
 								<xsl:when test="string-length(normalize-space(.)) &gt; 0">
 									<xsl:value-of select="normalize-space(.)"/>
@@ -354,7 +362,9 @@
 				<p class="dummy"/>
 			</xsl:if>
 			<!-- Apply templates for all headings on the next level -->
-			<xsl:apply-templates select="$h.next-level.relevant"/>
+			<xsl:apply-templates select="$h.next-level.relevant">
+				<xsl:with-param name="level" select="'block'" tunnel="yes"/>
+			</xsl:apply-templates>
 		</xsl:element>
 	</xsl:template>
 
@@ -371,7 +381,9 @@
 		<sent>
 			<xsl:call-template name="copy-span-attributes"/>
 			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
-			<xsl:apply-templates/>
+			<xsl:apply-templates>
+				<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+			</xsl:apply-templates>
 		</sent>
 	</xsl:template>
 
@@ -457,7 +469,9 @@
 				<!-- This is the a element used to represent a reference to a SMIL file in a DAISY 2.02 content doc.
 					We don't need it in the DTBook, as the @href will end up as a @smilref in the parent element.
 					This is handled by the named template 'copy-std-attr' -->
-				<xsl:apply-templates/>
+				<xsl:apply-templates>
+					<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<!--  If not doing a DTB migration, then use the next matching template -->
@@ -534,17 +548,20 @@
 	</xsl:template>
 
 	<xsl:template match="html:p | html:div | html:blockquote">
-		<xsl:element name="{local-name()}">
+		<xsl:param name="level" tunnel="yes"/>
+		<xsl:element name="{if ($level='inline') then 'span' else local-name()}">
 			<xsl:call-template name="copy-attributes"/>
 			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
-			<xsl:apply-templates/>
+			<xsl:apply-templates>
+				<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+			</xsl:apply-templates>
 		</xsl:element>
 	</xsl:template>
 
 	<xsl:template match="html:a | html:li | html:dl | html:dt | html:dd | html:span | html:strong | html:em | html:sub | html:sup | html:br | html:abbr">
-		<!--<xsl:param name="block" select="false()"/>
+		<!--<xsl:param name="level" tunnel="yes"/>
 		<xsl:choose>
-			<xsl:when test="$block">
+			<xsl:when test="not($level='inline')">
 				<p>
 					<xsl:element name="{local-name()}">
 						<xsl:call-template name="copy-attributes"/>
@@ -554,12 +571,14 @@
 				</p>
 			</xsl:when>
 			<xsl:otherwise>-->
-		<xsl:element name="{local-name()}">
-			<xsl:call-template name="copy-attributes"/>
-			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
-			<xsl:apply-templates/>
-		</xsl:element>
-		<!--</xsl:otherwise>
+				<xsl:element name="{local-name()}">
+					<xsl:call-template name="copy-attributes"/>
+					<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
+					<xsl:apply-templates>
+						<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			<!--</xsl:otherwise>
 		</xsl:choose>-->
 	</xsl:template>
 
@@ -568,14 +587,16 @@
 			<xsl:call-template name="copy-attributes"/>
 			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
 			<p class="inserted-by-transformer html-p">
-				<xsl:apply-templates/>
+				<xsl:apply-templates>
+					<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+				</xsl:apply-templates>
 			</p>
 		</div>
 	</xsl:template>
 
-	<xsl:template match="html:body/html:br">
-		<!-- 		<xsl:comment>br elements as direct child of body is removed</xsl:comment> -->
-	</xsl:template>
+	<!--<xsl:template match="html:body/html:br">
+		<!-\- 		<xsl:comment>br elements as direct child of body is removed</xsl:comment> -\->
+	</xsl:template>-->
 
 	<xsl:template match="html:table | html:table/html:caption | html:tr | html:td | html:th | html:col">
 		<xsl:element name="{local-name()}">
@@ -622,6 +643,16 @@
 	</xsl:template>
 
 	<xsl:template match="html:script"/>
+
+	<xsl:template match="html:b">
+		<em>
+			<xsl:call-template name="copy-attributes"/>
+			<xsl:attribute name="class" select="string-join((@class,concat('html-',local-name())),' ')"/>
+			<xsl:apply-templates>
+				<xsl:with-param name="level" select="'inline'" tunnel="yes"/>
+			</xsl:apply-templates>
+		</em>
+	</xsl:template>
 
 	<xsl:template match="html:bdi">
 		<div>
