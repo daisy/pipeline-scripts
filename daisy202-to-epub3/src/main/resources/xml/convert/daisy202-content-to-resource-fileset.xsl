@@ -29,11 +29,11 @@
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:if test="$inferredType">
-                    <d:file href="{$href}" media-type="{$inferredType}"/>
+                    <d:file href="{resolve-uri($href,base-uri(.))}" media-type="{$inferredType}"/>
                 </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="//h:link[ends-with(lower-case(@href),'.css')]">
-                <d:file href="{@href}" media-type="text/css"/>
+                <d:file href="{resolve-uri(@href,base-uri(.))}" media-type="text/css"/>
             </xsl:for-each>
             <xsl:for-each select="//h:img">
                 <xsl:variable name="type">
@@ -50,7 +50,7 @@
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:if test="$type">
-                    <d:file href="{@src}" media-type="{$type}"/>
+                    <d:file href="{resolve-uri(@src,base-uri(.))}" media-type="{$type}"/>
                 </xsl:if>
             </xsl:for-each>
         </d:fileset>
