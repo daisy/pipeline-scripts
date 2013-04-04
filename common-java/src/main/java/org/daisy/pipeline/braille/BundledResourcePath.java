@@ -22,6 +22,7 @@ import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 import static org.daisy.pipeline.braille.Utilities.Function0;
 import static org.daisy.pipeline.braille.Utilities.Functions.noOp;
 import static org.daisy.pipeline.braille.Utilities.Pair;
+import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
@@ -31,7 +32,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	protected static final String IDENTIFIER = "identifier";
 	protected static final String PATH = "path";
 	protected static final String UNPACK = "unpack";
-	//protected static final String INCLUDES = "includes";
+	protected static final String INCLUDES = "includes";
 	
 	protected URL identifier = null;
 	protected URL path = null;
@@ -55,8 +56,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	
 	@SuppressWarnings("unchecked")
 	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
-		if (properties.get(IDENTIFIER) == null
-				|| properties.get(IDENTIFIER).toString().isEmpty()) {
+		if (properties.get(IDENTIFIER) == null || properties.get(IDENTIFIER).toString().isEmpty()) {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
 		String id = properties.get(IDENTIFIER).toString();
 		if (!id.endsWith("/")) id += "/";
@@ -64,8 +64,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 			identifier = new URL(id); }
 		catch (MalformedURLException e) {
 			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL"); }
-		if (properties.get(PATH) == null
-				|| properties.get(PATH).toString().isEmpty()) {
+		if (properties.get(PATH) == null || properties.get(PATH).toString().isEmpty()) {
 			throw new IllegalArgumentException(PATH + " property must not be empty"); }
 		final Bundle bundle = context.getBundleContext().getBundle();
 		String relativePath = properties.get(PATH).toString();
@@ -73,10 +72,10 @@ public abstract class BundledResourcePath implements ResourcePath {
 		path = bundle.getEntry(relativePath);
 		if (path == null)
 			throw new IllegalArgumentException("Resource path at location " + relativePath + " could not be found");
-		
-		Predicate<String> includes = Predicates.<String>alwaysTrue();
-		// TODO if (properties.get(INCLUDES) != null) --> includes = globMatcher(...)
-		
+		Predicate<String> includes =
+			(properties.get(INCLUDES) != null && !properties.get(INCLUDES).toString().isEmpty()) ?
+				matchesGlobPattern(properties.get(INCLUDES).toString()) :
+				Predicates.<String>alwaysTrue();
 		Function<String,Collection<String>> getFilePaths = new Function<String,Collection<String>>() {
 			public Collection<String> apply(String path) {
 				Pair<Collection<String>,Collection<String>> entries = partition(

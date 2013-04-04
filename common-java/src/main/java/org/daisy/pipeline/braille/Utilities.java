@@ -1,6 +1,5 @@
 package org.daisy.pipeline.braille;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -14,6 +13,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,20 +50,22 @@ public abstract class Utilities {
 		
 		public static Function0<Void> noOp = new Function0<Void> () {
 			public Void apply() { return null; }};
-		
 	}
 	
 	public static abstract class Predicates {
 		
-		public static <T> Predicate<T> matchesPattern(final String regex) {
-			return new Predicate<T>() {
-				private Pattern pattern = Pattern.compile(regex);
-				public boolean apply(T object) {
-					return pattern.matcher(object.toString()).matches(); }};
+		private static Predicate<String> matchesRegexPattern(final Pattern pattern) {
+			return new Predicate<String>() {
+				public boolean apply(String s) {
+					return pattern.matcher(s).matches(); }};
 		}
 		
-		public static <T> Predicate<T> fileHasExtension(final String extension) {
-			return Predicates.<T>matchesPattern(".*\\." + extension + "$");
+		public static Predicate<String> matchesRegexPattern(final String pattern) {
+			return matchesRegexPattern(Pattern.compile(pattern));
+		}
+		
+		public static Predicate<String> matchesGlobPattern(final String pattern) {
+			return matchesRegexPattern(GlobPattern.compile(pattern));
 		}
 	}
 	
@@ -283,5 +286,81 @@ public abstract class Utilities {
 		}
 	}
 	
+	/*
+	 * Naive implementation of glob syntax. Assumes the pattern is valid.
+	 * @see http://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob
+	 */
+	private static abstract class GlobPattern {
+		
+		private static Pattern compile(String pattern) {
+			return new RegexBuilder(pattern).build();
+		}
+		
+		private static class RegexBuilder {
+			
+			private final StringCharacterIterator glob;
+			private boolean inClass;
+			private boolean inGroup;
+			
+			private RegexBuilder(String globPattern) {
+				glob = new StringCharacterIterator(globPattern);
+			}
+			
+			private Pattern build() {
+				StringBuilder regex = new StringBuilder();
+				regex.append('^');
+				inClass = false;
+				inGroup = false;
+				for (char c = glob.first(); c != CharacterIterator.DONE; c = glob.next()) {
+					if (!inClass) {
+						if (c == '[') {
+							regex.append("[[^/]&&[");
+							if (lookAhead() == '!')
+								regex.append(glob.next());
+							if (lookAhead() == '^')
+								regex.append("\\" + glob.next());
+							inClass = true; }
+						else if (c == '{' && !inGroup) {
+							regex.append("(?:(?:");
+							inGroup = true; }
+						else if (c == '}' && inGroup) {
+							regex.append("))");
+							inGroup = false; }
+						else if (c == ',' && inGroup)
+							regex.append(")|(?:");
+						else if (c == '*' && lookAhead() == '*') {
+							regex.append(".*");
+							glob.next(); }
+						else if (c == '*')
+							regex.append("[^/]*");
+						else if (c == '?')
+							regex.append("[^/]");
+						else if (".^$+]|()".indexOf(c) > -1)
+							regex.append("\\" + c);
+						else
+							regex.append(c); }
+					else {
+						if (c == ']') {
+							regex.append("]]");
+							inClass = false; }
+						else if (c == '&' && lookAhead() == '&')
+							regex.append("\\" + c + glob.next());
+						else if (c == '\\')
+							regex.append("\\" + c);
+						else
+							regex.append(c); }}
+				regex.append('$');
+				return Pattern.compile(regex.toString());
+			}
+			
+			private char lookAhead() {
+				char la = glob.next();
+				glob.previous();
+				return la;
+			}
+		}
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(Utilities.class);
+	
 }

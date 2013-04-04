@@ -13,7 +13,7 @@ import org.daisy.pipeline.braille.TablePath;
 import com.google.common.collect.Iterables;
 
 import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
-import static org.daisy.pipeline.braille.Utilities.Predicates.matchesPattern;
+import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern;
 
 public class LibhyphenTablePath extends BundledResourcePath implements TablePath {
 	
@@ -42,7 +42,7 @@ public class LibhyphenTablePath extends BundledResourcePath implements TablePath
 				try {
 					fileName = Iterables.<String>find(
 						resources,
-						matchesPattern(String.format("^hyph_%s_.*\\.dic$", language))); }
+						matchesGlobPattern(String.format("hyph_%s_*.dic", language))); }
 				catch (NoSuchElementException e) {}}
 		if (includes(fileName))
 			return resolveURL(identifier, fileName);

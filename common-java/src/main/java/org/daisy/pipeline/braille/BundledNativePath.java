@@ -12,7 +12,6 @@ import com.google.common.collect.Iterables;
 
 import org.osgi.service.component.ComponentContext;
 
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
 import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 import static org.daisy.pipeline.braille.Utilities.OS;
