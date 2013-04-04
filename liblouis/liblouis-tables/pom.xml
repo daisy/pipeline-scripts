@@ -56,7 +56,10 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Import-Package>org.daisy.pipeline.braille.liblouis</Import-Package>
+            <Import-Package>
+              org.daisy.pipeline.braille.liblouis,
+              org.daisy.pipeline.braille.libhyphen
+            </Import-Package>
             <Service-Component>OSGI-INF/liblouis-default-tables.xml</Service-Component>
           </instructions>
         </configuration>
