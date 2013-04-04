@@ -6,43 +6,44 @@
 	xmlns:my="http://github.com/bertfrees"
 	exclude-result-prefixes="#all">
 	
-	<xsl:template match="/">
-		<xsl:if test="not(/*/@xml:lang)">
+	<xsl:param name="fail-on-missing-table" select="'true'"/>
+	
+	<xsl:template match="/*">
+		<xsl:if test="not(@xml:lang)">
 			<xsl:message terminate="yes">
 				<xsl:text>This document has no xml:lang attribute</xsl:text>
 			</xsl:message>
 		</xsl:if>
-		<xsl:apply-templates select="/*"/>
+		<xsl:variable name="table" select="hyphen:lookup-table(@xml:lang)"/>
+		<xsl:if test="$fail-on-missing-table='true' and not($table)">
+			<xsl:message terminate="yes">
+				<xsl:value-of select="concat(
+					'No hyphenation table found that matches xml:lang=&quot;', @xml:lang, '&quot;')"/>
+			</xsl:message>
+		</xsl:if>
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()">
+				<xsl:with-param name="table" select="$table"/>
+			</xsl:apply-templates>
+		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="*">
 		<xsl:param name="table"/>
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()">
-				<xsl:with-param name="table" select="if (@xml:lang) then my:get-table(@xml:lang) else $table"/>
+				<xsl:with-param name="table" select="if (@xml:lang) then hyphen:lookup-table(@xml:lang) else $table"/>
 			</xsl:apply-templates>
 		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="text()">
 		<xsl:param name="table"/>
-		<xsl:sequence select="hyphen:hyphenate($table, string(.))"/>
+		<xsl:sequence select="if ($table) then hyphen:hyphenate($table, string(.)) else ."/>
 	</xsl:template>
 	
 	<xsl:template match="@*">
 		<xsl:sequence select="."/>
 	</xsl:template>
-	
-	<xsl:function name="my:get-table">
-		<xsl:param name="lang"/>
-		<xsl:variable name="table" select="hyphen:lookup-table($lang)"/>
-		<xsl:if test="not($table)">
-			<xsl:message terminate="yes">
-				<xsl:value-of select="concat(
-					'No hyphenation table found that matches xml:lang=&quot;', $lang, '&quot;')"/>
-			</xsl:message>
-		</xsl:if>
-		<xsl:sequence select="$table"/>
-	</xsl:function>
 
 </xsl:stylesheet>

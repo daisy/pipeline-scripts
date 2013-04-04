@@ -3,6 +3,7 @@
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/mark-transitions.xpl" uri="../xml/xproc/mark-transitions.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-translate.xpl" uri="../xml/xproc/generic-translate.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-liblouis-translate-mathml.xpl" uri="../xml/xproc/generic-liblouis-translate-mathml.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" uri="../xml/xslt/get-liblouis-typeform.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
