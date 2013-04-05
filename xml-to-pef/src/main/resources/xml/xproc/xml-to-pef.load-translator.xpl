@@ -37,6 +37,18 @@
                             <p:load>
                                 <p:with-option name="href" select="$translator"/>
                             </p:load>
+                            <p:choose>
+                                <p:when test="/p:pipeline or /xsl:stylesheet">
+                                    <p:identity/>
+                                </p:when>
+                                <p:otherwise>
+                                    <p:error code="px:brl02">
+                                        <p:input port="source">
+                                            <p:inline><message>Translator is neither a &lt;xsl:stylesheet&gt; nor a &lt;p:pipeline&gt;.</message></p:inline>
+                                        </p:input>
+                                    </p:error>
+                                </p:otherwise>
+                            </p:choose>
                         </p:group>
                         <p:catch>
                             <p:choose>
