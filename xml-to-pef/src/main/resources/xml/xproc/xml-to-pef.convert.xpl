@@ -13,7 +13,7 @@
     
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     
-    <p:option name="stylesheet" required="false" select="''"/>
+    <p:option name="default-stylesheet" required="false" select="''"/>
     <p:option name="temp-dir" required="true"/>
     
     <p:import href="styling.xpl"/>
@@ -38,7 +38,7 @@
         <p:input port="source">
             <p:pipe step="convert" port="source"/>
         </p:input>
-        <p:with-option name="stylesheet" select="$stylesheet"/>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
     </pxi:styling>
     
     <!-- =========== -->

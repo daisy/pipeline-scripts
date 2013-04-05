@@ -54,19 +54,19 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="stylesheet" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">stylesheet</h2>
-            <p px:role="desc">The default css stylesheet to apply.</p>
-            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css</code></pre>
-        </p:documentation>
-    </p:option>
-    
     <p:option name="translator" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">translator</h2>
             <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Must be a comma separated list of identifiers (URLs). Defaults to a simple liblouis-based translator.</p>
             <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-translate.xpl</code></pre>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="default-stylesheet" required="false" px:type="string" select="''">
+        <p:documentation>
+            <h2 px:role="name">default-stylesheet</h2>
+            <p px:role="desc">The default CSS stylesheet to apply.</p>
+            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css</code></pre>
         </p:documentation>
     </p:option>
     
@@ -95,7 +95,7 @@
         <p:input port="translators">
             <p:pipe step="translator" port="result"/>
         </p:input>
-        <p:with-option name="stylesheet" select="$stylesheet"/>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
         <p:with-option name="temp-dir" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:dtbook-to-pef.convert>
     

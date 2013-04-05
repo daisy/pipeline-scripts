@@ -12,19 +12,19 @@
     <p:output port="page-layout">
         <p:pipe step="apply-stylesheet" port="pages"/>
     </p:output>
-    <p:option name="stylesheet" required="true"/>
+    <p:option name="default-stylesheet" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/xproc/library.xpl"/>
 
     <p:choose>
-        <p:when test="$stylesheet!=''">
+        <p:when test="$default-stylesheet!=''">
             <p:add-attribute match="/link" attribute-name="href" name="link">
                 <p:input port="source">
                     <p:inline>
                         <link rel="stylesheet" media="embossed" type="text/css"/>
                     </p:inline>
                 </p:input>
-                <p:with-option name="attribute-value" select="$stylesheet"/>
+                <p:with-option name="attribute-value" select="$default-stylesheet"/>
             </p:add-attribute>
             <p:insert match="//*[name()='head'][1]" position="first-child">
                 <p:input port="source">

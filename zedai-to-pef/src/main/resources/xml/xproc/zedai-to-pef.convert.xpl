@@ -12,7 +12,7 @@
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
 
     <p:option name="temp-dir" required="true"/>
-    <p:option name="stylesheet" required="false" select="''"/>
+    <p:option name="default-stylesheet" required="false" select="''"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.convert.xpl"/>
 
@@ -44,7 +44,7 @@
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>
         </p:input>
-        <p:with-option name="stylesheet" select="$stylesheet"/>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:xml-to-pef.convert>
     
