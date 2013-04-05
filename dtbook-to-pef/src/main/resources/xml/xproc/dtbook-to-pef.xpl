@@ -26,28 +26,28 @@
         </p:documentation>
     </p:input>
     
-    <p:option name="result" required="true" px:sequence="false" px:type="anyFileURI">
+    <p:option name="include-preview" required="false" px:type="boolean" select="''">
         <p:documentation>
-            <h2 px:role="name">result</h2>
-            <p px:role="desc">File where your PEF will be stored.</p>
+            <h2 px:role="name">include-preview</h2>
+            <p px:role="desc">Whether or not to include a preview of the PEF in HTML (true or false).</p>
         </p:documentation>
     </p:option>
     
-    <p:option name="preview" required="false" px:sequence="false" px:type="anyFileURI" select="''">
+    <p:option name="include-brf" required="false" px:type="boolean" select="''">
         <p:documentation>
-            <h2 px:role="name">preview</h2>
-            <p px:role="desc">File where an HTML preview of the PEF will be stored. If left blank, no preview is generated.</p>
+            <h2 px:role="name">include-brf</h2>
+            <p px:role="desc">Whether or not to include an ASCII version of the PEF (true or false).</p>
         </p:documentation>
     </p:option>
     
-    <p:option name="brf" required="false" px:sequence="false" px:type="anyFileURI" select="''">
+    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation>
-            <h2 px:role="name">brf</h2>
-            <p px:role="desc">File where a BRF version of the PEF will be stored. If left blank, no BRF is generated.</p>
+            <h2 px:role="name">output-dir</h2>
+            <p px:role="desc">Directory for storing result files.</p>
         </p:documentation>
     </p:option>
     
-    <p:option name="temp-dir" required="true" px:output="temp" px:sequence="false" px:type="anyDirURI">
+    <p:option name="temp-dir" required="false" px:output="temp" px:type="anyDirURI" select="''">
         <p:documentation>
             <h2 px:role="name">temp-dir</h2>
             <p px:role="desc">Directory for storing temporary files.</p>
@@ -65,8 +65,8 @@
     <p:option name="translator" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">translator</h2>
-            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Must be a comma separated list of identifiers (URLs). Defaults to a simple generic liblouis-based translator.</p>
-            <pre><code class="example">http://www.sbs.ch/pipeline/modules/braille/sbs-translator/xslt/translator.xsl</code></pre>
+            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Must be a comma separated list of identifiers (URLs). Defaults to a simple liblouis-based translator.</p>
+            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-translate.xpl</code></pre>
         </p:documentation>
     </p:option>
     
@@ -96,7 +96,7 @@
             <p:pipe step="translator" port="result"/>
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
-        <p:with-option name="temp-dir" select="$temp-dir"/>
+        <p:with-option name="temp-dir" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:dtbook-to-pef.convert>
     
     <!-- ========= -->
@@ -104,9 +104,12 @@
     <!-- ========= -->
     
     <px:xml-to-pef.store>
-        <p:with-option name="result" select="$result"/>
-        <p:with-option name="preview" select="$preview"/>
-        <p:with-option name="brf" select="$brf"/>
+        <p:with-option name="output-dir" select="$output-dir"/>
+        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+            <p:pipe step="dtbook-to-pef" port="source"/>
+        </p:with-option>
+        <p:with-option name="include-preview" select="$include-preview"/>
+        <p:with-option name="include-brf" select="$include-brf"/>
     </px:xml-to-pef.store>
     
 </p:declare-step>

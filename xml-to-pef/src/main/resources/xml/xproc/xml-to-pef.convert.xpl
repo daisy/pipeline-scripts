@@ -20,11 +20,15 @@
     <p:import href="translation.xpl"/>
     <p:import href="formatting.xpl"/>
     <p:import href="add-metadata.xpl"/>
-    <p:import href="utils/normalize-uri.xpl"/>
+    <p:import href="utils/tempdir.xpl"/>
     
-    <pxi:normalize-uri name="temp-dir">
+    <!-- ======== -->
+    <!-- TEMP DIR -->
+    <!-- ======== -->
+    
+    <pxi:tempdir name="temp-dir">
         <p:with-option name="href" select="$temp-dir"/>
-    </pxi:normalize-uri>
+    </pxi:tempdir>
     
     <!-- ======= -->
     <!-- STYLING -->
