@@ -75,7 +75,7 @@
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.xmlsoft</groupId>
+                  <groupId>org.daisy.libs</groupId>
                   <artifactId>xml2</artifactId>
                   <classifier>i586-mingw32msvc-gpp-executable</classifier>
                   <type>nar</type>

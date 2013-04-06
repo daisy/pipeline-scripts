@@ -33,25 +33,25 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>net.sf.hunspell</groupId>
+                  <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
                   <classifier>i386-Linux-gpp-shared</classifier>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>net.sf.hunspell</groupId>
+                  <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
                   <classifier>amd64-Linux-gpp-shared</classifier>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>net.sf.hunspell</groupId>
+                  <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
                   <classifier>i386-MacOSX-gpp-shared</classifier>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>net.sf.hunspell</groupId>
+                  <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
                   <classifier>x86_64-MacOSX-gpp-shared</classifier>
                   <type>nar</type>
