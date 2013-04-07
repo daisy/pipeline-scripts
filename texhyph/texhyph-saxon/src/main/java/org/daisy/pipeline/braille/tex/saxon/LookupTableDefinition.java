@@ -16,6 +16,7 @@ import net.sf.saxon.value.StringValue;
 import org.daisy.pipeline.braille.tex.TexHyphenatorTableLookup;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
+@SuppressWarnings("serial")
 public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("tex",
@@ -64,13 +65,9 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
 				URL table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toExternalForm()));
+					return SingletonIterator.makeIterator(new StringValue(table.toString()));
 				return EmptyIterator.getInstance();
 			}
-			
-			private static final long serialVersionUID = 1L;
 		};
 	}
-	
-	private static final long serialVersionUID = 1L;
 }

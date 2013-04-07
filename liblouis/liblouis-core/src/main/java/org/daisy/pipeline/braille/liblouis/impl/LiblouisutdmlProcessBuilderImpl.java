@@ -15,6 +15,8 @@ import java.util.Map;
 import com.google.common.base.Function;
 
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
+import static org.daisy.pipeline.braille.Utilities.Files.asURL;
+import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
 import org.daisy.pipeline.braille.BundledNativePath;
@@ -45,7 +47,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 		if (this.nativePath == null) {
 			URL executablePath = nativePath.lookup("file2brl");
 			if (executablePath != null) {
-				file2brl = asFile(nativePath.resolve(executablePath));
+				file2brl = asFile(executablePath);
 				this.nativePath = nativePath;
 				logger.debug("Registering file2brl executable: " + executablePath); }}
 	}
@@ -78,23 +80,16 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			URL table,
+			String table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
-			URL configPath,
+			String configPath,
 			File tempDir) {
 		
 		try {
 			
-			File configPathFile = null;
-			if (configPath == null)
-				configPathFile = tempDir;
-			else {
-				URL resolvedConfigPath = configResolver.resolve(configPath);
-				if (resolvedConfigPath == null)
-					throw new RuntimeException("Liblouisutdml config path " + configPath + " could not be resolved");
-				configPathFile = asFile(resolvedConfigPath); }
+			File configPathFile = (configPath != null) ? resolveConfigPath(configPath) : tempDir;
 			
 			if (!Arrays.asList(configPathFile.list()).contains("liblouisutdml.ini"))
 				throw new RuntimeException("liblouisutdml.ini must be placed in " + configPathFile);
@@ -111,10 +106,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			if (semanticFiles != null && semanticFiles.size() > 0)
 				settings.put("semanticFiles", join(semanticFiles, ","));
 			if (table != null) {
-				URL resolvedTable = tableResolver.resolve(table);
-				if (resolvedTable == null)
-					throw new RuntimeException("Liblouis table " + table + " could not be resolved");
-				String tablePath = "\"" + asFile(resolvedTable).getCanonicalPath() + "\"";
+				String tablePath = "\"" + resolveTable(table).getCanonicalPath() + "\"";
 				settings.put("literaryTextTable", tablePath);
 				settings.put("editTable", tablePath); }
 			if (otherSettings != null)
@@ -149,6 +141,20 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			
 		catch (Exception e) {
 			throw new RuntimeException("Error during liblouisutdml conversion", e); }
+	}
+	
+	private File resolveTable(String table) {
+		URL resolvedTable = isAbsoluteFile(table) ? asURL(table) : tableResolver.resolve(table);
+		if (resolvedTable == null)
+			throw new RuntimeException("Liblouis table " + table + " could not be resolved");
+		return asFile(resolvedTable);
+	}
+	
+	private File resolveConfigPath(String configPath) {
+		URL resolvedConfigPath = isAbsoluteFile(configPath) ? asURL(configPath) : configResolver.resolve(configPath);
+		if (resolvedConfigPath == null)
+			throw new RuntimeException("Liblouisutdml config path " + configPath + " could not be resolved");
+		return asFile(resolvedConfigPath);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisutdmlProcessBuilderImpl.class);

@@ -23,8 +23,7 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
-import static org.daisy.pipeline.braille.Utilities.Files.relativizeURL;
-import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
+import static org.daisy.pipeline.braille.Utilities.Files;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -159,7 +158,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
 				
 				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
-				URL configPath = null;
+				String configPath = null;
 				
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
@@ -170,13 +169,13 @@ public class TranslateFileProvider implements XProcStepProvider {
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
 							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
-							URL path = resolveURL(url, ".");
+							String path = Files.resolve(url, ".").toString();
 							if (configPath == null)
 								configPath = path;
 							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							configFileNames.add(relativizeURL(path, url)); }}}
+							configFileNames.add(Files.relativize(path, url)); }}}
 				
 				// Get semantic action files
 				List<String> semanticFileNames = new ArrayList<String>();
@@ -187,17 +186,17 @@ public class TranslateFileProvider implements XProcStepProvider {
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
 							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
-							URL path = resolveURL(url, ".");
+							String path = Files.resolve(url, ".").toString();
 							if (configPath == null)
 								configPath = path;
 							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							semanticFileNames.add(relativizeURL(path, url)); }}}
+							semanticFileNames.add(Files.relativize(path, url)); }}}
 				
-				URL table = null;
+				String table = null;
 				if (getOption(_table) != null)
-					table = new URL(getOption(_table).getString());
+					table = getOption(_table).getString();
 				
 				// Write XML document to file
 				XdmNode xml = source.read();

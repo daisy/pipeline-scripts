@@ -17,8 +17,7 @@ import java.util.Map;
 import static org.daisy.pipeline.braille.Utilities.Iterators.partition;
 import static org.daisy.pipeline.braille.Utilities.Files;
 import static org.daisy.pipeline.braille.Utilities.Files.asURL;
-import static org.daisy.pipeline.braille.Utilities.Files.relativizeURL;
-import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
+import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.Utilities.Function0;
 import static org.daisy.pipeline.braille.Utilities.Functions.noOp;
 import static org.daisy.pipeline.braille.Utilities.Pair;
@@ -42,16 +41,20 @@ public abstract class BundledResourcePath implements ResourcePath {
 		return identifier;
 	}
 	
-	public URL resolve(URL url) {
-		String relativeURL = relativizeURL(identifier, url);
-		if (includes(relativeURL) || relativeURL.equals("")) {
+	public URL resolve(String resource) {
+		if (resource.endsWith("/") && (resource.equals(path.toString()) || resource.equals(identifier.toString()))) {
 			lazyUnpack.apply();
-			return resolveURL(path, relativeURL); }
+			return path; }
+		String relativeURL = Files.relativize(isAbsoluteFile(resource) ? path : identifier,
+				Files.resolve(identifier, resource));
+		if (includes(relativeURL)) {
+			lazyUnpack.apply();
+			return Files.resolve(path, relativeURL); }
 		return null;
 	}
 	
-	protected boolean includes(String name) {
-		return resources.contains(name);
+	protected boolean includes(String path) {
+		return resources.contains(path);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -60,8 +63,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
 		String id = properties.get(IDENTIFIER).toString();
 		if (!id.endsWith("/")) id += "/";
-		try {
-			identifier = new URL(id); }
+		try { identifier = new URL(id); }
 		catch (MalformedURLException e) {
 			throw new IllegalArgumentException(IDENTIFIER + " could not be parsed into a URL"); }
 		if (properties.get(PATH) == null || properties.get(PATH).toString().isEmpty()) {
@@ -90,7 +92,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 				Collections2.<String,String>transform(
 					getFilePaths.apply(relativePath),
 					new Function<String,String>() {
-						public String apply(String s) { return relativizeURL(path, bundle.getEntry(s)); }}),
+						public String apply(String s) { return Files.relativize(path, bundle.getEntry(s)); }}),
 				includes))
 			.build();
 		if (properties.get(UNPACK) != null && (Boolean)properties.get(UNPACK))
@@ -100,7 +102,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	protected void unpack(File directory) {
 		directory.mkdirs();
 		for (String resource: resources)
-			Files.unpack(resolveURL(path, resource), new File(directory, resource));
+			Files.unpack(Files.resolve(path, resource), new File(directory, resource));
 		path = asURL(directory);
 	}
 	
@@ -126,7 +128,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	
 	@Override
 	public String toString() {
-		return identifier.toExternalForm();
+		return identifier.toString();
 	}
 	
 	@Override

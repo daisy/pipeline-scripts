@@ -12,7 +12,7 @@ import org.daisy.pipeline.braille.TablePath;
 
 import com.google.common.collect.Iterables;
 
-import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
+import static org.daisy.pipeline.braille.Utilities.Files;
 import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern;
 
 public class LibhyphenTablePath extends BundledResourcePath implements TablePath {
@@ -45,7 +45,7 @@ public class LibhyphenTablePath extends BundledResourcePath implements TablePath
 						matchesGlobPattern(String.format("hyph_%s_*.dic", language))); }
 				catch (NoSuchElementException e) {}}
 		if (includes(fileName))
-			return resolveURL(identifier, fileName);
+			return Files.resolve(identifier, fileName);
 		return null;
 	}
 }

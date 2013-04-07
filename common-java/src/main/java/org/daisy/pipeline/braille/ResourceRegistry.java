@@ -1,7 +1,5 @@
 package org.daisy.pipeline.braille;
 
-import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
-
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,20 +29,18 @@ public abstract class ResourceRegistry<T extends ResourcePath> implements Resour
 	 * ResourceResolver
 	 */
 	
-	public URL resolve(URL url) {
-		URL resolved = resolverCache.get(url);
+	public URL resolve(String resource) {
+		URL resolved = resolverCache.get(resource);
 		if (resolved == null) {
 			for (T path : paths.values()) {
-				resolved = path.resolve(url);
+				resolved = path.resolve(resource);
 				if (resolved != null) break; }}
-		if (resolved == null && isAbsoluteFile(url))
-			resolved = url;
 		if (resolved != null)
-			resolverCache.put(url, resolved);
+			resolverCache.put(resource, resolved);
 		return resolved;
 	}
 	
-	private final Map<URL,URL> resolverCache = new HashMap<URL,URL>();
+	private final Map<String,URL> resolverCache = new HashMap<String,URL>();
 	
 	private static final Logger logger = LoggerFactory.getLogger(ResourceRegistry.class);
 }

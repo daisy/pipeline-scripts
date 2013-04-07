@@ -66,7 +66,7 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
 				URL table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toExternalForm()));
+					return SingletonIterator.makeIterator(new StringValue(table.toString()));
 				return EmptyIterator.getInstance();
 			}
 		};

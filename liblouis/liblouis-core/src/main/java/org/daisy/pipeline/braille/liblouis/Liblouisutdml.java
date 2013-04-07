@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.liblouis;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +19,10 @@ public interface Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			URL table,
+			String table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
-			URL configPath,
+			String configPath,
 			File tempDir);
 }

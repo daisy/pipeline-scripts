@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.CharacterIterator;
@@ -186,6 +185,79 @@ public abstract class Utilities {
 	
 	public static abstract class Files {
 		
+		public static File asFile(Object o) {
+			try {
+				if (o instanceof String)
+					return asFile(asURL(o));
+				if (o instanceof File)
+					return (File)o;
+				if (o instanceof URL)
+					return asFile(asURI(o));
+				if (o instanceof URI)
+					return new File((URI)o); }
+			catch (Exception e) {}
+			throw new RuntimeException("Object can not be converted to File: " + o);
+		}
+		
+		@SuppressWarnings("deprecation")
+		public static URL asURL(Object o) {
+			try {
+				if (o instanceof String)
+					return new URL((String)o);
+				if (o instanceof File)
+					return asURL(asURI(o));
+				if (o instanceof URL)
+					return (URL)o;
+				if (o instanceof URI)
+					return new URL(URLDecoder.decode(o.toString())); }
+			catch (Exception e) {}
+			throw new RuntimeException("Object can not be converted to URL: " + o);
+		}
+		
+		public static URI asURI(Object o) {
+			try {
+				if (o instanceof String)
+					return asURI(asURL(o));
+				if (o instanceof File)
+					return ((File)o).toURI();
+				if (o instanceof URL) {
+					URL url = (URL)o;
+					return new URI(url.getProtocol(), url.getAuthority(), url.getPath(), url.getQuery(), url.getRef()); }
+				if (o instanceof URI)
+					return (URI)o; }
+			catch (Exception e) {}
+			throw new RuntimeException("Object can not be converted to URI: " + o);
+		}
+		
+		public static boolean isAbsoluteFile(Object o) {
+			if (o instanceof String)
+				return ((String)o).startsWith("file:");
+			try { asFile(o); }
+			catch (Exception e) { return false; }
+			return true;
+		}
+		
+		public static String fileName(Object o) {
+			if (o instanceof File)
+				return ((File)o).getName();
+			String file = asURL(o).getFile();
+			return file.substring(file.lastIndexOf('/')+1);
+		}
+		
+		public static URL resolve(Object base, Object url) {
+			if (url instanceof URI)
+				return asURL(asURI(base).resolve((URI)url));
+			if (url instanceof String) {
+				try { return new URL(asURL(base), url.toString()); }
+				catch (MalformedURLException e) { throw new RuntimeException(e); }}
+			return asURL(url);
+		}
+		
+		@SuppressWarnings("deprecation")
+		public static String relativize(Object base, Object url) {
+			return URLDecoder.decode(asURI(base).relativize(asURI(url)).toString());
+		}
+		
 		public static boolean unpack(URL url, File file) {
 			if (file.exists()) return false;
 			try {
@@ -226,43 +298,6 @@ public abstract class Utilities {
 			catch (Exception e) {
 				throw new RuntimeException(
 						"Exception occured during chmodding of file '" + file.getName() + "'", e); }
-		}
-		
-		private static URI asURI(URL url) {
-			try {
-				return new URI(url.getProtocol(), url.getAuthority(), url.getPath(), url.getQuery(), url.getRef()); }
-			catch (URISyntaxException e) { throw new RuntimeException(e); }
-		}
-		
-		public static URL asURL(File file) {
-			try { return file.toURI().toURL(); }
-			catch (MalformedURLException e) { throw new RuntimeException(e); }
-		}
-		
-		public static File asFile(URL url) {
-			return new File(asURI(url));
-		}
-		
-		public static String fileName(URL url) {
-			String file = url.getFile();
-			return URLDecoder.decode(file.substring(file.lastIndexOf('/')+1));
-		}
-		
-		public static boolean isAbsoluteFile(URL url) {
-			try {
-				new File(asURI(url));
-				return true; }
-			catch (IllegalArgumentException e) {
-				return false; }
-		}
-		
-		public static URL resolveURL(URL base, String url) {
-			try { return new URL(base, url); }
-			catch (MalformedURLException e) { throw new RuntimeException(e); }
-		}
-		
-		public static String relativizeURL(URL base, URL url) {
-			return URLDecoder.decode(asURI(base).relativize(asURI(url)).toString());
 		}
 	}
 	

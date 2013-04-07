@@ -13,7 +13,6 @@ import com.google.common.collect.Iterables;
 import org.osgi.service.component.ComponentContext;
 
 import static org.daisy.pipeline.braille.Utilities.Files.chmod775;
-import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 import static org.daisy.pipeline.braille.Utilities.OS;
 
 public class BundledNativePath extends BundledResourcePath implements ResourceLookup<String> {
@@ -35,7 +34,7 @@ public class BundledNativePath extends BundledResourcePath implements ResourceLo
 		if ((path = lookupExecutable(name)) != null) {}
 		else if ((path = lookupSharedLibrary(name)) != null) {}
 		else { return null; }
-		return resolveURL(identifier, path);
+		return resolve(path);
 	}
 	
 	protected String lookupExecutable(String name) {

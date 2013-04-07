@@ -1,5 +1,6 @@
 package org.daisy.pipeline.braille.libhyphen;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
+import static org.daisy.pipeline.braille.Utilities.Files.asURL;
+import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
 
 public class Libhyphen {
 	
@@ -33,7 +36,7 @@ public class Libhyphen {
 		if (this.nativePath == null) {
 			URL libraryPath = nativePath.lookup("libhyphen");
 			if (libraryPath != null) {
-				Hyphen.setLibraryPath(asFile(nativePath.resolve(libraryPath)));
+				Hyphen.setLibraryPath(asFile(libraryPath));
 				this.nativePath = nativePath;
 				logger.debug("Registering libhyphen library: " + libraryPath); }}
 	}
@@ -52,30 +55,35 @@ public class Libhyphen {
 	}
 	
 	/**
-	 * @param tables The fully qualified table URL.
+	 * @param table Can be a file name or path relative to a registered table path,
+	 *     an absolute file, or a fully qualified table URL.
 	 * @param text The text to hyphenate.
 	 */
-	public String hyphenate(URL table, String text) {
+	public String hyphenate(String table, String text) {
 		try {
 			return getHyphenator(table).hyphenate(text, SOFT_HYPHEN); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during libhyphen hyphenation", e); }
 	}
 	
-	private Map<URL,Hyphenator> hyphenatorCache = new HashMap<URL,Hyphenator>();
+	private Map<String,Hyphenator> hyphenatorCache = new HashMap<String,Hyphenator>();
 	
-	private Hyphenator getHyphenator(URL table) {
+	private Hyphenator getHyphenator(String table) {
 		try {
 			Hyphenator hyphenator = hyphenatorCache.get(table);
 			if (hyphenator == null) {
-				URL resolvedTable = tableResolver.resolve(table);
-				if (resolvedTable == null)
-					throw new RuntimeException("Hyphenation table " + table + " could not be resolved");
-				hyphenator = new Hyphenator(asFile(resolvedTable));
+				hyphenator = new Hyphenator(resolveTable(table));
 				hyphenatorCache.put(table, hyphenator); }
 			return hyphenator; }
 		catch (Exception e) {
 			throw new RuntimeException(e); }
+	}
+	
+	private File resolveTable(String table) {
+		URL resolvedTable = isAbsoluteFile(table) ? asURL(table) : tableResolver.resolve(table);
+		if (resolvedTable == null)
+			throw new RuntimeException("Hyphenation table " + table + " could not be resolved");
+		return asFile(resolvedTable);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(Libhyphen.class);

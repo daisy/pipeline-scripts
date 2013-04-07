@@ -11,14 +11,13 @@ import com.google.common.collect.ImmutableMap;
 
 import org.osgi.service.component.ComponentContext;
 
-import static org.daisy.pipeline.braille.Utilities.Files.resolveURL;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 public abstract class BundledTablePath extends BundledResourcePath implements TablePath, ResourceLookup<Locale> {
 	
 	private static final String MANIFEST = "manifest";
 	
-	private Map<Locale,URL> lookupMap = null;
+	private Map<Locale,String> lookupMap = null;
 	
 	@Override
 	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
@@ -34,11 +33,11 @@ public abstract class BundledTablePath extends BundledResourcePath implements Ta
 	public URL lookup(Locale locale) {
 		if (lookupMap == null)
 			return null;
-		return lookupMap.get(locale);
+		return resolve(lookupMap.get(locale));
 	}
 	
-	private Map<Locale,URL> readManifest(URL url) {
-		Map<Locale,URL> map = new HashMap<Locale,URL>();
+	private Map<Locale,String> readManifest(URL url) {
+		Map<Locale,String> map = new HashMap<Locale,String>();
 		try {
 			url.openConnection();
 			InputStream reader = url.openStream();
@@ -47,9 +46,9 @@ public abstract class BundledTablePath extends BundledResourcePath implements Ta
 			for (String key : properties.stringPropertyNames()) {
 				Locale locale = parseLocale(key);
 				if (!map.containsKey(locale)) {
-					map.put(locale, resolveURL(identifier, properties.getProperty(key))); }}
+					map.put(locale, properties.getProperty(key)); }}
 			reader.close();
-			return new ImmutableMap.Builder<Locale,URL>().putAll(map).build(); }
+			return new ImmutableMap.Builder<Locale,String>().putAll(map).build(); }
 		catch (Exception e) {
 			throw new RuntimeException("Could not read manifest for table path " + getIdentifier(), e); }
 	}

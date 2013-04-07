@@ -1,7 +1,5 @@
 package org.daisy.pipeline.braille.liblouis.saxon;
 
-import java.net.URL;
-
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -17,6 +15,7 @@ import org.daisy.pipeline.braille.liblouis.Liblouis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("serial")
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("louis",
@@ -66,7 +65,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 					throws XPathException {
 				
 				try {
-					URL table = new URL(((StringValue)arguments[0].next()).getStringValue());
+					String table = ((StringValue)arguments[0].next()).getStringValue();
 					String text = ((StringValue)arguments[1].next()).getStringValue();
 					byte[] typeform = null;
 					boolean hyphenate = false;
@@ -83,11 +82,8 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 					logger.error("louis:translate failed", e);
 					throw new XPathException("louis:translate failed"); }
 			}
-			
-			private static final long serialVersionUID = 1L;
 		};
 	}
 	
-	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
 }

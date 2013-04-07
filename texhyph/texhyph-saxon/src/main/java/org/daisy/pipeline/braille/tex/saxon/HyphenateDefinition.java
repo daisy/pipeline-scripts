@@ -1,7 +1,5 @@
 package org.daisy.pipeline.braille.tex.saxon;
 
-import java.net.URL;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +15,7 @@ import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.tex.TexHyphenator;
 
+@SuppressWarnings("serial")
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("tex",
@@ -63,7 +62,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					throws XPathException {
 				
 				try {
-					URL table = new URL(((StringValue)arguments[0].next()).getStringValue());
+					String table = ((StringValue)arguments[0].next()).getStringValue();
 					String text = ((StringValue)arguments[1].next()).getStringValue();
 					return SingletonIterator.makeIterator(
 						new StringValue(hyphenator.hyphenate(table, text))); }
@@ -71,11 +70,8 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					logger.error("tex:hyphenate failed", e);
 					throw new XPathException("tex:hyphenate failed"); }
 			}
-			
-			private static final long serialVersionUID = 1L;
 		};
 	}
 	
-	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);
 }
