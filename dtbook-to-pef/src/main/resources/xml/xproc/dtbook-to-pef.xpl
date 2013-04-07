@@ -57,8 +57,8 @@
     <p:option name="translator" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">translator</h2>
-            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Must be a comma separated list of identifiers (URLs). Defaults to a simple liblouis-based translator.</p>
-            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/utilities/xproc/generic-translate.xpl</code></pre>
+            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Can be a comma separated list. Defaults to a simple liblouis-based translator.</p>
+            <pre><code class="example">generic-translate.xpl</code></pre>
         </p:documentation>
     </p:option>
     
@@ -80,7 +80,7 @@
     
     <px:xml-to-pef.load-translator name="translator">
         <p:with-option name="translator" select="if ($translator!='') then $translator else
-            'http://www.daisy.org/pipeline/modules/braille/utilities/xslt/generic-liblouis-translate.xsl'"/>
+            'http://www.daisy.org/pipeline/modules/braille/utilities/generic-liblouis-translate.xsl'"/>
     </px:xml-to-pef.load-translator>
     <p:sink/>
     

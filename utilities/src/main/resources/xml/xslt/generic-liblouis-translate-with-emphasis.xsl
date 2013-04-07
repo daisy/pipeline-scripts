@@ -7,7 +7,7 @@
 	exclude-result-prefixes="#all">
 	
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xslt/block-translator-template.xsl"/>
-	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/utilities/xslt/get-liblouis-typeform.xsl" />
+	<xsl:import href="get-liblouis-typeform.xsl" />
 	
 	<xsl:template match="css:block">
 		<xsl:variable name="table" select="louis:lookup-table(string(@xml:lang))"/>

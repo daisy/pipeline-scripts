@@ -9,6 +9,8 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:libhyphen-saxon" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:texhyph-saxon" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-formatter" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css" />
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-calabash" />

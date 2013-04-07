@@ -6,108 +6,113 @@
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:hyphen="http://hunspell.sourceforge.net/Hyphen"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     exclude-inline-prefixes="p px xsl"
     type="px:xml-to-pef.load-translator" version="1.0">
     
     <p:output port="result" primary="true" sequence="true"/>
     <p:option name="translator" required="true"/>
     
-    <p:choose>
-        <p:when test="contains($translator, ',http:/')">
-            <px:xml-to-pef.load-translator name="first">
-                <p:with-option name="translator" select="substring-before($translator, ',http:/')"/>
-            </px:xml-to-pef.load-translator>
-            <p:sink/>
-            <px:xml-to-pef.load-translator name="rest">
-                <p:with-option name="translator" select="concat('http:/', substring-after($translator, ',http:/'))"/>
-            </px:xml-to-pef.load-translator>
-            <p:sink/>
-            <p:identity>
+    <p:try>
+        <p:group>
+            <p:xslt template-name="main">
                 <p:input port="source">
-                    <p:pipe step="first" port="result"/>
-                    <p:pipe step="rest" port="result"/>
+                    <p:empty/>
                 </p:input>
-            </p:identity>
-        </p:when>
-        <p:otherwise>
-            <p:choose>
-                <p:when test="matches($translator, '^http:/.*')">
-                    <p:try>
-                        <p:group>
-                            <p:load>
-                                <p:with-option name="href" select="$translator"/>
-                            </p:load>
-                            <p:choose>
-                                <p:when test="/p:pipeline or /xsl:stylesheet">
-                                    <p:identity/>
-                                </p:when>
-                                <p:otherwise>
-                                    <p:error code="px:brl02">
-                                        <p:input port="source">
-                                            <p:inline><message>Translator is neither a &lt;xsl:stylesheet&gt; nor a &lt;p:pipeline&gt;.</message></p:inline>
-                                        </p:input>
-                                    </p:error>
-                                </p:otherwise>
-                            </p:choose>
-                        </p:group>
-                        <p:catch>
-                            <p:choose>
-                                <p:when test="matches($translator, '.*(\.cti|\.ctb|\.utb)$')">
-                                    <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
-                                        <p:input port="source">
-                                            <p:inline>
-                                                <xsl:stylesheet version="2.0">
-                                                    <xsl:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xslt/block-translator-template.xsl"/>
-                                                    <xsl:variable name="table"/>
-                                                    <xsl:template match="css:block">
-                                                        <xsl:sequence select="louis:translate($table, string(.))"/>
-                                                    </xsl:template>
-                                                </xsl:stylesheet>
-                                            </p:inline>
-                                        </p:input>
-                                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
-                                    </p:add-attribute>
-                                </p:when>
-                                <p:when test="matches($translator, '.*\.dic$')">
-                                    <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
-                                        <p:input port="source">
-                                            <p:inline>
-                                                <xsl:stylesheet version="2.0">
-                                                    <xsl:variable name="table"/>
-                                                    <xsl:template match="text()">
-                                                        <xsl:sequence select="hyphen:hyphenate($table, string(.))"/>
-                                                    </xsl:template>
-                                                    <xsl:template match="element()|@*|comment()|processing-instruction()">
-                                                        <xsl:copy>
-                                                            <xsl:apply-templates select="@*|node()"/>
-                                                        </xsl:copy>
-                                                    </xsl:template>
-                                                </xsl:stylesheet>
-                                            </p:inline>
-                                        </p:input>
-                                        <p:with-option name="attribute-value" select='concat("&apos;", $translator, "&apos;")'/>
-                                    </p:add-attribute>
-                                </p:when>
-                                <p:otherwise>
-                                    <p:error code="px:brl01">
-                                        <p:input port="source">
-                                            <p:inline><message>Translator could not be loaded.</message></p:inline>
-                                        </p:input>
-                                    </p:error>
-                                </p:otherwise>
-                            </p:choose>
-                        </p:catch>
-                    </p:try>
-                </p:when>
-                <p:otherwise>
-                    <p:error code="px:brl01">
-                        <p:input port="source">
-                            <p:inline><message>The option 'translator' must be of the form 'http:/...'.</message></p:inline>
-                        </p:input>
-                    </p:error>
-                </p:otherwise>
-            </p:choose>
-        </p:otherwise>
-    </p:choose>
+                <p:input port="stylesheet">
+                    <p:document href="../xslt/load-translator.xsl"/>
+                </p:input>
+                <p:with-param name="translator" select="$translator"/>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+            </p:xslt>
+        </p:group>
+        <p:catch>
+            <p:error code="px:brl01">
+                <p:input port="source">
+                    <p:inline><message>Could not load translator. Must be either a &lt;xsl:stylesheet&gt;, a &lt;p:pipeline&gt;, a liblouis table, a libhyphen table or a TeX hyphenation table.</message></p:inline>
+                </p:input>
+            </p:error>
+        </p:catch>
+    </p:try>
+    
+    <p:filter select="//d:translator"/>
+
+    <p:for-each name="translators">
+        <p:choose>
+            <p:xpath-context>
+                <p:pipe step="translators" port="current"/>
+            </p:xpath-context>
+            <p:when test="/d:translator/@kind='xml'">
+                <p:load>
+                    <p:with-option name="href" select="/d:translator/@href"/>
+                </p:load>
+            </p:when>
+            <p:when test="/d:translator/@kind='liblouis'">
+                <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
+                    <p:input port="source">
+                        <p:inline>
+                            <xsl:stylesheet version="2.0">
+                                <xsl:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xslt/block-translator-template.xsl"/>
+                                <xsl:variable name="table"/>
+                                <xsl:template match="css:block">
+                                    <xsl:sequence select="louis:translate($table, string(.))"/>
+                                </xsl:template>
+                            </xsl:stylesheet>
+                        </p:inline>
+                    </p:input>
+                    <p:with-option name="attribute-value" select='concat("&apos;", /d:translator/@href, "&apos;")'/>
+                </p:add-attribute>
+            </p:when>
+            <p:when test="/d:translator/@kind='libhyphen'">
+                <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
+                    <p:input port="source">
+                        <p:inline>
+                            <xsl:stylesheet version="2.0">
+                                <xsl:variable name="table"/>
+                                <xsl:template match="text()">
+                                    <xsl:sequence select="hyphen:hyphenate($table, string(.))"/>
+                                </xsl:template>
+                                <xsl:template match="element()|@*|comment()|processing-instruction()">
+                                    <xsl:copy>
+                                        <xsl:apply-templates select="@*|node()"/>
+                                    </xsl:copy>
+                                </xsl:template>
+                            </xsl:stylesheet>
+                        </p:inline>
+                    </p:input>
+                    <p:with-option name="attribute-value" select='concat("&apos;", /d:translator/@href, "&apos;")'/>
+                </p:add-attribute>
+            </p:when>
+            <p:when test="/d:translator/@kind='texhyph'">
+                <p:add-attribute attribute-name="select" match="//xsl:variable[@name='table']">
+                    <p:input port="source">
+                        <p:inline>
+                            <xsl:stylesheet version="2.0">
+                                <xsl:variable name="table"/>
+                                <xsl:template match="text()">
+                                    <xsl:sequence select="tex:hyphenate($table, string(.))"/>
+                                </xsl:template>
+                                <xsl:template match="element()|@*|comment()|processing-instruction()">
+                                    <xsl:copy>
+                                        <xsl:apply-templates select="@*|node()"/>
+                                    </xsl:copy>
+                                </xsl:template>
+                            </xsl:stylesheet>
+                        </p:inline>
+                    </p:input>
+                    <p:with-option name="attribute-value" select='concat("&apos;", /d:translator/@href, "&apos;")'/>
+                </p:add-attribute>
+            </p:when>
+            <p:otherwise>
+                <p:identity>
+                    <p:input port="source">
+                        <p:empty/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
+    </p:for-each>
     
 </p:declare-step>
