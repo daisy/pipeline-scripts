@@ -51,7 +51,8 @@
           <instructions>
             <Service-Component>
               OSGI-INF/tex-hyphenate.xml,
-              OSGI-INF/tex-lookup-table.xml
+              OSGI-INF/tex-lookup-table.xml,
+              OSGI-INF/tex-resolve-table.xml
             </Service-Component>
           </instructions>
         </configuration>

@@ -51,7 +51,8 @@
           <instructions>
             <Service-Component>
               OSGI-INF/libhyphen-hyphenate.xml,
-              OSGI-INF/libhyphen-lookup-table.xml
+              OSGI-INF/libhyphen-lookup-table.xml,
+              OSGI-INF/libhyphen-resolve-table.xml
             </Service-Component>
           </instructions>
         </configuration>
