@@ -25,6 +25,10 @@ head {
     display: none;
 }
 
+annotation[role="production"] {
+    display: none;
+}
+
 section,
 frontmatter {
     display: block;

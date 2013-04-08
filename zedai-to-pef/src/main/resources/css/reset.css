@@ -1,0 +1,28 @@
+h {
+	display: inline;
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+p {
+	display: inline;
+	text-indent: 0;
+}
+
+head {
+	display: inline;
+}
+
+section,
+frontmatter,
+bodymatter,
+block,
+lngroup,
+ln,
+object,
+verse {
+	display: inline;
+}

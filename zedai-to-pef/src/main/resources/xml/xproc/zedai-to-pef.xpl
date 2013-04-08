@@ -69,7 +69,7 @@
         <p:documentation>
             <h2 px:role="name">default-stylesheet</h2>
             <p px:role="desc">The default CSS stylesheet to apply.</p>
-            <pre><code class="example">http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css</code></pre>
+            <pre><code class="example">bana.css</code></pre>
         </p:documentation>
     </p:option>
     
@@ -98,7 +98,9 @@
         <p:input port="translators">
             <p:pipe step="translator" port="result"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+        <p:with-option name="default-stylesheet" select="resolve-uri(
+            if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
+            'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/')"/>
         <p:with-option name="temp-dir" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:zedai-to-pef.convert>
     
