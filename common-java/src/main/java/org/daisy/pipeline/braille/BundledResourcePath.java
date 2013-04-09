@@ -45,7 +45,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 		if (resource.endsWith("/") && (resource.equals(path.toString()) || resource.equals(identifier.toString()))) {
 			lazyUnpack.apply();
 			return path; }
-		String relativeURL = Files.relativize(isAbsoluteFile(resource) ? path : identifier,
+		String relativeURL = Files.relativize(resource.startsWith(path.toString()) ? path : identifier,
 				Files.resolve(identifier, resource));
 		if (includes(relativeURL)) {
 			lazyUnpack.apply();
