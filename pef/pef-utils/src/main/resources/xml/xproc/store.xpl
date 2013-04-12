@@ -6,7 +6,7 @@
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     exclude-inline-prefixes="#all"
-    type="px:xml-to-pef.store" name="store" version="1.0">
+    type="pef:store" name="store" version="1.0">
     
     <p:input port="source" primary="true" px:media-type="application/x-pef+xml"/>
     

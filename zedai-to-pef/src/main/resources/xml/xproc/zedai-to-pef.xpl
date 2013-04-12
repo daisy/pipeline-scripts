@@ -3,6 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:pef="http://www.daisy.org/ns/2008/pef"
     exclude-inline-prefixes="#all"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
     
@@ -75,7 +76,7 @@
     
     <p:import href="zedai-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-translator.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.store.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
     
     <!-- =============== -->
     <!-- LOAD COMPONENTS -->
@@ -108,13 +109,13 @@
     <!-- STORE PEF -->
     <!-- ========= -->
     
-    <px:xml-to-pef.store>
+    <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="zedai-to-pef" port="source"/>
         </p:with-option>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-brf" select="$include-brf"/>
-    </px:xml-to-pef.store>
+    </pef:store>
     
 </p:declare-step>

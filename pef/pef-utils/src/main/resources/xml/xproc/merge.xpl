@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="pef:merge" name="merge"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
