@@ -4,7 +4,6 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:pef="http://www.daisy.org/ns/2008/pef"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:opf="http://www.idpf.org/2007/opf"
     exclude-inline-prefixes="p px pxi xsl"
@@ -23,7 +22,7 @@
             <p:inline>
                 <xsl:stylesheet version="2.0">
                     <xsl:variable name="metadata" select="collection()[2]/opf:metadata"/>
-                    <xsl:template match="pef:meta">
+                    <xsl:template match="meta">
                         <xsl:variable name="this" select="."/>
                         <xsl:copy>
                             <xsl:apply-templates select="@*|node()"/>
