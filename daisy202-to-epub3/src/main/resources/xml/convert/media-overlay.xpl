@@ -100,12 +100,15 @@
             <p:when test="$include-mediaoverlay='true'">
                 <p:variable name="result-uri" select="replace($content-result-uri,'xhtml$','smil')"/>
                 
-                <cx:message>
+                <cx:message name="content">
                     <p:with-option name="message" select="concat('compiling media overlay for ',substring-after($result-uri,$publication-dir))"/>
                 </cx:message>
                 <px:mediaoverlay-rearrange>
                     <p:input port="mediaoverlay">
                         <p:pipe port="result" step="mediaoverlay-joined"/>
+                    </p:input>
+                    <p:input port="content">
+                        <p:pipe port="result" step="content"/>
                     </p:input>
                 </px:mediaoverlay-rearrange>
                 <p:add-attribute match="/*" attribute-name="xml:base">

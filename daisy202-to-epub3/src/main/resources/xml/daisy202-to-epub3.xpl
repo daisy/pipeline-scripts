@@ -71,7 +71,7 @@
     </p:identity>
     <p:choose>
         <p:when test="not(matches($href,'\w+:/'))">
-            <p:template>
+            <p:template name="error-message">
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
                         <message>href: "{$href}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
@@ -81,10 +81,14 @@
                     <p:pipe step="vars" port="result"/>
                 </p:input>
             </p:template>
-            <p:error code="PDE01"/>
+            <p:error code="PDE01">
+                <p:input port="source">
+                    <p:pipe port="result" step="error-message"/>
+                </p:input>
+            </p:error>
         </p:when>
         <p:when test="not(matches($output-dir,'\w+:/'))">
-            <p:template>
+            <p:template name="error-message">
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
                         <message>output: "{$output-dir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
@@ -94,10 +98,14 @@
                     <p:pipe step="vars" port="result"/>
                 </p:input>
             </p:template>
-            <p:error code="PDE05"/>
+            <p:error code="PDE05">
+                <p:input port="source">
+                    <p:pipe port="result" step="error-message"/>
+                </p:input>
+            </p:error>
         </p:when>
         <p:when test="not(matches($tempDir,'\w+:/'))">
-            <p:template>
+            <p:template  name="error-message">
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
                         <message>output: "{$tempDir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
@@ -107,10 +115,14 @@
                     <p:pipe step="vars" port="result"/>
                 </p:input>
             </p:template>
-            <p:error code="PDE02"/>
+            <p:error code="PDE02">
+                <p:input port="source">
+                    <p:pipe port="result" step="error-message"/>
+                </p:input>
+            </p:error>
         </p:when>
         <p:when test="not($mediaoverlay='true' or $mediaoverlay='false')">
-            <p:template>
+            <p:template  name="error-message">
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
                         <message>mediaoverlay: "{$mediaoverlay}" is not a valid value. When given, mediaoverlay must be either "true" (default) or "false".</message>
@@ -120,10 +132,14 @@
                     <p:pipe step="vars" port="result"/>
                 </p:input>
             </p:template>
-            <p:error code="PDE03"/>
+            <p:error code="PDE03">
+                <p:input port="source">
+                    <p:pipe port="result" step="error-message"/>
+                </p:input>
+            </p:error>
         </p:when>
         <p:when test="not($compatibility-mode='true' or $compatibility-mode='false')">
-            <p:template>
+            <p:template  name="error-message">
                 <p:input port="template">
                     <p:inline exclude-inline-prefixes="#all">
                         <message>compatibility-mode: "{$compatibility-mode}" is not a valid value. When given, compatibility-mode must be either "true" (default) or "false".</message>
@@ -133,7 +149,11 @@
                     <p:pipe step="vars" port="result"/>
                 </p:input>
             </p:template>
-            <p:error code="PDE04"/>
+            <p:error code="PDE04">
+                <p:input port="source">
+                    <p:pipe port="result" step="error-message"/>
+                </p:input>
+            </p:error>
         </p:when>
         <p:otherwise>
             <p:identity>
