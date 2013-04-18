@@ -8,8 +8,7 @@
     xmlns:l="http://xproc.org/library" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" 
-    xmlns:m="http://www.w3.org/1998/Math/MathML"
+    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:m="http://www.w3.org/1998/Math/MathML"
     exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -60,7 +59,7 @@
         </p:documentation>
         <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
-
+    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -100,18 +99,29 @@
     <p:import href="nimas-fileset-validator.validate-package-doc.xpl">
         <p:documentation>Package doc validation step.</p:documentation>
     </p:import>
-
-    <p:variable name="base-uri" select="base-uri()"/>
-    <p:variable name="package-doc-filename" 
-        select="tokenize($base-uri, '/')[last()]"/>
     
+    <p:import href="nimas-fileset-validator.fileset-filter.xpl"/>
+    
+    <p:variable name="base-uri" select="base-uri()"/>
+    <p:variable name="package-doc-filename" select="tokenize($base-uri, '/')[last()]"/>
+
     <cx:message message="Nimas fileset validator: validating files."/>
     <p:sink/>
-    
+
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
-
+    
+    <!-- check for missing dtbook files -->
+    <pxi:nimas-fileset-validator.fileset-filter media-type="application/x-dtbook+xml" name="filter-fileset">
+        <p:input port="source">
+            <p:pipe port="source" step="nimas-fileset-validator"/>
+        </p:input>
+    </pxi:nimas-fileset-validator.fileset-filter>
+    <px:check-files-exist name="check-dtbooks-exist"/>
+    
+    <!-- TODO: create report for missing DTBooks -->
+    
     <p:for-each name="validate-dtbooks">
         <p:output port="result" sequence="true">
             <p:pipe port="result" step="validate-dtbook-group"/>
@@ -119,23 +129,29 @@
         <p:output port="has-mathml" sequence="true">
             <p:pipe port="result" step="look-for-mathml"/>
         </p:output>
-        
-        <p:iteration-source select="//pkg:item[@media-type = 'application/x-dtbook+xml']">
-            <p:pipe port="source" step="nimas-fileset-validator"/>
+
+        <p:iteration-source select="//d:file">
+            <p:pipe port="result" step="check-dtbooks-exist"/>
         </p:iteration-source>
-        
+
         <p:variable name="dtbook-href" select="*/@href"/>
-        <p:variable name="dtbook-uri" select="*/resolve-uri($dtbook-href, base-uri())"/>
-        <p:variable name="report-filename" select="concat(replace($dtbook-href, '/', '_'), '-report.xml')"/>
+        <p:variable name="dtbook-filename" select="tokenize($dtbook-href, '/')[last()]"/>
         
+        <!-- TODO: will this be unique? 
+            We should actually relativize $dtbook-href wrt the package file rather than just take the filename part of the path. -->
+        <p:variable name="report-filename"
+            select="concat(replace($dtbook-filename, '/', '_'), '-report.xml')"/>
+
         <cx:message>
-            <p:with-option name="message" select="concat('Nimas fileset validator: Loading DTBook document: ', $dtbook-uri)"/>
+            <p:with-option name="message"
+                select="concat('Nimas fileset validator: Loading DTBook document: ', $dtbook-href)"/>
         </cx:message>
         <p:sink/>
         
         <p:load name="load-dtbook">
-            <p:with-option name="href" select="$dtbook-uri"/>
+            <p:with-option name="href" select="$dtbook-href"/>
         </p:load>
+        
         <!-- see if there's MathML -->
         <p:group name="look-for-mathml">
             <p:output port="result"/>
@@ -161,6 +177,7 @@
         
         <p:group name="validate-dtbook-group">
             <p:output port="result"/>
+            
             <cx:message message="Nimas fileset validator: Validating DTBook document."/>
             <p:sink/>
             
@@ -182,11 +199,11 @@
                 <p:input port="source">
                     <p:pipe port="report" step="validate-dtbook"/>
                 </p:input>
-            </p:insert> 
+            </p:insert>
             <p:string-replace match="d:document-info/d:report-path/text()">
-                <p:with-option name="replace" select="concat('&quot;', $report-filename, '&quot;')"/>
+                <p:with-option name="replace"
+                    select="concat('&quot;', $report-filename, '&quot;')"/>
             </p:string-replace>
-            
         </p:group>
     </p:for-each>
     
@@ -230,7 +247,7 @@
                 <p:sink/>
             </p:otherwise>
         </p:choose>
-        
+
         <!-- add the report path -->
         <p:insert position="last-child" match="d:document-info">
             <p:input port="insertion">
@@ -238,53 +255,55 @@
                     <d:report-path>@@</d:report-path>
                 </p:inline>
             </p:input>
-        </p:insert> 
+        </p:insert>
         <p:string-replace match="d:document-info/d:report-path/text()">
-            <p:with-option name="replace" select="concat('&quot;', $package-doc-filename, '-report.xml&quot;')"/>
+            <p:with-option name="replace"
+                select="concat('&quot;', $package-doc-filename, '-report.xml&quot;')"/>
         </p:string-replace>
     </p:group>
 
     <cx:message message="Nimas fileset validator: Formatting report as HTML."/>
     <p:sink/>
-    
+
     <px:validation-report-to-html name="format-as-html">
         <p:input port="source">
             <p:pipe port="result" step="validate-package-doc"/>
             <p:pipe port="result" step="validate-dtbooks"/>
         </p:input>
         <p:with-option name="toc" select="'true'"/>
-    </px:validation-report-to-html>
+    </px:validation-report-to-html>    
     
     <!-- ***************************************************** -->
     <!-- STORE REPORTS -->
     <!-- ***************************************************** -->
-    
+
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
             <cx:message>
-                <p:with-option name="message" select="concat('Nimas fileset validator: Storing reports to disk in output directory: ', $output-dir)"/>
+                <p:with-option name="message"
+                    select="concat('Nimas fileset validator: Storing reports to disk in output directory: ', $output-dir)"
+                />
             </cx:message>
             <p:sink/>
-            
+
             <p:for-each>
                 <p:iteration-source>
                     <p:pipe port="result" step="validate-dtbooks"/>
                     <p:pipe port="result" step="validate-package-doc"/>
                 </p:iteration-source>
-                <p:variable name="report-filename" select="/d:document-validation-report/d:document-info/d:report-path/text()"/>
+                <p:variable name="report-filename"
+                    select="/d:document-validation-report/d:document-info/d:report-path/text()"/>
                 <p:store name="store-report">
-                    <p:with-option name="href"
-                        select="concat($output-dir,'/', $report-filename)"/>
+                    <p:with-option name="href" select="concat($output-dir,'/', $report-filename)"/>
                 </p:store>
             </p:for-each>
-            
+
             <p:store name="store-html-report">
                 <p:input port="source">
                     <p:pipe port="result" step="format-as-html"/>
                 </p:input>
-                <p:with-option name="href"
-                    select="concat($output-dir,'/validation-report.xhtml')"/>
+                <p:with-option name="href" select="concat($output-dir,'/validation-report.xhtml')"/>
             </p:store>
         </p:when>
         <p:otherwise>

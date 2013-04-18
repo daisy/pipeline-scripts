@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="nimas-fileset-validator.check-pdfs"
-    type="pxi:nimas-fileset-validator.check-pdfs" xmlns:p="http://www.w3.org/ns/xproc"
+<p:declare-step version="1.0" name="nimas-fileset-validator.fileset-filter"
+    type="pxi:nimas-fileset-validator.fileset-filter" xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
@@ -12,8 +12,7 @@
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">Helper step for Nimas Fileset Validator</h1>
-        <p px:role="desc">Checks to see if the PDFs referenced from the package document exists on
-            disk.</p>
+        <p px:role="desc">Create a fileset of manifest items with the specified media-type.</p>
     </p:documentation>
 
     <!-- ***************************************************** -->
@@ -27,23 +26,22 @@
         </p:documentation>
     </p:input>
 
-    <p:output port="result" sequence="true">
-        <p:pipe port="result" step="check-pdfs-exist"/>
-        
+    <p:output port="result" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">result</h1>
-            <p px:role="desc">Report of missing PDFs, or an empty sequence if nothing is
-                missing.</p>
+            <p px:role="desc">FileSet representing the filtered file list.</p>
         </p:documentation>
     </p:output>
-
+    
+    <p:option name="media-type" required="true">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">media-type</h1>
+            <p px:role="desc">Media type of the files to list.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
-
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/validation-utils/validation-utils-library.xpl">
-        <p:documentation>Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
@@ -52,16 +50,19 @@
 
     <p:variable name="package-doc-uri" select="base-uri()"/>
 
-    <cx:message message="Nimas fileset validator: Checking that PDFs exist on disk."/>
+    <cx:message>
+        <p:with-option name="message" select="concat('Nimas fileset validator: Creating fileset filtered by ', $media-type)"/>
+    </cx:message>
 
     <!-- loop that creates a fileset for each file -->
     <p:for-each name="fileset.in-memory-files">
         <p:output port="result"/>
-        <p:iteration-source select="//pkg:item[@media-type = 'application/pdf']"/>
+        <p:iteration-source select="//pkg:item[@media-type = $media-type]"/>
         <p:variable name="refid" select="*/@id"/>
-        <p:variable name="pdfpath" select="resolve-uri(*/@href, $package-doc-uri)"/>
+        <p:variable name="filepath" select="resolve-uri(*/@href, $package-doc-uri)"/>
+        
         <px:fileset-add-entry>
-            <p:with-option name="href" select="$pdfpath"/>
+            <p:with-option name="href" select="$filepath"/>
             <p:with-option name="ref" select="concat($package-doc-uri, '#', $refid)"/>
             <p:input port="source">
                 <p:inline>
@@ -81,6 +82,5 @@
             <p:pipe step="fileset.in-memory-files" port="result"/>
         </p:input>
     </px:fileset-join>
-
-    <px:check-files-exist name="check-pdfs-exist"/>    
+    
 </p:declare-step>

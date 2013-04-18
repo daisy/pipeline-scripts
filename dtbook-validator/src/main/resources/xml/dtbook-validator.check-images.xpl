@@ -34,6 +34,7 @@
             <h1 px:role="name">result</h1>
             <p px:role="desc">List of missing images, or an empty sequence if nothing is missing.</p>
         </p:documentation>
+        <p:pipe port="report" step="check-images-exist"/>
     </p:output>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
@@ -107,6 +108,6 @@
             <p:pipe step="fileset-join" port="result"/>
         </p:input>
     </px:check-files-exist>  
-    
+    <p:sink/>
     
 </p:declare-step>
