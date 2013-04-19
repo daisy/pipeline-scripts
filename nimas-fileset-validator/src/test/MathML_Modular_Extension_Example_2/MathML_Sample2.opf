@@ -33,7 +33,7 @@ PUBLIC "+//ISBN 0-9673008-1-9//DTD OEB 1.2 Package//EN"
 <manifest>
 	<item id="opf" href="MathML_Sample2.opf" media-type="text/xml" />
 	<item id="ncx" href="MathML_Sample2.ncx" media-type="application/x-dtbncx+xml" />
-	<item id="Text_0" href="MathML_Sample2.xml" media-type="application/x-dtbook+xml" />
+	<item id="Text_0" href="MathML_Sample2-not-here.xml" media-type="application/x-dtbook+xml" />
 	<item id="Text_01" href="MathML_Sample2-copy.xml" media-type="application/x-dtbook+xml" />
 	<item id="Smil_0" href="MathML_Sample2.smil" media-type="application/smil" />
 	<item id="Misc_0" href="images/check.png" media-type="image/png" />

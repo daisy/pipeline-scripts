@@ -59,13 +59,13 @@
         <p:documentation>Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
     
-    <p:import href="nimas-fileset-validator.check-pdfs.xpl"/>
+    <p:import href="nimas-fileset-validator.fileset-filter.xpl"/>
     
     <p:variable name="base-uri" select="base-uri()">
         <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
     </p:variable>
     <p:variable name="filename" 
-        select="tokenize($base-uri, '/')[count(tokenize($base-uri, '/'))]"/>
+        select="tokenize($base-uri, '/')[last()]"/>
     
     <p:variable name="document-type" select="if ($math eq 'true') 
         then 'OPF 1.2 (MathML detected)' 
@@ -163,12 +163,52 @@
     </p:validate-with-schematron>
     <p:sink/>
     
-    <!-- check that any referenced PDFs exist on disk -->
-    <pxi:nimas-fileset-validator.check-pdfs name="check-pdfs-exist">
-        <p:input port="source">
-            <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
-        </p:input>
-    </pxi:nimas-fileset-validator.check-pdfs>    
+    <p:group name="check-files-exist">
+        <p:output port="result"/>
+        
+        <!-- check that any referenced PDFs exist on disk -->
+        <pxi:nimas-fileset-validator.fileset-filter media-type="application/pdf">
+            <p:input port="source">
+                <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
+            </p:input>
+        </pxi:nimas-fileset-validator.fileset-filter>
+        <px:check-files-exist name="check-pdfs-exist"/>
+        <!-- we're only using the report port-->
+        <p:sink>
+            <p:input port="source">
+                <p:pipe port="result" step="check-pdfs-exist"/>
+            </p:input>
+        </p:sink>
+        
+        <!-- check that any referenced DTBook documents exist on disk -->
+        <pxi:nimas-fileset-validator.fileset-filter media-type="application/x-dtbook+xml" name="filter-fileset">
+            <p:input port="source">
+                <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
+            </p:input>
+        </pxi:nimas-fileset-validator.fileset-filter>
+        <px:check-files-exist name="check-dtbooks-exist"/>
+        <!-- we're only using the report port-->
+        <p:sink>
+            <p:input port="source">
+                <p:pipe port="result" step="check-dtbooks-exist"/>
+            </p:input>
+        </p:sink>
+        <p:unwrap match="d:errors" name="unwrap-errors">
+            <p:input port="source">
+                <p:pipe port="report" step="check-dtbooks-exist"/>
+            </p:input>
+        </p:unwrap>
+        
+        <p:insert name="combine-errors" match="d:errors" position="last-child">
+            <p:input port="insertion">
+                <p:pipe port="result" step="unwrap-errors"/>
+            </p:input>
+            <p:input port="source">
+                <p:pipe port="report" step="check-pdfs-exist"/>
+            </p:input>
+        </p:insert>
+        
+    </p:group>
     
     <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>
@@ -178,7 +218,7 @@
             <!-- a sequence of reports -->
             <p:pipe port="result" step="validate-against-relaxng"/>
             <p:pipe port="report" step="validate-against-schematron"/>
-            <p:pipe port="result" step="check-pdfs-exist"/>
+            <p:pipe port="result" step="check-files-exist"/>
         </p:input>
     </px:combine-validation-reports>
     
