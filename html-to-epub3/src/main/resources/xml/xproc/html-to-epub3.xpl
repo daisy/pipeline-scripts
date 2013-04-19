@@ -27,8 +27,6 @@
     <p:import href="html-to-epub3.convert.xpl"/>
 <!--    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>-->
     
-    <!--TODO improve signature checking-->
-    
     <p:xslt name="output-dir-uri">
         <p:with-param name="href" select="concat($output-dir,'/')"/>
         <p:input port="source">
