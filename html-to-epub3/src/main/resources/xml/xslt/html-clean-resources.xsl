@@ -73,12 +73,29 @@
         <!-\-TODO handle 'script' with @src-\->
     </xsl:template>-->
 
-    <!--<xsl:template match="a[@href]">
-        <!-\-TODO handle 'a'-\->
-        <xsl:variable name="href" select="tokenize(@href,'#')[1]"/>
-        <xsl:if test="not(matches(normalize-space(@href),'^[^/]+:.*'))">
-        </xsl:if>
-    </xsl:template>-->
+    <xsl:template match="a[@href]">
+        <xsl:choose>
+            <xsl:when
+                test="pf:is-relative(@href) and not(pf:file-exists(pf:unescape-uri(pf:get-path(@href))))"
+                use-when="function-available('pf:file-exists')">
+
+                <xsl:message>[WARNING] Discarding link to non-existing resource '<xsl:value-of
+                        select="@src"/>'.</xsl:message>
+                <span>
+                    <xsl:copy-of select="@* except (@href|@target|@rel|@media|@targetlang|@type)"/>
+                    <xsl:apply-templates select="node()"/>
+                </span>
+            </xsl:when>
+            <xsl:when
+                test="false()">
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy>
+                    <xsl:apply-templates select="@* | node()"/>
+                </xsl:copy>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
 
     <xsl:template match="img[@src]">
