@@ -41,9 +41,7 @@
     <p:group name="html-resources">
         <p:log port="fileset" href="file:/tmp/out/log-html-res-fs.xml"/>
         <p:log port="docs" href="file:/tmp/out/log-html-res-docs.xml"/>
-        <p:output port="docs" primary="true" sequence="true">
-            <p:pipe port="result" step="html-cleaned"/>
-        </p:output>
+        <p:output port="docs" primary="true" sequence="true"/>
         <p:output port="fileset">
             <p:pipe port="result" step="fileset"/>
         </p:output>
@@ -73,6 +71,11 @@
         </p:for-each>
         <px:fileset-join/>
         <px:mediatype-detect name="fileset"/>
+        <p:delete match="//@data-original-href">
+            <p:input port="source">
+                <p:pipe port="result" step="html-cleaned"/>
+            </p:input>
+        </p:delete>
     </p:group>
     <!--TODO filter-out XHTML docs in the spine-->
     <!--TODO clean any out-of-spine XHTML docs-->
