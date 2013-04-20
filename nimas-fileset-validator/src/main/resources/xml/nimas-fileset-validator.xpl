@@ -60,6 +60,14 @@
         <p:pipe step="validate-dtbooks" port="result"/>
     </p:output>
     
+    <p:output port="validation-status">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">validation-status</h1>
+            <p px:role="desc">Validation status (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>
+        </p:documentation>
+        <p:pipe step="format-validation-status" port="result"/>
+    </p:output>
+    
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
@@ -272,6 +280,13 @@
         </p:input>
         <p:with-option name="toc" select="'true'"/>
     </px:validation-report-to-html>    
+    
+    <px:validation-status name="format-validation-status">
+        <p:input port="source">
+            <p:pipe port="result" step="validate-package-doc"/>
+            <p:pipe port="result" step="validate-dtbooks"/>
+        </p:input>
+    </px:validation-status>
     
     <!-- ***************************************************** -->
     <!-- STORE REPORTS -->
