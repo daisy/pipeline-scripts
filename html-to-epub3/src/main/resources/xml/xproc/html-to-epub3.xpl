@@ -63,8 +63,6 @@
         </px:html-load>
 
         <px:html-to-epub3-convert name="convert">
-            <p:log port="fileset.out" href="file:/tmp/out/log-final-fs.xml"/>
-            <p:log port="in-memory.out" href="file:/tmp/out/log-final-docs.xml"/>
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:html-to-epub3-convert>
 

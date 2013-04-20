@@ -39,8 +39,6 @@
     <!--=========================================================================-->
 
     <p:group name="html-resources">
-        <p:log port="fileset" href="file:/tmp/out/log-html-res-fs.xml"/>
-        <p:log port="docs" href="file:/tmp/out/log-html-res-docs.xml"/>
         <p:output port="docs" primary="true" sequence="true"/>
         <p:output port="fileset">
             <p:pipe port="result" step="fileset"/>
@@ -86,8 +84,6 @@
 
     <p:documentation>Clean the XHTML Documents</p:documentation>
     <pxi:html-to-epub3-content name="html-content">
-        <p:log port="docs" href="file:/tmp/out/log-html-fixed.xml"/>
-        <p:log port="fileset" href="file:/tmp/out/log-html-fs.xml"/>
         <p:with-option name="publication-dir" select="$epub-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
     </pxi:html-to-epub3-content>
@@ -98,8 +94,6 @@
 
     <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
     <p:group name="navigation">
-        <p:log port="doc" href="file:/tmp/out/log-navdoc.xhtml"/>
-        <p:log port="fileset" href="file:/tmp/out/log-navdoc-fs.xml"/>
 
         <p:output port="fileset" primary="true">
             <p:pipe port="result" step="navigation.fileset"/>
@@ -159,7 +153,6 @@
 
     <p:documentation>Extract metadata</p:documentation>
     <p:group name="metadata">
-        <p:log port="result" href="file:/tmp/out/log-md-result.xml"/>
         <p:output port="result"/>
         <!--TODO adapt to multiple XHTML input docs-->
         <p:xslt>
@@ -186,8 +179,6 @@
     <!--=========================================================================-->
     <p:documentation>Generate the EPUB 3 package document</p:documentation>
     <p:group name="package-doc">
-        <p:log port="doc" href="file:/tmp/out/log-opf.xml"/>
-        <p:log port="fileset" href="file:/tmp/out/log-opf-fs.xml"/>
 
         <p:output port="fileset" primary="true"/>
         <p:output port="doc">
