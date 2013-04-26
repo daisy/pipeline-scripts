@@ -176,6 +176,8 @@
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
         <p:with-option name="output-dir" select="$tempDir"/>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
+        <p:with-option name="mediaoverlay" select="$mediaoverlay"/>
     </px:daisy202-to-epub3-convert>
     
     <!-- decide filename -->
