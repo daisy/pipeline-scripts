@@ -2,6 +2,7 @@
 <p:declare-step type="pxi:attach-liblouis-config" name="attach-liblouis-config"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:louis="http://liblouis.org/liblouis"
@@ -14,7 +15,6 @@
     <p:output port="result" sequence="true" primary="true"/>
     
     <p:import href="utils/fileset-add-tempfile.xpl"/>
-    <p:import href="utils/copy-text-file.xpl"/>
     <p:import href="utils/select-by-position.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
@@ -27,31 +27,25 @@
     <p:sink/>
     
     <p:group name="liblouis-ini-file">
-        <p:output port="result" primary="true"/>
-        <pxi:copy-text-file>
-            <p:with-option name="href" select="resolve-uri('../../lbx_files/liblouisutdml.ini')">
-                <p:document href="attach-liblouis-config.xpl"/>
+        <p:output port="result"/>
+        <px:fileset-create>
+            <p:with-option name="base" select="resolve-uri('../../lbx_files/')">
+                <p:inline>
+                    <irrelevant/>
+                </p:inline>
             </p:with-option>
-            <p:with-option name="target" select="resolve-uri('liblouisutdml.ini', $directory)"/>
-        </pxi:copy-text-file>
-        <pxi:copy-text-file>
-            <p:with-option name="href" select="resolve-uri('../../lbx_files/braille-patterns.cti')">
-                <p:document href="attach-liblouis-config.xpl"/>
-            </p:with-option>
-            <p:with-option name="target" select="resolve-uri('braille-patterns.cti', $directory)"/>
-        </pxi:copy-text-file>
-        <pxi:copy-text-file>
-            <p:with-option name="href" select="resolve-uri('../../lbx_files/nabcc.dis')">
-                <p:document href="attach-liblouis-config.xpl"/>
-            </p:with-option>
-            <p:with-option name="target" select="resolve-uri('nabcc.dis', $directory)"/>
-        </pxi:copy-text-file>
-        <pxi:copy-text-file>
-            <p:with-option name="href" select="resolve-uri('../../lbx_files/pagenum.cti')">
-                <p:document href="attach-liblouis-config.xpl"/>
-            </p:with-option>
-            <p:with-option name="target" select="resolve-uri('pagenum.cti', $directory)"/>
-        </pxi:copy-text-file>
+        </px:fileset-create>
+        <px:fileset-add-entry href="liblouisutdml.ini"/>
+        <px:fileset-add-entry href="braille-patterns.cti"/>
+        <px:fileset-add-entry href="nabcc.dis"/>
+        <px:fileset-add-entry href="pagenum.cti"/>
+        <p:for-each>
+            <p:iteration-source select="/d:fileset/d:file"/>
+            <px:copy-resource>
+                <p:with-option name="href" select="/*/resolve-uri(@href, base-uri(.))"/>
+                <p:with-option name="target" select="/*/resolve-uri(@href, $directory)"/>
+            </px:copy-resource>
+        </p:for-each>
         <px:fileset-add-entry href="liblouisutdml.ini">
             <p:input port="source">
                 <p:pipe step="directory" port="result"/>
