@@ -170,8 +170,8 @@ skip           &amp;xpath(//louis:semantics)
             <p:input port="stylesheet">
                 <p:document href="../xslt/generate-liblouis-semantics.xsl"/>
             </p:input>
-            <p:input port="parameters">
-                <p:empty/>
+            <p:input port="parameters" select="/*/louis:page-layout/c:param-set">
+                <p:pipe step="attach-liblouis-semantics" port="current"/>
             </p:input>
         </p:xslt>
         <p:sink/>

@@ -13,6 +13,8 @@
     
     <xsl:variable name="SIZE_REGEX" select="concat('^', $NATURAL_NUMBER, '\s', $NATURAL_NUMBER, '$')"/>
     <xsl:variable name="PRINT_PAGE_REGEX" select="'string\(\s*print-page\s*\)'"/>
+    <xsl:variable name="RUNNING_HEADER_REGEX" select="'string\(\s*running-header\s*\)'"/>
+    <xsl:variable name="RUNNING_FOOTER_REGEX" select="'string\(\s*running-footer\s*\)'"/>
     <xsl:variable name="BRAILLE_PAGE_REGEX" select="concat('counter\(\s*braille-page\s*(,\s*', $IDENT, '\s*)?\)')"/>
     
     <xsl:template match="/">
@@ -29,8 +31,18 @@
                                  [normalize-space(substring-before(.,':'))='content']
                                return normalize-space(substring-after($property,':'))
                              )[1]"/>
+                <xsl:variable name="top-center-content"
+                    select="(for $property in tokenize(css:top-center[1]/@style, ';')
+                                 [normalize-space(substring-before(.,':'))='content']
+                               return normalize-space(substring-after($property,':'))
+                             )[1]"/>
                 <xsl:variable name="bottom-right-content"
                     select="(for $property in tokenize(css:bottom-right[1]/@style, ';')
+                                 [normalize-space(substring-before(.,':'))='content']
+                               return normalize-space(substring-after($property,':'))
+                             )[1]"/>
+                <xsl:variable name="bottom-center-content"
+                    select="(for $property in tokenize(css:bottom-center[1]/@style, ';')
                                  [normalize-space(substring-before(.,':'))='content']
                                return normalize-space(substring-after($property,':'))
                              )[1]"/>
@@ -94,6 +106,18 @@
                             <xsl:attribute name="value"
                                 select="if (//louis:print-page[@break='true'] and not(//louis:print-page[@break='false']))
                                           then 'true' else 'false'"/>
+                        </xsl:element>
+                        <xsl:element name="c:param">
+                            <xsl:attribute name="name" select="'running-header'"/>
+                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="value" select="if (matches($top-center-content, $RUNNING_HEADER_REGEX))
+                                                                then 'true' else 'false'"/>
+                        </xsl:element>
+                        <xsl:element name="c:param">
+                            <xsl:attribute name="name" select="'running-footer'"/>
+                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="value" select="if (matches($top-center-content, $RUNNING_FOOTER_REGEX))
+                                                                then 'true' else 'false'"/>
                         </xsl:element>
                     </xsl:element>
                 </xsl:element>

@@ -5,7 +5,7 @@
     xmlns:louis="http://liblouis.org/liblouis"
     exclude-result-prefixes="xs css louis"
     version="2.0">
-
+    
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
@@ -26,14 +26,26 @@
                 <xsl:variable name="content-list" select="substring-after(., $identifier)"/>
                 <xsl:variable name="content" select="css:eval-content-list($element, $content-list)"/>
                 <xsl:if test="exists($content)">
-                    <xsl:if test="$identifier='print-page'">
-                        <xsl:element name="louis:print-page">
-                            <xsl:attribute name="break"
-                                select="if (css:get-property-value($element, 'display', true(), true(), true())='page-break')
-                                          then 'true' else 'false'"/>
-                            <xsl:sequence select="string($content)"/>
-                        </xsl:element>
-                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="$identifier='print-page'">
+                            <xsl:element name="louis:print-page">
+                                <xsl:attribute name="break"
+                                               select="if (css:get-property-value($element, 'display', true(), true(), true())='page-break')
+                                                       then 'true' else 'false'"/>
+                                <xsl:sequence select="string($content)"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="$identifier='running-header'">
+                            <xsl:element name="louis:running-header">
+                                <xsl:sequence select="string($content)"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="$identifier='running-footer'">
+                            <xsl:element name="louis:running-footer">
+                                <xsl:sequence select="string($content)"/>
+                            </xsl:element>
+                        </xsl:when>
+                    </xsl:choose>
                 </xsl:if>
             </xsl:for-each>
         </xsl:if>
