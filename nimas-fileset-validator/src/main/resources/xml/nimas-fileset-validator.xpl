@@ -75,7 +75,7 @@
         </p:documentation>
     </p:option>
 
-    <p:option name="check-images" required="false" px:type="string" select="'false'">
+    <p:option name="check-images" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">check-images</h2>
             <p px:role="desc">Check to see that images referenced by DTBook file(s) exist on
