@@ -117,13 +117,44 @@
     </p:for-each>
     
     <p:for-each name="split-into-sections">
-        <pxi:split-into-sections/>
-        <p:for-each>
-            <p:variable name="i" select="p:iteration-position()"/>
-            <p:add-attribute match="/*" attribute-name="xml:base">
-                <p:with-option name="attribute-value" select="concat(replace(base-uri(/*),'.xml$',''),'/section_', $i,'.xml')"/>
-            </p:add-attribute>
-        </p:for-each>
+        <p:output port="result" sequence="true" primary="true">
+            <p:pipe step="split-volume" port="result"/>
+        </p:output>
+        <p:output port="spine">
+            <p:pipe step="spine" port="result"/>
+        </p:output>
+        <p:group name="split-volume">
+            <p:output port="result" sequence="true" primary="true">
+                <p:pipe step="sections" port="result"/>
+            </p:output>
+            <p:output port="spine">
+                <p:pipe step="volume-spine" port="result"/>
+            </p:output>
+            <pxi:split-into-sections/>
+            <p:for-each name="sections">
+                <p:output port="result"/>
+                <p:variable name="i" select="p:iteration-position()"/>
+                <p:add-attribute match="/*" attribute-name="xml:base">
+                    <p:with-option name="attribute-value" select="concat(replace(base-uri(/*),'.xml$',''),'/section_', $i,'.xml')"/>
+                </p:add-attribute>
+            </p:for-each>
+            <p:for-each>
+                <p:add-attribute match="/*" attribute-name="href">
+                    <p:input port="source">
+                        <p:inline>
+                            <louis:section/>
+                        </p:inline>
+                    </p:input>
+                    <p:with-option name="attribute-value" select="base-uri(/*)"/>
+                </p:add-attribute>
+            </p:for-each>
+            <p:wrap-sequence wrapper="louis:volume" name="volume-spine"/>
+        </p:group>
+        <p:wrap-sequence wrapper="louis:spine" name="spine">
+            <p:input port="source">
+                <p:pipe step="split-volume" port="spine"/>
+            </p:input>
+        </p:wrap-sequence>
     </p:for-each>
     
     <p:for-each name="attach-liblouis-page-layout">
