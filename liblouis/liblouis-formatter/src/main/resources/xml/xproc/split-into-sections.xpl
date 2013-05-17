@@ -12,9 +12,9 @@
     <p:for-each name="for-each">
         <p:choose>
             <p:when test="/*//*[@css:page]">
-                <p:variable name="css-page" select="/*//*[@css:page][1]/@css:page"/>
-                <p:variable name="section-id" select="/*//*[@css:page][1]/@xml:id"/>
+                <p:variable name="section-id" select="(/*//*[@css:page]/@xml:id)[1]"/>
                 <p:variable name="section-matcher" select="concat('*[@xml:id=&quot;', $section-id, '&quot;]')"/>
+                <p:variable name="css-page" select="string(//*[@xml:id=$section-id]/@css:page)"/>
                 <p:delete name="section-before">
                     <p:input port="source">
                         <p:pipe step="for-each" port="current"/>
