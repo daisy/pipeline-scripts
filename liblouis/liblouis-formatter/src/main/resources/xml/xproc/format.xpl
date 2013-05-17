@@ -20,10 +20,10 @@
     
     <p:import href="utils/xslt-for-each.xpl"/>
     <p:import href="utils/extract.xpl"/>
+    <p:import href="utils/select-by-base.xpl"/>
     <p:import href="split-into-sections.xpl"/>
     <p:import href="attach-liblouis-config.xpl"/>
-    <p:import href="format-box.xpl"/>
-    <p:import href="format-toc.xpl"/>
+    <p:import href="translate-files.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
@@ -200,7 +200,19 @@
         </p:xslt>
     </p:for-each>
     
+    <p:for-each name="extract-box">
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:output port="extracted" sequence="true">
+            <p:pipe step="extract" port="extracted"/>
+        </p:output>
+        <pxi:extract name="extract" match="louis:box" label="concat('box_', $p:index)"/>
+    </p:for-each>
+    
     <pxi:xslt-for-each name="group-toc-items">
+        <p:input port="iteration-source">
+            <p:pipe step="extract-box" port="extracted"/>
+            <p:pipe step="extract-box" port="result"/>
+        </p:input>
         <p:input port="stylesheet">
             <p:document href="../xslt/group-toc-items.xsl"/>
         </p:input>
@@ -210,60 +222,58 @@
     </pxi:xslt-for-each>
     
     <p:for-each name="extract-toc">
-        <p:output port="result" sequence="true" primary="true">
-            <p:pipe step="extract" port="result"/>
+        <p:output port="result" sequence="true" primary="true"/>
+        <p:output port="extracted" sequence="true">
             <p:pipe step="extract" port="extracted"/>
         </p:output>
         <pxi:extract name="extract" match="louis:toc" label="concat('toc_', $p:index)"/>
     </p:for-each>
     
     <pxi:attach-liblouis-config name="attach-liblouis-config">
+        <p:input port="source">
+            <p:pipe step="extract-toc" port="extracted"/>
+            <p:pipe step="extract-toc" port="result"/>
+        </p:input>
         <p:with-option name="directory" select="$temp-dir">
             <p:empty/>
         </p:with-option>
     </pxi:attach-liblouis-config>
     
-    <p:for-each>
-        <pxi:format-box>
-            <p:with-option name="temp-dir" select="$temp-dir"/>
-        </pxi:format-box>
-    </p:for-each>
-    
-    <pxi:format-toc>
+    <pxi:translate-files name="translate-files">
+        <p:input port="temp-result.valid">
+            <p:empty/>
+        </p:input>
+        <p:input port="temp-result.invalid">
+            <p:empty/>
+        </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
         </p:with-option>
-    </pxi:format-toc>
+    </pxi:translate-files>
     
-    <p:split-sequence name="split-sequence" test="not(/louis:toc)"/>
-    
-    <p:for-each name="translate-file">
-        <p:iteration-source>
-            <p:pipe step="split-sequence" port="matched"/>
+    <p:for-each>
+        <p:iteration-source select="//louis:section">
+            <p:pipe step="split-into-sections" port="spine"/>
         </p:iteration-source>
-        <p:variable name="width" select="/*/louis:page-layout//c:param[@name='page-width']/@value"/>
-        <p:variable name="height" select="/*/louis:page-layout//c:param[@name='page-height']/@value"/>
-        <louis:translate-file>
-            <p:input port="styles" select="/*/louis:styles/d:fileset">
-                <p:pipe step="translate-file" port="current"/>
+        <pxi:select-by-base name="select-result">
+            <p:input port="source">
+                <p:pipe step="translate-files" port="result"/>
             </p:input>
-            <p:input port="semantics" select="/*/louis:semantics/d:fileset">
-                <p:pipe step="translate-file" port="current"/>
-            </p:input>
-            <p:input port="page-layout" select="/*/louis:page-layout/c:param-set">
-                <p:pipe step="translate-file" port="current"/>
-            </p:input>
-            <p:with-option name="temp-dir" select="$temp-dir"/>
-        </louis:translate-file>
+            <p:with-option name="base" select="/*/@href"/>
+        </pxi:select-by-base>
         <pef:text2pef>
             <p:with-option name="table" select="$pef-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>
         <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="cols">
-            <p:with-option name="attribute-value" select="replace($width,'\.0*$','')"/>
+            <p:with-option name="attribute-value" select="/louis:result/@cols">
+                <p:pipe step="select-result" port="matched"/>
+            </p:with-option>
         </p:add-attribute>
         <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="rows">
-            <p:with-option name="attribute-value" select="replace($height,'\.0*$','')"/>
+            <p:with-option name="attribute-value" select="/louis:result/@rows">
+                <p:pipe step="select-result" port="matched"/>
+            </p:with-option>
         </p:add-attribute>
     </p:for-each>
     
