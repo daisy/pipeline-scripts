@@ -106,7 +106,7 @@ skip           &amp;xpath(//louis:semantics)
         <p:iteration-source>
             <p:pipe step="attach-liblouis-config" port="source"/>
         </p:iteration-source>
-        <pxi:select-by-position include-not-matched="true">
+        <pxi:select-by-position name="select">
             <p:input port="source">
                 <p:pipe step="attach-liblouis-config" port="source"/>
             </p:input>
@@ -115,6 +115,10 @@ skip           &amp;xpath(//louis:semantics)
             </p:with-option>
         </pxi:select-by-position>
         <p:xslt name="generate-liblouis-styles">
+            <p:input port="source">
+                <p:pipe step="select" port="matched"/>
+                <p:pipe step="select" port="not-matched"/>
+            </p:input>
             <p:input port="stylesheet">
                 <p:document href="../xslt/generate-liblouis-styles.xsl"/>
             </p:input>

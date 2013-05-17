@@ -7,31 +7,15 @@
     
     <p:input port="source" sequence="true" primary="true"/>
     <p:option name="position" required="true"/>
-    <p:option name="include-not-matched" required="false" select="'false'"/>
-    <p:output port="result" sequence="true" primary="true"/>
+    <p:output port="matched" sequence="true" primary="true"/>
+    <p:output port="not-matched" sequence="true">
+        <p:pipe step="split-sequence" port="not-matched"/>
+    </p:output>
     
     <p:split-sequence name="split-sequence">
         <p:with-option name="test" select="concat('position()=number(', $position,')')">
             <p:empty/>
         </p:with-option>
     </p:split-sequence>
-    
-    <p:choose>
-        <p:when test="$include-not-matched='true'">
-            <p:identity>
-                <p:input port="source">
-                    <p:pipe step="split-sequence" port="matched"/>
-                    <p:pipe step="split-sequence" port="not-matched"/>
-                </p:input>
-            </p:identity>
-        </p:when>
-        <p:otherwise>
-            <p:identity>
-                <p:input port="source">
-                    <p:pipe step="split-sequence" port="matched"/>
-                </p:input>
-            </p:identity>
-        </p:otherwise>
-    </p:choose>
     
 </p:declare-step>

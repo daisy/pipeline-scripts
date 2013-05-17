@@ -14,7 +14,7 @@
     <p:import href="select-by-position.xpl"/>
     
     <p:for-each name="for-each">
-        <pxi:select-by-position include-not-matched="true">
+        <pxi:select-by-position name="select">
             <p:input port="source">
                 <p:pipe step="xslt-for-each" port="iteration-source"/>
             </p:input>
@@ -23,6 +23,10 @@
             </p:with-option>
         </pxi:select-by-position>
         <p:xslt name="xslt">
+            <p:input port="source">
+                <p:pipe step="select" port="matched"/>
+                <p:pipe step="select" port="not-matched"/>
+            </p:input>
             <p:input port="stylesheet">
                 <p:pipe step="xslt-for-each" port="stylesheet"/>
             </p:input>
