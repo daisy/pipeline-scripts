@@ -27,6 +27,7 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl"/>
 
     <p:for-each name="content-resources">
         <p:output port="result" sequence="true"/>
@@ -37,14 +38,7 @@
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="$original-href"/>
         </p:add-attribute>
-        <p:xslt>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-            <p:input port="stylesheet">
-                <p:document href="daisy202-content-to-resource-fileset.xsl"/>
-            </p:input>
-        </p:xslt>
+        <px:html-to-fileset/>
         <cx:message>
             <p:with-option name="message" select="concat('extracted list of resources from ',$original-href)"/>
         </cx:message>

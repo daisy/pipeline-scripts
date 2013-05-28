@@ -96,7 +96,9 @@
     <p:identity name="result.content"/>
     
     <px:fileset-create name="empty-fileset">
-        <p:with-option name="base" select="$publication-dir"/>
+        <p:with-option name="base" select="$publication-dir">
+            <p:empty/>
+        </p:with-option>
     </px:fileset-create>
     <p:for-each>
         <p:iteration-source>
