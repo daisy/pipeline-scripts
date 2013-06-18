@@ -9,8 +9,6 @@
         </xsl:copy>
     </xsl:template>
 
-    <xsl:template match="h:meta"/>
-
     <xsl:template match="h:a">
         <xsl:variable name="a-href" select="tokenize(@href,'#')[1]"/>
         <xsl:variable name="a-fragment" select="if (contains(@href,'#')) then tokenize(@href,'#')[last()] else ''"/>
@@ -85,6 +83,29 @@
         <xsl:if test="$types">
             <xsl:attribute name="epub:type" select="string-join($types,' ')"/>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="h:link">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:if test="not(matches(@href,'^/+[^/]+:'))">
+                <xsl:attribute name="href" select="replace(@href,'^(.*)\.html([\?#]|$)(.*)','$1.xhtml$2$3','i')"/>
+            </xsl:if>
+            <xsl:copy-of select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="h:meta">
+        <xsl:choose>
+            <xsl:when test=".[@http-equiv]">
+                <xsl:if test="lower-case(@http-equiv)='content-type' and matches(@content,'charset=utf-8','i') and not(./parent::*/h:meta[@charset])">
+                    <meta charset="utf-8" xmlns="http://www.w3.org/1999/xhtml"/>
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>
