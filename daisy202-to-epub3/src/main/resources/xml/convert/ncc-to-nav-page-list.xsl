@@ -4,7 +4,7 @@
     <xsl:output indent="yes" include-content-type="no"/>
 
     <xsl:template match="/*">
-        <nav epub:type="page-list" style="display:none" id="page-list">
+        <nav epub:type="page-list" id="page-list">
             <xsl:apply-templates select="*"/>
         </nav>
     </xsl:template>
