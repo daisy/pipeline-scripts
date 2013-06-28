@@ -49,11 +49,11 @@
             <p px:role="desc">Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</p>
         </p:documentation>
     </p:option>
-
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy202-utils/xproc/daisy202-library.xpl"/>
     <p:import href="convert/convert.xpl"/>
 
@@ -180,10 +180,16 @@
         <p:with-option name="mediaoverlay" select="$mediaoverlay"/>
     </px:daisy202-to-epub3-convert>
     
+    <px:epub3-pub-enhance name="enhance">
+        <p:input port="in-memory.in">
+            <p:pipe port="in-memory.out" step="convert"/>
+        </p:input>
+    </px:epub3-pub-enhance>
+    
     <!-- decide filename -->
     <px:fileset-load media-types="application/oebps-package+xml">
         <p:input port="in-memory">
-            <p:pipe port="in-memory.out" step="convert"/>
+            <p:pipe port="in-memory.out" step="enhance"/>
         </p:input>
     </px:fileset-load>
     <p:split-sequence test="position()=1"/>
@@ -203,10 +209,10 @@
             <p:pipe port="result" step="result-uri"/>
         </p:with-option>
         <p:input port="fileset.in">
-            <p:pipe port="fileset.out" step="convert"/>
+            <p:pipe port="fileset.out" step="enhance"/>
         </p:input>
         <p:input port="in-memory.in">
-            <p:pipe port="in-memory.out" step="convert"/>
+            <p:pipe port="in-memory.out" step="enhance"/>
         </p:input>
     </px:epub3-store>
 
