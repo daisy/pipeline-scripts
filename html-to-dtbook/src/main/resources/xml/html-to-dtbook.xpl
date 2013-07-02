@@ -23,11 +23,6 @@
         </p:documentation>
     </p:option>
 
-    <!--<p:output port="debug" sequence="true">
-        <p:pipe port="fileset" step="convert"/>
-        <p:pipe port="in-memory" step="convert"/>
-    </p:output>-->
-
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>

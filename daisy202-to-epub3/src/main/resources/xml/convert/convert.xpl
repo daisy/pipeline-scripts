@@ -69,7 +69,7 @@
 
     <!-- Make a Navigation Document based on the DAISY 2.02 NCC. -->
 
-    <px:fileset-load media-types="application/xhtml+xml text/html">
+    <px:fileset-load media-types="application/xhtml+xml text/html" href="*/ncc.html">
         <p:input port="fileset">
             <p:pipe port="fileset.in" step="main"/>
         </p:input>
@@ -77,22 +77,7 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
-    <p:for-each>
-        <p:choose>
-            <p:when test="matches(lower-case(base-uri(/*)),'/ncc.html$')">
-                <p:identity/>
-            </p:when>
-            <p:otherwise>
-                <p:identity>
-                    <p:input port="source">
-                        <p:empty/>
-                    </p:input>
-                </p:identity>
-            </p:otherwise>
-        </p:choose>
-    </p:for-each>
     <p:split-sequence initial-only="true" test="position()=1"/>
-    <!-- TODO: should throw an error message here if there's no NCC (p:count=0) -->
     <p:group name="ncc">
         <p:output port="result" primary="true">
             <p:pipe port="result" step="ncc.ncc"/>
@@ -101,6 +86,37 @@
             <p:pipe port="result" step="ncc.pub-id"/>
         </p:output>
         <p:identity name="ncc.ncc"/>
+        <p:count/>
+        <p:choose>
+            <p:when test="/*='0'">
+                <p:in-scope-names name="vars"/>
+                <p:template name="error-message">
+                    <p:input port="source">
+                        <p:pipe port="result" step="ncc.ncc"/>
+                    </p:input>
+                    <p:input port="template">
+                        <p:inline exclude-inline-prefixes="#all">
+                            <message>There is no "ncc.html" file in the fileset.</message>
+                        </p:inline>
+                    </p:input>
+                    <p:input port="parameters">
+                        <p:pipe step="vars" port="result"/>
+                    </p:input>
+                </p:template>
+                <p:error code="PDE06">
+                    <p:input port="source">
+                        <p:pipe port="result" step="error-message"/>
+                    </p:input>
+                </p:error>
+            </p:when>
+            <p:otherwise>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="result" step="ncc.ncc"/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
         <p:add-attribute name="pub-id" match="/*" attribute-name="value">
             <p:with-option name="attribute-value" select="/html:html/html:head/html:meta[@name='dc:identifier']/@content"/>
             <p:input port="source">
@@ -144,9 +160,15 @@
         </p:choose>
     </p:for-each>
     <pxi:daisy202-to-epub3-content name="content-without-navigation">
-        <p:with-option name="publication-dir" select="$publication-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="daisy-dir" select="$daisy-dir"/>
+        <p:with-option name="publication-dir" select="$publication-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="content-dir" select="$content-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="daisy-dir" select="$daisy-dir">
+            <p:empty/>
+        </p:with-option>
         <p:input port="resolve-links-mapping">
             <p:pipe port="result" step="resolve-links-mapping"/>
         </p:input>
@@ -157,9 +179,15 @@
 
     <!-- Improve the EPUB 3 Navigation Document based on all the Content Documents. -->
     <pxi:daisy202-to-epub3-navigation name="navigation">
-        <p:with-option name="publication-dir" select="$publication-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
-        <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
+        <p:with-option name="publication-dir" select="$publication-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="content-dir" select="$content-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="compatibility-mode" select="$compatibility-mode">
+            <p:empty/>
+        </p:with-option>
         <p:input port="ncc-navigation">
             <p:pipe port="result" step="ncc-navigation"/>
         </p:input>
@@ -167,7 +195,7 @@
             <p:pipe port="content" step="content-without-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-navigation>
-    
+
     <!-- Content Documents -->
     <!-- Nav Doc if it's the only content, or other XHTML otherwise -->
     <p:count limit="1">
@@ -209,8 +237,6 @@
             </p:identity>
         </p:otherwise>
     </p:choose>
-    <p:add-xml-base/>
-    <p:identity/>
     <p:sink/>
 
     <pxi:daisy202-to-epub3-mediaoverlay name="mediaoverlay">
@@ -235,8 +261,12 @@
         <p:input port="daisy-content">
             <p:pipe port="content" step="content-docs"/>
         </p:input>
-        <p:with-option name="include-mediaoverlay-resources" select="$mediaoverlay"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="include-mediaoverlay-resources" select="$mediaoverlay">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="content-dir" select="$content-dir">
+            <p:empty/>
+        </p:with-option>
     </pxi:daisy202-to-epub3-resources>
 
     <pxi:daisy202-to-epub3-package name="package">
@@ -345,7 +375,7 @@
     </px:mediatype-detect>
     <p:identity name="result.fileset-without-ocf-files"/>
     <p:sink/>
-    
+
     <p:identity name="result.in-memory">
         <p:input port="source">
             <p:pipe port="in-memory" step="result.for-each"/>
