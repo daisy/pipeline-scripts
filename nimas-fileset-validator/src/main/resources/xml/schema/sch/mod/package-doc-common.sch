@@ -40,9 +40,10 @@
     		No SMIL file found.
     	</assert> 
     	
-    	<assert test="count(pkg:item[@media-type='text/xml'])=1"> 
+    	<!-- NIMAS OPF does not require the package file to reference itself -->
+    	<!--<assert test="count(pkg:item[@media-type='text/xml'])=1"> 
     		Zero or several package files listed in manifest.
-    	</assert> 
+    	</assert>--> 
     	
     	<assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
     		Zero or several NCX are listed in manifest.
