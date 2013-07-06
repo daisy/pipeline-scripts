@@ -134,7 +134,6 @@
         </p:group>
     </p:for-each>
     
-    <!-- this is weird .. -->
     <!-- wrap all the document-info elements -->
     <p:wrap-sequence name="wrap-doc-infos" wrapper="results" wrapper-prefix="tmp"
         wrapper-namespace="http://www.daisy.org/ns/pipeline/tmp">
@@ -150,7 +149,7 @@
                 <p:pipe port="result" step="wrap-doc-infos"/>
             </p:xpath-context>
             <!-- did any dtbook docs have mathml? if so, then we will say that this book has mathml.-->
-            <p:when test="//d:document-info[@special='mathml']">
+            <p:when test="//d:document-info[@internal='mathml']">
                 <p:output port="result">
                     <p:pipe port="report" step="run-package-doc-validation"/>
                 </p:output>
