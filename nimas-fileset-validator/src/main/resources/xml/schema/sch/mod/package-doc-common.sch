@@ -32,10 +32,11 @@
             At least one document with media-type equal to 'application/x-dtbook+xml' is required in the manifest.
         </report>
     	
-    	<assert test="count(pkg:item[@id='ncx' and @media-type='application/x-dtbncx+xml'])=1"> 
+    	<!-- NIMAS doesn't require an NCX -->
+    	<!--<assert test="count(pkg:item[@id='ncx' and @media-type='application/x-dtbncx+xml'])=1"> 
     		NCX manifest item in opf must have id="ncx".
 		</assert>  
-    	
+    	-->
     	<!-- NIMAS does not require the inclusion of SMIL files -->
     	<!--<assert test="count(pkg:item[@media-type='application/smil'])>0"> 
     		No SMIL file found.

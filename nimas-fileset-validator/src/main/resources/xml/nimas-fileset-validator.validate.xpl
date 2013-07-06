@@ -154,8 +154,6 @@
                     <p:pipe port="report" step="run-package-doc-validation"/>
                 </p:output>
                 
-                <cx:message message="Validating OPF with MathML"/>
-                
                 <pxi:nimas-fileset-validator.validate-package-doc name="run-package-doc-validation">
                     <p:input port="source">
                         <p:pipe port="source" step="nimas-fileset-validator.validate"/>
@@ -168,8 +166,6 @@
                 <p:output port="result">
                     <p:pipe port="report" step="run-package-doc-validation"/>
                 </p:output>
-                
-                <cx:message message="Validating OPF NO MathML"/>
                 
                 <pxi:nimas-fileset-validator.validate-package-doc name="run-package-doc-validation">
                     <p:input port="source">
