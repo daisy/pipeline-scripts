@@ -36,18 +36,20 @@
     		NCX manifest item in opf must have id="ncx".
 		</assert>  
     	
-    	<assert test="count(pkg:item[@media-type='application/smil'])>0"> 
+    	<!-- NIMAS does not require the inclusion of SMIL files -->
+    	<!--<assert test="count(pkg:item[@media-type='application/smil'])>0"> 
     		No SMIL file found.
-    	</assert> 
+    	</assert> -->
     	
     	<!-- NIMAS OPF does not require the package file to reference itself -->
     	<!--<assert test="count(pkg:item[@media-type='text/xml'])=1"> 
     		Zero or several package files listed in manifest.
     	</assert>--> 
     	
-    	<assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
+    	<!-- NIMAS OPF does not reference an NCX -->
+    	<!--<assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
     		Zero or several NCX are listed in manifest.
-    	</assert> 
+    	</assert>--> 
     	
     	<assert test="count(pkg:item[@media-type='application/x-dtbresource+xml'])&lt;2"> 
     		Several resource files are listed in manifest.
@@ -65,13 +67,14 @@
 			SMIL file in manifest not referenced in spine.
 		</assert>   					
 	</rule>	
-
-	<rule context="//pkg:package/pkg:spine/pkg:itemref">
+	
+	<!-- NIMAS doesn't care about SMIL -->
+	<!--<rule context="//pkg:package/pkg:spine/pkg:itemref">
 		<assert test="//pkg:item[@id=current()/@idref and @media-type='application/smil']"> 
 			Manifest item referenced by itemref in spine is not a SMIL file.
 		</assert>   					
 	</rule>
-
+-->
 	<rule context="//pkg:package/pkg:metadata/pkg:x-metadata/pkg:meta[@name='dtb:multimediaContent' and contains(@content,'audio')]">
 		<assert test="count(//pkg:package/pkg:manifest/pkg:item[@media-type='audio/mpeg4-generic' or @media-type='audio/mpeg' or @media-type='audio/x-wav' ])&gt;0"> 
 			dtb:multimediaContent value 'audio' does not correspond to manifest.
@@ -108,13 +111,10 @@
 		</report>
 	</rule>
 	
-	<!--
-		We probably don't need this but keeping it commented out just in case
-	<let name="pdf-id" value="//pkg:package/pkg:manifest/pkg:item[@media-type = 'application-pdf']/@id"/>
-    <rule context="//pkg:package/pkg:spine">
-        <report test="count(pkg:itemref[@idref = $pdf-id]) = 0">
-            It is an error to reference the PDF file from the spine.
-        </report>
-    </rule>
-    -->
+	<rule context="//pkg:package/pkg:spine/pkg:itemref">
+		<assert test="//pkg:item[@id=current()/@idref and @media-type='application/x-dtbook+xml']"> 
+			Manifest item referenced by itemref in spine is not a DTBook file.
+		</assert>   					
+	</rule>
+	
 </pattern>
