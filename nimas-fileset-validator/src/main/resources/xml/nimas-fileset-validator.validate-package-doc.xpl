@@ -164,7 +164,9 @@
     <p:sink/>
     
     <p:group name="check-files-exist">
-        <p:output port="result"/>
+        <p:output port="result">
+            <p:pipe port="report" step="check-pdfs-exist"/>
+        </p:output>
         
         <!-- check that any referenced PDFs exist on disk -->
         <pxi:nimas-fileset-validator.fileset-filter media-type="application/pdf">
@@ -179,36 +181,8 @@
                 <p:pipe port="result" step="check-pdfs-exist"/>
             </p:input>
         </p:sink>
-        
-        <!-- check that any referenced DTBook documents exist on disk -->
-        <pxi:nimas-fileset-validator.fileset-filter media-type="application/x-dtbook+xml" name="filter-fileset">
-            <p:input port="source">
-                <p:pipe port="source" step="nimas-fileset-validator.validate-package-doc"/>
-            </p:input>
-        </pxi:nimas-fileset-validator.fileset-filter>
-        <px:check-files-exist name="check-dtbooks-exist"/>
-        <!-- we're only using the report port-->
-        <p:sink>
-            <p:input port="source">
-                <p:pipe port="result" step="check-dtbooks-exist"/>
-            </p:input>
-        </p:sink>
-        <p:unwrap match="d:errors" name="unwrap-errors">
-            <p:input port="source">
-                <p:pipe port="report" step="check-dtbooks-exist"/>
-            </p:input>
-        </p:unwrap>
-        
-        <p:insert name="combine-errors" match="d:errors" position="last-child">
-            <p:input port="insertion">
-                <p:pipe port="result" step="unwrap-errors"/>
-            </p:input>
-            <p:input port="source">
-                <p:pipe port="report" step="check-pdfs-exist"/>
-            </p:input>
-        </p:insert>
-        
     </p:group>
+    <p:sink/>
     
     <px:combine-validation-reports name="wrap-reports">
         <p:with-option name="document-name" select="$filename"/>
