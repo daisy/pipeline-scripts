@@ -291,7 +291,8 @@
         </p:input>
         <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:validate-with-relax-ng-and-report>
-
+    <cx:message message="Input document is valid"/>
+    
     <p:documentation>Transform to ZedAI</p:documentation>
     <pxi:dtbook2005-3-to-zedai name="transform-to-zedai"/>
 
@@ -372,7 +373,6 @@
         </p:otherwise>
     </p:choose>
 
-
     <!-- this step should remove the 'tmp' prefix (it is no longer needed after this point) but it doesn't! -->
     <p:documentation>Strip temporary attributes from the ZedAI
         document.</p:documentation>
@@ -405,7 +405,7 @@
     <p:add-attribute name="generate-mods-metadata" match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$mods-file"/>
     </p:add-attribute>
-
+    
     <p:documentation>Generate ZedAI metadata</p:documentation>
     <px:dtbook-to-zedai-meta name="generate-zedai-metadata">
         <p:input port="parameters">
@@ -495,7 +495,7 @@
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>
     </px:validate-with-relax-ng-and-report>
-    
+    <cx:message message="ZedAI output is valid."/>
     <cx:message message="Conversion complete."/>
     <p:sink/>
 

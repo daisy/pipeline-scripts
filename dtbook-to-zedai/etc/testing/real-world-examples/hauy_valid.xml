@@ -11,6 +11,7 @@
       <meta content="en-GB" name="dc:Language"/>
       <meta content="2006-03-23" name="dc:Date"/>
       <meta content="C00000" name="dtb:uid"/>
+      <meta name="dc:Type" content="" />
    </head>
    <book>
 	   <!-- note- this evil document has an h2 as its first hx-->	

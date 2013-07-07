@@ -8,7 +8,6 @@
     <xsl:template match="/">
         <xsl:message>Renaming certain elements to span with @role</xsl:message>
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- transform these elements to spans so that they will be normalized as if they were spans

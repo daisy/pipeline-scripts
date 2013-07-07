@@ -12,7 +12,6 @@
         
         <xsl:message>Renaming annotation elements to identify block or phrase variants.</xsl:message>
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
     
     <!-- identity template -->
