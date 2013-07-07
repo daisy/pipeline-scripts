@@ -80,6 +80,8 @@
         </p:documentation>
     </p:option>
 
+    <p:option name="opt-copy-external-resources"/>
+    
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>
             Calabash extension steps.
@@ -517,35 +519,51 @@
             <p:with-option name="media-type" select="'application/z3998-auth+xml'"/>
         </px:fileset-add-entry>
 
-        <p:documentation>Add all the auxiliary resources to the fileset.</p:documentation>
-        <p:for-each name="result.fileset.resources">
-            <p:output port="result" sequence="true"/>
-            <p:iteration-source select="//*[@src]">
-                <p:pipe step="validate-zedai" port="result"/>
-            </p:iteration-source>
-            <p:variable name="src" select="/*/@src"/>
-            <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
-            <p:variable name="source-uri"
-                select="(//d:file[resolve-uri(@href,base-uri(.)) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
-                <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
-            </p:variable>
-            <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
-
-            <cx:message>
-                <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
-            </cx:message>
-            <p:sink/>
-
-            <px:fileset-create>
-                <p:with-option name="base" select="$output-dir"/>
-            </px:fileset-create>
-            <px:fileset-add-entry>
-                <p:with-option name="href" select="resolve-uri($src,$zedai-file)"/>
-            </px:fileset-add-entry>
-            <p:add-attribute match="/*/*" attribute-name="original-href">
-                <p:with-option name="attribute-value" select="$source-uri"/>
-            </p:add-attribute>
-        </p:for-each>
+        <p:choose name="result.fileset.resources">
+            <p:when test="$opt-copy-external-resources = 'true'">
+                <p:documentation>Add all the auxiliary resources to the fileset.</p:documentation>
+                <p:output port="result" sequence="true">
+                    <p:pipe port="result" step="for-each-resource"/>
+                </p:output>
+                <p:for-each name="for-each-resource">
+                    <p:output port="result" sequence="true"/>
+                    <p:iteration-source select="//*[@src]">
+                        <p:pipe step="validate-zedai" port="result"/>
+                    </p:iteration-source>
+                    <p:variable name="src" select="/*/@src"/>
+                    <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
+                    <p:variable name="source-uri"
+                        select="(//d:file[resolve-uri(@href,base-uri(.)) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
+                        <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
+                    </p:variable>
+                    <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
+                    
+                    <cx:message>
+                        <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
+                    </cx:message>
+                    <p:sink/>
+                    
+                    <px:fileset-create>
+                        <p:with-option name="base" select="$output-dir"/>
+                    </px:fileset-create>
+                    <px:fileset-add-entry>
+                        <p:with-option name="href" select="resolve-uri($src,$zedai-file)"/>
+                    </px:fileset-add-entry>
+                    <p:add-attribute match="/*/*" attribute-name="original-href">
+                        <p:with-option name="attribute-value" select="$source-uri"/>
+                    </p:add-attribute>
+                </p:for-each>        
+            </p:when>
+            <p:otherwise>
+                <p:output port="result" sequence="true"/>
+                <cx:message message="NOT copying external resources"/>
+                <p:identity>
+                    <p:input port="source"><p:empty/></p:input>
+                </p:identity>
+            </p:otherwise>
+                
+        </p:choose>
+        
 
         <p:documentation>If CSS was generated: Add it to the fileset.</p:documentation>
         <p:choose name="result.fileset.generated-css">

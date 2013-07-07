@@ -59,7 +59,12 @@
             <p px:role="desc">Language code of the input document.</p>
         </p:documentation>
     </p:option>
-    
+    <p:option name="copy-images" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">copy-external-resources</h2>
+            <p px:role="desc">Copy any referenced external resources to the output directory.</p>
+        </p:documentation>
+    </p:option>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
     <p:import href="dtbook-to-zedai.convert.xpl"/>
     <p:import href="dtbook-to-zedai.store.xpl"/>
@@ -76,6 +81,7 @@
         <p:with-option name="opt-css-filename" select="$css-filename"/>
         <p:with-option name="opt-lang" select="$lang"/>
         <p:with-option name="opt-assert-valid" select="$assert-valid"/>
+        <p:with-option name="opt-copy-external-resources" select="$copy-external-resources"/>
     </px:dtbook-to-zedai-convert>
     
     <px:dtbook-to-zedai-store name="store">
