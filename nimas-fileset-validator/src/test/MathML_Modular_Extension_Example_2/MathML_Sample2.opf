@@ -191,6 +191,7 @@ PUBLIC "+//ISBN 0-9673008-1-9//DTD OEB 1.2 Package//EN"
 </manifest>
 <spine>
 	<itemref idref="Smil_0" />
+	<itemref idref="item2222"/>
 </spine>
 </package>
   		    
