@@ -10,7 +10,6 @@
     <xsl:template match="/">
         <xsl:message>Move out inlined divs</xsl:message>
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
     
     <xsl:function name="f:is-target" as="xs:boolean">

@@ -19,7 +19,7 @@
         <xsl:variable name="elem" select="."/>
         <xsl:variable name="first-child" select="child::node()[1]"/>
         
-        <xsl:message>Moving <xsl:value-of select="$elem-to-move-name"/> out of <xsl:value-of select="local-name($elem)"/>.</xsl:message>
+<!--        <xsl:message>Moving <xsl:value-of select="$elem-to-move-name"/> out of <xsl:value-of select="local-name($elem)"/>.</xsl:message>-->
         
         <!-- move the element out a level -->
         <xsl:for-each-group select="*|text()[normalize-space()]"
