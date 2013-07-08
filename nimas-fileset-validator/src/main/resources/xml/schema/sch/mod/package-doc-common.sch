@@ -32,21 +32,25 @@
             At least one document with media-type equal to 'application/x-dtbook+xml' is required in the manifest.
         </report>
     	
-    	<assert test="count(pkg:item[@id='ncx' and @media-type='application/x-dtbncx+xml'])=1"> 
+    	<!-- NIMAS doesn't require an NCX -->
+    	<!--<assert test="count(pkg:item[@id='ncx' and @media-type='application/x-dtbncx+xml'])=1"> 
     		NCX manifest item in opf must have id="ncx".
 		</assert>  
-    	
-    	<assert test="count(pkg:item[@media-type='application/smil'])>0"> 
+    	-->
+    	<!-- NIMAS does not require the inclusion of SMIL files -->
+    	<!--<assert test="count(pkg:item[@media-type='application/smil'])>0"> 
     		No SMIL file found.
-    	</assert> 
+    	</assert> -->
     	
-    	<assert test="count(pkg:item[@media-type='text/xml'])=1"> 
+    	<!-- NIMAS OPF does not require the package file to reference itself -->
+    	<!--<assert test="count(pkg:item[@media-type='text/xml'])=1"> 
     		Zero or several package files listed in manifest.
-    	</assert> 
+    	</assert>--> 
     	
-    	<assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
+    	<!-- NIMAS OPF does not reference an NCX -->
+    	<!--<assert test="count(pkg:item[@media-type='application/x-dtbncx+xml'])=1"> 
     		Zero or several NCX are listed in manifest.
-    	</assert> 
+    	</assert>--> 
     	
     	<assert test="count(pkg:item[@media-type='application/x-dtbresource+xml'])&lt;2"> 
     		Several resource files are listed in manifest.
@@ -64,13 +68,14 @@
 			SMIL file in manifest not referenced in spine.
 		</assert>   					
 	</rule>	
-
-	<rule context="//pkg:package/pkg:spine/pkg:itemref">
+	
+	<!-- NIMAS doesn't care about SMIL -->
+	<!--<rule context="//pkg:package/pkg:spine/pkg:itemref">
 		<assert test="//pkg:item[@id=current()/@idref and @media-type='application/smil']"> 
 			Manifest item referenced by itemref in spine is not a SMIL file.
 		</assert>   					
 	</rule>
-
+-->
 	<rule context="//pkg:package/pkg:metadata/pkg:x-metadata/pkg:meta[@name='dtb:multimediaContent' and contains(@content,'audio')]">
 		<assert test="count(//pkg:package/pkg:manifest/pkg:item[@media-type='audio/mpeg4-generic' or @media-type='audio/mpeg' or @media-type='audio/x-wav' ])&gt;0"> 
 			dtb:multimediaContent value 'audio' does not correspond to manifest.
@@ -88,4 +93,29 @@
 			dtb:multimediaContent value 'text' does not correspond to manifest.
 		</assert>   					
 	</rule>
+	
+	<!-- NIMAS additions -->
+	<rule context="//pkg:package/pkg:metadata/pkg:dc-metadata">
+		<assert test="count(dc:Format) >= 1">dc:Format metadata is required by NIMAS.</assert>
+		<assert test="count(dc:Rights) >= 1">dc:Rights metadata is required by NIMAS.</assert>
+		<assert test="count(dc:Source) >= 1">dc:Source metadata is required by NIMAS.</assert>
+	</rule>
+	
+	<rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
+		<assert test="count(pkg:meta[@name = 'nimas-SourceEdition']) >= 1">nimas-SourceEdition metadata is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name = 'nimas-SourceDate']) >= 1">nimas-SourceDate metadata is required by NIMAS.</assert>
+	</rule>
+	
+	<rule context="//pkg:package/pkg:manifest">
+		<report test="count(pkg:item[@media-type = 'application/pdf']) = 0"> 
+			NIMAS requires at least one document with media-type equal to 'application/pdf' in the manifest.
+		</report>
+	</rule>
+	
+	<rule context="//pkg:package/pkg:spine/pkg:itemref">
+		<assert test="//pkg:item[@id=current()/@idref and @media-type='application/x-dtbook+xml']"> 
+			Manifest item referenced by itemref in spine is not a DTBook file.
+		</assert>   					
+	</rule>
+	
 </pattern>
