@@ -56,6 +56,8 @@
     
     <p:variable name="dtbook-uri" select="base-uri()"/>
     
+    <cx:message message="Checking that DTBook images exist on disk."/>
+    
     <p:for-each name="list-images">
         <p:output port="result"/>
         <p:iteration-source select="//dtb:img | //m:math"/>
