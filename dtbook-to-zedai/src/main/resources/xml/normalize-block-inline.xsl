@@ -10,7 +10,6 @@
     <xsl:template match="/">
         <xsl:message>Normalize mixed block/inline content</xsl:message>
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
     
     

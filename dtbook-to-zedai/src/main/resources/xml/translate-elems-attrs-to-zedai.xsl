@@ -32,7 +32,6 @@
         -->
 
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <xsl:template match="comment()">

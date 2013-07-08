@@ -7,7 +7,6 @@
     <xsl:template match="/">
         <xsl:message>Grouping contents of a definition list into items</xsl:message>
         <xsl:apply-templates/>
-        <xsl:message>--Done</xsl:message>
     </xsl:template>
 
     <!-- identity template -->
