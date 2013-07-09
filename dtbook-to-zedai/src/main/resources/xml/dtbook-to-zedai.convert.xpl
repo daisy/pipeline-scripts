@@ -80,7 +80,11 @@
         </p:documentation>
     </p:option>
 
-    <p:option name="opt-copy-external-resources"/>
+    <p:option name="opt-copy-external-resources" select="'true'">
+        <p:documentation>
+            Whether or not to include any referenced external resources like images and CSS-files in the output.
+        </p:documentation>
+    </p:option>
     
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation>

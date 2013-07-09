@@ -59,10 +59,10 @@
             <p px:role="desc">Language code of the input document.</p>
         </p:documentation>
     </p:option>
-    <p:option name="copy-images" required="false" px:type="boolean" select="'true'">
+    <p:option name="copy-external-resources" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">copy-external-resources</h2>
-            <p px:role="desc">Copy any referenced external resources to the output directory.</p>
+            <h2 px:role="name">Copy external resources</h2>
+            <p px:role="desc">Include any referenced external resources like images and CSS-files to the output.</p>
         </p:documentation>
     </p:option>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
