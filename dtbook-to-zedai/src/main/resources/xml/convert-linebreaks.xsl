@@ -27,7 +27,22 @@
             <xsl:for-each-group select="node()" group-ending-with="dtb:br">
                 <xsl:if test="not(empty(current-group()[not(self::dtb:br)][normalize-space()]))">
                     <xsl:element name="tmp:ln">
-                        <xsl:apply-templates select="current-group()[not(self::dtb:br)]"/>
+                        <xsl:for-each select="current-group()[not(self::dtb:br)]">
+                            <xsl:choose>
+                                <xsl:when test="self::text() and position()=1 and position()=last()">
+                                    <xsl:value-of select="normalize-space()"/>
+                                </xsl:when>
+                                <xsl:when test="self::text() and position()=1">
+                                    <xsl:value-of select="replace(.,'^\s+','')"/>
+                                </xsl:when>
+                                <xsl:when test="self::text() and position()=last()">
+                                    <xsl:value-of select="replace(.,'\s+$','')"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:apply-templates select="."/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
                     </xsl:element>
                     
                 </xsl:if>
