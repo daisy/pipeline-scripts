@@ -118,9 +118,11 @@
         </xsl:choose>
     </xsl:template>
 
-
     <xsl:template match="img[@src]">
         <xsl:choose>
+            <xsl:when test="pf:get-scheme(@src)='data'">
+                <xsl:copy-of select="."/>
+            </xsl:when>
             <xsl:when test="pf:is-absolute(@src)">
                 <xsl:message
                     select="concat('[WARNING] Replacing remote image ''',@src,''' by alternative text.')"/>
@@ -289,15 +291,18 @@
     </xsl:template>
 
     <xsl:template match="svg:foreignObject[@xlink:href]">
-        <xsl:message select="'[WARNING] Discarding SVG ''foreignObject'' element with external reference, not part of SVG 1.1'"/>
+        <xsl:message
+            select="'[WARNING] Discarding SVG ''foreignObject'' element with external reference, not part of SVG 1.1'"
+        />
     </xsl:template>
-    
+
     <xsl:template match="svg:foreignObject/@requiredExtensions">
         <xsl:attribute name="requiredExtensions" select="'http://www.idpf.org/2007/ops'"/>
     </xsl:template>
 
     <xsl:template match="svg:font-face-uri">
-        <svg:font-face-uri src="{f:safe-uri(@xlink:href)}" data-original-href="{normalize-space(@xlink:href)}">
+        <svg:font-face-uri src="{f:safe-uri(@xlink:href)}"
+            data-original-href="{normalize-space(@xlink:href)}">
             <xsl:apply-templates select="@* except @xlink:href | node()"/>
         </svg:font-face-uri>
     </xsl:template>
@@ -307,13 +312,13 @@
     </xsl:template>
 
     <xsl:template match="svg:image">
-        <svg:image src="{f:safe-uri(@xlink:href)}" data-original-href="{normalize-space(@xlink:href)}">
+        <svg:image src="{f:safe-uri(@xlink:href)}"
+            data-original-href="{normalize-space(@xlink:href)}">
             <xsl:apply-templates select="@* except @xlink:href | node()"/>
         </svg:image>
     </xsl:template>
 
-    <xsl:template match="svg:script[@xlink:href]">
-    </xsl:template>
+    <xsl:template match="svg:script[@xlink:href]"/>
 
     <xsl:template match="svg:video">
         <xsl:message select="'[WARNING] Discarding SVG ''video'' element, not part of SVG 1.1'"/>
@@ -323,20 +328,20 @@
     <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
      |  MathML                                                                     |
     <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
-    
-    
+
+
     <xsl:template match="m:math[@altimg]">
         <m:math altimg="{f:safe-uri(@altimg)}" data-original-href="{normalize-space(@altimg)}">
             <xsl:apply-templates select="@* except @altimg | node()"/>
         </m:math>
     </xsl:template>
-    
+
     <xsl:template match="m:mglyph[@src]">
         <m:math altimg="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
             <xsl:apply-templates select="@* except @src | node()"/>
         </m:math>
     </xsl:template>
-    
+
     <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
      |  Media Type Utils                                                           |
     <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->

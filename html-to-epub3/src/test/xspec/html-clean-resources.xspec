@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    stylesheet="../../main/resources/xml/xslt/html-clean-resources.xsl">
+    
+    <x:scenario label="An 'img' element">
+        <x:scenario label="with no @src">
+            <x:context>
+                <img/>    
+            </x:context>
+            <x:expect label="is converted as-is">
+                <img/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="pointing to a relative image">
+            <x:context>
+                <img src="image.png"/>    
+            </x:context>
+            <x:expect label="is annotated with the original href">
+                <img src="image.png" data-original-href="image.png"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="pointing to a remote image">
+            <x:context>
+                <img src="http://www.example.com/image.png" alt="alt text"/>    
+            </x:context>
+            <x:expect label="is converted as a span, with alt-text as content">
+                <span>alt text</span>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="pointing to a non-supported image format">
+            <x:context>
+                <img src="image.tiff" alt="alt text"/>    
+            </x:context>
+            <x:expect label="is converted as a span, with alt-text as content">
+                <span>alt text</span>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="inlined as a 'data:' URI">
+            <x:context>
+                <img src="data:image/png;base64,ABCDEFG"/>    
+            </x:context>
+            <x:expect label="is kept as-is">
+                <img src="data:image/png;base64,ABCDEFG"/>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+</x:description>
