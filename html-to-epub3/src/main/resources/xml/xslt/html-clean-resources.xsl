@@ -100,7 +100,7 @@
     <xsl:template match="a[@href]">
         <xsl:choose>
             <xsl:when
-                test="pf:is-relative(@href) and not(pf:file-exists(pf:unescape-uri(pf:get-path(@href))))"
+                test="pf:is-relative(@href) and pf:get-path(@href) and not(pf:file-exists(pf:unescape-uri(pf:get-path(@href))))"
                 use-when="function-available('pf:file-exists')">
                 <xsl:message
                     select="concat('[WARNING] Discarding link to non-existing resource ''',@href,'''.')"/>
