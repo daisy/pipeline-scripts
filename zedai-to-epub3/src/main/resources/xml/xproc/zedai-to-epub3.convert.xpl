@@ -157,7 +157,7 @@
         </p:add-attribute>
         <p:xslt name="zedai-to-html.html-with-ids">
             <p:input port="stylesheet">
-                <p:document href="../xslt/html-id-fixer.xsl"/>
+                <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-id-fixer.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -166,7 +166,7 @@
         <p:xslt name="zedai-to-html.html-chunks">
             <!--TODO fix links while chunking (see links-to-chunks) -->
             <p:input port="stylesheet">
-                <p:document href="../xslt/html-chunker.xsl"/>
+                <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-chunker.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
