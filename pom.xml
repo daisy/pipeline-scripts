@@ -27,6 +27,7 @@
     <module>dtbook-to-zedai</module>
     <module>dtbook-validator</module>
     <!-- <module>html-to-dtbook</module> -->
+    <module>html-to-epub3</module>
     <module>nimas-fileset-validator</module>
     <module>zedai-to-epub3</module>
     <module>zedai-to-html</module>
