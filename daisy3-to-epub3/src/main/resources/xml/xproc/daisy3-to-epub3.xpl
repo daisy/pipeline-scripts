@@ -45,6 +45,12 @@
                 (true or false).</p>
         </p:documentation>
     </p:option>
+    <p:option name="assert-valid" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Assert validity</h2>
+            <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
+        </p:documentation>
+    </p:option>
     <!--<p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Compatibility Mode</h2>
@@ -178,6 +184,7 @@
             <p:pipe port="result" step="dtbooks"/>
         </p:input>
         <p:with-option name="output-dir" select="$content-dir"/>
+        <p:with-option name="assert-valid" select="$assert-valid"/>
     </pxi:dtbook-to-html>
     <p:sink/>
 
