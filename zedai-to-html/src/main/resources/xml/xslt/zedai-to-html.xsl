@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:f="http://www.daisy.org/ns/functions-internal" xmlns:its="http://www.w3.org/2005/11/its"
+  xmlns:m="http://www.w3.org/1998/Math/MathML"
   xmlns:pf="http://www.daisy.org/ns/functions" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xpath-default-namespace="http://www.daisy.org/ns/z3998/authoring/"
@@ -1032,6 +1033,16 @@
   </xsl:template>-->
 
 
+  <!--===========================================================-->
+  <!-- Translation: MathML Feature                               -->
+  <!--===========================================================-->
+
+  <xsl:template match="m:*|m:*/@*">
+    <xsl:copy copy-namespaces="no">
+      <xsl:apply-templates select="node() | @*"/>
+    </xsl:copy>    
+  </xsl:template>
+  
   <!--===========================================================-->
   <!-- Identity templates                                        -->
   <!--===========================================================-->
