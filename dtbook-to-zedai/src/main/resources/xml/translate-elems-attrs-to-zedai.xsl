@@ -7,23 +7,25 @@
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
     xmlns:d="http://www.daisy.org/ns/z3998/authoring/features/description/"
     xmlns:f="http://www.daisy.org/ns/pipeline/internal-functions"
+    xmlns:m="http://www.w3.org/1998/Math/MathML"
     xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="#all">
 
+    <xsl:import href="translate-mathml-to-zedai.xsl"/>
+    
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
             regarding content model normalization has already been done.</desc>
     </doc>
 
-    
     <xsl:param name="css-filename"/>
 
     <xsl:output indent="yes" method="xml"/>
     
     <xsl:key name="ids" match="*" use="@id"/>
+    
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
-
         <!-- just for testing: insert the oxygen schema reference -->
         <!--
             <xsl:processing-instruction name="oxygen">
@@ -34,10 +36,10 @@
         <xsl:apply-templates/>
     </xsl:template>
 
-    <xsl:template match="comment()">
+    <xsl:template match="comment() | text()">
         <xsl:copy/>
     </xsl:template>
-
+    
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
         <xsl:if test="@id">
@@ -76,6 +78,15 @@
                 <meta property="z3998:name" content="book"/>
                 <meta property="z3998:version" content="1.0"/>
             </meta>
+            
+            <xsl:if test="exists(//m:math)">
+                <meta rel="z3998:feature"
+                    resource="http://www.daisy.org/z3998/2012/auth/features/mathml/1.0/">
+                    <meta property="z3998:name" content="mathml"/>
+                    <meta property="z3998:version" content="1.0"/>
+                </meta>
+            </xsl:if>
+            
             <meta rel="z3998:rdfa-context"
                 resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
 
@@ -176,10 +187,6 @@
             <xsl:call-template name="attrs"/>
             <xsl:apply-templates/>
         </h>
-    </xsl:template>
-
-    <xsl:template match="text()">
-        <xsl:copy-of select="."/>
     </xsl:template>
 
     <xsl:template match="dtb:bridgehead|dtb:hd">

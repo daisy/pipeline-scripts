@@ -109,6 +109,12 @@
             Collection of utilities for merging and upgrading DTBook files.
         </p:documentation>
     </p:import>
+    
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-validator/dtbook-validator.select-schema.xpl">
+        <p:documentation>
+            Schema selector used for DTBook validation.
+        </p:documentation>
+    </p:import>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
         <p:documentation>
@@ -286,16 +292,26 @@
     </p:choose>
 
     <!-- =============================================================== -->
-    <!-- CREATE ZEDAI -->
+    <!-- Validate the DTBook -->
     <!-- =============================================================== -->
     <p:documentation>Validate the DTBook input</p:documentation>
+    
+    <p:identity name="dtbook-validation-input"/>
+    <px:dtbook-validator.select-schema name="dtbook-schema" dtbook-version="2005-3" mathml-version="2.0"/>
     <px:validate-with-relax-ng-and-report name="validate-dtbook">
+        <p:input port="source">
+            <p:pipe port="result" step="dtbook-validation-input"/>
+        </p:input>
         <p:input port="schema">
-            <p:document href="./schema/dtbook-2005-3.rng"/>
+            <p:pipe port="result" step="dtbook-schema"/>
         </p:input>
         <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:validate-with-relax-ng-and-report>
     <cx:message message="Input document is valid"/>
+    
+    <!-- =============================================================== -->
+    <!-- CREATE ZEDAI -->
+    <!-- =============================================================== -->
     
     <p:documentation>Transform to ZedAI</p:documentation>
     <pxi:dtbook2005-3-to-zedai name="transform-to-zedai"/>
