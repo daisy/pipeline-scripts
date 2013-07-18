@@ -19,4 +19,12 @@ Thumbs.db
 #vim files
 .*.sw?
 .*~
+
+# XSpec result files
+*-result.html
+
+# Temp directory
+**/temp/
+
+# misc
 dtbook-validator/src/test/dtbook_has_errors_maybe_dont_share.xml
