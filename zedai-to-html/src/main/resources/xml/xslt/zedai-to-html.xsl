@@ -547,11 +547,12 @@
   <!--====== List module ========================================-->
 
   <xsl:template match="list" mode="#all">
-    <!--TODO normalize: page breaks-->
+    <xsl:apply-templates select="pagebreak[empty(preceding-sibling::item)]" mode="block"/>
     <xsl:element name="{if (@type='ordered') then 'ol' else 'ul'}">
       <xsl:apply-templates select="@*"/>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="* except pagebreak"/>
     </xsl:element>
+    <xsl:apply-templates select="pagebreak[empty(following-sibling::item)]" mode="block"/>
   </xsl:template>
   <xsl:template match="list[@type='ordered']/@start">
     <xsl:copy/>
@@ -559,6 +560,7 @@
   <xsl:template match="item" mode="#all">
     <li>
       <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="preceding-sibling::pagebreak[exists(preceding-sibling::item) and current() is following-sibling::item[1]]"/>
       <xsl:apply-templates/>
     </li>
   </xsl:template>
