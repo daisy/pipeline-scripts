@@ -67,7 +67,7 @@
 
     <!-- we are using a string option instead of an XML input source because
         the wellformedness of the document cannot be taken for granted -->
-    <p:option name="input-opf" required="true" px:type="string">
+    <p:option name="input-opf" required="true" px:type="anyFileURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">input-opf</h2>
             <p px:role="desc">Path to the input package document (*.opf).</p>
@@ -243,7 +243,7 @@
                         select="concat('&quot;', $package-doc-filename, '-report.xml&quot;')"/>
                 </p:string-replace>
             </p:group>
-            
+
             <px:validation-report-to-html name="format-as-html">
                 <p:input port="source">
                     <p:pipe port="result" step="wrap-report"/>
