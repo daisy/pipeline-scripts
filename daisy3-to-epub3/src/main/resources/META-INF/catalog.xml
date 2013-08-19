@@ -9,5 +9,6 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-to-zedai"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-to-html"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:common-utils"/>
 
 </catalog>
