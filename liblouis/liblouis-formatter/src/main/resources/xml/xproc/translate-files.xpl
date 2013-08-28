@@ -242,7 +242,7 @@
                         <p:variable name="width" select="number(/louis:toc/@width)">
                             <p:pipe step="source.toc" port="result"/>
                         </p:variable>
-                        <p:variable name="page-width" select="number(/*/louis:page-layout//c:param[@name='page-width']/@value)">
+                        <p:variable name="page-width" select="number(/*/louis:page-layout//c:param[@name='louis:page-width']/@value)">
                             <p:pipe step="source.section" port="matched"/>
                         </p:variable>
                         <pxi:select-by-position position="1"/>
@@ -273,12 +273,12 @@
                             <p:with-option name="attribute-value" select="$section-base"/>
                         </p:add-attribute>
                         <p:add-attribute match="/louis:result" attribute-name="cols">
-                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='page-width']/@value,'\.0*$','')">
+                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='louis:page-width']/@value,'\.0*$','')">
                                 <p:pipe step="source.section" port="matched"/>
                             </p:with-option>
                         </p:add-attribute>
                         <p:add-attribute match="/louis:result" attribute-name="rows">
-                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='page-height']/@value,'\.0*$','')">
+                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='louis:page-height']/@value,'\.0*$','')">
                                 <p:pipe step="source.section" port="matched"/>
                             </p:with-option>
                         </p:add-attribute>
@@ -417,7 +417,7 @@
                             <p:input port="semantics" select="/*/louis:semantics/d:fileset">
                                 <p:pipe step="source.box" port="result"/>
                             </p:input>
-                            <p:with-param port="page-layout" name="page-width" select="/*/@width">
+                            <p:with-param port="page-layout" name="louis:page-width" select="/*/@width">
                                 <p:pipe step="source.box" port="result"/>
                             </p:with-param>
                             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -576,12 +576,12 @@
                             <p:with-option name="attribute-value" select="$section-base"/>
                         </p:add-attribute>
                         <p:add-attribute match="/louis:result" attribute-name="cols">
-                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='page-width']/@value,'\.0*$','')">
+                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='louis:page-width']/@value,'\.0*$','')">
                                 <p:pipe step="source.section" port="result"/>
                             </p:with-option>
                         </p:add-attribute>
                         <p:add-attribute match="/louis:result" attribute-name="rows">
-                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='page-height']/@value,'\.0*$','')">
+                            <p:with-option name="attribute-value" select="replace(/*/louis:page-layout//c:param[@name='louis:page-height']/@value,'\.0*$','')">
                                 <p:pipe step="source.section" port="result"/>
                             </p:with-option>
                         </p:add-attribute>

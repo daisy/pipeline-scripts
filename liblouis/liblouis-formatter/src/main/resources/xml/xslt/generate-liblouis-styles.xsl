@@ -11,7 +11,7 @@
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes" name="louis-styles"/>
     
-    <xsl:variable name="braille-page-format" select="pxi:get-page-layout-param(/*, 'braille-page-format')"/>
+    <xsl:variable name="braille-page-format" select="pxi:get-page-layout-param(/*, 'louis:braille-page-format')"/>
     
     <xsl:variable name="root" select="/*"/>
     <xsl:key name="style-string" match="//*[@style]" use="string(@style)"/>
@@ -44,7 +44,7 @@
                     <xsl:when test="/louis:toc">
                         <xsl:variable name="href" select="@href"/>
                         <xsl:variable name="offset-left" select="
-                            number(pxi:get-page-layout-param(collection()/*[base-uri(.)=$href], 'page-width'))
+                            number(pxi:get-page-layout-param(collection()/*[base-uri(.)=$href], 'louis:page-width'))
                             - number(/louis:toc/@width)"/>
                         <xsl:for-each select="distinct-values(//louis:toc-item/@style/string())">
                             <xsl:variable name="i" select="position()"/>

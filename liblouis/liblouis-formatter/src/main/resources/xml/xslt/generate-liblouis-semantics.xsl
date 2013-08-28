@@ -9,8 +9,8 @@
     
     <xsl:output method="xml" encoding="UTF-8" indent="no"/>
     
-    <xsl:param name="running-header"/>
-    <xsl:param name="running-footer"/>
+    <xsl:param name="louis:running-header"/>
+    <xsl:param name="louis:running-footer"/>
     
     <xsl:template match="/">
         <louis:semantics>
@@ -36,9 +36,9 @@
                             <xsl:text>'])&#xa;</xsl:text>
                         </xsl:if>
                     </xsl:for-each>
-                    <xsl:sequence select="if ($running-header='true') then 'runninghead' else 'skip'"/>
+                    <xsl:sequence select="if ($louis:running-header='true') then 'runninghead' else 'skip'"/>
                     <xsl:text> &amp;xpath(//louis:running-header)&#xa;</xsl:text>
-                    <xsl:sequence select="if ($running-footer='true') then 'footer' else 'skip'"/>
+                    <xsl:sequence select="if ($louis:running-footer='true') then 'footer' else 'skip'"/>
                     <xsl:text> &amp;xpath(//louis:running-footer)&#xa;</xsl:text>
                     <xsl:text>&#xa;</xsl:text>
                 </xsl:otherwise>

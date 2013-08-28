@@ -58,23 +58,19 @@
                     <xsl:attribute name="name" select="$name"/>
                     <xsl:element name="c:param-set">
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'page-width'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:page-width'"/>
                             <xsl:attribute name="value" select="if ($size) then tokenize($size, '\s+')[1] else '40'"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'page-height'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:page-height'"/>
                             <xsl:attribute name="value" select="if ($size) then tokenize($size, '\s+')[2] else '25'"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'print-page-position'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:print-page-position'"/>
                             <xsl:attribute name="value" select="$print-page-position"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'braille-page-position'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:braille-page-position'"/>
                             <xsl:attribute name="value" select="$braille-page-position"/>
                         </xsl:element>
                         <xsl:if test="$braille-page-position!='none'">
@@ -83,8 +79,7 @@
                                                 else $bottom-right-content,
                                           concat('^.*', $BRAILLE_PAGE_REGEX, '.*$'), '$1')"/>
                             <xsl:element name="c:param">
-                                <xsl:attribute name="name" select="'braille-page-format'"/>
-                                <xsl:attribute name="namespace" select="''"/>
+                                <xsl:attribute name="name" select="'louis:braille-page-format'"/>
                                 <xsl:attribute name="value">
                                     <xsl:choose>
                                         <xsl:when test="$format=('lower-roman','upper-roman')">
@@ -101,21 +96,18 @@
                             </xsl:element>
                         </xsl:if>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'page-break-separator'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:page-break-separator'"/>
                             <xsl:attribute name="value"
                                 select="if (//louis:print-page[@break='true'] and not(//louis:print-page[@break='false']))
                                           then 'true' else 'false'"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'running-header'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:running-header'"/>
                             <xsl:attribute name="value" select="if (matches($top-center-content, $RUNNING_HEADER_REGEX))
                                                                 then 'true' else 'false'"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'running-footer'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:running-footer'"/>
                             <xsl:attribute name="value" select="if (matches($top-center-content, $RUNNING_FOOTER_REGEX))
                                                                 then 'true' else 'false'"/>
                         </xsl:element>
@@ -127,13 +119,11 @@
                     <xsl:attribute name="name" select="'auto'"/>
                     <xsl:element name="c:param-set">
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'page-width'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:page-width'"/>
                             <xsl:attribute name="value" select="'40'"/>
                         </xsl:element>
                         <xsl:element name="c:param">
-                            <xsl:attribute name="name" select="'page-height'"/>
-                            <xsl:attribute name="namespace" select="''"/>
+                            <xsl:attribute name="name" select="'louis:page-height'"/>
                             <xsl:attribute name="value" select="'25'"/>
                         </xsl:element>
                     </xsl:element>

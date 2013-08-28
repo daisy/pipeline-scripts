@@ -12,7 +12,7 @@
       * Turn borders into louis:border and louis:box
       * Turn padding into margin
     -->
-    <xsl:param name="page-width"/>
+    <xsl:param name="louis:page-width"/>
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
@@ -22,7 +22,7 @@
         <xsl:apply-templates select="node()">
             <xsl:with-param name="left-absolute" select="0"/>
             <xsl:with-param name="right-absolute" select="0"/>
-            <xsl:with-param name="width" select="number($page-width)"/>
+            <xsl:with-param name="width" select="number($louis:page-width)"/>
         </xsl:apply-templates>
     </xsl:template>
     

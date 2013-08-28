@@ -12,7 +12,7 @@
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
     
-    <xsl:variable name="page-width" select="number(pxi:get-page-layout-param(/*, 'page-width'))"/>
+    <xsl:variable name="page-width" select="number(pxi:get-page-layout-param(/*, 'louis:page-width'))"/>
     
     <xsl:template match="@*|node()">
         <xsl:copy>

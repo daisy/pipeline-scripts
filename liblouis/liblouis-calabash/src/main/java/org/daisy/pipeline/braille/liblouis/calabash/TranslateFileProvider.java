@@ -38,11 +38,6 @@ public class TranslateFileProvider implements XProcStepProvider {
 	
 	private static final QName _table = new QName("table");
 	private static final QName _paged = new QName("paged");
-	private static final QName _page_height = new QName("page-height");
-	private static final QName _page_width = new QName("page-width");
-	private static final QName _print_page_position = new QName("print-page-position");
-	private static final QName _braille_page_position = new QName("braille-page-position");
-	private static final QName _page_break_separator = new QName("page-break-separator");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName _href = new QName("href");
 	private static final QName _pages = new QName("pages");
@@ -50,6 +45,11 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
 	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
 	
+	private static final QName louis_page_height = new QName(LOUIS_PREFIX, LOUIS_NS, "page-height");
+	private static final QName louis_page_width = new QName(LOUIS_PREFIX, LOUIS_NS, "page-width");
+	private static final QName louis_print_page_position = new QName(LOUIS_PREFIX, LOUIS_NS, "print-page-position");
+	private static final QName louis_braille_page_position = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-page-position");
+	private static final QName louis_page_break_separator = new QName(LOUIS_PREFIX, LOUIS_NS, "page-break-separator");
 	
 	private Liblouisutdml liblouisutdml = null;
 	
@@ -131,28 +131,26 @@ public class TranslateFileProvider implements XProcStepProvider {
 				// Get options
 				if (getOption(_paged) != null)
 					settings.put("braillePages",  getOption(_paged).getBoolean() ? "yes" : "no");
-				if (pageLayout.containsKey(_page_width))
-					settings.put("cellsPerLine", pageLayout.get(_page_width).getString());
-				if (pageLayout.containsKey(_page_height))
-					settings.put("linesPerPage", pageLayout.get(_page_height).getString());
-				if (pageLayout.containsKey(_braille_page_position)) {
-					String position = pageLayout.get(_braille_page_position).getString();
+				if (pageLayout.containsKey(louis_page_width))
+					settings.put("cellsPerLine", pageLayout.get(louis_page_width).getString());
+				if (pageLayout.containsKey(louis_page_height))
+					settings.put("linesPerPage", pageLayout.get(louis_page_height).getString());
+				if (pageLayout.containsKey(louis_braille_page_position)) {
+					String position = pageLayout.get(louis_braille_page_position).getString();
 					if (position.equals("top-right") || position.equals("bottom-right")) {
 						settings.put("braillePageNumberAt", position.replace("-right", ""));
 						settings.put("numberBraillePages", "yes"); }
 					else if (position.equals("none"))
 						settings.put("numberBraillePages", "no"); }
-				if (pageLayout.containsKey(_print_page_position)) {
-					String position = pageLayout.get(_print_page_position).getString();
+				if (pageLayout.containsKey(louis_print_page_position)) {
+					String position = pageLayout.get(louis_print_page_position).getString();
 					if (position.equals("top-right") || position.equals("bottom-right")) {
 						settings.put("printPageNumberAt", position.replace("-right", ""));
 						settings.put("printPages", "yes"); }
 					else if (position.equals("none"))
 						settings.put("printPages", "no"); }
-				if (pageLayout.containsKey(_page_break_separator)) {
-					boolean separator = pageLayout.get(_page_break_separator).getBoolean();
-					settings.put("pageSeparator", separator ? "yes" : "no");
-					settings.put("pageSeparatorNumber", separator ? "yes" : "no");
+				if (pageLayout.containsKey(louis_page_break_separator)) {
+					boolean separator = pageLayout.get(louis_page_break_separator).getBoolean();
 					settings.put("pageSeparator", separator ? "yes" : "no");
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
 				
