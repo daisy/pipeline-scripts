@@ -1,13 +1,8 @@
 package org.daisy.pipeline.braille.liblouis.calabash;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -49,9 +44,12 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName _braille_page_position = new QName("braille-page-position");
 	private static final QName _page_break_separator = new QName("page-break-separator");
 	private static final QName _temp_dir = new QName("temp-dir");
+	private static final QName _href = new QName("href");
+	private static final QName _pages = new QName("pages");
+	
 	private static final QName d_fileset = new QName("http://www.daisy.org/ns/pipeline/data", "fileset");
 	private static final QName d_file = new QName("http://www.daisy.org/ns/pipeline/data", "file");
-	private static final QName _href = new QName("href");
+	
 	
 	private Liblouisutdml liblouisutdml = null;
 	
@@ -128,6 +126,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 				
 				Map<String,String> settings = new HashMap<String,String>();
 				settings.put("lineEnd", "\\n");
+				settings.put("pageEnd", "\\f");
 				
 				// Get options
 				if (getOption(_paged) != null)
@@ -214,56 +213,32 @@ public class TranslateFileProvider implements XProcStepProvider {
 						settings, xmlFile, brailleFile, configPath, tempDir);
 				
 				// Read the braille document and wrap it in a new XML document
-				ByteBuffer buffer = ByteBuffer.allocate((int)brailleFile.length());
-				byte[] bytes;
-				int available;
-				
-				InputStream totalStream = new FileInputStream(brailleFile);
-				while((available = totalStream.available()) > 0) {
-					bytes = new byte[available];
-					totalStream.read(bytes);
-					buffer.put(bytes); }
-				totalStream.close();
-				int bodyLength = 0;
-				try {
-					// On Windows, a "\r" is always added although the configuration says "lineEnd \n"
-					InputStream bodyStream = new NormalizeEndOfLineInputStream(new FileInputStream(bodyTempFile));
-					while((available = bodyStream.available()) > 0)
-						bodyLength += bodyStream.skip(available);
-					bodyStream.close(); }
-				catch (FileNotFoundException e) {}
-				assert buffer.position() >= bodyLength;
-				buffer.flip();
-				
-				if (bodyLength > 0) {
-					bytes = new byte[buffer.remaining() - bodyLength];
-					buffer.get(bytes);
-					writeDocument(xml.getBaseURI(), bytes);
-					bytes = new byte[buffer.remaining()];
-					buffer.get(bytes);
-					writeDocument(xml.getBaseURI(), bytes); }
-				else {
-					bytes = new byte[buffer.remaining()];
-					buffer.get(bytes);
-					writeDocument(xml.getBaseURI(), bytes); }}
+				LiblouisResultReader reader = new LiblouisResultReader(brailleFile, bodyTempFile);
+				while (true) {
+					StringBuilder section = new StringBuilder();
+					String page;
+					int pageCount = 0;
+					while ((page = reader.readPage()) != null) {
+						section.append(page).append('\f');
+						pageCount++; }
+					writeDocument(xml.getBaseURI(), section.toString(), pageCount);
+					if (!reader.nextSection())
+						break; }}
 			
 			catch (Exception e) {
 				throw new XProcException(step.getNode(), e); }
 		}
 		
-		private void writeDocument(URI baseURI, byte[] textContent) {
-			try {
-				TreeWriter treeWriter = new TreeWriter(runtime);
-				treeWriter.startDocument(baseURI);
-				treeWriter.addStartElement(louis_result);
-				treeWriter.startContent();
-				treeWriter.addText(new String(textContent, "UTF-8"));
-				treeWriter.addEndElement();
-				treeWriter.endDocument();
-				result.write(treeWriter.getResult());
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
+		private void writeDocument(URI baseURI, String textContent, int pageCount) {
+			TreeWriter treeWriter = new TreeWriter(runtime);
+			treeWriter.startDocument(baseURI);
+			treeWriter.addStartElement(louis_result);
+			treeWriter.addAttribute(_pages, String.valueOf(pageCount));
+			treeWriter.startContent();
+			treeWriter.addText(textContent);
+			treeWriter.addEndElement();
+			treeWriter.endDocument();
+			result.write(treeWriter.getResult());
 		}
 	}
 }
