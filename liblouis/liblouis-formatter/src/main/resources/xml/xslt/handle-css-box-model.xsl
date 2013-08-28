@@ -38,22 +38,22 @@
         <xsl:param name="left-absolute"/>
         <xsl:param name="right-absolute"/>
         <xsl:param name="width"/>
-        <xsl:variable name="display" as="xs:string?" select="css:get-property-value(., 'display', true(), true(), true())"/>
+        <xsl:variable name="display" as="xs:string?" select="css:get-value(., 'display', true(), true(), true())"/>
         <xsl:choose>
             <xsl:when test="$display and $display=('block','list-item','toc-item') and matches(string(@style), 'margin|border|padding')">
-                <xsl:variable name="margin-left"    select="number(pxi:or-default(pxi:get-property-if-applies(., 'margin-left',    $display), '0'))"/>
-                <xsl:variable name="margin-right"   select="number(pxi:or-default(pxi:get-property-if-applies(., 'margin-right',   $display), '0'))"/>
-                <xsl:variable name="margin-top"     select="number(pxi:or-default(pxi:get-property-if-applies(., 'margin-top',     $display), '0'))"/>
-                <xsl:variable name="margin-bottom"  select="number(pxi:or-default(pxi:get-property-if-applies(., 'margin-bottom',  $display), '0'))"/>
-                <xsl:variable name="padding-left"   select="number(pxi:or-default(pxi:get-property-if-applies(., 'padding-left',   $display), '0'))"/>
-                <xsl:variable name="padding-right"  select="number(pxi:or-default(pxi:get-property-if-applies(., 'padding-right',  $display), '0'))"/>
-                <xsl:variable name="padding-top"    select="number(pxi:or-default(pxi:get-property-if-applies(., 'padding-top',    $display), '0'))"/>
-                <xsl:variable name="padding-bottom" select="number(pxi:or-default(pxi:get-property-if-applies(., 'padding-bottom', $display), '0'))"/>
-                <xsl:variable name="border-left"    select="pxi:or-default(pxi:get-property-if-applies(., 'border-left',  $display), 'none')"/>
-                <xsl:variable name="border-right"   select="pxi:or-default(pxi:get-property-if-applies(., 'border-right', $display), 'none')"/>
-                <xsl:variable name="border-top"     select="pxi:or-default(pxi:get-property-if-applies(., 'border-top',   $display), 'none')"/>
-                <xsl:variable name="border-bottom"  select="pxi:or-default(pxi:get-property-if-applies(., 'border-bottom',$display), 'none')"/>
-                <xsl:variable name="style" select="css:remove-from-style(string(@style),
+                <xsl:variable name="margin-left"    select="number(pxi:or-default(pxi:get-value-if-applies(., 'margin-left',    $display), '0'))"/>
+                <xsl:variable name="margin-right"   select="number(pxi:or-default(pxi:get-value-if-applies(., 'margin-right',   $display), '0'))"/>
+                <xsl:variable name="margin-top"     select="number(pxi:or-default(pxi:get-value-if-applies(., 'margin-top',     $display), '0'))"/>
+                <xsl:variable name="margin-bottom"  select="number(pxi:or-default(pxi:get-value-if-applies(., 'margin-bottom',  $display), '0'))"/>
+                <xsl:variable name="padding-left"   select="number(pxi:or-default(pxi:get-value-if-applies(., 'padding-left',   $display), '0'))"/>
+                <xsl:variable name="padding-right"  select="number(pxi:or-default(pxi:get-value-if-applies(., 'padding-right',  $display), '0'))"/>
+                <xsl:variable name="padding-top"    select="number(pxi:or-default(pxi:get-value-if-applies(., 'padding-top',    $display), '0'))"/>
+                <xsl:variable name="padding-bottom" select="number(pxi:or-default(pxi:get-value-if-applies(., 'padding-bottom', $display), '0'))"/>
+                <xsl:variable name="border-left"    select="pxi:or-default(pxi:get-value-if-applies(., 'border-left',  $display), 'none')"/>
+                <xsl:variable name="border-right"   select="pxi:or-default(pxi:get-value-if-applies(., 'border-right', $display), 'none')"/>
+                <xsl:variable name="border-top"     select="pxi:or-default(pxi:get-value-if-applies(., 'border-top',   $display), 'none')"/>
+                <xsl:variable name="border-bottom"  select="pxi:or-default(pxi:get-value-if-applies(., 'border-bottom',$display), 'none')"/>
+                <xsl:variable name="style" select="css:remove-from-declarations(string(@style),
                     ('margin-left', 'margin-right', 'margin-top', 'margin-bottom',
                     'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
                     'border-left', 'border-right', 'border-top', 'border-bottom'))"/>
@@ -142,10 +142,10 @@
         <louis:div>
             <xsl:attribute name="style"
                 select="string-join(('display:block',
-                                     css:get-style(., $paged-properties),
+                                     css:concretize-properties(., $css:paged-media-properties),
                                      $margin-style), ';')"/>
             <xsl:variable name="child-style"
-                select="css:remove-from-style($style, $paged-properties)"/>
+                select="css:remove-from-declarations($style, $css:paged-media-properties)"/>
             <xsl:choose>
                 <xsl:when test="$border-left!='none' or $border-right!='none'">
                     <xsl:variable name="new-width"
@@ -218,7 +218,7 @@
         </xsl:variable>
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
-            <xsl:attribute name="style" select="pxi:append-properties($style, string-join($margin-style,';'))"/>
+            <xsl:attribute name="style" select="pxi:append-declarations($style, string-join($margin-style,';'))"/>
             <xsl:apply-templates select="node()">
                 <xsl:with-param name="left-absolute" select="$new-left-absolute"/>
                 <xsl:with-param name="right-absolute" select="$new-right-absolute"/>
@@ -252,22 +252,22 @@
         <xsl:sequence select="if ($times &gt; 0) then concat($char, pxi:repeat-char($char, $times - 1)) else ''"/>
     </xsl:function>
     
-    <xsl:function name="pxi:get-property-if-applies" as="xs:string?">
+    <xsl:function name="pxi:get-value-if-applies" as="xs:string?">
         <xsl:param name="element" as="element()"/>
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="display" as="xs:string"/>
         <xsl:if test="css:applies-to($property, $display)">
-            <xsl:sequence select="css:get-property-value($element, $property, true(), true(), true())"/>
+            <xsl:sequence select="css:get-value($element, $property, true(), true(), true())"/>
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="pxi:append-properties" as="xs:string">
+    <xsl:function name="pxi:append-declarations" as="xs:string">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="append" as="xs:string"/>
         <xsl:variable name="remove" as="xs:string*"
-            select="for $property in tokenize($append,';')
-                      return normalize-space(substring-before($property,':'))"/>
-        <xsl:sequence select="string-join((css:remove-from-style($style, $remove), $append), ';')"/>
+            select="for $declaration in tokenize($append,';')
+                      return normalize-space(substring-before($declaration,':'))"/>
+        <xsl:sequence select="string-join((css:remove-from-declarations($style, $remove), $append), ';')"/>
     </xsl:function>
     
 </xsl:stylesheet>

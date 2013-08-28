@@ -11,7 +11,7 @@
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl" />
     
     <xsl:template match="/*">
-        <xsl:variable name="page" select="css:get-property-value(., 'page', true(), true(), false())"/>
+        <xsl:variable name="page" select="css:get-value(., 'page', true(), true(), false())"/>
         <xsl:copy>
             <xsl:attribute name="css:page" select="$page"/>
             <xsl:apply-templates select="@*|node()">
@@ -31,7 +31,7 @@
     
     <xsl:template match="*[contains(string(@style), 'page')]">
         <xsl:param name="current-page"/>
-        <xsl:variable name="page" select="css:get-property-value(., 'page', true(), true(), false())"/>
+        <xsl:variable name="page" select="css:get-value(., 'page', true(), true(), false())"/>
         <xsl:copy>
             <xsl:if test="$page!=$current-page">
                 <xsl:attribute name="css:page" select="$page"/>

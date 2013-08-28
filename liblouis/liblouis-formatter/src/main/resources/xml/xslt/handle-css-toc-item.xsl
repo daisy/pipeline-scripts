@@ -18,7 +18,7 @@
     
     <xsl:template match="*[contains(string(@style), 'toc-item')]">
         <xsl:variable name="display" as="xs:string"
-            select="css:get-property-value(., 'display', true(), true(), false())"/>
+            select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:variable name="ref" as="attribute()?" select="@ref"/>
         <xsl:copy>
             <xsl:choose>
@@ -39,7 +39,7 @@
         <xsl:copy>
             <xsl:choose>
                 <xsl:when test="some $ref in collection()//*[@ref=$id] satisfies
-                    (css:get-property-value($ref, 'display', true(), true(), false())='toc-item')">
+                    (css:get-value($ref, 'display', true(), true(), false())='toc-item')">
                     <xsl:apply-templates select="@*|node()" mode="flatten"/>
                 </xsl:when>
                 <xsl:otherwise>

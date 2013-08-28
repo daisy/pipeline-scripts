@@ -17,7 +17,7 @@
     </xsl:template>
     
     <xsl:template match="*[matches(string(@style), 'display\s*:\s*none')]">
-        <xsl:variable name="display" select="css:get-property-value(., 'display', true(), true(), false())"/>
+        <xsl:variable name="display" select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:choose>
             <xsl:when test="$display='none'">
                 <xsl:sequence select=".//louis:print-page"/>

@@ -65,7 +65,7 @@
 					</xsl:variable>
 					<xsl:apply-templates select="@*[not(name()='style')]" mode="identify-blocks"/>
 					<xsl:attribute name="style" select="concat(
-						css:remove-from-style(string(@style), ('string-set')), ';string-set:', string-join($string-set-result,','))"/>
+						css:remove-from-declarations(string(@style), ('string-set')), ';string-set:', string-join($string-set-result,','))"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="@*" mode="identify-blocks"/>
@@ -100,9 +100,9 @@
 										<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
 										<xsl:variable name="inline-style" as="xs:string"
 											select="string-join(
-											(for $name in $properties[not(.='display')][css:applies-to(., 'inline')] return
-												(for $value in css:get-property-value($this, $name, true(), false(), false()) return
-													concat($name, ':', $value))), ';')"/>
+											(for $property in $css:properties[not(.='display')][css:applies-to(., 'inline')] return
+												(for $value in css:get-value($this, $property, true(), false(), false()) return
+													concat($property, ':', $value))), ';')"/>
 										<xsl:if test="$inline-style!=''">
 											<xsl:attribute name="style" select="$inline-style"/>
 										</xsl:if>
@@ -133,12 +133,12 @@
 	
 	<xsl:function name="pxi:display" as="xs:string">
 		<xsl:param name="element" as="element()"/>
-		<xsl:sequence select="css:get-property-value($element, 'display', true(), true(), false())"/>
+		<xsl:sequence select="css:get-value($element, 'display', true(), true(), false())"/>
 	</xsl:function>
 	
 	<xsl:function name="pxi:string-set" as="xs:string">
 		<xsl:param name="element" as="element()"/>
-		<xsl:sequence select="css:get-property-value($element, 'string-set', true(), true(), false())"/>
+		<xsl:sequence select="css:get-value($element, 'string-set', true(), true(), false())"/>
 	</xsl:function>
 	
 	<xsl:function name="pxi:is-block" as="xs:boolean">

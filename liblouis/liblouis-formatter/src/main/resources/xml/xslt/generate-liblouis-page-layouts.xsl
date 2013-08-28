@@ -22,29 +22,29 @@
             <xsl:for-each select="/css:pages/css:page[not(@position)]">
                 <xsl:variable name="name" select="if (@name) then string(@name) else 'auto'"/>
                 <xsl:variable name="size"
-                    select="(for $property in tokenize(@style, ';')
+                    select="(for $declaration in tokenize(@style, ';')
                                  [normalize-space(substring-before(.,':'))='size']
-                               return normalize-space(substring-after($property,':'))
+                               return normalize-space(substring-after($declaration,':'))
                             )[matches(., $SIZE_REGEX)][1]"/>
                 <xsl:variable name="top-right-content"
-                    select="(for $property in tokenize(css:top-right[1]/@style, ';')
+                    select="(for $declaration in tokenize(css:top-right[1]/@style, ';')
                                  [normalize-space(substring-before(.,':'))='content']
-                               return normalize-space(substring-after($property,':'))
+                               return normalize-space(substring-after($declaration,':'))
                              )[1]"/>
                 <xsl:variable name="top-center-content"
-                    select="(for $property in tokenize(css:top-center[1]/@style, ';')
+                    select="(for $declaration in tokenize(css:top-center[1]/@style, ';')
                                  [normalize-space(substring-before(.,':'))='content']
-                               return normalize-space(substring-after($property,':'))
+                               return normalize-space(substring-after($declaration,':'))
                              )[1]"/>
                 <xsl:variable name="bottom-right-content"
-                    select="(for $property in tokenize(css:bottom-right[1]/@style, ';')
+                    select="(for $declaration in tokenize(css:bottom-right[1]/@style, ';')
                                  [normalize-space(substring-before(.,':'))='content']
-                               return normalize-space(substring-after($property,':'))
+                               return normalize-space(substring-after($declaration,':'))
                              )[1]"/>
                 <xsl:variable name="bottom-center-content"
-                    select="(for $property in tokenize(css:bottom-center[1]/@style, ';')
+                    select="(for $declaration in tokenize(css:bottom-center[1]/@style, ';')
                                  [normalize-space(substring-before(.,':'))='content']
-                               return normalize-space(substring-after($property,':'))
+                               return normalize-space(substring-after($declaration,':'))
                              )[1]"/>
                 <xsl:variable name="print-page-position"
                     select="if (matches($top-right-content, $PRINT_PAGE_REGEX)) then 'top-right'

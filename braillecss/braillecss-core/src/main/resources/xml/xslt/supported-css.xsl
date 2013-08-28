@@ -3,10 +3,13 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:r="regex-utils"
     exclude-result-prefixes="#all"
     version="2.0">
     
-    <xsl:variable name="properties" as="xs:string*"
+    <xsl:import href="regex-utils.xsl"/>
+    
+    <xsl:variable name="css:properties" as="xs:string*"
         select="('display',
                  'margin-left',
                  'margin-right',
@@ -39,45 +42,49 @@
     <xsl:variable name="COLOR" select="'#[0-9A-F]{6}'"/>
     <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
     <xsl:variable name="IDENT" select="'(\p{L}|_)(\p{L}|_|-)*'"/>
-    <xsl:variable name="IDENT_LIST" select="concat($IDENT, '(\s+', $IDENT, ')*')"/>
+    <xsl:variable name="IDENT_LIST" select="r:space-separated($IDENT)"/>
     <xsl:variable name="INHERIT" select="'inherit'"/>
     <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
     <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
-    <xsl:variable name="STRING">'.+?'|".+?"</xsl:variable>
-    <xsl:variable name="CONTENT" select="concat('(', $STRING, '|content\(\)|attr\(.+?\))')"/>
-    <xsl:variable name="CONTENT_LIST" select="concat($CONTENT, '(\s+', $CONTENT, ')*')"/>
+    <xsl:variable name="STRING">('.+?'|".+?")</xsl:variable>
+    <xsl:variable name="CONTENT" select="r:or(($STRING,'content\(\)','attr\(.+?\)'))"/>
+    <xsl:variable name="CONTENT_LIST" select="r:space-separated($CONTENT)"/>
     
-    <xsl:variable name="valid-properties" as="xs:string*"
-        select="(concat('^(', 'block|inline|list-item|none|toc-item|page-break', ')$'),
-                 concat('^(', $INTEGER, ')$'),
-                 concat('^(', $INTEGER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $NATURAL_NUMBER, ')$'),
-                 concat('^(', $DOT_PATTERN, '|', 'none', ')$'),
-                 concat('^(', $DOT_PATTERN, '|none', ')$'),
-                 concat('^(', $DOT_PATTERN, '|none', ')$'),
-                 concat('^(', $DOT_PATTERN, '|none', ')$'),
-                 concat('^(', $INTEGER, '|', $INHERIT, ')$'),
-                 concat('^(', $DOT_PATTERN, '|demical|lower-alpha|lower-roman|none|upper-alpha|upper-roman|', $INHERIT, ')$'),
-                 concat('^(', 'center|justify|left|right|', $INHERIT, ')$'),
-                 concat('^(', 'always|auto|avoid|left|right|', $INHERIT, ')$'),
-                 concat('^(', 'always|auto|avoid|left|right|', $INHERIT, ')$'),
-                 concat('^(', 'auto|avoid|', $INHERIT, ')$'),
-                 concat('^(', $INTEGER, '|', $INHERIT, ')$'),
-                 concat('^(', $INTEGER, '|', $INHERIT, ')$'),
-                 concat('^(', $IDENT, '|auto', ')$ '),
-                 concat('^(', $IDENT, '\s+', $CONTENT_LIST, '(\s*,\s*', $IDENT, '\s+', $CONTENT_LIST, ')*)$'),
-                 concat('^(', $IDENT_LIST, 'none', ')$ '),
-                 concat('^(', 'normal|italic|oblique|', $INHERIT, ')$ '),
-                 concat('^(', 'normal|bold|100|200|300|400|500|600|700|800|900|', $INHERIT, ')$ '),
-                 concat('^(', 'none|underline|overline|line-through|blink', $INHERIT, ')$ '),
-                 concat('^(', $COLOR, '|', $INHERIT, ')$ '))"/>
+    <xsl:variable name="DECLARATIONS_BLOCK">\{(([^'"\{\}]+|'.+?'|".+?"|\{([^'"\{\}]+|'.+?'|".+?")*\})*)\}</xsl:variable>
     
-    <xsl:variable name="applies-to" as="xs:string*"
+    <xsl:variable name="RULESET" select="r:concat(('((@|::)',$IDENT,'\s+)?',$DECLARATIONS_BLOCK))"/>
+    
+    <xsl:variable name="css:valid-declarations" as="xs:string*"
+        select="(r:exact(r:or(('block','inline','list-item','none','toc-item','page-break'))),
+                 r:exact($INTEGER),
+                 r:exact($INTEGER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact($NATURAL_NUMBER),
+                 r:exact(r:or(($DOT_PATTERN,'none'))),
+                 r:exact(r:or(($DOT_PATTERN,'none'))),
+                 r:exact(r:or(($DOT_PATTERN,'none'))),
+                 r:exact(r:or(($DOT_PATTERN,'none'))),
+                 r:exact(r:or(($INTEGER,$INHERIT))),
+                 r:exact(r:or(($DOT_PATTERN,'demical','lower-alpha','lower-roman','none','upper-alpha','upper-roman',$INHERIT))),
+                 r:exact(r:or(('center','justify','left','right',$INHERIT))),
+                 r:exact(r:or(('always','auto','avoid','left','right', $INHERIT))),
+                 r:exact(r:or(('always','auto','avoid','left','right', $INHERIT))),
+                 r:exact(r:or(('auto','avoid',$INHERIT))),
+                 r:exact(r:or(($INTEGER,$INHERIT))),
+                 r:exact(r:or(($INTEGER,$INHERIT))),
+                 r:exact(r:or(($IDENT,'auto'))),
+                 r:exact(r:comma-separated(r:join(($IDENT,$CONTENT_LIST), '\s+'))),
+                 r:exact(r:or(($IDENT_LIST,'none'))),
+                 r:exact(r:or(('normal','italic','oblique',$INHERIT))),
+                 r:exact(r:or(('normal','bold','100','200','300','400','500','600','700','800','900',$INHERIT))),
+                 r:exact(r:or(('none','underline','overline','line-through','blink',$INHERIT))),
+                 r:exact(r:or(($COLOR,$INHERIT))))"/>
+    
+    <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
                  '^(block|list-item|toc-item)$',
                  '^(block|list-item)$',
@@ -105,9 +112,10 @@
                  '.*',
                  '.*',
                  '.*',
+                 '.*',
                  '.*')"/>
     
-    <xsl:variable name="default-values" as="xs:string*"
+    <xsl:variable name="css:default-values" as="xs:string*"
         select="('inline',
                  '0.0',
                  '0.0',
@@ -137,7 +145,7 @@
                  'none',
                  '#000000')"/>
     
-    <xsl:variable name="media" as="xs:string*"
+    <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
                  'embossed',
                  'embossed',
@@ -167,7 +175,7 @@
                  'print',
                  'print')"/>
     
-    <xsl:variable name="inherited-properties" as="xs:string*"
+    <xsl:variable name="css:inheriting-properties" as="xs:string*"
         select="('-brl-text-indent',
                  '-brl-list-style-type',
                  'text-align',
@@ -179,47 +187,47 @@
                  'text-decoration',
                  'color')"/>
     
-    <xsl:variable name="paged-properties" as="xs:string*"
+    <xsl:variable name="css:paged-media-properties" as="xs:string*"
         select="('page-break-before',
                  'page-break-after',
                  'page-break-inside',
                  'orphans',
                  'widows')"/>
-
+    
     <xsl:function name="css:get-properties" as="xs:string*">
-        <xsl:sequence select="$properties"/>
+        <xsl:sequence select="$css:properties"/>
     </xsl:function>
 
     <xsl:function name="css:is-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(index-of($properties, $property))"/>
+        <xsl:sequence select="boolean(index-of($css:properties, $property))"/>
     </xsl:function>
-
-    <xsl:function name="css:is-valid-property" as="xs:boolean">
+    
+    <xsl:function name="css:is-valid-declaration" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="value" as="xs:string"/>
-        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
-        <xsl:sequence select="if ($index) then matches($value, $valid-properties[$index]) else false()"/>
+        <xsl:variable name="index" select="pxi:index-of($css:properties, $property)"/>
+        <xsl:sequence select="if ($index) then matches($value, $css:valid-declarations[$index]) else false()"/>
     </xsl:function>
 
     <xsl:function name="css:get-default-value" as="xs:string?">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
+        <xsl:variable name="index" select="pxi:index-of($css:properties, $property)"/>
         <xsl:if test="$index">
-            <xsl:sequence select="$default-values[$index]"/>
+            <xsl:sequence select="$css:default-values[$index]"/>
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:is-inherited-property" as="xs:boolean">
+    <xsl:function name="css:is-inheriting-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(pxi:index-of($inherited-properties, $property))"/>
+        <xsl:sequence select="boolean(pxi:index-of($css:inheriting-properties, $property))"/>
     </xsl:function>
     
     <xsl:function name="css:applies-to" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="display" as="xs:string"/>
-        <xsl:variable name="index" select="pxi:index-of($properties, $property)"/>
-        <xsl:sequence select="if ($index) then matches($display, $applies-to[$index]) else false()"/>
+        <xsl:variable name="index" select="pxi:index-of($css:properties, $property)"/>
+        <xsl:sequence select="if ($index) then matches($display, $css:applies-to[$index]) else false()"/>
     </xsl:function>
     
     <xsl:function name="pxi:index-of" as="xs:integer?">

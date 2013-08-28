@@ -39,7 +39,7 @@
                     <xsl:when test="current-grouping-key()">
                         <xsl:variable name="width" select="
                             (if ($this/ancestor::louis:box) then $this/ancestor::louis:box[1]/@width else $page-width)
-                             - number(pxi:or-default(css:get-property-value(
+                             - number(pxi:or-default(css:get-value(
                                 $this, '-louis-reset-margin-right', true(), true(), false()), '0'))"/>
                         <xsl:for-each-group select="current-group()/descendant-or-self::*[@css:toc-item]"
                             group-adjacent="for $ref in (@ref) return base-uri(collection()/*[descendant::*[@xml:id=$ref]])">
@@ -66,7 +66,7 @@
                                                 <xsl:apply-templates select="@*[not(name()='style')]"/>
                                                 <xsl:attribute name="style"
                                                                select="string-join((
-                                                                         css:remove-from-style(string(@style), ('display')),
+                                                                         css:remove-from-declarations(string(@style), ('display')),
                                                                          'display: block'), ';')"/>
                                                 <xsl:sequence select="string(collection()/descendant::*[@xml:id=$ref])"/>
                                             </xsl:copy>
