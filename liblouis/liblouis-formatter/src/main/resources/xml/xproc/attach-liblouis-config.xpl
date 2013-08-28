@@ -85,7 +85,6 @@ style preformatted
 
 no-pagenum     &amp;xpath(//louis:no-pagenum)
 contentsheader &amp;xpath(//louis:toc)
-none           &amp;xpath(//louis:box)
 none           &amp;xpath(//louis:include)
 none           &amp;xpath(//louis:result)
 preformatted   &amp;xpath(//louis:line)

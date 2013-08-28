@@ -45,7 +45,7 @@
                     </p:add-attribute>
                 </p:group>
                 <p:sink/>
-                <p:split-sequence test="normalize-space(string(/*))!=''">
+                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]">
                     <p:input port="source">
                         <p:pipe step="section-before" port="result"/>
                         <p:pipe step="section" port="result"/>

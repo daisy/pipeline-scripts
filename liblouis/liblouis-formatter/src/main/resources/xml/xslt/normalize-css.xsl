@@ -67,7 +67,7 @@
     </xsl:template>
     
     <xsl:template match="*[descendant::*[@css:toc-item] and normalize-space(string(.))='']">
-        <xsl:variable name="normalized-style-attribute">
+        <xsl:variable name="normalized-style-attribute" as="attribute()?">
             <xsl:call-template name="normalized-style-attribute"/>
         </xsl:variable>
         <xsl:copy>

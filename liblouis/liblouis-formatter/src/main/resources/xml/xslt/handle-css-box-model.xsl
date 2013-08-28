@@ -222,7 +222,7 @@
             <xsl:apply-templates select="node()">
                 <xsl:with-param name="left-absolute" select="$new-left-absolute"/>
                 <xsl:with-param name="right-absolute" select="$new-right-absolute"/>
-                <xsl:with-param name="width" select="$width"/>
+                <xsl:with-param name="width" select="$width - $new-left-absolute + $left-absolute - $new-right-absolute + $right-absolute"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>

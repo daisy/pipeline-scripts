@@ -63,7 +63,11 @@
                                         <xsl:for-each select="current-group()">
                                             <xsl:variable name="ref" select="@ref"/>
                                             <xsl:copy>
-                                                <xsl:apply-templates select="@*"/>
+                                                <xsl:apply-templates select="@*[not(name()='style')]"/>
+                                                <xsl:attribute name="style"
+                                                               select="string-join((
+                                                                         css:remove-from-style(string(@style), ('display')),
+                                                                         'display: block'), ';')"/>
                                                 <xsl:sequence select="string(collection()/descendant::*[@xml:id=$ref])"/>
                                             </xsl:copy>
                                         </xsl:for-each>
