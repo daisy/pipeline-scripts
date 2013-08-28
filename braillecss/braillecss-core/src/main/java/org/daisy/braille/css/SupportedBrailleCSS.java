@@ -14,6 +14,7 @@ import cz.vutbr.web.css.CSSProperty.Orphans;
 import cz.vutbr.web.css.CSSProperty.PageBreak;
 import cz.vutbr.web.css.CSSProperty.PageBreakInside;
 import cz.vutbr.web.css.CSSProperty.Widows;
+import cz.vutbr.web.css.CSSProperty.CounterReset;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFactory;
@@ -39,7 +40,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 25;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 26;
 
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 
@@ -172,6 +173,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		values.put("widows", DEFAULT_UA_WIDOWS);
 
 		// misc
+		props.put("counter-reset", CounterReset.NONE);
 		props.put("-brl-string-set", StringSet.NONE);
 		props.put("-brl-content", Content.NONE); // NOTE: only allowed on :before and :after pseudo elements
 		props.put("-brl-typeform-indication", TypeformIndication.NONE);

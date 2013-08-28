@@ -33,6 +33,7 @@
                  'widows',
                  'page',
                  'string-set',
+                 'counter-reset',
                  'typeform-indication',
                  'font-style',
                  'font-weight',
@@ -78,6 +79,7 @@
                  r:exact(r:or(($INTEGER,$INHERIT))),
                  r:exact(r:or(($IDENT,'auto'))),
                  r:exact(r:comma-separated(r:join(($IDENT,$CONTENT_LIST), '\s+'))),
+                 r:exact(r:space-separated(r:concat(($IDENT,'(\s+',$INTEGER,')?')))),
                  r:exact(r:or(($IDENT_LIST,'none'))),
                  r:exact(r:or(('normal','italic','oblique',$INHERIT))),
                  r:exact(r:or(('normal','bold','100','200','300','400','500','600','700','800','900',$INHERIT))),
@@ -140,6 +142,7 @@
                  'auto',
                  'none',
                  'none',
+                 'none',
                  'normal',
                  'normal',
                  'none',
@@ -147,6 +150,7 @@
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed',
