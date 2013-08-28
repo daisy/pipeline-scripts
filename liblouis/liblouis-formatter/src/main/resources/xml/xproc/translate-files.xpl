@@ -13,6 +13,7 @@
     <p:input port="source" sequence="true" primary="true"/>
     <p:input port="temp-result.valid" sequence="true"/>
     <p:input port="temp-result.invalid" sequence="true"/>
+    <p:input port="spine" sequence="false"/>
     <p:output port="result" sequence="true" primary="true"/>
     
     <p:option name="temp-dir" required="true"/>
@@ -23,6 +24,62 @@
     <!-- ================ -->
     <!-- HELPER FUNCTIONS -->
     <!-- ================ -->
+    
+    <p:declare-step type="pxi:set-braille-page-begin" name="set-braille-page-begin">
+        <p:input port="source" sequence="false" primary="true"/>
+        <p:input port="source.all" sequence="false"/>
+        <p:input port="temp-result.all" sequence="false"/>
+        <p:input port="spine" sequence="false"/>
+        <p:output port="result" sequence="false" primary="true"/>
+        <p:choose>
+            <p:when test="/*/louis:page-layout//c:param[@name='louis:braille-page-position' and @value='none']">
+                <p:identity/>
+            </p:when>
+            <p:otherwise>
+                <p:insert match="/*/louis:page-layout/c:param-set" position="last-child">
+                    <p:input port="insertion">
+                        <p:inline>
+                            <c:param name="louis:braille-page-begin"/>
+                        </p:inline>
+                    </p:input>
+                </p:insert>
+                <p:choose>
+                    <p:when test="/*/@louis:braille-page-reset">
+                        <p:add-attribute match="/*/louis:page-layout//c:param[@name='louis:braille-page-begin']"
+                                         attribute-name="value">
+                            <p:with-option name="attribute-value" select="/*/@louis:braille-page-reset"/>
+                        </p:add-attribute>
+                    </p:when>
+                    <p:otherwise>
+                        <p:variable name="section-base" select="base-uri(/*)"/>
+                        <p:variable name="braille-page-reset-base"
+                                    select="string-join(/*/*[@louis:braille-page-reset]/base-uri(.), ' ')">
+                            <p:pipe step="set-braille-page-begin" port="source.all"/>
+                        </p:variable>
+                        <p:variable name="preceding-pages-base"
+                                    select="string-join(
+                                              //louis:section[@href=$section-base]/preceding::louis:section
+                                              [not(following::louis:section[following::louis:section[@href=$section-base]]
+                                                                           [@href=tokenize($braille-page-reset-base, ' ')])]
+                                              /@href, ' ')">
+                            <p:pipe step="set-braille-page-begin" port="spine"/>
+                        </p:variable>
+                        <p:variable name="last-braille-page-reset"
+                                    select="(/*/*[base-uri(.)=tokenize($preceding-pages-base, ' ')[1]]/@louis:braille-page-reset, 1)[1]">
+                            <p:pipe step="set-braille-page-begin" port="source.all"/>
+                        </p:variable>
+                        <p:add-attribute match="/*/louis:page-layout//c:param[@name='louis:braille-page-begin']" attribute-name="value">
+                            <p:with-option name="attribute-value"
+                                           select="number($last-braille-page-reset)
+                                                   + sum(/*/*[base-uri(.)=tokenize($preceding-pages-base, ' ')]/number(@pages))">
+                                <p:pipe step="set-braille-page-begin" port="temp-result.all"/>
+                            </p:with-option>
+                        </p:add-attribute>
+                    </p:otherwise>
+                </p:choose>
+            </p:otherwise>
+        </p:choose>
+    </p:declare-step>
     
     <p:declare-step type="pxi:include-liblouis-results" name="include-liblouis-results">
         <p:input port="source" sequence="false" primary="true"/>
@@ -284,7 +341,7 @@
                         </p:add-attribute>
                     </p:group>
                     
-                    <pxi:update-liblouis-results name="update-results-1">
+                    <pxi:update-liblouis-results name="update-results">
                         <p:input port="source.valid">
                             <p:pipe step="main" port="temp-result.valid"/>
                         </p:input>
@@ -301,68 +358,75 @@
                         <p:variable name="include-base" select="base-uri(/*/*[descendant::louis:include[resolve-uri(@href)=$toc-base]])">
                             <p:pipe step="source.all" port="result"/>
                         </p:variable>
-                        <p:variable name="old-length" select="count(/*/louis:result[base-uri(.)=$toc-base]//louis:line)">
+                        <p:variable name="old-toc-length" select="count(/*/louis:result[base-uri(.)=$toc-base]//louis:line)">
                             <p:pipe step="temp-result.all" port="result"/>
                         </p:variable>
-                        <p:variable name="new-length" select="count(//louis:line)">
+                        <p:variable name="new-toc-length" select="count(//louis:line)">
                             <p:pipe step="result.toc" port="result"/>
                         </p:variable>
-                        <pxi:invalidate-liblouis-results name="update-results-2">
+                        <p:variable name="old-section-length" select="(/*/louis:result[base-uri(.)=$section-base]/number(@pages), 0)[1]">
+                            <p:pipe step="temp-result.all" port="result"/>
+                        </p:variable>
+                        <p:variable name="new-section-length" select="number(/*/@pages)">
+                            <p:pipe step="result.section" port="result"/>
+                        </p:variable>
+                        <p:variable name="braille-page-reset-base"
+                                    select="string-join(/*/*[@louis:braille-page-reset]/base-uri(.), ' ')">
+                            <p:pipe step="source.all" port="result"/>
+                        </p:variable>
+                        <p:variable name="following-pages-base"
+                                    select="string-join(
+                                              //louis:section[@href=$section-base]/following::louis:section
+                                              [not(@href=tokenize($braille-page-reset-base, ' '))]
+                                              [not(preceding::louis:section[preceding::louis:section[@href=$section-base]]
+                                                                           [@href=tokenize($braille-page-reset-base, ' ')])]
+                                              /@href, ' ')">
+                            <p:pipe step="main" port="spine"/>
+                        </p:variable>
+                        <p:variable name="following-numbered-pages-base"
+                                    select="string-join(
+                                              /*/*[base-uri()=tokenize($following-pages-base, ' ')]
+                                                  [louis:page-layout//c:param[@name='louis:braille-page-position' and not(@value='none')]]
+                                            /base-uri(), ' ')">
+                            <p:pipe step="source.all" port="result"/>
+                        </p:variable>
+                        <pxi:invalidate-liblouis-results name="invalidate-results">
                             <p:input port="source.valid">
-                                <p:pipe step="update-results-1" port="result.valid"/>
+                                <p:pipe step="update-results" port="result.valid"/>
                             </p:input>
                             <p:input port="source.invalid">
-                                <p:pipe step="update-results-1" port="result.invalid"/>
+                                <p:pipe step="update-results" port="result.invalid"/>
                             </p:input>
-                            <p:with-option name="base" select="$include-base">
-                                <p:empty/>
+                            <p:with-option name="base" select="string-join(distinct-values((
+                                                                 $include-base,
+                                                                 if ($new-toc-length &gt; $old-toc-length)
+                                                                   then /*/louis:toc[resolve-uri(@href)=$include-base]/base-uri(.)
+                                                                   else (),
+                                                                 if ($new-section-length &gt; $old-section-length)
+                                                                   then (/*/louis:section[base-uri()=tokenize($following-numbered-pages-base, ' ')]/base-uri(.),
+                                                                         /*/louis:toc[resolve-uri(@href)=tokenize($following-numbered-pages-base, ' ')]/base-uri(.))
+                                                                   else ()
+                                                               )), ' ')">
+                                <p:pipe step="source.all" port="result"/>
                             </p:with-option>
                         </pxi:invalidate-liblouis-results>
-                        <p:choose>
-                            <p:when test="$new-length &gt; $old-length">
-                                <pxi:invalidate-liblouis-results name="update-results-3">
-                                    <p:input port="source.valid">
-                                        <p:pipe step="update-results-2" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="source.invalid">
-                                        <p:pipe step="update-results-2" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="base" select="string-join(/*/louis:toc[resolve-uri(@href)=$include-base]/base-uri(.), ' ')">
-                                        <p:pipe step="source.all" port="result"/>
-                                    </p:with-option>
-                                </pxi:invalidate-liblouis-results>
-                                <pxi:translate-files>
-                                    <p:input port="source">
-                                        <p:pipe step="rotate-sources" port="result"/>
-                                    </p:input>
-                                    <p:input port="temp-result.valid">
-                                        <p:pipe step="update-results-3" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="temp-result.invalid">
-                                        <p:pipe step="update-results-3" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="temp-dir" select="$temp-dir">
-                                        <p:empty/>
-                                    </p:with-option>
-                                </pxi:translate-files>
-                            </p:when>
-                            <p:otherwise>
-                                <pxi:translate-files>
-                                    <p:input port="source">
-                                        <p:pipe step="rotate-sources" port="result"/>
-                                    </p:input>
-                                    <p:input port="temp-result.valid">
-                                        <p:pipe step="update-results-2" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="temp-result.invalid">
-                                        <p:pipe step="update-results-2" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="temp-dir" select="$temp-dir">
-                                        <p:empty/>
-                                    </p:with-option>
-                                </pxi:translate-files>
-                            </p:otherwise>
-                        </p:choose>
+                        <pxi:translate-files>
+                            <p:input port="source">
+                                <p:pipe step="rotate-sources" port="result"/>
+                            </p:input>
+                            <p:input port="temp-result.valid">
+                                <p:pipe step="invalidate-results" port="result.valid"/>
+                            </p:input>
+                            <p:input port="temp-result.invalid">
+                                <p:pipe step="invalidate-results" port="result.invalid"/>
+                            </p:input>
+                            <p:input port="spine">
+                                <p:pipe step="main" port="spine"/>
+                            </p:input>
+                            <p:with-option name="temp-dir" select="$temp-dir">
+                                <p:empty/>
+                            </p:with-option>
+                        </pxi:translate-files>
                     </p:group>
                 </p:when>
                 <p:when test="/louis:box">
@@ -450,7 +514,7 @@
                         </p:add-attribute>
                     </p:group>
                     
-                    <pxi:update-liblouis-results name="update-results-1">
+                    <pxi:update-liblouis-results name="update-results">
                         <p:input port="source.valid">
                             <p:pipe step="main" port="temp-result.valid"/>
                         </p:input>
@@ -466,68 +530,45 @@
                         <p:variable name="include-base" select="base-uri(/*/*[descendant::louis:include[resolve-uri(@href)=$box-base]])">
                             <p:pipe step="source.all" port="result"/>
                         </p:variable>
-                        <p:variable name="old-length" select="count(/*/louis:result[base-uri(.)=$box-base]//louis:line)">
+                        <p:variable name="old-box-length" select="count(/*/louis:result[base-uri(.)=$box-base]//louis:line)">
                             <p:pipe step="temp-result.all" port="result"/>
                         </p:variable>
-                        <p:variable name="new-length" select="count(//louis:line)">
+                        <p:variable name="new-box-length" select="count(//louis:line)">
                             <p:pipe step="result.box" port="result"/>
                         </p:variable>
-                        <pxi:invalidate-liblouis-results name="update-results-2">
+                        <pxi:invalidate-liblouis-results name="invalidate-results">
                             <p:input port="source.valid">
-                                <p:pipe step="update-results-1" port="result.valid"/>
+                                <p:pipe step="update-results" port="result.valid"/>
                             </p:input>
                             <p:input port="source.invalid">
-                                <p:pipe step="update-results-1" port="result.invalid"/>
+                                <p:pipe step="update-results" port="result.invalid"/>
                             </p:input>
-                            <p:with-option name="base" select="$include-base">
-                                <p:empty/>
+                            <p:with-option name="base" select="string-join(distinct-values((
+                                                                 $include-base,
+                                                                 if ($new-box-length &gt; $old-box-length)
+                                                                   then /*/louis:toc[resolve-uri(@href)=$include-base]/base-uri(.)
+                                                                   else ()
+                                                               )), ' ')">
+                                <p:pipe step="source.all" port="result"/>
                             </p:with-option>
                         </pxi:invalidate-liblouis-results>
-                        <p:choose>
-                            <p:when test="$new-length &gt; $old-length">
-                                <pxi:invalidate-liblouis-results name="update-results-3">
-                                    <p:input port="source.valid">
-                                        <p:pipe step="update-results-2" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="source.invalid">
-                                        <p:pipe step="update-results-2" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="base" select="string-join(/*/louis:toc[resolve-uri(@href)=$include-base]/base-uri(.), ' ')">
-                                        <p:pipe step="source.all" port="result"/>
-                                    </p:with-option>
-                                </pxi:invalidate-liblouis-results>
-                                <pxi:translate-files>
-                                    <p:input port="source">
-                                        <p:pipe step="rotate-sources" port="result"/>
-                                    </p:input>
-                                    <p:input port="temp-result.valid">
-                                        <p:pipe step="update-results-3" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="temp-result.invalid">
-                                        <p:pipe step="update-results-3" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="temp-dir" select="$temp-dir">
-                                        <p:empty/>
-                                    </p:with-option>
-                                </pxi:translate-files>
-                            </p:when>
-                            <p:otherwise>
-                                <pxi:translate-files>
-                                    <p:input port="source">
-                                        <p:pipe step="rotate-sources" port="result"/>
-                                    </p:input>
-                                    <p:input port="temp-result.valid">
-                                        <p:pipe step="update-results-2" port="result.valid"/>
-                                    </p:input>
-                                    <p:input port="temp-result.invalid">
-                                        <p:pipe step="update-results-2" port="result.invalid"/>
-                                    </p:input>
-                                    <p:with-option name="temp-dir" select="$temp-dir">
-                                        <p:empty/>
-                                    </p:with-option>
-                                </pxi:translate-files>
-                            </p:otherwise>
-                        </p:choose>
+                        <pxi:translate-files>
+                            <p:input port="source">
+                                <p:pipe step="rotate-sources" port="result"/>
+                            </p:input>
+                            <p:input port="temp-result.valid">
+                                <p:pipe step="invalidate-results" port="result.valid"/>
+                            </p:input>
+                            <p:input port="temp-result.invalid">
+                                <p:pipe step="invalidate-results" port="result.invalid"/>
+                            </p:input>
+                            <p:input port="spine">
+                                <p:pipe step="main" port="spine"/>
+                            </p:input>
+                            <p:with-option name="temp-dir" select="$temp-dir">
+                                <p:empty/>
+                            </p:with-option>
+                        </pxi:translate-files>
                     </p:group>
                 </p:when>
                 <p:otherwise>
@@ -548,10 +589,22 @@
                         </p:input>
                     </p:identity>
                     
-                    <pxi:include-liblouis-results>
+                    <pxi:set-braille-page-begin name="set-braille-page-begin">
                         <p:input port="source">
                             <p:pipe step="source.section" port="result"/>
                         </p:input>
+                        <p:input port="source.all">
+                            <p:pipe step="source.all" port="result"/>
+                        </p:input>
+                        <p:input port="temp-result.all">
+                            <p:pipe step="temp-result.all" port="result"/>
+                        </p:input>
+                        <p:input port="spine">
+                            <p:pipe step="main" port="spine"/>
+                        </p:input>
+                    </pxi:set-braille-page-begin>
+                    
+                    <pxi:include-liblouis-results>
                         <p:input port="liblouis-results">
                             <p:pipe step="main" port="temp-result.valid"/>
                             <p:pipe step="main" port="temp-result.invalid"/>
@@ -568,7 +621,7 @@
                                 <p:pipe step="source.section" port="result"/>
                             </p:input>
                             <p:input port="page-layout" select="/*/louis:page-layout/c:param-set">
-                                <p:pipe step="source.section" port="result"/>
+                                <p:pipe step="set-braille-page-begin" port="result"/>
                             </p:input>
                             <p:with-option name="temp-dir" select="$temp-dir"/>
                         </louis:translate-file>
@@ -599,20 +652,67 @@
                         </p:input>
                     </pxi:update-liblouis-results>
                     
-                    <pxi:translate-files>
-                        <p:input port="source">
-                            <p:pipe step="rotate-sources" port="result"/>
-                        </p:input>
-                        <p:input port="temp-result.valid">
-                            <p:pipe step="update-results" port="result.valid"/>
-                        </p:input>
-                        <p:input port="temp-result.invalid">
-                            <p:pipe step="update-results" port="result.invalid"/>
-                        </p:input>
-                        <p:with-option name="temp-dir" select="$temp-dir">
-                            <p:empty/>
-                        </p:with-option>
-                    </pxi:translate-files>
+                    <p:group>
+                        <p:variable name="old-section-length" select="(/*/louis:result[base-uri(.)=$section-base]/number(@pages), 0)[1]">
+                            <p:pipe step="temp-result.all" port="result"/>
+                        </p:variable>
+                        <p:variable name="new-section-length" select="number(/*/@pages)">
+                            <p:pipe step="result.section" port="result"/>
+                        </p:variable>
+                        <p:variable name="braille-page-reset-base"
+                                    select="string-join(/*/*[@louis:braille-page-reset]/base-uri(.), ' ')">
+                            <p:pipe step="source.all" port="result"/>
+                        </p:variable>
+                        <p:variable name="following-pages-base"
+                                    select="string-join(
+                                              //louis:section[@href=$section-base]/following::louis:section
+                                              [not(@href=tokenize($braille-page-reset-base, ' '))]
+                                              [not(preceding::louis:section[preceding::louis:section[@href=$section-base]]
+                                                                           [@href=tokenize($braille-page-reset-base, ' ')])]
+                                              /@href, ' ')">
+                            <p:pipe step="main" port="spine"/>
+                        </p:variable>
+                        <p:variable name="following-numbered-pages-base"
+                                    select="string-join(
+                                              /*/*[base-uri()=tokenize($following-pages-base, ' ')]
+                                                  [louis:page-layout//c:param[@name='louis:braille-page-position' and not(@value='none')]]
+                                            /base-uri(), ' ')">
+                            <p:pipe step="source.all" port="result"/>
+                        </p:variable>
+                        <pxi:invalidate-liblouis-results name="invalidate-results">
+                            <p:input port="source.valid">
+                                <p:pipe step="update-results" port="result.valid"/>
+                            </p:input>
+                            <p:input port="source.invalid">
+                                <p:pipe step="update-results" port="result.invalid"/>
+                            </p:input>
+                            <p:with-option name="base" select="string-join(distinct-values((
+                                                                if ($new-section-length &gt; $old-section-length)
+                                                                   then (/*/louis:section[base-uri()=tokenize($following-numbered-pages-base, ' ')]/base-uri(.),
+                                                                         /*/louis:toc[resolve-uri(@href)=tokenize($following-numbered-pages-base, ' ')]/base-uri(.))
+                                                                   else ()
+                                                               )), ' ')">
+                                <p:pipe step="source.all" port="result"/>
+                            </p:with-option>
+                        </pxi:invalidate-liblouis-results>
+                        <pxi:translate-files>
+                            <p:input port="source">
+                                <p:pipe step="rotate-sources" port="result"/>
+                            </p:input>
+                            <p:input port="temp-result.valid">
+                                <p:pipe step="invalidate-results" port="result.valid"/>
+                            </p:input>
+                            <p:input port="temp-result.invalid">
+                                <p:pipe step="invalidate-results" port="result.invalid"/>
+                            </p:input>
+                            <p:input port="spine">
+                                <p:pipe step="main" port="spine"/>
+                            </p:input>
+                            <p:with-option name="temp-dir" select="$temp-dir">
+                                <p:empty/>
+                            </p:with-option>
+                        </pxi:translate-files>
+                    </p:group>
                 </p:otherwise>
             </p:choose>
         </p:when>

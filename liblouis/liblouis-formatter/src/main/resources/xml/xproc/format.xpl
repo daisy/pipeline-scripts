@@ -151,6 +151,17 @@
         </p:input>
     </pxi:xslt-for-each>
     
+    <p:for-each name="handle-css-counter-reset">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-css-counter-reset.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
     <p:for-each name="split-into-sections">
         <p:output port="result" sequence="true" primary="true">
             <p:pipe step="split-volume" port="result"/>
@@ -279,6 +290,9 @@
         </p:input>
         <p:input port="temp-result.invalid">
             <p:empty/>
+        </p:input>
+        <p:input port="spine">
+            <p:pipe step="split-into-sections" port="spine"/>
         </p:input>
         <p:with-option name="temp-dir" select="$temp-dir">
             <p:empty/>
