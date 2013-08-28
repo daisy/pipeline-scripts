@@ -59,9 +59,6 @@
     <!-- ========== -->
     
     <pxi:formatting>
-        <p:input port="page-layout">
-            <p:pipe step="styling" port="page-layout"/>
-        </p:input>
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>

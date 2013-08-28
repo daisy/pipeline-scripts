@@ -6,16 +6,14 @@
     xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
     exclude-inline-prefixes="#all"
     type="pxi:styling" name="styling" version="1.0">
-
+    
     <p:input port="source" primary="true"/>
     <p:output port="result" primary="true"/>
-    <p:output port="page-layout">
-        <p:pipe step="apply-stylesheet" port="pages"/>
-    </p:output>
+    
     <p:option name="default-stylesheet" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/xproc/library.xpl"/>
-
+    
     <p:choose>
         <p:when test="$default-stylesheet!=''">
             <p:add-attribute match="/link" attribute-name="href" name="link">
@@ -44,20 +42,9 @@
         </p:otherwise>
     </p:choose>
     
-    <!-- Apply stylesheet -->
+    <!-- Inline CSS -->
     
-    <css:apply-stylesheet name="apply-stylesheet"/>
-    
-    <!-- Handle content on :before and :after pseudo-elements -->
-    
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/handle-content.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
+    <css:inline/>
     
     <!-- Number lists -->
     

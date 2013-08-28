@@ -3,6 +3,7 @@ package org.daisy.braille.css.calabash;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
 import cz.vutbr.web.css.CSSFactory;
+import cz.vutbr.web.css.CSSProperty;
 import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.NodeData;
 import cz.vutbr.web.css.RuleMargin;
@@ -29,6 +31,8 @@ import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
+import cz.vutbr.web.css.Term;
+import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.SingleMapNodeData;
 import cz.vutbr.web.domassign.StyleMap;
@@ -45,6 +49,7 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.util.NamespaceIterator;
 
 import org.daisy.braille.css.BrailleCSSNodeData;
+import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.braille.css.SupportedPrintCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
@@ -57,11 +62,11 @@ import org.w3c.dom.Node;
 import static org.daisy.pipeline.braille.Utilities.Strings.join;
 import static org.daisy.pipeline.braille.Utilities.Strings.normalizeSpace;
 
-public class ApplyStylesheetProvider implements XProcStepProvider {
+public class InlineProvider implements XProcStepProvider {
 	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new ApplyStylesheet(runtime, step);
+		return new Inline(runtime, step);
 	}
 	
 	private static SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
@@ -73,13 +78,12 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 		CSSFactory.registerURIResolver(resolver);
 	}
 	
-	public class ApplyStylesheet extends DefaultStep {
+	public class Inline extends DefaultStep {
 	
 		private ReadablePipe sourcePipe = null;
 		private WritablePipe resultPipe = null;
-		private WritablePipe pagesPipe = null;
 		
-		private ApplyStylesheet(XProcRuntime runtime, XAtomicStep step) {
+		private Inline(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
 	
@@ -90,17 +94,13 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 	
 		@Override
 		public void setOutput(String port, WritablePipe pipe) {
-			if (port.equals("result"))
-				resultPipe = pipe;
-			else if (port.equals("pages"))
-				pagesPipe = pipe;
+			resultPipe = pipe;
 		}
 	
 		@Override
 		public void reset() {
 			sourcePipe.resetReader();
 			resultPipe.resetWriter();
-			pagesPipe.resetWriter();
 		}
 	
 		@Override
@@ -112,27 +112,24 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 				CSSFactory.registerNodeDataInstance(printNodeDataImpl);
 				StyleSheet brailleSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
 				StyleSheet printSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "print");
-				resultPipe.write((new InlineCSSWriter(doc, brailleSheet, printSheet, runtime)).getResult());
-				pagesPipe.write(new CSSPagesWriter(new URI(doc.getBaseURI()), brailleSheet, runtime).getResult()); }
+				resultPipe.write((new InlineCSSWriter(doc, brailleSheet, printSheet, runtime)).getResult()); }
 			catch (Exception e) {
 				throw new RuntimeException(e); }
 		}
 	}
 	
-	private static final String CSS_URI = "http://www.daisy.org/ns/pipeline/braille-css";
-	private static final String CSS_PREFIX = "css";
-	
 	private static final QName _style = new QName("style");
-	private static final QName _css_before = new QName(CSS_PREFIX, CSS_URI, "before");
-	private static final QName _css_after = new QName(CSS_PREFIX, CSS_URI, "after");
 	
 	private static class InlineCSSWriter extends TreeWriter {
 		
 		private final StyleMap brailleStylemap;
 		private final StyleMap printStylemap;
+		private final Map<String,RulePage> pages;
 		
-		public InlineCSSWriter(Document document, StyleSheet brailleStylesheet,
-				StyleSheet printStylesheet, XProcRuntime xproc) throws Exception {
+		public InlineCSSWriter(Document document,
+		                       StyleSheet brailleStylesheet,
+		                       StyleSheet printStylesheet,
+		                       XProcRuntime xproc) throws Exception {
 			super(xproc);
 			CSSFactory.registerSupportedCSS(brailleCSS);
 			CSSFactory.registerNodeDataInstance(brailleNodeDataImpl);
@@ -140,6 +137,9 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			CSSFactory.registerSupportedCSS(printCSS);
 			CSSFactory.registerNodeDataInstance(printNodeDataImpl);
 			printStylemap = new Analyzer(printStylesheet).evaluateDOM(document, "print", false);
+			pages = new HashMap<String,RulePage>();
+			for (RulePage page : Iterables.<RulePage>filter(brailleStylesheet, RulePage.class))
+				pages.put(Objects.firstNonNull(page.getName(), "auto"), page);
 			startDocument(new URI(document.getBaseURI()));
 			traverse(document.getDocumentElement());
 			endDocument();
@@ -148,6 +148,7 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 		private void traverse(Node node) throws XPathException, URISyntaxException {
 			
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				boolean isRoot = !seenRoot;
 				addStartElement((Element)node);
 				NamedNodeMap attributes = node.getAttributes();
 				for (int i=0; i<attributes.getLength(); i++) {
@@ -158,32 +159,37 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 					else if ("style".equals(attr.getLocalName())) {}
 					else
 						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue()); }
-				String style = "";
+				StringBuilder style = new StringBuilder();
 				NodeData brailleData = brailleStylemap.get((Element)node);
 				if (brailleData != null)
-					style += normalizeSpace(brailleData);
+					inlineStyle(style, brailleData);
 				NodeData printData = printStylemap.get((Element)node);
 				if (printData != null)
-					style += normalizeSpace(printData);
-				if (style.length() > 0)
-					addAttribute(_style, style);
-				receiver.startContent();
+					inlineStyle(style, printData);
 				NodeData beforeData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
-				if (beforeData != null) {
-					String beforeStyle = normalizeSpace(beforeData);
-					if (beforeStyle.length() > 0) {
-						addStartElement(_css_before);
-						addAttribute(_style, beforeStyle);
-						addEndElement(); }}
+				if (beforeData != null)
+					inlinePseudoStyle(style, beforeData, Selector.PseudoDeclaration.BEFORE);
+				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
+				if (afterData != null)
+					inlinePseudoStyle(style, afterData, Selector.PseudoDeclaration.AFTER);
+				BrailleCSSProperty.Page pageProperty = brailleData.<BrailleCSSProperty.Page>getProperty("page", false);
+				if (pageProperty != null) {
+					RulePage page;
+					if (pageProperty == BrailleCSSProperty.Page.identifier)
+						page = pages.get(brailleData.<TermIdent>getValue(TermIdent.class, "page", false).getValue());
+					else
+						page = pages.get(pageProperty.toString());
+					if (page != null)
+						inlinePageStyle(style, page, pages.get("auto")); }
+				else if (isRoot) {
+					RulePage page = pages.get("auto");
+					if (page != null)
+						inlinePageStyle(style, page, null); }
+				if (normalizeSpace(style).length() > 0) {
+					addAttribute(_style, style.toString().trim()); }
+				receiver.startContent();
 				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling())
 					traverse(child);
-				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
-				if (afterData != null) {
-					String afterStyle = normalizeSpace(afterData);
-					if (afterStyle.length() > 0) {
-						addStartElement(_css_after);
-						addAttribute(_style, afterStyle);
-						addEndElement(); }}
 				addEndElement(); }
 			else if (node.getNodeType() == Node.COMMENT_NODE)
 				addComment(node.getNodeValue());
@@ -203,7 +209,6 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 			else {
 				List<NamespaceBinding> namespaces = new ArrayList<NamespaceBinding>();
 				Iterators.<NamespaceBinding>addAll(namespaces, NamespaceIterator.iterateNamespaces(inode));
-				namespaces.add(NamespaceBinding.makeNamespaceBinding(CSS_PREFIX, CSS_URI));
 				inscopeNS = Iterables.<NamespaceBinding>toArray(namespaces, NamespaceBinding.class);
 				seenRoot = true; }
 			receiver.setSystemId(element.getBaseURI());
@@ -211,38 +216,52 @@ public class ApplyStylesheetProvider implements XProcStepProvider {
 		}
 	}
 	
-	private static final QName _css_page = new QName(CSS_PREFIX, CSS_URI, "page");
-	private static final QName _css_pages = new QName(CSS_PREFIX, CSS_URI, "pages");
-	private static final QName _name = new QName("name");
-	private static final QName _position = new QName("position");
+	private static void inlineStyle(StringBuilder builder, NodeData nodeData) {
+		List<String> keys = new ArrayList<String>(nodeData.getPropertyNames());
+		keys.remove("page");
+		Collections.sort(keys);
+		for(String key : keys) {
+			builder.append(normalizeProperty(key)).append(": ");
+			Term<?> value = nodeData.getValue(key, true);
+			if (value != null)
+				builder.append(value.toString());
+			else {
+				CSSProperty prop = nodeData.getProperty(key);
+				builder.append(prop); }
+			builder.append("; "); }
+	}
 	
-	private static class CSSPagesWriter extends TreeWriter {
-		public CSSPagesWriter(URI base, StyleSheet stylesheet, XProcRuntime xproc) throws Exception {
-			super(xproc);
-			startDocument(base);
-			addStartElement(_css_pages);
-			Map<String,RulePage> pages = new HashMap<String,RulePage>();
-			for (RulePage page : Iterables.<RulePage>filter(stylesheet, RulePage.class))
-				pages.put(Objects.firstNonNull(page.getName(), "auto"), page);
-			for (String name : pages.keySet()) {
-				addStartElement(_css_page);
-				addAttribute(_name, name);
-				RulePage page = pages.get(name);
-				String pseudo = page.getPseudo();
-				if (pseudo != null) addAttribute(_position, pseudo);
-				String pageStyle = normalizeSpace(join(
-						Iterables.<Declaration>filter(page, Declaration.class), " "));
-				if (!"".equals(pageStyle))
-					addAttribute(_style, pageStyle);
-				for (RuleMargin margin : Iterables.<RuleMargin>filter(page, RuleMargin.class)) {
-					addStartElement(new QName(CSS_PREFIX, CSS_URI, margin.getMarginArea().value));
-					String marginStyle = normalizeSpace(join(margin, " "));
-					if (!"".equals(marginStyle))
-						addAttribute(_style, marginStyle);
-					addEndElement(); }
-				addEndElement(); }
-			addEndElement();
-			endDocument();
-		}
+	private static void inlinePseudoStyle(StringBuilder builder, NodeData nodeData, Selector.PseudoDeclaration decl) {
+		if (builder.length() > 0 && builder.charAt(0) != '{') {
+			builder.insert(0, "{ ");
+			builder.append("} "); }
+		builder.append(decl.isPseudoElement() ? "::" : ":").append(decl.value()).append(" { ");
+		inlineStyle(builder, nodeData);
+		builder.append("} ");
+	}
+	
+	private static void inlinePageStyle(StringBuilder builder, RulePage rulePage, RulePage inheritFrom) {
+		if (builder.length() > 0 && builder.charAt(0) != '{') {
+			builder.insert(0, "{ ");
+			builder.append("} "); }
+		builder.append("@page ");
+		String pseudo = rulePage.getPseudo();
+		if (pseudo != null && !"".equals(pseudo))
+			builder.append(":").append(pseudo).append(" ");
+		builder.append("{ ");
+		for (Declaration decl : Iterables.<Declaration>filter(rulePage, Declaration.class))
+			builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, " ")).append("; ");
+		for (RuleMargin margin : Iterables.<RuleMargin>filter(rulePage, RuleMargin.class)) {
+			builder.append("@").append(margin.getMarginArea().value).append(" { ");
+			for (Declaration decl : margin)
+				builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, " ")).append("; ");
+			builder.append("} "); }
+		builder.append("} ");
+	}
+	
+	private static String normalizeProperty(String property) {
+		if (property.startsWith("-brl-"))
+			return property.substring(5);
+		return property;
 	}
 }

@@ -9,11 +9,10 @@
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    exclude-inline-prefixes="#all"
+    exclude-inline-prefixes="d px pxi c louis pef xsl"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
-    <p:input port="page-layout" sequence="false"/>
     <p:output port="result" sequence="false" primary="true"/>
     
     <p:option name="temp-dir" required="true"/>
@@ -39,18 +38,6 @@
         <p:with-option name="href" select="$temp-dir"/>
     </px:mkdir>
     
-    <p:xslt name="liblouis-page-layouts">
-        <p:input port="source">
-            <p:pipe step="format" port="page-layout"/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/generate-liblouis-page-layouts.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
     <p:for-each>
         <p:iteration-source>
             <p:pipe step="format" port="source"/>
@@ -71,8 +58,58 @@
                         <xsl:template match="/*">
                             <xsl:copy>
                                 <xsl:copy-of select="document('')/*/namespace::*[name()='louis']"/>
+                                <xsl:copy-of select="document('')/*/namespace::*[name()='css']"/>
                                 <xsl:sequence select="@*|node()"/>
                             </xsl:copy>
+                        </xsl:template>
+                    </xsl:stylesheet>
+                </p:inline>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="handle-css-before-after">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-css-before-after.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="handle-css-page">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="../xslt/handle-css-page.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:inline>
+                    <xsl:stylesheet version="2.0">
+                        <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css/xslt/parsing-helper.xsl"/>
+                        <xsl:template match="@*|node()">
+                            <xsl:copy>
+                                <xsl:apply-templates select="@*|node()"/>
+                            </xsl:copy>
+                        </xsl:template>
+                        <xsl:template match="@style">
+                            <xsl:variable name="main-declarations"
+                                          select="css:get-declarations(css:tokenize-stylesheet(string(.)), ())"/>
+                            <xsl:if test="normalize-space(string($main-declarations))!=''">
+                                <xsl:attribute name="style" select="$main-declarations"/>
+                            </xsl:if>
                         </xsl:template>
                     </xsl:stylesheet>
                 </p:inline>
@@ -113,17 +150,6 @@
             <p:empty/>
         </p:input>
     </pxi:xslt-for-each>
-    
-    <p:for-each name="handle-css-page">
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:document href="../xslt/handle-css-page.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-    </p:for-each>
     
     <p:for-each name="split-into-sections">
         <p:output port="result" sequence="true" primary="true">
@@ -167,16 +193,14 @@
     </p:for-each>
     
     <p:for-each name="attach-liblouis-page-layout">
-        <p:filter name="liblouis-page-layout">
-            <p:input port="source">
-                <p:pipe step="liblouis-page-layouts" port="result"/>
+        <p:xslt name="liblouis-page-layout">
+            <p:input port="stylesheet">
+                <p:document href="../xslt/generate-liblouis-page-layout.xsl"/>
             </p:input>
-            <p:with-option name="select"
-                select="concat('//louis:page-layout[@name=&quot;', /*/@css:page, '&quot;]')">
-                <p:pipe step="attach-liblouis-page-layout" port="current"/>
-            </p:with-option>
-        </p:filter>
-        <p:sink/>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
         <p:insert match="/*" position="last-child">
             <p:input port="source">
                 <p:pipe step="attach-liblouis-page-layout" port="current"/>
@@ -185,6 +209,7 @@
                 <p:pipe step="liblouis-page-layout" port="result"/>
             </p:input>
         </p:insert>
+        <p:delete match="/*/@css:page"/>
     </p:for-each>
     
     <p:for-each name="handle-css-box-model">

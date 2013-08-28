@@ -32,40 +32,116 @@
 		<xsl:variable name="is-block" as="xs:boolean" select="$parent-is-block and pxi:is-block(.)"/>
 		<xsl:variable name="has-string-set" as="xs:boolean" select="$parent-has-string-set and pxi:has-string-set(.)"/>
 		<xsl:variable name="string-set" as="xs:string" select="if ($has-string-set) then pxi:string-set(.) else 'none'"/>
+		<xsl:variable name="stylesheet" as="xs:string*" select="css:tokenize-stylesheet(string(@style))"/>
+		<xsl:variable name="content-before"
+		              select="for $declaration in css:filter-declaration(css:tokenize-declarations(
+		                                            css:get-declarations($stylesheet, '::before')), 'content')
+		                      return css:eval-content-list(., substring-after($declaration, ':'))"/>
+		<xsl:variable name="content-after"
+		              select="for $declaration in css:filter-declaration(css:tokenize-declarations(
+		                                            css:get-declarations($stylesheet, '::after')), 'content')
+		                      return css:eval-content-list(., substring-after($declaration, ':'))"/>
 		<xsl:variable name="display" as="xs:string" select="if ($parent-display='none') then 'none' else pxi:display(.)"/>
 		<xsl:variable name="this" as="element()" select="."/>
 		<xsl:copy>
 			<xsl:choose>
-				<xsl:when test="$string-set!='none'">
-					<xsl:variable name="string-set-result" as="xs:string*">
-						<xsl:for-each select="tokenize($string-set,',')">
-							<xsl:variable name="identifier" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
-							<xsl:variable name="content-list" select="substring-after(., $identifier)"/>
-							<xsl:variable name="content" select="css:eval-content-list($this, $content-list)"/>
-							<xsl:if test="exists($content) and matches($identifier, $IDENT)">
-								<xsl:variable name="block">
-									<xsl:element name="css:string-set">
-										<xsl:attribute name="name" select="$identifier"/>
-										<xsl:element name="css:block">
-											<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
-											<xsl:sequence select="$content"/>
-										</xsl:element>
-									</xsl:element>
-								</xsl:variable>
-								<xsl:variable name="block-result">
-									<xsl:apply-templates select="$block/css:string-set/css:block">
-										<xsl:with-param name="context" select="$this"/>
-									</xsl:apply-templates>
-								</xsl:variable>
-								<xsl:if test="normalize-space(string($block-result))">
-									<xsl:sequence select="concat($identifier, ' &quot;', normalize-space(string($block-result)), '&quot;')"/>
-								</xsl:if>
-							</xsl:if>
+				<xsl:when test="$string-set!='none' or $content-before or $content-after">
+					<xsl:variable name="new-rulesets" as="xs:string*">
+						<xsl:for-each select="css:tokenize-stylesheet(string(@style))">
+							<xsl:choose>
+								<xsl:when test="starts-with(., '{')">
+									<xsl:variable name="string-set-result" as="xs:string*">
+										<xsl:for-each select="tokenize($string-set,',')">
+											<xsl:variable name="identifier" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
+											<xsl:variable name="content-list" select="substring-after(., $identifier)"/>
+											<xsl:variable name="content" select="css:eval-content-list($this, $content-list)"/>
+											<xsl:if test="$content and matches($identifier, $IDENT)">
+												<xsl:variable name="block">
+													<xsl:element name="css:string-set">
+														<xsl:attribute name="name" select="$identifier"/>
+														<xsl:element name="css:block">
+															<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+															<xsl:sequence select="$content"/>
+														</xsl:element>
+													</xsl:element>
+												</xsl:variable>
+												<xsl:variable name="block-result">
+													<xsl:apply-templates select="$block/css:string-set/css:block">
+														<xsl:with-param name="context" select="$this"/>
+													</xsl:apply-templates>
+												</xsl:variable>
+												<xsl:sequence select="concat($identifier, ' &quot;', normalize-space(string($block-result)), '&quot;')"/>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:variable>
+									<xsl:sequence select="concat(
+									                      '{ ',
+									                      string-join((
+									                        css:remove-from-declarations(
+									                          replace(., concat('^',$RULESET,'$'), '$5'),
+									                          ('string-set')),
+									                        if (exists($string-set-result))
+									                          then concat('string-set: ', string-join($string-set-result,','))
+									                          else ()), '; '), ' }')"/>
+								</xsl:when>
+								<xsl:when test="starts-with(., '::before ')">
+									<xsl:variable name="content-before-result" as="xs:string">
+										<xsl:variable name="block">
+											<xsl:element name="css:before">
+												<xsl:element name="css:block">
+													<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+													<xsl:sequence select="$content-before"/>
+												</xsl:element>
+											</xsl:element>
+										</xsl:variable>
+										<xsl:variable name="block-result">
+											<xsl:apply-templates select="$block/css:before/css:block">
+												<xsl:with-param name="context" select="$this"/>
+											</xsl:apply-templates>
+										</xsl:variable>
+										<xsl:sequence select="concat('&quot;', normalize-space(string($block-result)), '&quot;')"/>
+									</xsl:variable>
+									<xsl:sequence select="concat(
+									                      '::before { ',
+									                      string-join((
+									                        css:remove-from-declarations(
+									                          replace(., concat('^',$RULESET,'$'), '$5'),
+									                          ('content')),
+									                        concat('content: ', $content-before-result)), '; '), ' }')"/>
+								</xsl:when>
+								<xsl:when test="starts-with(., '::after ')">
+									<xsl:variable name="content-after-result" as="xs:string">
+										<xsl:variable name="block">
+											<xsl:element name="css:after">
+												<xsl:element name="css:block">
+													<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+													<xsl:sequence select="$content-after"/>
+												</xsl:element>
+											</xsl:element>
+										</xsl:variable>
+										<xsl:variable name="block-result">
+											<xsl:apply-templates select="$block/css:after/css:block">
+												<xsl:with-param name="context" select="$this"/>
+											</xsl:apply-templates>
+										</xsl:variable>
+										<xsl:sequence select="concat('&quot;', normalize-space(string($block-result)), '&quot;')"/>
+									</xsl:variable>
+									<xsl:sequence select="concat(
+									                      '::after { ',
+									                      string-join((
+									                        css:remove-from-declarations(
+									                          replace(., concat('^',$RULESET,'$'), '$5'),
+									                          ('content')),
+									                        concat('content: ', $content-after-result)), '; '), ' }')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:sequence select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:for-each>
 					</xsl:variable>
 					<xsl:apply-templates select="@*[not(name()='style')]" mode="identify-blocks"/>
-					<xsl:attribute name="style" select="concat(
-						css:remove-from-declarations(string(@style), ('string-set')), ';string-set:', string-join($string-set-result,','))"/>
+					<xsl:attribute name="style" select="string-join($new-rulesets, ' ')"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="@*" mode="identify-blocks"/>
