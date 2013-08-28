@@ -50,6 +50,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName louis_print_page_position = new QName(LOUIS_PREFIX, LOUIS_NS, "print-page-position");
 	private static final QName louis_braille_page_position = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-page-position");
 	private static final QName louis_page_break_separator = new QName(LOUIS_PREFIX, LOUIS_NS, "page-break-separator");
+	private static final QName louis_braille_page_begin = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-page-begin");
 	
 	private Liblouisutdml liblouisutdml = null;
 	
@@ -153,6 +154,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 					boolean separator = pageLayout.get(louis_page_break_separator).getBoolean();
 					settings.put("pageSeparator", separator ? "yes" : "no");
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
+				if (pageLayout.containsKey(louis_braille_page_begin))
+					settings.put("beginningPageNumber",
+					             pageLayout.get(louis_braille_page_begin).getString());
 				
 				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
 				String configPath = null;
