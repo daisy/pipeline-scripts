@@ -24,6 +24,7 @@
     <p:import href="split-into-sections.xpl"/>
     <p:import href="attach-liblouis-config.xpl"/>
     <p:import href="translate-files.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/utilities/validate-braille.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
@@ -49,6 +50,14 @@
             <p:empty/>
         </p:input>
     </p:xslt>
+    
+    <p:for-each>
+        <p:iteration-source>
+            <p:pipe step="format" port="source"/>
+        </p:iteration-source>
+        <px:validate-braille fail-if-invalid="true"/>
+    </p:for-each>
+    <p:sink/>
     
     <p:for-each>
         <p:iteration-source>

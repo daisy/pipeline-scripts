@@ -4,8 +4,6 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="xs">
 	
-	<xsl:output method="xml" encoding="utf-8" indent="yes" />
-	
 	<xsl:template match="/*">
 		<xsl:variable name="BRAILLE_WHITESPACE_OR_SOFT_HYPHENS">[\s&#x00A0;&#x00AD;\p{IsBraillePatterns}]+</xsl:variable>
 		<xsl:analyze-string select="string(.)" regex="{$BRAILLE_WHITESPACE_OR_SOFT_HYPHENS}">

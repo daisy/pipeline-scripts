@@ -46,35 +46,4 @@
         </p:catch>
     </p:try>
     
-    <!-- Validate output -->
-    
-    <p:try>
-        <p:group>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/validate-braille.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
-        </p:group>
-        <p:catch name="validate-catch">
-            <p:insert match="/message" position="last-child" name="validate-error">
-                <p:input port="source">
-                    <p:inline><message>Translated document is invalid: </message></p:inline>
-                </p:input>
-                <p:input port="insertion">
-                    <p:pipe step="validate-catch" port="error"/>
-                </p:input>
-            </p:insert>
-            <p:error code="px:brl04">
-                <p:input port="source">
-                    <p:pipe step="validate-error" port="result"/>
-                </p:input>
-            </p:error>
-        </p:catch>
-    </p:try>
-    <p:sink/>
-    
 </p:declare-step>
