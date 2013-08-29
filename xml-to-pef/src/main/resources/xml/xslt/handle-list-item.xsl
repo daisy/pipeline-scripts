@@ -17,12 +17,12 @@
     
     <xsl:template match="*[contains(string(@style), 'list-item')]">
         <xsl:variable name="display" as="xs:string"
-            select="css:get-property-value(., 'display', true(), true(), false())"/>
+            select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="$display='list-item'">
                 <xsl:variable name="list-style-type" as="xs:string"
-                    select="css:get-property-value(., 'list-style-type', true(), true(), false())"/>
+                    select="css:get-value(., 'list-style-type', true(), true(), false())"/>
                 <xsl:if test="$list-style-type!='none'">
                     <xsl:element name="css:marker">
                         <xsl:attribute name="style" select="'display:inline'"/>
