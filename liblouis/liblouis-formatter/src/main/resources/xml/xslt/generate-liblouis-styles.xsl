@@ -60,7 +60,7 @@
                     <xsl:otherwise>
                         <xsl:call-template name="print-liblouis-style">
                             <xsl:with-param name="style" select="string(@style)"/>
-                            <xsl:with-param name="style-name" select="'document'"/>
+                            <xsl:with-param name="style-name" select="'root'"/>
                         </xsl:call-template>
                         <xsl:for-each select="distinct-values(//*[not(self::louis:toc-item)]/@style/string())">
                             <xsl:variable name="display" select="pxi:get-property-value(., 'display')"/>
@@ -84,7 +84,7 @@
         
         <xsl:text># --------------------------------------------------------------------------------------------------&#xa;</xsl:text>
         <xsl:text># </xsl:text>
-        <xsl:value-of select="$style"/>
+        <xsl:value-of select="if (starts-with($style-name, '#')) then $style else $style-name"/>
         <xsl:text>&#xa;</xsl:text>
         <xsl:text># --------------------------------------------------------------------------------------------------&#xa;</xsl:text>
         
@@ -200,7 +200,7 @@
         
         <!-- braillePageNumberFormat -->
         
-        <xsl:if test="$style-name='document'">
+        <xsl:if test="$style-name='root'">
             <xsl:variable name="braillePageNumberFormat">
                 <xsl:choose>
                     <xsl:when test="$braille-page-format='decimal'">

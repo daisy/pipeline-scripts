@@ -38,6 +38,7 @@
         <px:fileset-add-entry href="liblouisutdml.ini"/>
         <px:fileset-add-entry href="braille-patterns.cti"/>
         <px:fileset-add-entry href="nabcc.dis"/>
+        <px:fileset-add-entry href="whitespace.cti"/>
         <px:fileset-add-entry href="pagenum.cti"/>
         <p:for-each>
             <p:iteration-source select="/d:fileset/d:file"/>
@@ -56,16 +57,18 @@
     
     <pxi:fileset-add-tempfile name="styles-directory" suffix=".cfg">
         <p:input port="source">
-            <p:inline><louis:config-file># Default styles
-
-style no-pagenum
-    braillePageNumberFormat blank
+            <p:inline><louis:config-file># --------------------------------------------------------------------------------------------------
+# Default styles
+# --------------------------------------------------------------------------------------------------
 
 style contentsheader
     leftMargin 0
     rightMargin 0
     firstLineIndent 0
     format leftJustified
+    braillePageNumberFormat blank
+
+style block
 
 style preformatted
     firstLineIndent 0
@@ -81,15 +84,18 @@ style preformatted
     
     <pxi:fileset-add-tempfile name="semantics-directory" suffix=".sem">
         <p:input port="source">
-            <p:inline><louis:semantic-file># Default semantics
+            <p:inline><louis:semantic-file># --------------------------------------------------------------------------------------------------
+# Default semantics
+# --------------------------------------------------------------------------------------------------
 
-no-pagenum     &amp;xpath(//louis:no-pagenum)
 contentsheader &amp;xpath(//louis:toc)
 none           &amp;xpath(//louis:include)
 none           &amp;xpath(//louis:result)
 preformatted   &amp;xpath(//louis:line)
 preformatted   &amp;xpath(//louis:border)
 pagenum        &amp;xpath(//louis:print-page)
+softreturn     &amp;xpath(//louis:line-break)
+block          &amp;xpath(//louis:block)
 skip           &amp;xpath(//louis:page-layout)
 skip           &amp;xpath(//louis:styles)
 skip           &amp;xpath(//louis:semantics)

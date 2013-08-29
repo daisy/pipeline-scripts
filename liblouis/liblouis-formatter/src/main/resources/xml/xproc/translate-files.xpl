@@ -272,9 +272,7 @@
                     <p:insert match="/*" position="first-child">
                         <p:input port="insertion">
                             <p:inline>
-                                <louis:no-pagenum>
-                                    <louis:toc>&#xA0;</louis:toc>
-                                </louis:no-pagenum>
+                                <louis:toc>&#xA0;</louis:toc>
                             </p:inline>
                         </p:input>
                     </p:insert>

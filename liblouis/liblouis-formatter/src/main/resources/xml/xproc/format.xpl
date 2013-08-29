@@ -9,7 +9,7 @@
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    exclude-inline-prefixes="d px pxi c louis pef xsl"
+    exclude-inline-prefixes="d px pxi c pef xsl"
     version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
@@ -22,6 +22,7 @@
     <p:import href="utils/select-by-base.xpl"/>
     <p:import href="split-into-sections.xpl"/>
     <p:import href="attach-liblouis-config.xpl"/>
+    <p:import href="normalize-space.xpl"/>
     <p:import href="translate-files.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/utilities/validate-braille.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/xproc/library.xpl"/>
@@ -246,18 +247,14 @@
     </p:for-each>
     
     <p:for-each name="extract-box">
-        <p:output port="result" sequence="true" primary="true"/>
-        <p:output port="extracted" sequence="true">
+        <p:output port="result" sequence="true">
             <p:pipe step="extract" port="extracted"/>
+            <p:pipe step="extract" port="result"/>
         </p:output>
         <pxi:extract name="extract" match="louis:box" label="concat('box_', $p:index)"/>
     </p:for-each>
     
     <pxi:xslt-for-each name="group-toc-items">
-        <p:input port="iteration-source">
-            <p:pipe step="extract-box" port="extracted"/>
-            <p:pipe step="extract-box" port="result"/>
-        </p:input>
         <p:input port="stylesheet">
             <p:document href="../xslt/group-toc-items.xsl"/>
         </p:input>
@@ -267,22 +264,22 @@
     </pxi:xslt-for-each>
     
     <p:for-each name="extract-toc">
-        <p:output port="result" sequence="true" primary="true"/>
-        <p:output port="extracted" sequence="true">
+        <p:output port="result" sequence="true">
             <p:pipe step="extract" port="extracted"/>
+            <p:pipe step="extract" port="result"/>
         </p:output>
         <pxi:extract name="extract" match="louis:toc" label="concat('toc_', $p:index)"/>
     </p:for-each>
     
     <pxi:attach-liblouis-config name="attach-liblouis-config">
-        <p:input port="source">
-            <p:pipe step="extract-toc" port="extracted"/>
-            <p:pipe step="extract-toc" port="result"/>
-        </p:input>
         <p:with-option name="directory" select="$temp-dir">
             <p:empty/>
         </p:with-option>
     </pxi:attach-liblouis-config>
+    
+    <p:for-each name="normalize-space">
+        <pxi:normalize-space/>
+    </p:for-each>
     
     <pxi:translate-files name="translate-files">
         <p:input port="temp-result.valid">

@@ -27,7 +27,7 @@
                 <xsl:otherwise>
                     <xsl:text>namespaces </xsl:text>
                     <xsl:text>louis=http://liblouis.org/liblouis&#xa;</xsl:text>
-                    <xsl:text>document &amp;xpath(/*)&#xa;</xsl:text>
+                    <xsl:text>root &amp;xpath(/*)&#xa;</xsl:text>
                     <xsl:for-each select="distinct-values(//*/@louis:style/string())">
                         <xsl:if test="starts-with(., '#')">
                             <xsl:value-of select="substring-after(., '#')"/>
