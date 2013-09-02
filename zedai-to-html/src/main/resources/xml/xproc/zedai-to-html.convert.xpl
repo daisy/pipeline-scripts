@@ -21,6 +21,7 @@
     <p:option name="chunk" select="'false'"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/logging-library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     <!--=========================================================================-->
@@ -194,9 +195,23 @@
         <p:viewport match="/*/*">
             <p:documentation>Make sure that the files in the fileset is relative to the ZedAI file.</p:documentation>
             <p:variable name="original-uri" select="(/*/@original-href, resolve-uri(/*/@href,$fileset-base))[1]"/>
+            <p:variable name="uri" select="resolve-uri(/*/@href,$fileset-base)"/>
+            <p:variable name="base" select="$zedai-uri"/>
+            <px:assert message="The URI to be made relative should not be empty (original URI: $1 | URI: $2 | ZedAI base: $3)">
+                <p:with-option name="param1" select="$original-uri"/>
+                <p:with-option name="param2" select="$uri"/>
+                <p:with-option name="param3" select="$base"/>
+                <p:with-option name="test" select="not($uri='')"/>
+            </px:assert>
+            <px:assert message="The base URI that the resource hrefs should be relative against should not be empty (original URI: $1 | URI: $2 | ZedAI base: $3)">
+                <p:with-option name="param1" select="$original-uri"/>
+                <p:with-option name="param2" select="$uri"/>
+                <p:with-option name="param3" select="$base"/>
+                <p:with-option name="test" select="not($base='')"/>
+            </px:assert>
             <p:xslt>
-                <p:with-param name="uri" select="resolve-uri(/*/@href,$fileset-base)"/>
-                <p:with-param name="base" select="$zedai-uri"/>
+                <p:with-param name="uri" select="$uri"/>
+                <p:with-param name="base" select="$base"/>
                 <p:input port="stylesheet">
                     <p:inline>
                         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
