@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.daisy.pipeline.modules.braille</groupId>
+    <artifactId>braille-modules-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../../</relativePath>
+  </parent>
+  <groupId>org.daisy.pipeline.modules.braille</groupId>
+  <artifactId>libhyphen-ooo-tables</artifactId>
+  <version>3.2.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <scm>
+    <connection>scm:svn:http://svn.services.openoffice.org/ooo/tags/OpenOffice_3_2_0/dictionaries</connection>
+  </scm>
+  <name>DAISY Pipeline 2 Braille Module :: libhyphen-ooo-tables</name>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <targetPath>hyphen</targetPath>
+        <directory>${basedir}/target/generated-resources/hyphen</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-scm-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>checkout</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <configuration>
+              <connectionType>connection</connectionType>
+              <skipCheckoutIfExists>true</skipCheckoutIfExists>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <copy todir="target/generated-resources/hyphen" flatten="true">
+                  <fileset dir="target/checkout">
+                    <include name="**/hyph_*.dic"/>
+                  </fileset>
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Import-Package>org.daisy.pipeline.braille.libhyphen</Import-Package>
+            <Service-Component>OSGI-INF/libhyphen-ooo-tables.xml</Service-Component>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

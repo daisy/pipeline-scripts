@@ -13,14 +13,14 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>assembly</artifactId>
-  <version>${braille.modules.version}</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DAISY Pipeline 2 :: Braille Modules Assembly</name>
   <description>Builds an installer for the DAISY Pipeline 2 Braille modules.</description>
 
   <properties>
-    <assembly.version>${braille.modules.version}</assembly.version>
+    <assembly.version>${project.version}</assembly.version>
     <izpack.version>5.0.0-beta11-SNAPSHOT</izpack.version>
     <izpack.staging>${project.build.directory}/staging</izpack.staging>
   </properties>
@@ -91,11 +91,15 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>braillecss</artifactId>
+                  <artifactId>css-calabash</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>braillecss-calabash</artifactId>
+                  <artifactId>css-core</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>css-utils</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -103,7 +107,15 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>common-utils</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>dotify-saxon</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>dotify-utils</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -130,6 +142,10 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>libhyphen-saxon</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>libhyphen-utils</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -172,6 +188,10 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
+                  <artifactId>liblouis-utils</artifactId>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.pipeline.modules.braille</groupId>
                   <artifactId>pef-calabash</artifactId>
                 </artifactItem>
                 <artifactItem>
@@ -196,7 +216,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
-                  <artifactId>utilities</artifactId>
+                  <artifactId>texhyph-utils</artifactId>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -334,7 +354,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
   
