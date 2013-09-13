@@ -11,6 +11,32 @@
     <p:input port="source" sequence="true" primary="true"/>
     <p:output port="result" sequence="true" primary="true"/>
     
+    <!--
+        Copy last occurences of `louis:print-page`, `louis:running-header` and
+        `louis:running-footer` from preceding sections over to this section.
+        Assumption: the number of documents on preceding-sections port is at least 1.
+    -->
+    <p:declare-step type="pxi:copy-strings" name="copy-strings">
+        <p:input port="source" primary="true"/>
+        <p:input port="preceding-sections" sequence="true"/>
+        <p:output port="result"/>
+        <p:split-sequence test="position()=last()" name="last-preceding-section">
+            <p:input port="source">
+                <p:pipe step="copy-strings" port="preceding-sections"/>
+            </p:input>
+        </p:split-sequence>
+        <p:insert position="first-child">
+            <p:input port="source">
+                <p:pipe step="copy-strings" port="source"/>
+            </p:input>
+            <p:input port="insertion" select="//louis:print-page[last()]|
+                                              //louis:running-header[last()]|
+                                              //louis:running-footer[last()]">
+                <p:pipe step="last-preceding-section" port="matched"/>
+            </p:input>
+        </p:insert>
+    </p:declare-step>
+    
     <p:for-each name="for-each">
         <p:choose>
             <p:when test="/*//*[@css:page or @louis:braille-page-reset]">
@@ -79,6 +105,20 @@
                             </p:otherwise>
                         </p:choose>
                         <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
+                        <p:for-each>
+                            <p:choose>
+                                <p:when test="number($count-preceding-sections) > 0">
+                                    <pxi:copy-strings>
+                                        <p:input port="preceding-sections">
+                                            <p:pipe step="section-1" port="result"/>
+                                        </p:input>
+                                    </pxi:copy-strings>
+                                </p:when>
+                                <p:otherwise>
+                                    <p:identity/>
+                                </p:otherwise>
+                            </p:choose>
+                        </p:for-each>
                     </p:group>
                 </p:group>
                 <p:identity name="section-2"/>
@@ -107,14 +147,23 @@
                                 <p:delete>
                                     <p:with-option name="match" select="concat($section-matcher, '|*[following::', $section-matcher, ']')"/>
                                 </p:delete>
-                                <p:choose>
-                                    <p:when test="number($count-preceding-sections) > 0">
-                                        <p:delete match="/*/@louis:braille-page-reset"/>
-                                    </p:when>
-                                    <p:otherwise>
-                                        <p:identity/>
-                                    </p:otherwise>
-                                </p:choose>
+                                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
+                                <p:for-each>
+                                    <p:choose>
+                                        <p:when test="number($count-preceding-sections) > 0">
+                                            <p:delete match="/*/@louis:braille-page-reset"/>
+                                            <pxi:copy-strings>
+                                                <p:input port="preceding-sections">
+                                                    <p:pipe step="section-1" port="result"/>
+                                                    <p:pipe step="section-2" port="result"/>
+                                                </p:input>
+                                            </pxi:copy-strings>
+                                        </p:when>
+                                        <p:otherwise>
+                                            <p:identity/>
+                                        </p:otherwise>
+                                    </p:choose>
+                                </p:for-each>
                             </p:when>
                             <p:otherwise>
                                 <p:identity>
@@ -124,7 +173,6 @@
                                 </p:identity>
                             </p:otherwise>
                         </p:choose>
-                        <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
                     </p:group>
                 </p:group>
                 <p:identity name="section-3"/>
