@@ -4,4 +4,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/pef2text.xpl" uri="../xml/xproc/pef2text.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/text2pef.xpl" uri="../xml/xproc/text2pef.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/validate.xpl" uri="../xml/xproc/validate.xpl"/>
 </catalog>

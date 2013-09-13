@@ -3,14 +3,13 @@ package org.daisy.pipeline.braille.pef;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URI;
 
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.Serializer;
 
-import org.daisy.braille.pef.TextHandler;
+import org.daisy.braille.pef.PEFValidator;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import com.xmlcalabash.core.XProcException;
@@ -21,24 +20,23 @@ import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 
-public class Text2PEFProvider implements XProcStepProvider {
+// TODO: move to XProc?
+public class ValidateProvider implements XProcStepProvider {
 	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new Text2PEF(runtime, step);
+		return new Validate(runtime, step);
 	}
 	
-	public static class Text2PEF extends DefaultStep {
+	public static class Validate extends DefaultStep {
 		
+		private static final QName _assert_valid = new QName("assert-valid");
 		private static final QName _temp_dir = new QName("temp-dir");
-		private static final QName _table = new QName("table");
-		private static final QName _title = new QName("title");
-		private static final QName _creator = new QName("creator");
 		
 		private ReadablePipe source = null;
 		private WritablePipe result = null;
 		
-		private Text2PEF(XProcRuntime runtime, XAtomicStep step) {
+		private Validate(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
 		
@@ -63,30 +61,28 @@ public class Text2PEFProvider implements XProcStepProvider {
 			super.run();
 			try {
 				
+				boolean assertValid = true;
+				if (getOption(_assert_valid) != null)
+					assertValid = getOption(_assert_valid).getBoolean();
 				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
-				XdmNode text = source.read();
 				
-				// Write text document to file
-				File textFile = File.createTempFile("text2pef.", ".txt", tempDir);
-				OutputStream textStream = new FileOutputStream(textFile);
-				OutputStreamWriter writer = new OutputStreamWriter(textStream, "UTF-8");
-				writer.write(text.getStringValue());
-				writer.close();
+				// Write PEF document to file
+				File pefFile = File.createTempFile("validate.", ".pef", tempDir);
+				OutputStream pefStream = new FileOutputStream(pefFile);
+				Serializer serializer = new Serializer(pefStream);
+				serializer.serializeNode(source.read());
+				serializer.close();
+				pefStream.close();
 				
-				// Parse text to PEF
-				File pefFile = File.createTempFile("text2pef.", ".pef", tempDir);
-				TextHandler.Builder b = new TextHandler.Builder(textFile, pefFile);
-				b.title(getOption(_title, ""));
-				b.author(getOption(_creator, ""));
-				b.converterId(getOption(_table).getString());
-				TextHandler handler = b.build();
-				handler.parse();
-				textFile.delete();
+				// Run validation
+				PEFValidator validator = new PEFValidator();
+				boolean valid = validator.validate(pefFile.toURI().toURL());
+				if (assertValid && !valid)
+					throw new RuntimeException("PEF document is invalid.");
 				
-				// Read PEF document
-				XdmNode pef = runtime.getProcessor().newDocumentBuilder().build(pefFile);
-				pefFile.delete();
-				result.write(pef); }
+				// TODO: getReportStream?
+				
+				result.write(source.read()); }
 			
 			catch (Exception e) {
 				throw new XProcException(step.getNode(), e); }

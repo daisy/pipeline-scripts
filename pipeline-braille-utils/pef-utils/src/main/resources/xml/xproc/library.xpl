@@ -21,5 +21,10 @@
     -->
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/text2pef.xpl"/>
     
+    <!--
+        pef:validate
+    -->
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/validate.xpl"/>
+    
 </p:library>
 

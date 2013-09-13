@@ -20,6 +20,7 @@ import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
+import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
@@ -30,10 +31,10 @@ public class PEF2TextProvider implements XProcStepProvider {
 	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new Text2PEF(runtime, step);
+		return new PEF2Text(runtime, step);
 	}
 	
-	public static class Text2PEF extends DefaultStep {
+	public static class PEF2Text extends DefaultStep {
 		
 		private static final QName _href = new QName("href");
 		private static final QName _table = new QName("table");
@@ -45,7 +46,7 @@ public class PEF2TextProvider implements XProcStepProvider {
 		
 		private ReadablePipe source = null;
 		
-		private Text2PEF(XProcRuntime runtime, XAtomicStep step) {
+		private PEF2Text(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
 		
@@ -87,7 +88,7 @@ public class PEF2TextProvider implements XProcStepProvider {
 				textStream.close(); }
 			
 			catch (Exception e) {
-				throw new RuntimeException(e); }
+				throw new XProcException(step.getNode(), e); }
 		}
 	}
 }
