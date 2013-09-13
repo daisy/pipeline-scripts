@@ -7,6 +7,7 @@
     xmlns:hyphen="http://hunspell.sourceforge.net/Hyphen"
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     exclude-inline-prefixes="p px xsl"
     type="px:xml-to-pef.load-translator" version="1.0">
     
@@ -28,10 +29,19 @@
                 </p:input>
             </p:xslt>
         </p:group>
-        <p:catch>
-            <p:error code="px:brl01">
+        <p:catch name="catch-error">
+            <p:variable name="cause" select="string(/*/c:error[1])">
+                <p:pipe step="catch-error" port="error"/>
+            </p:variable>
+            <p:string-replace match="/message/text()" name="error-message">
                 <p:input port="source">
-                    <p:inline><message>Could not load translator. Must be either a &lt;xsl:stylesheet&gt;, a &lt;p:pipeline&gt;, a liblouis table, a libhyphen table or a TeX hyphenation table.</message></p:inline>
+                    <p:inline><message>$message</message></p:inline>
+                </p:input>
+                <p:with-option name="replace" select="concat('&quot;Could not load translator ', $translator, '. ', $cause, '&quot;')"/>
+            </p:string-replace>
+            <p:error code="px:brl01" name="error">
+                <p:input port="source">
+                    <p:pipe step="error-message" port="result"/>
                 </p:input>
             </p:error>
         </p:catch>
