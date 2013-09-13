@@ -22,7 +22,7 @@
             <p:inline>
                 <xsl:stylesheet version="2.0">
                     <xsl:variable name="metadata" select="collection()[2]/opf:metadata"/>
-                    <xsl:template match="meta">
+                    <xsl:template match="*[local-name()='meta']">
                         <xsl:variable name="this" select="."/>
                         <xsl:copy>
                             <xsl:apply-templates select="@*|node()"/>
