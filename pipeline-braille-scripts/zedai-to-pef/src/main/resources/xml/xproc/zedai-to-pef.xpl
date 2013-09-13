@@ -3,6 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     exclude-inline-prefixes="#all"
     type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
@@ -10,9 +11,9 @@
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">ZedAI to PEF</h1>
         <p px:role="desc">Transforms a ZedAI (DAISY 4 XML) document into a PEF.</p>
-        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEF">
-            http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEF 
-        </a> 
+        <a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEFUsage">
+            http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEFUsage
+        </a>
         <dl px:role="author">
             <dt>Name:</dt>
             <dd px:role="name">Bert Frees</dd>
@@ -77,6 +78,16 @@
     <p:import href="zedai-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.load-translator.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
+    
+    <!-- =============== -->
+    <!-- CREATE TEMP DIR -->
+    <!-- =============== -->
+    
+    <px:tempdir name="temp-dir">
+        <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
+    </px:tempdir>
+    <p:sink/>
     
     <!-- =============== -->
     <!-- LOAD COMPONENTS -->
@@ -102,7 +113,9 @@
         <p:with-option name="default-stylesheet" select="resolve-uri(
             if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
             'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/')"/>
-        <p:with-option name="temp-dir" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
+        <p:with-option name="temp-dir" select="string(/c:result)">
+            <p:pipe step="temp-dir" port="result"/>
+        </p:with-option>
     </px:zedai-to-pef.convert>
     
     <!-- ========= -->

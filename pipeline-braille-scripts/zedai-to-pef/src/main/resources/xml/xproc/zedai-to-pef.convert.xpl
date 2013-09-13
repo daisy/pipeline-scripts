@@ -10,12 +10,14 @@
     <p:input port="translators" sequence="true"/>
     
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
-
-    <p:option name="temp-dir" required="true"/>
+    
     <p:option name="default-stylesheet" required="false" select="''"/>
-
+    
+    <!-- Empty temporary directory dedicated to this conversion -->
+    <p:option name="temp-dir" required="true"/>
+    
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xproc/xml-to-pef.convert.xpl"/>
-
+    
     <!-- ================ -->
     <!-- EXTRACT METADATA -->
     <!-- ================ -->

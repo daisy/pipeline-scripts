@@ -14,21 +14,14 @@
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     
     <p:option name="default-stylesheet" required="false" select="''"/>
+    
+    <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
     
     <p:import href="styling.xpl"/>
     <p:import href="translation.xpl"/>
     <p:import href="formatting.xpl"/>
     <p:import href="add-metadata.xpl"/>
-    <p:import href="utils/tempdir.xpl"/>
-    
-    <!-- ======== -->
-    <!-- TEMP DIR -->
-    <!-- ======== -->
-    
-    <pxi:tempdir name="temp-dir">
-        <p:with-option name="href" select="$temp-dir"/>
-    </pxi:tempdir>
     
     <!-- ======= -->
     <!-- STYLING -->
@@ -49,9 +42,7 @@
         <p:input port="translators">
             <p:pipe step="convert" port="translators"/>
         </p:input>
-        <p:with-option name="temp-dir" select="string(/c:result)">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:with-option>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
     </pxi:translation>
     
     <!-- ========== -->
@@ -59,9 +50,7 @@
     <!-- ========== -->
     
     <pxi:formatting>
-        <p:with-option name="temp-dir" select="string(/c:result)">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:with-option>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
     </pxi:formatting>
     
     <!-- ======== -->

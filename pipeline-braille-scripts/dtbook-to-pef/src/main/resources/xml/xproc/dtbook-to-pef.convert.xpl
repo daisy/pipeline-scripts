@@ -11,14 +11,16 @@
     
     <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
     
-    <p:option name="temp-dir" required="true"/>
     <p:option name="default-stylesheet" required="false" select="''"/>
+    
+    <!-- Empty temporary directory dedicated to this conversion -->
+    <p:option name="temp-dir" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.store.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/xproc/zedai-to-pef.convert.xpl"/>
-
+    
     <!-- =============== -->
     <!-- DTBOOK TO ZEDAI -->
     <!-- =============== -->
@@ -50,7 +52,7 @@
         </p:input>
         <p:with-option name="test"
                        select="concat('/*/@xml:base=&quot;',
-                                      //d:file[@media-type='application/z3998-auth+xml'][1]/resolve-uri(@href, base-uri()),
+                                      //d:file[@media-type='application/z3998-auth+xml'][1]/resolve-uri(@href, base-uri(.)),
                                       '&quot;')">
             <p:pipe step="zedai" port="fileset.out"/>
         </p:with-option>
