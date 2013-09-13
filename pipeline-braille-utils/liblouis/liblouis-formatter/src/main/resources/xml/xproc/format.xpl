@@ -41,14 +41,10 @@
         <p:iteration-source>
             <p:pipe step="format" port="source"/>
         </p:iteration-source>
-        <px:validate-braille fail-if-invalid="true"/>
+        <px:validate-braille assert-valid="true"/>
     </p:for-each>
-    <p:sink/>
     
     <p:for-each>
-        <p:iteration-source>
-            <p:pipe step="format" port="source"/>
-        </p:iteration-source>
         <p:add-xml-base/>
         <p:xslt>
             <p:input port="stylesheet">
