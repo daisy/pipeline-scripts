@@ -255,7 +255,7 @@
       <dependency>
         <groupId>org.daisy.libs</groupId>
        <artifactId>jstyleparser</artifactId>
-       <version>1.7.0-p1-SNAPSHOT</version>
+       <version>1.13.0-p1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.liblouis</groupId>

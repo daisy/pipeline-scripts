@@ -23,76 +23,49 @@ import cz.vutbr.web.css.CSSProperty;
 import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
-import cz.vutbr.web.css.TermFactory;
 import cz.vutbr.web.css.TermFunction;
 import cz.vutbr.web.css.TermIdent;
-import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.css.TermList;
-import cz.vutbr.web.css.TermNumber;
 import cz.vutbr.web.css.TermString;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 
-public class BrailleCSSDeclarationTransformer {
+public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	
-	private static final SupportedCSS css = SupportedBrailleCSS.getInstance();
+	private final SupportedCSS css;
+	private final Map<String,Method> methods;
 	
-	private static DeclarationTransformer backingInstance;
-	private static BrailleCSSDeclarationTransformer instance;
-	static {
-		backingInstance = DeclarationTransformer.getInstance();
-		instance = new BrailleCSSDeclarationTransformer();
-	}
-	
-	public static final BrailleCSSDeclarationTransformer getInstance() {
-		return instance;
-	}
-	
-	public boolean parseDeclaration(Declaration d,
-			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-
-		String propertyName = d.getProperty().toLowerCase();
-		
-		if (!css.isSupportedCSSProperty(propertyName)) {
-			propertyName = "-brl-" + propertyName;
-			if (!css.isSupportedCSSProperty(propertyName)) {
-				return false;
-			}
-		}
-
-		try {
-			Method m = methods.get(propertyName);
-			if (m != null) {
-				return (Boolean)m.invoke(this, d, properties, values);
-			} else {
-				return backingInstance.parseDeclaration(d, properties, values);
-			}			
-		} catch (Exception e) {
-		}
-		
-		return false;
-	}
-
-	private Map<String, Method> methods;
-	private static final TermFactory tf = CSSFactory.getTermFactory();
-	
-	private BrailleCSSDeclarationTransformer() {
-		this.methods = parsingMethods();
-	}
-	
-	private Map<String, Method> parsingMethods() {
-		Map<String, Method> map = new HashMap<String, Method>(css
-				.getTotalProperties(), 1.0f);
-		for (String key : css.getDefinedPropertyNames()) {
+	public BrailleCSSDeclarationTransformer() {
+		super();
+		css = CSSFactory.getSupportedCSS();
+		methods = new HashMap<String,Method>();
+		for (String property : css.getDefinedPropertyNames()) {
 			try {
-				Method m = BrailleCSSDeclarationTransformer.class.getDeclaredMethod(
-						DeclarationTransformer.camelCase("process-" + key),
-						Declaration.class, Map.class, Map.class);
-				map.put(key, m);
-			} catch (NoSuchMethodException e) {
+				Method method = BrailleCSSDeclarationTransformer.class.getDeclaredMethod(
+					camelCase("process-" + property),
+					Declaration.class, Map.class, Map.class);
+				methods.put(property, method);
 			} catch (Exception e) {
 			}
 		}
-		return map;
+	}
+	
+	@Override
+	public boolean parseDeclaration(Declaration d, Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		String property = d.getProperty().toLowerCase();
+		if (!css.isSupportedCSSProperty(property)) {
+			property = "-brl-" + property;
+			if (!css.isSupportedCSSProperty(property))
+				return false;
+		}
+		try {
+			Method m = methods.get(property);
+			if (m != null)
+				return (Boolean)m.invoke(this, d, properties, values);
+			else
+				return super.parseDeclaration(d, properties, values);
+		} catch (Exception e) {
+		}
+		return false;
 	}
 	
 	/****************************************************************
@@ -232,7 +205,6 @@ public class BrailleCSSDeclarationTransformer {
 		if (d.size() == 1 && genericOneIdent(StringSet.class, d, properties))
 			return true;
 		
-		final Set<String> validTermIdents = new HashSet<String>(Arrays.asList("print-page"));
 		final Set<String> validFuncNames = new HashSet<String>(Arrays.asList("content", "attr"));
 		TermList contentList = tf.createList();
 		String stringName = null;
@@ -295,7 +267,7 @@ public class BrailleCSSDeclarationTransformer {
 	/****************************************************************
 	 * GENERIC METHODS
 	 ****************************************************************/
-
+	
 	private <T extends CSSProperty> boolean genericOneIdentOrDotPattern(
 			Class<T> type, T dotPatternIdentification, Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
@@ -334,99 +306,5 @@ public class BrailleCSSDeclarationTransformer {
 				properties)
 				|| genericTerm(TermIdent.class, d.get(0), d.getProperty(),
 						identifierIdentification, sanify, properties, values);
-	}
-	
-	/****************************************************************
-	 * Copied from {@link DeclarationTransformer}
-	 ****************************************************************/
-	
-	// private static final boolean AVOID_INH = true;
-	private static final boolean ALLOW_INH = false;
-	
-	public <T extends CSSProperty> T genericPropertyRaw(Class<T> type,
-			Set<T> intersection, TermIdent term) {
-
-		try {
-			String name = term.getValue().replace("-", "_").toUpperCase();
-			T property = CSSProperty.Translator.valueOf(type, name);
-			if (intersection != null && intersection.contains(property))
-				return property;
-			return property;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	private <T extends CSSProperty> boolean genericProperty(Class<T> type,
-			TermIdent term, boolean avoidInherit,
-			Map<String, CSSProperty> properties, String propertyName) {
-
-		T property = genericPropertyRaw(type, null, term);
-		if (property == null || (avoidInherit && property.equalsInherit()))
-			return false;
-
-		properties.put(propertyName, property);
-		return true;
-	}
-	
-	private <T extends CSSProperty> boolean genericTermIdent(Class<T> type,
-			Term<?> term, boolean avoidInherit, String propertyName,
-			Map<String, CSSProperty> properties) {
-
-		if (term instanceof TermIdent) {
-			return genericProperty(type, (TermIdent) term, avoidInherit,
-					properties, propertyName);
-		}
-		return false;
-	}
-	
-	private <T extends CSSProperty> boolean genericTerm(
-			Class<? extends Term<?>> termType, Term<?> term,
-			String propertyName, T typeIdentification, boolean sanify,
-			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
-
-		if (termType.isInstance(term)) {
-			if (sanify) {
-				if (term.getValue() instanceof Integer) {
-					final Integer zero = new Integer(0);
-					if (zero.compareTo((Integer) term.getValue()) > 0) {
-						((TermInteger) term).setValue(zero);
-					}
-				}
-				else if (term.getValue() instanceof Float) {
-					final Float zero = new Float(0.0f);
-					if (zero.compareTo((Float) term.getValue()) > 0) {
-						((TermNumber) term).setValue(zero);
-					}
-				}
-			}
-			properties.put(propertyName, typeIdentification);
-			values.put(propertyName, term);
-			return true;
-		}
-		return false;
-	}
-	
-	private <T extends CSSProperty> boolean genericOneIdent(Class<T> type,
-			Declaration d, Map<String, CSSProperty> properties) {
-
-		if (d.size() != 1)
-			return false;
-
-		return genericTermIdent(type, d.get(0), ALLOW_INH, d.getProperty(),
-				properties);
-	}
-	
-	private <T extends CSSProperty> boolean genericOneIdentOrInteger(
-			Class<T> type, T integerIdentification, boolean sanify,
-			Declaration d, Map<String, CSSProperty> properties,
-			Map<String, Term<?>> values) {
-
-		if (d.size() != 1)
-			return false;
-
-		return genericTermIdent(type, d.get(0), ALLOW_INH, d.getProperty(),
-				properties)
-				|| genericTerm(TermInteger.class, d.get(0), d.getProperty(),
-						integerIdentification, sanify, properties, values);
 	}
 }

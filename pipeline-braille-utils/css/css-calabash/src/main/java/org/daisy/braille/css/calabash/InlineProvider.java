@@ -30,11 +30,10 @@ import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
-import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.domassign.Analyzer;
-import cz.vutbr.web.domassign.SingleMapNodeData;
+import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -48,10 +47,9 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.util.NamespaceIterator;
 
-import org.daisy.braille.css.BrailleCSSNodeData;
+import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
 import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.SupportedBrailleCSS;
-import org.daisy.braille.css.SupportedPrintCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.w3c.dom.Document;
@@ -69,10 +67,15 @@ public class InlineProvider implements XProcStepProvider {
 		return new Inline(runtime, step);
 	}
 	
-	private static SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
-	private static SupportedCSS printCSS = SupportedPrintCSS.getInstance();
-	private static Class<? extends NodeData> brailleNodeDataImpl = BrailleCSSNodeData.class;
-	private static Class<? extends NodeData> printNodeDataImpl = SingleMapNodeData.class;
+	private static SupportedBrailleCSS supportedCSS;
+	
+	static {
+		supportedCSS = new SupportedBrailleCSS();
+		// FIXME: SupportedCSS can be set only once! must be done *before* NodeData is initialized
+		CSSFactory.registerSupportedCSS(supportedCSS);
+		// FIXME: DeclarationTransformer can be set only once! must be done *before* NodeData is initialized
+		CSSFactory.registerDeclarationTransformer(new BrailleCSSDeclarationTransformer());
+	}
 	
 	public void setUriResolver(URIResolver resolver) {
 		CSSFactory.registerURIResolver(resolver);
@@ -109,10 +112,7 @@ public class InlineProvider implements XProcStepProvider {
 			try {
 				XdmNode source = sourcePipe.read();
 				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-				CSSFactory.registerNodeDataInstance(printNodeDataImpl);
-				StyleSheet brailleSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "embossed");
-				StyleSheet printSheet = CSSFactory.getUsedStyles(doc, source.getBaseURI().toURL(), "print");
-				resultPipe.write((new InlineCSSWriter(doc, brailleSheet, printSheet, runtime)).getResult()); }
+				resultPipe.write((new InlineCSSWriter(doc, runtime)).getResult()); }
 			catch (Exception e) {
 				throw new RuntimeException(e); }
 		}
@@ -127,20 +127,26 @@ public class InlineProvider implements XProcStepProvider {
 		private final Map<String,RulePage> pages;
 		
 		public InlineCSSWriter(Document document,
-		                       StyleSheet brailleStylesheet,
-		                       StyleSheet printStylesheet,
 		                       XProcRuntime xproc) throws Exception {
 			super(xproc);
-			CSSFactory.registerSupportedCSS(brailleCSS);
-			CSSFactory.registerNodeDataInstance(brailleNodeDataImpl);
-			brailleStylemap = new Analyzer(brailleStylesheet).evaluateDOM(document, "embossed", false);
-			CSSFactory.registerSupportedCSS(printCSS);
-			CSSFactory.registerNodeDataInstance(printNodeDataImpl);
-			printStylemap = new Analyzer(printStylesheet).evaluateDOM(document, "print", false);
+			
+			URI baseURI = new URI(document.getBaseURI());
+			
+			// media embossed
+			supportedCSS.setSupportedMedia("embossed");
+			StyleSheet brailleStyleSheet = CSSFactory.getUsedStyles(document, baseURI.toURL(), "embossed");
+			brailleStylemap = new Analyzer(brailleStyleSheet).evaluateDOM(document, "embossed", false);
+			
+			// media print
+			supportedCSS.setSupportedMedia("print");
+			StyleSheet printStyleSheet = CSSFactory.getUsedStyles(document, baseURI.toURL(), "print");
+			printStylemap = new Analyzer(printStyleSheet).evaluateDOM(document, "print", false);
+			
 			pages = new HashMap<String,RulePage>();
-			for (RulePage page : Iterables.<RulePage>filter(brailleStylesheet, RulePage.class))
+			for (RulePage page : Iterables.<RulePage>filter(brailleStyleSheet, RulePage.class))
 				pages.put(Objects.firstNonNull(page.getName(), "auto"), page);
-			startDocument(new URI(document.getBaseURI()));
+			
+			startDocument(baseURI);
 			traverse(document.getDocumentElement());
 			endDocument();
 		}
@@ -162,16 +168,16 @@ public class InlineProvider implements XProcStepProvider {
 				StringBuilder style = new StringBuilder();
 				NodeData brailleData = brailleStylemap.get((Element)node);
 				if (brailleData != null)
-					inlineStyle(style, brailleData);
+					insertStyle(style, brailleData);
 				NodeData printData = printStylemap.get((Element)node);
 				if (printData != null)
-					inlineStyle(style, printData);
+					insertStyle(style, printData);
 				NodeData beforeData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
 				if (beforeData != null)
-					inlinePseudoStyle(style, beforeData, Selector.PseudoDeclaration.BEFORE);
+					insertPseudoStyle(style, beforeData, Selector.PseudoDeclaration.BEFORE);
 				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null)
-					inlinePseudoStyle(style, afterData, Selector.PseudoDeclaration.AFTER);
+					insertPseudoStyle(style, afterData, Selector.PseudoDeclaration.AFTER);
 				BrailleCSSProperty.Page pageProperty = brailleData.<BrailleCSSProperty.Page>getProperty("page", false);
 				if (pageProperty != null) {
 					RulePage page;
@@ -180,11 +186,11 @@ public class InlineProvider implements XProcStepProvider {
 					else
 						page = pages.get(pageProperty.toString());
 					if (page != null)
-						inlinePageStyle(style, page, pages.get("auto")); }
+						insertPageStyle(style, page, pages.get("auto")); }
 				else if (isRoot) {
 					RulePage page = pages.get("auto");
 					if (page != null)
-						inlinePageStyle(style, page, null); }
+						insertPageStyle(style, page, null); }
 				if (normalizeSpace(style).length() > 0) {
 					addAttribute(_style, style.toString().trim()); }
 				receiver.startContent();
@@ -216,7 +222,7 @@ public class InlineProvider implements XProcStepProvider {
 		}
 	}
 	
-	private static void inlineStyle(StringBuilder builder, NodeData nodeData) {
+	private static void insertStyle(StringBuilder builder, NodeData nodeData) {
 		List<String> keys = new ArrayList<String>(nodeData.getPropertyNames());
 		keys.remove("page");
 		Collections.sort(keys);
@@ -231,17 +237,17 @@ public class InlineProvider implements XProcStepProvider {
 			builder.append("; "); }
 	}
 	
-	private static void inlinePseudoStyle(StringBuilder builder, NodeData nodeData, Selector.PseudoDeclaration decl) {
-		if (builder.length() > 0 && builder.charAt(0) != '{') {
+	private static void insertPseudoStyle(StringBuilder builder, NodeData nodeData, Selector.PseudoDeclaration decl) {
+		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
 			builder.insert(0, "{ ");
 			builder.append("} "); }
 		builder.append(decl.isPseudoElement() ? "::" : ":").append(decl.value()).append(" { ");
-		inlineStyle(builder, nodeData);
+		insertStyle(builder, nodeData);
 		builder.append("} ");
 	}
 	
-	private static void inlinePageStyle(StringBuilder builder, RulePage rulePage, RulePage inheritFrom) {
-		if (builder.length() > 0 && builder.charAt(0) != '{') {
+	private static void insertPageStyle(StringBuilder builder, RulePage rulePage, RulePage inheritFrom) {
+		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
 			builder.insert(0, "{ ");
 			builder.append("} "); }
 		builder.append("@page ");
@@ -249,14 +255,34 @@ public class InlineProvider implements XProcStepProvider {
 		if (pseudo != null && !"".equals(pseudo))
 			builder.append(":").append(pseudo).append(" ");
 		builder.append("{ ");
-		for (Declaration decl : Iterables.<Declaration>filter(rulePage, Declaration.class))
-			builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, " ")).append("; ");
+		List<String> seen = new ArrayList<String>();
+		for (Declaration decl : Iterables.<Declaration>filter(rulePage, Declaration.class)) {
+			seen.add(decl.getProperty());
+			insertDeclaration(builder, decl); }
+		if (inheritFrom != null)
+			for (Declaration decl : Iterables.<Declaration>filter(inheritFrom, Declaration.class))
+				if (!seen.contains(decl.getProperty()))
+					insertDeclaration(builder, decl);
+		seen.clear();
 		for (RuleMargin margin : Iterables.<RuleMargin>filter(rulePage, RuleMargin.class)) {
-			builder.append("@").append(margin.getMarginArea().value).append(" { ");
-			for (Declaration decl : margin)
-				builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, " ")).append("; ");
-			builder.append("} "); }
+			seen.add(margin.getMarginArea().value);
+			insertMarginStyle(builder, margin); }
+		if (inheritFrom != null)
+			for (RuleMargin margin : Iterables.<RuleMargin>filter(inheritFrom, RuleMargin.class))
+				if (!seen.contains(margin.getMarginArea().value))
+					insertMarginStyle(builder, margin);
 		builder.append("} ");
+	}
+	
+	private static void insertMarginStyle(StringBuilder builder, RuleMargin ruleMargin) {
+		builder.append("@").append(ruleMargin.getMarginArea().value).append(" { ");
+		for (Declaration decl : ruleMargin)
+			insertDeclaration(builder, decl);
+		builder.append("} ");
+	}
+	
+	private static void insertDeclaration(StringBuilder builder, Declaration decl) {
+		builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, "")).append("; ");
 	}
 	
 	private static String normalizeProperty(String property) {
