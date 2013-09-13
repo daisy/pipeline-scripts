@@ -26,5 +26,10 @@
     -->
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/xproc/validate.xpl"/>
     
+    <!--
+        pef:compare
+    -->
+    <p:import href="compare.xpl"/>
+    
 </p:library>
 
