@@ -3,7 +3,7 @@ package org.daisy.pipeline.braille;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Bytes;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -153,31 +153,47 @@ public abstract class Utilities {
 			return String.valueOf(object).replaceAll("\\s+", " ").trim();
 		}
 		
-		public static Pair<String,boolean[]> extractHyphens(String string, char hyphen) {
+		public static Pair<String,byte[]> extractHyphens(String string, Character shy, Character zwsp) {
+			if ((shy == null || !string.contains(String.valueOf(shy))) &&
+			    (zwsp == null || !string.contains(String.valueOf(zwsp))))
+				return new Pair<String,byte[]>(string, null);
+			final byte SHY = 1;
+			final byte ZWSP = 2;
 			StringBuffer unhyphenatedString = new StringBuffer();
-			List<Boolean> hyphens = new ArrayList<Boolean>();
-			boolean seenHyphen = false;
+			List<Byte> hyphens = new ArrayList<Byte>();
+			boolean seenShy = false;
+			boolean seenZwsp = false;
 			for (int i = 0; i < string.length(); i++) {
 				char c = string.charAt(i);
-				if (c == hyphen)
-					seenHyphen = true;
+				if (c == shy)
+					seenShy = true;
+				else if (c == zwsp)
+					seenZwsp = true;
 				else {
 					unhyphenatedString.append(c);
-					hyphens.add(seenHyphen);
-					seenHyphen = false; }}
+					hyphens.add(seenShy ? SHY : seenZwsp ? ZWSP : 0);
+					seenShy = false;
+					seenZwsp = false; }}
 			hyphens.remove(0);
-			return new Pair<String,boolean[]>(unhyphenatedString.toString(), Booleans.toArray(hyphens));
+			return new Pair<String,byte[]>(unhyphenatedString.toString(), Bytes.toArray(hyphens));
 		}
 		
-		public static String insertHyphens(String string, boolean hyphens[], char hyphen) {
+		public static String insertHyphens(String string, byte hyphens[], Character shy, Character zwsp) {
+			if ((shy == null && zwsp == null) || hyphens == null)
+				return string;
+			final byte SHY = 1;
+			final byte ZWSP = 2;
 			if (string.equals("")) return "";
 			if (hyphens.length != string.length()-1)
 				throw new RuntimeException("hyphens.length must be equal to string.length() - 1");
 			StringBuffer hyphenatedString = new StringBuffer();
-			int i; for (i = 0; i < hyphens.length; i++) {
+			int i;
+			for (i = 0; i < hyphens.length; i++) {
 				hyphenatedString.append(string.charAt(i));
-				if (hyphens[i])
-					hyphenatedString.append(hyphen); }
+				if (shy != null && hyphens[i] == SHY)
+					hyphenatedString.append(shy);
+				else if (zwsp != null && hyphens[i] == ZWSP)
+					hyphenatedString.append(zwsp); }
 			hyphenatedString.append(string.charAt(i));
 			return hyphenatedString.toString();
 		}

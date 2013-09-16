@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 
 public class LiblouisJnaImpl implements Liblouis {
 	
-	private final static char SOFT_HYPHEN = '\u00AD';
+	private final static char SHY = '\u00AD';
+	private final static char ZWSP = '\u200B';
 	
 	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
@@ -64,19 +65,16 @@ public class LiblouisJnaImpl implements Liblouis {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String translate(String table, String text, byte[] typeform, boolean hyphenate) {
+	public String translate(String table, String text, boolean hyphenated, byte[] typeform) {
 		try {
 			Translator translator = getTranslator(table);
-			boolean[] hyphens = null;
-			if (text.contains(String.valueOf(SOFT_HYPHEN))) {
-				Pair<String,boolean[]> input = extractHyphens(text, SOFT_HYPHEN);
+			byte[] hyphens = null;
+			if (hyphenated) {
+				Pair<String,byte[]> input = extractHyphens(text, SHY, ZWSP);
 				text = input._1;
 				hyphens = input._2; }
-			TranslationResult result = translator.translate(text, typeform, hyphens, hyphenate);
-			if (hyphenate || hyphens != null)
-				return insertHyphens(result.getBraille(), result.getHyphenPositions(), SOFT_HYPHEN);
-			else
-				return result.getBraille(); }
+			TranslationResult result = translator.translate(text, hyphens, typeform);
+			return insertHyphens(result.getBraille(), result.getHyphenPositions(), SHY, ZWSP); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during liblouis translation", e); }
 	}
@@ -87,7 +85,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	public String hyphenate(String table, String text) {
 		try {
 			Translator translator = getTranslator(table);
-			return insertHyphens(text, translator.hyphenate(text), SOFT_HYPHEN); }
+			return insertHyphens(text, translator.hyphenate(text), SHY, ZWSP); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during liblouis hyphenation", e); }
 	}

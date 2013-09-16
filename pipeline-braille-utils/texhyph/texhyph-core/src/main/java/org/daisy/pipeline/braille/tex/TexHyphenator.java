@@ -40,7 +40,7 @@ public class TexHyphenator {
 	 */
 	public String hyphenate(String table, String text) {
 		try {
-			return getHyphenator(table).hyphenate(text).replaceAll("\u200B", "\u00AD"); }
+			return getHyphenator(table).hyphenate(text); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during TeX hyphenation", e); }
 	}

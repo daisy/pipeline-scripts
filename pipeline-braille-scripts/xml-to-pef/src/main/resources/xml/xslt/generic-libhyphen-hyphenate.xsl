@@ -3,7 +3,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:hyphen="http://hunspell.sourceforge.net/Hyphen"
-	xmlns:my="http://github.com/bertfrees"
 	exclude-result-prefixes="#all">
 	
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/libhyphen-utils/xslt/library.xsl"/>

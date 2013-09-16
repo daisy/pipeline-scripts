@@ -19,7 +19,8 @@ import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
 
 public class Libhyphen {
 	
-	private static final char SOFT_HYPHEN = '\u00AD';
+	private final static char SHY = '\u00AD';
+	private final static char ZWSP = '\u200B';
 	
 	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
@@ -57,11 +58,11 @@ public class Libhyphen {
 	/**
 	 * @param table Can be a file name or path relative to a registered table path,
 	 *     an absolute file, or a fully qualified table URL.
-	 * @param text The text to hyphenate.
+	 * @param text The text to be hyphenated.
 	 */
 	public String hyphenate(String table, String text) {
 		try {
-			return getHyphenator(table).hyphenate(text, SOFT_HYPHEN); }
+			return getHyphenator(table).hyphenate(text, SHY, ZWSP); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during libhyphen hyphenation", e); }
 	}

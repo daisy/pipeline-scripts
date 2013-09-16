@@ -9,6 +9,8 @@
 	<xsl:import href="block-translator-template.xsl"/>
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/xslt/library.xsl"/>
 	
+	<xsl:param name="prehyphenated" select="'false'"/>
+	
 	<xsl:template match="css:block">
 		<xsl:variable name="table" select="louis:lookup-table(string(@xml:lang))"/>
 		<xsl:if test="not($table)">
@@ -17,7 +19,7 @@
 					'No liblouis table found that matches xml:lang=&quot;', string(@xml:lang), '&quot;')"/>
 			</xsl:message>
 		</xsl:if>
-		<xsl:sequence select="louis:translate($table, string(/*), louis:get-typeform(/*))"/>
+		<xsl:sequence select="louis:translate($table, string(/*), $prehyphenated='true', louis:get-typeform(/*))"/>
 	</xsl:template>
 
 </xsl:stylesheet>

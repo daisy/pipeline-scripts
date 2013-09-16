@@ -285,7 +285,7 @@
       <dependency>
         <groupId>ch.sbs</groupId>
         <artifactId>jhyphen</artifactId>
-        <version>0.1.4-SNAPSHOT</version>
+        <version>0.1.5-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

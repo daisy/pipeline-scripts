@@ -9,6 +9,7 @@
 	<xsl:import href="block-translator-template.xsl"/>
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/xslt/library.xsl"/>
 	
+	<xsl:param name="prehyphenated" select="'false'"/>
 	<xsl:param name="hyphenate" select="'false'"/>
 	
 	<xsl:template match="css:block">
@@ -19,7 +20,14 @@
 					'No liblouis table found that matches xml:lang=&quot;', string(@xml:lang), '&quot;')"/>
 			</xsl:message>
 		</xsl:if>
-		<xsl:sequence select="louis:translate($table, string(/*), (), $hyphenate='true')"/>
+		<xsl:choose>
+			<xsl:when test="$prehyphenated='false' and $hyphenate='true'">
+				<xsl:sequence select="louis:translate($table, louis:hyphenate($table, string(/*)), true())"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="louis:translate($table, string(/*), $prehyphenated='true')"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>
