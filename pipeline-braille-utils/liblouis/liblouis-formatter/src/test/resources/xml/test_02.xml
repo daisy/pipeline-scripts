@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page {
+                 size: 30 15;
+                 @top-center { content: string(running-header) }
+                 @bottom-right { content: string(print-page) }
+                 @bottom-center { content: string(running-footer) }}">
+    <section style="display: block;">
+      ⠤⠤⠤
+    </section>
+    <section style="display: block;
+                    page-break-before: always;
+                    string-set: print-page '⠤'">
+      ⠤⠤⠤
+    </section>
+    <section style="display: block;
+                    page-break-before: always;
+                    string-set: print-page '⠤⠤', running-footer '⠤⠤'">
+      ⠤⠤⠤
+    </section>
+    <section style="display: block;
+                    page-break-before: always;
+                    string-set: print-page '', running-header '⠤⠤'">
+      ⠤⠤⠤
+    </section>
+    <section style="display: block;
+                    page-break-before: always;
+                    string-set: print-page '⠤⠤⠤', running-footer ''">
+      ⠤⠤⠤
+    </section>
+  </body>
+</doc>

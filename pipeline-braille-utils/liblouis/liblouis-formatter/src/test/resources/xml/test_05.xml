@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page {
+                 size: 15 15;
+                 @bottom-right { content: counter(braille-page) }}">
+    <frontmatter style="@page {
+                          size: 15 15;
+                          @bottom-right { content: counter(braille-page, prefix-p) }}">
+      ⠤⠤⠤
+    </frontmatter>
+    <bodymatter>
+      ⠤⠤⠤
+    </bodymatter>
+    <rearmatter style="{ counter-reset: braille-page 1 }
+                       @page {
+                         size: 15 15;
+                         @bottom-right { content: counter(braille-page, lower-roman) }}">
+      ⠤⠤⠤
+    </rearmatter>
+  </body>
+</doc>

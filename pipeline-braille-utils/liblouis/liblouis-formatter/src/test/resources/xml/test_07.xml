@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page {
+                 size: 15 15;
+                 @top-right { content: string(print-page) }}">
+    <section style="display: block">
+      ⠤⠤⠤
+      <pagenum style="display: page-break;
+                      string-set: print-page '⠸⠤'"/>
+      ⠤⠤⠤
+    </section>
+    <section style="display: block;
+                    page-break-before: always;">
+      <pagenum style="display: page-break;
+                      string-set: print-page '⠸⠤⠤'"/>
+      ⠤⠤⠤
+      <pagenum style="display: page-break;
+                      string-set: print-page '⠸⠤⠤⠤'"/>
+      ⠤⠤⠤
+    </section>
+  </body>
+</doc>

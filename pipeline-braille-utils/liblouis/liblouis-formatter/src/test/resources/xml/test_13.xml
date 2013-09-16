@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page {
+                 size: 15 15
+                 @bottom-right {
+                   content: counter(braille-page) }}">
+    <frontmatter style="@page {
+                          size: 15 15
+                          @bottom-right {
+                            content: counter(braille-page, lower-roman) }}">
+      <toc>
+        <entry ref="chapter_1" style="display: toc-item"/>
+        <entry ref="chapter_2" style="display: toc-item"/>
+        <entry ref="chapter_3" style="display: toc-item"/>
+      </toc>
+      <h xml:id="chapter_1" style="display:block;
+                                   margin-top: 1">
+        ⠿
+      </h>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+    </frontmatter>
+    <bodymatter style="display: block;
+                       page-break-before: always;
+                       counter-reset: braille-page 1">
+      <h xml:id="chapter_2" style="display:block;
+                                   margin-top: 1">
+        ⠿⠿
+      </h>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+      <h xml:id="chapter_3" style="display:block;
+                                   margin-top: 1">
+        ⠿⠿⠿
+      </h>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+      <p style="display: block">⠤⠤⠤</p>
+    </bodymatter>
+  </body>
+</doc>

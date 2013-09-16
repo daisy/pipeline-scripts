@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:louis="http://liblouis.org/liblouis"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               script="../../main/resources/xml/xproc/format.xpl">
+  
+  <!-- ======= -->
+  <!-- test_01 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_01">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_01.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_01.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_02 -->
+  <!-- ======= -->
+  <!--
+      FAILS: running-footer is updated 1 page too soon
+  -->
+  <x:scenario label="test_02">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_02.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_02.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_03 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_03">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_03.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_03.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_04 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_04">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_04.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_04.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_05 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_05">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_05.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_05.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_06 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_06">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_06.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_06.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_07 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_07">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_07.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_07.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_08 -->
+  <!-- ======= -->
+  <!--
+      FAILS because of liblouisutdml bug: nested orphanControl
+       => solutions:
+          1. make orphans a non-inheriting property
+          2. add the following rule to default.css:
+             * { orphans: 0 }
+  -->
+  <x:scenario label="test_08">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_08.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_08.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_09 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_09">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_09.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_09.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_10 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_10">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_10.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_10.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_11 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_11">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_11.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_11.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_12 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_12">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_12.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_12.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_13 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_13">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_13.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_13.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_14 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_14">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_14.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_14.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_15 -->
+  <!-- ======= -->
+  <!--
+      FAILS: toc-item inside box
+  -->
+  <x:scenario label="test_15">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_15.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_15.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_16 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_16">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_16.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_16.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_17 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_17">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_17.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_17.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_18 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_18">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_18.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_18.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

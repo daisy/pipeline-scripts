@@ -1,0 +1,51 @@
+<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+	<head xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<meta>
+			<dc:date>2013-08-20+02:00</dc:date>
+			<dc:format>application/x-pef+xml</dc:format>
+			<dc:identifier>f22e8346-bade-40db-b81e-75b13f0e4d42</dc:identifier>
+		</meta>
+	</head>
+	<body>
+		<volume rows="15" cols="30" rowgap="0" duplex="true">
+			<section>
+				<page>
+					<row>⠤⠤⠤</row>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+				</page>
+			</section>
+			<section>
+				<page>
+					<row>⠤⠤⠤</row>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row/>
+					<row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
+				</page>
+			</section>
+		</volume>
+	</body>
+</pef>

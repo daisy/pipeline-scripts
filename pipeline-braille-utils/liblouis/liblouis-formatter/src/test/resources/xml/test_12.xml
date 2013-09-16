@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page {
+                 size: 23 15;
+                 @top-right {
+                   content: string(print-page) }
+                 @bottom-right {
+                   content: counter(braille-page) }}">
+    <frontmatter>
+      <pagenum style="string-set: print-page '⠤';
+                      display: none"/>
+      <toc style="display:block;
+                  margin-right: 2;">
+        <entry ref="chapter_1" style="display: toc-item;
+                                      margin-left: 4;
+                                      text-indent: -4"/>
+        <entry ref="chapter_1_1" style="display: toc-item;
+                                        margin-left: 6;
+                                        text-indent: -4"/>
+        <entry ref="chapter_1_2" style="display: toc-item;
+                                        margin-left: 6;
+                                        text-indent: -4"/>
+        <entry ref="chapter_2" style="display: toc-item;
+                                      margin-left: 4;
+                                      text-indent: -4"/>
+      </toc>
+    </frontmatter>
+    <bodymatter style="display: block;
+                       page-break-before: always">
+      <section>
+        <pagenum style="string-set: print-page '⠤⠤';
+                        display: none"/>
+        <h xml:id="chapter_1" style="display:block;
+                                     margin-top: 1">
+          ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿
+        </h>
+        <p style="display: block">⠤⠤⠤</p>
+        <p style="display: block">⠤⠤⠤</p>
+        <p style="display: block">⠤⠤⠤</p>
+        <section>
+          <h xml:id="chapter_1_1" style="display:block;
+                                         margin-top: 1">
+            ⠿⠿⠿⠿ ⠿⠿⠿⠿
+          </h>
+          <p style="display: block">⠤⠤⠤</p>
+          <p style="display: block">⠤⠤⠤</p>
+          <p style="display: block">⠤⠤⠤</p>
+        </section>
+        <section>
+          <h xml:id="chapter_1_2" style="display:block;
+                                         margin-top: 1">
+            ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿
+          </h>
+          <p style="display: block">⠤⠤⠤</p>
+          <p style="display: block">⠤⠤⠤</p>
+          <p style="display: block">⠤⠤⠤</p>
+        </section>
+      </section>
+      <section>
+        <pagenum style="string-set: print-page '⠤⠤⠤';
+                        display: none"/>
+        <h xml:id="chapter_2" style="display:block;
+                                     margin-top: 1">
+          ⠿⠿⠿⠿ ⠿⠿⠿⠿
+        </h>
+        <p style="display: block">⠤⠤⠤</p>
+        <p style="display: block">⠤⠤⠤</p>
+        <p style="display: block">⠤⠤⠤</p>
+      </section>
+    </bodymatter>
+  </body>
+</doc>

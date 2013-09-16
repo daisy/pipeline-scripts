@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page { size: 10 10; }">
+    <section style="display: block;
+                    page-break-before: always">
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <section>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+      </section>
+    </section>
+    
+    <section style="display: block;
+                    page-break-before: always">
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <section style="display: block;
+                      page-break-inside: avoid;">
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+      </section>
+    </section>
+    
+    <section style="display: block;
+                    page-break-before: always">
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <section style="display: block;
+                      orphans: 3;">
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+      </section>
+    </section>
+    
+    <section style="display: block;
+                    page-break-before: always">
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <p style="display: block;">⠤⠤⠤</p>
+      <section style="display: block;
+                      page-break-after: avoid;">
+        <p style="display: block;">⠤⠤⠤</p>
+        <p style="display: block;">⠤⠤⠤</p>
+      </section>
+      <p style="display: block;">⠤⠤⠤</p>
+    </section>
+  </body>
+</doc>
