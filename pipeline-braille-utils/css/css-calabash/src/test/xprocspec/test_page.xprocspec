@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
+               script="../../main/resources/xml/xproc/inline.xpl">
+  
+  <!-- ======= -->
+  <!-- test_01 -->
+  <!-- ======= -->
+  <!--
+      
+  -->
+  <x:scenario label="test_01">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                @page {
+                  size: 40 25;
+                  @top-right {
+                    content: counter(braille-page)
+                  }
+                  @bottom-right {
+                    content: string(print-page)
+                  }
+                }
+                @page front {
+                  @top-right {
+                    content: counter(braille-page, lower-roman)
+                  }
+                }
+                frontmatter {
+                  page: front
+                }
+              </style>
+            </head>
+            <body>
+              <frontmatter>
+                <p>foobar</p>
+              </frontmatter>
+              <bodymatter>
+                <p>foobar</p>
+              </bodymatter>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <frontmatter style="@page { size: 40.0 25.0; @top-right { content: counter(braille-page, lower-roman); } @bottom-right { content: string(print-page); } }">
+            <p>foobar</p>
+          </frontmatter>
+          <bodymatter>
+            <p>foobar</p>
+          </bodymatter>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+    
+</x:description>
