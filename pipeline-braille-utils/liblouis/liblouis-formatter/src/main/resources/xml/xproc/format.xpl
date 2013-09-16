@@ -316,7 +316,7 @@
         </p:add-attribute>
     </p:for-each>
     
-    <pef:merge>
+    <pef:merge level="section">
         <p:input port="parameters">
             <p:empty/>
         </p:input>

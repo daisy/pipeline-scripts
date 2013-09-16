@@ -7,7 +7,7 @@
 		</meta>
 	</head>
 	<body>
-		<volume rows="25" cols="40" rowgap="0" duplex="true">
+		<volume rows="10" cols="40" rowgap="0" duplex="true">
 			<section>
 				<page>
 					<row>⠀⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿</row>
