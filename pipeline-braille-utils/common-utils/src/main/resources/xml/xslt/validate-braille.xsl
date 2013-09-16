@@ -5,7 +5,7 @@
 	exclude-result-prefixes="xs">
 	
 	<xsl:template match="/*">
-		<xsl:variable name="BRAILLE_WHITESPACE_OR_SOFT_HYPHENS">[\s&#x00A0;&#x00AD;\p{IsBraillePatterns}]+</xsl:variable>
+		<xsl:variable name="BRAILLE_WHITESPACE_OR_SOFT_HYPHENS">[\s&#x00A0;&#x00AD;&#x200B;\p{IsBraillePatterns}]+</xsl:variable>
 		<xsl:analyze-string select="string(.)" regex="{$BRAILLE_WHITESPACE_OR_SOFT_HYPHENS}">
 			<xsl:non-matching-substring>
 				<xsl:message terminate="yes">
