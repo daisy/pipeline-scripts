@@ -12,7 +12,7 @@
     
     <p:output port="result" primary="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/xproc/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     
     <pef:compare fail-if-not-equal="false" name="compare">
         <p:input port="source">

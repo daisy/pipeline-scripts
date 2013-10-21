@@ -11,7 +11,7 @@
         <p:input port="stylesheet">
             <p:inline>
                 <xsl:stylesheet version="2.0">
-                    <xsl:import href="../../main/resources/xml/xslt/library.xsl"/>
+                    <xsl:import href="../../main/resources/xml/library.xsl"/>
                     <xsl:template match="/*">
                         <xsl:element name="c:result">
                             <xsl:sequence select="louis:get-typeform(.)"/>

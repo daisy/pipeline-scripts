@@ -4,6 +4,6 @@
     <scr:service>
         <scr:provide interface="org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigPath"/>
     </scr:service>
-    <scr:property name="identifier" type="String" value="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/"/>
+    <scr:property name="identifier" type="String" value="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/lbu_files/"/>
     <scr:property name="path" type="String" value="/lbu_files"/>
 </scr:component>

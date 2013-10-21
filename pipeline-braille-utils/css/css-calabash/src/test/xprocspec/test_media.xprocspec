@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
-               script="../../main/resources/xml/xproc/inline.xpl">
-  
+               script="../../main/resources/xml/inline.xpl">
   
   <!-- ======= -->
   <!-- test_01 -->

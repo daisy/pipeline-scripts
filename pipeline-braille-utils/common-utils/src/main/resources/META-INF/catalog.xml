@@ -2,8 +2,8 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/xproc/mark-transitions.xpl" uri="../xml/xproc/mark-transitions.xpl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/xproc/validate-braille.xpl" uri="../xml/xproc/validate-braille.xpl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/xslt/encoding-functions.xsl" uri="../xml/xslt/encoding-functions.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/translation/mark-transitions.xpl" uri="../xml/translation/mark-transitions.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/formatting/validate-braille.xpl" uri="../xml/formatting/validate-braille.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/common-utils/formatting/encoding-functions.xsl" uri="../xml/formatting/encoding-functions.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils" />
 </catalog>

@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:louis="http://liblouis.org/liblouis"
                xmlns:math="http://www.w3.org/1998/Math/MathML"
-               script="../../main/resources/xml/xproc/translate-mathml.xpl">
+               script="../../main/resources/xml/translate-mathml.xpl">
     
     <!-- ======== -->
     <!-- test_001 -->
