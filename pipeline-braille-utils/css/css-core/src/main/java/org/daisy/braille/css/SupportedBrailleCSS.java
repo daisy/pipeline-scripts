@@ -43,7 +43,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 	
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 30;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 33;
 	
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 	
@@ -152,6 +152,8 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		embossedProperties.add("text-indent");
 		
 		// layout box
+		props.put("margin", Margin.component_values);
+		embossedProperties.add("margin");
 		props.put("margin-top", Margin.integer);
 		values.put("margin-top", DEFAULT_UA_MARGIN);
 		embossedProperties.add("margin-top");
@@ -165,6 +167,8 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		values.put("margin-left", DEFAULT_UA_MARGIN);
 		embossedProperties.add("margin-left");
 
+		props.put("padding", Padding.component_values);
+		embossedProperties.add("padding");
 		props.put("padding-top", Padding.integer);
 		values.put("padding-top", DEFAULT_UA_PADDING);
 		embossedProperties.add("padding-top");
@@ -178,6 +182,8 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		values.put("padding-left", DEFAULT_UA_PADDING);
 		embossedProperties.add("padding-left");
 		
+		props.put("border", Border.component_values);
+		embossedProperties.add("border");
 		props.put("border-top", Border.NONE);
 		embossedProperties.add("border-top");
 		props.put("border-right", Border.NONE);

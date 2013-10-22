@@ -9,7 +9,7 @@ public interface BrailleCSSProperty extends CSSProperty {
 	 ************************************************************************/
 
 	public enum Border implements BrailleCSSProperty {
-		dot_pattern(""), NONE("none"), INHERIT("inherit");
+		dot_pattern(""), component_values(""), NONE("none"), INHERIT("inherit");
 
 		private String text;
 
@@ -103,7 +103,7 @@ public interface BrailleCSSProperty extends CSSProperty {
 	}
 
 	public enum Margin implements BrailleCSSProperty {
-		integer(""), INHERIT("inherit");
+		integer(""), component_values(""), INHERIT("inherit");
 
 		private String text;
 
@@ -126,7 +126,7 @@ public interface BrailleCSSProperty extends CSSProperty {
 	}
 
 	public enum Padding implements BrailleCSSProperty {
-		integer(""), INHERIT("inherit");
+		integer(""), component_values(""), INHERIT("inherit");
 
 		private String text;
 

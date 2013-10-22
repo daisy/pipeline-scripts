@@ -25,9 +25,11 @@ import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFunction;
 import cz.vutbr.web.css.TermIdent;
+import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.css.TermList;
 import cz.vutbr.web.css.TermString;
 import cz.vutbr.web.domassign.DeclarationTransformer;
+import cz.vutbr.web.domassign.Repeater;
 
 public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	
@@ -99,6 +101,13 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
+	private boolean processBorder(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		Repeater r = new BorderRepeater();
+		return r.repeatOverFourTermDeclaration(d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
 	private boolean processContent(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 
@@ -162,6 +171,13 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
+	private boolean processMargin(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		Repeater r = new MarginRepeater();
+		return r.repeatOverFourTermDeclaration(d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
 	private boolean processPaddingBottom(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
@@ -187,6 +203,13 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean processPadding(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		Repeater r = new PaddingRepeater();
+		return r.repeatOverFourTermDeclaration(d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
@@ -304,5 +327,84 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 				properties)
 				|| genericTerm(TermIdent.class, d.get(0), d.getProperty(),
 						identifierIdentification, sanify, properties, values);
+	}
+	
+	
+	/****************************************************************
+	 * REPEATER CLASSES
+	 ****************************************************************/
+	
+	private final class BorderRepeater extends Repeater {
+			
+		public BorderRepeater() {
+			super(4);
+			type = Border.class;
+			names.add("border-top");
+			names.add("border-right");
+			names.add("border-bottom");
+			names.add("border-left");
+		}
+		
+		protected boolean operation(int i,
+		                            Map<String,CSSProperty> properties,
+		                            Map<String,Term<?>> values) {
+			
+			Term<?> term = terms.get(i);
+			
+			if (genericTermIdent(type, term, AVOID_INH, names.get(i), properties))
+				return true;
+			
+			try {
+				if (TermIdent.class.isInstance(term)) {
+					String propertyName = names.get(i);
+					TermDotPattern value = TermDotPattern.createDotPattern((TermIdent)term);
+					properties.put(propertyName, Border.dot_pattern);
+					values.put(propertyName, value);
+					return true;
+				}
+			} catch (Exception e) {
+			}
+			return false;
+		}
+	}
+	
+	private final class MarginRepeater extends Repeater {
+
+		public MarginRepeater() {
+			super(4);
+			type = Margin.class;
+			names.add("margin-top");
+			names.add("margin-right");
+			names.add("margin-bottom");
+			names.add("margin-left");
+		}
+		
+		protected boolean operation(int i,
+		                            Map<String,CSSProperty> properties,
+		                            Map<String,Term<?>> values) {
+			return genericTermIdent(type, terms.get(i), AVOID_INH, names.get(i), properties)
+				|| genericTerm(TermInteger.class, terms.get(i), names.get(i),
+				               Margin.integer, false, properties, values);
+		}
+	}
+	
+	private final class PaddingRepeater extends Repeater {
+			
+		public PaddingRepeater() {
+			super(4);
+			type = Padding.class;
+			names.add("padding-top");
+			names.add("padding-right");
+			names.add("padding-bottom");
+			names.add("padding-left");
+		}
+		
+		protected boolean operation(int i,
+		                            Map<String,CSSProperty> properties,
+		                            Map<String,Term<?>> values) {
+			return genericTermIdent(type, terms.get(i), AVOID_INH, names.get(i), properties)
+				|| genericTerm(TermInteger.class, terms.get(i), names.get(i),
+				               Padding.integer, false, properties, values);
+		}
 	}
 }
