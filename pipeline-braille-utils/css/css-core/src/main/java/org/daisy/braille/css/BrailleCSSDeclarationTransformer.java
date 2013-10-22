@@ -53,9 +53,7 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	public boolean parseDeclaration(Declaration d, Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		String property = d.getProperty().toLowerCase();
 		if (!css.isSupportedCSSProperty(property)) {
-			property = "-brl-" + property;
-			if (!css.isSupportedCSSProperty(property))
-				return false;
+			return false;
 		}
 		try {
 			Method m = methods.get(property);
@@ -73,35 +71,35 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	 ****************************************************************/
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlBorderBottom(Declaration d,
+	private boolean processBorderBottom(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(Border.class, Border.dot_pattern,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlBorderLeft(Declaration d,
+	private boolean processBorderLeft(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(Border.class, Border.dot_pattern,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlBorderRight(Declaration d,
+	private boolean processBorderRight(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(Border.class, Border.dot_pattern,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlBorderTop(Declaration d,
+	private boolean processBorderTop(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(Border.class, Border.dot_pattern,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlContent(Declaration d,
+	private boolean processContent(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 
 		if (d.size() == 1 && genericOneIdent(Content.class, d, properties))
@@ -123,69 +121,69 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlDisplay(Declaration d,
+	private boolean processDisplay(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdent(Display.class, d, properties);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlListStyleType(Declaration d,
+	private boolean processListStyleType(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(ListStyleType.class, ListStyleType.dot_pattern,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlMarginBottom(Declaration d,
+	private boolean processMarginBottom(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Margin.class, Margin.integer, true,
 				d, properties, values);
 	}
 
 	@SuppressWarnings("unused")
-	private boolean processBrlMarginLeft(Declaration d,
+	private boolean processMarginLeft(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Margin.class, Margin.integer, false,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlMarginRight(Declaration d,
+	private boolean processMarginRight(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Margin.class, Margin.integer, false,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlMarginTop(Declaration d,
+	private boolean processMarginTop(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Margin.class, Margin.integer, true,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlPaddingBottom(Declaration d,
+	private boolean processPaddingBottom(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
 	}
 
 	@SuppressWarnings("unused")
-	private boolean processBrlPaddingLeft(Declaration d,
+	private boolean processPaddingLeft(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlPaddingRight(Declaration d,
+	private boolean processPaddingRight(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlPaddingTop(Declaration d,
+	private boolean processPaddingTop(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(Padding.class, Padding.integer, true,
 				d, properties, values);
@@ -199,7 +197,7 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlStringSet(Declaration d,
+	private boolean processStringSet(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		
 		if (d.size() == 1 && genericOneIdent(StringSet.class, d, properties))
@@ -234,14 +232,14 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlTextIndent(Declaration d,
+	private boolean processTextIndent(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrInteger(TextIndent.class, TextIndent.integer, false,
 				d, properties, values);
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean processBrlTypeformIndication(Declaration d,
+	private boolean processTypeformIndication(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		
 		if (d.size() == 1 && genericOneIdent(TypeformIndication.class, d, properties))

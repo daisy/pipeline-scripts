@@ -33,7 +33,6 @@ import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.domassign.Analyzer;
-import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -227,7 +226,7 @@ public class InlineProvider implements XProcStepProvider {
 		keys.remove("page");
 		Collections.sort(keys);
 		for(String key : keys) {
-			builder.append(normalizeProperty(key)).append(": ");
+			builder.append(key).append(": ");
 			Term<?> value = nodeData.getValue(key, true);
 			if (value != null)
 				builder.append(value.toString());
@@ -282,12 +281,6 @@ public class InlineProvider implements XProcStepProvider {
 	}
 	
 	private static void insertDeclaration(StringBuilder builder, Declaration decl) {
-		builder.append(normalizeProperty(decl.getProperty())).append(": ").append(join(decl, "")).append("; ");
-	}
-	
-	private static String normalizeProperty(String property) {
-		if (property.startsWith("-brl-"))
-			return property.substring(5);
-		return property;
+		builder.append(decl.getProperty()).append(": ").append(join(decl, "")).append("; ");
 	}
 }

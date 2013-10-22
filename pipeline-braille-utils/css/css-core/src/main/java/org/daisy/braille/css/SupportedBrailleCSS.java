@@ -147,53 +147,53 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		// text spacing
 		props.put("text-align", DEFAULT_UA_TEXT_ALIGN);
 		embossedProperties.add("text-align");
-		props.put("-brl-text-indent", TextIndent.integer);
-		values.put("-brl-text-indent", DEFAULT_UA_TEXT_IDENT);
-		embossedProperties.add("-brl-text-indent");
+		props.put("text-indent", TextIndent.integer);
+		values.put("text-indent", DEFAULT_UA_TEXT_IDENT);
+		embossedProperties.add("text-indent");
 		
 		// layout box
-		props.put("-brl-margin-top", Margin.integer);
-		values.put("-brl-margin-top", DEFAULT_UA_MARGIN);
-		embossedProperties.add("-brl-margin-top");
-		props.put("-brl-margin-right", Margin.integer);
-		values.put("-brl-margin-right", DEFAULT_UA_MARGIN);
-		embossedProperties.add("-brl-margin-right");
-		props.put("-brl-margin-bottom", Margin.integer);
-		values.put("-brl-margin-bottom", DEFAULT_UA_MARGIN);
-		embossedProperties.add("-brl-margin-bottom");
-		props.put("-brl-margin-left", Margin.integer);
-		values.put("-brl-margin-left", DEFAULT_UA_MARGIN);
-		embossedProperties.add("-brl-margin-left");
+		props.put("margin-top", Margin.integer);
+		values.put("margin-top", DEFAULT_UA_MARGIN);
+		embossedProperties.add("margin-top");
+		props.put("margin-right", Margin.integer);
+		values.put("margin-right", DEFAULT_UA_MARGIN);
+		embossedProperties.add("margin-right");
+		props.put("margin-bottom", Margin.integer);
+		values.put("margin-bottom", DEFAULT_UA_MARGIN);
+		embossedProperties.add("margin-bottom");
+		props.put("margin-left", Margin.integer);
+		values.put("margin-left", DEFAULT_UA_MARGIN);
+		embossedProperties.add("margin-left");
 
-		props.put("-brl-padding-top", Padding.integer);
-		values.put("-brl-padding-top", DEFAULT_UA_PADDING);
-		embossedProperties.add("-brl-padding-top");
-		props.put("-brl-padding-right", Padding.integer);
-		values.put("-brl-padding-right", DEFAULT_UA_PADDING);
-		embossedProperties.add("-brl-padding-right");
-		props.put("-brl-padding-bottom", Padding.integer);
-		values.put("-brl-padding-bottom", DEFAULT_UA_PADDING);
-		embossedProperties.add("-brl-padding-bottom");
-		props.put("-brl-padding-left", Padding.integer);
-		values.put("-brl-padding-left", DEFAULT_UA_PADDING);
-		embossedProperties.add("-brl-padding-left");
+		props.put("padding-top", Padding.integer);
+		values.put("padding-top", DEFAULT_UA_PADDING);
+		embossedProperties.add("padding-top");
+		props.put("padding-right", Padding.integer);
+		values.put("padding-right", DEFAULT_UA_PADDING);
+		embossedProperties.add("padding-right");
+		props.put("padding-bottom", Padding.integer);
+		values.put("padding-bottom", DEFAULT_UA_PADDING);
+		embossedProperties.add("padding-bottom");
+		props.put("padding-left", Padding.integer);
+		values.put("padding-left", DEFAULT_UA_PADDING);
+		embossedProperties.add("padding-left");
 		
-		props.put("-brl-border-top", Border.NONE);
-		embossedProperties.add("-brl-border-top");
-		props.put("-brl-border-right", Border.NONE);
-		embossedProperties.add("-brl-border-right");
-		props.put("-brl-border-bottom", Border.NONE);
-		embossedProperties.add("-brl-border-bottom");
-		props.put("-brl-border-left", Border.NONE);
-		embossedProperties.add("-brl-border-left");
+		props.put("border-top", Border.NONE);
+		embossedProperties.add("border-top");
+		props.put("border-right", Border.NONE);
+		embossedProperties.add("border-right");
+		props.put("border-bottom", Border.NONE);
+		embossedProperties.add("border-bottom");
+		props.put("border-left", Border.NONE);
+		embossedProperties.add("border-left");
 		
 		// positioning
-		props.put("-brl-display", Display.INLINE);
-		embossedProperties.add("-brl-display");
+		props.put("display", Display.INLINE);
+		embossedProperties.add("display");
 		
 		// elements
-		props.put("-brl-list-style-type", ListStyleType.NONE);
-		embossedProperties.add("-brl-list-style-type");
+		props.put("list-style-type", ListStyleType.NONE);
+		embossedProperties.add("list-style-type");
 		
 		// paged
 		props.put("page", Page.AUTO);
@@ -214,12 +214,12 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		// misc
 		props.put("counter-reset", CounterReset.NONE);
 		embossedProperties.add("counter-reset");
-		props.put("-brl-string-set", StringSet.NONE);
-		embossedProperties.add("-brl-string-set");
-		props.put("-brl-content", Content.NONE);
-		embossedProperties.add("-brl-content");
-		props.put("-brl-typeform-indication", TypeformIndication.NONE);
-		embossedProperties.add("-brl-typeform-indication");
+		props.put("string-set", StringSet.NONE);
+		embossedProperties.add("string-set");
+		props.put("content", Content.NONE);
+		embossedProperties.add("content");
+		props.put("typeform-indication", TypeformIndication.NONE);
+		embossedProperties.add("typeform-indication");
 		
 		/* ----------- */
 		/* media print */
