@@ -223,8 +223,8 @@
         <version>4.2.0</version>
       </dependency>
       <dependency>
-        <groupId>com.googlecode.guava-osgi</groupId>
-        <artifactId>guava-osgi</artifactId>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
         <version>11.0.1</version>
       </dependency>
       <dependency>
