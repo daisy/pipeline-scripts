@@ -44,7 +44,7 @@
         <p:pipe port="result" step="wrap-reports"/>
     </p:output>
     
-    <p:output port="html-report" px:media-type="application/xml+vnd.pipeline.report">
+    <p:output port="html-report" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">html-report</h1>
             <p px:role="desc">An HTML-formatted version of the validation report.</p>
@@ -52,7 +52,7 @@
         <p:pipe port="result" step="create-html-report"/>
     </p:output>
     
-    <p:output port="validation-status" px:media-type="application/xml+vnd.pipeline.status">
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">validation-status</h1>
             <p px:role="desc">Validation status (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>

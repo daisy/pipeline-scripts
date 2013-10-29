@@ -31,7 +31,7 @@
 
     <!-- NOTE: the "input" here is given by an option string "input-opf" -->
 
-    <p:output port="result" primary="true" px:media-type="application/xml+vnd.pipeline.report">
+    <p:output port="result" primary="true" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">result</h1>
             <p px:role="desc">An HTML-formatted validation report comprising all documents'
@@ -56,7 +56,7 @@
         <p:pipe step="if-package-wellformed" port="dtbook-validation-report"/>
     </p:output>
 
-    <p:output port="validation-status" px:media-type="application/xml+vnd.pipeline.status">
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">validation-status</h1>
             <p px:role="desc">Validation status
