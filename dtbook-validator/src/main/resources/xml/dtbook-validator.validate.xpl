@@ -30,7 +30,7 @@
     
     <p:output port="result" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">result</h1>
+            <h1 px:role="name">Copy of input document</h1>
             <p px:role="desc">A copy of the input document; may include PSVI annotations.</p>
         </p:documentation>
         <p:pipe port="copy-of-document" step="validate-against-relaxng"/>
@@ -38,7 +38,7 @@
     
     <p:output port="xml-report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">xml-report</h1>
+            <h1 px:role="name">XML Reports</h1>
             <p px:role="desc">Raw output from all types of validation used (RelaxNG, Schematron, custom).</p>
         </p:documentation>
         <p:pipe port="result" step="wrap-reports"/>
@@ -46,7 +46,7 @@
     
     <p:output port="html-report" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">html-report</h1>
+            <h1 px:role="name">HTML Report</h1>
             <p px:role="desc">An HTML-formatted version of the validation report.</p>
         </p:documentation>
         <p:pipe port="result" step="create-html-report"/>
@@ -54,7 +54,7 @@
     
     <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">validation-status</h1>
+            <h1 px:role="name">Validation status</h1>
             <p px:role="desc">Validation status (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>
         </p:documentation>
         <p:pipe step="format-validation-status" port="result"/>

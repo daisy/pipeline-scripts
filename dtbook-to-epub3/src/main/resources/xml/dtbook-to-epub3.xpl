@@ -7,6 +7,7 @@
         <h1 px:role="name">DTBook to EPUB3</h1>
         <p px:role="desc">Converts multiple dtbooks to epub3 format</p>
     </p:documentation>
+    
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">DTBook file(s)</h2>

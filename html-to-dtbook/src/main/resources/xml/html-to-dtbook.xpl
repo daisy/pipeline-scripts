@@ -11,7 +11,7 @@
 
     <p:option name="html" required="true" px:type="anyFileURI" px:media-type="application/xhtml+xml text/html">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">source</h2>
+            <h2 px:role="name">HTML document</h2>
             <p px:role="desc">The HTML file you want to convert.</p>
         </p:documentation>
     </p:option>

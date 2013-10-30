@@ -33,7 +33,7 @@
 
     <p:output port="result" primary="true" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">result</h1>
+            <h1 px:role="name">HTML report</h1>
             <p px:role="desc">An HTML-formatted validation report comprising all documents'
                 reports.</p>
         </p:documentation>
@@ -42,7 +42,7 @@
 
     <p:output port="package-doc-validation-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">package-doc-validation-report</h1>
+            <h1 px:role="name">Package Document XML Report</h1>
             <p px:role="desc">Raw validation output for the package document.</p>
         </p:documentation>
         <p:pipe step="if-package-wellformed" port="package-doc-validation-report"/>
@@ -50,7 +50,7 @@
 
     <p:output port="dtbook-validation-report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">dtbook-validation-report</h1>
+            <h1 px:role="name">DTBook XML Report</h1>
             <p px:role="desc">Raw validation output for the DTBook file(s).</p>
         </p:documentation>
         <p:pipe step="if-package-wellformed" port="dtbook-validation-report"/>
@@ -58,7 +58,7 @@
 
     <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">validation-status</h1>
+            <h1 px:role="name">Validation Status</h1>
             <p px:role="desc">Validation status
                 (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>
         </p:documentation>
@@ -69,14 +69,14 @@
         the wellformedness of the document cannot be taken for granted -->
     <p:option name="input-opf" required="true" px:type="anyFileURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">input-opf</h2>
+            <h2 px:role="name">Package Document (*.opf)</h2>
             <p px:role="desc">Path to the input package document (*.opf).</p>
         </p:documentation>
     </p:option>
 
     <p:option name="output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">output-dir</h2>
+            <h2 px:role="name">All validation reports</h2>
             <p px:role="desc">Directory where the validation reports are stored. If left blank,
                 nothing is saved to disk.</p>
         </p:documentation>
@@ -84,14 +84,14 @@
 
     <p:option name="mathml-version" required="false" px:type="string" select="'3.0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">mathml-version</h2>
+            <h2 px:role="name">MathML version</h2>
             <p px:role="desc">Version of MathML in the DTBook file(s). Defaults to 3.0.</p>
         </p:documentation>
     </p:option>
 
     <p:option name="check-images" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">check-images</h2>
+            <h2 px:role="name">Check that images exist</h2>
             <p px:role="desc">Check to see that images referenced by DTBook file(s) exist on
                 disk.</p>
         </p:documentation>

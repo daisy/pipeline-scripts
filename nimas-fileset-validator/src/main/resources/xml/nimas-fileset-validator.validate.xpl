@@ -28,7 +28,7 @@
 
     <p:output port="result" primary="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">result</h1>
+            <h1 px:role="name">HTML Report</h1>
             <p px:role="desc">An HTML-formatted validation report comprising all documents'
                 reports.</p>
         </p:documentation>
@@ -37,7 +37,7 @@
 
     <p:output port="package-doc-validation-report">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">package-doc-validation-report</h1>
+            <h1 px:role="name">Package Document XML Report</h1>
             <p px:role="desc">Raw validation output for the package document.</p>
         </p:documentation>
         <p:pipe step="validate-package-doc" port="result"/>
@@ -45,7 +45,7 @@
 
     <p:output port="dtbook-validation-report" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">dtbook-validation-report</h1>
+            <h1 px:role="name">DTBook XML Report</h1>
             <p px:role="desc">Raw validation output for the DTBook file(s).</p>
         </p:documentation>
         <p:pipe step="validate-dtbooks" port="result"/>
@@ -53,7 +53,7 @@
 
     <p:output port="validation-status">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">validation-status</h1>
+            <h1 px:role="name">Validation Status</h1>
             <p px:role="desc">Validation status
                 (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>
         </p:documentation>

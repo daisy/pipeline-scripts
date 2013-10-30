@@ -10,14 +10,14 @@
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/z3998-auth+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">source</h2>
+            <h2 px:role="name">ZedAI document</h2>
             <p px:role="desc">Input ZedAI.</p>
         </p:documentation>
     </p:input>
 
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">output-dir</h2>
+            <h2 px:role="name">Output directory</h2>
             <p px:role="desc">Output directory.</p>
         </p:documentation>
     </p:option>
