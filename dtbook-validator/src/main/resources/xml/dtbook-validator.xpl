@@ -63,7 +63,7 @@
 
     <!-- we are using a string option instead of an XML input source because
         the wellformedness of the document cannot be taken for granted -->
-    <p:option name="input-dtbook" required="true" px:type="anyFileURI">
+    <p:option name="input-dtbook" required="true" px:type="anyFileURI" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">DTBook</h2>
             <p px:role="desc">Path to the input DTBook document.</p>
