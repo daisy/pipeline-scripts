@@ -55,115 +55,40 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy202-utils/xproc/daisy202-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/logging-library.xpl"/>
     <p:import href="convert/convert.xpl"/>
 
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
     <p:variable name="tempDir" select="if (ends-with($temp-dir,'/')) then $temp-dir else concat($temp-dir,'/')"/>
 
     <!-- validate options -->
-    <p:in-scope-names name="vars"/>
     <p:identity>
         <p:input port="source">
             <p:inline>
-                <dummy-doc-for-p-template/>
+                <dummy-doc-for-assertions/>
             </p:inline>
         </p:input>
     </p:identity>
-    <p:choose>
-        <p:when test="not(matches($href,'\w+:/'))">
-            <p:template name="error-message">
-                <p:input port="template">
-                    <p:inline exclude-inline-prefixes="#all">
-                        <message>href: "{$href}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
-                    </p:inline>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="vars" port="result"/>
-                </p:input>
-            </p:template>
-            <p:error code="PDE01">
-                <p:input port="source">
-                    <p:pipe port="result" step="error-message"/>
-                </p:input>
-            </p:error>
-        </p:when>
-        <p:when test="not(matches($output-dir,'\w+:/'))">
-            <p:template name="error-message">
-                <p:input port="template">
-                    <p:inline exclude-inline-prefixes="#all">
-                        <message>output: "{$output-dir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
-                    </p:inline>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="vars" port="result"/>
-                </p:input>
-            </p:template>
-            <p:error code="PDE05">
-                <p:input port="source">
-                    <p:pipe port="result" step="error-message"/>
-                </p:input>
-            </p:error>
-        </p:when>
-        <p:when test="not(matches($tempDir,'\w+:/'))">
-            <p:template  name="error-message">
-                <p:input port="template">
-                    <p:inline exclude-inline-prefixes="#all">
-                        <message>output: "{$tempDir}" is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/).</message>
-                    </p:inline>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="vars" port="result"/>
-                </p:input>
-            </p:template>
-            <p:error code="PDE02">
-                <p:input port="source">
-                    <p:pipe port="result" step="error-message"/>
-                </p:input>
-            </p:error>
-        </p:when>
-        <p:when test="not($mediaoverlay='true' or $mediaoverlay='false')">
-            <p:template  name="error-message">
-                <p:input port="template">
-                    <p:inline exclude-inline-prefixes="#all">
-                        <message>mediaoverlay: "{$mediaoverlay}" is not a valid value. When given, mediaoverlay must be either "true" (default) or "false".</message>
-                    </p:inline>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="vars" port="result"/>
-                </p:input>
-            </p:template>
-            <p:error code="PDE03">
-                <p:input port="source">
-                    <p:pipe port="result" step="error-message"/>
-                </p:input>
-            </p:error>
-        </p:when>
-        <p:when test="not($compatibility-mode='true' or $compatibility-mode='false')">
-            <p:template  name="error-message">
-                <p:input port="template">
-                    <p:inline exclude-inline-prefixes="#all">
-                        <message>compatibility-mode: "{$compatibility-mode}" is not a valid value. When given, compatibility-mode must be either "true" (default) or "false".</message>
-                    </p:inline>
-                </p:input>
-                <p:input port="parameters">
-                    <p:pipe step="vars" port="result"/>
-                </p:input>
-            </p:template>
-            <p:error code="PDE04">
-                <p:input port="source">
-                    <p:pipe port="result" step="error-message"/>
-                </p:input>
-            </p:error>
-        </p:when>
-        <p:otherwise>
-            <p:identity>
-                <p:input port="source">
-                    <p:empty/>
-                </p:input>
-            </p:identity>
-        </p:otherwise>
-    </p:choose>
-    <p:sink/>
+    <px:assert message="href: '$1' is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/)." error-code="PDE01">
+        <p:with-option name="test" select="matches($href,'\w+:/')"/>
+        <p:with-option name="param1" select="$href"/>
+    </px:assert>
+    <px:assert message="output: '$1' is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/)." error-code="PDE05">
+        <p:with-option name="test" select="matches($output-dir,'\w+:/')"/>
+        <p:with-option name="param1" select="$output-dir"/>
+    </px:assert>
+    <px:assert message="tempDir: '$1' is not a valid URI. You probably either forgot to prefix the path with file:/, or if you're using Windows, remember to replace all directory separators (\) with forward slashes (/)." error-code="PDE02">
+        <p:with-option name="test" select="matches($tempDir,'\w+:/')"/>
+        <p:with-option name="param1" select="$tempDir"/>
+    </px:assert>
+    <px:assert message="mediaoverlay: '$1' is not a valid value. When given, mediaoverlay must be either 'true' (default) or 'false'." error-code="PDE03">
+        <p:with-option name="test" select="$mediaoverlay='true' or $mediaoverlay='false'"/>
+        <p:with-option name="param1" select="$mediaoverlay"/>
+    </px:assert>
+    <px:assert message="compatibility-mode: '$1' is not a valid value. When given, compatibility-mode must be either 'true' (default) or 'false'." error-code="PDE04">
+        <p:with-option name="test" select="$compatibility-mode='true' or $compatibility-mode='false'"/>
+        <p:with-option name="param1" select="$compatibility-mode"/>
+    </px:assert>
 
     <!-- load -->
     <px:daisy202-load name="load">
