@@ -77,6 +77,7 @@
         href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/daisy3-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/logging-library.xpl"/>
     <p:import href="../internal/ncx-to-nav.xpl"/>
     <p:import href="../internal/dtbook-to-html.xpl"/>
     <p:import href="../internal/list-audio-clips.xpl"/>
