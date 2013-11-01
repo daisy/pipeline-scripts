@@ -4,4 +4,5 @@
   <uri name="http://www.daisy.org/pipeline/modules/dtbook-validator/dtbook-validator.select-schema.xpl" uri="../xml/dtbook-validator.select-schema.xpl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:validation-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
 </catalog>

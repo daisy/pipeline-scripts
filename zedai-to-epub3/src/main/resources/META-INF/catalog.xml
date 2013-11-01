@@ -11,4 +11,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:metadata-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-to-html" />
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-utils" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:common-utils" />
 </catalog>
