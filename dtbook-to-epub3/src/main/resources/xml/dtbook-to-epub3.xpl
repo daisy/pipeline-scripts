@@ -40,6 +40,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/logging-library.xpl"/>
 
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
     <p:sink/>
