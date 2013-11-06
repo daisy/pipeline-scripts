@@ -57,7 +57,10 @@
               OSGI-INF/liblouis-jna-impl.xml,
               OSGI-INF/liblouis-table-registry.xml,
               OSGI-INF/liblouisutdml-config-registry.xml,
-              OSGI-INF/liblouisutdml-process-builder-impl.xml</Service-Component>
+              OSGI-INF/liblouisutdml-process-builder-impl.xml
+            </Service-Component>
+            <Export-Package>org.daisy.pipeline.braille.liblouis</Export-Package>
+            <Private-Package>org.daisy.pipeline.braille.liblouis.impl</Private-Package>
           </instructions>
         </configuration>
       </plugin>

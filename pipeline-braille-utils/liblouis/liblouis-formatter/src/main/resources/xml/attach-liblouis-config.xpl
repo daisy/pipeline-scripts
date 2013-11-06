@@ -42,11 +42,12 @@
         <px:fileset-add-entry href="pagenum.cti"/>
         <p:for-each>
             <p:iteration-source select="/d:fileset/d:file"/>
-            <px:copy-resource>
+            <px:copy-resource fail-on-error="true">
                 <p:with-option name="href" select="/*/resolve-uri(@href, base-uri(.))"/>
                 <p:with-option name="target" select="/*/resolve-uri(@href, $directory)"/>
             </px:copy-resource>
         </p:for-each>
+        <p:sink/>
         <px:fileset-add-entry href="liblouisutdml.ini">
             <p:input port="source">
                 <p:pipe step="directory" port="result"/>

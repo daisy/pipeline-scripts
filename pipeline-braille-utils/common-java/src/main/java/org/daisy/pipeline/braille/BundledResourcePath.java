@@ -17,7 +17,6 @@ import java.util.Map;
 import static org.daisy.pipeline.braille.Utilities.Iterators.partition;
 import static org.daisy.pipeline.braille.Utilities.Files;
 import static org.daisy.pipeline.braille.Utilities.Files.asURL;
-import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.Utilities.Function0;
 import static org.daisy.pipeline.braille.Utilities.Functions.noOp;
 import static org.daisy.pipeline.braille.Utilities.Pair;

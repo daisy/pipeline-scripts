@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 <p:declare-step type="louis:translate-mathml" name="translate-mathml"
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
@@ -40,5 +40,8 @@
         <p:with-param name="page-width" port="page-layout" select="200.0"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </louis:translate-file>
+    
+    <p:string-replace match="/louis:result/text()"
+                      replace="translate(replace(., '&#x0A;&#x0C;$', ''), ' ', '&#x2800;')"/>
     
 </p:declare-step>

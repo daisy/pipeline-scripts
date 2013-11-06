@@ -20,7 +20,7 @@
         <xsl:variable name="display" select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:choose>
             <xsl:when test="$display='none'">
-                <xsl:sequence select=".//louis:print-page"/>
+                <xsl:sequence select=".//louis:print-page|.//louis:running-header|louis:running-footer"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:copy>

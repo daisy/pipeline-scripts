@@ -37,13 +37,13 @@
                 <p:input port="stylesheet">
                     <p:inline>
                         <xsl:stylesheet version="2.0">
-                            <xsl:template match="/pef:volume">
+                            <xsl:template match="/*">
                                 <xsl:copy>
-                                <xsl:sequence select="@*|text()"/>
+                                    <xsl:sequence select="@*|text()"/>
                                     <xsl:apply-templates select="*"/>
                                 </xsl:copy>
                             </xsl:template>
-                            <xsl:template match="pef:section">
+                            <xsl:template match="*[local-name()='section']">
                                 <xsl:copy>
                                     <xsl:sequence select="(@cols,parent::*/@cols)[1]"/>
                                     <xsl:sequence select="(@duplex,parent::*/@duplex)[1]"/>
@@ -73,13 +73,13 @@
             <p:input port="stylesheet">
                 <p:inline>
                     <xsl:stylesheet version="2.0">
-                        <xsl:template match="/pef:volume">
+                        <xsl:template match="/*">
                             <xsl:copy>
                                 <xsl:sequence select="@*|text()"/>
-                                <xsl:apply-templates select="pef:section"/>
+                                <xsl:apply-templates select="*"/>
                             </xsl:copy>
                         </xsl:template>
-                        <xsl:template match="pef:section">
+                        <xsl:template match="*[local-name()='section']">
                             <xsl:copy>
                                 <xsl:if test="string(@cols)!=string(parent::*/@cols)">
                                     <xsl:sequence select="@cols"/>

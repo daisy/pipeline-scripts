@@ -10,9 +10,7 @@
     
     <p:input port="source" primary="true"/>
     <p:input port="translators" sequence="true"/>
-    <p:output port="result" primary="true">
-        <p:pipe step="translate" port="result"/>
-    </p:output>
+    <p:output port="result" primary="true"/>
     
     <p:option name="temp-dir" required="true"/>
     

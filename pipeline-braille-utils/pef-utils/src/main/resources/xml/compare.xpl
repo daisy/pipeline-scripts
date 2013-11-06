@@ -22,6 +22,7 @@
         <p:delete match="/*/pef:head/pef:meta/dc:date"/>
         <p:delete match="/*/pef:head/pef:meta/dc:identifier"/>
         <p:string-replace match="text()" replace="replace(normalize-space(.), '&#x2800;+$', '')"/>
+        <p:delete match="//pef:row[string(.)='' and not(following-sibling::pef:row[string(.)!=''])]"/>
     </p:declare-step>
     
     <pxi:normalize-pef name="normalize-source">
