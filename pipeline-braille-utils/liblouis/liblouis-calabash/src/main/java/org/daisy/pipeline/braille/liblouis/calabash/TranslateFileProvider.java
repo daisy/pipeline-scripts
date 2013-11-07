@@ -19,6 +19,7 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import static org.daisy.pipeline.braille.Utilities.Files;
+import static org.daisy.pipeline.braille.Utilities.Files.asURL;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -169,7 +170,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
+							URL url = asURL(baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)));
 							String path = Files.resolve(url, ".").toString();
 							if (configPath == null)
 								configPath = path;
@@ -186,7 +187,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URL url = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)).toURL();
+							URL url = asURL(baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)));
 							String path = Files.resolve(url, ".").toString();
 							if (configPath == null)
 								configPath = path;
