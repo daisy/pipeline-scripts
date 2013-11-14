@@ -7,9 +7,10 @@
 
     <p:documentation>Transforms XHTML into an EPUB 3 publication.</p:documentation>
 
-    <!--TODO optionally identify an XHTML doc as being the nav doc -->
-
     <p:input port="input" primary="true" sequence="true"/>
+    <p:input port="metadata" sequence="true">
+        <p:empty/>
+    </p:input>
 
     <p:output port="fileset.out" primary="true">
         <p:pipe port="result" step="ocf"/>
@@ -31,8 +32,12 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="html-to-epub3.content.xpl"/>
 
-    <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
-    <p:variable name="content-dir" select="concat($epub-dir,'EPUB/')"/>
+    <p:variable name="epub-dir" select="concat($output-dir,'epub/')">
+        <p:empty/>
+    </p:variable>
+    <p:variable name="content-dir" select="concat($epub-dir,'EPUB/')">
+        <p:empty/>
+    </p:variable>
 
     <!--=========================================================================-->
     <!-- COMPUTE THE RESOURCES FILESET                                           -->
@@ -69,11 +74,12 @@
         </p:for-each>
         <px:fileset-join/>
         <px:mediatype-detect name="fileset"/>
-        <p:delete match="//@data-original-href">
-            <p:input port="source">
+        <p:for-each>
+            <p:iteration-source>
                 <p:pipe port="result" step="html-cleaned"/>
-            </p:input>
-        </p:delete>
+            </p:iteration-source>
+            <p:delete match="//@data-original-href"/>
+        </p:for-each>
     </p:group>
     <!--TODO filter-out XHTML docs in the spine-->
     <!--TODO clean any out-of-spine XHTML docs-->
@@ -84,8 +90,12 @@
 
     <p:documentation>Clean the XHTML Documents</p:documentation>
     <pxi:html-to-epub3-content name="html-content">
-        <p:with-option name="publication-dir" select="$epub-dir"/>
-        <p:with-option name="content-dir" select="$content-dir"/>
+        <p:with-option name="publication-dir" select="$epub-dir">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="content-dir" select="$content-dir">
+            <p:empty/>
+        </p:with-option>
     </pxi:html-to-epub3-content>
 
     <!--=========================================================================-->
@@ -102,7 +112,9 @@
             <p:pipe port="result" step="navigation.doc"/>
         </p:output>
 
-        <p:variable name="nav-base" select="concat($content-dir,'toc.xhtml')"/>
+        <p:variable name="nav-base" select="concat($content-dir,'toc.xhtml')">
+            <p:empty/>
+        </p:variable>
 
         <px:epub3-nav-create-toc name="navigation.toc">
             <p:input port="source">
@@ -166,11 +178,6 @@
                 <p:document href="../xslt/html-to-metadata.xsl"/>
             </p:input>
         </p:xslt>
-        <!--<p:identity>
-            <p:input port="source">
-                <p:empty/>
-            </p:input>
-        </p:identity>-->
     </p:group>
     <p:sink/>
 
@@ -205,11 +212,8 @@
                 <p:pipe port="result" step="resources"/>
             </p:input>
             <p:input port="metadata">
-<!--                <p:pipe port="result" step="metadata"/>-->
+                <p:pipe port="metadata" step="main"/>
                 <p:pipe port="result" step="metadata"/>
-                <!--<p:inline>
-                    <metadata/>
-                </p:inline>-->
             </p:input>
             <p:input port="content-docs">
                 <p:pipe port="doc" step="navigation"/>

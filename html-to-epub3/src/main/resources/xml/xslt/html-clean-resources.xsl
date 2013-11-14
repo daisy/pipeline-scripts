@@ -65,6 +65,7 @@
                     <xsl:copy-of select="@* except @href | node()"/>
                 </link>
             </xsl:otherwise>
+            <!--FIXME parse CSS-->
         </xsl:choose>
     </xsl:template>
 
