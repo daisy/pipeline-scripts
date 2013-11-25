@@ -16,8 +16,8 @@
     
     <p:import href="utils/fileset-add-tempfile.xpl"/>
     <p:import href="utils/select-by-position.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <px:fileset-create name="directory">
         <p:with-option name="base" select="$directory">

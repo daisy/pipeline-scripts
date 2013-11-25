@@ -75,7 +75,7 @@
     <p:import href="dtbook-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xml-to-pef.load-translator.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->

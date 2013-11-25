@@ -14,8 +14,8 @@
     <p:option name="math-code" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/translate-file.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <px:fileset-create base="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/lbu_files/"/>
     <px:fileset-add-entry name="styles">
