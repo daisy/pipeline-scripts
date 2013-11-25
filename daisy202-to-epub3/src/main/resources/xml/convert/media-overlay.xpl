@@ -45,17 +45,11 @@
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
     </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/join.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For joining media overlays.</p:documentation>
-    </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/upgrade-smil.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For converting DAISY 2.02 SMIL-files into EPUB3 Media Overlays.</p:documentation>
-    </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/rearrange.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For generating ("rearranging") new Media Overlays based on the Content Documents and the old Media Overlays.</p:documentation>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/library.xpl">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating media overlays.</p:documentation>
     </p:import>
 
     <p:declare-step type="pxi:fix-textrefs">

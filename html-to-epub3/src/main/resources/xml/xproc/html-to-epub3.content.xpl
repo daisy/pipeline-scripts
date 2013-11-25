@@ -17,7 +17,7 @@
     <p:option name="publication-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
 

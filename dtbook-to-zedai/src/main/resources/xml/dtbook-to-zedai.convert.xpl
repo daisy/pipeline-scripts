@@ -98,13 +98,13 @@
     </p:import>
 
     <!-- for use with the pipeline framework -->
-    <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/metadata-utils-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/metadata-utils/library.xpl">
         <p:documentation>
             Collection of utilities for generating metadata.
         </p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl">
         <p:documentation>
             Collection of utilities for merging and upgrading DTBook files.
         </p:documentation>
@@ -116,19 +116,19 @@
         </p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation>
             For manipulating filesets.
         </p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl">
         <p:documentation>
             For determining the media type of files.
         </p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/validation-utils/validation-utils-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
         <p:documentation>
             Collection of utilities for validation and reporting.
         </p:documentation>

@@ -44,7 +44,7 @@
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation>Utilities for representing a fileset.</p:documentation>
     </p:import>
 

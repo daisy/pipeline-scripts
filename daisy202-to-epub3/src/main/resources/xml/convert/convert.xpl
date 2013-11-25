@@ -31,8 +31,8 @@
     <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean"/>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
 
     <p:import href="resolve-links.create-mapping.xpl"/>
     <p:import href="ncc-navigation.xpl"/>

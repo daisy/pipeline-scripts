@@ -69,15 +69,15 @@
                 steps.</p></p:documentation>
     </p:import>
     <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/xproc/epub3-ocf-library.xpl">
+        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For putting it all
                 into a ZIP container.</p></p:documentation>
     </p:import>
     <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/xproc/epub3-pub-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/daisy3-library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/logging-library.xpl"/>
+        href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="../internal/ncx-to-nav.xpl"/>
     <p:import href="../internal/dtbook-to-html.xpl"/>
     <p:import href="../internal/list-audio-clips.xpl"/>

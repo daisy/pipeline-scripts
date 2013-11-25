@@ -23,11 +23,11 @@
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation>For manipulating filesets.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl">
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
 
