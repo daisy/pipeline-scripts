@@ -65,9 +65,9 @@
             <p px:role="desc">Include any referenced external resources like images and CSS-files to the output.</p>
         </p:documentation>
     </p:option>
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="dtbook-to-zedai.convert.xpl"/>
-    <p:import href="dtbook-to-zedai.store.xpl"/>
     
     <px:dtbook-load name="load"/>
 
@@ -84,9 +84,9 @@
         <p:with-option name="opt-copy-external-resources" select="$copy-external-resources"/>
     </px:dtbook-to-zedai-convert>
     
-    <px:dtbook-to-zedai-store name="store">
+    <px:fileset-store name="fileset-store">
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="convert"/>
         </p:input>
-    </px:dtbook-to-zedai-store>
+    </px:fileset-store>
 </p:declare-step>
