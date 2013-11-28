@@ -23,7 +23,7 @@
     </p:option>
 
     <p:import href="zedai-to-html.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/zedai-load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-store.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     

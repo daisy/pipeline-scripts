@@ -46,8 +46,8 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import
-        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/zedai-to-html.convert.xpl"/>
+        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-store.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
