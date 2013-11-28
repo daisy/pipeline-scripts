@@ -40,21 +40,10 @@
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For loading the HTML-file.</p>
-        </p:documentation>
-    </p:import>
-
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For loading the HTML-file.</p>
-        </p:documentation>
-    </p:import>
-    
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl"/>
 
     <p:variable name="top-uid" select="string-join(tokenize(replace(concat('',current-dateTime()),'[-:]',''),'[T\+\.]')[position() &lt;= 3],'-')"/>
 

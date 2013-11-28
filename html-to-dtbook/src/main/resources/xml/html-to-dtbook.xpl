@@ -23,29 +23,10 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
-
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For loading the HTML fileset.</p>
-        </p:documentation>
-    </p:import>
-
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For storing the DTBook fileset.</p>
-        </p:documentation>
-    </p:import>
-
+    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-
-    <p:import href="html-to-dtbook.convert.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For converting from HTML to DTBook.</p>
-        </p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
+    <p:import href="html-to-dtbook.convert.xpl"/>
 
     <px:html-load name="html">
         <p:with-option name="href" select="$html"/>
@@ -56,7 +37,7 @@
             <p:pipe port="in-memory.out" step="convert.convert"/>
         </p:output>
         <p:output port="fileset">
-            <p:pipe port="fileset.out" step="convert.convert"/>
+            <p:pipe port="fileset.out" step="convert.fileset.out"/>
         </p:output>
 
         <p:identity name="convert.in-memory.in"/>
@@ -96,15 +77,27 @@
                 <p:pipe port="result" step="convert.fileset.in"/>
             </p:input>
         </px:html-to-dtbook-convert>
+        <p:viewport match="d:file" name="convert.fileset.out">
+            <p:output port="fileset.out"/>
+            <p:choose>
+                <p:when test="/*/@media-type='application/x-dtbook+xml'">
+                    <p:add-attribute match="/*" attribute-name="doctype-public" attribute-value="-//NISO//DTD dtbook 2005-3//EN"/>
+                    <p:add-attribute match="/*" attribute-name="doctype-system" attribute-value="http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd"/>
+                </p:when>
+                <p:otherwise>
+                    <p:identity/>
+                </p:otherwise>
+            </p:choose>
+        </p:viewport>
     </p:group>
 
-    <px:dtbook-store>
+    <px:fileset-store>
         <p:input port="fileset.in">
             <p:pipe port="fileset" step="convert"/>
         </p:input>
         <p:input port="in-memory.in">
             <p:pipe port="in-memory" step="convert"/>
         </p:input>
-    </px:dtbook-store>
+    </px:fileset-store>
     
 </p:declare-step>
