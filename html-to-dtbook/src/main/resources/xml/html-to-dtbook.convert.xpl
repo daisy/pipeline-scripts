@@ -197,11 +197,11 @@
         <p:delete match="/*/@xml:base"/>
         <p:identity name="convert.in-memory"/>
 
-        <px:dtbook-fileset>
+        <px:dtbook-load>
             <p:input port="source">
                 <p:pipe port="result" step="convert.dtbook.original-base"/>
             </p:input>
-        </px:dtbook-fileset>
+        </px:dtbook-load>
         <p:add-attribute match="//d:file[@href='dtbook.2005.basic.css']" attribute-name="original-href">
             <p:with-option name="attribute-value" select="p:resolve-uri('../css/dtbook.2005.basic.css',base-uri(/*))">
                 <p:inline>
