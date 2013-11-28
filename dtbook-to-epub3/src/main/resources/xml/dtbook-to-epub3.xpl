@@ -36,7 +36,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/xproc/zedai-to-epub3.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
