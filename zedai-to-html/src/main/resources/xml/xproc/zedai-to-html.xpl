@@ -24,7 +24,7 @@
 
     <p:import href="zedai-to-html.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-store.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     
     <p:variable name="input-uri" select="base-uri(/)"/>
@@ -56,7 +56,6 @@
         <p:variable name="output-dir-uri" select="/*/@href">
             <p:pipe port="result" step="output-dir-uri"/>
         </p:variable>
-        <p:variable name="html-file-uri" select="concat($output-dir-uri,replace($input-uri,'^.*/([^/]*)\.[^/\.]*$','$1'),'.html')"/>
 
         <px:zedai-load name="load">
             <p:input port="source">
@@ -71,12 +70,11 @@
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-html-convert>
 
-        <px:html-store name="store">
+        <px:fileset-store name="store">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert"/>
             </p:input>
-            <p:with-option name="html-file" select="$html-file-uri"/>
-        </px:html-store>
+        </px:fileset-store>
     </p:group>
 
 </p:declare-step>
