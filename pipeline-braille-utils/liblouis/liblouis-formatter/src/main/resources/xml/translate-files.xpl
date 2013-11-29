@@ -20,7 +20,7 @@
     
     <p:import href="utils/select-by-base.xpl"/>
     <p:import href="utils/select-by-position.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/library.xpl"/>
     
     <!-- ================ -->
     <!-- HELPER FUNCTIONS -->
