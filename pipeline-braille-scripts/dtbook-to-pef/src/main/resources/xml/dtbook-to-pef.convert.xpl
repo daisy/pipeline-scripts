@@ -17,7 +17,7 @@
     <p:option name="temp-dir" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/zedai-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- =============== -->

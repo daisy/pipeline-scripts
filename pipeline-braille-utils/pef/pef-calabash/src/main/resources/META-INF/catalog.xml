@@ -2,7 +2,5 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/pef2text.xpl" uri="../xml/pef2text.xpl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/text2pef.xpl" uri="../xml/text2pef.xpl"/>
-  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/validate.xpl" uri="../xml/validate.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-calabash/library.xpl" uri="../xml/library.xpl"/>
 </catalog>

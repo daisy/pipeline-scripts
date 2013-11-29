@@ -13,7 +13,7 @@
     <p:option name="temp-dir" required="true"/>
     <p:option name="math-code" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-calabash/translate-file.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     

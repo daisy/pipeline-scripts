@@ -4,11 +4,11 @@
     <!--
         louis:format
     -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/format.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-formatter/library.xpl"/>
     
     <!--
         louis:translate-mathml
     -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/translate-mathml.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/library.xpl"/>
     
 </p:library>
