@@ -3,6 +3,8 @@
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl" uri="../xml/library.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/generic-liblouis-translate-mathml.xpl" uri="../xml/translation/generic-liblouis-translate-mathml.xpl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/generic-translate.xpl" uri="../xml/translation/generic-translate.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/block-translator-template.xsl" uri="../xml/translation/block-translator-template.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/generic-liblouis-translate.xsl" uri="../xml/translation/generic-liblouis-translate.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/generic-liblouis-translate-and-hyphenate.xsl" uri="../xml/translation/generic-liblouis-translate-and-hyphenate.xsl"/>

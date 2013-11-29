@@ -3,7 +3,5 @@
 
     <p:import href="xml-to-pef.convert.xpl"/>
     <p:import href="xml-to-pef.load-translator.xpl"/>
-    <p:import href="translation/generic-liblouis-translate-mathml.xpl"/>
-    <p:import href="translation/generic-translate.xpl"/>
 
 </p:library>
