@@ -9,7 +9,11 @@
         <p px:role="desc">Transforms (X)HTML documents into an EPUB 3 publication.</p>
     </p:documentation>
     
-    <p:input port="metadata" primary="false" sequence="true">
+    <p:input port="metadata" primary="false" sequence="true" px:media-type="application/xhtml+xml">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">HTML document(s)</h2>
+            <p px:role="desc">List of the HTML documents to extract metadata from.</p>
+        </p:documentation>
         <p:empty/>
     </p:input>
 
