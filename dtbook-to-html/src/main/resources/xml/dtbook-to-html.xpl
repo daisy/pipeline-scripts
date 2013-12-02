@@ -48,7 +48,7 @@
     <p:import
         href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-store.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     
@@ -122,12 +122,11 @@
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-html-convert>
 
-        <px:html-store name="store">
+        <px:fileset-store name="store">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="to-html"/>
             </p:input>
-            <p:with-option name="html-file" select="$html-file-uri"/>
-        </px:html-store>
+        </px:fileset-store>
 
     </p:group>
 
