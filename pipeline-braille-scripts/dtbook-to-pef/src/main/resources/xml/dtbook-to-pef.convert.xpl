@@ -16,10 +16,10 @@
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.store.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/zedai-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- =============== -->
     <!-- DTBOOK TO ZEDAI -->
@@ -33,14 +33,14 @@
         <p:with-option name="opt-output-dir" select="$temp-dir"/>
     </px:dtbook-to-zedai-convert>
     <p:sink/>
-    <px:dtbook-to-zedai-store>
+    <px:fileset-store>
         <p:input port="fileset.in">
             <p:pipe step="zedai" port="fileset.out"/>
         </p:input>
         <p:input port="in-memory.in">
             <p:pipe step="zedai" port="in-memory.out"/>
         </p:input>
-    </px:dtbook-to-zedai-store>
+    </px:fileset-store>
     
     <!-- ============ -->
     <!-- ZEDAI TO PEF -->

@@ -18,8 +18,8 @@
     <p:option name="brf-table" required="false" select="'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US'"/>
     
     <p:import href="utils/normalize-uri.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/pef-to-html.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/pef2text.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/library.xpl"/>
     
     <pxi:normalize-uri>
         <p:with-option name="href" select="$output-dir"/>

@@ -12,19 +12,9 @@
     <p:import href="store.xpl"/>
     
     <!--
-        pef:pef2text
+        pef:pef2text, pef:text2pef, pef:validate
     -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/pef2text.xpl"/>
-    
-    <!--
-        pef:text2pef
-    -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/text2pef.xpl"/>
-    
-    <!--
-        pef:validate
-    -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/validate.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/library.xpl"/>
     
     <!--
         pef:compare

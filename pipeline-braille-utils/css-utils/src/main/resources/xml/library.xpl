@@ -4,7 +4,6 @@
     <!--
         css:inline
     -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/inline.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/library.xpl"/>
     
 </p:library>
-

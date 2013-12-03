@@ -16,7 +16,7 @@
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xml-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     
     <!-- ================ -->
     <!-- EXTRACT METADATA -->
