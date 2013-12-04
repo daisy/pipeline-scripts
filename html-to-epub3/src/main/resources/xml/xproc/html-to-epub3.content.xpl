@@ -17,7 +17,7 @@
     <p:option name="publication-dir" required="true"/>
     <p:option name="content-dir" required="true"/>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
 
@@ -99,7 +99,7 @@
                             xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                             xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
                             <xsl:import
-                                href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
+                                href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
                             <xsl:template match="/">
                                 <c:result><xsl:value-of
                                     select="pf:replace-path(base-uri(/*),escape-html-uri(replace(pf:unescape-uri(pf:get-path(base-uri(/*))),'[^\p{L}\p{N}\-/_.]','_')))"

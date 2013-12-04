@@ -40,21 +40,10 @@
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For loading the HTML-file.</p>
-        </p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-utils-library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <p px:role="desc">For loading the HTML-file.</p>
-        </p:documentation>
-    </p:import>
-    
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl"/>
-
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/upgrade-dtbook/upgrade-dtbook.xpl"/>
 
     <p:variable name="top-uid" select="string-join(tokenize(replace(concat('',current-dateTime()),'[-:]',''),'[T\+\.]')[position() &lt;= 3],'-')"/>
 
@@ -208,11 +197,11 @@
         <p:delete match="/*/@xml:base"/>
         <p:identity name="convert.in-memory"/>
 
-        <px:dtbook-fileset>
+        <px:dtbook-load>
             <p:input port="source">
                 <p:pipe port="result" step="convert.dtbook.original-base"/>
             </p:input>
-        </px:dtbook-fileset>
+        </px:dtbook-load>
         <p:add-attribute match="//d:file[@href='dtbook.2005.basic.css']" attribute-name="original-href">
             <p:with-option name="attribute-value" select="p:resolve-uri('../css/dtbook.2005.basic.css',base-uri(/*))">
                 <p:inline>

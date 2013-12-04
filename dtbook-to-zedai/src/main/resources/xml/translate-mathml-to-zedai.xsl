@@ -6,7 +6,7 @@
     exclude-result-prefixes="#all">
 
     <xsl:import  href="http://www.daisy.org/pipeline/modules/mediatype-utils/mediatype-functions.xsl"/>
-    <xsl:import  href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
+    <xsl:import  href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
     
 
     <xsl:output indent="yes" method="xml"/>

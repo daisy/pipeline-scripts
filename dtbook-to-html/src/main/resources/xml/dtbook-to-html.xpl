@@ -44,11 +44,11 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/dtbook-load.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import
-        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/zedai-to-html.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/html-store.xpl"/>
+        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     
@@ -70,7 +70,7 @@
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                     xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
                     <xsl:import
-                        href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
+                        href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
                     <xsl:param name="href" required="yes"/>
                     <xsl:template match="/*">
                         <xsl:copy>
@@ -122,12 +122,11 @@
             <p:with-option name="output-dir" select="$output-dir-uri"/>
         </px:zedai-to-html-convert>
 
-        <px:html-store name="store">
+        <px:fileset-store name="store">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="to-html"/>
             </p:input>
-            <p:with-option name="html-file" select="$html-file-uri"/>
-        </px:html-store>
+        </px:fileset-store>
 
     </p:group>
 

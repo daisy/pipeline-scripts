@@ -41,16 +41,16 @@
         <p:documentation>Calabash extension steps.</p:documentation>
     </p:import>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/xproc/file-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl">
         <p:documentation>For manipulating files.</p:documentation>
     </p:import>
     
     <p:import
-        href="http://www.daisy.org/pipeline/modules/validation-utils/validation-utils-library.xpl">
+        href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
         <p:documentation> Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/xproc/fileset-library.xpl">
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation>Utilities for representing a fileset.</p:documentation>
     </p:import>
     
