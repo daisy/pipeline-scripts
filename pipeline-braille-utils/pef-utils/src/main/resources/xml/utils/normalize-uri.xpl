@@ -21,7 +21,7 @@
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                     xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                     version="2.0">
-                    <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/xslt/uri-functions.xsl"/>
+                    <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
                     <xsl:param name="href" required="yes"/>
                     <xsl:template match="/*">
                         <xsl:copy>
