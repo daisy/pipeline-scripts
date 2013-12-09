@@ -11,13 +11,8 @@
   </parent>
 
   <artifactId>daisy202-to-epub3</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: DAISY 2.02 to EPUB 3</name>
-
-
-  <scm>
-    <tag>v1.7</tag>
-  </scm>
 </project>
