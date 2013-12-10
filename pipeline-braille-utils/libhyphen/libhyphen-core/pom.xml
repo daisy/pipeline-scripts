@@ -29,7 +29,7 @@
       <artifactId>org.osgi.compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy</groupId>
+      <groupId>org.daisy.bindings</groupId>
       <artifactId>jhyphen</artifactId>
     </dependency>
     <dependency>

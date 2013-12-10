@@ -283,7 +283,7 @@
         <version>1.6.4</version>
       </dependency>
       <dependency>
-        <groupId>org.daisy</groupId>
+        <groupId>org.daisy.bindings</groupId>
         <artifactId>jhyphen</artifactId>
         <version>0.1.5</version>
       </dependency>
