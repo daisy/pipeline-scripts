@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.daisy.pipeline.modules</groupId>
+    <artifactId>modules-parent</artifactId>
+    <version>1.0</version>
+    <relativePath/>
+  </parent>
+  
+  <artifactId>dtbook-to-odt</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  
+  <name>DAISY Pipeline 2 module :: DTBook to ODT</name>
+  
+  <properties>
+    <odt-utils.version>1.0.0-SNAPSHOT</odt-utils.version>
+    <jodconverter-core.version>3.0-beta-4-SNAPSHOT</jodconverter-core.version>
+    <libreoffice-uno.version>4.0.2-SNAPSHOT</libreoffice-uno.version>
+  </properties>
+  
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>templates/**</exclude>
+          <exclude>xml/dtbook-to-odt.xpl</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>xml/dtbook-to-odt.xpl</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>target/generated-resources</directory>
+        <includes>
+          <include>templates/**</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>shell-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-ott</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>shell</goal>
+            </goals>
+            <configuration>
+              <workDir>${project.basedir}</workDir>
+              <chmod>true</chmod>
+              <script>
+                #!/bin/sh
+                zip_odt() {
+                  cd $1
+                  zip -0 -X $2 mimetype
+                  zip -r $2 * -x mimetype
+                }
+                rm -rf target/generated-resources/templates
+                mkdir target/generated-resources/templates
+                for template in $(ls src/main/resources/templates); do
+                  (zip_odt src/main/resources/templates/${template} $(pwd)/target/generated-resources/templates/${template})
+                done
+              </script>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>
