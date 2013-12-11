@@ -27,6 +27,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
+	private final static boolean LIBLOUIS_EXTERNAL = Boolean.getBoolean("org.daisy.pipeline.liblouis.external");
 	
 	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
@@ -40,7 +41,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	}
 	
 	protected void bindLibrary(BundledNativePath nativePath) {
-		if (this.nativePath == null) {
+		if (!LIBLOUIS_EXTERNAL && this.nativePath == null) {
 			URL libraryPath = nativePath.lookup("liblouis");
 			if (libraryPath != null) {
 				Louis.setLibraryPath(asFile(libraryPath));
