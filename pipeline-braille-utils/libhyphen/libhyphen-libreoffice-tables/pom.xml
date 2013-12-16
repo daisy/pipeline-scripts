@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
     <relativePath>../../../</relativePath>
   </parent>
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>libhyphen-libreoffice-tables</artifactId>
-  <version>4.0.0-SNAPSHOT</version>
+  <version>4.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>DAISY Pipeline 2 Braille Module :: libhyphen-libreoffice-tables</name>
   <build>
@@ -35,15 +33,13 @@
             </goals>
             <configuration>
               <tasks>
-                <mkdir dir="target/checkout"/>
-                <get dest="target/checkout/dictionaries.zip"
-                     src="http://cgit.freedesktop.org/libreoffice/dictionaries/snapshot/libreoffice-4.0.0.1.zip"
-                     usetimestamp="true" skipexisting="true"/>
+                <mkdir dir="target/checkout" />
+                <get dest="target/checkout/dictionaries.zip" src="http://cgit.freedesktop.org/libreoffice/dictionaries/snapshot/libreoffice-4.0.0.1.zip" usetimestamp="true" skipexisting="true" />
                 <unzip dest="target/generated-resources/hyphen" src="target/checkout/dictionaries.zip">
                   <patternset>
-                    <include name="**/hyph_*.dic"/>
+                    <include name="**/hyph_*.dic" />
                   </patternset>
-                  <mapper type="flatten"/>
+                  <mapper type="flatten" />
                 </unzip>
               </tasks>
             </configuration>
