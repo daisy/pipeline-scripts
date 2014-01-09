@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+  
   <modelVersion>4.0.0</modelVersion>
-
+  
   <parent>
-    <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>modules-parent</artifactId>
-    <version>1.0</version>
-    <relativePath />
+    <groupId>org.daisy</groupId>
+    <artifactId>daisy</artifactId>
+    <version>2</version>
+    <relativePath/>
   </parent>
-
+  
   <groupId>org.daisy.pipeline.modules.braille</groupId>
-  <artifactId>braille-modules-parent</artifactId>
+  <artifactId>braille-modules-aggregator</artifactId>
   <version>1.8-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
+  
+  <name>DAISY Pipeline 2 :: Aggregator POM for the Braille Modules</name>
   
   <modules>
+    <module>bom</module>
+    <module>parent</module>
     <module>pipeline-braille-utils/common-java</module>
     <module>pipeline-braille-utils/common-utils</module>
     <module>pipeline-braille-utils/css/css-core</module>
@@ -50,261 +52,4 @@
     <module>pipeline-braille-scripts/dtbook-to-pef</module>
   </modules>
   
-  <dependencyManagement>
-    <dependencies>
-      <!-- Braille modules -->
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>common-java</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>common-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>css-calabash</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>css-core</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>css-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>dotify-saxon</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>dotify-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>dtbook-to-pef</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>libhyphen-core</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>libhyphen-libreoffice-tables</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>libhyphen-native</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>libhyphen-saxon</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>libhyphen-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-calabash</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-core</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-formatter</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-mathml</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-native</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-saxon</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-tables</artifactId>
-        <version>2.5.4-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>liblouis-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>pef-calabash</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>pef-saxon</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>pef-to-html</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>pef-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>texhyph-core</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>texhyph-saxon</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>texhyph-utils</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>xml-to-pef</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.pipeline.modules.braille</groupId>
-        <artifactId>zedai-to-pef</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
-      </dependency>
-
-      <!-- Framework bundles -->
-      <dependency>
-        <groupId>org.daisy.pipeline</groupId>
-        <artifactId>calabash-adapter</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-
-      <!-- Third-Party Libraries -->
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.core</artifactId>
-        <version>4.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.compendium</artifactId>
-        <version>4.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>15.0</version>
-      </dependency>
-      <dependency>
-        <groupId>net.java.dev.jna</groupId>
-        <artifactId>jna</artifactId>
-        <version>3.5.2</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sf.saxon</groupId>
-        <artifactId>Saxon-HE</artifactId>
-        <version>9.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>com.xmlcalabash</artifactId>
-        <version>1.0.3</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>brailleutils-core</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>brailleutils-catalog</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-       <artifactId>jstyleparser</artifactId>
-       <version>1.13.0-p1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.liblouis</groupId>
-        <artifactId>liblouis-java</artifactId>
-        <version>1.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>dotify-translator</artifactId>
-        <version>1.0-alpha1</version>
-      </dependency>
-      <dependency>
-        <groupId>com.googlecode.texhyphj</groupId>
-        <artifactId>texhyphj</artifactId>
-        <version>1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>com.ibm.icu</groupId>
-        <artifactId>icu4j</artifactId>
-        <version>4.6</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.6.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.bindings</groupId>
-        <artifactId>jhyphen</artifactId>
-        <version>0.1.5</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>http://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>sonatype-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>

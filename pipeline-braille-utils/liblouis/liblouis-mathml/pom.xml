@@ -7,7 +7,7 @@
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.8-SNAPSHOT</version>
-    <relativePath>../../../</relativePath>
+    <relativePath>../../../parent/</relativePath>
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -15,7 +15,7 @@
   <version>1.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   
-  <name>DAISY Pipeline 2 Braille Module:: liblouis-mathml</name>
+  <name>DAISY Pipeline 2 Braille Module :: liblouis-mathml</name>
   
   <build>
     <resources>

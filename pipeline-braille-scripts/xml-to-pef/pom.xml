@@ -7,7 +7,7 @@
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.8-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
+    <relativePath>../../parent/</relativePath>
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -16,6 +16,5 @@
   <packaging>bundle</packaging>
   
   <name>DAISY Pipeline 2 Braille Module :: xml-to-pef</name>
-  
   
 </project>
