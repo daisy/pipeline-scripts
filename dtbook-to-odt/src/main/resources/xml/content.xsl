@@ -92,7 +92,8 @@
 	<!-- ======= -->
 	
 	<xsl:param name="image_dpi" as="xs:string" required="yes"/>
-	<xsl:param name="page_numbers" as="xs:string" select="'true'"/>
+	<xsl:param name="page_numbers" as="xs:string" select="'false'"/>
+	<xsl:param name="page_numbers_float" as="xs:string" select="'true'"/>
 	
 	<!-- ======== -->
 	<!-- TEMPLATE -->
@@ -161,11 +162,26 @@
 		<xsl:sequence select="($paragraph_style, dtb:style-name(.))[1]"/>
 	</xsl:template>
 	
-	<xsl:template match="dtb:p[.//dtb:pagenum]" mode="office:text office:annotation text:section" priority="1">
-		<xsl:call-template name="insert-pagenum-after"/>
+	<xsl:template match="dtb:p[.//dtb:pagenum]" priority="0.6"
+	              mode="office:text office:annotation text:section text:list-item table:table-cell">
+		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
+		<xsl:choose>
+			<xsl:when test="$page_numbers='false' or $pagenum_done">
+				<xsl:next-match/>
+			</xsl:when>
+			<xsl:when test="$page_numbers_float='true'">
+				<xsl:call-template name="insert-pagenum-after"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="$group-inline-nodes" mode="#current">
+					<xsl:with-param name="select" select="*|text()"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
-		
-	<xsl:template match="dtb:p" mode="office:text office:annotation text:section text:list-item table:table-cell text:note-body">
+	
+	<xsl:template match="dtb:p" mode="office:text office:annotation text:section text:list-item
+	                                  table:table-cell text:note-body">
 		<xsl:call-template name="text:p"/>
 	</xsl:template>
 	
