@@ -67,6 +67,13 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="page-numbers-float" required="false" px:type="boolean" select="'true'">
+        <p:documentation>
+            <h2 px:role="name">page-numbers-float</h2>
+            <p px:role="desc">Try to float page numbers to an appropriate place as opposed to exactly following print.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="image-dpi" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">image-dpi</h2>
@@ -137,6 +144,7 @@
             <p:with-option name="images" select="if ($images=('LINK')) then $images else 'EMBED'"/>
             <p:with-param port="parameters" name="image_dpi" select="if ($image-dpi='') then '600' else $image-dpi"/>
             <p:with-param port="parameters" name="page_numbers" select="$page-numbers"/>
+            <p:with-param port="parameters" name="page_numbers_float" select="$page-numbers-float"/>
         </px:dtbook-to-odt.convert>
         
         <!-- ========= -->
