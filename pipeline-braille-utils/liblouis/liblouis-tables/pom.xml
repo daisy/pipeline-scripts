@@ -17,10 +17,11 @@
 
   <name>DAISY Pipeline 2 Braille Module :: liblouis-tables</name>
 
-  <scm>
-    <connection>scm:svn:https://liblouis.googlecode.com/svn/tags/liblouis_2_5_3/tables</connection>
-    <tag>HEAD</tag>
-  </scm>
+  <properties>
+    <liblouis.version>2.5.3</liblouis.version>
+    <liblouis.tarball.url>https://liblouis.googlecode.com/files/liblouis-2.5.3.tar.gz</liblouis.tarball.url>
+    <liblouis.tarball.sha1>a2ba4d99bab07900dba02a03349f2099beb9b490</liblouis.tarball.sha1>
+  </properties>
 
   <build>
     <resources>
@@ -34,18 +35,41 @@
     </resources>
     <plugins>
       <plugin>
-        <artifactId>maven-scm-plugin</artifactId>
+        <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
             <id>checkout</id>
             <phase>generate-resources</phase>
             <goals>
-              <goal>checkout</goal>
+              <goal>run</goal>
             </goals>
             <configuration>
-              <connectionType>connection</connectionType>
-              <checkoutDirectory>${basedir}/target/generated-resources/tables</checkoutDirectory>
-              <excludes>lang2table,Makefile.am,maketablelist.sh,README</excludes>
+              <target>
+                <mkdir dir="target/checkout"/>
+                <get dest="target/checkout/liblouis.tar.gz" src="${liblouis.tarball.url}"
+                     usetimestamp="true" skipexisting="true"/>
+                <local name="checksum.matches"/>
+                <local name="checksum.matches.fail"/>
+                <checksum file="target/checkout/liblouis.tar.gz" algorithm="sha1"
+                          property="${liblouis.tarball.sha1}" verifyproperty="checksum.matches"/>
+                <condition property="checksum.matches.fail">
+                  <equals arg1="${checksum.matches}" arg2="false"/>
+                </condition>
+                <fail if="checksum.matches.fail">Checksum error</fail>
+                <untar src="target/checkout/liblouis.tar.gz" compression="gzip"
+                       dest="target/generated-resources">
+                  <patternset>
+                    <include name="*/tables/*"/>
+                    <exclude name="*/tables/lang2table"/>
+                    <exclude name="*/tables/Makefile.am"/>
+                    <exclude name="*/tables/maketablelist.sh"/>
+                    <exclude name="*/tables/README"/>
+                  </patternset>
+                  <mapper>
+                    <globmapper from="liblouis-${liblouis.version}/*" to="*"/>
+                  </mapper>
+                </untar>
+              </target>
             </configuration>
           </execution>
         </executions>
