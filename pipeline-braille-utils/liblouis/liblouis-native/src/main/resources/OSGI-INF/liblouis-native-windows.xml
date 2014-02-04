@@ -6,6 +6,5 @@
     </scr:service>
     <scr:property name="identifier" type="String" value="http://www.liblouis.org/native/windows/"/>
     <scr:property name="path" type="String" value="/native/windows"/>
-    <scr:property name="unpack" type="Boolean" value="true"/>
     <scr:property name="os.family" type="String" value="windows"/>
 </scr:component>

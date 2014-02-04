@@ -1,6 +1,6 @@
 package org.daisy.pipeline.braille.liblouis.saxon;
 
-import java.net.URL;
+import java.io.File;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -14,6 +14,11 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
+import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
 @SuppressWarnings("serial")
 public class ResolveTableDefinition extends ExtensionFunctionDefinition {
@@ -58,15 +63,24 @@ public class ResolveTableDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
-					throws XPathException {
+			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
 				
-				String resource = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableResolver.resolve(resource);
-				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toString()));
-				return EmptyIterator.getInstance();
+				try {
+					String resource = ((StringValue)arguments[0].next()).getStringValue();
+					File[] tableList = tableResolver.resolveTableList(tokenizeTableList(resource), null);
+					if (tableList != null && tableList.length > 0) {
+						String[] files = new String[tableList.length];
+						for (int i = 0; i < tableList.length; i++)
+							files[i] = tableList[i].getCanonicalPath();
+						return SingletonIterator.makeIterator(new StringValue(join(files, ","))); }
+					return EmptyIterator.getInstance(); }
+				catch (Exception e) {
+					logger.error("louis:resolve-table failed", e);
+					throw new XPathException("louis:resolve-table failed"); }
 			}
 		};
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(ResolveTableDefinition.class);
+
 }

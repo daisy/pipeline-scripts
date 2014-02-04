@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.libhyphen;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Files.asURL;
 import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
+import static org.daisy.pipeline.braille.Utilities.URLs.asURL;
 
 public class Libhyphen {
 	
@@ -35,9 +36,9 @@ public class Libhyphen {
 	
 	protected void bindLibrary(BundledNativePath nativePath) {
 		if (this.nativePath == null) {
-			URL libraryPath = nativePath.lookup("libhyphen");
+			URI libraryPath = nativePath.lookup("libhyphen");
 			if (libraryPath != null) {
-				Hyphen.setLibraryPath(asFile(libraryPath));
+				Hyphen.setLibraryPath(asFile(nativePath.resolve(libraryPath)));
 				this.nativePath = nativePath;
 				logger.debug("Registering libhyphen library: " + libraryPath); }}
 	}
@@ -60,16 +61,16 @@ public class Libhyphen {
 	 *     an absolute file, or a fully qualified table URL.
 	 * @param text The text to be hyphenated.
 	 */
-	public String hyphenate(String table, String text) {
+	public String hyphenate(URI table, String text) {
 		try {
 			return getHyphenator(table).hyphenate(text, SHY, ZWSP); }
 		catch (Exception e) {
 			throw new RuntimeException("Error during libhyphen hyphenation", e); }
 	}
 	
-	private Map<String,Hyphenator> hyphenatorCache = new HashMap<String,Hyphenator>();
+	private Map<URI,Hyphenator> hyphenatorCache = new HashMap<URI,Hyphenator>();
 	
-	private Hyphenator getHyphenator(String table) {
+	private Hyphenator getHyphenator(URI table) {
 		try {
 			Hyphenator hyphenator = hyphenatorCache.get(table);
 			if (hyphenator == null) {
@@ -80,7 +81,7 @@ public class Libhyphen {
 			throw new RuntimeException(e); }
 	}
 	
-	private File resolveTable(String table) {
+	private File resolveTable(URI table) {
 		URL resolvedTable = isAbsoluteFile(table) ? asURL(table) : tableResolver.resolve(table);
 		if (resolvedTable == null)
 			throw new RuntimeException("Hyphenation table " + table + " could not be resolved");

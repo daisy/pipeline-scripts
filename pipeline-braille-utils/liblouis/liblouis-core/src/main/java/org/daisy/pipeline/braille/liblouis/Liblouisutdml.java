@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.liblouis;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,6 @@ public interface Liblouisutdml {
 			Map<String,String> otherSettings,
 			File input,
 			File output,
-			String configPath,
+			URI configPath,
 			File tempDir);
 }

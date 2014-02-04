@@ -19,7 +19,7 @@
     <scr:reference bind="bindExecutable"
         unbind="unbindExecutable"
         interface="org.daisy.pipeline.braille.BundledNativePath"
-        cardinality="1..n"
+        cardinality="0..n"
         name="File2brlExecutable"
-        policy="dynamic"/>
+        policy="static"/>
 </scr:component>

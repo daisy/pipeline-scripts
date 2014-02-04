@@ -9,11 +9,11 @@
         interface="org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver"
         cardinality="1..1"
         name="LibhyphenTableResolver"
-        policy="dynamic"/>
+        policy="static"/>
     <scr:reference bind="bindLibrary"
         unbind="unbindLibrary"
         interface="org.daisy.pipeline.braille.BundledNativePath"
         cardinality="1..n"
         name="LibhyphenLibrary"
-        policy="dynamic"/>
+        policy="static"/>
 </scr:component>

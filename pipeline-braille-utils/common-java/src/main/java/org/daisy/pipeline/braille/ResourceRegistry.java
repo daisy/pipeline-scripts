@@ -1,5 +1,6 @@
 package org.daisy.pipeline.braille;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,34 +14,35 @@ public abstract class ResourceRegistry<T extends ResourcePath> implements Resour
 		if (paths.containsKey(path.getIdentifier()))
 			throw new RuntimeException("Resource registry already contains resource path with identifier " + path.getIdentifier());
 		paths.put(path.getIdentifier(), path);
-		resolverCache.clear();
+		resolver.invalidateCache();
 		logger.debug("Adding resource path to registry: {}", path.getIdentifier());
 	}
 	
 	protected void unregister(T path) {
 		paths.remove(path.getIdentifier());
-		resolverCache.clear();
+		resolver.invalidateCache();
 		logger.debug("Removing resource path from registry: {}", path.getIdentifier());
 	}
 	
-	protected final Map<URL,T> paths = new HashMap<URL,T>();
+	protected final Map<URI,T> paths = new HashMap<URI,T>();
 	
 	/*
-	 * ResourceResolver
+	 * Iterate over all registered resource paths and return as soon as one
+	 * path can resolve the resource.
 	 */
-	
-	public URL resolve(String resource) {
-		URL resolved = resolverCache.get(resource);
-		if (resolved == null) {
+	protected final CachedResolver resolver = new CachedResolver() {
+		public URL delegate(URI resource) {
 			for (T path : paths.values()) {
-				resolved = path.resolve(resource);
-				if (resolved != null) break; }}
-		if (resolved != null)
-			resolverCache.put(resource, resolved);
-		return resolved;
-	}
+				URL resolved = path.resolve(resource);
+				if (resolved != null)
+					return resolved; }
+			return null;
+		}
+	};
 	
-	private final Map<String,URL> resolverCache = new HashMap<String,URL>();
+	public URL resolve(URI resource) {
+		return resolver.resolve(resource);
+	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(ResourceRegistry.class);
 }

@@ -1,9 +1,11 @@
 package org.daisy.pipeline.braille;
 
-import java.net.URL;
+import java.net.URI;
 
 public interface ResourcePath extends ResourceResolver {
 	
-	public URL getIdentifier();
+	public URI getIdentifier();
+	
+	public URI canonicalize(URI resource);
 	
 }

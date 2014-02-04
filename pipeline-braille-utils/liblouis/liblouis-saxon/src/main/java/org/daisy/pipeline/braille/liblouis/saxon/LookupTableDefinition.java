@@ -1,6 +1,6 @@
 package org.daisy.pipeline.braille.liblouis.saxon;
 
-import java.net.URL;
+import java.net.URI;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -15,6 +15,7 @@ import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTableLookup;
 
+import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 
 @SuppressWarnings("serial")
@@ -64,9 +65,9 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 					throws XPathException {
 				
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableLookup.lookup(parseLocale(locale));
-				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toString()));
+				URI[] tableList = tableLookup.lookup(parseLocale(locale));
+				if (tableList != null && tableList.length > 0)
+					return SingletonIterator.makeIterator(new StringValue(serializeTableList(tableList)));
 				return EmptyIterator.getInstance();
 			}
 		};

@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.liblouis.calabash;
 
 import java.io.File;
-import java.net.URL;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +17,8 @@ import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
-import static org.daisy.pipeline.braille.Utilities.Files;
-import static org.daisy.pipeline.braille.Utilities.Files.asURL;
+import static org.daisy.pipeline.braille.Utilities.Files.asFile;
+import static org.daisy.pipeline.braille.Utilities.URLs.decode;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -159,8 +158,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 					settings.put("beginningPageNumber",
 					             pageLayout.get(louis_braille_page_begin).getString());
 				
-				File tempDir = new File(new URI(getOption(_temp_dir).getString()));
-				String configPath = null;
+				File tempDir = asFile(getOption(_temp_dir).getString());
+				URI configPath = null;
 				
 				// Get configuration files
 				List<String> configFileNames = new ArrayList<String>();
@@ -170,14 +169,14 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URL url = asURL(baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)));
-							String path = Files.resolve(url, ".").toString();
+							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
+							URI path = uri.resolve(".");
 							if (configPath == null)
 								configPath = path;
 							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							configFileNames.add(Files.relativize(path, url)); }}}
+							configFileNames.add(decode(path.relativize(uri).toString())); }}}
 				
 				// Get semantic action files
 				List<String> semanticFileNames = new ArrayList<String>();
@@ -187,14 +186,14 @@ public class TranslateFileProvider implements XProcStepProvider {
 						URI baseURI = fileset.getBaseURI();
 						XdmSequenceIterator files = fileset.axisIterator(Axis.CHILD, d_file);
 						while (files != null && files.hasNext()) {
-							URL url = asURL(baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href)));
-							String path = Files.resolve(url, ".").toString();
+							URI uri = baseURI.resolve(((XdmNode)files.next()).getAttributeValue(_href));
+							URI path = uri.resolve(".");
 							if (configPath == null)
 								configPath = path;
 							else if (!configPath.equals(path))
 								throw new XProcException(step.getNode(),
 										"All configuration files and semantic action files must be placed in " + configPath);
-							semanticFileNames.add(Files.relativize(path, url)); }}}
+							semanticFileNames.add(decode(path.relativize(uri).toString())); }}}
 				
 				String table = null;
 				if (getOption(_table) != null)
