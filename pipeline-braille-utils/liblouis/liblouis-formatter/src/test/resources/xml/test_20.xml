@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page { size: 15 10 }">
+    <frontmatter>
+      <toc>
+        <entry ref="r1" style="display: toc-item"/>
+        <entry ref="r2" style="display: toc-item"/>
+      </toc>
+    </frontmatter>
+    <bodymatter style="display: block; page-break-before: always">
+      <p style="display: block" xml:id="r1">
+        ⠿⠿⠿
+      </p>
+      <p style="display: block">
+        ⠿⠿⠿ <span xml:id="r2">⠿</span> ⠿⠿⠿
+      </p>
+    </bodymatter>
+  </body>
+</doc>

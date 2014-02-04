@@ -412,4 +412,46 @@
     </x:expect>
   </x:scenario>
   
+  <!-- ======= -->
+  <!-- test_19 -->
+  <!-- ======= -->
+  <!--
+      TOC entry referencing nothing.
+  -->
+  <x:scenario label="test_19">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_19.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_19.pef"/>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_20 -->
+  <!-- ======= -->
+  <!--
+      TOC entry referencing an inline item.
+  -->
+  <x:scenario label="test_20">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_20.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_20.pef"/>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

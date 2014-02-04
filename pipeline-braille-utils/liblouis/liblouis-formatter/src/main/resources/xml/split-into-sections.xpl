@@ -48,7 +48,7 @@
                 <!-- ========= -->
                 
                 <p:delete>
-                    <p:with-option name="match" select="concat($section-matcher, '|*[preceding::', $section-matcher, ']')"/>
+                    <p:with-option name="match" select="concat($section-matcher, '|node()[preceding::', $section-matcher, ']')"/>
                 </p:delete>
                 <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
                 <p:identity name="section-1"/>
@@ -70,12 +70,12 @@
                             <p:input port="source">
                                 <p:pipe step="for-each" port="current"/>
                             </p:input>
-                            <p:with-option name="match" select="concat('*[following::', $section-matcher, ']')"/>
+                            <p:with-option name="match" select="concat('node()[following::', $section-matcher, ']')"/>
                         </p:delete>
                         <p:choose>
                             <p:when test="//*[@xml:id=$section-id]/@css:page">
                                 <p:delete>
-                                    <p:with-option name="match" select="concat('*[preceding::', $section-matcher, ']')"/>
+                                    <p:with-option name="match" select="concat('node()[preceding::', $section-matcher, ']')"/>
                                 </p:delete>
                                 <p:add-attribute match="/*" attribute-name="css:page">
                                     <p:with-option name="attribute-value" select="//*[@xml:id=$section-id]/@css:page"/>
@@ -145,7 +145,7 @@
                         <p:choose>
                             <p:when test="//*[@xml:id=$section-id]/@css:page">
                                 <p:delete>
-                                    <p:with-option name="match" select="concat($section-matcher, '|*[following::', $section-matcher, ']')"/>
+                                    <p:with-option name="match" select="concat($section-matcher, '|node()[following::', $section-matcher, ']')"/>
                                 </p:delete>
                                 <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
                                 <p:for-each>

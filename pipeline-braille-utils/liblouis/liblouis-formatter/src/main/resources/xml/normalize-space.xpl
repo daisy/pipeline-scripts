@@ -5,6 +5,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:louis="http://liblouis.org/liblouis"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-inline-prefixes="xsl"
     version="1.0">
     
@@ -14,7 +15,8 @@
     <p:unwrap match="/*//*[not(ancestor::louis:semantics or ancestor::louis:styles or ancestor::louis:page-layout) and
                                not(self::louis:*) and
                                not(@louis:*) and
-                               not(@xml:space)]"/>
+                               not(@xml:space) and
+                               not(@css:target)]"/>
     
     <p:xslt>
         <p:input port="stylesheet">
