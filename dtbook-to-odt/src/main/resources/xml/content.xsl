@@ -164,11 +164,7 @@
 	
 	<xsl:template match="dtb:p[.//dtb:pagenum]" priority="0.6"
 	              mode="office:text office:annotation text:section text:list-item table:table-cell">
-		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
 		<xsl:choose>
-			<xsl:when test="$page_numbers='false' or $pagenum_done">
-				<xsl:next-match/>
-			</xsl:when>
 			<xsl:when test="$page_numbers_float='true'">
 				<xsl:call-template name="insert-pagenum-after"/>
 			</xsl:when>
@@ -304,18 +300,15 @@
 	</xsl:template>
 	
 	<xsl:template match="dtb:pagenum" mode="table:table">
-		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
-		<xsl:if test="$page_numbers='true' and not($pagenum_done)">
-			<xsl:variable name="pagenum_row" as="element()">
-				<xsl:element name="dtb:tr">
-					<xsl:element name="dtb:td">
-						<xsl:attribute name="class" select="'pagenum'"/>
-						<xsl:sequence select="."/>
-					</xsl:element>
+		<xsl:variable name="pagenum_row" as="element()">
+			<xsl:element name="dtb:tr">
+				<xsl:element name="dtb:td">
+					<xsl:attribute name="class" select="'pagenum'"/>
+					<xsl:sequence select="."/>
 				</xsl:element>
-			</xsl:variable>
-			<xsl:apply-templates select="$pagenum_row" mode="#current"/>
-		</xsl:if>
+			</xsl:element>
+		</xsl:variable>
+		<xsl:apply-templates select="$pagenum_row" mode="#current"/>
 	</xsl:template>
 	
 	<xsl:template match="dtb:tr" mode="table:table table:table-header-rows">
@@ -386,35 +379,39 @@
 	</xsl:template>
 	
 	<xsl:template match="dtb:note|dtb:annotation" mode="text:note-body">
+		<xsl:apply-templates select="$group-inline-nodes" mode="#current">
+			<xsl:with-param name="select" select="*|text()"/>
+			<xsl:with-param name="skip_notes" select="true()" tunnel="yes"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<!--
+	    Render notes only if `skip_notes` is explicitely set too false. Detect notes
+	    that are not referenced anywhere.
+	-->
+	<xsl:template match="dtb:note|dtb:annotation" priority="0.9"
+	              mode="text:p text:h text:span office:text office:annotation text:section">
 		<xsl:param name="skip_notes" as="xs:boolean" select="true()" tunnel="yes"/>
 		<xsl:choose>
 			<xsl:when test="not($skip_notes)">
-				<xsl:apply-templates select="$group-inline-nodes" mode="#current">
-					<xsl:with-param name="select" select="*|text()"/>
-					<xsl:with-param name="skip_notes" select="true()" tunnel="yes"/>
-				</xsl:apply-templates>
+				<xsl:next-match/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:next-match/>
+				<xsl:variable name="id" select="string(@id)"/>
+				<xsl:variable name="refs" select="if (self::dtb:note)
+				                                  then collection()[2]//dtb:noteref[@idref=concat('#',$id)]
+				                                  else collection()[2]//dtb:annoref[@idref=concat('#',$id)]"/>
+				<xsl:if test="not(exists($refs))">
+					<xsl:message terminate="yes">
+						<xsl:text>ERROR! </xsl:text>
+						<xsl:sequence select="name(.)"/>
+						<xsl:text> with id #</xsl:text>
+						<xsl:sequence select="$id"/>
+						<xsl:text> is never referenced.</xsl:text>
+					</xsl:message>
+				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-	
-	<xsl:template match="dtb:note|dtb:annotation" mode="#all" priority="-1.2">
-		<xsl:param name="skip_notes" as="xs:boolean" select="true()" tunnel="yes"/>
-		<xsl:variable name="id" select="string(@id)"/>
-		<xsl:variable name="refs" select="if (self::dtb:note)
-		                                  then collection()[2]//dtb:noteref[@idref=concat('#',$id)]
-		                                  else collection()[2]//dtb:annoref[@idref=concat('#',$id)]"/>
-		<xsl:if test="not(exists($refs)) or not($skip_notes)">
-			<xsl:message terminate="yes">
-				<xsl:text>ERROR! </xsl:text>
-				<xsl:sequence select="name(.)"/>
-				<xsl:text> with id #</xsl:text>
-				<xsl:sequence select="$id"/>
-				<xsl:text> is never referenced.</xsl:text>
-			</xsl:message>
-		</xsl:if>
 	</xsl:template>
 	
 	<xsl:variable name="dtb:notes" as="element()*" select="collection()[2]//dtb:note"/>
@@ -573,40 +570,33 @@
 	</xsl:template>
 	
 	<xsl:template match="dtb:pagenum" mode="office:text office:annotation text:section table:table-cell">
-		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
 		<xsl:param name="pagenum_prefix" as="node()*" tunnel="yes"/>
-		<xsl:if test="$page_numbers='true' and not($pagenum_done)">
-			<xsl:call-template name="text:p">
-				<xsl:with-param name="apply-templates" select="($pagenum_prefix, *|text())"/>
-			</xsl:call-template>
-		</xsl:if>
+		<xsl:call-template name="text:p">
+			<xsl:with-param name="apply-templates" select="($pagenum_prefix, *|text())"/>
+		</xsl:call-template>
 	</xsl:template>
 	
-	<xsl:template match="dtb:pagenum" mode="text:p text:h text:span">
+	<!--
+	    Skip pagenum if page numbering is not enabled, or if it has been rendered already (moved)
+	-->
+	<xsl:template match="dtb:pagenum" priority="0.9"
+	              mode="office:text text:section office:annotation
+	                    table:table-cell table:table table:table-header-rows table:table-row
+	                    text:list text:list-item text:note-body text:h text:p text:span">
 		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
 		<xsl:if test="$page_numbers='true' and not($pagenum_done)">
-			<xsl:element name="text:span">
-				<xsl:attribute name="text:style-name" select="'ERROR'"/>
-				<xsl:call-template name="FIXME"/>
-			</xsl:element>
+			<xsl:next-match/>
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template match="dtb:pagenum" mode="#all" priority="-1.2">
-		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
-		<xsl:if test="$page_numbers='true' and not($pagenum_done)">
-			<xsl:call-template name="TERMINATE"/>
-		</xsl:if>
-	</xsl:template>
-	
+	<!--
+	    Move all page number descendants to after this element.
+	-->
 	<xsl:template name="insert-pagenum-after">
-		<xsl:param name="pagenum_done" as="xs:boolean" select="false()" tunnel="yes"/>
 		<xsl:next-match>
 			<xsl:with-param name="pagenum_done" select="true()" tunnel="yes"/>
 		</xsl:next-match>
-		<xsl:if test="$page_numbers='true' and not($pagenum_done)">
-			<xsl:apply-templates mode="#current" select=".//dtb:pagenum"/>
-		</xsl:if>
+		<xsl:apply-templates mode="#current" select=".//dtb:pagenum"/>
 	</xsl:template>
 	
 	<!-- ====================== -->
