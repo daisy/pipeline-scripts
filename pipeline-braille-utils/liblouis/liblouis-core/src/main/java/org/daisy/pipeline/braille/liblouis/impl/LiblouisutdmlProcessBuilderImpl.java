@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
 
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
+	private final static boolean LIBLOUISUTDML_EXTERNAL =
+		Boolean.getBoolean("org.daisy.pipeline.liblouisutdml.external");
+	
 	private File file2brl;
 	private BundledNativePath nativePath;
 	private LiblouisTableResolver tableResolver;
@@ -49,7 +52,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	}
 	
 	protected void bindExecutable(BundledNativePath nativePath) {
-		if (this.nativePath == null) {
+		if (!LIBLOUISUTDML_EXTERNAL && this.nativePath == null) {
 			URI executablePath = nativePath.lookup("file2brl");
 			if (executablePath != null) {
 				file2brl = asFile(nativePath.resolve(executablePath));
