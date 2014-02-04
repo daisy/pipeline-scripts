@@ -454,4 +454,25 @@
     </x:expect>
   </x:scenario>
   
+  <!-- ======= -->
+  <!-- test_21 -->
+  <!-- ======= -->
+  <!--
+      FIXME: liblouisutdml bug (leftMargin + firstLineIndent < 0)
+  -->
+  <x:scenario label="test_21">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="file" href="../resources/xml/test_21.xml"/>
+      </x:input>
+      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="file" href="../resources/pef/test_21.pef"/>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

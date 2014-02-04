@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <body style="@page { size: 15 10 }">
+    <div style="display: block;
+                margin-left: 1;
+                padding-left: 1;
+                text-indent: -2;
+                border-left: ⠇">
+      ⠿⠿⠿⠿
+    </div>
+  </body>
+</doc>
