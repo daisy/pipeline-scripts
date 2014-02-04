@@ -8,7 +8,9 @@
   <!-- test_01 -->
   <!-- ======= -->
   <!--
-      
+      - Page dimensions can be changed within the document.
+      - When page dimensions change, a new section is started.
+      - Page dimensions are inherited from parent elements.
   -->
   <x:scenario label="test_01">
     <x:call step="louis:format">
@@ -29,7 +31,11 @@
   <!-- test_02 -->
   <!-- ======= -->
   <!--
-      FAILS: running-footer is updated 1 page too soon
+      - The print page number can be placed in the bottom right corner.
+      - The running header can be placed at the top.
+      - The running footer can be placed at the bottom.
+      - The print page number and the running header/footer can be updated.
+        => FIXME: running-footer is updated 1 page too soon
   -->
   <x:scenario label="test_02">
     <x:call step="louis:format">
@@ -50,7 +56,8 @@
   <!-- test_03 -->
   <!-- ======= -->
   <!--
-      
+      - The placement of the running header and print page number can be changed within the document.
+      - When the page layout changes, a new section is started.
   -->
   <x:scenario label="test_03">
     <x:call step="louis:format">
@@ -71,7 +78,11 @@
   <!-- test_04 -->
   <!-- ======= -->
   <!--
-      
+      - The braille page number can be placed in the bottom right corner.
+      - The braille page number is augmented with each page break.
+      - The braille page number can be reset.
+      - The rendering of braille page numbers can be disabled, but the number will still be
+        augmented with each page break.
   -->
   <x:scenario label="test_04">
     <x:call step="louis:format">
@@ -92,7 +103,9 @@
   <!-- test_05 -->
   <!-- ======= -->
   <!--
-      
+      - The braille page number can be given different styles.
+      - The default page number style is 'decimal'.
+      - The page number style can be changed within the document.
   -->
   <x:scenario label="test_05">
     <x:call step="louis:format">
@@ -113,7 +126,8 @@
   <!-- test_06 -->
   <!-- ======= -->
   <!--
-      
+      - The print page number and braille page number can be placed next to each other in the bottom
+        right corner.
   -->
   <x:scenario label="test_06">
     <x:call step="louis:format">
@@ -134,7 +148,9 @@
   <!-- test_07 -->
   <!-- ======= -->
   <!--
-      
+      - A separator line can be inserted when a page break occurs in print.
+      - The new print page number is placed at the end of the separator line.
+      - The separator line is omitted when no text preceeds or follows on the same braille page.
   -->
   <x:scenario label="test_07">
     <x:call step="louis:format">
@@ -155,11 +171,12 @@
   <!-- test_08 -->
   <!-- ======= -->
   <!--
-      FAILS because of liblouisutdml bug: nested orphanControl
-       => solutions:
-          1. make orphans a non-inheriting property
-          2. add the following rule to default.css:
-             * { orphans: 0 }
+      - A block can be kept together on the same page.
+      - The first lines of a block can be kept together on the same page (orphan control).
+        => FIXME: orphans doesn't work because of liblouisutdml bug (nested orphanControl)
+           1. make orphans a non-inheriting property
+           2. add the following rule to default.css: * { orphans: 0 }
+      - A page break can be forced.
   -->
   <x:scenario label="test_08">
     <x:call step="louis:format">
@@ -180,7 +197,8 @@
   <!-- test_09 -->
   <!-- ======= -->
   <!--
-      
+      - A block can have borders.
+      - Boxes can be nested.
   -->
   <x:scenario label="test_09">
     <x:call step="louis:format">
@@ -201,7 +219,7 @@
   <!-- test_10 -->
   <!-- ======= -->
   <!--
-      
+      - Content can be inserted before or after items with CSS.
   -->
   <x:scenario label="test_10">
     <x:call step="louis:format">
@@ -222,7 +240,9 @@
   <!-- test_11 -->
   <!-- ======= -->
   <!--
-      
+      - A table of content can be created from a list of references.
+      - If braille page numbering is enabled, a TOC entry shows the braille page number of the
+        target.
   -->
   <x:scenario label="test_11">
     <x:call step="louis:format">
@@ -243,7 +263,8 @@
   <!-- test_12 -->
   <!-- ======= -->
   <!--
-      
+      - The entries in a TOC can be styled individually.
+      - If print page numbering is enabled, a TOC entry shows the print page number of the target.
   -->
   <x:scenario label="test_12">
     <x:call step="louis:format">
@@ -264,7 +285,8 @@
   <!-- test_13 -->
   <!-- ======= -->
   <!--
-      
+      - A table of content can reference items from multiple sections.
+      - A TOC entry shows the print page number in the same style as on the target page.
   -->
   <x:scenario label="test_13">
     <x:call step="louis:format">
@@ -285,7 +307,8 @@
   <!-- test_14 -->
   <!-- ======= -->
   <!--
-      
+      - Multiple TOCs/indexes can exist in the same document.
+      - An TOC/index can reference items that occured before the TOC/index.
   -->
   <x:scenario label="test_14">
     <x:call step="louis:format">
@@ -306,7 +329,7 @@
   <!-- test_15 -->
   <!-- ======= -->
   <!--
-      FAILS: toc-item inside box
+      - FIXME: A TOC entry can not reference a boxed item.
   -->
   <x:scenario label="test_15">
     <x:call step="louis:format">
@@ -348,7 +371,8 @@
   <!-- test_17 -->
   <!-- ======= -->
   <!--
-      
+      - By default, whitespace is normalized (trimmed and collapsed).
+      - Whitespace can also be preserved.
   -->
   <x:scenario label="test_17">
     <x:call step="louis:format">
@@ -369,7 +393,9 @@
   <!-- test_18 -->
   <!-- ======= -->
   <!--
-      
+      - Hyphenation marks (SHY and ZWSP) are not visible in the output.
+      - A SHY makes a word splittable and a hyphen is inserted when the word is split.
+      - A ZWSP makes a word splittable but no hyphen is inserted when the word is split.
   -->
   <x:scenario label="test_18">
     <x:call step="louis:format">
