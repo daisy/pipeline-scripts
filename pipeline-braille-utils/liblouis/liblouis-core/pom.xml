@@ -37,6 +37,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
@@ -66,15 +71,9 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.exam</groupId>
-      <artifactId>pax-exam-container-native</artifactId>
+      <artifactId>pax-exam-container-forked</artifactId>
       <version>3.3.0</version>
-      <!--
-          scope is set to provided here instead of test so that org.osgi.core is available during
-          compilation. If org.osgi.core would be added as a compile dependency, the transitive
-          version from pax-exam-container-native would be overridden and this would cause a version
-          mismatch. (Although the version in pax-exam-container-native appears to be 4.2.0 too!!)
-      -->
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.exam</groupId>
@@ -86,6 +85,12 @@
       <groupId>org.ops4j.pax.exam</groupId>
       <artifactId>pax-exam-link-mvn</artifactId>
       <version>3.3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.url</groupId>
+      <artifactId>pax-url-reference</artifactId>
+      <version>1.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
