@@ -75,6 +75,13 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>libhyphen-native</artifactId>
+        <classifier>linux</classifier>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>libhyphen-native</artifactId>
+        <classifier>mac</classifier>
         <version>1.1.0</version>
       </dependency>
       <dependency>
@@ -110,6 +117,19 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>liblouis-native</artifactId>
+        <classifier>linux</classifier>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-native</artifactId>
+        <classifier>mac</classifier>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>liblouis-native</artifactId>
+        <classifier>windows</classifier>
         <version>1.1.0</version>
       </dependency>
       <dependency>
