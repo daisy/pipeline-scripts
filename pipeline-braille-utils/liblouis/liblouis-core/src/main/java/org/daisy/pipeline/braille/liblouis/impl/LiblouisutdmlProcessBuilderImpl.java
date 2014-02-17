@@ -78,7 +78,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 		this.configResolver = configResolver;
 	}
 	
-	protected void unbindTableResolver(LiblouisutdmlConfigResolver path) {
+	protected void unbindConfigResolver(LiblouisutdmlConfigResolver path) {
 		this.configResolver = null;
 	}
 	
