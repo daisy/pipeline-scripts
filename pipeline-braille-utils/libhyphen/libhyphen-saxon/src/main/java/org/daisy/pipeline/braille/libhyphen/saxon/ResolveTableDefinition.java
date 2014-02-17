@@ -1,5 +1,6 @@
 package org.daisy.pipeline.braille.libhyphen.saxon;
 
+import java.net.URI;
 import java.net.URL;
 
 import net.sf.saxon.expr.XPathContext;
@@ -14,6 +15,11 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver;
+
+import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class ResolveTableDefinition extends ExtensionFunctionDefinition {
@@ -61,12 +67,18 @@ public class ResolveTableDefinition extends ExtensionFunctionDefinition {
 			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
 					throws XPathException {
 				
-				String resource = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableResolver.resolve(resource);
-				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toString()));
-				return EmptyIterator.getInstance();
+				try {
+					URI resource = asURI(((StringValue)arguments[0].next()).getStringValue());
+					URL table = tableResolver.resolve(resource);
+					if (table != null)
+						return SingletonIterator.makeIterator(new StringValue(table.toString()));
+					return EmptyIterator.getInstance();  }
+				catch (Exception e) {
+					logger.error("hyphen:resolve-table failed", e);
+					throw new XPathException("hyphen:resolve-table failed"); }
 			}
 		};
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(ResolveTableDefinition.class);
 }

@@ -1,5 +1,7 @@
 package org.daisy.pipeline.braille.tex.saxon;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,8 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.tex.TexHyphenator;
+
+import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
 
 @SuppressWarnings("serial")
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
@@ -62,7 +66,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					throws XPathException {
 				
 				try {
-					String table = ((StringValue)arguments[0].next()).getStringValue();
+					URI table = asURI(((StringValue)arguments[0].next()).getStringValue());
 					String text = ((StringValue)arguments[1].next()).getStringValue();
 					return SingletonIterator.makeIterator(
 						new StringValue(hyphenator.hyphenate(table, text))); }

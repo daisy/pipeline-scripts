@@ -1,6 +1,6 @@
 package org.daisy.pipeline.braille.tex.saxon;
 
-import java.net.URL;
+import java.net.URI;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -63,7 +63,7 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 					XPathContext context) throws XPathException {
 				
 				String locale = ((StringValue)arguments[0].next()).getStringValue();
-				URL table = tableLookup.lookup(parseLocale(locale));
+				URI table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
 					return SingletonIterator.makeIterator(new StringValue(table.toString()));
 				return EmptyIterator.getInstance();
