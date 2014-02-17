@@ -17,7 +17,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_01.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -42,7 +42,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_02.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -64,7 +64,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_03.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -89,7 +89,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_04.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -112,7 +112,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_05.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -134,7 +134,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_06.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -157,7 +157,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_07.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -183,7 +183,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_08.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -205,7 +205,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_09.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -226,7 +226,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_10.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -249,7 +249,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_11.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -271,7 +271,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_12.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -293,7 +293,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_13.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -315,7 +315,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_14.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -336,7 +336,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_15.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -357,7 +357,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_16.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -379,7 +379,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_17.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -402,7 +402,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_18.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
