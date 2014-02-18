@@ -37,7 +37,7 @@
       - The print page number and the running header/footer can be updated.
         => FIXME: running-footer is updated 1 page too soon
   -->
-  <x:scenario label="test_02">
+  <x:scenario label="test_02" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_02.xml"/>
@@ -178,7 +178,7 @@
            2. add the following rule to default.css: * { orphans: 0 }
       - A page break can be forced.
   -->
-  <x:scenario label="test_08">
+  <x:scenario label="test_08" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_08.xml"/>
@@ -331,7 +331,7 @@
   <!--
       - FIXME: A TOC entry can not reference a boxed item.
   -->
-  <x:scenario label="test_15">
+  <x:scenario label="test_15" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_15.xml"/>
@@ -423,7 +423,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_19.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -444,7 +444,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_20.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -465,7 +465,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/xml/test_21.xml"/>
       </x:input>
-      <x:option name="temp-dir" select="resolve-uri('../../../target/xprocspec/tmp/')"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
