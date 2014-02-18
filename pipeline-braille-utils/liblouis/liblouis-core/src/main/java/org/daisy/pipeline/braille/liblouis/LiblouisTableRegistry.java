@@ -50,7 +50,7 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 		}
 	};
 	
-	private final ResourceLookup<Locale,URI[]> lookup = new LocaleBasedLookup.<URI[]>newInstance(dispatchingLookup);
+	private final ResourceLookup<Locale,URI[]> lookup = LocaleBasedLookup.<URI[]>newInstance(dispatchingLookup);
 	
 	private final CachedLookup<Locale,URI[]> cachedLookup = CachedLookup.<Locale,URI[]>newInstance(lookup);
 	
