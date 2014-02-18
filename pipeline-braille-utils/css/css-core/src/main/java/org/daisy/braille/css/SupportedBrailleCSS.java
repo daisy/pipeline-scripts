@@ -22,6 +22,7 @@ import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFactory;
 
+import org.daisy.braille.css.BrailleCSSProperty.AbsoluteMargin;
 import org.daisy.braille.css.BrailleCSSProperty.Border;
 import org.daisy.braille.css.BrailleCSSProperty.Content;
 import org.daisy.braille.css.BrailleCSSProperty.Display;
@@ -43,7 +44,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 	
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 33;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 35;
 	
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 	
@@ -152,6 +153,13 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		embossedProperties.add("text-indent");
 		
 		// layout box
+		props.put("left", AbsoluteMargin.integer);
+		values.put("left", DEFAULT_UA_MARGIN);
+		embossedProperties.add("left");
+		props.put("right", AbsoluteMargin.integer);
+		values.put("right", DEFAULT_UA_MARGIN);
+		embossedProperties.add("right");
+		
 		props.put("margin", Margin.component_values);
 		embossedProperties.add("margin");
 		props.put("margin-top", Margin.integer);

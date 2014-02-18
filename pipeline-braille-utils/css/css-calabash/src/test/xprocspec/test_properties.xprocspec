@@ -9,7 +9,7 @@
   <!--
       border, margin, padding
   -->
-  <x:scenario label="test_06">
+  <x:scenario label="test_01">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
@@ -36,6 +36,41 @@
         <body>
           <h style="border-bottom: ⠒; border-left: none; border-right: none; border-top: ⠒; display: block; margin-bottom: 1.0; margin-left: 3.0; margin-right: 3.0; margin-top: 1.0; padding-bottom: 0.0; padding-left: 3.0; padding-right: 3.0; padding-top: 0.0;">foo</h>
           <p style="display: block; margin-bottom: 3.0; margin-left: 4.0; margin-right: 2.0; margin-top: 1.0;">bar</p>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_02 -->
+  <!-- ======= -->
+  <!--
+      left, right
+  -->
+  <x:scenario label="test_02">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                p { display: block; left: 1; right: 2; }
+              </style>
+            </head>
+            <body>
+              <p>foo</p>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <p style="display: block; left: 1.0; right: 2.0;">foo</p>
         </body>
       </x:document>
     </x:expect>

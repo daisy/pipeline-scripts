@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.daisy.braille.css.BrailleCSSProperty.AbsoluteMargin;
 import org.daisy.braille.css.BrailleCSSProperty.Border;
 import org.daisy.braille.css.BrailleCSSProperty.Content;
 import org.daisy.braille.css.BrailleCSSProperty.Display;
@@ -136,6 +137,13 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	}
 	
 	@SuppressWarnings("unused")
+	private boolean processLeft(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		return genericOneIdentOrInteger(AbsoluteMargin.class, AbsoluteMargin.integer, true,
+				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
 	private boolean processListStyleType(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrDotPattern(ListStyleType.class, ListStyleType.dot_pattern,
@@ -216,6 +224,13 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 	private boolean processPage(Declaration d,
 			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
 		return genericOneIdentOrIdentifier(Page.class, Page.identifier, true,
+				d, properties, values);
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean processRight(Declaration d,
+			Map<String, CSSProperty> properties, Map<String, Term<?>> values) {
+		return genericOneIdentOrInteger(AbsoluteMargin.class, AbsoluteMargin.integer, true,
 				d, properties, values);
 	}
 	

@@ -7,7 +7,30 @@ public interface BrailleCSSProperty extends CSSProperty {
 	/************************************************************************
 	 * BRAILLE CSS PROPERTIES *
 	 ************************************************************************/
+	
+	public enum AbsoluteMargin implements BrailleCSSProperty {
+		integer(""), INHERIT("inherit");
 
+		private String text;
+
+		private AbsoluteMargin(String text) {
+			this.text = text;
+		}
+
+		public boolean inherited() {
+			return true;
+		}
+
+		public boolean equalsInherit() {
+			return this == INHERIT;
+		}
+
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
+	
 	public enum Border implements BrailleCSSProperty {
 		dot_pattern(""), component_values(""), NONE("none"), INHERIT("inherit");
 
