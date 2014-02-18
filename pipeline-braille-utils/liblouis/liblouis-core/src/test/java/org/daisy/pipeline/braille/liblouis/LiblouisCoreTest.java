@@ -50,4 +50,14 @@ public class LiblouisCoreTest {
 	public void testTranslate() {
 		assertEquals("foobar", liblouis.translate("foobar.cti", "foobar", false, null));
 	}
+	
+	@Test
+	public void testHyphenate_1() {
+		assertEquals("foo\u00ADbar", liblouis.hyphenate("foobar.cti,foobar.dic", "foobar"));
+	}
+	
+	@Test
+	public void testHyphenate_2() {
+		assertEquals("foo-\u200Bbar", liblouis.hyphenate("foobar.cti,foobar.dic", "foo-bar"));
+	}
 }

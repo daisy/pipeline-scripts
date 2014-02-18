@@ -50,7 +50,7 @@
   
   <xsl:function name="pxi:repeat-char" as="xs:string">
     <xsl:param name="char" as="xs:string"/>
-    <xsl:param name="times" />
+    <xsl:param name="times" as="xs:integer"/>
     <xsl:sequence select="string-join(for $i in 1 to $times return $char, '')"/>
   </xsl:function>
     
