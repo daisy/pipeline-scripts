@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
-               script="../../main/resources/xml/inline.xpl">
+               script="http://www.daisy.org/pipeline/modules/braille/css-calabash/library.xpl">
   
   <!-- ======= -->
   <!-- test_01 -->
@@ -431,7 +431,7 @@
   <!--
       TODO: Root selector
   -->
-  <x:scenario label="test_11">
+  <x:scenario label="test_11" pending="true">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
