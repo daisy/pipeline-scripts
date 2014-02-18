@@ -11,9 +11,9 @@
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:variable name="liblouis-properties" as="xs:string*"
-        select="('-louis-reset-margin-left',
-                 '-louis-reset-margin-right',
-                 'display',
+        select="('display',
+                 'left',
+                 'right',
                  'margin-top',
                  'margin-bottom',
                  'text-align',
@@ -24,9 +24,9 @@
                  'orphans')"/>
     
     <xsl:variable name="liblouis-defaults" as="xs:string*"
-        select="('inherit',
+        select="('inline',
                  'inherit',
-                 'inline',
+                 'inherit',
                  '0.0',
                  '0.0',
                  'inherit',
@@ -74,7 +74,7 @@
             <xsl:apply-templates select="@*[not(name()='style')]"/>
             <xsl:if test="not(every $declaration in css:tokenize-declarations(string($normalized-style-attribute))
                           satisfies normalize-space(substring-before($declaration,':'))
-                              =('display','orphans','-louis-reset-margin-left','text-indent'))">
+                              =('display','orphans','left','text-indent'))">
                 <xsl:sequence select="$normalized-style-attribute"/>
             </xsl:if>
             <xsl:apply-templates select="node()"/>
@@ -88,16 +88,16 @@
         <xsl:variable name="declarations" as="xs:string*">
             <xsl:for-each select="$liblouis-properties">
                 <xsl:if test="not($this/ancestor-or-self::louis:box and .=$css:paged-media-properties)">
-                    <xsl:if test="$this/self::louis:box or css:applies-to(., $display) or starts-with(., '-louis-')">
+                    <xsl:if test="$this/self::louis:box or css:applies-to(., $display)">
                         <xsl:variable name="i" select="position()"/>
                         <xsl:variable name="liblouis-default"
                             select="$liblouis-defaults[$i]"/>
                         <xsl:variable name="concretize-inherit"
                             select="$force-inherit or $liblouis-default!='inherit'"/>
                         <xsl:variable name="include-default"
-                            select="not(starts-with(., '-louis-')) and $liblouis-default!=css:get-default-value(.)"/>
+                            select="$liblouis-default!=css:get-default-value(.)"/>
                         <xsl:variable name="value" as="xs:string?"
-                            select="css:get-value($this, ., $concretize-inherit, $include-default, not(starts-with(., '-louis-')))"/>
+                            select="css:get-value($this, ., $concretize-inherit, $include-default, true())"/>
                         <xsl:if test="$value and $value!=$liblouis-default">
                             <xsl:sequence select="concat(., ': ', $value)"/>
                         </xsl:if>

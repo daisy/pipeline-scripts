@@ -10,6 +10,8 @@
     
     <xsl:variable name="css:properties" as="xs:string*"
         select="('display',
+                 'left',
+                 'right',
                  'margin-left',
                  'margin-right',
                  'margin-top',
@@ -56,6 +58,8 @@
     
     <xsl:variable name="css:valid-declarations" as="xs:string*"
         select="(re:exact(re:or(('block','inline','list-item','none','toc-item','page-break'))),
+                 re:exact($NATURAL_NUMBER),
+                 re:exact($NATURAL_NUMBER),
                  re:exact($INTEGER),
                  re:exact($INTEGER),
                  re:exact($NATURAL_NUMBER),
@@ -89,6 +93,8 @@
         select="('.*',
                  '^(block|list-item|toc-item)$',
                  '^(block|list-item)$',
+                 '^(block|list-item|toc-item)$',
+                 '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
@@ -118,6 +124,8 @@
     
     <xsl:variable name="css:default-values" as="xs:string*"
         select="('inline',
+                 '0.0',
+                 '0.0',
                  '0.0',
                  '0.0',
                  '0.0',
@@ -173,13 +181,17 @@
                  'embossed',
                  'embossed',
                  'embossed',
+                 'embossed',
+                 'embossed',
                  'print',
                  'print',
                  'print',
                  'print')"/>
     
     <xsl:variable name="css:inheriting-properties" as="xs:string*"
-        select="('text-indent',
+        select="('left',
+                 'right',
+                 'text-indent',
                  'list-style-type',
                  'text-align',
                  'orphans',

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:louis="http://liblouis.org/liblouis"
+               stylesheet="../../main/resources/xml/handle-css-border.xsl">
+  
+  <x:scenario label="test_001">
+    <x:context>
+      <doc>
+        <body style="display:block;
+                     border-top: ⠒;
+                     border-bottom: ⠒;">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:div style="display:block; page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; ">
+          <louis:border style="⠒"/>
+          <body style="display:block; ">
+            <p>foo</p>
+          </body>
+          <louis:border style="⠒"/>
+        </louis:div>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_002">
+    <x:context>
+      <doc>
+        <body style="display:block;
+                     margin-top: 1;
+                     border-top: ⠒;
+                     padding-top: 1;
+                     margin-left: 1;
+                     padding-left: 1;">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:div style="display:block; page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; margin-left:1.0;margin-top:1.0">
+          <louis:border style="⠒"/>
+          <body style="display:block; margin-left:1.0;margin-top:1.0">
+            <p>foo</p>
+          </body>
+        </louis:div>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_003">
+    <x:context>
+      <doc>
+        <body style="display:block;
+                     border-top: ⠒;
+                     border-left: ⠇;">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:div style="display:block; page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; ">
+          <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none">
+            <body style="display:block; ">
+              <p>foo</p>
+            </body>
+          </louis:box>
+        </louis:div>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_004">
+    <x:context>
+      <doc>
+        <body style="display:block;
+                     border-top: ⠒;
+                     margin-top: 1;
+                     border-left: ⠇;
+                     padding-left: 1;
+                     padding-bottom: 1;">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:div style="display:block; page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; margin-top:1.0">
+          <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none">
+            <body style="display:block; margin-left:1.0;margin-bottom:1.0">
+              <p>foo</p>
+            </body>
+          </louis:box>
+        </louis:div>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

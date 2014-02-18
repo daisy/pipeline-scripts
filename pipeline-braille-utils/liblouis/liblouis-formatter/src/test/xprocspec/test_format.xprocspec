@@ -458,7 +458,7 @@
   <!-- test_21 -->
   <!-- ======= -->
   <!--
-      FIXME: liblouisutdml bug (leftMargin + firstLineIndent < 0)
+      liblouisutdml bug (leftMargin + firstLineIndent < 0)
   -->
   <x:scenario label="test_21">
     <x:call step="louis:format">

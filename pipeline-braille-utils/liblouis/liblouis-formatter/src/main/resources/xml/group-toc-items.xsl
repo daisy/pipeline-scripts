@@ -37,10 +37,10 @@
                     and self::*[normalize-space()='']">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
-                        <xsl:variable name="width" select="
+                        <xsl:variable name="width" as="xs:integer" select="
                             (if ($this/ancestor::louis:box) then $this/ancestor::louis:box[1]/@width else $page-width)
-                             - number(pxi:or-default(css:get-value(
-                                $this, '-louis-reset-margin-right', true(), true(), false()), '0'))"/>
+                             - xs:integer(number(pxi:or-default(css:get-value(
+                                $this, 'right', true(), true(), false()), '0')))"/>
                         <xsl:for-each-group select="current-group()/descendant-or-self::*[@css:toc-item]"
                             group-adjacent="for $ref in (@ref) return base-uri(collection()/*[descendant::*[@xml:id=$ref]])">
                             <xsl:variable name="href" select="current-grouping-key()"/>
@@ -49,7 +49,7 @@
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key()">
                                         <xsl:element name="louis:div">
-                                            <xsl:attribute name="style" select="'display:block;-louis-reset-margin-left:0'"/>
+                                            <xsl:attribute name="style" select="'display:block;left:0'"/>
                                             <xsl:element name="louis:toc">
                                                 <xsl:attribute name="href" select="$href"/>
                                                 <xsl:attribute name="width" select="$width"/>

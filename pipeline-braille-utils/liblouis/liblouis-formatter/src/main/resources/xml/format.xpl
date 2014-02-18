@@ -218,13 +218,24 @@
         <p:delete match="/*/@css:page"/>
     </p:for-each>
     
-    <p:for-each name="handle-css-box-model">
+    <p:for-each name="handle-css-border">
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="handle-css-box-model.xsl"/>
+                <p:document href="handle-css-border.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="handle-css-margin">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="handle-css-margin.xsl"/>
             </p:input>
             <p:input port="parameters" select="/*/louis:page-layout/c:param-set">
-                <p:pipe step="handle-css-box-model" port="current"/>
+                <p:pipe step="handle-css-margin" port="current"/>
             </p:input>
         </p:xslt>
     </p:for-each>

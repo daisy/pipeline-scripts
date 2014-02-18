@@ -94,8 +94,8 @@
         
         <xsl:variable name="display" select="pxi:get-property-value($style, 'display')"/>
         <xsl:variable name="text-align" select="pxi:get-property-value($style, 'text-align')"/>
-        <xsl:variable name="louis-reset-margin-left" select="pxi:get-property-value($style, '-louis-reset-margin-left')"/>
-        <xsl:variable name="louis-reset-margin-right" select="pxi:get-property-value($style, '-louis-reset-margin-right')"/>
+        <xsl:variable name="left" select="pxi:get-property-value($style, 'left')"/>
+        <xsl:variable name="right" select="pxi:get-property-value($style, 'right')"/>
         <xsl:variable name="margin-top" select="pxi:get-property-value($style, 'margin-top')"/>
         <xsl:variable name="margin-bottom" select="pxi:get-property-value($style, 'margin-bottom')"/>
         <xsl:variable name="text-indent" select="pxi:get-property-value($style, 'text-indent')"/>
@@ -129,8 +129,8 @@
         <!-- leftMargin -->
         
         <xsl:choose>
-            <xsl:when test="pxi:is-numeric($louis-reset-margin-left)">
-                <xsl:value-of select="concat('   leftMargin ', format-number(number($louis-reset-margin-left) + $offset-left, '0'), '&#xa;')"/>
+            <xsl:when test="pxi:is-numeric($left)">
+                <xsl:value-of select="concat('   leftMargin ', format-number(number($left) + $offset-left, '0'), '&#xa;')"/>
             </xsl:when>
             <xsl:when test="$offset-left > 0">
                 <xsl:value-of select="concat('   leftMargin ', format-number($offset-left, '0'))"/>
@@ -139,8 +139,8 @@
         
         <!-- rightMargin -->
         
-        <xsl:if test="pxi:is-numeric($louis-reset-margin-right)">
-            <xsl:value-of select="concat('   rightMargin ', format-number(number($louis-reset-margin-right), '0'), '&#xa;')"/>
+        <xsl:if test="pxi:is-numeric($right)">
+            <xsl:value-of select="concat('   rightMargin ', format-number(number($right), '0'), '&#xa;')"/>
         </xsl:if>
         
         <!-- linesBefore -->
