@@ -124,11 +124,11 @@ public interface ResourceLookup<Q,R> {
 			if (!"".equals(locale.getCountry())) {
 				R resource = delegate(assocLocale(query, new Locale(locale.getLanguage(), locale.getCountry())));
 				if (resource != null)
-					return resource;
-				if (!"".equals(locale.getLanguage())) {
-					resource = delegate(assocLocale(query, new Locale(locale.getLanguage())));
-					if (resource != null)
-						return resource; }}
+					return resource; }
+			if (!"".equals(locale.getLanguage())) {
+				R resource = delegate(assocLocale(query, new Locale(locale.getLanguage())));
+				if (resource != null)
+					return resource; }
 			return null;
 		}
 		public static <Q,R> LocaleBasedLookup<Q,R> newInstance(final ResourceLookup<Q,R> delegate,
