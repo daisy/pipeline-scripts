@@ -1,6 +1,13 @@
 package org.daisy.pipeline.braille.liblouis;
 
+import java.io.File;
+import java.net.URI;
+
 import javax.inject.Inject;
+
+import static org.daisy.pipeline.braille.Utilities.Files.asFile;
+import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
+import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +34,12 @@ public class LiblouisCoreTest {
 	@Inject
 	Liblouis liblouis;
 	
+	@Inject
+	LiblouisTableResolver resolver;
+	
+	@Inject
+	LiblouisTableLookup lookup;
+	
 	@Configuration
 	public Option[] config() {
 		return options(
@@ -47,17 +60,32 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testResolveTable() {
+		assertEquals("foobar.cti", asFile(resolver.resolve(asURI("foobar.cti"))).getName());
+	}
+	
+	@Test
+	public void testResolveTableList() {
+		assertEquals("foobar.cti", (resolver.resolveTableList(new URI[]{asURI("foobar.cti")}, null)[0]).getName());
+	}
+	
+	@Test
+	public void testLookupTable() {
+		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, lookup.lookup(parseLocale("foo")));
+	}
+	
+	@Test
 	public void testTranslate() {
 		assertEquals("foobar", liblouis.translate("foobar.cti", "foobar", false, null));
 	}
 	
 	@Test
-	public void testHyphenate_1() {
+	public void testHyphenate() {
 		assertEquals("foo\u00ADbar", liblouis.hyphenate("foobar.cti,foobar.dic", "foobar"));
 	}
 	
 	@Test
-	public void testHyphenate_2() {
+	public void testHyphenateCompoundWord() {
 		assertEquals("foo-\u200Bbar", liblouis.hyphenate("foobar.cti,foobar.dic", "foo-bar"));
 	}
 }
