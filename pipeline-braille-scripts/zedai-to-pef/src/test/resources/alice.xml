@@ -2,7 +2,7 @@
 <?oxygen RNGSchema="../../../schemas/zedai/z3998-book-1.0/z3998-book.rng" type="xml"?>
 <document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="en">
     <head>
-        <link xmlns="" rel="stylesheet" media="embossed" type="text/css" href="test.css" />
+        <link xmlns="" rel="stylesheet" media="embossed" type="text/css" href="alice.css" />
         <meta rel="z3998:profile" resource="http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/">
             <meta property="z3998:name" content="book"/>
             <meta property="z3998:version" content="1.0"/>

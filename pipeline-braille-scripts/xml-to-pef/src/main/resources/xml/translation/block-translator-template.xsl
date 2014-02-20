@@ -21,8 +21,8 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="/">
-		<xsl:apply-templates select="*" mode="identify-blocks"/>
+	<xsl:template match="/*">
+		<xsl:apply-templates select="." mode="identify-blocks"/>
 	</xsl:template>
 	
 	<xsl:template match="*" mode="identify-blocks">
@@ -43,6 +43,7 @@
 		                      return css:eval-content-list(., substring-after($declaration, ':'))"/>
 		<xsl:variable name="display" as="xs:string" select="if ($parent-display='none') then 'none' else pxi:display(.)"/>
 		<xsl:variable name="this" as="element()" select="."/>
+		<xsl:variable name="lang" as="xs:string?" select="pxi:lang(.)"/>
 		<xsl:copy>
 			<xsl:choose>
 				<xsl:when test="$string-set!='none' or $content-before or $content-after">
@@ -60,7 +61,9 @@
 													<xsl:element name="css:string-set">
 														<xsl:attribute name="name" select="$identifier"/>
 														<xsl:element name="css:block">
-															<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+															<xsl:if test="$lang">
+																<xsl:attribute name="xml:lang" select="$lang"/>
+															</xsl:if>
 															<xsl:sequence select="$content"/>
 														</xsl:element>
 													</xsl:element>
@@ -89,7 +92,9 @@
 										<xsl:variable name="block">
 											<xsl:element name="css:before">
 												<xsl:element name="css:block">
-													<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+													<xsl:if test="$lang">
+														<xsl:attribute name="xml:lang" select="$lang"/>
+													</xsl:if>
 													<xsl:sequence select="$content-before"/>
 												</xsl:element>
 											</xsl:element>
@@ -114,7 +119,9 @@
 										<xsl:variable name="block">
 											<xsl:element name="css:after">
 												<xsl:element name="css:block">
-													<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+													<xsl:if test="$lang">
+														<xsl:attribute name="xml:lang" select="$lang"/>
+													</xsl:if>
 													<xsl:sequence select="$content-after"/>
 												</xsl:element>
 											</xsl:element>
@@ -140,17 +147,17 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:variable>
-					<xsl:apply-templates select="@*[not(name()='style')]" mode="identify-blocks"/>
+					<xsl:apply-templates select="@*[not(name()='style')]" mode="#current"/>
 					<xsl:attribute name="style" select="string-join($new-rulesets, ' ')"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="@*" mode="identify-blocks"/>
+					<xsl:apply-templates select="@*" mode="#current"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="$display='none'">
 					<xsl:if test="$has-string-set">
-						<xsl:apply-templates select="*" mode="identify-blocks">
+						<xsl:apply-templates select="*" mode="#current">
 							<xsl:with-param name="parent-is-block" select="$is-block"/>
 							<xsl:with-param name="parent-has-string-set" select="$has-string-set"/>
 							<xsl:with-param name="parent-display" select="$display"/>
@@ -162,7 +169,7 @@
 						<xsl:choose>
 							<xsl:when test="current-grouping-key()">
 								<xsl:for-each select="current-group()">
-									<xsl:apply-templates select="." mode="identify-blocks">
+									<xsl:apply-templates select="." mode="#current">
 										<xsl:with-param name="parent-is-block" select="$is-block"/>
 										<xsl:with-param name="parent-has-string-set" select="$has-string-set"/>
 										<xsl:with-param name="parent-display" select="$display"/>
@@ -173,7 +180,9 @@
 							<xsl:otherwise>
 								<xsl:variable name="block">
 									<xsl:element name="css:block">
-										<xsl:attribute name="xml:lang" select="pxi:lang($this)"/>
+										<xsl:if test="$lang">
+											<xsl:attribute name="xml:lang" select="$lang"/>
+										</xsl:if>
 										<xsl:variable name="inline-style" as="xs:string"
 											select="string-join(
 											(for $property in $css:properties[not(.='display')][css:applies-to(., 'inline')] return
@@ -202,7 +211,7 @@
 		<xsl:copy/>
 	</xsl:template>
 	
-	<xsl:function name="pxi:lang" as="xs:string">
+	<xsl:function name="pxi:lang" as="xs:string?">
 		<xsl:param name="element" as="element()"/>
 		<xsl:sequence select="$element/ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
 	</xsl:function>
