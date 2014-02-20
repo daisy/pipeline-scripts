@@ -62,11 +62,17 @@
     <xsl:template match="louis:border|
                          louis:line|
                          louis:print-page|
+                         louis:running-header|
+                         louis:running-footer|
                          louis:page-layout">
         <xsl:sequence select="."/>
     </xsl:template>
     
-    <xsl:template match="*[descendant::*[@css:toc-item] and normalize-space(string(.))='']">
+    <xsl:template match="*[descendant::*[@css:toc-item]
+                           and normalize-space(string(.))
+                               = normalize-space(string-join(.//(louis:print-page|
+                                                                 louis:running-header|
+                                                                 louis:running-footer)/string(),''))]">
         <xsl:variable name="normalized-style-attribute" as="attribute()?">
             <xsl:call-template name="normalized-style-attribute"/>
         </xsl:variable>

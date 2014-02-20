@@ -37,9 +37,9 @@
                     and self::*[normalize-space()='']">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
-                        <xsl:variable name="width" as="xs:integer" select="
+                        <xsl:variable name="width" as="xs:integer" select="xs:integer(
                             (if ($this/ancestor::louis:box) then $this/ancestor::louis:box[1]/@width else $page-width)
-                             - xs:integer(number(pxi:or-default(css:get-value(
+                             - number(pxi:or-default(css:get-value(
                                 $this, 'right', true(), true(), false()), '0')))"/>
                         <xsl:for-each-group select="current-group()/descendant-or-self::*[@css:toc-item]"
                             group-adjacent="for $ref in (@ref) return base-uri(collection()/*[descendant::*[@xml:id=$ref]])">

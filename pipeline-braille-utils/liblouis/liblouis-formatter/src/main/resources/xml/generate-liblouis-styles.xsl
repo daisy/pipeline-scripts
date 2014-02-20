@@ -2,7 +2,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     exclude-result-prefixes="#all"

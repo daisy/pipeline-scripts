@@ -7,12 +7,10 @@
     exclude-result-prefixes="xs louis brl css"
     version="2.0">
     
-    <xsl:output method="xml" encoding="UTF-8" indent="no"/>
-    
     <xsl:param name="louis:running-header"/>
     <xsl:param name="louis:running-footer"/>
     
-    <xsl:template match="/">
+    <xsl:template match="/*">
         <louis:semantics>
             <xsl:choose>
                 <xsl:when test="/louis:toc">

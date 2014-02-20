@@ -29,9 +29,9 @@
             <p:input port="source">
                 <p:pipe step="copy-strings" port="source"/>
             </p:input>
-            <p:input port="insertion" select="//louis:print-page[last()]|
-                                              //louis:running-header[last()]|
-                                              //louis:running-footer[last()]">
+            <p:input port="insertion" select="(//louis:print-page)[last()]|
+                                              (//louis:running-header)[last()]|
+                                              (//louis:running-footer)[last()]">
                 <p:pipe step="last-preceding-section" port="matched"/>
             </p:input>
         </p:insert>
@@ -177,13 +177,16 @@
                 </p:group>
                 <p:identity name="section-3"/>
                 <p:sink/>
-                <pxi:split-into-sections>
+                <p:split-sequence test="normalize-space(string(/*))
+                                        != normalize-space(string-join(//(louis:print-page|louis:running-header|louis:running-footer)/string(),''))
+                                        or //*[@css:toc-item]">
                     <p:input port="source">
                         <p:pipe step="section-1" port="result"/>
                         <p:pipe step="section-2" port="result"/>
                         <p:pipe step="section-3" port="result"/>
                     </p:input>
-                </pxi:split-into-sections>
+                </p:split-sequence>
+                <pxi:split-into-sections/>
             </p:when>
             <p:otherwise>
                 <p:identity/>

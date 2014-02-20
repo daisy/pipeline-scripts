@@ -42,7 +42,7 @@
                 <xsl:when test="some $ref in collection()//*[@ref=$id] satisfies
                     (css:get-value($ref, 'display', true(), true(), false())='toc-item')">
                     <xsl:apply-templates select="@*"/>
-                    <xsl:attribute name="css:target" select="true"/>
+                    <xsl:attribute name="css:target" select="'true'"/>
                     <xsl:apply-templates select="node()" mode="flatten"/>
                 </xsl:when>
                 <xsl:otherwise>
