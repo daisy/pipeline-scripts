@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:louis="http://liblouis.org/liblouis"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/normalize-css.xsl">
+  
+  <!--
+      Concretize inherit (if inherit is not the default)
+  -->
+  <x:scenario label="test_01">
+    <x:context>
+      <doc>
+        <p style="display: block"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p style="display: block; orphans: 2.0"> foo </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Drop properties that don't apply
+  -->
+  <x:scenario label="test_02">
+    <x:context>
+      <doc>
+        <p style="left: 2"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p> foo </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Drop properties that are the default
+  -->
+  <x:scenario label="test_03">
+    <x:context>
+      <doc>
+        <p style="display:block; left: inherit; orphans: 0.0"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p style="display: block"> foo </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      FIXME: concretize inherit if inherit is the default, but the inherited value was dropped
+      (can happen with left, right, text-align and text-indent)
+  -->
+  <x:scenario label="test_04" pending="true">
+    <x:context>
+      <doc style="left: 2">
+        <p style="display: block"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p style="display: block; left: 2; orphans: 2.0"> foo </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Reorder properties
+  -->
+  <x:scenario label="test_05">
+    <x:context>
+      <doc>
+        <p style="orphans: 3; left: 1; display: block"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p style="display: block; left: 1; orphans: 3"> foo </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Concretize inherit on louis:box
+  -->
+  <x:scenario label="test_06">
+    <x:context>
+      <doc style="left: 2">
+        <louis:box>
+          bar
+        </louis:box>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:box style="left: 2; right: 0.0; text-align: left; text-indent: 0.0">
+          bar
+        </louis:box>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Drop paged-media properties inside louis:box
+  -->
+  <x:scenario label="test_07">
+    <x:context>
+      <doc>
+        <louis:box>
+          <p style="display: block; page-break-after: always"> foo </p>
+        </louis:box>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <louis:box style="left: 0.0; right: 0.0; text-align: left; text-indent: 0.0">
+          <p style="display: block"> foo </p>
+        </louis:box>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      
+  -->
+  <x:scenario label="test_08">
+    <x:context>
+      <doc>
+        <toc style="display: block; left: 2">
+          <entry css:toc-item="true" style="display: toc-item"/>
+          <div style="display: block; left: 4">
+            <entry css:toc-item="true" style="display: toc-item"/>
+          </div>
+          <louis:print-page>i</louis:print-page>
+        </toc>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <toc>
+          <entry css:toc-item="true" style="display: toc-item; left: 2; text-indent: 0.0"/>
+          <div>
+            <entry css:toc-item="true" style="display: toc-item; left: 4; text-indent: 0.0"/>
+          </div>
+          <louis:print-page>i</louis:print-page>
+        </toc>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

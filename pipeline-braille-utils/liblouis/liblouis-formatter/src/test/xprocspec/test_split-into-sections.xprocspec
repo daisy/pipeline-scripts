@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               xmlns:louis="http://liblouis.org/liblouis"
+               script="../../main/resources/xml/split-into-sections.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="pxi:split-into-sections">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc xml:id="doc" css:page="@page { size: 30 15 }">
+            <front xml:id="front" css:page="@page { size: 30 15; @bottom-right { content: counter(braille-page, lower-roman) } }">
+              <louis:print-page>i</louis:print-page>
+              <p>foo</p>
+              <louis:print-page>ii</louis:print-page>
+            </front>
+            <body xml:id="body">
+              <louis:print-page>3</louis:print-page>
+              <p>bar</p>
+              <louis:print-page>4</louis:print-page>
+            </body>
+            <rear xml:id="rear" louis:braille-page-reset="1">
+              <p>baz</p>
+            </rear>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <doc xml:id="doc" css:page="@page { size: 30 15; @bottom-right { content: counter(braille-page, lower-roman) } }">
+          <front xml:id="front">
+            <louis:print-page>i</louis:print-page>
+            <p>foo</p>
+            <louis:print-page>ii</louis:print-page>
+          </front>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc xml:id="doc" css:page="@page { size: 30 15 }">
+          <louis:print-page>ii</louis:print-page>
+          <body xml:id="body">
+            <louis:print-page>3</louis:print-page>
+            <p>bar</p>
+            <louis:print-page>4</louis:print-page>
+          </body>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc xml:id="doc" louis:braille-page-reset="1" css:page="@page { size: 30 15 }">
+          <louis:print-page>4</louis:print-page>
+          <rear xml:id="rear">
+            <p>baz</p>
+          </rear>
+        </doc>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

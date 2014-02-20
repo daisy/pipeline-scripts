@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               xmlns:louis="http://liblouis.org/liblouis"
+               script="test_group-toc-items.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="pxi:test-group-toc-items">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc xml:base="file:/home/me/doc.xml">
+            <toc>
+              <entry css:toc-item="true" ref="h1" style="display: toc-item; left: 2; text-indent: 0.0"/>
+              <div>
+                <entry css:toc-item="true" ref="h2" style="display: toc-item; left: 4; text-indent: 0.0"/>
+              </div>
+              <louis:print-page>i</louis:print-page>
+            </toc>
+            <h xml:id="h1"> foo </h>
+            <h xml:id="h2"> bar </h>
+            <louis:page-layout>
+              <c:param-set>
+                <c:param name="louis:page-width" value="30"/>
+              </c:param-set>
+            </louis:page-layout>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <doc xml:base="file:/home/me/doc.xml">
+          <toc>
+            <louis:div style="display:block;left:0">
+              <louis:toc href="file:/home/me/doc.xml" width="30">
+                <louis:toc-item ref="h1" style="display: toc-item; left: 2; text-indent: 0.0"/>
+                <louis:toc-item ref="h2" style="display: toc-item; left: 4; text-indent: 0.0"/>
+              </louis:toc>
+            </louis:div>
+            <louis:print-page>i</louis:print-page>
+          </toc>
+          <h xml:id="h1"> foo </h>
+          <h xml:id="h2"> bar </h>
+          <louis:page-layout>
+            <c:param-set>
+              <c:param name="louis:page-width" value="30"/>
+            </c:param-set>
+          </louis:page-layout>
+        </doc>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:call step="pxi:test-group-toc-items">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc xml:base="file:/home/me/doc/section_1.xml">
+            <toc>
+              <entry css:toc-item="true" ref="h1" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+              <entry css:toc-item="true" ref="h2" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+            </toc>
+            <h xml:id="h1"> foo </h>
+            <louis:page-layout>
+              <c:param-set>
+                <c:param name="louis:page-width" value="30"/>
+              </c:param-set>
+            </louis:page-layout>
+          </doc>
+        </x:document>
+        <x:document type="inline">
+          <doc xml:base="file:/home/me/doc/section_2.xml">
+            <h xml:id="h2"> bar </h>
+            <louis:page-layout>
+              <c:param-set>
+                <c:param name="louis:page-width" value="30"/>
+              </c:param-set>
+            </louis:page-layout>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <doc xml:base="file:/home/me/doc/section_1.xml">
+          <louis:div style="display:block;left:0">
+            <louis:toc href="file:/home/me/doc/section_1.xml" width="30">
+              <louis:toc-item ref="h1" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+            </louis:toc>
+          </louis:div>
+          <louis:div style="display:block;left:0">
+            <louis:toc href="file:/home/me/doc/section_2.xml" width="30">
+              <louis:toc-item ref="h2" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+            </louis:toc>
+          </louis:div>
+          <h xml:id="h1"> foo </h>
+          <louis:page-layout>
+            <c:param-set>
+              <c:param name="louis:page-width" value="30"/>
+            </c:param-set>
+          </louis:page-layout>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc xml:base="file:/home/me/doc/section_2.xml">
+          <h xml:id="h2"> bar </h>
+          <louis:page-layout>
+            <c:param-set>
+              <c:param name="louis:page-width" value="30"/>
+            </c:param-set>
+          </louis:page-layout>
+        </doc>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
