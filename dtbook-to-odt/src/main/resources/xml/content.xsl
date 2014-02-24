@@ -28,7 +28,6 @@
 		xmlns:f="functions"
 		exclude-result-prefixes="#all">
 	
-	<xsl:include href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
 	<xsl:include href="utilities.xsl"/>
 	
 	<!-- ========================== -->
@@ -91,7 +90,7 @@
 	<!-- OPTIONS -->
 	<!-- ======= -->
 	
-	<xsl:param name="image_dpi" as="xs:string" required="yes"/>
+	<xsl:param name="image_dpi" as="xs:string" select="'600'"/>
 	<xsl:param name="page_numbers" as="xs:string" select="'false'"/>
 	<xsl:param name="page_numbers_float" as="xs:string" select="'true'"/>
 	
