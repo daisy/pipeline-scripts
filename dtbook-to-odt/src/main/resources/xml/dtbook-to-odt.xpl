@@ -5,7 +5,7 @@
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:odt="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-	xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+    xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
     exclude-inline-prefixes="#all"
     type="px:dtbook-to-odt" name="dtbook-to-odt" version="1.0">
     
@@ -91,14 +91,11 @@
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
     
-    <px:tempdir name="temp-dir">
+    <px:tempdir>
         <p:with-option name="href" select="$output-dir"/>
     </px:tempdir>
     <p:group>
-        
-        <p:variable name="temp-dir" select="string(/c:result)">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:variable>
+        <p:variable name="temp-dir" select="string(/c:result)"/>
         
         <!-- =========== -->
         <!-- LOAD DTBOOK -->
@@ -132,9 +129,7 @@
                     <meta:user-defined meta:name="dtbook-to-odt.version">${project.version}</meta:user-defined>
                 </p:inline>
             </p:input>
-            <p:with-option name="temp-dir" select="$temp-dir">
-                <p:pipe step="temp-dir" port="result"/>
-            </p:with-option>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
             <p:with-option name="template" select="if ($template!='') then $template else resolve-uri('../templates/default.ott')">
                 <p:inline>
                     <irrelevant/>
