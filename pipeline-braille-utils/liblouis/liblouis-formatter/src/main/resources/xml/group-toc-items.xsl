@@ -8,8 +8,6 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
-    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
-    
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:variable name="page-width" select="number(pxi:get-page-layout-param(/*, 'louis:page-width'))"/>
@@ -20,20 +18,20 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@css:toc-item]">
+    <xsl:template match="*[@css:display='toc-item']">
         <xsl:element name="louis:toc-item">
             <xsl:apply-templates select="@style|@ref"/>
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="*[descendant::*[@css:toc-item]]">
+    <xsl:template match="*[descendant::*[@css:display='toc-item']]">
         <xsl:variable name="this" as="element()" select="."/>
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:for-each-group select="*|text()[not(normalize-space()='')]"
                 group-adjacent="boolean(
-                    descendant-or-self::*[@css:toc-item]
-                    and not(descendant-or-self::*[not(@css:toc-item) and @style]))
+                    descendant-or-self::*[@css:display='toc-item']
+                    and not(descendant-or-self::*[not(@css:display='toc-item') and @style]))
                     and self::*[normalize-space()='']">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
@@ -41,7 +39,7 @@
                             (if ($this/ancestor::louis:box) then $this/ancestor::louis:box[1]/@width else $page-width)
                              - number(pxi:or-default(css:get-value(
                                 $this, 'right', true(), true(), false()), '0')))"/>
-                        <xsl:for-each-group select="current-group()/descendant-or-self::*[@css:toc-item]"
+                        <xsl:for-each-group select="current-group()/descendant-or-self::*[@css:display='toc-item']"
                             group-adjacent="for $ref in (@ref) return base-uri(collection()/*[descendant::*[@xml:id=$ref]])">
                             <xsl:variable name="href" select="current-grouping-key()"/>
                             <xsl:for-each-group select="current-group()"
@@ -49,7 +47,8 @@
                                 <xsl:choose>
                                     <xsl:when test="current-grouping-key()">
                                         <xsl:element name="louis:div">
-                                            <xsl:attribute name="style" select="'display:block;left:0'"/>
+                                            <xsl:attribute name="css:display" select="'block'"/>
+                                            <xsl:attribute name="style" select="'left:0'"/>
                                             <xsl:element name="louis:toc">
                                                 <xsl:attribute name="href" select="$href"/>
                                                 <xsl:attribute name="width" select="$width"/>
@@ -63,11 +62,8 @@
                                         <xsl:for-each select="current-group()">
                                             <xsl:variable name="ref" select="@ref"/>
                                             <xsl:copy>
-                                                <xsl:apply-templates select="@*[not(name()='style')]"/>
-                                                <xsl:attribute name="style"
-                                                               select="string-join((
-                                                                         css:remove-from-declarations(string(@style), ('display')),
-                                                                         'display: block'), ';')"/>
+                                                <xsl:apply-templates select="@*"/>
+                                                <xsl:attribute name="css:display" select="'block'"/>
                                                 <xsl:sequence select="string(collection()/descendant::*[@xml:id=$ref])"/>
                                             </xsl:copy>
                                         </xsl:for-each>

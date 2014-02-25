@@ -25,7 +25,7 @@
                                 content: 'bar' }}">
             <css:before style=" display: block;
                                 margin-left: 2;
-                                content: 'bar' ">bar</css:before>
+                                content: 'bar' "/>
             foo
           </p>
         </body>
@@ -45,7 +45,7 @@
       <doc>
         <body>
           <p foo="bar" style="::after {{ content: attr(foo) }}">
-            <css:after style=" content: attr(foo) ">bar</css:after>
+            <css:after style=" content: attr(foo) "/>
           </p>
         </body>
       </doc>

@@ -22,7 +22,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_01.pef"/>
     </x:expect>
   </x:scenario>
@@ -47,7 +47,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_02.pef"/>
     </x:expect>
   </x:scenario>
@@ -69,7 +69,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_03.pef"/>
     </x:expect>
   </x:scenario>
@@ -94,7 +94,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_04.pef"/>
     </x:expect>
   </x:scenario>
@@ -117,7 +117,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_05.pef"/>
     </x:expect>
   </x:scenario>
@@ -139,7 +139,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_06.pef"/>
     </x:expect>
   </x:scenario>
@@ -162,7 +162,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_07.pef"/>
     </x:expect>
   </x:scenario>
@@ -188,7 +188,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_08.pef"/>
     </x:expect>
   </x:scenario>
@@ -210,7 +210,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_09.pef"/>
     </x:expect>
   </x:scenario>
@@ -231,7 +231,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_10.pef"/>
     </x:expect>
   </x:scenario>
@@ -254,7 +254,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_11.pef"/>
     </x:expect>
   </x:scenario>
@@ -276,7 +276,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_12.pef"/>
     </x:expect>
   </x:scenario>
@@ -298,7 +298,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_13.pef"/>
     </x:expect>
   </x:scenario>
@@ -320,7 +320,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_14.pef"/>
     </x:expect>
   </x:scenario>
@@ -341,7 +341,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_15.pef"/>
     </x:expect>
   </x:scenario>
@@ -362,7 +362,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_16.pef"/>
     </x:expect>
   </x:scenario>
@@ -384,7 +384,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_17.pef"/>
     </x:expect>
   </x:scenario>
@@ -407,7 +407,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_18.pef"/>
     </x:expect>
   </x:scenario>
@@ -428,7 +428,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_19.pef"/>
     </x:expect>
   </x:scenario>
@@ -449,7 +449,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_20.pef"/>
     </x:expect>
   </x:scenario>
@@ -470,7 +470,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="file" href="../resources/pef/test_21.pef"/>
     </x:expect>
   </x:scenario>

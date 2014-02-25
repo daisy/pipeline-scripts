@@ -5,8 +5,6 @@
     xmlns:louis="http://liblouis.org/liblouis"
     exclude-result-prefixes="#all"
     version="2.0">
-
-    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
@@ -16,11 +14,23 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[matches(string(@style), 'display\s*:\s*none')]">
+    <xsl:template match="*[contains(string(@style), 'display')]">
         <xsl:variable name="display" select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:choose>
-            <xsl:when test="$display='none'">
+            <xsl:when test="$display=('none','page-break')">
                 <xsl:sequence select=".//louis:print-page|.//louis:running-header|louis:running-footer"/>
+            </xsl:when>
+            <xsl:when test="$display=('block','list-item','toc-item')">
+                <xsl:copy>
+                    <xsl:sequence select="@*[not(name()='style')]"/>
+                    <xsl:variable name="style" as="xs:string?"
+                                  select="css:remove-from-declarations(string(@style), ('display'))"/>
+                    <xsl:if test="$style">
+                        <xsl:attribute name="style" select="$style"/>
+                    </xsl:if>
+                    <xsl:attribute name="css:display" select="$display"/>
+                    <xsl:apply-templates select="node()"/>
+                </xsl:copy>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:copy>

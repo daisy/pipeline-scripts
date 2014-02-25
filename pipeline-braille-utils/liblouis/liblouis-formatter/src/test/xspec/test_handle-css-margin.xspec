@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
                xmlns:louis="http://liblouis.org/liblouis"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                stylesheet="../../main/resources/xml/handle-css-margin.xsl">
   
   <x:param name="louis:page-width" select="'20'"/>
@@ -8,9 +9,9 @@
   <x:scenario label="test_001">
     <x:context>
       <doc>
-        <louis:div style="display:block;">
+        <louis:div css:display="block">
           <louis:border style="⠒"/>
-          <body style="display:block;">
+          <body css:display="block">
             <p>foo</p>
           </body>
           <louis:border style="⠒"/>
@@ -19,9 +20,9 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div style="display:block;">
+        <louis:div css:display="block">
           <louis:border>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</louis:border>
-          <body style="display:block;">
+          <body css:display="block">
             <p>foo</p>
           </body>
           <louis:border>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</louis:border>
@@ -33,12 +34,12 @@
   <x:scenario label="test_002">
     <x:context>
       <doc>
-        <louis:div style="display:block;
-                          margin-left:1.0;
+        <louis:div css:display="block"
+                   style="margin-left:1.0;
                           margin-top:1.0;">
           <louis:border style="⠒"/>
-          <body style="display:block;
-                       margin-left:1.0;
+          <body css:display="block"
+                style="margin-left:1.0;
                        margin-top:1.0;">
             <p>foo</p>
           </body>
@@ -47,11 +48,11 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div style="display:block;
-                          margin-top:1.0; left:1.0">
+        <louis:div css:display="block"
+                   style="margin-top:1.0; left:1.0">
           <louis:border>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</louis:border>
-          <body style="display:block;
-                       margin-top:1.0; left:2.0">
+          <body css:display="block"
+                style="margin-top:1.0; left:2.0">
             <p>foo</p>
           </body>
         </louis:div>
@@ -62,12 +63,12 @@
   <x:scenario label="test_003">
     <x:context>
       <doc>
-        <louis:div style="display:block;">
+        <louis:div css:display="block">
           <louis:box border-top="⠒"
                      border-bottom="none"
                      border-left="⠇"
                      border-right="none">
-            <body style="display:block;">
+            <body css:display="block">
               <p>foo</p>
             </body>
           </louis:box>
@@ -76,9 +77,9 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div style="display:block;">
+        <louis:div css:display="block">
           <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none" width="19">
-            <body style="display:block;">
+            <body css:display="block">
               <p>foo</p>
             </body>
           </louis:box>
@@ -90,14 +91,14 @@
   <x:scenario label="test_004">
     <x:context>
       <doc>
-        <louis:div style="display:block;
-                          margin-top:1.0;">
+        <louis:div css:display="block"
+                   style="margin-top:1.0">
           <louis:box border-top="⠒"
                      border-bottom="none"
                      border-left="⠇"
                      border-right="none">
-            <body style="display:block;
-                         margin-left:1.0;
+            <body css:display="block"
+                  style="margin-left:1.0;
                          margin-bottom:1.0;">
               <p>foo</p>
             </body>
@@ -107,11 +108,11 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div style="display:block;
-                          margin-top:1.0">
+        <louis:div css:display="block"
+                   style="margin-top:1.0">
           <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none" width="19">
-            <body style="display:block;
-                         margin-bottom:1.0; left:1.0">
+            <body css:display="block"
+                  style="margin-bottom:1.0; left:1.0">
               <p>foo</p>
             </body>
           </louis:box>
@@ -123,8 +124,8 @@
   <x:scenario label="test_005">
     <x:context>
       <doc>
-        <body style="display:block;
-                     left: 5;
+        <body css:display="block"
+              style="left: 5;
                      margin-left:1;">
           <p>foo</p>
         </body>
@@ -132,7 +133,8 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <body style="display:block; left:6.0">
+        <body css:display="block"
+              style="left:6.0">
           <p>foo</p>
         </body>
       </doc>
@@ -142,14 +144,14 @@
   <x:scenario label="test_006">
     <x:context>
       <doc>
-        <louis:div style="display:block;
-                          margin-left: 2;">
+        <louis:div css:display="block"
+                   style="margin-left: 2;">
           <louis:box border-top="none"
                      border-bottom="none"
                      border-left="none"
                      border-right="none">
-            <body style="display:block;
-                         margin-left: 1;
+            <body css:display="block"
+                  style="margin-left: 1;
                          text-indent: -4;">
               <p>foo</p>
             </body>
@@ -159,9 +161,11 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div style="display:block; left:2.0">
+        <louis:div css:display="block"
+                   style="left:2.0">
           <louis:box border-top="none" border-bottom="none" border-left="none" border-right="none" width="18">
-            <body style="display:block; left:1.0; text-indent:-1.0">
+            <body css:display="block"
+                  style="left:1.0; text-indent:-1.0">
               <p>foo</p>
             </body>
           </louis:box>

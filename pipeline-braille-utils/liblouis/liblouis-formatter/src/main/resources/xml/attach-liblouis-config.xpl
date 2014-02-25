@@ -6,7 +6,6 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-inline-prefixes="#all"
     version="1.0">
     

@@ -10,7 +10,7 @@
         <x:document type="inline">
           <doc>
             <toc>
-              <entry ref="h1" style="display:toc-item"/>
+              <entry ref="h1" css:display="toc-item"/>
             </toc>
             <h xml:id="h1">
               <span>foo</span>bar
@@ -26,7 +26,7 @@
       <x:document type="inline">
         <doc>
           <toc>
-            <entry ref="h1" style="display:toc-item" css:toc-item="true"/>
+            <entry ref="h1" css:display="toc-item"/>
           </toc>
           <h xml:id="h1" css:target="true">
             foobar
@@ -42,7 +42,7 @@
         <x:document type="inline">
           <doc>
             <toc>
-              <entry ref="h1" style="display:toc-item"/>
+              <entry ref="h1" css:display="toc-item"/>
             </toc>
           </doc>
         </x:document>
@@ -62,7 +62,7 @@
       <x:document type="inline">
         <doc>
           <toc>
-            <entry ref="h1" style="display:toc-item" css:toc-item="true"/>
+            <entry ref="h1" css:display="toc-item" />
           </toc>
         </doc>
       </x:document>
@@ -82,7 +82,7 @@
         <x:document type="inline">
           <doc>
             <toc>
-              <entry ref="h_1" style="display:toc-item"/>
+              <entry ref="h_1" css:display="toc-item"/>
             </toc>
             <h xml:id="h1">
               <span>foo</span>bar
@@ -98,7 +98,7 @@
       <x:document type="inline">
         <doc>
           <toc>
-            <entry ref="h_1" style="display: block"/>
+            <entry ref="h_1" css:display="block"/>
           </toc>
           <h xml:id="h1">
             <span>foo</span>bar

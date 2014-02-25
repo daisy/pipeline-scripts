@@ -53,15 +53,21 @@
     </xsl:template>
     
     <xsl:template match="*">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="*[@css:display]">
         <xsl:param name="real-left" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="real-right" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-left" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-right" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-text-indent" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-width" as="xs:integer" select="xs:integer(number($louis:page-width))" tunnel="yes"/>
-        <xsl:variable name="display" as="xs:string?" select="css:get-value(., 'display', true(), true(), true())"/>
+        <xsl:variable name="display" as="xs:string" select="string(@css:display)"/>
         <xsl:choose>
-            <xsl:when test="$display and $display=('block','list-item','toc-item') and matches(string(@style), 'margin|left|right')">
+            <xsl:when test="matches(string(@style), 'margin-left|margin-right|left|right|text-indent')">
                 <xsl:variable name="margin-left" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-left', $display)))"/>
                 <xsl:variable name="margin-right" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-right', $display)))"/>
                 <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'text-indent', $display)))"/>
@@ -75,8 +81,8 @@
                 <xsl:variable name="corrected-right" as="xs:integer" select="max((0, $new-right))"/>
                 <xsl:variable name="corrected-text-indent" as="xs:integer" select="max((- $corrected-left, $text-indent))"/>
                 <xsl:copy>
-                    <xsl:apply-templates select="@*"/>
-                    <xsl:attribute name="style" select="pxi:join-declarations((
+                    <xsl:apply-templates select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="pxi:maybe-style-attr((
                                                           css:remove-from-declarations(string(@style),
                                                             ('left', 'right', 'margin-left', 'margin-right','text-indent')),
                                                           if ($corrected-left != $current-left)
@@ -100,9 +106,7 @@
                 </xsl:copy>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:copy>
-                    <xsl:apply-templates select="@*|node()"/>
-                </xsl:copy>
+                <xsl:next-match/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -127,9 +131,11 @@
         </xsl:choose>
     </xsl:function>
     
-    <xsl:function name="pxi:join-declarations" as="xs:string">
+    <xsl:function name="pxi:maybe-style-attr" as="attribute()?">
         <xsl:param name="declarations" as="xs:string*"/>
-        <xsl:sequence select="string-join($declarations, '; ')"/>
+        <xsl:if test="exists($declarations)">
+            <xsl:attribute name="style" select="string-join($declarations, '; ')"/>
+        </xsl:if>
     </xsl:function>
     
 </xsl:stylesheet>

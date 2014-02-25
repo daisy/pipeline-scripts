@@ -3,6 +3,7 @@
                xmlns:c="http://www.w3.org/ns/xproc-step"
                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                xmlns:louis="http://liblouis.org/liblouis"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="test_generate-liblouis-styles.xpl">
   
   <x:scenario label="test_01">
@@ -10,13 +11,13 @@
       <x:input port="source">
         <x:document type="inline">
           <doc>
-            <body style="display: block">
-              <section style="display: block; page-break-before: always">
-                <h style="display: block; left: 3; right: 3; margin-top: 1; margin-bottom: 1; text-align: center; page-break-after: avoid">
+            <body css:display="block">
+              <section css:display="block" style="page-break-before: always">
+                <h css:display="block" style="left: 3; right: 3; margin-top: 1; margin-bottom: 1; text-align: center; page-break-after: avoid">
                   baz
                 </h>
-                <p style="display: block; text-indent: 2; orphans: 2">
-                  <span style="display: inline">foo</span>bar
+                <p css:display="block" style="text-indent: 2; orphans: 2">
+                  <span>foo</span>bar
                 </p>
               </section>
             </body>
@@ -103,9 +104,9 @@ style d799e10
       <x:input port="source">
         <x:document type="inline">
           <louis:toc href="file:/home/me/doc.xml" width="20">
-            <louis:toc-item style="display: toc-item; left: 4; text-indent: -4"/>
-            <louis:toc-item style="display: toc-item; left: 4; text-indent: -4"/>
-            <louis:toc-item style="display: toc-item; left: 6; text-indent: -4"/>
+            <louis:toc-item style="left: 4; text-indent: -4"/>
+            <louis:toc-item style="left: 4; text-indent: -4"/>
+            <louis:toc-item style="left: 6; text-indent: -4"/>
           </louis:toc>
         </x:document>
         <x:document type="inline">

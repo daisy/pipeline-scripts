@@ -24,16 +24,12 @@
                     <xsl:if test="$before_style">
                         <xsl:element name="css:before">
                             <xsl:attribute name="style" select="$before_style"/>
-                            <xsl:sequence select="for $declaration in css:filter-declaration(css:tokenize-declarations($before_style), 'content')
-                                                  return css:eval-content-list(., substring-after($declaration, ':'))"/>
                         </xsl:element>
                     </xsl:if>
                     <xsl:apply-templates select="node()"/>
                     <xsl:if test="$after_style">
                         <xsl:element name="css:after">
                             <xsl:attribute name="style" select="$after_style"/>
-                            <xsl:sequence select="for $declaration in css:filter-declaration(css:tokenize-declarations($after_style), 'content')
-                                                  return css:eval-content-list(., substring-after($declaration, ':'))"/>
                         </xsl:element>
                     </xsl:if>
                 </xsl:copy>

@@ -12,9 +12,9 @@
         <x:document type="inline">
           <doc xml:base="file:/home/me/doc.xml">
             <toc>
-              <entry css:toc-item="true" ref="h1" style="display: toc-item; left: 2; text-indent: 0.0"/>
+              <entry ref="h1" css:display="toc-item" style="left: 2; text-indent: 0.0"/>
               <div>
-                <entry css:toc-item="true" ref="h2" style="display: toc-item; left: 4; text-indent: 0.0"/>
+                <entry ref="h2" css:display="toc-item" style="left: 4; text-indent: 0.0"/>
               </div>
               <louis:print-page>i</louis:print-page>
             </toc>
@@ -36,10 +36,10 @@
       <x:document type="inline">
         <doc xml:base="file:/home/me/doc.xml">
           <toc>
-            <louis:div style="display:block;left:0">
+            <louis:div css:display="block" style="left:0">
               <louis:toc href="file:/home/me/doc.xml" width="30">
-                <louis:toc-item ref="h1" style="display: toc-item; left: 2; text-indent: 0.0"/>
-                <louis:toc-item ref="h2" style="display: toc-item; left: 4; text-indent: 0.0"/>
+                <louis:toc-item ref="h1" style="left: 2; text-indent: 0.0"/>
+                <louis:toc-item ref="h2" style="left: 4; text-indent: 0.0"/>
               </louis:toc>
             </louis:div>
             <louis:print-page>i</louis:print-page>
@@ -62,8 +62,8 @@
         <x:document type="inline">
           <doc xml:base="file:/home/me/doc/section_1.xml">
             <toc>
-              <entry css:toc-item="true" ref="h1" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
-              <entry css:toc-item="true" ref="h2" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+              <entry ref="h1" css:display="toc-item" style="left: 0.0; text-indent: 0.0"/>
+              <entry ref="h2" css:display="toc-item" style="left: 0.0; text-indent: 0.0"/>
             </toc>
             <h xml:id="h1"> foo </h>
             <louis:page-layout>
@@ -91,14 +91,14 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <doc xml:base="file:/home/me/doc/section_1.xml">
-          <louis:div style="display:block;left:0">
+          <louis:div css:display="block" style="left:0">
             <louis:toc href="file:/home/me/doc/section_1.xml" width="30">
-              <louis:toc-item ref="h1" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+              <louis:toc-item ref="h1" style="left: 0.0; text-indent: 0.0"/>
             </louis:toc>
           </louis:div>
-          <louis:div style="display:block;left:0">
+          <louis:div css:display="block" style="left:0">
             <louis:toc href="file:/home/me/doc/section_2.xml" width="30">
-              <louis:toc-item ref="h2" style="display: toc-item; left: 0.0; text-indent: 0.0"/>
+              <louis:toc-item ref="h2" style="left: 0.0; text-indent: 0.0"/>
             </louis:toc>
           </louis:div>
           <h xml:id="h1"> foo </h>

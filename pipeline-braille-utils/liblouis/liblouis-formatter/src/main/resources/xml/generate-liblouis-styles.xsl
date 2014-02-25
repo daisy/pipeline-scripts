@@ -3,6 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     exclude-result-prefixes="#all"
     version="2.0">
@@ -13,29 +14,28 @@
     <xsl:variable name="braille-page-format" select="pxi:get-page-layout-param(/*, 'louis:braille-page-format')"/>
     
     <xsl:variable name="root" select="/*"/>
-    <xsl:key name="style-string" match="//*[@style]" use="string(@style)"/>
+    <xsl:key name="style-string" match="//*[@css:display]|//louis:toc-item" use="string(@style)"/>
     
     <xsl:function name="pxi:generate-style-name" as="xs:string">
-        <xsl:param name="style-string" as="xs:string" />
+        <xsl:param name="style-string" as="xs:string"/>
         <xsl:value-of select="generate-id($root/key('style-string', $style-string)[1])"/>
     </xsl:function>
     
-    <xsl:template match="@style">
-        <xsl:variable name="display" select="pxi:get-property-value(., 'display')"/>
-        <xsl:if test="$display=('block','toc-item','list-item')">
-            <xsl:attribute name="louis:style" select="concat('#', pxi:generate-style-name(string()))"/>
-        </xsl:if>
-    </xsl:template>
+    <xsl:template match="@style|@css:display"/>
     
     <xsl:template match="@*|node()">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="self::*/@css:display or self::louis:toc-item">
+                <xsl:attribute name="louis:style" select="concat('#', pxi:generate-style-name(string(@style)))"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()"/>
         </xsl:copy>
     </xsl:template>
     
     <xsl:template match="/*">
         <xsl:copy>
-            <xsl:apply-templates select="@*[not(name()='style')]|node()"/>
+            <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
         <xsl:result-document href="louis-styles.xml" format="louis-styles">
             <louis:styles>
@@ -45,12 +45,13 @@
                         <xsl:variable name="offset-left" select="
                             number(pxi:get-page-layout-param(collection()/*[base-uri(.)=$href], 'louis:page-width'))
                             - number(/louis:toc/@width)"/>
-                        <xsl:for-each select="distinct-values(//louis:toc-item/@style/string())">
+                        <xsl:for-each select="distinct-values(//louis:toc-item/string(@style))">
                             <xsl:variable name="i" select="position()"/>
                             <xsl:if test="$i &lt;= 10">
                                 <xsl:call-template name="print-liblouis-style">
                                     <xsl:with-param name="style" select="."/>
                                     <xsl:with-param name="style-name" select="concat('contents', $i)"/>
+                                    <xsl:with-param name="toc-item" select="true()"/>
                                     <xsl:with-param name="offset-left" select="$offset-left"/>
                                 </xsl:call-template>
                             </xsl:if>
@@ -61,14 +62,11 @@
                             <xsl:with-param name="style" select="string(@style)"/>
                             <xsl:with-param name="style-name" select="'root'"/>
                         </xsl:call-template>
-                        <xsl:for-each select="distinct-values(//*[not(self::louis:toc-item)]/@style/string())">
-                            <xsl:variable name="display" select="pxi:get-property-value(., 'display')"/>
-                            <xsl:if test="$display=('block','list-item')">
-                                <xsl:call-template name="print-liblouis-style">
-                                    <xsl:with-param name="style" select="."/>
-                                    <xsl:with-param name="style-name" select="pxi:generate-style-name(.)"/>
-                                </xsl:call-template>
-                            </xsl:if>
+                        <xsl:for-each select="distinct-values(//*[@css:display and not(self::louis:toc-item)]/string(@style))">
+                            <xsl:call-template name="print-liblouis-style">
+                                <xsl:with-param name="style" select="."/>
+                                <xsl:with-param name="style-name" select="pxi:generate-style-name(.)"/>
+                            </xsl:call-template>
                         </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -79,6 +77,7 @@
     <xsl:template name="print-liblouis-style">
         <xsl:param name="style" as="xs:string"/>
         <xsl:param name="style-name" as="xs:string"/>
+        <xsl:param name="toc-item" as="xs:boolean" select="false()"/>
         <xsl:param name="offset-left" select="0"/>
         
         <xsl:text># --------------------------------------------------------------------------------------------------&#xa;</xsl:text>
@@ -91,7 +90,6 @@
         <xsl:sequence select="$style-name"/>
         <xsl:text>&#xa;</xsl:text>
         
-        <xsl:variable name="display" select="pxi:get-property-value($style, 'display')"/>
         <xsl:variable name="text-align" select="pxi:get-property-value($style, 'text-align')"/>
         <xsl:variable name="left" select="pxi:get-property-value($style, 'left')"/>
         <xsl:variable name="right" select="pxi:get-property-value($style, 'right')"/>
@@ -107,7 +105,7 @@
         
         <xsl:variable name="format" as="xs:string?">
             <xsl:choose>
-                <xsl:when test="$display='toc-item'">
+                <xsl:when test="$toc-item">
                     <xsl:value-of select="'contents'"/>
                 </xsl:when>
                 <xsl:when test="$text-align='left'">

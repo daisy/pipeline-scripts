@@ -115,6 +115,17 @@
         </p:xslt>
     </p:for-each>
     
+    <p:for-each name="handle-css-content">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="handle-css-content.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
     <p:for-each name="handle-css-string-set">
         <p:xslt>
             <p:input port="stylesheet">
@@ -126,10 +137,10 @@
         </p:xslt>
     </p:for-each>
     
-    <p:for-each name="handle-css-display-none">
+    <p:for-each name="handle-css-display">
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="handle-css-display-none.xsl"/>
+                <p:document href="handle-css-display.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>

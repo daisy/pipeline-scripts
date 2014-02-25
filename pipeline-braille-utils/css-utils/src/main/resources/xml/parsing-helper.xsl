@@ -81,7 +81,9 @@
     <xsl:function name="css:tokenize-declarations" as="xs:string*">
         <xsl:param name="declarations" as="xs:string?"/>
         <xsl:if test="$declarations">
-            <xsl:sequence select="tokenize($declarations, ';')[not(normalize-space(.)='')]"/>
+            <xsl:sequence select="for $declaration
+                                  in tokenize($declarations, ';')[not(normalize-space(.)='')]
+                                  return replace($declaration, '(^\s+|\s+$)', '')"/>
         </xsl:if>
     </xsl:function>
     
@@ -97,22 +99,96 @@
         <xsl:sequence select="$tokenized-declarations[normalize-space(substring-before(.,':'))=$properties]"/>
     </xsl:function>
     
+    <xsl:variable name="IDENT_RE" select="'(\p{L}|_)(\p{L}|_|-)*'"/>
+    <!--
+        <string>
+    -->
+    <xsl:variable name="STRING_RE">('.*?'|".*?")</xsl:variable>
+    <!--
+        content()
+    -->
+    <xsl:variable name="CONTENT_FN_RE" select="'content\(\)'"/>
+    <!--
+        attr(<name>)
+    -->
+    <xsl:variable name="ATTR_FN_RE" select="concat('attr\(\s*(',$IDENT_RE,')\s*\)')"/>
+    <!--
+        string(<identifier>)
+    -->
+    <xsl:variable name="STRING_FN_RE" select="concat('string\(\s*(',$IDENT_RE,')\s*\)')"/>
+    <!--
+        counter(<identifier>,<style>?)
+    -->
+    <xsl:variable name="COUNTER_FN_RE" select="concat('counter\(\s*(',$IDENT_RE,')\s*(,\s*(',$IDENT_RE,')\s*)?\)')"/>
+    <!--
+        $1: <string>
+        $3: content()
+        $4: attr(<name>)
+        $5:      <name>
+        $8: string(<identifier>)
+        $9:        <identifier>
+        $12: counter(<identifier>,<style>?)
+        $13:         <identifier>
+        $16:                      <style>
+    -->
+    <xsl:variable name="CONTENT_RE" select="concat('(',$STRING_RE,')|
+                                                    (',$CONTENT_FN_RE,')|
+                                                    (',$ATTR_FN_RE,')|
+                                                    (',$STRING_FN_RE,')|
+                                                    (',$COUNTER_FN_RE,')')"/>
+    
     <xsl:function name="css:eval-content-list">
-        <xsl:param name="element" as="element()"/>
+        <xsl:param name="context" as="element()"/>
         <xsl:param name="content-list" as="xs:string"/>
-        <xsl:analyze-string select="$content-list" regex="{$CONTENT}">
+        <xsl:analyze-string select="$content-list" regex="{$CONTENT_RE}" flags="x">
             <xsl:matching-substring>
                 <xsl:choose>
-                    <xsl:when test="matches(., concat('^', $STRING, '$'))">
-                        <xsl:sequence select="substring(., 2, string-length(.)-2)"/>
+                    <!--
+                        <string>
+                    -->
+                    <xsl:when test="regex-group(1)!=''">
+                        <xsl:variable name="string" as="xs:string"
+                                      select="substring(regex-group(1), 2, string-length(regex-group(1))-2)"/>
+                        <xsl:sequence select="$string"/>
                     </xsl:when>
-                    <xsl:when test="matches(., '^attr\(.+?\)$')">
-                        <xsl:variable name="attr"
-                            select="normalize-space(substring(., 6, string-length(.)-6))"/>
-                        <xsl:sequence select="string($element/@*[name()=$attr])"/>
+                    <!--
+                        content()
+                    -->
+                    <xsl:when test="regex-group(3)!=''">
+                        <xsl:if test="$context">
+                            <xsl:sequence select="$context/child::node()"/>
+                        </xsl:if>
                     </xsl:when>
-                    <xsl:when test="matches(., '^content\(\)$')">
-                        <xsl:sequence select="$element/child::node()"/>
+                    <!--
+                        attr(<name>)
+                    -->
+                    <xsl:when test="regex-group(4)!=''">
+                        <xsl:if test="$context">
+                            <xsl:variable name="name" as="xs:string" select="regex-group(5)"/>
+                            <xsl:sequence select="string($context/@*[name()=$name])"/>
+                        </xsl:if>
+                    </xsl:when>
+                    <!--
+                        string(<identifier>)
+                    -->
+                    <xsl:when test="regex-group(8)!=''">
+                        <xsl:variable name="identifier" as="xs:string" select="regex-group(9)"/>
+                        <xsl:element name="css:string">
+                            <xsl:attribute name="identifier" select="$identifier"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <!--
+                        counter(<identifier>,<style>?)
+                    -->
+                    <xsl:when test="regex-group(12)!=''">
+                        <xsl:variable name="identifier" as="xs:string" select="regex-group(13)"/>
+                        <xsl:variable name="style" as="xs:string" select="regex-group(16)"/>
+                        <xsl:element name="css:counter">
+                            <xsl:attribute name="identifier" select="$identifier"/>
+                            <xsl:if test="$style!=''">
+                                <xsl:attribute name="style" select="$style"/>
+                            </xsl:if>
+                        </xsl:element>
                     </xsl:when>
                 </xsl:choose>
             </xsl:matching-substring>

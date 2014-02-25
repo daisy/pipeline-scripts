@@ -50,7 +50,7 @@
                 <p:delete>
                     <p:with-option name="match" select="concat($section-matcher, '|node()[preceding::', $section-matcher, ']')"/>
                 </p:delete>
-                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
+                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:display='toc-item']"/>
                 <p:identity name="section-1"/>
                 <p:sink/>
                 
@@ -104,7 +104,7 @@
                                 <p:identity/>
                             </p:otherwise>
                         </p:choose>
-                        <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
+                        <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:display='toc-item']"/>
                         <p:for-each>
                             <p:choose>
                                 <p:when test="number($count-preceding-sections) > 0">
@@ -147,7 +147,7 @@
                                 <p:delete>
                                     <p:with-option name="match" select="concat($section-matcher, '|node()[following::', $section-matcher, ']')"/>
                                 </p:delete>
-                                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:toc-item]"/>
+                                <p:split-sequence test="normalize-space(string(/*))!='' or //*[@css:display='toc-item']"/>
                                 <p:for-each>
                                     <p:choose>
                                         <p:when test="number($count-preceding-sections) > 0">
@@ -179,7 +179,7 @@
                 <p:sink/>
                 <p:split-sequence test="normalize-space(string(/*))
                                         != normalize-space(string-join(//(louis:print-page|louis:running-header|louis:running-footer)/string(),''))
-                                        or //*[@css:toc-item]">
+                                        or //*[@css:display='toc-item']">
                     <p:input port="source">
                         <p:pipe step="section-1" port="result"/>
                         <p:pipe step="section-2" port="result"/>
