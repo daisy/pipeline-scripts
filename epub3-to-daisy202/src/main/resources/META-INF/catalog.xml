@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:px="http://www.daisy.org/ns/pipeline">
+
+  <uri name="http://www.daisy.org/pipeline/modules/epub3-to-daisy202/xproc/epub3-to-daisy202.xpl" uri="../xml/xproc/epub3-to-daisy202.xpl" px:script="true"/>
+  <uri name="http://www.daisy.org/pipeline/modules/epub3-to-daisy202/xproc/library.xpl" uri="../xml/xproc/library.xpl"/>
+
+  <!-- TODO: This XSLT will be included in Pipeline 2 from v1.8 onwards. Until then, we keep a copy of it in this repo as well. -->
+  <!--<uri name="http://www.daisy.org/pipeline/modules/common-utils/deep-level-grouping.xsl" uri="../xml/xslt/deep-level-grouping.xsl"/>-->
+
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-nav-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-ocf-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-pub-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
+
+</catalog>
