@@ -118,14 +118,10 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="*[descendant::*[@css:display='toc-item']
-                           and normalize-space(string(.))
-                               = normalize-space(string-join(.//(louis:print-page|
-                                                                 louis:running-header|
-                                                                 louis:running-footer)/string(),''))]"
+    <xsl:template match="*[descendant::*[@css:display='toc-item'] and not(descendant::css:block)]"
                   as="xs:string?" mode="property" priority="0.8">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:if test="not($property=('display','orphans','left','text-indent'))">
+        <xsl:if test="not($property=('orphans','left','text-indent'))">
             <xsl:next-match>
                 <xsl:with-param name="property" select="$property"/>
             </xsl:next-match>

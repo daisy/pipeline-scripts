@@ -28,7 +28,7 @@
     <xsl:template match="louis:border">
         <xsl:param name="current-width" as="xs:integer" select="xs:integer(number($louis:page-width))" tunnel="yes"/>
         <xsl:copy>
-            <xsl:value-of select="pxi:repeat-char(@style, $current-width)"/>
+            <xsl:value-of select="pxi:repeat-char(@pattern, $current-width)"/>
         </xsl:copy>
     </xsl:template>
     
@@ -58,77 +58,55 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@css:display]">
+    <xsl:template match="*[matches(string(@style), 'margin-left|margin-right|left|right|text-indent')]">
         <xsl:param name="real-left" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="real-right" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-left" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-right" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-text-indent" as="xs:integer" select="0" tunnel="yes"/>
         <xsl:param name="current-width" as="xs:integer" select="xs:integer(number($louis:page-width))" tunnel="yes"/>
-        <xsl:variable name="display" as="xs:string" select="string(@css:display)"/>
-        <xsl:choose>
-            <xsl:when test="matches(string(@style), 'margin-left|margin-right|left|right|text-indent')">
-                <xsl:variable name="margin-left" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-left', $display)))"/>
-                <xsl:variable name="margin-right" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-right', $display)))"/>
-                <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'text-indent', $display)))"/>
-                <xsl:variable name="left"  as="xs:string?" select="css:get-value(., 'left', false(), false(), false())"/>
-                <xsl:variable name="right" as="xs:string?" select="css:get-value(., 'right', false(), false(), false())"/>
-                <xsl:variable name="new-left" as="xs:integer"
-                              select="(if ($left and not($left='inherit')) then xs:integer(number($left)) else $real-left) + $margin-left"/>
-                <xsl:variable name="new-right" as="xs:integer"
-                              select="(if ($right and not($right='inherit')) then xs:integer(number($right)) else $real-right) + $margin-right"/>
-                <xsl:variable name="corrected-left" as="xs:integer" select="max((0, $new-left))"/>
-                <xsl:variable name="corrected-right" as="xs:integer" select="max((0, $new-right))"/>
-                <xsl:variable name="corrected-text-indent" as="xs:integer" select="max((- $corrected-left, $text-indent))"/>
-                <xsl:copy>
-                    <xsl:apply-templates select="@*[not(name()='style')]"/>
-                    <xsl:sequence select="pxi:maybe-style-attr((
-                                                          css:remove-from-declarations(string(@style),
-                                                            ('left', 'right', 'margin-left', 'margin-right','text-indent')),
-                                                          if ($corrected-left != $current-left)
-                                                            then concat('left:', format-number($corrected-left, '0.0'))
-                                                            else (),
-                                                          if ($corrected-right != $current-right)
-                                                            then concat('right:', format-number($corrected-right, '0.0'))
-                                                            else (),
-                                                          if ($corrected-text-indent != $current-text-indent)
-                                                            then concat('text-indent:', format-number($corrected-text-indent, '0.0'))
-                                                            else ()))"/>
-                    <xsl:apply-templates select="node()">
-                        <xsl:with-param name="real-left" select="$new-left" tunnel="yes"/>
-                        <xsl:with-param name="real-right" select="$new-right" tunnel="yes"/>
-                        <xsl:with-param name="current-left" select="$corrected-left" tunnel="yes"/>
-                        <xsl:with-param name="current-right" select="$corrected-right" tunnel="yes"/>
-                        <xsl:with-param name="current-text-indent" select="$corrected-text-indent" tunnel="yes"/>
-                        <xsl:with-param name="current-width" tunnel="yes"
-                                        select="$current-width + $current-left + $current-right - $corrected-left - $corrected-right"/>
-                    </xsl:apply-templates>
-                </xsl:copy>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:next-match/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:variable name="margin-left" as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-left', true(), true(), true())))"/>
+        <xsl:variable name="margin-right" as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-right', true(), true(), true())))"/>
+        <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(css:get-value(., 'text-indent', true(), true(), true())))"/>
+        <xsl:variable name="left"  as="xs:string?" select="css:get-value(., 'left', false(), false(), true())"/>
+        <xsl:variable name="right" as="xs:string?" select="css:get-value(., 'right', false(), false(), true())"/>
+        <xsl:variable name="new-left" as="xs:integer"
+                      select="(if ($left and not($left='inherit')) then xs:integer(number($left)) else $real-left) + $margin-left"/>
+        <xsl:variable name="new-right" as="xs:integer"
+                      select="(if ($right and not($right='inherit')) then xs:integer(number($right)) else $real-right) + $margin-right"/>
+        <xsl:variable name="corrected-left" as="xs:integer" select="max((0, $new-left))"/>
+        <xsl:variable name="corrected-right" as="xs:integer" select="max((0, $new-right))"/>
+        <xsl:variable name="corrected-text-indent" as="xs:integer" select="max((- $corrected-left, $text-indent))"/>
+        <xsl:copy>
+          <xsl:apply-templates select="@*[not(name()='style')]"/>
+          <xsl:sequence select="pxi:maybe-style-attr((
+                                  css:remove-from-declarations(string(@style),
+                                    ('left', 'right', 'margin-left', 'margin-right','text-indent')),
+                                  if ($corrected-left != $current-left)
+                                    then concat('left:', format-number($corrected-left, '0.0'))
+                                    else (),
+                                  if ($corrected-right != $current-right)
+                                    then concat('right:', format-number($corrected-right, '0.0'))
+                                    else (),
+                                  if ($corrected-text-indent != $current-text-indent)
+                                    then concat('text-indent:', format-number($corrected-text-indent, '0.0'))
+                                    else ()))"/>
+          <xsl:apply-templates select="node()">
+            <xsl:with-param name="real-left" select="$new-left" tunnel="yes"/>
+            <xsl:with-param name="real-right" select="$new-right" tunnel="yes"/>
+            <xsl:with-param name="current-left" select="$corrected-left" tunnel="yes"/>
+            <xsl:with-param name="current-right" select="$corrected-right" tunnel="yes"/>
+            <xsl:with-param name="current-text-indent" select="$corrected-text-indent" tunnel="yes"/>
+            <xsl:with-param name="current-width" tunnel="yes"
+                            select="$current-width + $current-left + $current-right - $corrected-left - $corrected-right"/>
+          </xsl:apply-templates>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:function name="pxi:repeat-char" as="xs:string">
         <xsl:param name="char" as="xs:string"/>
         <xsl:param name="times" as="xs:integer"/>
         <xsl:sequence select="if ($times &gt; 0) then concat($char, pxi:repeat-char($char, $times - 1)) else ''"/>
-    </xsl:function>
-    
-    <xsl:function name="pxi:get-value-if-applies-or-default" as="xs:string?">
-        <xsl:param name="element" as="element()"/>
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:param name="display" as="xs:string"/>
-        <xsl:choose>
-            <xsl:when test="css:applies-to($property, $display)">
-                <xsl:sequence select="css:get-value($element, $property, true(), true(), true())"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="css:get-default-value($property)"/>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:function>
     
     <xsl:function name="pxi:maybe-style-attr" as="attribute()?">

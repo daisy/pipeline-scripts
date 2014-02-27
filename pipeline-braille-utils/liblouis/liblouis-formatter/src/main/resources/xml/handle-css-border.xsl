@@ -28,108 +28,91 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@css:display]">
+    <xsl:template match="*[@css:display and matches(string(@style), 'border|padding')]">
         <xsl:variable name="display" as="xs:string" select="string(@css:display)"/>
-        <xsl:choose>
-            <xsl:when test="matches(string(@style), 'border|padding')">
-                <xsl:variable name="margin-left"    as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-left',    $display)))"/>
-                <xsl:variable name="margin-right"   as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-right',   $display)))"/>
-                <xsl:variable name="margin-top"     as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-top',     $display)))"/>
-                <xsl:variable name="margin-bottom"  as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'margin-bottom',  $display)))"/>
-                <xsl:variable name="padding-left"   as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'padding-left',   $display)))"/>
-                <xsl:variable name="padding-right"  as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'padding-right',  $display)))"/>
-                <xsl:variable name="padding-top"    as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'padding-top',    $display)))"/>
-                <xsl:variable name="padding-bottom" as="xs:integer" select="xs:integer(number(pxi:get-value-if-applies-or-default(., 'padding-bottom', $display)))"/>
-                <xsl:variable name="border-left"    as="xs:string" select="pxi:get-value-if-applies-or-default(., 'border-left',  $display)"/>
-                <xsl:variable name="border-right"   as="xs:string" select="pxi:get-value-if-applies-or-default(., 'border-right', $display)"/>
-                <xsl:variable name="border-top"     as="xs:string" select="pxi:get-value-if-applies-or-default(., 'border-top',   $display)"/>
-                <xsl:variable name="border-bottom"  as="xs:string" select="pxi:get-value-if-applies-or-default(., 'border-bottom',$display)"/>
-                <xsl:variable name="style" as="xs:string?" select="css:remove-from-declarations(string(@style),
+        <xsl:variable name="margin-left"    as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-left',    true(), true(), true())))"/>
+        <xsl:variable name="margin-right"   as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-right',   true(), true(), true())))"/>
+        <xsl:variable name="margin-top"     as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-top',     true(), true(), true())))"/>
+        <xsl:variable name="margin-bottom"  as="xs:integer" select="xs:integer(number(css:get-value(., 'margin-bottom',  true(), true(), true())))"/>
+        <xsl:variable name="padding-left"   as="xs:integer" select="xs:integer(number(css:get-value(., 'padding-left',   true(), true(), true())))"/>
+        <xsl:variable name="padding-right"  as="xs:integer" select="xs:integer(number(css:get-value(., 'padding-right',  true(), true(), true())))"/>
+        <xsl:variable name="padding-top"    as="xs:integer" select="xs:integer(number(css:get-value(., 'padding-top',    true(), true(), true())))"/>
+        <xsl:variable name="padding-bottom" as="xs:integer" select="xs:integer(number(css:get-value(., 'padding-bottom', true(), true(), true())))"/>
+        <xsl:variable name="border-left"    as="xs:string" select="css:get-value(., 'border-left',   true(), true(), true())"/>
+        <xsl:variable name="border-right"   as="xs:string" select="css:get-value(., 'border-right',  true(), true(), true())"/>
+        <xsl:variable name="border-top"     as="xs:string" select="css:get-value(., 'border-top',    true(), true(), true())"/>
+        <xsl:variable name="border-bottom"  as="xs:string" select="css:get-value(., 'border-bottom', true(), true(), true())"/>
+        <xsl:variable name="style" as="xs:string?" select="css:remove-from-declarations(string(@style),
                     ('margin-left', 'margin-right', 'margin-top', 'margin-bottom',
                      'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
                      'border-left', 'border-right', 'border-top', 'border-bottom'))"/>
-                <xsl:choose>
-                    <xsl:when test="$border-left!='none' or $border-right!='none' or $border-top!='none' or $border-bottom!='none'">
-                        <louis:div>
-                            <xsl:attribute name="css:display" select="'block'"/>
-                            <xsl:variable name="style" as="xs:string?"
-                                          select="css:remove-from-declarations(($style,'')[1], $css:paged-media-properties)"/>
-                            <xsl:choose>
-                                <xsl:when test="$border-left!='none' or $border-right!='none'">
-                                    <xsl:sequence select="pxi:maybe-style-attr((
-                                                             css:concretize-properties(., $css:paged-media-properties),
-                                                             pxi:margin-style($margin-left,$margin-right,$margin-top,$margin-bottom)))"/>
-                                    <louis:box>
-                                        <xsl:attribute name="border-top" select="$border-top"/>
-                                        <xsl:attribute name="border-bottom" select="$border-bottom"/>
-                                        <xsl:attribute name="border-left" select="$border-left"/>
-                                        <xsl:attribute name="border-right" select="$border-right"/>
-                                        <xsl:copy>
-                                            <xsl:apply-templates select="@*[not(name()='style')]"/>
-                                            <xsl:sequence select="pxi:maybe-style-attr(($style,
-                                                                     pxi:margin-style($padding-left,$padding-right,$padding-top,$padding-bottom)))"/>
-                                            <xsl:apply-templates select="node()"/>
-                                        </xsl:copy>
-                                    </louis:box>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:sequence select="pxi:maybe-style-attr((
-                                                     css:concretize-properties(., $css:paged-media-properties),
-                                                     pxi:margin-style($margin-left,
-                                                                      $margin-right,
-                                                                      $margin-top + (if ($border-top='none') then $padding-top else 0),
-                                                                      $margin-bottom + (if ($border-bottom='none') then $padding-bottom else 0))))"/>
-                                    <xsl:if test="$border-top!='none'">
-                                        <louis:border style="{$border-top}"/>
-                                    </xsl:if>
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="@*[not(name()='style')]"/>
-                                        <xsl:sequence select="pxi:maybe-style-attr(($style,
-                                                                 pxi:margin-style($padding-left,
-                                                                                  $padding-right,
-                                                                                  if ($border-top='none') then 0 else $padding-top,
-                                                                                  if ($border-bottom='none') then 0 else $padding-bottom)))"/>
-                                        <xsl:apply-templates select="node()"/>
-                                    </xsl:copy>
-                                    <xsl:if test="$border-bottom!='none'">
-                                        <louis:border style="{$border-bottom}"/>
-                                    </xsl:if>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </louis:div>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:copy>
-                            <xsl:apply-templates select="@*[not(name()='style')]"/>
-                            <xsl:sequence select="pxi:maybe-style-attr(($style,
-                                                     pxi:margin-style($margin-left + $padding-left,
-                                                                      $margin-right + $padding-right,
-                                                                      $margin-top + $padding-top,
-                                                                      $margin-bottom + $padding-bottom)))"/>
-                            <xsl:apply-templates select="node()"/>
-                        </xsl:copy>
-                    </xsl:otherwise>
-                </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="$border-left!='none' or $border-right!='none' or $border-top!='none' or $border-bottom!='none'">
+                <louis:div>
+                    <xsl:attribute name="css:display" select="'block'"/>
+                    <xsl:variable name="style" as="xs:string?"
+                                  select="css:remove-from-declarations(($style,'')[1], $css:paged-media-properties)"/>
+                    <xsl:choose>
+                        <xsl:when test="$border-left!='none' or $border-right!='none'">
+                            <xsl:sequence select="pxi:maybe-style-attr((
+                                                    css:concretize-properties(., $css:paged-media-properties),
+                                                    pxi:margin-style($margin-left,$margin-right,$margin-top,$margin-bottom)))"/>
+                            <louis:box>
+                                <xsl:attribute name="border-top" select="$border-top"/>
+                                <xsl:attribute name="border-bottom" select="$border-bottom"/>
+                                <xsl:attribute name="border-left" select="$border-left"/>
+                                <xsl:attribute name="border-right" select="$border-right"/>
+                                <xsl:copy>
+                                    <xsl:apply-templates select="@*[not(name()='style')]"/>
+                                    <xsl:sequence select="pxi:maybe-style-attr(($style,
+                                                            pxi:margin-style($padding-left,$padding-right,$padding-top,$padding-bottom)))"/>
+                                    <xsl:apply-templates select="node()"/>
+                                </xsl:copy>
+                            </louis:box>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:sequence select="pxi:maybe-style-attr((
+                                                    css:concretize-properties(., $css:paged-media-properties),
+                                                    pxi:margin-style($margin-left,
+                                                                     $margin-right,
+                                                                     $margin-top + (if ($border-top='none') then $padding-top else 0),
+                                                                     $margin-bottom + (if ($border-bottom='none') then $padding-bottom else 0))))"/>
+                            <xsl:if test="$border-top!='none'">
+                                <css:block>
+                                    <louis:border pattern="{$border-top}"/>
+                                </css:block>
+                            </xsl:if>
+                            <xsl:copy>
+                                <xsl:apply-templates select="@*[not(name()='style')]"/>
+                                <xsl:sequence select="pxi:maybe-style-attr(($style,
+                                                        pxi:margin-style($padding-left,
+                                                                         $padding-right,
+                                                                         if ($border-top='none') then 0 else $padding-top,
+                                                                         if ($border-bottom='none') then 0 else $padding-bottom)))"/>
+                                <xsl:apply-templates select="node()"/>
+                            </xsl:copy>
+                            <xsl:if test="$border-bottom!='none'">
+                                <css:block>
+                                    <louis:border pattern="{$border-bottom}"/>
+                                </css:block>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </louis:div>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:next-match/>
+                <xsl:copy>
+                    <xsl:apply-templates select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="pxi:maybe-style-attr(($style,
+                                            pxi:margin-style($margin-left + $padding-left,
+                                                             $margin-right + $padding-right,
+                                                             $margin-top + $padding-top,
+                                                             $margin-bottom + $padding-bottom)))"/>
+                    <xsl:apply-templates select="node()"/>
+                </xsl:copy>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    <xsl:function name="pxi:get-value-if-applies-or-default" as="xs:string">
-        <xsl:param name="element" as="element()"/>
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:param name="display" as="xs:string"/>
-        <xsl:choose>
-            <xsl:when test="css:applies-to($property, $display)">
-                <xsl:sequence select="css:get-value($element, $property, true(), true(), true())"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="css:get-default-value($property)"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
     
     <xsl:function name="pxi:margin-style" as="xs:string?">
         <xsl:param name="margin-left" as="xs:integer"/>

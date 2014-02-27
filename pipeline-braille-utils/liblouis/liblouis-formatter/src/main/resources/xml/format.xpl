@@ -22,7 +22,6 @@
     <p:import href="utils/select-by-base.xpl"/>
     <p:import href="split-into-sections.xpl"/>
     <p:import href="attach-liblouis-config.xpl"/>
-    <p:import href="normalize-space.xpl"/>
     <p:import href="translate-files.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
@@ -168,6 +167,28 @@
         </p:xslt>
     </p:for-each>
     
+    <p:for-each name="handle-xml-space">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="handle-xml-space.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
+    <p:for-each name="identify-blocks">
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="identify-blocks.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+    </p:for-each>
+    
     <p:for-each name="split-into-sections">
         <p:output port="result" sequence="true" primary="true">
             <p:pipe step="split-volume" port="result"/>
@@ -262,6 +283,23 @@
         </p:xslt>
     </p:for-each>
     
+    <p:for-each>
+        <p:unwrap match="/*//*[not(ancestor-or-self::louis:page-layout or
+                                   @style or
+                                   @css:display or
+                                   @css:target or
+                                   self::css:block or
+                                   self::louis:space or
+                                   self::louis:print-page or
+                                   self::louis:running-header or
+                                   self::louis:running-footer or
+                                   self::louis:border or
+                                   self::louis:box)]"/>
+        <p:wrap wrapper="css:block" match="css:block" group-adjacent="true()"/>
+        <p:unwrap match="css:block/css:block"/>
+        <p:add-attribute match="css:block" attribute-name="css:display" attribute-value="block"/>
+    </p:for-each>
+    
     <p:for-each name="extract-box">
         <p:output port="result" sequence="true">
             <p:pipe step="extract" port="extracted"/>
@@ -294,7 +332,14 @@
     </pxi:attach-liblouis-config>
     
     <p:for-each name="normalize-space">
-        <pxi:normalize-space/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:document href="normalize-space.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
     </p:for-each>
     
     <pxi:translate-files name="translate-files">

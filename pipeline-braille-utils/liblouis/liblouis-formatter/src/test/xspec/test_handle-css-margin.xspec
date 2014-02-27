@@ -6,15 +6,15 @@
   
   <x:param name="louis:page-width" select="'20'"/>
   
-  <x:scenario label="test_001">
+  <x:scenario label="test_01">
     <x:context>
       <doc>
         <louis:div css:display="block">
-          <louis:border style="⠒"/>
+          <louis:border pattern="⠒"/>
           <body css:display="block">
             <p>foo</p>
           </body>
-          <louis:border style="⠒"/>
+          <louis:border pattern="⠒"/>
         </louis:div>
       </doc>
     </x:context>
@@ -31,13 +31,13 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_002">
+  <x:scenario label="test_02">
     <x:context>
       <doc>
         <louis:div css:display="block"
                    style="margin-left:1.0;
                           margin-top:1.0;">
-          <louis:border style="⠒"/>
+          <louis:border pattern="⠒"/>
           <body css:display="block"
                 style="margin-left:1.0;
                        margin-top:1.0;">
@@ -60,7 +60,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_003">
+  <x:scenario label="test_03">
     <x:context>
       <doc>
         <louis:div css:display="block">
@@ -88,7 +88,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_004">
+  <x:scenario label="test_04">
     <x:context>
       <doc>
         <louis:div css:display="block"
@@ -121,7 +121,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_005">
+  <x:scenario label="test_05">
     <x:context>
       <doc>
         <body css:display="block"
@@ -141,7 +141,26 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_006">
+  <x:scenario label="test_06">
+    <x:context>
+      <doc style="left: 5">
+        <body css:display="block"
+              style="margin-left: 1">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc style="left:5.0">
+        <body css:display="block"
+              style="left:6.0">
+          <p>foo</p>
+        </body>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_07">
     <x:context>
       <doc>
         <louis:div css:display="block"

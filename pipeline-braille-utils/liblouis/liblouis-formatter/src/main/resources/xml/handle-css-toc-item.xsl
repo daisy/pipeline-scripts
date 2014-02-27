@@ -30,29 +30,15 @@
         </xsl:copy>
     </xsl:template>
     
-    <!-- Flatten elements that are referenced in a toc-item -->
     <xsl:template match="*[@xml:id]">
         <xsl:variable name="id" select="string(@xml:id)"/>
         <xsl:copy>
-            <xsl:choose>
-                <xsl:when test="some $ref in collection()//*[@ref=$id] satisfies $ref/@css:display='toc-item'">
-                    <xsl:apply-templates select="@*"/>
-                    <xsl:attribute name="css:target" select="'true'"/>
-                    <xsl:apply-templates select="node()" mode="flatten"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="@*|node()"/>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="some $ref in collection()//*[@ref=$id] satisfies $ref/@css:display='toc-item'">
+                <xsl:attribute name="css:target" select="'true'"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()"/>
         </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="element()" mode="flatten">
-        <xsl:apply-templates select="node()" mode="flatten"/>
-    </xsl:template>
-    
-    <xsl:template match="@*|text()|comment()|processing-instruction()" mode="flatten">
-        <xsl:copy/>
     </xsl:template>
     
 </xsl:stylesheet>

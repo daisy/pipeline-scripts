@@ -18,7 +18,9 @@
         <xsl:variable name="display" select="css:get-value(., 'display', true(), true(), false())"/>
         <xsl:choose>
             <xsl:when test="$display=('none','page-break')">
-                <xsl:sequence select=".//louis:print-page|.//louis:running-header|louis:running-footer"/>
+                <xsl:sequence select=".//louis:print-page|
+                                      .//louis:running-header|
+                                      .//louis:running-footer"/>
             </xsl:when>
             <xsl:when test="$display=('block','list-item','toc-item')">
                 <xsl:copy>

@@ -68,8 +68,6 @@ style contentsheader
     format leftJustified
     braillePageNumberFormat blank
 
-style block
-
 style preformatted
     firstLineIndent 0
     format leftJustified
@@ -95,7 +93,6 @@ preformatted   &amp;xpath(//louis:line)
 preformatted   &amp;xpath(//louis:border)
 pagenum        &amp;xpath(//louis:print-page)
 softreturn     &amp;xpath(//louis:line-break)
-block          &amp;xpath(//louis:block)
 skip           &amp;xpath(//louis:page-layout)
 skip           &amp;xpath(//louis:styles)
 skip           &amp;xpath(//louis:semantics)

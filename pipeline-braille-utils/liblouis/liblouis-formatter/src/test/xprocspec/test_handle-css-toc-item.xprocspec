@@ -29,7 +29,7 @@
             <entry ref="h1" css:display="toc-item"/>
           </toc>
           <h xml:id="h1" css:target="true">
-            foobar
+            <span>foo</span>bar
           </h>
         </doc>
       </x:document>
