@@ -7,21 +7,21 @@
         <p px:role="desc">Transforms an EPUB3 publication into DAISY 2.02.</p>
     </p:documentation>
 
-    <p:output port="html-report" px:media-type="application/vnd.pipeline.report+xml">
+    <!--<p:output port="html-report" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">HTML Report</h1>
             <p px:role="desc">An HTML-formatted version of the validation report.</p>
         </p:documentation>
         <p:pipe port="result" step="html"/>
-    </p:output>
+    </p:output>-->
 
-    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+    <!--<p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h1 px:role="name">Validation status</h1>
             <p px:role="desc">Validation status (http://code.google.com/p/daisy-pipeline/wiki/ValidationStatusXML).</p>
         </p:documentation>
         <p:pipe port="result" step="status"/>
-    </p:output>
+    </p:output>-->
 
     <p:option name="epub" required="true" px:type="anyFileURI" px:media-type="application/epub+zip">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
