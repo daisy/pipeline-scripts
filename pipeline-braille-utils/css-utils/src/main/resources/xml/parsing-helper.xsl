@@ -121,6 +121,22 @@
     -->
     <xsl:variable name="COUNTER_FN_RE" select="concat('counter\(\s*(',$IDENT_RE,')\s*(,\s*(',$IDENT_RE,')\s*)?\)')"/>
     <!--
+        target-text(<target>)
+    -->
+    <xsl:variable name="TARGET_TEXT_FN_RE" select="concat('target-text\(\s*(',$ATTR_FN_RE,')\s*\)')"/>
+    <!--
+        target-string(<target>,<identifier>)
+    -->
+    <xsl:variable name="TARGET_STRING_FN_RE" select="concat('target-string\(\s*(',$ATTR_FN_RE,')\s*,\s*(',$IDENT_RE,')\s*\)')"/>
+    <!--
+        target-counter(<target>,<identifier>)
+    -->
+    <xsl:variable name="TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$ATTR_FN_RE,')\s*,\s*(',$IDENT_RE,')\s*\)')"/>
+    <!--
+        leader(<pattern>)
+    -->
+    <xsl:variable name="LEADER_FN_RE" select="concat('leader\(\s*',$STRING_RE,'\s*\)')"/>
+    <!--
         $1: <string>
         $3: content()
         $4: attr(<name>)
@@ -130,12 +146,26 @@
         $12: counter(<identifier>,<style>?)
         $13:         <identifier>
         $16:                      <style>
+        $20: target-text(<target>)
+        $21:             <target>
+        $25: target-string(<target>,<identifier>)
+        $26:               <target>
+        $30:                        <identifier>
+        $33: target-counter(<target>,<identifier>)
+        $34:                <target>
+        $38:                         <identifier>
+        $41: leader(<pattern>)
+        $42:        <pattern>
     -->
     <xsl:variable name="CONTENT_RE" select="concat('(',$STRING_RE,')|
                                                     (',$CONTENT_FN_RE,')|
                                                     (',$ATTR_FN_RE,')|
                                                     (',$STRING_FN_RE,')|
-                                                    (',$COUNTER_FN_RE,')')"/>
+                                                    (',$COUNTER_FN_RE,')|
+                                                    (',$TARGET_TEXT_FN_RE,')|
+                                                    (',$TARGET_STRING_FN_RE,')|
+                                                    (',$TARGET_COUNTER_FN_RE,')|
+                                                    (',$LEADER_FN_RE,')')"/>
     
     <xsl:function name="css:eval-content-list">
         <xsl:param name="context" as="element()"/>
@@ -188,6 +218,47 @@
                             <xsl:if test="$style!=''">
                                 <xsl:attribute name="style" select="$style"/>
                             </xsl:if>
+                        </xsl:element>
+                    </xsl:when>
+                    <!--
+                        target-text(<target>)
+                    -->
+                    <xsl:when test="regex-group(20)!=''">
+                        <xsl:variable name="target" as="xs:string" select="string($context/@*[name()=regex-group(22)])"/>
+                        <xsl:element name="css:target-text">
+                            <xsl:attribute name="target" select="$target"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <!--
+                        target-string(<target>,<identifier>)
+                    -->
+                    <xsl:when test="regex-group(25)!=''">
+                        <xsl:variable name="target" as="xs:string" select="string($context/@*[name()=regex-group(27)])"/>
+                        <xsl:variable name="identifier" as="xs:string" select="regex-group(30)"/>
+                        <xsl:element name="css:target-string">
+                            <xsl:attribute name="target" select="$target"/>
+                            <xsl:attribute name="identifier" select="$identifier"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <!--
+                        target-counter(<target>,<identifier>)
+                    -->
+                    <xsl:when test="regex-group(33)!=''">
+                        <xsl:variable name="target" as="xs:string" select="string($context/@*[name()=regex-group(35)])"/>
+                        <xsl:variable name="identifier" as="xs:string" select="regex-group(38)"/>
+                        <xsl:element name="css:target-counter">
+                            <xsl:attribute name="target" select="$target"/>
+                            <xsl:attribute name="identifier" select="$identifier"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <!--
+                        leader(<pattern>)
+                    -->
+                    <xsl:when test="regex-group(41)!=''">
+                        <xsl:variable name="pattern" as="xs:string"
+                                      select="substring(regex-group(42), 2, string-length(regex-group(42))-2)"/>
+                        <xsl:element name="css:leader">
+                            <xsl:attribute name="pattern" select="$pattern"/>
                         </xsl:element>
                     </xsl:when>
                 </xsl:choose>
