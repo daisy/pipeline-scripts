@@ -57,7 +57,7 @@
     <xsl:variable name="RULESET" select="re:concat(('((@|::)',$IDENT,'\s+)?',$DECLARATIONS_BLOCK))"/>
     
     <xsl:variable name="css:valid-declarations" as="xs:string*"
-        select="(re:exact(re:or(('block','inline','list-item','none','toc-item','page-break'))),
+        select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
                  re:exact($NATURAL_NUMBER),
                  re:exact($NATURAL_NUMBER),
                  re:exact($INTEGER),
@@ -91,9 +91,6 @@
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
-                 '^(block|list-item|toc-item)$',
-                 '^(block|list-item)$',
-                 '^(block|list-item|toc-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
@@ -105,7 +102,10 @@
                  '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
-                 '^(block|list-item|toc-item)$',
+                 '^(block|list-item)$',
+                 '^(block|list-item)$',
+                 '^(block|list-item)$',
+                 '^(block|list-item)$',
                  '^(list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',

@@ -79,7 +79,7 @@ public interface BrailleCSSProperty extends CSSProperty {
 	
 	public enum Display implements BrailleCSSProperty {
 		INLINE("inline"), BLOCK("block"), LIST_ITEM("list-item"),
-		TOC_ITEM("toc-item"), NONE("none"), PAGE_BREAK("page-break"), INHERIT("inherit");
+		NONE("none"), PAGE_BREAK("page-break"), INHERIT("inherit");
 
 		private String text;
 
