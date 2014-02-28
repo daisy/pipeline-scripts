@@ -114,7 +114,19 @@
             <p:otherwise>
                 <!-- Content Document -->
                 <p:variable name="xhtml-new-base" select="replace(base-uri(/*),'^(.*)\.([^/\.]*)$','$1.html')"/>
-
+                
+                <!-- normalize HTML5 -->
+                <p:xslt>
+                    <p:input port="parameters">
+                        <p:empty/>
+                    </p:input>
+                    <p:input port="stylesheet">
+                        <!-- stylesheet hopefully preserves all IDs (!) -->
+                        <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html5-upgrade.xsl"/>
+                    </p:input>
+                </p:xslt>
+                
+                <!-- downgrade to HTML4 -->
                 <p:xslt>
                     <p:input port="parameters">
                         <p:empty/>
