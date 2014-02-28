@@ -101,27 +101,9 @@
         </xsl:next-match>
     </xsl:template>
     
-    <xsl:template match="*[@css:display='toc-item']" as="xs:string?" mode="property" priority="0.6">
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:next-match>
-            <xsl:with-param name="property" select="$property"/>
-            <xsl:with-param name="concretize-inherit" select="true()" tunnel="yes"/>
-        </xsl:next-match>
-    </xsl:template>
-    
     <xsl:template match="*[ancestor-or-self::louis:box]" as="xs:string?" mode="property" priority="0.7">
         <xsl:param name="property" as="xs:string"/>
         <xsl:if test="not($property=$css:paged-media-properties)">
-            <xsl:next-match>
-                <xsl:with-param name="property" select="$property"/>
-            </xsl:next-match>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="*[descendant::*[@css:display='toc-item'] and not(descendant::css:block)]"
-                  as="xs:string?" mode="property" priority="0.8">
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:if test="not($property=('orphans','left','text-indent'))">
             <xsl:next-match>
                 <xsl:with-param name="property" select="$property"/>
             </xsl:next-match>

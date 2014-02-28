@@ -51,4 +51,30 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_03">
+    <x:context>
+      <toc>
+        <entry ref="h1" style="display: block;
+                               content: target-text(attr(ref)) ' '
+                                        leader('⠄⠄') ' '
+                                        target-counter(attr(ref), braille-page) ' '
+                                        target-string(attr(ref), print-page)"/>
+      </toc>
+    </x:context>
+    <x:expect label="result">
+      <toc>
+        <entry ref="h1" style="display: block;
+                               content: target-text(attr(ref)) ' '
+                                        leader('⠄⠄') ' '
+                                        target-counter(attr(ref), braille-page) ' '
+                                        target-string(attr(ref), print-page)">
+          <css:target-text target="h1"/>
+          <css:leader pattern="⠄⠄"/>
+          <css:target-counter target="h1" identifier="braille-page"/>
+          <css:target-string target="h1" identifier="print-page"/>
+        </entry>
+      </toc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

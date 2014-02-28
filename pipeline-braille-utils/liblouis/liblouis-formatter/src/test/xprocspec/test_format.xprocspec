@@ -15,7 +15,21 @@
   <x:scenario label="test_01">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_01.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 15 5 }">
+              <frontmatter style="@page { size: 30 5 }">
+                ⠤⠤⠤
+              </frontmatter>
+              <bodymatter>
+                ⠤⠤⠤
+              </bodymatter>
+              <rearmatter style="@page { size: 30 5 }">
+                ⠤⠤⠤
+              </rearmatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -23,7 +37,46 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_01.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="30" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+              <section cols="15">
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -40,7 +93,39 @@
   <x:scenario label="test_02" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_02.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 20 5;
+                         @top-center { content: string(running-header) }
+                         @bottom-right { content: string(print-page) }
+                         @bottom-center { content: string(running-footer) }}">
+              <section style="display: block;">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;
+                              string-set: print-page '⠤'">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;
+                              string-set: print-page '⠤⠤', running-footer '⠤⠤'">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;
+                              string-set: print-page '', running-header '⠤⠤'">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;
+                              string-set: print-page '⠤⠤⠤', running-footer ''">
+                ⠤⠤⠤
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -48,7 +133,56 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_02.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="20" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠤⠤</row>
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -62,7 +196,22 @@
   <x:scenario label="test_03">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_03.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 20 5; }">
+              <section style="display: block;
+                              string-set: print-page '⠤', running-footer '⠤⠤'">
+                ⠤⠤⠤
+              </section>
+              <section style="@page {
+                              size: 20 5;
+                              @bottom-center { content: string(running-footer) }
+                              @bottom-right { content: string(print-page) }}">
+                ⠤⠤⠤
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -70,7 +219,37 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_03.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="20" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -87,7 +266,38 @@
   <x:scenario label="test_04">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_04.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 5;
+                         @bottom-right { content: counter(braille-page) }}">
+              <section style="display: block;">
+                ⠤⠤⠤
+              </section>
+              <section style="@page { size: 15 5 }">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;
+                              counter-reset: braille-page 10">
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always">
+                ⠤⠤⠤
+              </section>
+              <section style="@page {
+                              size: 15 5;
+                              @top-right { content: counter(braille-page) }}">
+                ⠤⠤⠤
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -95,7 +305,71 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_04.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠚</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠁</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠃</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -110,7 +384,28 @@
   <x:scenario label="test_05">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_05.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 5;
+                         @bottom-right { content: counter(braille-page) }}">
+              <frontmatter style="@page {
+                                  size: 15 5;
+                                  @bottom-right { content: counter(braille-page, prefix-p) }}">
+                ⠤⠤⠤
+              </frontmatter>
+              <bodymatter>
+                ⠤⠤⠤
+              </bodymatter>
+              <rearmatter style="{ counter-reset: braille-page 1 }
+                                 @page {
+                                 size: 15 5;
+                                 @bottom-right { content: counter(braille-page, lower-roman) }}">
+                ⠤⠤⠤
+              </rearmatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -118,7 +413,46 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_05.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠏⠼⠁</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠊</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -132,7 +466,17 @@
   <x:scenario label="test_06">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_06.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 5;
+                         @bottom-right { content: string(print-page) ' ' counter(braille-page) }}">
+              <section style="string-set: print-page '⠤⠤'">
+                ⠤⠤⠤
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -140,7 +484,28 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_06.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠼⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -155,7 +520,29 @@
   <x:scenario label="test_07">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_07.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 5;
+                         @top-right { content: string(print-page) }}">
+              <section style="display: block">
+                ⠤⠤⠤
+                <pagenum style="display: page-break;
+                                string-set: print-page '⠸⠤'"/>
+                ⠤⠤⠤
+              </section>
+              <section style="display: block;
+                              page-break-before: always;">
+                <pagenum style="display: page-break;
+                                string-set: print-page '⠸⠤⠤'"/>
+                ⠤⠤⠤
+                <pagenum style="display: page-break;
+                                string-set: print-page '⠸⠤⠤⠤'"/>
+                ⠤⠤⠤
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -163,7 +550,35 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_07.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="5" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠸⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠸⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -181,7 +596,66 @@
   <x:scenario label="test_08" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_08.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 10 6; }">
+              <section style="display: block;
+                              page-break-before: always">
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <section>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                </section>
+              </section>
+              <section style="display: block;
+                              page-break-before: always">
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <section style="display: block;
+                                page-break-inside: avoid;">
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                </section>
+              </section>
+              <section style="display: block;
+                              page-break-before: always">
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <section style="display: block;
+                                orphans: 3;">
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                </section>
+              </section>
+              <section style="display: block;
+                              page-break-before: always">
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <p style="display: block;">⠤⠤⠤</p>
+                <section style="display: block;
+                                page-break-after: avoid;">
+                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block;">⠤⠤⠤</p>
+                </section>
+                <p style="display: block;">⠤⠤⠤</p>
+              </section>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -189,7 +663,85 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_08.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="6" cols="10" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -203,7 +755,58 @@
   <x:scenario label="test_09">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_09.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 20 15; }">
+              <div style="display: block;
+                          text-align: center;
+                          margin-left: 1;
+                          margin-right: 1;
+                          margin-top: 1;
+                          margin-bottom: 1;
+                          padding-left: 1;
+                          padding-right: 1;
+                          padding-top: 1;
+                          padding-bottom: 1;
+                          border-left: ⠇;
+                          border-right: ⠸;
+                          border-top: ⠤;
+                          border-bottom: ⠉">
+                ⠿⠿⠿⠿
+              </div>
+              <div style="display: block;
+                          text-align: center;
+                          margin-left: 1;
+                          margin-right: 1;
+                          margin-top: 1;
+                          margin-bottom: 1;
+                          padding-left: 1;
+                          padding-right: 1;
+                          padding-top: 1;
+                          padding-bottom: 1;
+                          border-left: ⠇;
+                          border-right: ⠸;
+                          border-top: ⠤;
+                          border-bottom: ⠉">
+                <div style="display: block;
+                            margin-left: 1;
+                            margin-right: 1;
+                            margin-top: 1;
+                            margin-bottom: 1;
+                            padding-left: 1;
+                            padding-right: 1;
+                            padding-top: 1;
+                            padding-bottom: 1;
+                            border-left: ⠇;
+                            border-right: ⠸;
+                            border-top: ⠤;
+                            border-bottom: ⠉">
+                  ⠿⠿⠿⠿
+                </div>
+              </div>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -211,7 +814,38 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_09.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="15" cols="20" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠀⠀⠀⠀⠿⠿⠿⠿⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠀⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉</row>
+                  <row/>
+                  <row>⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠇⠀⠀⠀⠿⠿⠿⠿⠀⠀⠀⠸⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠀⠀⠸</row>
+                  <row>⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠀⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -224,7 +858,20 @@
   <x:scenario label="test_10">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_10.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 30 2; }">
+              <table>
+                <tr style="display: block">
+                  <td style="::after { content: '⠆' } ">⠤⠤⠤</td>
+                  <td style="::after { content: '⠆' } ">⠤⠤⠤</td>
+                  <td style="::after { content: '⠆' } ">⠤⠤⠤</td>
+                  <td>⠤⠤⠤</td>
+                </tr>
+              </table>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -232,7 +879,25 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_10.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="2" cols="30" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠆⠀⠤⠤⠤⠆⠀⠤⠤⠤⠆⠀⠤⠤⠤</row>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -241,13 +906,74 @@
   <!-- ======= -->
   <!--
       - A table of content can be created from a list of references.
-      - If braille page numbering is enabled, a TOC entry shows the braille page number of the
+      - If braille page numbering is enabled, a TOC entry can show the braille page number of the
         target.
   -->
   <x:scenario label="test_11">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_11.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 14 8; @bottom-right { content: counter(braille-page) }}">
+              <frontmatter>
+                <toc>
+                  <h style="display:block;
+                            text-align: center;
+                            margin-bottom: 1;">
+                    ⠤⠤⠤
+                  </h>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_3" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_4" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 page-break-before: always">
+                <h xml:id="chapter_1" style="display:block;
+                                             text-align: center;
+                                             margin-top: 1;
+                                             page-break-after: avoid">
+                  ⠿
+                </h>
+                <p style="display: block;">⠤⠤⠤</p>
+                <h xml:id="chapter_2" style="display:block;
+                                             text-align: center;
+                                             margin-top: 1;
+                                             page-break-after: avoid">
+                  ⠿⠿
+                </h>
+                <p style="display: block;">⠤⠤⠤</p>
+                <h xml:id="chapter_3" style="display:block;
+                                             text-align: center;
+                                             margin-top: 1;
+                                             page-break-after: avoid">
+                  ⠿⠿⠿
+                </h>
+                <p style="display: block;">⠤⠤⠤</p>
+                <h xml:id="chapter_4" style="display:block;
+                                             text-align: center;
+                                             margin-top: 1;
+                                             page-break-after: avoid">
+                  ⠿⠿⠿⠿
+                </h>
+                <p style="display: block;">⠤⠤⠤</p>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -255,7 +981,51 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_11.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="8" cols="14" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠤⠤⠤</row>
+                  <row/>
+                  <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                  <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                  <row>⠿⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                  <row>⠿⠿⠿⠿⠀⠄⠄⠄⠄⠄⠄⠀⠼⠉</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠿⠿⠿</row>
+                  <row>⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠿⠿⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -264,12 +1034,92 @@
   <!-- ======= -->
   <!--
       - The entries in a TOC can be styled individually.
-      - If print page numbering is enabled, a TOC entry shows the print page number of the target.
+      - If print page numbering is enabled, a TOC entry can show the print page number of the target.
   -->
   <x:scenario label="test_12">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_12.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 23 9;
+                         @top-right {
+                         content: string(print-page) }
+                         @bottom-right {
+                         content: counter(braille-page) }}">
+              <frontmatter>
+                <pagenum style="string-set: print-page '⠤';
+                                display: none"/>
+                <toc style="display:block;
+                            margin-right: 2;">
+                  <entry ref="chapter_1" style="display: block;
+                                                margin-left: 4;
+                                                text-indent: -4;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_1_1" style="display: block;
+                                                  margin-left: 6;
+                                                  text-indent: -4;
+                                                  content: target-text(attr(ref))
+                                                           leader('⠄')
+                                                           target-string(attr(ref), print-page)
+                                                           target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_1_2" style="display: block;
+                                                  margin-left: 6;
+                                                  text-indent: -4;
+                                                  content: target-text(attr(ref))
+                                                           leader('⠄')
+                                                           target-string(attr(ref), print-page)
+                                                           target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                margin-left: 4;
+                                                text-indent: -4;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 page-break-before: always">
+                <section>
+                  <pagenum style="string-set: print-page '⠤⠤';
+                                  display: none"/>
+                  <h xml:id="chapter_1" style="display:block;
+                                               margin-top: 1">
+                    ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿
+                  </h>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <section>
+                    <h xml:id="chapter_1_1" style="display:block;
+                                                   margin-top: 1">
+                      ⠿⠿⠿⠿ ⠿⠿⠿⠿
+                    </h>
+                    <p style="display: block">⠤⠤⠤</p>
+                  </section>
+                  <section>
+                    <h xml:id="chapter_1_2" style="display:block;
+                                                   margin-top: 1">
+                      ⠿⠿⠿⠿ ⠿⠿⠿⠿ ⠿⠿⠿⠿
+                    </h>
+                    <p style="display: block">⠤⠤⠤</p>
+                  </section>
+                </section>
+                <section>
+                  <pagenum style="string-set: print-page '⠤⠤⠤';
+                                  display: none"/>
+                  <h xml:id="chapter_2" style="display:block;
+                                               margin-top: 1">
+                    ⠿⠿⠿⠿ ⠿⠿⠿⠿
+                  </h>
+                  <p style="display: block">⠤⠤⠤</p>
+                </section>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -277,7 +1127,54 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_12.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="9" cols="23" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠿⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠿⠿⠿⠿⠀⠄⠄⠄⠄⠄⠄⠀⠤⠤⠀⠼⠃</row>
+                  <row>⠀⠀⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠄⠄⠄⠀⠤⠤⠀⠼⠃</row>
+                  <row>⠀⠀⠿⠿⠿⠿⠀⠿⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠿⠿⠿⠿⠀⠄⠄⠄⠄⠀⠤⠤⠀⠼⠃</row>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠄⠄⠄⠄⠀⠤⠤⠤⠀⠼⠉</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+                <page>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠤⠤</row>
+                  <row>⠿⠿⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠿⠿⠿⠿</row>
+                  <row>⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
+                </page>
+                <page>
+                  <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠤</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -291,7 +1188,54 @@
   <x:scenario label="test_13">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_13.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 8
+                         @bottom-right {
+                         content: counter(braille-page) }}">
+              <frontmatter style="@page {
+                                  size: 15 8
+                                  @bottom-right {
+                                  content: counter(braille-page, lower-roman) }}">
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)"/>
+                  <entry ref="chapter_3" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)"/>
+                </toc>
+                <h xml:id="chapter_1" style="display: block;
+                                             margin-top: 1">
+                  ⠿
+                </h>
+                <p style="display: block">⠤⠤⠤</p>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 page-break-before: always;
+                                 counter-reset: braille-page 1">
+                <h xml:id="chapter_2" style="display:block;
+                                             margin-top: 1">
+                  ⠿⠿
+                </h>
+                <p style="display: block">⠤⠤⠤</p>
+                <h xml:id="chapter_3" style="display:block;
+                                             margin-top: 1">
+                  ⠿⠿⠿
+                </h>
+                <p style="display: block">⠤⠤⠤</p>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -299,7 +1243,43 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_13.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="8" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠊</row>
+                  <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row>⠿⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row/>
+                  <row>⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠊</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row>⠿⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -313,7 +1293,58 @@
   <x:scenario label="test_14">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_14.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 5
+                         @bottom-right {
+                         content: counter(braille-page) }}">
+              <frontmatter>
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 page-break-before: always">
+                <h xml:id="chapter_1" style="display:block;
+                                             margin-top: 1">
+                  ⠿
+                </h>
+                <p style="display: block" xml:id="x" >⠤⠤⠤</p>
+                <h xml:id="chapter_2" style="display:block;
+                                             margin-top: 1">
+                  ⠿⠿
+                </h>
+                <p style="display: block" xml:id="y" >⠤⠤⠤</p>
+                <p style="display: block" xml:id="z" >⠤⠤⠤</p>
+              </bodymatter>
+              <rearmatter style="display: block;
+                                 page-break-before: always">
+                <index>
+                  <entry ref="x" style="display: block;
+                                        content: target-text(attr(ref))
+                                                 leader('⠄')
+                                                 target-counter(attr(ref), braille-page)"/>
+                  <entry ref="y" style="display: block;
+                                        content: target-text(attr(ref))
+                                                 leader('⠄')
+                                                 target-counter(attr(ref), braille-page)"/>
+                  <entry ref="z" style="display: block;
+                                        content: target-text(attr(ref))
+                                                 leader('⠄')
+                                                 target-counter(attr(ref), braille-page)"/>
+                </index>
+              </rearmatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -321,7 +1352,49 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_14.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+    <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+        </meta>
+    </head>
+    <body>
+        <volume rows="5" cols="15" rowgap="0" duplex="true">
+            <section>
+                <page>
+                    <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                    <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                    <row/>
+                    <row/>
+                    <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+                <page>
+                    <row>⠿</row>
+                    <row>⠤⠤⠤</row>
+                    <row/>
+                    <row>⠿⠿</row>
+                    <row>⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
+                </page>
+                <page>
+                    <row>⠤⠤⠤</row>
+                    <row/>
+                    <row/>
+                    <row/>
+                    <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉</row>
+                </page>
+                <page>
+                    <row>⠤⠤⠤⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                    <row>⠤⠤⠤⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                    <row>⠤⠤⠤⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠉</row>
+                    <row/>
+                    <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙</row>
+                </page>
+            </section>
+        </volume>
+    </body>
+</pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -334,7 +1407,43 @@
   <x:scenario label="test_15" pending="true">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_15.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 7
+                         @bottom-right {
+                         content: counter(braille-page) }}">
+              <frontmatter>
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 page-break-before: always">
+                <h xml:id="chapter_1" style="display:block;
+                                             text-align: center">
+                  ⠿
+                </h>
+                <p style="display: block">⠤⠤⠤</p>
+                <h xml:id="chapter_2" style="display:block;
+                                             text-align: center;
+                                             border-left: ⠇;
+                                             border-right: ⠸;
+                                             border-top: ⠤;
+                                             border-bottom: ⠉">
+                  ⠿⠿
+                </h>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -342,7 +1451,39 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_15.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="7" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                  <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠇⠀⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠀⠀⠸</row>
+                  <row>⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉</row>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -355,7 +1496,37 @@
   <x:scenario label="test_16">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_16.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 7
+                         @bottom-right {
+                         content: counter(braille-page) }
+                         @bottom-center {
+                         content: string(running-footer) }}">
+              <frontmatter style="@page { size: 15 4 }">
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 string-set: running-footer '⠤⠤⠤⠤⠤'">
+                <h xml:id="chapter_1" style="display: block">⠿</h>
+                <p style="display: block">⠤⠤⠤</p>
+                <h xml:id="chapter_2" style="display: block">⠿⠿</h>
+                <p style="display: block">⠤⠤⠤</p>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -363,7 +1534,38 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_16.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="7" cols="15" rowgap="0" duplex="true">
+              <section rows="4">
+                <page>
+                  <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠿⠿</row>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠤⠤⠤⠤⠤⠀⠀⠀⠼⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -377,7 +1579,41 @@
   <x:scenario label="test_17">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_17.xml"/>
+        <x:document type="inline">
+          <doc style="@page { size: 40 6 }">
+            <body style="display: block;
+                         margin-left: 2;
+                         margin-right: 2">
+              <div>
+⠿⠿⠿
+   ⠿⠿⠿
+⠿⠿⠿   ⠿⠿⠿
+   ⠿⠿⠿   ⠿⠿⠿
+</div>
+              <div xml:space="preserve">
+⠿⠿⠿
+   ⠿⠿⠿
+⠿⠿⠿   ⠿⠿⠿
+   ⠿⠿⠿   ⠿⠿⠿
+</div>
+              <div style="display: block;
+                          page-break-before: always">
+                ⠤⠤⠤
+              </div>
+              ⠤⠤⠤
+              <div>
+                ⠤⠤⠤
+                <div style="display: block">
+                  ⠤⠤⠤
+                </div>
+              </div>
+              <div style="display: block;
+                          page-break-before: always"
+                   xml:space="preserve">
+⠤⠤⠤</div>
+  </body>
+</doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -385,7 +1621,45 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_17.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="6" cols="40" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠀⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿</row>
+                  <row>⠀⠀⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠿⠿⠿</row>
+                  <row>⠀⠀⠿⠿⠿⠀⠀⠀⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠿⠿⠿</row>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠀⠤⠤⠤⠀⠤⠤⠤</row>
+                  <row>⠀⠀⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row/>
+                  <row>⠀⠀⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -400,7 +1674,30 @@
   <x:scenario label="test_18">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_18.xml"/>
+        <x:document type="inline">
+          <doc style="@page { size: 30 3 }">
+            <section style="display: block;">
+              ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿
+            </section>
+            <section style="display: block;
+                            page-break-before: always">
+              ⠿⠿⠿⠿⠿&#xAD;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#xAD;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#xAD;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#xAD;⠿⠿⠿⠿⠿
+            </section>
+            <section style="display: block;
+                            page-break-before: always">
+              ⠿⠿⠿⠿⠿&#x200B;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#x200B;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#x200B;⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿&#x200B;⠿⠿⠿⠿⠿
+            </section>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -408,7 +1705,36 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_18.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="3" cols="30" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠤</row>
+                  <row>⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -421,7 +1747,24 @@
   <x:scenario label="test_19">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_19.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 15 3 }">
+              <frontmatter>
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))"/>
+                  
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block; page-break-before: always">
+                <h xml:id="chapter_1" style="display:block"> ⠿ </h>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -429,7 +1772,31 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_19.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="3" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿</row>
+                  <row/>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠿</row>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -442,7 +1809,29 @@
   <x:scenario label="test_20">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_20.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 15 3 }">
+              <frontmatter>
+                <toc>
+                  <entry ref="r1" style="display: block;
+                                          content: target-text(attr(ref))"/>
+                  
+                  <entry ref="r2" style="display: block;
+                                          content: target-text(attr(ref))"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block; page-break-before: always">
+                <p style="display: block" xml:id="r1">
+                  ⠿⠿⠿
+                </p>
+                <p style="display: block">
+                  ⠿⠿⠿ <span xml:id="r2">⠿</span> ⠿⠿⠿
+                </p>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -450,7 +1839,31 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_20.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="3" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠿⠿</row>
+                  <row>⠿</row>
+                  <row/>
+                </page>
+                <page>
+                  <row>⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠀⠿⠀⠿⠿⠿</row>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   
@@ -463,7 +1876,19 @@
   <x:scenario label="test_21">
     <x:call step="louis:format">
       <x:input port="source">
-        <x:document type="file" href="../resources/xml/test_21.xml"/>
+        <x:document type="inline">
+          <doc>
+            <body style="@page { size: 15 3 }">
+              <div style="display: block;
+                          margin-left: 1;
+                          padding-left: 1;
+                          text-indent: -2;
+                          border-left: ⠇">
+                ⠿⠿⠿⠿
+              </div>
+            </body>
+          </doc>
+        </x:document>
       </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
@@ -471,7 +1896,26 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
-      <x:document type="file" href="../resources/pef/test_21.pef"/>
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="3" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠀⠇⠿⠿⠿⠿</row>
+                  <row/>
+                  <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
     </x:expect>
   </x:scenario>
   

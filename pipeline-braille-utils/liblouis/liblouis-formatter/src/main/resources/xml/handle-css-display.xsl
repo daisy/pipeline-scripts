@@ -22,7 +22,7 @@
                                       .//louis:running-header|
                                       .//louis:running-footer"/>
             </xsl:when>
-            <xsl:when test="$display=('block','list-item','toc-item')">
+            <xsl:when test="$display=('block','list-item')">
                 <xsl:copy>
                     <xsl:sequence select="@*[not(name()='style')]"/>
                     <xsl:variable name="style" as="xs:string?"
@@ -30,7 +30,7 @@
                     <xsl:if test="$style">
                         <xsl:attribute name="style" select="$style"/>
                     </xsl:if>
-                    <xsl:attribute name="css:display" select="$display"/>
+                    <xsl:attribute name="css:display" select="'block'"/>
                     <xsl:apply-templates select="node()"/>
                 </xsl:copy>
             </xsl:when>

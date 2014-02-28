@@ -125,32 +125,4 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      
-  -->
-  <x:scenario label="test_08">
-    <x:context>
-      <doc>
-        <toc css:display="block" style="left: 2">
-          <entry css:display="toc-item"/>
-          <div css:display="block" style="left: 4">
-            <entry css:display="toc-item"/>
-          </div>
-          <louis:print-page>i</louis:print-page>
-        </toc>
-      </doc>
-    </x:context>
-    <x:expect label="result">
-      <doc>
-        <toc css:display="block">
-          <entry css:display="toc-item" style="left: 2; text-indent: 0.0"/>
-          <div css:display="block">
-            <entry css:display="toc-item" style="left: 4; text-indent: 0.0"/>
-          </div>
-          <louis:print-page>i</louis:print-page>
-        </toc>
-      </doc>
-    </x:expect>
-  </x:scenario>
-  
 </x:description>

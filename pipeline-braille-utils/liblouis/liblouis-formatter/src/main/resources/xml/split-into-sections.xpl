@@ -50,8 +50,7 @@
                 <p:delete>
                     <p:with-option name="match" select="concat($section-matcher, '|node()[preceding::', $section-matcher, ']')"/>
                 </p:delete>
-                <p:split-sequence test="//*/@css:display='toc-item' or
-                                        //css:block or
+                <p:split-sequence test="//css:block or
                                         //louis:print-page or
                                         //louis:running-header or
                                         //louis:running-footer"/>
@@ -108,8 +107,7 @@
                                 <p:identity/>
                             </p:otherwise>
                         </p:choose>
-                        <p:split-sequence test="//*/@css:display='toc-item' or
-                                                //css:block or
+                        <p:split-sequence test="//css:block or
                                                 //louis:print-page or
                                                 //louis:running-header or
                                                 //louis:running-footer"/>
@@ -155,8 +153,7 @@
                                 <p:delete>
                                     <p:with-option name="match" select="concat($section-matcher, '|node()[following::', $section-matcher, ']')"/>
                                 </p:delete>
-                                <p:split-sequence test="//*/@css:display='toc-item' or
-                                                        //css:block or
+                                <p:split-sequence test="//css:block or
                                                         //louis:print-page or
                                                         //louis:running-header or
                                                         //louis:running-footer"/>
@@ -189,7 +186,7 @@
                 </p:group>
                 <p:identity name="section-3"/>
                 <p:sink/>
-                <p:split-sequence test="//*/@css:display='toc-item' or //css:block">
+                <p:split-sequence test="//css:block">
                     <p:input port="source">
                         <p:pipe step="section-1" port="result"/>
                         <p:pipe step="section-2" port="result"/>

@@ -136,10 +136,10 @@
         </p:xslt>
     </p:for-each>
     
-    <p:for-each name="handle-css-display">
+    <p:for-each name="handle-css-counter-reset">
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="handle-css-display.xsl"/>
+                <p:document href="handle-css-counter-reset.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -147,19 +147,10 @@
         </p:xslt>
     </p:for-each>
     
-    <pxi:xslt-for-each name="handle-css-toc-item">
-        <p:input port="stylesheet">
-            <p:document href="handle-css-toc-item.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </pxi:xslt-for-each>
-    
-    <p:for-each name="handle-css-counter-reset">
+    <p:for-each name="handle-css-display">
         <p:xslt>
             <p:input port="stylesheet">
-                <p:document href="handle-css-counter-reset.xsl"/>
+                <p:document href="handle-css-display.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -283,11 +274,55 @@
         </p:xslt>
     </p:for-each>
     
+    <!--
+        add @css:target on elements that are referenced somewhere
+    -->
+    <pxi:xslt-for-each>
+        <p:input port="stylesheet">
+            <p:inline>
+                <xsl:stylesheet version="2.0">
+                    <xsl:template match="@*|node()">
+                        <xsl:copy>
+                            <xsl:apply-templates select="@*|node()"/>
+                        </xsl:copy>
+                    </xsl:template>
+                    <xsl:template match="*[@xml:id]">
+                        <xsl:variable name="id" select="string(@xml:id)"/>
+                        <xsl:copy>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:if test="collection()//*[@target=($id,concat('#',$id))
+                                                          and (self::css:target-text or
+                                                               self::css:target-string or
+                                                               self::css:target-counter)]">
+                                <xsl:attribute name="css:target" select="'true'"/>
+                            </xsl:if>
+                            <xsl:apply-templates select="node()"/>
+                        </xsl:copy>
+                    </xsl:template>
+                </xsl:stylesheet>
+            </p:inline>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </pxi:xslt-for-each>
+    
+    <!--
+        - drop non-block elements
+        - group adjacent css:block
+        - add @display='block' on css:block
+    -->
     <p:for-each>
         <p:unwrap match="/*//*[not(ancestor-or-self::louis:page-layout or
                                    @style or
                                    @css:display or
                                    @css:target or
+                                   self::css:string or
+                                   self::css:counter or
+                                   self::css:target-text or
+                                   self::css:target-string or
+                                   self::css:target-counter or
+                                   self::css:leader or
                                    self::css:block or
                                    self::louis:space or
                                    self::louis:print-page or
@@ -308,14 +343,24 @@
         <pxi:extract name="extract" match="louis:box" label="concat('box_', $p:index)"/>
     </p:for-each>
     
-    <pxi:xslt-for-each name="group-toc-items">
-        <p:input port="stylesheet">
-            <p:document href="group-toc-items.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </pxi:xslt-for-each>
+    <p:group name="generate-toc">
+        <pxi:xslt-for-each>
+            <p:input port="stylesheet">
+                <p:document href="generate-toc-items.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </pxi:xslt-for-each>
+        <pxi:xslt-for-each>
+            <p:input port="stylesheet">
+                <p:document href="group-toc-items.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </pxi:xslt-for-each>
+    </p:group>
     
     <p:for-each name="extract-toc">
         <p:output port="result" sequence="true">
