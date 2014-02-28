@@ -5,7 +5,8 @@
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:pef="http://www.daisy.org/ns/2008/pef"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    exclude-inline-prefixes="#all"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    exclude-inline-prefixes="px pxi dc xsl"
     version="1.0">
 
     <p:input port="source" primary="true" px:media-type="application/x-pef+xml"/>
@@ -23,6 +24,37 @@
         <p:delete match="/*/pef:head/pef:meta/dc:identifier"/>
         <p:string-replace match="text()" replace="replace(normalize-space(.), '&#x2800;+$', '')"/>
         <p:delete match="//pef:row[string(.)='' and not(following-sibling::pef:row[string(.)!=''])]"/>
+        <p:xslt>
+            <p:input port="stylesheet">
+                <p:inline>
+                    <xsl:stylesheet version="2.0">
+                        <xsl:template match="/*">
+                            <xsl:copy>
+                                <xsl:sequence select="@*|text()"/>
+                                <xsl:apply-templates select="*"/>
+                            </xsl:copy>
+                        </xsl:template>
+                        <xsl:template match="pef:volume">
+                            <xsl:copy>
+                                <xsl:apply-templates select="node()"/>
+                            </xsl:copy>
+                        </xsl:template>
+                        <xsl:template match="pef:section">
+                            <xsl:copy>
+                                <xsl:sequence select="(@cols,parent::*/@cols)[1]"/>
+                                <xsl:sequence select="(@duplex,parent::*/@duplex)[1]"/>
+                                <xsl:sequence select="(@rowgap,parent::*/@rowgap)[1]"/>
+                                <xsl:sequence select="(@rows,parent::*/@rows)[1]"/>
+                                <xsl:sequence select="node()"/>
+                            </xsl:copy>
+                        </xsl:template>
+                    </xsl:stylesheet>
+                </p:inline>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
     </p:declare-step>
     
     <pxi:normalize-pef name="normalize-source">
