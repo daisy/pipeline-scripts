@@ -9,13 +9,13 @@
   -->
   <x:scenario label="test_01">
     <x:context>
-      <doc>
-        <p css:display="block"> foo </p>
+      <doc style="orphans: 3">
+        <p css:display="block" style="orphans: inherit"> foo </p>
       </doc>
     </x:context>
     <x:expect label="result">
       <doc>
-        <p css:display="block" style="orphans: 2"> foo </p>
+        <p css:display="block" style="orphans: 3"> foo </p>
       </doc>
     </x:expect>
   </x:scenario>
@@ -42,7 +42,7 @@
   <x:scenario label="test_03">
     <x:context>
       <doc>
-        <p css:display="block" style="left: inherit; orphans: 0"> foo </p>
+        <p css:display="block" style="left: inherit"> foo </p>
       </doc>
     </x:context>
     <x:expect label="result">
@@ -65,7 +65,7 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <p css:display="block" style="text-align: center; orphans: 2"> foo </p>
+        <p css:display="block" style="text-align: center"> foo </p>
       </doc>
     </x:expect>
   </x:scenario>
@@ -124,10 +124,10 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <p css:display="block" style="orphans: 2"> foo </p>
-        <p css:display="block" style="text-align: left; orphans: 2"> foo </p>
-        <p css:display="block" style="text-align: left; orphans: 2"> foo </p>
-        <p css:display="block" style="orphans: 2"> foo </p>
+        <p css:display="block"> foo </p>
+        <p css:display="block" style="text-align: left"> foo </p>
+        <p css:display="block" style="text-align: left"> foo </p>
+        <p css:display="block"> foo </p>
       </doc>
     </x:expect>
   </x:scenario>

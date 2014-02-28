@@ -588,12 +588,9 @@
   <!--
       - A block can be kept together on the same page.
       - The first lines of a block can be kept together on the same page (orphan control).
-        => FIXME: orphans doesn't work because of liblouisutdml bug (nested orphanControl)
-           1. make orphans a non-inheriting property
-           2. add the following rule to default.css: * { orphans: 0 }
       - A page break can be forced.
   -->
-  <x:scenario label="test_08" pending="failure">
+  <x:scenario label="test_08">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="inline">
