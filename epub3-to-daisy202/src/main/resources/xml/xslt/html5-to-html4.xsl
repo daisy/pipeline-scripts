@@ -25,7 +25,13 @@
     </xsl:template>
 
     <xsl:template match="*">
-        <xsl:comment select="concat('No template for element: ',name())"/>
+        <xsl:element name="{if (f:is-phrasing(.)) then 'span' else 'div'}">
+            <xsl:call-template name="attrs">
+                <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'unknown-element' else ()" tunnel="yes"/>
+            </xsl:call-template>
+            <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
+            <xsl:comment select="concat(' No template for element: ',name(),' ')"/>
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="html:style"/>
@@ -667,15 +673,26 @@
     </xsl:template>
 
     <xsl:template match="html:audio">
-        <xsl:if test="$link-to-media = 'true'">
-            <xsl:variable name="src" select="(@src,html:source/@src)[1]"/>
-            <a href="{$src}">
-                <xsl:call-template name="attrs">
-                    <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
-                </xsl:call-template>
-                <xsl:value-of select="$src"/>
-            </a>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="$link-to-media = 'true'">
+                <xsl:variable name="src" select="(@src,html:source/@src)[1]"/>
+                <a href="{$src}">
+                    <xsl:call-template name="attrs">
+                        <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
+                    </xsl:call-template>
+                    <xsl:value-of select="$src"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <span>
+                    <xsl:call-template name="attrs">
+                        <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
+                    </xsl:call-template>
+                    <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
+                    <xsl:comment select="concat(' link removed: ',(@src,html:source/@src)[1],' ')"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="html:b">
@@ -758,112 +775,121 @@
     </xsl:template>
 
     <xsl:template match="html:datalist">
-        <!-- TODO -->
-        <xsl:copy>
+        <xsl:message select="' the datalist element is not allowed in HTML4 and has no good equivalent; replacing with an invisible div... '"/>
+        <div>
             <xsl:call-template name="attlist.datalist"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.datalist">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'datalist' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:del">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.del"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.del">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'del' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <xsl:attribute name="style" select="string-join((@style,('text-decoration:line-through;')),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:details">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.details"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.details">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'details' else ()" tunnel="yes"/>
+            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then ('details',if (@open) then 'details-open' else ()) else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @open is dropped and converted to a class instead -->
     </xsl:template>
 
     <xsl:template match="html:dialog">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.dialog"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.dialog">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'dialog' else ()" tunnel="yes"/>
+            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then ('dialog',if (@open) then 'dialog-open' else ()) else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @open is dropped and converted to a class instead -->
     </xsl:template>
 
     <xsl:template match="html:embed">
-        <!-- TODO -->
-        <xsl:copy>
-            <xsl:call-template name="attlist.embed"/>
-            <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        <xsl:choose>
+            <xsl:when test="ancestor::html:object">
+                <span>
+                    <xsl:call-template name="attrs">
+                        <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'embed' else ()" tunnel="yes"/>
+                    </xsl:call-template>
+                    <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
+                    <xsl:comment select="concat(' embedded media removed: ',@src,' ')"/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <object>
+                    <xsl:call-template name="attlist.embed"/>
+                    <xsl:apply-templates select="node()"/>
+                </object>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="attlist.embed">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'embed' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@height|@type|@width"/>
+        <xsl:if test="@src">
+            <xsl:attribute name="data" select="@src"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:fieldset">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.fieldset"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.fieldset">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'fieldset' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @disabled, @form and @name is dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the fieldset and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:footer">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.footer"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.footer">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'footer' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:form">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.form"/>
             <xsl:apply-templates select="node()"/>
@@ -871,29 +897,25 @@
     </xsl:template>
 
     <xsl:template name="attlist.form">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'form' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@accept|@accept-charset|@action|@enctype|@method|@name|@target"/>
+        <!-- @autocomplete and @novalidate are dropped -->
     </xsl:template>
 
     <xsl:template match="html:header">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.header"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.header">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'header' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:i">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.i"/>
             <xsl:apply-templates select="node()"/>
@@ -901,14 +923,10 @@
     </xsl:template>
 
     <xsl:template name="attlist.i">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'i' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:iframe">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.iframe"/>
             <xsl:apply-templates select="node()"/>
@@ -916,14 +934,12 @@
     </xsl:template>
 
     <xsl:template name="attlist.iframe">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'iframe' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@height|@name|@src|@width"/>
+        <!-- @sandbox, @seamless and @srcdoc are dropped -->
     </xsl:template>
 
     <xsl:template match="html:input">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.input"/>
             <xsl:apply-templates select="node()"/>
@@ -931,44 +947,45 @@
     </xsl:template>
 
     <xsl:template name="attlist.input">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'input' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@accept|@alt|@checked|@disabled|@maxlength|@name|@readonly|@size|@src|@type|@value"/>
+        <xsl:attribute name="style" select="string-join((@style,if (@height) then concat('height:',@height,';') else (), if (@width) then concat('width:',@width,';') else ()),' ')"/>
+        <!-- @autocomplete, @autofocus, @form, @formaction, @formenctype, @formmethod, @formnovalidate, @formtarget, @list, @max, @min, @multiple, @pattern, @placeholder, @required and @step are dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the input and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:ins">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.ins"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.ins">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'ins' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <xsl:attribute name="style" select="string-join((@style,('text-decoration:underline;')),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:keygen">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.keygen"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
+        <xsl:message select="' WARNING: the keygen element was replaced with a span; the form is probably broken '"/>
     </xsl:template>
 
     <xsl:template name="attlist.keygen">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'keygen' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @autofocus, @challenge, @disabled, @form, @keytype and @name is dropped -->
     </xsl:template>
 
     <xsl:template match="html:label">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.label"/>
             <xsl:apply-templates select="node()"/>
@@ -976,14 +993,15 @@
     </xsl:template>
 
     <xsl:template name="attlist.label">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'label' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@for"/>
+        <!-- @form is dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the input and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:legend">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.legend"/>
             <xsl:apply-templates select="node()"/>
@@ -991,29 +1009,23 @@
     </xsl:template>
 
     <xsl:template name="attlist.legend">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'legend' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:main">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.main"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.main">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'main' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:map">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.map"/>
             <xsl:apply-templates select="node()"/>
@@ -1021,104 +1033,97 @@
     </xsl:template>
 
     <xsl:template name="attlist.map">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'map' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@name"/>
     </xsl:template>
 
     <xsl:template match="html:mark">
-        <!-- TODO -->
-        <xsl:copy>
+        <em>
             <xsl:call-template name="attlist.mark"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </em>
     </xsl:template>
 
     <xsl:template name="attlist.mark">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'mark' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:menu">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.menu"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.menu">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'menu' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @label and @type is dropped -->
     </xsl:template>
 
     <xsl:template match="html:menuitem">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.menuitem"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.menuitem">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'menuitem' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @type, @label, @icon, @disabled, @checked, @radiogroup, @default and @command is dropped -->
     </xsl:template>
 
     <xsl:template match="html:meter">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.meter"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.meter">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'meter' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @form, @high, @low, @max, @min, @optimum and @value is dropped -->
     </xsl:template>
 
     <xsl:template match="html:nav">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.nav"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.nav">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'nav' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:noscript">
-        <!-- TODO -->
-        <xsl:copy>
-            <xsl:call-template name="attlist.noscript"/>
-            <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        <xsl:choose>
+            <xsl:when test="ancestor::html:body">
+                <xsl:copy>
+                    <xsl:call-template name="attlist.noscript"/>
+                    <xsl:apply-templates select="node()"/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message select="' noscript element removed since it can only be used inside the body element in HTML4 '"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="attlist.noscript">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'noscript' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:object">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.object"/>
             <xsl:apply-templates select="node()"/>
@@ -1126,14 +1131,12 @@
     </xsl:template>
 
     <xsl:template name="attlist.object">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'object' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@data|@height|@name|@type|@usemap|@width"/>
+        <!-- @form is dropped -->
     </xsl:template>
 
     <xsl:template match="html:optgroup">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.optgroup"/>
             <xsl:apply-templates select="node()"/>
@@ -1141,14 +1144,11 @@
     </xsl:template>
 
     <xsl:template name="attlist.optgroup">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'optgroup' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@disabled|@label"/>
     </xsl:template>
 
     <xsl:template match="html:option">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.option"/>
             <xsl:apply-templates select="node()"/>
@@ -1156,29 +1156,28 @@
     </xsl:template>
 
     <xsl:template name="attlist.option">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'option' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@disabled|@label|@selected|@value"/>
     </xsl:template>
 
     <xsl:template match="html:output">
-        <!-- TODO -->
-        <xsl:copy>
+        <xsl:element name="{if (f:is-phrasing(.)) then 'span' else 'div'}">
             <xsl:call-template name="attlist.output"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </xsl:element>
     </xsl:template>
 
     <xsl:template name="attlist.output">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'output' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @for, @form and @name is dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the output and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:param">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.param"/>
             <xsl:apply-templates select="node()"/>
@@ -1186,14 +1185,11 @@
     </xsl:template>
 
     <xsl:template name="attlist.param">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'param' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@name|@value"/>
     </xsl:template>
 
     <xsl:template match="html:pre">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.pre"/>
             <xsl:apply-templates select="node()"/>
@@ -1201,104 +1197,89 @@
     </xsl:template>
 
     <xsl:template name="attlist.pre">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'pre' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:progress">
-        <!-- TODO -->
-        <xsl:copy>
+        <xsl:element name="{if (f:is-phrasing(.)) then 'span' else 'div'}">
             <xsl:call-template name="attlist.progress"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </xsl:element>
     </xsl:template>
 
     <xsl:template name="attlist.progress">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'progress' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @max and @value is dropped -->
     </xsl:template>
 
     <xsl:template match="html:rb">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.rb"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.rb">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'rb' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:rp">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.rp"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.rp">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'rp' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:rt">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.rt"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.rt">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'rt' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:rtc">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.rtc"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.rtc">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'rtc' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:ruby">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.ruby"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.ruby">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'ruby' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:s">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.s"/>
             <xsl:apply-templates select="node()"/>
@@ -1306,14 +1287,10 @@
     </xsl:template>
 
     <xsl:template name="attlist.s">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 's' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:script">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.script"/>
             <xsl:apply-templates select="node()"/>
@@ -1321,14 +1298,12 @@
     </xsl:template>
 
     <xsl:template name="attlist.script">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'script' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@charset|@defer|@src|@type"/>
+        <!-- @async is dropped -->
     </xsl:template>
 
     <xsl:template match="html:select">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.select"/>
             <xsl:apply-templates select="node()"/>
@@ -1336,14 +1311,15 @@
     </xsl:template>
 
     <xsl:template name="attlist.select">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'select' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@disabled|@multiple|@name|@size"/>
+        <!-- @autofocus, @form and @required are dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the select and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:small">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.small"/>
             <xsl:apply-templates select="node()"/>
@@ -1351,37 +1327,31 @@
     </xsl:template>
 
     <xsl:template name="attlist.small">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'small' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:source">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.source"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.source">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'source' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <!-- @media, @src and @type is dropped -->
     </xsl:template>
 
     <xsl:template match="html:summary">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.summary"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.summary">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'summary' else ()" tunnel="yes"/>
         </xsl:call-template>
@@ -1403,7 +1373,6 @@
     </xsl:template>
 
     <xsl:template match="html:textarea">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.textarea"/>
             <xsl:apply-templates select="node()"/>
@@ -1411,10 +1380,12 @@
     </xsl:template>
 
     <xsl:template name="attlist.textarea">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'textarea' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@cols|@disabled|@name|@readonly|@rows"/>
+        <!-- @autofocus, @form, @maxlength, @placeholder, @required and @wrap is dropped -->
+        <xsl:if test="@form">
+            <xsl:message select="' WARNING: the *explicit* linkage between the textarea and the referenced form is lost since @form is dropped '"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:time">
@@ -1478,15 +1449,26 @@
     </xsl:template>
 
     <xsl:template match="html:video">
-        <xsl:if test="$link-to-media = 'true'">
-            <xsl:variable name="src" select="(@src,html:source/@src)[1]"/>
-            <a href="{$src}">
-                <xsl:call-template name="attrs">
-                    <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
-                </xsl:call-template>
-                <xsl:value-of select="$src"/>
-            </a>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="$link-to-media = 'true'">
+                <xsl:variable name="src" select="(@src,html:source/@src)[1]"/>
+                <a href="{$src}">
+                    <xsl:call-template name="attrs">
+                        <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
+                    </xsl:call-template>
+                    <xsl:value-of select="$src"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <span>
+                    <xsl:call-template name="attrs">
+                        <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'audio' else ()" tunnel="yes"/>
+                    </xsl:call-template>
+                    <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
+                    <xsl:comment select="concat(' link removed: ',(@src,html:source/@src)[1],' ')"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="html:wbr">
@@ -1554,6 +1536,13 @@
             select="$level//html:*[(self::html:section or self::html:article or self::html:aside or self::html:nav or self::html:body) and ((ancestor::html:*[self::html:section or self::html:article or self::html:aside or self::html:nav or self::html:body])[last()] intersect $level)]"/>
         <xsl:variable name="level-nodes" select="$level//node()[not(ancestor-or-self::* intersect $level-levels)]"/>
         <xsl:sequence select="$level-nodes"/>
+    </xsl:function>
+
+    <xsl:function name="f:is-phrasing" as="xs:boolean">
+        <xsl:param name="context" as="node()*"/>
+        <xsl:sequence
+            select="if ((for $e in ($context) return if ($e[self::html:a[f:is-phrasing(html:*)] or self::html:abbr or self::html:area[ancestor::html:map] or self::html:audio or self::html:b or self::html:bdi or self::html:bdo or self::html:br or self::html:button or self::html:canvas or self::html:cite or self::html:code or self::html:command or self::html:datalist or self::html:del[f:is-phrasing(html:*)] or self::html:dfn or self::html:em or self::html:embed or self::html:i or self::html:iframe or self::html:img or self::html:input or self::html:ins[f:is-phrasing(html:*)] or self::html:kbd or self::html:keygen or self::html:label or self::html:map[f:is-phrasing(html:*)] or self::html:mark or self::html:math or self::html:meter or self::html:noscript or self::html:object or self::html:output or self::html:progress or self::html:q or self::html:ruby or self::html:s or self::html:samp or self::html:script or self::html:select or self::html:small or self::html:span or self::html:strong or self::html:sub or self::html:sup or self::html:svg or self::html:textarea or self::html:time or self::html:u or self::html:var or self::html:video or self::html:wbr or self::html:text]) then 'true' else 'false')='false') then true() else false()"
+        />
     </xsl:function>
 
 </xsl:stylesheet>
