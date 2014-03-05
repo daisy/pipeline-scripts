@@ -39,19 +39,16 @@
         <xsl:param name="except" tunnel="yes"/>
 
         <xsl:copy-of select="(@id|@title|@xml:space)[not(name()=$except)]"/>
-        <xsl:call-template name="classes-and-types"/>
+        <xsl:call-template name="classes"/>
     </xsl:template>
 
     <xsl:template name="i18n">
         <xsl:param name="except" tunnel="yes"/>
 
-        <xsl:copy-of select="(@dir)[not(name()=$except)]"/>
-        <xsl:if test="(@xml:lang|@lang) and not(('xml:lang','lang')=$except)">
-            <xsl:attribute name="xml:lang" select="(@xml:lang|@lang)[1]"/>
-        </xsl:if>
+        <xsl:copy-of select="(@dir|@lang)[not(name()=$except)]"/>
     </xsl:template>
 
-    <xsl:template name="classes-and-types">
+    <xsl:template name="classes">
         <xsl:param name="classes" select="()" tunnel="yes"/>
         <xsl:param name="except" tunnel="yes" select="()"/>
         <xsl:param name="except-classes" tunnel="yes" select="()"/>
@@ -59,11 +56,6 @@
         <xsl:if test="not($except-classes='*')">
 
             <xsl:variable name="old-classes" select="f:classes(.)"/>
-
-            <xsl:variable name="showin" select="replace($old-classes[matches(.,'^showin-...$')][1],'showin-','')"/>
-            <xsl:if test="$showin and not('_showin'=$except)">
-                <xsl:attribute name="showin" select="$showin"/>
-            </xsl:if>
 
             <xsl:if test="not('_class'=$except)">
                 <xsl:variable name="class-string" select="string-join(distinct-values(($classes, $old-classes)[not(.='') and not(.=$except-classes)]),' ')"/>
@@ -93,7 +85,7 @@
         <xsl:param name="except" tunnel="yes"/>
 
         <xsl:copy-of select="(@id|@title|@xml:space)[not(name()=$except)]"/>
-        <xsl:call-template name="classes-and-types"/>
+        <xsl:call-template name="classes"/>
         <xsl:call-template name="i18n"/>
     </xsl:template>
 
@@ -155,7 +147,10 @@
     <xsl:template name="attlist.meta">
         <xsl:call-template name="i18n"/>
         <xsl:copy-of select="@http-equiv|@name|@content"/>
-        <!-- @charset is dropped -->
+        <xsl:if test="@charset">
+            <xsl:attribute name="http-equiv" select="'Content-Type'"/>
+            <xsl:attribute name="content" select="concat('text/html; charset=',@charset)"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="html:body">
@@ -238,8 +233,8 @@
 
     <xsl:template name="attlist.a">
         <xsl:call-template name="attrs"/>
-        <xsl:copy-of select="@type|@href|@hreflang|@rel|@accesskey|@tabindex"/>
-        <!-- @download and @media is dropped - they don't have a good equivalent in HTML4 -->
+        <xsl:copy-of select="@href|@hreflang|@rel|@target"/>
+        <!-- @download, @media and @type is dropped - they don't have a good equivalent in HTML4 -->
     </xsl:template>
 
     <xsl:template match="html:em">
@@ -395,8 +390,7 @@
 
     <xsl:template name="attlist.img">
         <xsl:call-template name="attrs"/>
-        <xsl:attribute name="src" select="replace(@src,'^images/','')"/>
-        <xsl:copy-of select="@alt|@longdesc|@height|@width"/>
+        <xsl:copy-of select="@src|@alt|@longdesc|@height|@width"/>
     </xsl:template>
 
     <xsl:template match="html:figure">
@@ -513,10 +507,10 @@
     </xsl:template>
 
     <xsl:template match="html:li">
-        <li>
+        <xsl:copy>
             <xsl:call-template name="attlist.li"/>
             <xsl:apply-templates select="node()"/>
-        </li>
+        </xsl:copy>
     </xsl:template>
 
     <xsl:template name="attlist.li">
@@ -533,6 +527,7 @@
 
     <xsl:template name="attlist.table">
         <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@sortable"/>
     </xsl:template>
 
     <xsl:template match="html:caption">
@@ -554,7 +549,9 @@
     </xsl:template>
 
     <xsl:template name="attlist.figcaption">
-        <xsl:call-template name="attrs"/>
+        <xsl:call-template name="attrs">
+            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'figcaption' else ()" tunnel="yes"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:thead">
@@ -644,7 +641,10 @@
         </xsl:copy>
     </xsl:template>
 
-
+    <xsl:template name="attlist.td">
+        <xsl:call-template name="attrs"/>
+        <xsl:copy-of select="@headers|@scope|@rowspan|@colspan"/>
+    </xsl:template>
 
     <xsl:template match="html:area">
         <xsl:copy>
@@ -790,17 +790,16 @@
     </xsl:template>
 
     <xsl:template match="html:del">
-        <span>
+        <s>
             <xsl:call-template name="attlist.del"/>
             <xsl:apply-templates select="node()"/>
-        </span>
+        </s>
     </xsl:template>
 
     <xsl:template name="attlist.del">
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'del' else ()" tunnel="yes"/>
         </xsl:call-template>
-        <xsl:attribute name="style" select="string-join((@style,('text-decoration:line-through;')),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:details">
@@ -852,7 +851,9 @@
     </xsl:template>
 
     <xsl:template name="attlist.embed">
-        <xsl:call-template name="attrs"/>
+        <xsl:call-template name="attrs">
+            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'embed' else ()" tunnel="yes"/>
+        </xsl:call-template>
         <xsl:copy-of select="@height|@type|@width"/>
         <xsl:if test="@src">
             <xsl:attribute name="data" select="@src"/>
@@ -957,17 +958,16 @@
     </xsl:template>
 
     <xsl:template match="html:ins">
-        <span>
+        <u>
             <xsl:call-template name="attlist.ins"/>
             <xsl:apply-templates select="node()"/>
-        </span>
+        </u>
     </xsl:template>
 
     <xsl:template name="attlist.ins">
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'ins' else ()" tunnel="yes"/>
         </xsl:call-template>
-        <xsl:attribute name="style" select="string-join((@style,('text-decoration:underline;')),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:keygen">
@@ -1120,7 +1120,9 @@
     </xsl:template>
 
     <xsl:template name="attlist.noscript">
-        <xsl:call-template name="attrs"/>
+        <xsl:call-template name="attrs">
+            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'noscript' else ()" tunnel="yes"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:object">
@@ -1358,18 +1360,17 @@
     </xsl:template>
 
     <xsl:template match="html:template">
-        <!-- TODO -->
-        <xsl:copy>
+        <div>
             <xsl:call-template name="attlist.template"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </div>
     </xsl:template>
 
     <xsl:template name="attlist.template">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'template' else ()" tunnel="yes"/>
         </xsl:call-template>
+        <xsl:attribute name="style" select="string-join((@style,'display:none;'),' ')"/>
     </xsl:template>
 
     <xsl:template match="html:textarea">
@@ -1389,37 +1390,32 @@
     </xsl:template>
 
     <xsl:template match="html:time">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.time"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.time">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'time' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:track">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.track"/>
-            <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+            <xsl:comment select="string-join((@kind,@srclang,@label,@src),' - ')"/>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.track">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'track' else ()" tunnel="yes"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="html:u">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.u"/>
             <xsl:apply-templates select="node()"/>
@@ -1427,14 +1423,10 @@
     </xsl:template>
 
     <xsl:template name="attlist.u">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'u' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:var">
-        <!-- TODO -->
         <xsl:copy>
             <xsl:call-template name="attlist.var"/>
             <xsl:apply-templates select="node()"/>
@@ -1442,10 +1434,7 @@
     </xsl:template>
 
     <xsl:template name="attlist.var">
-        <!-- TODO -->
-        <xsl:call-template name="attrs">
-            <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'var' else ()" tunnel="yes"/>
-        </xsl:call-template>
+        <xsl:call-template name="attrs"/>
     </xsl:template>
 
     <xsl:template match="html:video">
@@ -1472,28 +1461,16 @@
     </xsl:template>
 
     <xsl:template match="html:wbr">
-        <!-- TODO -->
-        <xsl:copy>
+        <span>
             <xsl:call-template name="attlist.wbr"/>
             <xsl:apply-templates select="node()"/>
-        </xsl:copy>
+        </span>
     </xsl:template>
 
     <xsl:template name="attlist.wbr">
-        <!-- TODO -->
         <xsl:call-template name="attrs">
             <xsl:with-param name="classes" select="if ($add-semantic-classes='true') then 'wbr' else ()" tunnel="yes"/>
         </xsl:call-template>
-    </xsl:template>
-
-
-
-
-
-
-    <xsl:template name="attlist.td">
-        <xsl:call-template name="attrs"/>
-        <xsl:copy-of select="@headers|@scope|@rowspan|@colspan"/>
     </xsl:template>
 
     <xsl:function name="f:classes" as="xs:string*">
@@ -1504,7 +1481,7 @@
     <xsl:function name="f:level" as="xs:integer">
         <xsl:param name="element" as="element()"/>
         <xsl:variable name="level" select="($element/ancestor-or-self::html:*[self::html:section or self::html:article or self::html:aside or self::html:nav or self::html:body])[last()]"/>
-        <xsl:variable name="level-nodes" select="f:level-nodes($level)"/>
+        <xsl:variable name="level-nodes" select="if (count($level) &gt; 0) then f:level-nodes($level) else f:level-nodes($element)"/>
         <xsl:variable name="h-in-section" select="$level-nodes[self::html:h1 or self::html:h2 or self::html:h3 or self::html:h4 or self::html:h5 or self::html:h6]"/>
         <xsl:variable name="h" select="$h-in-section[1]"/>
         <xsl:variable name="sections" select="$level/ancestor-or-self::*[self::html:section or self::html:article or self::html:aside or self::html:nav]"/>
@@ -1522,7 +1499,7 @@
         <xsl:variable name="implicit-level" select="($implicit-level, if ($h-in-level-numbers = 1) then 1 else ())"/>
         <xsl:variable name="implicit-level" select="count($implicit-level)"/>
 
-        <xsl:variable name="level" select="$explicit-level + $implicit-level"/>
+        <xsl:variable name="level" select="$explicit-level + $implicit-level + 1"/>
         <xsl:sequence select="max((1,min(($level, 6))))"/>
         <!--
             NOTE: HTML4 only supports 6 levels using the h1-h6 elements,
