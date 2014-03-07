@@ -58,15 +58,16 @@
         </p:documentation>
         <p:pipe port="result" step="status"/>
     </p:output>
-    
+
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epubcheck-adapter/library.xpl"/>
 
-    <px:epubcheck name="epubcheck">
+    <px:epubcheck>
         <p:with-option name="epub" select="$epub"/>
-        <p:with-option name="mode" select="$mode"/>
-        <p:with-option name="version" select="$version"/>
+        <p:with-option name="mode" select="if ($mode='') then 'epub' else $mode"/>
+        <p:with-option name="version" select="if ($version='') then '3' else $version"/>
     </px:epubcheck>
-    
+
     <p:xslt name="xml-report.not-wrapped">
         <p:input port="parameters">
             <p:empty/>
@@ -118,7 +119,7 @@
     </p:insert>
     <p:delete match="//d:report/*[not(*)]"/>
     <p:identity name="xml-report"/>
-    
+
     <p:xslt name="html-report">
         <p:input port="parameters">
             <p:empty/>
