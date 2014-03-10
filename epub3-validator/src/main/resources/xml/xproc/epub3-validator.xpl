@@ -13,18 +13,18 @@
         <p><a px:role="homepage" href="http://code.google.com/p/daisy-pipeline/wiki/EpubCheckDoc">Online Documentation</a></p>
     </p:documentation>
 
-    <p:option name="epub" required="true" px:type="anyFileURI" px:media-type="application/epub+zip">
+    <p:option name="epub" required="true" px:type="anyFileURI" px:media-type="application/epub+zip application/oebps-package+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">EPUB</h2>
             <p px:role="desc">EPUB to be validated.</p>
         </p:documentation>
     </p:option>
 
-    <p:option name="mode" required="false" px:output="result" px:type="string" select="'epub'">
+    <p:option name="mode" required="false" px:type="string" select="'epub'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">What to validate</h2>
             <p px:role="desc">One of: "epub" (the entire epub), "opf" (the package file), "xhtml" (the content files), "svg" (vector graphics), "mo" (media overlays), "nav" (the navigation
-                document).</p>
+                document) or "expanded" (like "epub" but unzipped).</p>
         </p:documentation>
     </p:option>
 
@@ -64,7 +64,7 @@
 
     <px:epubcheck>
         <p:with-option name="epub" select="$epub"/>
-        <p:with-option name="mode" select="if ($mode='') then 'epub' else $mode"/>
+        <p:with-option name="mode" select="if ($mode='') then (if (matches(lower-case($epub),'\.(opf|xml)$')) then 'expanded' else 'epub') else $mode"/>
         <p:with-option name="version" select="if ($version='') then '3' else $version"/>
     </px:epubcheck>
 
