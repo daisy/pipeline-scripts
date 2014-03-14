@@ -1202,16 +1202,15 @@
                   <entry ref="chapter_1" style="display: block;
                                                 content: target-text(attr(ref))
                                                          leader('⠄')
-                                                         target-string(attr(ref), print-page)
                                                          target-counter(attr(ref), braille-page)"/>
                   <entry ref="chapter_2" style="display: block;
                                                 content: target-text(attr(ref))
                                                          leader('⠄')
-                                                         target-string(attr(ref), print-page)"/>
+                                                         target-counter(attr(ref), braille-page)"/>
                   <entry ref="chapter_3" style="display: block;
                                                 content: target-text(attr(ref))
                                                          leader('⠄')
-                                                         target-string(attr(ref), print-page)"/>
+                                                         target-counter(attr(ref), braille-page)"/>
                 </toc>
                 <h xml:id="chapter_1" style="display: block;
                                              margin-top: 1">
@@ -1910,6 +1909,177 @@
                   <row>⠀⠇⠿⠿⠿⠿</row>
                   <row/>
                   <row/>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_22 -->
+  <!-- ======= -->
+  <!--
+      - Print page numbers and braille page numbers can be enabled or disabled in a TOC.
+  -->
+  <x:scenario label="test_22">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 10
+                         @bottom-right {
+                         content: string(print-page) ' ' counter(braille-page) }}">
+              <pagenum style="string-set: print-page '⠤';
+                              display: none"/>
+              <frontmatter>
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)"/>
+                  <entry ref="chapter_3" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_4" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-string(attr(ref), print-page)
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 margin-top: 1">
+                <h xml:id="chapter_1" style="display:block">
+                  ⠿
+                </h>
+                <h xml:id="chapter_2" style="display:block">
+                  ⠿⠿
+                </h>
+                <h xml:id="chapter_3" style="display:block">
+                  ⠿⠿⠿
+                </h>
+                <h xml:id="chapter_4" style="display:block">
+                  ⠿⠿⠿⠿
+                </h>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
+      </x:input>
+      <x:option name="temp-dir" select="$temp-dir"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="10" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿</row>
+                  <row>⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠤</row>
+                  <row>⠿⠿⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row>⠿⠿⠿⠿⠀⠄⠄⠄⠄⠄⠀⠤⠀⠼⠁</row>
+                  <row/>
+                  <row>⠿</row>
+                  <row>⠿⠿</row>
+                  <row>⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠀⠼⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_23 -->
+  <!-- ======= -->
+  <!--
+      - The leader pattern in a TOC can be configured.
+  -->
+  <x:scenario label="test_23">
+    <x:call step="louis:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc>
+            <body style="@page {
+                         size: 15 8
+                         @bottom-right {
+                         content: counter(braille-page) }}">
+              <frontmatter>
+                <toc>
+                  <entry ref="chapter_1" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠄')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_2" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         leader('⠤')
+                                                         target-counter(attr(ref), braille-page)"/>
+                  <entry ref="chapter_3" style="display: block;
+                                                content: target-text(attr(ref))
+                                                         target-counter(attr(ref), braille-page)"/>
+                </toc>
+              </frontmatter>
+              <bodymatter style="display: block;
+                                 margin-top: 1">
+                <h xml:id="chapter_1" style="display:block">
+                  ⠿
+                </h>
+                <h xml:id="chapter_2" style="display:block">
+                  ⠿⠿
+                </h>
+                <h xml:id="chapter_3" style="display:block">
+                  ⠿⠿⠿
+                </h>
+              </bodymatter>
+            </body>
+          </doc>
+        </x:document>
+      </x:input>
+      <x:option name="temp-dir" select="$temp-dir"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="8" cols="15" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
+                  <row>⠿⠿⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠀⠼⠁</row>
+                  <row>⠿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                  <row/>
+                  <row>⠿</row>
+                  <row>⠿⠿</row>
+                  <row>⠿⠿⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
                 </page>
               </section>
             </volume>

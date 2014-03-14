@@ -45,10 +45,10 @@
                                        <xsl:attribute name="href" select="$href"/>
                                        <xsl:attribute name="width" select="$page-width - $right"/>
                                        <xsl:if test="$print-page!=''">
-                                          <xsl:attribute name="print-page" select="$print-page"/>
+                                          <xsl:attribute name="print-pages" select="$print-page"/>
                                        </xsl:if>
                                        <xsl:if test="$braille-page!=''">
-                                          <xsl:attribute name="braille-page" select="$braille-page"/>
+                                          <xsl:attribute name="braille-pages" select="$braille-page"/>
                                        </xsl:if>
                                        <xsl:if test="$leader!=''">
                                           <xsl:attribute name="leader" select="$leader"/>

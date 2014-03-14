@@ -290,6 +290,19 @@
                         <p:input port="page-layout" select="/*/louis:page-layout/c:param-set">
                             <p:pipe step="source.section" port="matched"/>
                         </p:input>
+                        <p:with-param name="louis:braille-pages-in-toc" select="/louis:toc/@braille-pages='true'">
+                            <p:pipe step="source.toc" port="result"/>
+                        </p:with-param>
+                        <p:with-param name="louis:print-pages-in-toc" select="/louis:toc/@print-pages='true'">
+                            <p:pipe step="source.toc" port="result"/>
+                        </p:with-param>
+                        <p:with-param name="louis:toc-leader-pattern"
+                                      select="translate(
+                                                string(/louis:toc/@leader),
+                                                '⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿⠀',
+                                                'a1b''k2l`cif/msp&quot;e3h9o6r~djg>ntq,*5&lt;-u8v.%{$+x!&amp;;:4|0z7(_?w}#y)=')">
+                            <p:pipe step="source.toc" port="result"/>
+                        </p:with-param>
                         <p:with-option name="temp-dir" select="$temp-dir"/>
                     </louis:translate-file>
                     
@@ -480,7 +493,7 @@
                             <p:input port="semantics" select="/*/louis:semantics/d:fileset">
                                 <p:pipe step="source.box" port="result"/>
                             </p:input>
-                            <p:with-param port="page-layout" name="louis:page-width" select="/*/@width">
+                            <p:with-param name="louis:page-width" select="/*/@width">
                                 <p:pipe step="source.box" port="result"/>
                             </p:with-param>
                             <p:with-option name="temp-dir" select="$temp-dir"/>

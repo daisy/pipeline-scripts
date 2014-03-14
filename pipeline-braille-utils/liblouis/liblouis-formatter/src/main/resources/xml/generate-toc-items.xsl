@@ -30,7 +30,10 @@
                     <xsl:attribute name="ref" select="replace($target[1],'^#','')"/>
                     <xsl:sequence select="@style|@css:display"/>
                     <xsl:if test="count(css:leader)=1">
-                        <xsl:attribute name="leader" select="css:leader/@pattern"/>
+                        <xsl:variable name="pattern" as="xs:string" select="substring(css:leader/@pattern, 1, 1)"/>
+                        <xsl:if test="matches($pattern, $DOT_PATTERN) and $pattern!='&#x2800;'">
+                            <xsl:attribute name="leader" select="$pattern"/>
+                        </xsl:if>
                     </xsl:if>
                     <xsl:if test="count(css:target-string[@identifier='print-page'])=1">
                         <xsl:attribute name="print-page" select="'true'"/>

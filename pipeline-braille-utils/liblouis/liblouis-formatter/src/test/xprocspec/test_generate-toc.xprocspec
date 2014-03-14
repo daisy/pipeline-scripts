@@ -41,7 +41,7 @@
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
           <louis:div css:display="block" style="left: 0; right: 0.0">
-            <louis:toc href="file:/users/me/toc.xml" width="30" print-page="true" braille-page="true" leader="⠄⠄">
+            <louis:toc href="file:/users/me/toc.xml" width="30" print-pages="true" braille-pages="true" leader="⠄⠄">
               <louis:toc-item ref="h1" style="left:0.0; text-indent:0.0"/>
               <louis:toc-item ref="h2" style="left:0.0; text-indent:0.0"/>
             </louis:toc>
@@ -96,7 +96,7 @@
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
           <louis:div css:display="block" style="left: 0; right: 0.0">
-            <louis:toc href="file:/users/me/toc.xml" width="30" print-page="true">
+            <louis:toc href="file:/users/me/toc.xml" width="30" print-pages="true">
               <louis:toc-item ref="h1" style="left:0.0; text-indent:0.0"/>
             </louis:toc>
           </louis:div>

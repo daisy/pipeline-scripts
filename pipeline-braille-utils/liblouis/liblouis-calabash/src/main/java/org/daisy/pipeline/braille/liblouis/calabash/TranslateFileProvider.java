@@ -51,6 +51,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 	private static final QName louis_braille_page_position = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-page-position");
 	private static final QName louis_page_break_separator = new QName(LOUIS_PREFIX, LOUIS_NS, "page-break-separator");
 	private static final QName louis_braille_page_begin = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-page-begin");
+	private static final QName louis_braille_pages_in_toc = new QName(LOUIS_PREFIX, LOUIS_NS, "braille-pages-in-toc");
+	private static final QName louis_print_pages_in_toc = new QName(LOUIS_PREFIX, LOUIS_NS, "print-pages-in-toc");
+	private static final QName louis_toc_leader_pattern = new QName(LOUIS_PREFIX, LOUIS_NS, "toc-leader-pattern");
 	
 	private Liblouisutdml liblouisutdml = null;
 	
@@ -73,7 +76,7 @@ public class TranslateFileProvider implements XProcStepProvider {
 		private ReadablePipe styles = null;
 		private ReadablePipe semantics = null;
 		private WritablePipe result = null;
-		private Hashtable<QName,RuntimeValue> pageLayout = new Hashtable<QName,RuntimeValue> ();
+		private Hashtable<QName,RuntimeValue> params = new Hashtable<QName,RuntimeValue>();
 		
 		/**
 		 * Creates a new instance of TranslateFile
@@ -97,17 +100,10 @@ public class TranslateFileProvider implements XProcStepProvider {
 			result = pipe;
 		}
 		
+		// FIXME: Calabash should call the function setParameter(String port, QName name, RuntimeValue value)
 		@Override
 		public void setParameter(QName name, RuntimeValue value) {
-			setParameter("page-layout", name, value);
-		}
-		
-		@Override
-		public void setParameter(String port, QName name, RuntimeValue value) {
-			if (port.equals("page-layout"))
-				pageLayout.put(name, value);
-			else
-				super.setParameter(port, name, value);
+			params.put(name, value);
 		}
 		
 		@Override
@@ -132,31 +128,41 @@ public class TranslateFileProvider implements XProcStepProvider {
 				// Get options
 				if (getOption(_paged) != null)
 					settings.put("braillePages",  getOption(_paged).getBoolean() ? "yes" : "no");
-				if (pageLayout.containsKey(louis_page_width))
-					settings.put("cellsPerLine", pageLayout.get(louis_page_width).getString());
-				if (pageLayout.containsKey(louis_page_height))
-					settings.put("linesPerPage", pageLayout.get(louis_page_height).getString());
-				if (pageLayout.containsKey(louis_braille_page_position)) {
-					String position = pageLayout.get(louis_braille_page_position).getString();
+				if (params.containsKey(louis_page_width))
+					settings.put("cellsPerLine", params.get(louis_page_width).getString());
+				if (params.containsKey(louis_page_height))
+					settings.put("linesPerPage", params.get(louis_page_height).getString());
+				if (params.containsKey(louis_braille_page_position)) {
+					String position = params.get(louis_braille_page_position).getString();
 					if (position.equals("top-right") || position.equals("bottom-right")) {
 						settings.put("braillePageNumberAt", position.replace("-right", ""));
 						settings.put("numberBraillePages", "yes"); }
 					else if (position.equals("none"))
 						settings.put("numberBraillePages", "no"); }
-				if (pageLayout.containsKey(louis_print_page_position)) {
-					String position = pageLayout.get(louis_print_page_position).getString();
+				if (params.containsKey(louis_print_page_position)) {
+					String position = params.get(louis_print_page_position).getString();
 					if (position.equals("top-right") || position.equals("bottom-right")) {
 						settings.put("printPageNumberAt", position.replace("-right", ""));
 						settings.put("printPages", "yes"); }
 					else if (position.equals("none"))
 						settings.put("printPages", "no"); }
-				if (pageLayout.containsKey(louis_page_break_separator)) {
-					boolean separator = pageLayout.get(louis_page_break_separator).getBoolean();
+				if (params.containsKey(louis_page_break_separator)) {
+					boolean separator = params.get(louis_page_break_separator).getBoolean();
 					settings.put("pageSeparator", separator ? "yes" : "no");
 					settings.put("pageSeparatorNumber", separator ? "yes" : "no"); }
-				if (pageLayout.containsKey(louis_braille_page_begin))
+				if (params.containsKey(louis_braille_page_begin))
 					settings.put("beginningPageNumber",
-					             pageLayout.get(louis_braille_page_begin).getString());
+					             params.get(louis_braille_page_begin).getString());
+				if (params.containsKey(louis_braille_pages_in_toc))
+					settings.put("braillePageNumbersInContents",
+					             params.get(louis_braille_pages_in_toc).getBoolean() ? "yes" : "no");
+				if (params.containsKey(louis_print_pages_in_toc))
+					settings.put("printPageNumbersInContents",
+					             params.get(louis_print_pages_in_toc).getBoolean() ? "yes" : "no");
+				if (params.containsKey(louis_toc_leader_pattern)) {
+					String pattern = params.get(louis_toc_leader_pattern).getString();
+					if (pattern.length() == 1)
+						settings.put("lineFill", pattern); }
 				
 				File tempDir = asFile(getOption(_temp_dir).getString());
 				URI configPath = null;
