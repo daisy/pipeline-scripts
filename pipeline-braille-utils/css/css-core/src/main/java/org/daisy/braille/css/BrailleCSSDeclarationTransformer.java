@@ -115,9 +115,15 @@ public class BrailleCSSDeclarationTransformer extends DeclarationTransformer {
 		if (d.size() == 1 && genericOneIdent(Content.class, d, properties))
 			return true;
 		
+		final Set<String> validFuncNames = new HashSet<String>(Arrays.asList(
+				"content", "attr", "target-text", "target-string", "target-counter", "leader"));
+		
 		TermList list = tf.createList();
 		for (Term<?> t : d.asList()) {
 			if (t instanceof TermString)
+				list.add(t);
+			else if (t instanceof TermFunction
+			         && validFuncNames.contains(((TermFunction)t).getFunctionName().toLowerCase()))
 				list.add(t);
 			else
 				return false;

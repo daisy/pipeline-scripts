@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
+               script="http://www.daisy.org/pipeline/modules/braille/css-calabash/library.xpl">
+  
+  <!-- ======= -->
+  <!-- test_01 -->
+  <!-- ======= -->
+  <!--
+      <string>, none
+  -->
+  <x:scenario label="test_01">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                td::after { content: ',' }
+                td:last-child::after { content: none; }
+              </style>
+            </head>
+            <body>
+              <table>
+                <tr>
+                  <td>foo</td>
+                  <td>bar</td>
+                </tr>
+              </table>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <table>
+            <tr>
+              <td style="::after { content: ','; }">foo</td>
+              <td style="::after { content: none; }">bar</td>
+            </tr>
+          </table>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_02 -->
+  <!-- ======= -->
+  <!--
+      attr()
+  -->
+  <x:scenario label="test_02">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                pagenum { display: block; text-align: right; content: attr(value); }
+              </style>
+            </head>
+            <body>
+              <pagenum value="1"/>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <pagenum value="1" style="content: attr(value); display: block; text-align: right;"/>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_03 -->
+  <!-- ======= -->
+  <!--
+      target-text(), target-string(), target-counter(), leader()
+  -->
+  <x:scenario label="test_03">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                toc entry { display: block; content: target-text(attr(ref))
+                                                     leader('⠄')
+                                                     target-string(attr(ref), print-page)
+                                                     target-counter(attr(ref), braille-page); }
+              </style>
+            </head>
+            <body>
+              <toc>
+                <entry ref="h1"/>
+              </toc>
+              <h xml:id="h1">foo</h>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <toc>
+            <entry ref="h1" style="content: target-text(attr(ref))  leader('⠄')  target-string(attr(ref), print-page)  target-counter(attr(ref), braille-page); display: block;"/>
+          </toc>
+          <h xml:id="h1">foo</h>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
