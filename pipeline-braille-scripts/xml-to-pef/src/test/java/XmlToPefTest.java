@@ -82,6 +82,7 @@ public class XmlToPefTest {
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-mathml").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-utils").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-tables").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-native").versionAsInProject().classifier("linux"),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("libhyphen-core").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
