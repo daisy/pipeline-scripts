@@ -33,17 +33,17 @@ public class LiblouisJnaImpl implements Liblouis {
 	private BundledNativePath nativePath;
 	private LiblouisTableResolver tableResolver;
 	
+	// Hold a reference to avoid garbage collection
+	private TableResolver _tableResolver;
+	
 	protected void activate() {
 		logger.debug("Loading liblouis service");
 		logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
 		final LiblouisTableResolver tableResolver = this.tableResolver;
-		Louis.getLibrary().lou_registerTableResolver(
-			new TableResolver() {
-				public File[] invoke(String tableList, File base) {
-					return tableResolver.resolveTableList(tokenizeTableList(tableList), base);
-				}
-			}
-		);
+		_tableResolver = new TableResolver() {
+			public File[] invoke(String tableList, File base) {
+				return tableResolver.resolveTableList(tokenizeTableList(tableList), base); }};
+		Louis.getLibrary().lou_registerTableResolver(_tableResolver);
 	}
 	
 	protected void deactivate() {
