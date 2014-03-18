@@ -164,7 +164,7 @@
 	<xsl:template match="dtb:p[.//dtb:pagenum]" priority="0.6"
 	              mode="office:text office:annotation text:section text:list-item table:table-cell">
 		<xsl:choose>
-			<xsl:when test="$page_numbers_float='true'">
+			<xsl:when test="$page_numbers='true' and $page_numbers_float='true'">
 				<xsl:call-template name="insert-pagenum-after"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -256,6 +256,16 @@
 		<xsl:sequence select="dtb:style-name(.)"/>
 	</xsl:template>
 	
+	<xsl:template match="dtb:table[.//dtb:pagenum]" priority="0.6" mode="office:text text:section">
+		<xsl:choose>
+			<xsl:when test="$page_numbers='true' and $page_numbers_float='true'">
+				<xsl:call-template name="insert-pagenum-after"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:next-match/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
 	<xsl:template match="dtb:table" mode="office:text text:section">
 		<xsl:variable name="dtb:table" as="element()">
@@ -502,7 +512,7 @@
 	</xsl:template>
 	
 	<xsl:template match="dtb:img" mode="office:text office:annotation text:section table:table-cell text:list-item">
-		<xsl:variable name="src" select="resolve-uri(@src, base-uri(collection()[2]/dtb:dtbook))"/>
+		<xsl:variable name="src" select="resolve-uri(@src, base-uri(collection()[2]/*))"/>
 		<xsl:variable name="image_dimensions" as="xs:integer*" select="pf:image-dimensions($src)"/>
 		<xsl:call-template name="text:p">
 			<xsl:with-param name="sequence">
@@ -566,6 +576,13 @@
 	
 	<xsl:template match="dtb:pagenum" mode="paragraph-style">
 		<xsl:sequence select="dtb:style-name(.)"/>
+	</xsl:template>
+	
+	<!--
+	    FIXME: what if pagenum_done?
+	-->
+	<xsl:template match="dtb:pagenum" as="xs:boolean" mode="is-block-element">
+		<xsl:sequence select="$page_numbers='true'"/>
 	</xsl:template>
 	
 	<xsl:template match="dtb:pagenum" mode="office:text office:annotation text:section table:table-cell">
@@ -818,7 +835,7 @@
 		<xsl:sequence select="false()"/>
 	</xsl:template>
 	
-	<xsl:template match="dtb:p|dtb:list|dtb:dl|dtb:table|dtb:imggroup|dtb:blockquote|dtb:pagenum"
+	<xsl:template match="dtb:p|dtb:list|dtb:dl|dtb:table|dtb:imggroup|dtb:blockquote"
 	              as="xs:boolean"
 	              mode="is-block-element">
 		<xsl:sequence select="true()"/>
