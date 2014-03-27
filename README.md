@@ -9,6 +9,7 @@ Script Modules for the default DAISY Pipeline 2 distribution. Currently includes
 - DAISY 3 to EPUB 3
 - DTBook to EPUB 3
 - DTBook to HTML
+- DTBook to [OpenDocument Text (ODF)](http://en.wikipedia.org/wiki/OpenDocument)
 - DTBook to ZedAI (DAISY Authoring and Interchange)
 - DTBook Validator
 - HTML to DTBook
