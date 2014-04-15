@@ -22,6 +22,7 @@
   <modules>
     <module>daisy202-to-epub3</module>
     <module>daisy3-to-epub3</module>
+    <module>dtbook-to-daisy3</module>
     <module>dtbook-to-epub3</module>
     <module>dtbook-to-html</module>
     <module>dtbook-to-zedai</module>
@@ -32,7 +33,6 @@
     <module>nimas-fileset-validator</module>
     <module>zedai-to-epub3</module>
     <module>zedai-to-html</module>
-
   </modules>
 
   <!-- BoM of the default script modules (for use in assemblies) -->
@@ -47,6 +47,11 @@
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>daisy3-to-epub3</artifactId>
         <version>1.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules</groupId>
+        <artifactId>dtbook-to-daisy3</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
