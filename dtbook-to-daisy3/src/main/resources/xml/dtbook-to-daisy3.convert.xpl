@@ -156,32 +156,37 @@
     <p:variable name="audio-relative-dir" select="''"/> <!-- i.e. same directory -->
     <p:variable name="audio-dir" select="concat($output-fileset-base, $audio-relative-dir)"/>
     <p:variable name="mo-dir" select="$output-fileset-base"/>
-    <p:variable name="uid" select="concat(//dtbook:meta[@name='dtb:uid'][1]/@content, '-packaged')">
+    <p:variable name="uid" select="concat((//dtbook:meta[@name='dtb:uid'])[1]/@content, '-packaged')">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
-    <p:variable name="title" select="//dtbook:meta[@name='dc:Title'][1]/@content">
+    <p:variable name="title" select="normalize-space((//dtbook:meta[@name='dc:Title'])[1]/@content)">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
-    <p:variable name="dtd-version" select="//dtbook:dtbook/@version">
+    <p:variable name="dtd-version" select="(//dtbook:dtbook)[1]/@version">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
-    <p:variable name="dclang" select="//dtbook:meta[@name='dc:Language'][1]/@content">
+    <p:variable name="dclang" select="(//dtbook:meta[@name='dc:Language'])[1]/@content">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
     <p:variable name="lang" select="if ($dclang) then $dclang else //@*[name()='xml:lang'][1]">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
-    <p:variable name="dcpublisher" select="//dtbook:meta[@name='dc:Publisher'][1]/@content">
+    <p:variable name="dcpublisher" select="(//dtbook:meta[@name='dc:Publisher'])[1]/@content">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
     <p:variable name="publisher" select="if ($publisher) then $publisher
 					 else (if ($dcpublisher) then $dcpublisher else 'unknown')"/>
 
-    <!-- ===== SMIL FILES AND THEIR FILESET ENTRIES ==== -->
-    <px:create-daisy3-smils name="create-mo">
-      <p:input port="content">
-	<p:pipe port="result" step="first-dtbook"/>
+
+    <!-- ===== ADD WHAT IS MAYBE MISSING IN THE DTBOOK ===== -->
+    <px:fix-dtbook-structure>
+      <p:input port="source">
+    	<p:pipe port="result" step="first-dtbook"/>
       </p:input>
+    </px:fix-dtbook-structure>
+
+    <!-- ===== SMIL FILES AND THEIR FILESET ENTRIES ===== -->
+    <px:create-daisy3-smils name="create-mo">
       <p:input port="audio-map">
 	<p:pipe port="audio-map" step="main"/>
       </p:input>
