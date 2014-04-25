@@ -49,6 +49,12 @@
             <p px:role="desc">Whether or not to include NCX-file, OPF guide element and ASCII filenames (true or false).</p>
         </p:documentation>
     </p:option>
+    <p:option name="epub-filename" required="false" select="''" px:type="string">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">EPUB3 Filename</h2>
+            <p px:role="desc">By default, the filename is the dc:identifier with a "epub" file extension. This option can be used to set a custom filename.</p>
+        </p:documentation>
+    </p:option>
 
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
@@ -113,7 +119,7 @@
     </px:fileset-load>
     <p:split-sequence test="position()=1"/>
     <p:add-attribute match="/*" attribute-name="result-uri" cx:depends-on="mkdir">
-        <p:with-option name="attribute-value" select="concat($output-dir,encode-for-uri(replace(concat(//dc:identifier,' - ',//dc:title,'.epub'),'[/\\?%*:|&quot;&lt;&gt;]','')))"/>
+        <p:with-option name="attribute-value" select="concat($output-dir,encode-for-uri(replace(if ($epub-filename='') then concat(//dc:identifier,'.epub') else $epub-filename,'[/\\?%*:|&quot;&lt;&gt;]','')))"/>
     </p:add-attribute>
     <p:delete match="/*/*"/>
     <p:identity name="result-uri"/>
