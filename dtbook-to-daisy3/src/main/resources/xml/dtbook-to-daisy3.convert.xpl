@@ -18,6 +18,7 @@
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/create-audio-fileset.xpl"/>
 
   <p:input port="in-memory.in" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -95,7 +96,9 @@
     <p:input port="source">
       <p:pipe port="in-memory.in" step="main"/>
     </p:input>
-    <p:with-option name="test" select="concat('replace(base-uri(/*), &quot;///&quot;, &quot;/&quot;)=&quot;', $dtbook-uri, '&quot;')"/>
+    <!-- TODO: do the URI normalization somewhere else -->
+    <p:with-option name="test" select="concat('replace(&quot;file:/&quot;, replace(base-uri(/*), &quot;///&quot;, &quot;/&quot;), &quot;&quot;)=&quot;',
+				       replace('file:/', replace($dtbook-uri, '///', '/'), ''), '&quot;')"/>
   </p:split-sequence>
   <p:count/>
   <p:choose name="first-dtbook">
