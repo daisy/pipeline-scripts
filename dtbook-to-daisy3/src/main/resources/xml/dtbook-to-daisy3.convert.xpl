@@ -149,16 +149,16 @@
     <p:variable name="output-name" select="replace(base-uri(/),'^.*/([^/]+)$','$1')">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
-    <p:variable name="daisy3-file-uri" select="concat($output-fileset-base, $output-name)"/>
+    <p:variable name="daisy3-dtbook-uri" select="concat($output-fileset-base, $output-name)"/>
     <p:variable name="opf-uri" select="concat($output-fileset-base, 'book.opf')"/>
     <!-- Those variables could be used for structuring the output
          package but some DAISY players can only read flat
          package. -->
     <!-- <p:variable name="audio-dir" select="concat($output-fileset-base, 'audio/')"/> -->
-    <!-- <p:variable name="mo-dir" select="concat($output-fileset-base, 'mo/')"/> -->
+    <!-- <p:variable name="smil-dir" select="concat($output-fileset-base, 'mo/')"/> -->
     <p:variable name="audio-relative-dir" select="''"/> <!-- i.e. same directory -->
     <p:variable name="audio-dir" select="concat($output-fileset-base, $audio-relative-dir)"/>
-    <p:variable name="mo-dir" select="$output-fileset-base"/>
+    <p:variable name="smil-dir" select="$output-fileset-base"/>
     <p:variable name="uid" select="concat((//dtbook:meta[@name='dtb:uid'])[1]/@content, '-packaged')">
       <p:pipe port="result" step="first-dtbook"/>
     </p:variable>
@@ -180,7 +180,6 @@
     <p:variable name="publisher" select="if ($publisher) then $publisher
 					 else (if ($dcpublisher) then $dcpublisher else 'unknown')"/>
 
-
     <!-- ===== ADD WHAT IS MAYBE MISSING IN THE DTBOOK ===== -->
     <px:fix-dtbook-structure>
       <p:input port="source">
@@ -193,10 +192,10 @@
       <p:input port="audio-map">
 	<p:pipe port="audio-map" step="main"/>
       </p:input>
-      <p:with-option name="content-dir" select="$output-fileset-base"/>
-      <p:with-option name="daisy3-file-uri" select="$daisy3-file-uri"/>
+      <p:with-option name="root-dir" select="$output-fileset-base"/>
+      <p:with-option name="daisy3-dtbook-uri" select="$daisy3-dtbook-uri"/>
       <p:with-option name="audio-dir" select="$audio-dir"/>
-      <p:with-option name="mo-dir" select="$mo-dir"/>
+      <p:with-option name="smil-dir" select="$smil-dir"/>
       <p:with-option name="uid" select="$uid"/>
     </px:create-daisy3-smils>
 
@@ -205,7 +204,7 @@
       <p:input port="source">
 	<p:pipe port="updated-content" step="create-mo"/>
       </p:input>
-      <p:with-option name="attribute-value" select="$daisy3-file-uri"/>
+      <p:with-option name="attribute-value" select="$daisy3-dtbook-uri"/>
     </p:add-attribute>
     <p:add-attribute match="//dtbook:meta[@name='dtb:uid']" attribute-name="content">
       <p:with-option name="attribute-value" select="$uid"/>
@@ -218,7 +217,7 @@
       <p:with-option name="base" select="$output-fileset-base"/>
     </px:fileset-create>
     <px:fileset-add-entry name="fileset.doc" media-type="application/x-dtbook+xml">
-      <p:with-option name="href" select="$daisy3-file-uri"/>
+      <p:with-option name="href" select="$daisy3-dtbook-uri"/>
     </px:fileset-add-entry>
 
     <!-- ===== NCX FILE AND ITS FILESET ENTRY ==== -->
@@ -231,7 +230,7 @@
       </p:input>
       <p:with-option name="ncx-dir" select="$output-fileset-base"/>
       <p:with-option name="audio-dir" select="$audio-dir"/>
-      <p:with-option name="mo-dir" select="$mo-dir"/>
+      <p:with-option name="smil-dir" select="$smil-dir"/>
       <p:with-option name="uid" select="$uid"/>
     </px:create-ncx>
     <px:fileset-create>
@@ -253,61 +252,10 @@
     </px:create-audio-fileset>
 
     <!-- ===== RESOURCE FILE AND ITS FILESET ENTRIES ==== -->
-    <p:add-attribute name="create-resources" match="/*" attribute-name="xml:base">
-      <p:input port="source">
-	<!-- TODO: use different words depending on the document
-	     language, and generate the corresponding audio. -->
-	<p:inline xmlns="http://www.daisy.org/z3986/2005/resource/">
-	  <resources version="2005-1">
-	    <scope nsuri="http://www.daisy.org/z3986/2005/ncx/" >
-	      <nodeSet id="page-set"
-		       select="//smilCustomTest[@bookStruct='PAGE_NUMBER']">
-		<resource xml:lang="en">
-		  <text>page</text>
-		</resource>
-	      </nodeSet>
-	      <nodeSet id="note-set"
-		       select="//smilCustomTest[@bookStruct='NOTE']">
-		<resource xml:lang="en">
-		  <text>note</text>
-		</resource>
-	      </nodeSet>
-	      <nodeSet id="notref-set"
-		       select="//smilCustomTest[@bookStruct='NOTE_REFERENCE']">
-		<resource xml:lang="en">
-		  <text>note</text>
-		</resource>
-	      </nodeSet>
-	      <nodeSet id="annot-set"
-		       select="//smilCustomTest[@bookStruct='ANNOTATION']">
-		  <resource xml:lang="en">
-		    <text>annotation</text>
-		  </resource>
-	      </nodeSet>
-	      <nodeSet id="line-set"
-		       select="//smilCustomTest[@bookStruct='LINE_NUMBER']">
-		<resource xml:lang="en">
-		  <text>line</text>
-		</resource>
-	      </nodeSet>
-	      <nodeSet id="sidebar-set"
-		       select="//smilCustomTest[@bookStruct='OPTIONAL_SIDEBAR']">
-		<resource xml:lang="en">
-		  <text>sidebar</text>
-		</resource>
-	      </nodeSet>
-	      <nodeSet id="prodnote-set"
-		       select="//smilCustomTest[@bookStruct='OPTIONAL_PRODUCER_NOTE']">
-		<resource xml:lang="en">
-		  <text>note</text>
-		</resource>
-	      </nodeSet>
-	    </scope>
-	  </resources>
-	</p:inline>
-      </p:input>
-      <p:with-option name="attribute-value" select="concat($output-fileset-base, 'resources.res')"/>
-    </p:add-attribute>
+    <px:create-res-file name="create-resources">
+      <p:with-option name="output-dir" select="$output-fileset-base"/>
+      <p:with-option name="lang" select="$lang"/>
+    </px:create-res-file>
     <px:fileset-create>
       <p:with-option name="base" select="$output-fileset-base"/>
     </px:fileset-create>
