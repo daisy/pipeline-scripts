@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-validator" type="px:dtbook-validator"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -92,9 +91,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
@@ -111,12 +108,12 @@
     <p:import href="dtbook-validator.store.xpl"/>
     <p:variable name="dtbook-filename" select="tokenize($input-dtbook, '/')[last()]"/>
 
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('DTBook validator: ', $input-dtbook)"/>
         <p:input port="source">
             <p:empty/>
         </p:input>
-    </cx:message>
+    </px:message>
     <p:sink/>
 
     <px:fileset-add-entry name="create-fileset-for-dtbook-doc">
@@ -129,7 +126,7 @@
     </px:fileset-add-entry>
 
 
-    <cx:message message="DTBook validator: Checking that DTBook document exists and is well-formed"/>
+    <px:message message="DTBook validator: Checking that DTBook document exists and is well-formed"/>
     <p:sink/>
 
     <!--check that the package document is well-formed XML -->
@@ -203,13 +200,13 @@
                 <p:pipe port="validation-status" step="check-dtbook-wellformed"/>
             </p:output>
 
-            <cx:message message="DTBook Validator: DTBook document is missing or not well-formed">
+            <px:message message="DTBook Validator: DTBook document is missing or not well-formed">
                 <p:input port="source">
                     <p:inline>
                         <p:empty/>
                     </p:inline>
                 </p:input>
-            </cx:message>
+            </px:message>
             <p:sink/>
 
             <px:combine-validation-reports name="wrap-report">

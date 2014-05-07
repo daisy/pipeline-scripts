@@ -6,4 +6,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:html-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:common-utils" />
 </catalog>

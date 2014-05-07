@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resolve-links"
-    name="resolve-links" version="1.0">
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" type="pxi:daisy202-to-epub3-resolve-links" name="resolve-links" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <p px:role="desc">De-references links in content documents.</p>
-        <p>In DAISY 2.02, links point to other locations in the book via the SMIL files. For instance, a link in ncc.html might point to
-            content.smil#fragment, and the SMIL clip at content.smil#fragment might point to content.html#id. This step would change the original link from
-            content.smil#fragment to content.html#id.</p>
+        <p>In DAISY 2.02, links point to other locations in the book via the SMIL files. For instance, a link in ncc.html might point to content.smil#fragment, and the SMIL clip at
+            content.smil#fragment might point to content.html#id. This step would change the original link from content.smil#fragment to content.html#id.</p>
     </p:documentation>
 
     <p:input port="source" primary="true">
@@ -50,9 +48,7 @@
         </p:documentation>
     </p:output>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:variable name="content-base" select="base-uri(/*)"/>
     <p:variable name="content-filename" select="replace(replace($content-base,'^.*/([^/]+)$','$1'),'^([^#]+)#.*$','$1')"/>
@@ -102,9 +98,9 @@
         </p:choose>
         <p:delete match="/*/@xml:base"/>
     </p:viewport>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('dereferenced all links in ',$content-base)"/>
-    </cx:message>
+    </px:message>
     <!--
         Is this necessary? Seems to cause http://www.daisy.org/forums/18667
     <p:xslt>

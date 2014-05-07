@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-resources"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" type="pxi:daisy202-to-epub3-resources"
     name="resources" version="1.0" xmlns:d="http://www.daisy.org/ns/pipeline/data">
 
     <p:documentation>
@@ -24,7 +24,7 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">Whether or not to include audio files associated with media overlays. Can be either 'true' or 'false'.</p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
@@ -39,9 +39,9 @@
             <p:with-option name="attribute-value" select="$original-href"/>
         </p:add-attribute>
         <px:html-to-fileset/>
-        <cx:message>
+        <px:message>
             <p:with-option name="message" select="concat('extracted list of resources from ',$original-href)"/>
-        </cx:message>
+        </px:message>
     </p:for-each>
     <p:sink/>
     <p:for-each name="smil-resources">
@@ -60,9 +60,9 @@
                         <p:document href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/smil-to-audio-fileset.xsl"/>
                     </p:input>
                 </p:xslt>
-                <cx:message>
+                <px:message>
                     <p:with-option name="message" select="concat('extracted list of audio files from ',$original-href)"/>
-                </cx:message>
+                </px:message>
             </p:when>
             <p:otherwise>
                 <p:identity>
@@ -89,8 +89,8 @@
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$content-dir"/>
     </p:add-attribute>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'determined media type for all auxiliary resources'"/>
-    </cx:message>
+    </px:message>
 
 </p:declare-step>

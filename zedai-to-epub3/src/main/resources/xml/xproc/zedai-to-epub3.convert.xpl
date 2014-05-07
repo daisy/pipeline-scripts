@@ -21,6 +21,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'EPUB/')"/>
@@ -190,7 +191,7 @@
                 <p:with-option name="href" select="$result-uri"/>
             </px:fileset-add-entry>
         </p:for-each>
-        <cx:message message="Converted to XHTML."/>
+        <px:message message="Converted to XHTML."/>
     </p:group>
 
     <!--=========================================================================-->
@@ -246,7 +247,7 @@
                 <p:with-option name="attribute-value" select="$nav-base"/>
             </p:add-attribute>
             <p:delete match="/*/@xml:base"/>
-            <cx:message message="Navigation Document Created." name="navigation-doc.result.html-file"/>
+            <px:message message="Navigation Document Created." name="navigation-doc.result.html-file"/>
         </p:group>
     </p:group>
 
@@ -336,7 +337,7 @@
             <p:with-option name="href" select="$opf-base"/>
         </px:fileset-add-entry>
 
-        <cx:message message="Package Document Created."/>
+        <px:message message="Package Document Created."/>
     </p:group>
 
     <p:group name="fileset.without-ocf">

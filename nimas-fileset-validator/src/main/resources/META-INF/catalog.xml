@@ -4,4 +4,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:validation-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-validator"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:common-utils" />
 </catalog>

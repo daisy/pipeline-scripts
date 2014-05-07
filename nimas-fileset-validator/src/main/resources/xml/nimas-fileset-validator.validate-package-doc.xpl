@@ -2,7 +2,6 @@
 <p:declare-step version="1.0" name="nimas-fileset-validator.validate-package-doc" type="pxi:nimas-fileset-validator.validate-package-doc"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" 
@@ -50,9 +49,7 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
@@ -71,7 +68,7 @@
         then 'OPF 1.2 (MathML detected)' 
         else 'OPF 1.2'"/>
     
-    <cx:message message="Nimas fileset validator: Validating package document."/>
+    <px:message message="Nimas fileset validator: Validating package document."/>
     <p:sink/>
     
     <!-- ***************************************************** -->

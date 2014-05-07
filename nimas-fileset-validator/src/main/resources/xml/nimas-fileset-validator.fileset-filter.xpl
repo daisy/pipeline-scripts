@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="nimas-fileset-validator.fileset-filter"
     type="pxi:nimas-fileset-validator.fileset-filter" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
@@ -40,9 +39,7 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation>Utilities for representing a fileset.</p:documentation>
@@ -50,9 +47,9 @@
 
     <p:variable name="package-doc-uri" select="base-uri()"/>
 
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('Nimas fileset validator: Creating fileset filtered by ', $media-type)"/>
-    </cx:message>
+    </px:message>
 
     <!-- loop that creates a fileset for each file -->
     <p:for-each name="fileset.in-memory-files">

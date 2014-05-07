@@ -273,9 +273,9 @@
                             <p:empty/>
                         </p:input>
                     </p:identity>
-                    <cx:message>
+                    <px:message>
                         <p:with-option name="message" select="concat('skipping ',$file-href)"/>
-                    </cx:message>
+                    </px:message>
                 </p:when>
                 <p:otherwise>
                     <!-- File refers to a document on disk or in memory; keep it -->

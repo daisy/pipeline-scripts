@@ -50,6 +50,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
@@ -103,7 +104,7 @@
         </px:dtbook-load>
         
 
-        <cx:message message="Converting to ZedAI..."/>
+        <px:message message="Converting to ZedAI..."/>
         <px:dtbook-to-zedai-convert name="to-zedai">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="load"/>
@@ -114,7 +115,7 @@
             <p:with-option name="opt-assert-valid" select="$assert-valid"/>
         </px:dtbook-to-zedai-convert>
 
-        <cx:message message="Converting to XHTML5..."/>
+        <px:message message="Converting to XHTML5..."/>
         <px:zedai-to-html-convert name="to-html">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="to-zedai"/>

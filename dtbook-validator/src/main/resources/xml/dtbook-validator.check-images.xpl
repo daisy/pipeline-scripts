@@ -2,8 +2,6 @@
 <p:declare-step version="1.0" name="dtbook-validator.check-images" type="px:dtbook-validator.check-images"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"    
     xmlns:xhtml="http://www.w3.org/1999/xhtml" 
@@ -37,9 +35,7 @@
         <p:pipe port="report" step="check-images-exist"/>
     </p:output>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl">
         <p:documentation>For manipulating files.</p:documentation>
@@ -56,7 +52,7 @@
     
     <p:variable name="dtbook-uri" select="base-uri()"/>
     
-    <cx:message message="Checking that DTBook images exist on disk."/>
+    <px:message message="Checking that DTBook images exist on disk."/>
     
     <p:for-each name="list-images">
         <p:output port="result"/>

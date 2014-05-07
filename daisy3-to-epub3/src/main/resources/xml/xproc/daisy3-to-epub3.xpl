@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal/daisy3-to-epub3"
     type="px:daisy3-to-epub3" version="1.0" name="main">
 
@@ -70,10 +69,6 @@
     <!-- IMPORTS                                                                 -->
     <!--=========================================================================-->
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">Calabash extension
-                steps.</p></p:documentation>
-    </p:import>
     <p:import
         href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml"><p px:role="desc">For putting it all
@@ -323,7 +318,7 @@
             <p:with-option name="href" select="$opf-uri"/>
         </px:fileset-add-entry>
 
-        <cx:message message="Package Document Created."/>
+        <px:message message="Package Document Created."/>
     </p:group>
     <p:sink/>
 

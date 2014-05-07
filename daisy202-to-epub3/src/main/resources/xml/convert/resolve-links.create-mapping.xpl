@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    type="pxi:daisy202-to-epub3-resolve-links-create-mapping" name="resolve-links-create-mapping" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" type="pxi:daisy202-to-epub3-resolve-links-create-mapping" name="resolve-links-create-mapping" version="1.0">
 
     <p:documentation>
         <h1 px:role="desc">Creates a reusable mapping for pxi:daisy202-to-epub3-resolve-links</h1>
@@ -42,9 +42,7 @@
         </p:documentation>
     </p:output>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:for-each>
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For each SMIL</p:documentation>
@@ -88,11 +86,11 @@
         <p:add-attribute attribute-name="xml:base" match="/*">
             <p:with-option name="attribute-value" select="$smil-base"/>
         </p:add-attribute>
-        <cx:message>
+        <px:message>
             <p:with-option name="message" select="concat('created a map of links from the SMIL file ',$smil-base)"/>
-        </cx:message>
+        </px:message>
     </p:for-each>
     <p:wrap-sequence wrapper="di:mapping" xmlns:di="http://www.daisy.org/ns/pipeline/tmp"/>
-    <cx:message message="created a map of links from all the SMIL files"/>
+    <px:message message="created a map of links from all the SMIL files"/>
 
 </p:declare-step>

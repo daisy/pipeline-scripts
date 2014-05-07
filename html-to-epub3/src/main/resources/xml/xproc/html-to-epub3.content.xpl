@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" type="pxi:html-to-epub3-content"
     version="1.0">
@@ -18,7 +17,7 @@
     <p:option name="content-dir" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
 
     <!--TODO if single doc, chunk; else keep original chunking-->
@@ -123,11 +122,11 @@
                 </p:with-option>
             </p:add-attribute>
             <p:delete match="/*/@xml:base"/>
-            <!--<cx:message>
+            <!--<px:message>
                 <p:with-option name="message"
                     select="concat('upgraded HTML document to the EPUB3 content document ',substring($result-uri,string-length($publication-dir)+1))"
                 />
-            </cx:message>-->
+            </px:message>-->
         </p:for-each>
     </p:group>
 

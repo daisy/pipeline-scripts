@@ -4,7 +4,7 @@
     xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:l="http://xproc.org/library"
+    xmlns:l="http://xproc.org/library"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
@@ -97,9 +97,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
@@ -115,12 +113,12 @@
 
     <p:variable name="package-doc-filename" select="tokenize($input-opf, '/')[last()]"/>
 
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('Nimas fileset validator: ', $input-opf)"/>
         <p:input port="source">
             <p:empty/>
         </p:input>
-    </cx:message>
+    </px:message>
     <p:sink/>
 
     <!-- ***************************************************** -->
@@ -137,7 +135,7 @@
     </px:fileset-add-entry>
 
 
-    <cx:message message="Nimas fileset validator: Checking that package document is well-formed"/>
+    <px:message message="Nimas fileset validator: Checking that package document is well-formed"/>
     <p:sink/>
 
     <!--check that the package document is well-formed XML -->
@@ -211,13 +209,13 @@
                 <p:pipe port="validation-status" step="check-package-wellformed"/>
             </p:output>
 
-            <cx:message message="Package document is not well-formed">
+            <px:message message="Package document is not well-formed">
                 <p:input port="source">
                     <p:inline>
                         <p:empty/>
                     </p:inline>
                 </p:input>
-            </cx:message>
+            </px:message>
             <p:sink/>
 
             <p:group name="wrap-report">

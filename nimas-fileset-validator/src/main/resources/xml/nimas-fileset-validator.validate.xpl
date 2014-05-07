@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="nimas-fileset-validator.validate"
     type="pxi:nimas-fileset-validator.validate" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -65,9 +65,7 @@
     <p:option name="base-uri"/>
 
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
@@ -191,7 +189,7 @@
         </p:string-replace>
     </p:group>
 
-    <cx:message message="Nimas fileset validator: Formatting report as HTML."/>
+    <px:message message="Nimas fileset validator: Formatting report as HTML."/>
     <p:sink/>
 
     <px:validation-report-to-html name="format-as-html">

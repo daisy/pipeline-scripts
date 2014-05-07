@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-validator.validate" type="pxi:dtbook-validator.validate"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -65,13 +64,11 @@
     <p:option name="check-images"/>
     <p:option name="base-uri"/>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
     <p:import
         href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl">
-        <p:documentation> Collection of utilities for validation and reporting. </p:documentation>
+        <p:documentation>Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
     
     <p:import href="dtbook-validator.select-schema.xpl">
@@ -96,9 +93,9 @@
     <!-- ***************************************************** -->
     <!-- VALIDATION STEPS -->
     <!-- ***************************************************** -->
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('DTBook Validator: Validating document: ', $base-uri)"/>
-    </cx:message>
+    </px:message>
     
     <!-- fetch the appropriate RNG schema -->
     <px:dtbook-validator.select-schema name="select-rng-schema">
