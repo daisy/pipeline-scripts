@@ -28,6 +28,13 @@
             <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
         </p:documentation>
     </p:option>
+    
+    <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Temporary directory</h2>
+            <p px:role="desc">Directory used for temporary files.</p>
+        </p:documentation>
+    </p:option>
 
     <p:option name="assert-valid" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -106,7 +113,7 @@
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.dtbook-to-zedai"/>
             </p:input>
-            <p:with-option name="output-dir" select="$output-dir-uri"/>
+            <p:with-option name="output-dir" select="$temp-dir"/>
         </px:zedai-to-epub3-convert>
 
         <px:epub3-store name="store">

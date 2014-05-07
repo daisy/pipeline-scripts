@@ -38,6 +38,12 @@
             <p px:role="desc">Output directory for the produced EPUB.</p>
             <pre><code class="example">file:/home/user/epub3/</code></pre></p:documentation>
     </p:option>
+    <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Temporary directory</h2>
+            <p px:role="desc">Directory used for temporary files.</p>
+        </p:documentation>
+    </p:option>
     <p:option name="mediaoverlays" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include Media Overlays</h2>
@@ -90,8 +96,9 @@
     <!--=========================================================================-->
     <!--FIXME check options-->
     <p:variable name="output-dir-checked" select="resolve-uri(replace($output-dir,'(.+?)/?$','$1/'))"/>
-    <p:variable name="epub-dir" select="concat($output-dir-checked,'epub/')"/>
-    <p:variable name="content-dir" select="concat($output-dir-checked,'epub/EPUB/')"/>
+    <p:variable name="temp-dir-checked" select="resolve-uri(replace($temp-dir,'(.+?)/?$','$1/'))"/>
+    <p:variable name="epub-dir" select="concat($temp-dir-checked,'epub/')"/>
+    <p:variable name="content-dir" select="concat($temp-dir-checked,'epub/EPUB/')"/>
     <p:variable name="epub-file" select="concat($output-dir-checked,'result.epub')"/>
     <p:variable name="type" xmlns:opf="http://openebook.org/namespaces/oeb-package/1.0/"
         select="for $daisy-type in /opf:package/opf:metadata/opf:x-metadata/opf:meta[@name='dtb:multimediaType']/@content
