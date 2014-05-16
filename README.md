@@ -1,7 +1,7 @@
 DAISY Pipeline 2 :: Default Scripts
 ===================================
                                    
-[![Build Status](https://travis-ci.org/daisy-consortium/pipeline-scripts.png?branch=master)](https://travis-ci.org/daisy-consortium/pipeline-scripts)
+[![Build Status](https://travis-ci.org/daisy/pipeline-scripts.png?branch=master)](https://travis-ci.org/daisy/pipeline-scripts)
 
 Script Modules for the default DAISY Pipeline 2 distribution. Currently includes:
 
