@@ -20,7 +20,7 @@
   <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <h2 px:role="name">DTBook file(s)</h2>
-      <p px:role="desc">One or more DTBook files to be transformed. In
+      <p px:role="desc">One or more 2005-3 DTBook files to be transformed. In
       the case of multiple files, the first one will be taken.</p>
     </p:documentation>
   </p:input>

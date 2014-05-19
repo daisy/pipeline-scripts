@@ -22,7 +22,7 @@
 
   <p:input port="in-memory.in" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">DTBook file</h2>
+      <h2 px:role="name">2005 DTBook file</h2>
       <p px:role="desc">It contains the DTBook file to be
       transformed. Any other document will be ignored.</p>
     </p:documentation>
@@ -180,6 +180,26 @@
     <p:variable name="publisher" select="if ($publisher) then $publisher
 					 else (if ($dcpublisher) then $dcpublisher else 'unknown')"/>
 
+
+    <!-- TODO: automatic upgrade? -->
+    <!-- TODO: it could be moved or copied to dtbook-to-daisy3.xpl -->
+    <p:choose>
+      <p:when test="not(starts-with($dtd-version, '2005'))">
+	<!-- TODO: correct error code. -->
+	 <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="C0051">
+	   <p:input port="source">
+	     <p:inline>
+	       <message>Other versions than DTBook-2005 are not supported.</message>
+	     </p:inline>
+	   </p:input>
+	 </p:error>
+	 <p:sink/>
+      </p:when>
+      <p:otherwise>
+	<p:sink/>
+      </p:otherwise>
+    </p:choose>
+
     <!-- ===== ADD WHAT IS MAYBE MISSING IN THE DTBOOK ===== -->
     <px:fix-dtbook-structure>
       <p:input port="source">
@@ -188,6 +208,7 @@
     </px:fix-dtbook-structure>
 
     <!-- ===== SMIL FILES AND THEIR FILESET ENTRIES ===== -->
+    <cx:message message="Generating SMIL files..."/>
     <px:create-daisy3-smils name="create-mo">
       <p:input port="audio-map">
 	<p:pipe port="audio-map" step="main"/>
