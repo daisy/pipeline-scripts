@@ -71,11 +71,11 @@
         <p:with-option name="href" select="$epub-href"/>
         <p:with-option name="unzipped-basedir" select="concat($temp-dir,'epub/')"/>
     </px:unzip-fileset>
-    
+
     <!-- This is a workaround for a bug that should be fixed in Pipeline v1.8
                  see: https://github.com/daisy-consortium/pipeline-modules-common/pull/49 -->
     <p:delete match="/*/*[ends-with(@href,'/')]" name="load.in-memory.fileset-fix"/>
-    
+
     <p:for-each>
         <p:iteration-source>
             <p:pipe port="in-memory.out" step="unzip"/>
@@ -94,7 +94,7 @@
         </p:choose>
     </p:for-each>
     <p:identity name="load.in-memory"/>
-    
+
     <px:fileset-store name="load.stored">
         <p:input port="fileset.in">
             <p:pipe port="result" step="load.in-memory.fileset-fix"/>
@@ -103,23 +103,30 @@
             <p:pipe port="result" step="load.in-memory"/>
         </p:input>
     </px:fileset-store>
-    
-    <px:epub3-to-daisy202-convert name="convert.daisy202">
-        <p:input port="fileset.in">
+    <p:identity>
+        <p:input port="source">
             <p:pipe port="fileset.out" step="load.stored"/>
         </p:input>
+    </p:identity>
+    <p:viewport match="/*/d:file">
+        <p:add-attribute match="/*" attribute-name="original-href">
+            <p:with-option name="attribute-value" select="resolve-uri(/*/@href,base-uri())"/>
+        </p:add-attribute>
+    </p:viewport>
+
+    <px:epub3-to-daisy202-convert name="convert.daisy202">
         <p:input port="in-memory.in">
             <p:pipe port="result" step="load.in-memory"/>
         </p:input>
     </px:epub3-to-daisy202-convert>
-    
+
     <px:fileset-move name="move">
         <p:with-option name="new-base" select="concat($output-dir,replace(base-uri(/*),'^.*/([^/]+)/[^/]*$','$1/'))"/>
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="convert.daisy202"/>
         </p:input>
     </px:fileset-move>
-    
+
     <px:fileset-store name="fileset-store">
         <p:input port="fileset.in">
             <p:pipe port="fileset.out" step="move"/>
