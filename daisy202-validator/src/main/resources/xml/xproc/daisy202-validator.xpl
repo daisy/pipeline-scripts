@@ -65,20 +65,40 @@
             <p:pipe port="report.out" step="validate"/>
         </p:input>
     </p:identity>
-
     <p:group>
-        <!-- remove this group when https://github.com/daisy/pipeline-modules-common/pull/52 is merged -->
+        <!-- TODO: remove this group when https://github.com/daisy/pipeline-modules-common/pull/52 is merged -->
         <p:for-each>
-            <p:rename match="/*">
-                <p:with-option name="new-name" select="concat('d:',/*/@severity)"/>
-            </p:rename>
-            <p:delete match="/*/@severity"/>
+            <p:choose>
+                <p:when test="/*/@severity='info'">
+                    <p:identity>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                    </p:identity>
+                </p:when>
+                <p:when test="/*/@severity">
+                    <p:rename match="/*" new-name="d:error"/>
+                    <p:wrap-sequence wrapper="d:errors"/>
+                </p:when>
+                <p:otherwise>
+                    <p:identity>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                    </p:identity>
+                </p:otherwise>
+            </p:choose>
         </p:for-each>
-        <p:wrap-sequence wrapper="d:errors"/>
-        <p:rename match="/*/d:warn" new-name="d:error"/>
-        <p:delete match="/*/*[not(self::d:error)]"/>
+        <p:identity name="reportfix.before-insert"/>
+        <p:identity>
+            <p:input port="source">
+                <p:pipe port="result" step="reportfix.before-insert"/>
+                <p:inline exclude-inline-prefixes="#all">
+                    <d:errors/>
+                </p:inline>
+            </p:input>
+        </p:identity>
     </p:group>
-
     <px:combine-validation-reports>
         <p:with-option name="document-name" select="replace($ncc,'.*/','')">
             <p:empty/>

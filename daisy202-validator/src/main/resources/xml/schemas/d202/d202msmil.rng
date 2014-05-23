@@ -3,7 +3,7 @@
 NOT DONE
 catalog:: -//DAISY//RNG msmil v2.02//EN
 -->
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
   <a:documentation>
     d202msmil.rng
     This file is part of the RelaxNG/Schematron validation

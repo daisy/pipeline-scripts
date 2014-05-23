@@ -1,6 +1,6 @@
 <p:declare-step version="1.0" name="main" type="px:daisy202-validator.validate" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal/daisy202-validator"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:html="http://www.w3.org/1999/xhtml" exclude-inline-prefixes="#all">
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:html="http://www.w3.org/1999/xhtml" exclude-inline-prefixes="#all" xmlns:l="http://xproc.org/library">
 
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
@@ -23,21 +23,24 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/validation-utils/library.xpl"/>
 
     <p:variable name="start" select="current-dateTime()"/>
 
+    <px:mediatype-detect name="fileset.in">
+        <p:input port="source">
+            <p:pipe port="fileset.in" step="main"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.in" step="main"/>
+        </p:input>
+    </px:mediatype-detect>
     <px:message message="Validating DAISY 2.02 fileset"/>
     <px:message message="timeToleranceMs set to $1">
         <p:with-option name="param1" select="$timeToleranceMs"/>
     </px:message>
-    <p:identity name="fileset.in">
-        <!-- pipe fileset.in from this one so that px:message is executed first -->
-    </p:identity>
-
     <px:fileset-load media-types="application/smil+xml">
-        <p:input port="fileset">
-            <p:pipe port="result" step="fileset.in"/>
-        </p:input>
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
@@ -56,95 +59,189 @@
     <p:identity name="ncc"/>
     <p:sink/>
 
+    <p:delete match="/*/d:file[ends-with(lower-case(resolve-uri(@href,base-uri(.))),'/ncc.html')]">
+        <p:input port="source">
+            <p:pipe port="result" step="fileset.in"/>
+        </p:input>
+    </p:delete>
+    <px:fileset-load media-types="application/xhtml+xml text/html">
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.in" step="main"/>
+        </p:input>
+    </px:fileset-load>
+    <p:identity name="content"/>
+    <p:sink/>
+
+    <px:fileset-load media-types="application/*+xml application/xml text/html">
+        <p:input port="fileset">
+            <p:pipe port="result" step="fileset.in"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.in" step="main"/>
+        </p:input>
+    </px:fileset-load>
+    <p:for-each>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri(/*)"/>
+        </p:add-attribute>
+    </p:for-each>
+    <p:identity name="interdoc-urichecker.before-wrap"/>
+    <p:wrap-sequence wrapper="wrapper">
+        <p:input port="source">
+            <p:pipe port="result" step="fileset.in"/>
+            <p:pipe port="result" step="interdoc-urichecker.before-wrap"/>
+        </p:input>
+    </p:wrap-sequence>
+    <p:xslt>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="validate.check-references.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:filter select="/*/*"/>
+    <p:identity name="interdoc-urichecker-tests"/>
+    <p:sink/>
+
+    <p:for-each name="file-types.iterate">
+        <p:iteration-source select="/*/d:file">
+            <p:pipe port="result" step="fileset.in"/>
+        </p:iteration-source>
+        <p:variable name="base-uri-xpath" select="concat('&quot;',replace(resolve-uri(/*/@href,base-uri(/*)),'&quot;','&quot;&quot;'),'&quot;')"/>
+        <p:choose>
+            <p:when test="/*/@media-type=('application/xhtml+xml','text/html','application/smil+xml','audio/mpeg3','audio/mpeg','audio/wav','image/jpeg','image/gif','image/png','text/css')">
+                <p:output port="result" sequence="true"/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:empty/>
+                    </p:input>
+                </p:identity>
+            </p:when>
+            <p:otherwise>
+                <p:output port="result" sequence="true"/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:inline exclude-inline-prefixes="#all">
+                            <d:message severity="error">
+                                <d:desc>DESC</d:desc>
+                                <d:file>FILE</d:file>
+                            </d:message>
+                        </p:inline>
+                    </p:input>
+                </p:identity>
+                <p:string-replace match="//d:desc/text()">
+                    <p:with-option name="replace"
+                        select="concat('&quot;file type not allowed in DAISY 2.02 fileset: ',/*/@media-type,' (expected a html, smil, mp2, mp3, wav, jpg, gif, png or css file type)&quot;')">
+                        <p:pipe port="current" step="file-types.iterate"/>
+                    </p:with-option>
+                </p:string-replace>
+                <p:string-replace match="//d:file/text()">
+                    <p:with-option name="replace" select="$base-uri-xpath"/>
+                </p:string-replace>
+            </p:otherwise>
+        </p:choose>
+    </p:for-each>
+    <p:identity name="filetype-restriction-tests"/>
+    <p:sink/>
+
+    <!-- validate SMIL files -->
+    <p:for-each name="for-each.smil">
+        <p:iteration-source>
+            <p:pipe port="result" step="smil"/>
+        </p:iteration-source>
+        <p:choose>
+            <p:when test="ends-with(lower-case(base-uri(/*)),'/master.smil')">
+                <l:relax-ng-report name="for-each.smil.validate-smil-master">
+                    <p:input port="schema">
+                        <p:document href="../../schemas/d202/d202msmil.rng"/>
+                    </p:input>
+                </l:relax-ng-report>
+                <p:sink/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="report" step="for-each.smil.validate-smil-master"/>
+                    </p:input>
+                </p:identity>
+            </p:when>
+            <p:otherwise>
+                <l:relax-ng-report name="for-each.smil.validate-smil-other">
+                    <p:input port="schema">
+                        <p:document href="../../schemas/d202/d202smil.rng"/>
+                    </p:input>
+                </l:relax-ng-report>
+                <p:sink/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe port="report" step="for-each.smil.validate-smil-other"/>
+                    </p:input>
+                </p:identity>
+            </p:otherwise>
+        </p:choose>
+        <p:identity>
+            <p:input port="source">
+                <p:empty/>
+            </p:input>
+        </p:identity>
+    </p:for-each>
+    <p:identity name="smil-schema-tests"/>
+    <p:sink/>
+
+    <!-- validate NCC file -->
+    <l:relax-ng-report name="ncc.validate-ncc">
+        <p:input port="source">
+            <p:pipe port="result" step="ncc"/>
+        </p:input>
+        <p:input port="schema">
+            <p:document href="../../schemas/d202/d202smil.rng"/>
+        </p:input>
+    </l:relax-ng-report>
+    <p:sink/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="report" step="ncc.validate-ncc"/>
+        </p:input>
+    </p:identity>
+    <p:identity name="ncc-schema-tests"/>
+    <p:sink/>
+
+    <p:for-each>
+        <p:iteration-source>
+            <p:pipe port="result" step="ncc"/>
+            <p:pipe port="result" step="content"/>
+        </p:iteration-source>
+        <p:xslt>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="validate.check-heading-hierarchy.xsl"/>
+            </p:input>
+        </p:xslt>
+        <p:filter select="/*/*"/>
+    </p:for-each>
+    <p:identity name="html-heading-hierarchy-tests"/>
+    <p:sink/>
+
     <!--
-    // InterDocURICheckerD202Delegate
-    for referer in fileset[xml- and html-files] {
-        for reference in referer.references {
-            if matches(reference, regex.URI_REMOTE) and !startsWith(reference, "#") {
-                path = reference.stripFragment()
-                fragment = reference.getFragment()
-                uri = resolve-uri(base-uri(referer), path)
-                if uri is not in fileset {
-                    concat('The URI ',reference,' points to a file that is not in included in the DAISY 2.02 fileset')
-                } else if fragment!='' {
-                    if uri is SMIL {
-                        if not(smil//text[@id=$fragment] or smil//par[@id=$fragment]) {
-                            concat('The URI ',reference,' does not resolve correctly')
-                        }
-                    } else {
-                        if not(xml//@id=$fragment) then {
-                            concat('The URI ',reference,' does not resolve correctly')
-                        }
-                    }
-                }
+        validate duration:
+            - compare audio duration with info from SMIL files and NCC totalTime (not implemented in DP1, but should probably have been there)
+            - depends on https://github.com/daisy/pipeline-mod-audio/issues/4
+        validate ID3:
+            if (is mp3) {
+                if (has ID3v2) - info: concat(file,' has ID3 tag')
+                if (is not mono) - warning: concat(file,' is not single channel')
+                if (variable bitrate) - warning: concat(file,' file uses variable bit rate (VBR)')
             }
-        }
-    }
+            depends on https://github.com/daisy/pipeline-mod-audio/issues/3
     -->
-    <p:identity name="interdoc-urichecker-tests">
+    <p:identity name="audio-duration-and-id3-tests">
         <p:input port="source">
             <!-- not implemented -->
             <p:empty/>
         </p:input>
     </p:identity>
     <p:sink/>
-
-    <!--
-    // FilesetFileTypeRestrictionDelegate
-    for file in fileset {
-        if filetype not allowed in fileset {
-            concat(file,' is not an allowed file type in DAISY 2.02')
-                allowed file types:
-                    D202Ncc
-                    D202Smil
-                    D202MasterSmil
-                    D202TextualContent
-                    Mp3
-                    Mp2
-                    Wav
-                    Jpg
-                    Gif
-                    Png
-                    Css
-        }
-    }
-    -->
-    <p:identity name="filetype-restriction-tests">
-        <p:input port="source">
-            <!-- not implemented -->
-            <p:empty/>
-        </p:input>
-    </p:identity>
-    <p:sink/>
-
-    <!-- TODO: validate SMIL files against "-//DAISY//RNG smil v2.02//EN" (see org.daisy.util.fileset.impl.D202SmilFileImpl) -->
-
-    <!-- TODO: validate NCC file against "-//DAISY//RNG ncc v2.02//EN" (see org.daisy.util.fileset.impl.D202NccFileImpl) -->
-
-    <!--
-    for each file, switch (file type) {
-        NCC: check that the heading hierarchy is correct (i.e. no levels are skipped. assert that not(level#-1 > previousLevel#). message: "incorrect heading hierarchy"
-        Content: check that the heading hierarchy is correct (i.e. no levels are skipped. assert that not(level#-1 > previousLevel#). message: "incorrect heading hierarchy"
-        master SMIL: // not implemented in DP1, marked as TODO
-        audio: {-->
-    <!-- validate duration -->
-    <!--
-                compare audio duration with info from SMIL files and NCC totalTime (not implemented in DP1, but should probably have been there)
-                depends on https://github.com/daisy/pipeline-mod-audio/issues/4
-            -->
-
-    <!-- validate ID3 -->
-    <!--
-                if (is mp3) {
-                    if (has ID3v2) - info: concat(file,' has ID3 tag')
-                    if (is not mono) - warning: concat(file,' is not single channel')
-                    if (variable bitrate) - warning: concat(file,' file uses variable bit rate (VBR)')
-                }
-                depends on https://github.com/daisy/pipeline-mod-audio/issues/3 and
-            -->
-    <!--}
-    }
-    -->
 
     <p:for-each>
         <p:iteration-source>
@@ -344,6 +441,10 @@
         <p:input port="source">
             <p:pipe step="interdoc-urichecker-tests" port="result"/>
             <p:pipe step="filetype-restriction-tests" port="result"/>
+            <p:pipe step="smil-schema-tests" port="result"/>
+            <p:pipe step="ncc-schema-tests" port="result"/>
+            <p:pipe step="html-heading-hierarchy-tests" port="result"/>
+            <p:pipe step="audio-duration-and-id3-tests" port="result"/>
             <p:pipe step="smil-time-tests" port="result"/>
             <p:pipe step="ncc-time-test" port="result"/>
         </p:input>
