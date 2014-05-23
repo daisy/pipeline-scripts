@@ -12,5 +12,7 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:epub3-pub-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-validator"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:daisy202-validator"/>
 
 </catalog>

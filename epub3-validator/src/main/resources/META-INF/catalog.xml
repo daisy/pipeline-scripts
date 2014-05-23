@@ -3,6 +3,7 @@
 
    <uri name="http://www.daisy.org/pipeline/modules/epub3-validator/epub3-validator.xpl" uri="../xml/xproc/epub3-validator.xpl" px:script="true"/>
    <uri name="http://www.daisy.org/pipeline/modules/epub3-validator/library.xpl" uri="../xml/xproc/library.xpl"/>
+   <uri name="http://www.daisy.org/pipeline/modules/epub3-validator/epubcheck-pipeline-report-to-html-report.xsl" uri="../xslt/epubcheck-pipeline-report-to-html-report.xsl"/>
    
    <nextCatalog catalog="org:daisy:pipeline:modules:epubcheck-adapter"/>
    <nextCatalog catalog="org:daisy:pipeline:modules:common-utils" />

@@ -184,18 +184,15 @@
                     <p:with-option name="attribute-value" select="replace(/*/@profile,'.xhtml(#|$)','.html$1')"/>
                 </p:add-attribute>
             </p:viewport>
-            <p:viewport match="//*[self::html:h1 or self::html:h2 or self::html:h3 or self::html:h4 or self::html:h5 or self::html:h6 or self::html:span[matches(@class,'(^|\s)page-(front|normal|special)(\s|$)')]]">
-                <p:choose>
-                    <p:when test="/*/@id">
-                        <p:identity/>
-                    </p:when>
-                    <p:otherwise>
-                        <p:add-attribute match="/*" attribute-name="id"></p:add-attribute>
-                    </p:otherwise>
-                </p:choose>
-            </p:viewport>
+            <p:xslt>
+                <p:input port="parameters">
+                    <p:empty/>
+                </p:input>
+                <p:input port="stylesheet">
+                    <p:document href="../../xslt/add-missing-ids.xsl"/>
+                </p:input>
+            </p:xslt>
         </p:group>
-
     </p:for-each>
     <p:identity name="converted-content"/>
     <p:sink/>

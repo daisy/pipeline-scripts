@@ -23,8 +23,8 @@
     <p:option name="mode" required="false" px:type="string" select="'epub'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">What to validate</h2>
-            <p px:role="desc">One of: "epub" (the entire epub), "opf" (the package file), "xhtml" (the content files), "svg" (vector graphics), "mo" (media overlays), "nav" (the navigation
-                document) or "expanded" (like "epub" but unzipped).</p>
+            <p px:role="desc">One of: "epub" (the entire epub), "opf" (the package file), "xhtml" (the content files), "svg" (vector graphics), "mo" (media overlays), "nav" (the navigation document)
+                or "expanded" (like "epub" but unzipped).</p>
         </p:documentation>
     </p:option>
 
@@ -34,14 +34,6 @@
             <p px:role="desc">The EPUB version to validate against. Default is "3". Values allowed are: "2" and "3".</p>
         </p:documentation>
     </p:option>
-
-    <!--<p:output port="report" sequence="true">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h1 px:role="name">XML Report</h1>
-            <p px:role="desc">Raw output from the validation.</p>
-        </p:documentation>
-        <p:pipe port="result" step="xml-report"/>
-    </p:output>-->
 
     <p:output port="html-report" px:media-type="application/vnd.pipeline.report+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -59,68 +51,20 @@
         <p:pipe port="result" step="status"/>
     </p:output>
 
+    <p:import href="step/validate.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epubcheck-adapter/library.xpl"/>
 
-    <px:epubcheck>
+    <px:epub3-validator.validate name="validate">
         <p:with-option name="epub" select="$epub"/>
-        <p:with-option name="mode" select="if ($mode='') then (if (matches(lower-case($epub),'\.(opf|xml)$')) then 'expanded' else 'epub') else $mode"/>
-        <p:with-option name="version" select="if ($version='') then '3' else $version"/>
-    </px:epubcheck>
-
-    <p:xslt name="xml-report.not-wrapped">
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/epubcheck-report-to-pipeline-report.xsl"/>
-        </p:input>
-    </p:xslt>
-    <p:for-each>
-        <p:iteration-source select="//d:warn">
-            <p:pipe port="result" step="xml-report.not-wrapped"/>
-        </p:iteration-source>
-        <p:identity/>
-    </p:for-each>
-    <p:wrap-sequence wrapper="d:warnings" name="warnings"/>
-    <p:for-each>
-        <p:iteration-source select="//d:error">
-            <p:pipe port="result" step="xml-report.not-wrapped"/>
-        </p:iteration-source>
-        <p:identity/>
-    </p:for-each>
-    <p:wrap-sequence wrapper="d:errors" name="errors"/>
-    <p:for-each name="exception">
-        <p:iteration-source select="//d:exception">
-            <p:pipe port="result" step="xml-report.not-wrapped"/>
-        </p:iteration-source>
-        <p:identity/>
-    </p:for-each>
-    <p:wrap-sequence wrapper="d:exceptions" name="exceptions"/>
-    <p:for-each name="hint">
-        <p:iteration-source select="//d:hint">
-            <p:pipe port="result" step="xml-report.not-wrapped"/>
-        </p:iteration-source>
-        <p:identity/>
-    </p:for-each>
-    <p:wrap-sequence wrapper="d:hints" name="hints"/>
-    <p:delete match="//d:report/*">
-        <p:input port="source">
-            <p:pipe port="result" step="xml-report.not-wrapped"/>
-        </p:input>
-    </p:delete>
-    <p:insert match="//d:report" position="first-child">
-        <p:input port="insertion">
-            <p:pipe port="result" step="exceptions"/>
-            <p:pipe port="result" step="errors"/>
-            <p:pipe port="result" step="warnings"/>
-            <p:pipe port="result" step="hints"/>
-        </p:input>
-    </p:insert>
-    <p:delete match="//d:report/*[not(*)]"/>
-    <p:identity name="xml-report"/>
+        <p:with-option name="mode" select="$mode"/>
+        <p:with-option name="version" select="$version"/>
+    </px:epub3-validator.validate>
 
     <p:xslt name="html-report">
+        <p:input port="source">
+            <p:pipe port="report.out" step="validate"/>
+        </p:input>
         <p:input port="parameters">
             <p:empty/>
         </p:input>
@@ -128,12 +72,13 @@
             <p:document href="../xslt/epubcheck-pipeline-report-to-html-report.xsl"/>
         </p:input>
     </p:xslt>
+    <p:sink/>
 
     <p:group name="status">
         <p:output port="result"/>
         <p:for-each>
             <p:iteration-source select="/d:document-validation-report/d:document-info/d:error-count">
-                <p:pipe port="result" step="xml-report"/>
+                <p:pipe port="report.out" step="validate"/>
             </p:iteration-source>
             <p:identity/>
         </p:for-each>

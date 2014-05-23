@@ -2,5 +2,6 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" version="1.0">
 
     <p:import href="epub3-validator.xpl"/>
+    <p:import href="step/validate.xpl"/>
 
 </p:library>

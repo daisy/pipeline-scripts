@@ -31,8 +31,8 @@
             <xsl:when test=".=''">
                 <d:message severity="error">
                     <d:desc>The reference in the attribute "<xsl:value-of select="name()"/>" at <xsl:value-of
-                            select="concat('/',string-join(for $e in (ancestor-or-self::*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"/> is
-                        empty.</d:desc>
+                            select="concat('/',string-join(for $e in (ancestor-or-self::* except /*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"
+                        /> is empty.</d:desc>
                     <d:file>
                         <xsl:value-of select="$base-uri"/>
                     </d:file>
@@ -49,8 +49,8 @@
                     <xsl:when test="not($fileset/d:file/resolve-uri(@href,base-uri(.)) = $uri)">
                         <d:message severity="error">
                             <d:desc>The reference in the attribute "<xsl:value-of select="name()"/>" at <xsl:value-of
-                                    select="concat('/',string-join(for $e in (ancestor-or-self::*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"/> points
-                                to a resource that is not included in the DAISY 2.02 fileset.</d:desc>
+                                    select="concat('/',string-join(for $e in (ancestor-or-self::* except /*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"
+                                /> points to a resource that is not included in the DAISY 2.02 fileset.</d:desc>
                             <d:file>
                                 <xsl:value-of select="$base-uri"/>
                             </d:file>
@@ -62,8 +62,8 @@
                     <xsl:when test="$fragment and not($xml-documents[base-uri()=$uri]//@id=$fragment)">
                         <d:message severity="error">
                             <d:desc>The reference in the attribute "<xsl:value-of select="name()"/>" at <xsl:value-of
-                                    select="concat('/',string-join(for $e in (ancestor-or-self::*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"/> points
-                                to a id in the target resource that does not exist.</d:desc>
+                                    select="concat('/',string-join(for $e in (ancestor-or-self::* except /*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"
+                                /> points to a id in the target resource that does not exist.</d:desc>
                             <d:file>
                                 <xsl:value-of select="$base-uri"/>
                             </d:file>
@@ -76,8 +76,8 @@
                         test="$fragment and $fileset/d:file[resolve-uri(@href,base-uri(.))=$uri]/@media-type = 'application/smil+xml' and not($xml-documents[base-uri(.)=$uri]//*[@id=$fragment]/local-name()=('par','text'))">
                         <d:message severity="error">
                             <d:desc>The reference in the attribute "<xsl:value-of select="name()"/>" at <xsl:value-of
-                                    select="concat('/',string-join(for $e in (ancestor-or-self::*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"/> points
-                                to an element in a SMIL-file which is neither a "par" nor a "text" element.</d:desc>
+                                    select="concat('/',string-join(for $e in (ancestor-or-self::* except /*) return concat($e/name(),'[',(count($e/preceding-sibling::*[name()=$e/name()])+1),']'),'/'))"
+                                /> points to an element in a SMIL-file which is neither a "par" nor a "text" element.</d:desc>
                             <d:file>
                                 <xsl:value-of select="$base-uri"/>
                             </d:file>
@@ -89,32 +89,6 @@
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
-
-        <!--
-           // InterDocURICheckerD202Delegate
-           for referer in fileset[xml- and html-files] {
-               for reference in referer.references {
-                   if !matches(reference, regex.URI_REMOTE) and !startsWith(reference, "#") {
-                       path = reference.stripFragment()
-                       fragment = reference.getFragment()
-                       uri = resolve-uri(base-uri(referer), path)
-                       if uri is not in fileset {
-                           concat('The URI ',reference,' points to a file that is not in included in the DAISY 2.02 fileset')
-                       } else if fragment!='' {
-                           if uri is SMIL {
-                               if not(smil//text[@id=$fragment] or smil//par[@id=$fragment]) {
-                                   concat('The URI ',reference,' does not resolve correctly')
-                               }
-                           } else {
-                               if not(xml//@id=$fragment) then {
-                                   concat('The URI ',reference,' does not resolve correctly')
-                               }
-                           }
-                       }
-                   }
-               }
-           }
-           -->
 
     </xsl:template>
 
