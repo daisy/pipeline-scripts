@@ -15,7 +15,6 @@
   </appender>
   
   <root level="WARN">
-    <appender-ref ref="STDOUT"/>
     <appender-ref ref="TEST_LOG"/>
   </root>
   

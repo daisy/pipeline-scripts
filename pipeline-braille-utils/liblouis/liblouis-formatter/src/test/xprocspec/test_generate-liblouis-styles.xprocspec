@@ -36,12 +36,12 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <doc>
-          <body louis:style="#d799e3">
-            <section louis:style="#d799e5">
-              <h louis:style="#d799e7">
+          <body louis:style="#d798e3">
+            <section louis:style="#d798e5">
+              <h louis:style="#d798e7">
                 baz
               </h>
-              <p louis:style="#d799e10">
+              <p louis:style="#d798e10">
                 <span>foo</span>bar
               </p>
             </section>
@@ -66,20 +66,20 @@ style root
    braillePageNumberFormat p
 
 # --------------------------------------------------------------------------------------------------
-# d799e3
+# d798e3
 # --------------------------------------------------------------------------------------------------
-style d799e3
+style d798e3
 
 # --------------------------------------------------------------------------------------------------
-# d799e5
+# d798e5
 # --------------------------------------------------------------------------------------------------
-style d799e5
+style d798e5
    newPageBefore yes
 
 # --------------------------------------------------------------------------------------------------
-# d799e7
+# d798e7
 # --------------------------------------------------------------------------------------------------
-style d799e7
+style d798e7
    format centered
    leftMargin 3
    rightMargin 3
@@ -88,9 +88,9 @@ style d799e7
    keepWithNext yes
 
 # --------------------------------------------------------------------------------------------------
-# d799e10
+# d798e10
 # --------------------------------------------------------------------------------------------------
-style d799e10
+style d798e10
    firstLineIndent 2
    orphanControl 2
 
@@ -126,9 +126,9 @@ style d799e10
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <louis:toc href="file:/home/me/doc.xml" width="20">
-          <louis:toc-item louis:style="#d865e3"/>
-          <louis:toc-item louis:style="#d865e3"/>
-          <louis:toc-item louis:style="#d865e7"/>
+          <louis:toc-item louis:style="#d864e3"/>
+          <louis:toc-item louis:style="#d864e3"/>
+          <louis:toc-item louis:style="#d864e7"/>
         </louis:toc>
       </x:document>
     </x:expect>
