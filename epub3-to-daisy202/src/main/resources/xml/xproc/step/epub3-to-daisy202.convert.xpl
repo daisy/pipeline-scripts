@@ -347,6 +347,9 @@
             <p:pipe port="fileset.in" step="main"/>
         </p:input>
     </p:identity>
+    <px:fileset-rebase>
+        <p:with-option name="new-base" select="replace((/*/d:file[@media-type='application/oebps-package+xml'])[1]/resolve-uri(@href,base-uri()),'[^/]+$','')"/>
+    </px:fileset-rebase>
     <p:delete match="//d:file[@media-type=('application/oebps-package+xml','application/x-dtbncx+xml') or starts-with(@href,'..') or starts-with(@href,'META-INF/') or @href='mimetype']"/>
     <p:viewport match="//d:file[@media-type='application/xhtml+xml']">
         <p:variable name="base-uri" select="resolve-uri(/*/@href,base-uri(/*))"/>

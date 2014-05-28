@@ -3,9 +3,6 @@
 
     <!--
         TODO:
-          - clipEnd -> clip-end
-          - clipBegin -> clip-begin
-          - remove attributes and elements from non-smil namespaces
           - update metadata according to SMIL 1.0
     -->
 
@@ -19,6 +16,17 @@
         <xsl:element name="{local-name()}" namespace="">
             <xsl:apply-templates select="@*|node()"/>
         </xsl:element>
+    </xsl:template>
+    
+    <xsl:template match="*[not(namespace-uri()='http://www.w3.org/ns/SMIL')]"/>
+    <xsl:template match="@*[not(namespace-uri()='http://www.w3.org/ns/SMIL')]"/>
+    
+    <xsl:template match="@clipEnd">
+        <xsl:attribute name="clip-end" select="."/>
+    </xsl:template>
+    
+    <xsl:template match="@clipBegin">
+        <xsl:attribute name="clip-begin" select="."/>
     </xsl:template>
 
 </xsl:stylesheet>
