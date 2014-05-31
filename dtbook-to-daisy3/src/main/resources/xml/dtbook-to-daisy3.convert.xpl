@@ -13,13 +13,6 @@
     <p px:role="desc">Converts a single dtbook to DAISY 3 format</p>
   </p:documentation>
 
-  <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/create-audio-fileset.xpl"/>
-
   <p:input port="in-memory.in" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <h2 px:role="name">2005 DTBook file</h2>
@@ -85,6 +78,13 @@
       user intends to store it with no further transformation.</p>
     </p:documentation>
   </p:option>
+  
+  <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/create-audio-fileset.xpl"/>
 
   <!-- Find the first DTBook file within the input documents. -->
   <p:variable name="dtbook-uri"

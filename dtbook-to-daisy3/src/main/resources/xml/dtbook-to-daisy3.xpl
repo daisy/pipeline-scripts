@@ -12,11 +12,6 @@
     <p px:role="desc">Converts multiple dtbooks to daisy 3 format</p>
   </p:documentation>
 
-  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="dtbook-to-daisy3.convert.xpl"/>
-
   <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <h2 px:role="name">DTBook file(s)</h2>
@@ -64,6 +59,11 @@
     </p:documentation>
   </p:option>
 
+  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  <p:import href="dtbook-to-daisy3.convert.xpl"/>
+  
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
   <p:sink/>
   <p:xslt name="output-dir-uri">
@@ -113,7 +113,7 @@
 	  <p:pipe port="matched" step="first-dtbook"/>
 	</p:input>
 	<p:input port="stylesheet">
-	  <p:document href="http://www.daisy.org/pipeline/modules/file-utils/css-stylesheet-uris.xsl"/>
+	  <p:document href="http://www.daisy.org/pipeline/modules/css-utils/xml-to-css-uris.xsl"/>
 	</p:input>
       </p:xslt>
       <p:viewport match="//*[@href]">

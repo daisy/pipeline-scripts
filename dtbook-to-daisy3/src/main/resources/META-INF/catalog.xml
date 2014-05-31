@@ -6,8 +6,8 @@
   <uri name="http://www.daisy.org/pipeline/modules/dtbook-to-daisy3/library.xpl"
        uri="../xml/library.xpl"/>
 
+  <nextCatalog catalog="org:daisy:pipeline:modules:css-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:daisy3-utils"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
 </catalog>
