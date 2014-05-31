@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-to-daisy3" type="px:dtbook-to-daisy3"
 		xmlns:p="http://www.w3.org/ns/xproc"
-		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
 		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
 		xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -59,10 +58,10 @@
     </p:documentation>
   </p:option>
 
+  <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-tts/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
   <p:import href="dtbook-to-daisy3.convert.xpl"/>
   
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
@@ -125,7 +124,7 @@
     </p:group>
     <p:catch>
       <p:output port="result"/>
-      <cx:message message="warning: CSS stylesheet URI(s) are malformed."/>
+      <px:message message="CSS stylesheet URI(s) are malformed." severity="WARNING"/>
       <p:identity>
 	<p:input port="source">
 	  <p:empty/>

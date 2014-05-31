@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="main" type="px:dtbook-to-daisy3-convert"
 		xmlns:p="http://www.w3.org/ns/xproc"
-		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
 		xmlns:dc="http://purl.org/dc/elements/1.1/"
 		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
@@ -208,7 +207,7 @@
     </px:fix-dtbook-structure>
 
     <!-- ===== SMIL FILES AND THEIR FILESET ENTRIES ===== -->
-    <cx:message message="Generating SMIL files..."/>
+    <px:message message="Generating SMIL files..."/>
     <px:create-daisy3-smils name="create-mo">
       <p:input port="audio-map">
 	<p:pipe port="audio-map" step="main"/>
