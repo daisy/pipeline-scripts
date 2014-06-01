@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step name="main" type="pxi:dtbook-to-html" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal/daisy3-to-epub3" version="1.0">
 
@@ -19,7 +19,7 @@
     <p:import
         href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
 
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
@@ -40,7 +40,7 @@
             </p:input>
         </p:identity>
 
-        <cx:message message="Converting to ZedAI..."/>
+        <px:message message="Converting to ZedAI..."/>
         <px:dtbook-to-zedai-convert name="to-zedai">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.in" step="main"/>
@@ -51,7 +51,7 @@
             <p:with-option name="opt-assert-valid" select="$assert-valid"/>
         </px:dtbook-to-zedai-convert>
 
-        <cx:message message="Converting to XHTML5..."/>
+        <px:message message="Converting to XHTML5..."/>
         <px:zedai-to-html-convert name="to-html" chunk="true">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="to-zedai"/>

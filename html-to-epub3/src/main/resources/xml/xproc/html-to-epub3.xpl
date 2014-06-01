@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     type="px:html-to-epub3" name="main" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">

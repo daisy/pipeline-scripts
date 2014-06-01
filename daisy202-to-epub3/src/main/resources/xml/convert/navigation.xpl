@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-navigation" name="main" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-navigation" name="main" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="desc">Make a EPUB3 Navigation Document based on the Content Documents.</h1>
@@ -56,13 +56,11 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
-    </p:import>
-    <p:import href="resolve-links.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/library.xpl"/>
-    
+    <p:import href="resolve-links.xpl"/>
+
     <p:variable name="original-href" select="/*/@original-href"/>
 
     <px:epub3-nav-create-toc name="content-nav-toc">
@@ -247,7 +245,7 @@
         </p:otherwise>
     </p:choose>
     <p:identity name="result.ncx"/>
-    
+
     <px:fileset-create>
         <p:with-option name="base" select="$content-dir"/>
     </px:fileset-create>
@@ -287,9 +285,9 @@
                         <p:pipe port="result" step="result.navigation"/>
                     </p:input>
                 </p:identity>
-                <cx:message>
+                <px:message>
                     <p:with-option name="message" select="'The navigation document is in the spine; replaced it with the updated version'"/>
-                </cx:message>
+                </px:message>
             </p:when>
             <p:otherwise>
                 <p:identity/>

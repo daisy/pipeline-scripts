@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" type="pxi:daisy202-to-epub3-ncc-navigation" name="ncc-navigation"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:cx="http://xmlcalabash.com/ns/extensions" version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" version="1.0">
 
     <p:documentation>
         <p px:role="desc">Transform the DAISY 2.02 NCC into a EPUB 3 Navigation Document.</p>
@@ -55,9 +55,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="resolve-links.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">De-references links to SMIL-files.</p:documentation>
     </p:import>
@@ -71,9 +69,9 @@
             <p:pipe port="resolve-links-mapping" step="ncc-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'dereferenced all links in the SMIL files'"/>
-    </cx:message>
+    </px:message>
     <p:identity name="ncc-navigation.no-navs"/>
     <p:sink/>
     <p:xslt name="ncc-navigation.toc">
@@ -87,9 +85,9 @@
             <p:document href="ncc-to-nav-toc.xsl"/>
         </p:input>
     </p:xslt>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'created TOC from NCC'"/>
-    </cx:message>
+    </px:message>
     <p:sink/>
     <p:xslt>
         <p:input port="parameters">
@@ -102,9 +100,9 @@
             <p:document href="ncc-to-nav-page-list.xsl"/>
         </p:input>
     </p:xslt>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'created page list from NCC'"/>
-    </cx:message>
+    </px:message>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -130,9 +128,9 @@
             <p:document href="ncc-to-nav-landmarks.xsl"/>
         </p:input>
     </p:xslt>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'created landmarks from NCC'"/>
-    </cx:message>
+    </px:message>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -179,9 +177,9 @@
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'created Navigation Document from NCC'"/>
-    </cx:message>
+    </px:message>
     <p:identity name="ncc-navigation.result"/>
     <p:sink/>
 

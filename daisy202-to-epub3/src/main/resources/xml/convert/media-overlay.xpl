@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
+    xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-mediaoverlay" name="mediaoverlay" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <p px:role="desc">For processing the SMILs.</p>
@@ -42,9 +42,7 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating filesets.</p:documentation>
     </p:import>
@@ -69,17 +67,17 @@
         </p:iteration-source>
         <p:variable name="original-uri" select="base-uri(/*)"/>
         <px:mediaoverlay-upgrade-smil/>
-        <cx:message>
+        <px:message>
             <p:with-option name="message" select="concat('upgraded the SMIL file ',$original-uri)"/>
-        </cx:message>
+        </px:message>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>
     </p:for-each>
     <px:mediaoverlay-join name="mediaoverlay-joined"/>
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="'joined all the media overlays'"/>
-    </cx:message>
+    </px:message>
     <p:sink/>
 
     <p:choose>

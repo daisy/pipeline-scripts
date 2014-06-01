@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     type="px:html-to-epub3-convert" name="main" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation>Transforms XHTML into an EPUB 3 publication.</p:documentation>
@@ -29,7 +29,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="html-to-epub3.content.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')">
@@ -153,7 +153,7 @@
             <px:fileset-add-entry media-type="application/xml+xhtml">
                 <p:with-option name="href" select="$nav-base"/>
             </px:fileset-add-entry>
-            <cx:message message="Navigation Document Created."/>
+            <px:message message="Navigation Document Created."/>
         </p:group>
     </p:group>
     <p:sink/>
@@ -239,7 +239,7 @@
             <p:with-option name="href" select="$opf-base"/>
         </px:fileset-add-entry>
 
-        <cx:message message="Package Document Created."/>
+        <px:message message="Package Document Created."/>
     </p:group>
     <p:sink/>
 

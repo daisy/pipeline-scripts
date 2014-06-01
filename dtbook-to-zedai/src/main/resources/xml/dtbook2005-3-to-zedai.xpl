@@ -2,10 +2,8 @@
 <p:declare-step version="1.0" name="dtbook2005-3-to-zedai" type="pxi:dtbook2005-3-to-zedai"
     xmlns:p="http://www.w3.org/ns/xproc" 
     xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    exclude-inline-prefixes="cx cxo pxi p c">
+    exclude-inline-prefixes="pxi p c">
 
     <p:documentation>
         Transforms DTBook 2005-3 XML into ZedAI XML. Part of the DTBook-to-ZedAI module.

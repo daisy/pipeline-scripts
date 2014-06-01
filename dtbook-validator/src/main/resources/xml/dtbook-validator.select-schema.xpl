@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-validator.select-schema" type="px:dtbook-validator.select-schema"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     exclude-inline-prefixes="#all">
     

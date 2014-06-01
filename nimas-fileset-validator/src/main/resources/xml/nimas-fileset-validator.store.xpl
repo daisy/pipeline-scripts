@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="nimas-fileset-validator.store" type="pxi:nimas-fileset-validator.store"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
     xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -41,9 +40,7 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
     <!-- ***************************************************** -->
     <!-- STORE REPORTS -->
@@ -52,11 +49,11 @@
     <p:choose>
         <!-- save reports if we specified an output dir -->
         <p:when test="string-length($output-dir) > 0">
-            <cx:message>
+            <px:message>
                 <p:with-option name="message"
                     select="concat('Nimas fileset validator: Storing reports to disk in output directory: ', $output-dir)"
                 />
-            </cx:message>
+            </px:message>
             <p:sink/>
             
             <p:for-each>

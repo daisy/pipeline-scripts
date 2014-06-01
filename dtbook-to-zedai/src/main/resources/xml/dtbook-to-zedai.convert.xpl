@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step version="1.0" name="dtbook-to-zedai.convert" type="px:dtbook-to-zedai-convert"
     xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions"
     xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
@@ -86,11 +85,7 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>
-            Calabash extension steps.
-        </p:documentation>
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="dtbook2005-3-to-zedai.xpl">
         <p:documentation>
             Converts DTBook 2005-3 to ZedAI
@@ -163,15 +158,15 @@
     <p:variable name="mods-file" select="concat($output-dir, $mods-filename)"/>
     <p:variable name="css-file" select="concat($output-dir, $css-filename)"/>
 
-    <cx:message>
+    <px:message>
         <p:with-option name="message" select="concat('ZedAI file name: ',$zedai-filename)"/>
-    </cx:message>
-    <cx:message>
+    </px:message>
+    <px:message>
         <p:with-option name="message" select="concat('MODS file name: ',$mods-filename)"/>
-    </cx:message>
-    <cx:message>
+    </px:message>
+    <px:message>
         <p:with-option name="message" select="concat('CSS file name: ',$css-filename)"/>
-    </cx:message>
+    </px:message>
 
     <!-- =============================================================== -->
     <!-- LOAD INPUT DTBOOKS -->
@@ -204,11 +199,11 @@
                             </p:identity>
                         </p:when>
                         <p:otherwise>
-                            <cx:message>
+                            <px:message>
                                 <p:with-option name="message"
                                     select="concat('Input DTBook not in memory, loading from disk: ', $dtbook-base)"
                                 />
-                            </cx:message>
+                            </px:message>
                             <p:load>
                                 <p:with-option name="href" select="$dtbook-base"/>
                             </p:load>
@@ -307,7 +302,7 @@
         </p:input>
         <p:with-option name="assert-valid" select="$opt-assert-valid"/>
     </px:validate-with-relax-ng-and-report>
-    <cx:message message="Input document is valid"/>
+    <px:message message="Input document is valid"/>
     
     <!-- =============================================================== -->
     <!-- CREATE ZEDAI -->
@@ -497,7 +492,7 @@
                     </p:add-attribute>
                 </p:when>
                 <p:otherwise>
-                    <cx:message
+                    <px:message
                         message="WARNING: required xml:lang attribute not found, and no 'lang' option was passed to the converter."/>
                     <p:identity/>
                 </p:otherwise>
@@ -509,14 +504,14 @@
     <!-- VALIDATE FINAL OUTPUT -->
     <!-- =============================================================== -->
     <p:documentation>Validate the final ZedAI output.</p:documentation>
-    <cx:message message="Validating ZedAI"/>
+    <px:message message="Validating ZedAI"/>
     <px:validate-with-relax-ng-and-report name="validate-zedai" assert-valid="true">
         <p:input port="schema">
             <p:document href="./schema/z3998-book-1.0-latest/z3998-book.rng"/>
         </p:input>
     </px:validate-with-relax-ng-and-report>
-    <cx:message message="ZedAI output is valid."/>
-    <cx:message message="Conversion complete."/>
+    <px:message message="ZedAI output is valid."/>
+    <px:message message="Conversion complete."/>
     <p:sink/>
 
 
@@ -558,9 +553,9 @@
                     </p:variable>
                     <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
                     
-                    <cx:message>
+                    <px:message>
                         <p:with-option name="message" select="concat($source-uri,' --> ',$result-uri)"/>
-                    </cx:message>
+                    </px:message>
                     <p:sink/>
                     
                     <px:fileset-create>
@@ -576,7 +571,7 @@
             </p:when>
             <p:otherwise>
                 <p:output port="result" sequence="true"/>
-                <cx:message message="NOT copying external resources"/>
+                <px:message message="NOT copying external resources"/>
                 <p:identity>
                     <p:input port="source"><p:empty/></p:input>
                 </p:identity>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:cx="http://xmlcalabash.com/ns/extensions" type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:mo="http://www.w3.org/ns/SMIL" xmlns:epub="http://www.idpf.org/2007/ops" type="pxi:daisy202-to-epub3-content" name="content" version="1.0">
 
     <p:input port="content-flow" primary="true" sequence="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">DAISY 2.02 content files.</p:documentation>
@@ -37,7 +37,7 @@
     <p:option name="content-dir" required="true"/>
     <p:option name="daisy-dir" required="true"/>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="resolve-links.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">Resolves SMIL-linkbacks.</p:documentation>
@@ -89,9 +89,9 @@
         <p:add-attribute match="/*" attribute-name="original-href">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>
-        <cx:message>
+        <px:message>
             <p:with-option name="message" select="concat('upgraded the DAISY 2.02 content document ',substring($original-uri,string-length($daisy-dir)+1),' into the EPUB3 content document ',substring($result-uri,string-length($publication-dir)+1))"/>
-        </cx:message>
+        </px:message>
     </p:for-each>
     <p:identity name="result.content"/>
     
