@@ -5,11 +5,11 @@ import java.net.URI;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.EmptyAtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.EmptyIterator;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
@@ -59,14 +59,12 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			public SequenceIterator call(SequenceIterator[] arguments,
-					XPathContext context) throws XPathException {
-				
-				String locale = ((StringValue)arguments[0].next()).getStringValue();
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
+				String locale = ((AtomicSequence)arguments[0]).getStringValue();
 				URI table = tableLookup.lookup(parseLocale(locale));
 				if (table != null)
-					return SingletonIterator.makeIterator(new StringValue(table.toString()));
-				return EmptyIterator.getInstance();
+					return new StringValue(table.toString());
+				return EmptyAtomicSequence.getInstance();
 			}
 		};
 	}

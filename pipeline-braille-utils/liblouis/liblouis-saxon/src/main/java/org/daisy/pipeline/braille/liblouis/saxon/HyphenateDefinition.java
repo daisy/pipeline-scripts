@@ -3,10 +3,10 @@ package org.daisy.pipeline.braille.liblouis.saxon;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
@@ -58,14 +58,11 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
-					throws XPathException {
-				
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String table = ((StringValue)arguments[0].next()).getStringValue();
-					String text = ((StringValue)arguments[1].next()).getStringValue();
-					return SingletonIterator.makeIterator(
-							new StringValue(liblouis.hyphenate(table, text))); }
+					String table = ((AtomicSequence)arguments[0]).getStringValue();
+					String text = ((AtomicSequence)arguments[1]).getStringValue();
+					return new StringValue(liblouis.hyphenate(table, text)); }
 				catch (Exception e) {
 					logger.error("louis:hyphenate failed", e);
 					throw new XPathException("louis:hyphenate failed"); }
