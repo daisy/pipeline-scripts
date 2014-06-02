@@ -18,9 +18,9 @@
   <name>DAISY Pipeline 2 Braille Module :: liblouis-tables</name>
 
   <properties>
-    <liblouis.version>2.5.3</liblouis.version>
-    <liblouis.tarball.url>https://liblouis.googlecode.com/files/liblouis-2.5.3.tar.gz</liblouis.tarball.url>
-    <liblouis.tarball.sha1>a2ba4d99bab07900dba02a03349f2099beb9b490</liblouis.tarball.sha1>
+    <liblouis.version>2.5.4</liblouis.version>
+    <liblouis.tarball.url>http://www.liblouis.org/downloads/liblouis-2.5.4.tar.gz</liblouis.tarball.url>
+    <liblouis.tarball.sha1>d2c6727973760560235daab7a8830f19b31adb49</liblouis.tarball.sha1>
   </properties>
 
   <build>
