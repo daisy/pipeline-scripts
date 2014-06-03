@@ -89,8 +89,9 @@
         <p:add-attribute match="/*" attribute-name="original-href">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>
-        <px:message>
-            <p:with-option name="message" select="concat('upgraded the DAISY 2.02 content document ',substring($original-uri,string-length($daisy-dir)+1),' into the EPUB3 content document ',substring($result-uri,string-length($publication-dir)+1))"/>
+        <px:message message="upgraded the DAISY 2.02 content document $1 into the EPUB3 content document $2">
+            <p:with-option name="param1" select="substring($original-uri,string-length($daisy-dir)+1)"/>
+            <p:with-option name="param2" select="substring($result-uri,string-length($publication-dir)+1)"/>
         </px:message>
     </p:for-each>
     <p:identity name="result.content"/>

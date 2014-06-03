@@ -169,6 +169,7 @@
         <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
     <p:delete match="/*/@xml:base"/>
+    <px:message message="Successfully created navigation document (ncc.xhtml)"/>
     <p:identity name="result.navigation"/>
     <p:sink/>
 
@@ -197,6 +198,7 @@
                     <p:pipe port="result" step="ncx.spine"/>
                 </p:input>
             </p:insert>
+            <px:message message="Creating NCX..."/>
             <p:xslt name="ncx.ncx-without-docauthors">
                 <p:input port="parameters">
                     <p:empty/>
@@ -235,6 +237,7 @@
                 <p:with-option name="attribute-value" select="concat($content-dir,'ncx.xml')"/>
             </p:add-attribute>
             <p:delete match="/*/@xml:base"/>
+            <px:message message="Successfully created NCX"/>
         </p:when>
         <p:otherwise>
             <p:identity>
@@ -257,6 +260,7 @@
                 </p:with-option>
                 <p:with-option name="media-type" select="'application/x-dtbncx+xml'"/>
             </px:fileset-add-entry>
+            <px:message message="NCX added to the fileset"/>
         </p:when>
         <p:otherwise>
             <p:identity/>
@@ -268,6 +272,7 @@
         </p:with-option>
         <p:with-option name="media-type" select="'application/xhtml+xml'"/>
     </px:fileset-add-entry>
+    <px:message message="Navigation Document added to the fileset"/>
     <p:identity name="result.fileset"/>
     <p:sink/>
 
@@ -285,9 +290,7 @@
                         <p:pipe port="result" step="result.navigation"/>
                     </p:input>
                 </p:identity>
-                <px:message>
-                    <p:with-option name="message" select="'The navigation document is in the spine; replaced it with the updated version'"/>
-                </px:message>
+                <px:message message="The navigation document is in the spine; replaced it with the updated version"/>
             </p:when>
             <p:otherwise>
                 <p:identity/>
