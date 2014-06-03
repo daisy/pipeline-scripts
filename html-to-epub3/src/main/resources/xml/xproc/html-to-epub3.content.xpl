@@ -30,8 +30,8 @@
         <p:output port="result" sequence="true"/>
         <p:for-each>
             <p:variable name="original-uri" select="base-uri(/*)"/>
-            
-            
+
+
             <!--TODO remove http-equiv='content-type'-->
 
             <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
@@ -50,13 +50,29 @@
             <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
              |   CLEAN HTTP-EQUIV                                                          |
             <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
-            
-            <p:delete match="/h:html/h:head/h:meta[matches(@http-equiv,'Content-Type','i')]" xmlns:h="http://www.w3.org/1999/xhtml"/>
-            
+
+            <p:delete match="/h:html/h:head/h:meta[matches(@http-equiv,'Content-Type','i')]"
+                xmlns:h="http://www.w3.org/1999/xhtml"/>
+
+            <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+             |   SET LANGUAGE                                                              |
+            <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
+            <p:group>
+                <p:variable name="lang"
+                    select="/*/(if (@lang|@xml:lang) then (@lang|@xml:lang)
+                                                    else p:system-property('p:language'))"/>
+                <p:add-attribute match="/*" attribute-name="lang">
+                    <p:with-option name="attribute-value" select="$lang"/>
+                </p:add-attribute>
+                <p:add-attribute match="/*" attribute-name="xml:lang">
+                    <p:with-option name="attribute-value" select="$lang"/>
+                </p:add-attribute>
+            </p:group>
+
             <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
              |   FIX CONTENT MODELS                                                        |
             <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
-            
+
             <p:xslt>
                 <p:input port="stylesheet">
                     <p:document
@@ -66,7 +82,7 @@
                     <p:empty/>
                 </p:input>
             </p:xslt>
-            
+
             <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
              |   ADD MISSING IDS                                                           |
             <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
@@ -79,7 +95,7 @@
                     <p:empty/>
                 </p:input>
             </p:xslt>
-            
+
             <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
              |   CLEAN OUTLINE                                                        |
             <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
@@ -101,8 +117,8 @@
                                 href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
                             <xsl:template match="/">
                                 <c:result><xsl:value-of
-                                    select="pf:replace-path(base-uri(/*),escape-html-uri(replace(pf:unescape-uri(pf:get-path(base-uri(/*))),'[^\p{L}\p{N}\-/_.]','_')))"
-                                /></c:result>
+                                        select="pf:replace-path(base-uri(/*),escape-html-uri(replace(pf:unescape-uri(pf:get-path(base-uri(/*))),'[^\p{L}\p{N}\-/_.]','_')))"
+                                    /></c:result>
                             </xsl:template>
                         </xsl:stylesheet>
                     </p:inline>
@@ -117,7 +133,8 @@
                 </p:input>
             </p:identity>
             <p:add-attribute match="/*" attribute-name="xml:base">
-                <p:with-option name="attribute-value" select="resolve-uri(replace(normalize-space(.),'^.*?([^/]+)\.[^/]*$','$1.xhtml'), $content-dir)">
+                <p:with-option name="attribute-value"
+                    select="resolve-uri(replace(normalize-space(.),'^.*?([^/]+)\.[^/]*$','$1.xhtml'), $content-dir)">
                     <p:pipe port="result" step="safe-uri"/>
                 </p:with-option>
             </p:add-attribute>
