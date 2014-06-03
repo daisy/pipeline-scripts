@@ -42,6 +42,7 @@ public class LiblouisJnaImpl implements Liblouis {
 		final LiblouisTableResolver tableResolver = this.tableResolver;
 		_tableResolver = new TableResolver() {
 			public File[] invoke(String tableList, File base) {
+				logger.debug("Resolving " + tableList);
 				return tableResolver.resolveTableList(tokenizeTableList(tableList), base); }};
 		Louis.getLibrary().lou_registerTableResolver(_tableResolver);
 	}
