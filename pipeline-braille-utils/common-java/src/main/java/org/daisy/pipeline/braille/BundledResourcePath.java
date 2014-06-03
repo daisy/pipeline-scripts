@@ -22,6 +22,7 @@ import static org.daisy.pipeline.braille.Utilities.Iterators.partition;
 import static org.daisy.pipeline.braille.Utilities.Files;
 import static org.daisy.pipeline.braille.Utilities.URIs;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
+import static org.daisy.pipeline.braille.Utilities.Files.normalize;
 import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
 import static org.daisy.pipeline.braille.Utilities.URLs.asURL;
 import static org.daisy.pipeline.braille.Utilities.URLs.decode;
@@ -30,6 +31,9 @@ import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BundledResourcePath implements ResourcePath {
 	
@@ -54,6 +58,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 	
 	private final ResourceResolver resolver = new CachedResolver() {
 		public URL delegate(URI resource) {
+			logger.trace("Resolving " + resource + " within " + identifier + " (real path: " + path + "; unpack dir: " + unpackDir + ")");
 			resource = resource.normalize();
 			if (resource.equals(identifier) || resource.equals(path) || resource.equals(unpackDir))
 				return maybeUnpack(asURI("."));
@@ -163,7 +168,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 				directory = context.getBundleContext().getDataFile("resources" + i);
 				if (!directory.exists()) break; }
 			directory.mkdirs();
-			unpackDir = new File(directory.toString() + "/"); }
+			unpackDir = normalize(directory); }
 	}
 	
 	protected void lazyUnpack(final ComponentContext context) {
@@ -185,6 +190,8 @@ public abstract class BundledResourcePath implements ResourcePath {
 			}
 		};
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(BundledResourcePath.class);
 	
 	@Override
 	public String toString() {
