@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.options.MavenArtifactProvisionOption;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
@@ -68,7 +69,7 @@ public class LiblouisFormatterTest {
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-core").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-calabash").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-native").versionAsInProject().classifier("linux"),
+			forThisPlatform(mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-native").versionAsInProject()),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("css-core").versionAsInProject(),
@@ -111,5 +112,17 @@ public class LiblouisFormatterTest {
 		                             new File(baseDir, "target/xprocspec"),
 		                             new XProcSpecRunner.Reporter.DefaultReporter());
 		assertTrue("XProcSpec tests should run with success", success);
+	}
+	
+	public static MavenArtifactProvisionOption forThisPlatform(MavenArtifactProvisionOption bundle) {
+		String name = System.getProperty("os.name").toLowerCase();
+		if (name.startsWith("windows"))
+			return bundle.classifier("windows");
+		else if (name.startsWith("mac os x"))
+			return bundle.classifier("mac");
+		else if (name.startsWith("linux"))
+			return bundle.classifier("linux");
+		else
+			throw new RuntimeException("Unsupported OS: " + name);
 	}
 }
