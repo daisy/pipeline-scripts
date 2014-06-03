@@ -14,6 +14,7 @@ import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTabl
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.Utilities.Strings.insertHyphens;
+import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
 import org.liblouis.Louis;
 import org.liblouis.CompilationException;
@@ -42,8 +43,13 @@ public class LiblouisJnaImpl implements Liblouis {
 		final LiblouisTableResolver tableResolver = this.tableResolver;
 		_tableResolver = new TableResolver() {
 			public File[] invoke(String tableList, File base) {
-				logger.debug("Resolving " + tableList);
-				return tableResolver.resolveTableList(tokenizeTableList(tableList), base); }};
+				logger.debug("Resolving " + tableList + " against base " + base);
+				File[] resolved = tableResolver.resolveTableList(tokenizeTableList(tableList), base);
+				if (resolved != null)
+					logger.debug("Resolved to " + join(resolved, ","));
+				else
+					logger.warn("Failed to resolve table.");
+				return resolved; }};
 		Louis.getLibrary().lou_registerTableResolver(_tableResolver);
 	}
 	
