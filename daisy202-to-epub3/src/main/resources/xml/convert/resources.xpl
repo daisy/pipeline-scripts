@@ -39,8 +39,8 @@
             <p:with-option name="attribute-value" select="$original-href"/>
         </p:add-attribute>
         <px:html-to-fileset/>
-        <px:message>
-            <p:with-option name="message" select="concat('extracted list of resources from ',$original-href)"/>
+        <px:message message="extracted list of resources from $1">
+            <p:with-option name="param1" select="$original-href"/>
         </px:message>
     </p:for-each>
     <p:sink/>
@@ -60,8 +60,8 @@
                         <p:document href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/smil-to-audio-fileset.xsl"/>
                     </p:input>
                 </p:xslt>
-                <px:message>
-                    <p:with-option name="message" select="concat('extracted list of audio files from ',$original-href)"/>
+                <px:message message="extracted list of audio files from $1">
+                    <p:with-option name="param1" select="$original-href"/>
                 </px:message>
             </p:when>
             <p:otherwise>
@@ -89,8 +89,6 @@
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="$content-dir"/>
     </p:add-attribute>
-    <px:message>
-        <p:with-option name="message" select="'determined media type for all auxiliary resources'"/>
-    </px:message>
+    <px:message message="determined media type for all auxiliary resources"/>
 
 </p:declare-step>

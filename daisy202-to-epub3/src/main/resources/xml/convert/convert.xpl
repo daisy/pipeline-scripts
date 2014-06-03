@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step name="main" xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:html="http://www.w3.org/1999/xhtml" type="px:daisy202-to-epub3-convert" version="1.0">
+    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:html="http://www.w3.org/1999/xhtml" type="px:daisy202-to-epub3-convert"
+    version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml"> Transforms DAISY 2.02 into EPUB3. </p:documentation>
 
     <p:input port="fileset.in" primary="true">
         <!-- TODO: This fileset is assumed to reference SMIL files and HTML files in reading order. px:daisy202-load provides this, but we could provide a step that rearranges the fileset according to the reading order for use by other scripts. -->
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">A fileset containing references to all the DAISY 2.02 files and any resources they reference (audio, images etc.). SMIL files and HTML files occur in reading order.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">A fileset containing references to all the DAISY 2.02 files and any resources they reference (audio, images etc.). SMIL files and HTML
+            files occur in reading order.</p:documentation>
     </p:input>
 
     <p:input port="in-memory.in" sequence="true">
@@ -30,9 +32,9 @@
     <p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean"/>
     <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean"/>
 
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:import href="resolve-links.create-mapping.xpl"/>
     <p:import href="ncc-navigation.xpl"/>
@@ -77,59 +79,26 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
-    <p:split-sequence initial-only="true" test="position()=1"/>
-    <p:group name="ncc">
-        <p:output port="result" primary="true">
-            <p:pipe port="result" step="ncc.ncc"/>
-        </p:output>
-        <p:output port="pub-id">
-            <p:pipe port="result" step="ncc.pub-id"/>
-        </p:output>
-        <p:identity name="ncc.ncc"/>
-        <p:count/>
-        <p:choose>
-            <p:when test="/*='0'">
-                <p:in-scope-names name="vars"/>
-                <p:template name="error-message">
-                    <p:input port="source">
-                        <p:pipe port="result" step="ncc.ncc"/>
-                    </p:input>
-                    <p:input port="template">
-                        <p:inline exclude-inline-prefixes="#all">
-                            <message>There is no "ncc.html" file in the fileset.</message>
-                        </p:inline>
-                    </p:input>
-                    <p:input port="parameters">
-                        <p:pipe step="vars" port="result"/>
-                    </p:input>
-                </p:template>
-                <p:error code="PDE06">
-                    <p:input port="source">
-                        <p:pipe port="result" step="error-message"/>
-                    </p:input>
-                </p:error>
-            </p:when>
-            <p:otherwise>
-                <p:identity>
-                    <p:input port="source">
-                        <p:pipe port="result" step="ncc.ncc"/>
-                    </p:input>
-                </p:identity>
-            </p:otherwise>
-        </p:choose>
-        <p:add-attribute name="pub-id" match="/*" attribute-name="value">
-            <p:with-option name="attribute-value" select="/html:html/html:head/html:meta[@name='dc:identifier']/@content"/>
-            <p:input port="source">
-                <p:inline>
-                    <d:meta name="pub-id"/>
-                </p:inline>
-            </p:input>
-        </p:add-attribute>
-        <p:identity name="ncc.pub-id"/>
-    </p:group>
+    <p:identity name="ncc"/>
+
+    <px:assert message="There must be exactly one NCC-file" test-count-min="1" test-count-max="1" error-code="PDE06"/>
+    <px:message message="Extracting dc:identifier from NCC"/>
+    <p:add-attribute name="pub-id" match="/*" attribute-name="value">
+        <p:with-option name="attribute-value" select="/html:html/html:head/html:meta[@name='dc:identifier']/@content"/>
+        <p:input port="source">
+            <p:inline>
+                <d:meta name="pub-id"/>
+            </p:inline>
+        </p:input>
+    </p:add-attribute>
+    <p:identity name="ncc.pub-id"/>
+
     <pxi:daisy202-to-epub3-ncc-navigation name="ncc-navigation">
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
+        <p:input port="ncc">
+            <p:pipe port="result" step="ncc"/>
+        </p:input>
         <p:input port="resolve-links-mapping">
             <p:pipe port="result" step="resolve-links-mapping"/>
         </p:input>
@@ -291,7 +260,7 @@
             <p:pipe port="mediaoverlay" step="mediaoverlay"/>
         </p:input>
         <p:with-option name="pub-id" select="/*/@value">
-            <p:pipe port="pub-id" step="ncc"/>
+            <p:pipe port="result" step="ncc.pub-id"/>
         </p:with-option>
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="epub-dir" select="$epub-dir"/>
@@ -310,6 +279,7 @@
             <p:pipe port="result" step="result.fileset-without-ocf-files"/>
         </p:input>
     </px:fileset-join>
+    <px:message message="Added container files to fileset (mimetype, META-INF/container.xml)"/>
     <p:identity name="result.fileset"/>
     <p:sink/>
 
@@ -373,6 +343,7 @@
             <p:pipe port="in-memory" step="result.for-each"/>
         </p:input>
     </px:mediatype-detect>
+    <px:message message="Prepared final fileset of files for the EPUB package (which excludes the container files)"/>
     <p:identity name="result.fileset-without-ocf-files"/>
     <p:sink/>
 
@@ -382,6 +353,7 @@
             <p:pipe port="in-memory.out" step="finalize"/>
         </p:input>
     </p:identity>
+    <px:message message="Prepared final set of converted files for the EPUB package"/>
     <p:sink/>
 
 </p:declare-step>

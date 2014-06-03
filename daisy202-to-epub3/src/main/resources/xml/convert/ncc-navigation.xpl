@@ -69,9 +69,7 @@
             <p:pipe port="resolve-links-mapping" step="ncc-navigation"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links>
-    <px:message>
-        <p:with-option name="message" select="'dereferenced all links in the SMIL files'"/>
-    </px:message>
+    <px:message message="dereferenced all links in the SMIL files"/>
     <p:identity name="ncc-navigation.no-navs"/>
     <p:sink/>
     <p:xslt name="ncc-navigation.toc">
@@ -85,9 +83,7 @@
             <p:document href="ncc-to-nav-toc.xsl"/>
         </p:input>
     </p:xslt>
-    <px:message>
-        <p:with-option name="message" select="'created TOC from NCC'"/>
-    </px:message>
+    <px:message message="created TOC from NCC"/>
     <p:sink/>
     <p:xslt>
         <p:input port="parameters">
@@ -100,9 +96,7 @@
             <p:document href="ncc-to-nav-page-list.xsl"/>
         </p:input>
     </p:xslt>
-    <px:message>
-        <p:with-option name="message" select="'created page list from NCC'"/>
-    </px:message>
+    <px:message message="created page list from NCC"/>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -128,9 +122,7 @@
             <p:document href="ncc-to-nav-landmarks.xsl"/>
         </p:input>
     </p:xslt>
-    <px:message>
-        <p:with-option name="message" select="'created landmarks from NCC'"/>
-    </px:message>
+    <px:message message="created landmarks from NCC"/>
     <p:choose>
         <p:when test="count(/*/*)=0">
             <p:identity>
@@ -177,9 +169,7 @@
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
-    <px:message>
-        <p:with-option name="message" select="'created Navigation Document from NCC'"/>
-    </px:message>
+    <px:message message="created Navigation Document from NCC"/>
     <p:identity name="ncc-navigation.result"/>
     <p:sink/>
 
