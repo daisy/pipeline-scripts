@@ -2,14 +2,18 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" type="pxi:html-to-epub3-content"
-    version="1.0">
+    name="main" version="1.0">
 
-    <p:input port="html" sequence="true"/>
+    <p:input port="html" sequence="true" primary="true"/>
+    <p:input port="fileset.in.resources"/>
     <p:output port="docs" sequence="true" primary="true">
         <p:pipe port="result" step="docs"/>
     </p:output>
-    <p:output port="fileset" primary="false">
-        <p:pipe port="result" step="fileset"/>
+    <p:output port="fileset.out.docs" primary="false">
+        <p:pipe port="result" step="fileset.docs"/>
+    </p:output>
+    <p:output port="fileset.out.resources" primary="false">
+        <p:pipe port="result" step="fileset.resources"/>
     </p:output>
 
 
@@ -149,9 +153,9 @@
 
 
     <!--=========================================================================-->
-    <!-- RESULT FILESET                                                          -->
+    <!-- RESULT FILESETS                                                         -->
     <!--=========================================================================-->
-    <p:group name="fileset">
+    <p:group name="fileset.docs">
         <p:output port="result"/>
         <p:for-each>
             <p:variable name="result-uri" select="base-uri(/*)"/>
@@ -163,6 +167,16 @@
             </px:fileset-add-entry>
         </p:for-each>
         <px:fileset-join/>
+    </p:group>
+
+    <p:group name="fileset.resources">
+        <p:output port="result"/>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="$content-dir"/>
+            <p:input port="source">
+                <p:pipe port="fileset.in.resources" step="main"/>
+            </p:input>
+        </p:add-attribute>
     </p:group>
 
 

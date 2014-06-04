@@ -2,8 +2,8 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    type="px:html-to-epub3-convert" name="main" exclude-inline-prefixes="#all" version="1.0">
+    xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:html-to-epub3-convert" name="main"
+    exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation>Transforms XHTML into an EPUB 3 publication.</p:documentation>
 
@@ -22,10 +22,8 @@
     <p:option name="output-dir" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/library.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
@@ -48,7 +46,6 @@
         <p:output port="fileset">
             <p:pipe port="result" step="fileset"/>
         </p:output>
-        <!--TODO pre-process resource-->
         <p:for-each name="html-cleaned">
             <p:output port="result" sequence="true"/>
             <p:xslt>
@@ -78,24 +75,25 @@
             <p:iteration-source>
                 <p:pipe port="result" step="html-cleaned"/>
             </p:iteration-source>
-            <p:delete match="//@data-original-href"/>
+            <p:delete match="//@*[starts-with(name(),'data-original-')]"/>
         </p:for-each>
     </p:group>
-    <!--TODO filter-out XHTML docs in the spine-->
-    <!--TODO clean any out-of-spine XHTML docs-->
 
     <!--=========================================================================-->
-    <!-- CLEAN THE XHTML                                                        -->
+    <!-- CLEAN THE XHTML Content Documents                                       -->
     <!--=========================================================================-->
 
     <p:documentation>Clean the XHTML Documents</p:documentation>
-    <pxi:html-to-epub3-content name="html-content">
+    <pxi:html-to-epub3-content name="content-docs">
         <p:with-option name="publication-dir" select="$epub-dir">
             <p:empty/>
         </p:with-option>
         <p:with-option name="content-dir" select="$content-dir">
             <p:empty/>
         </p:with-option>
+        <p:input port="fileset.in.resources">
+            <p:pipe port="fileset" step="html-resources"/>
+        </p:input>
     </pxi:html-to-epub3-content>
 
     <!--=========================================================================-->
@@ -104,7 +102,6 @@
 
     <p:documentation>Generate the EPUB 3 navigation document</p:documentation>
     <p:group name="navigation">
-
         <p:output port="fileset" primary="true">
             <p:pipe port="result" step="navigation.fileset"/>
         </p:output>
@@ -118,7 +115,7 @@
 
         <px:epub3-nav-create-toc name="navigation.toc">
             <p:input port="source">
-                <p:pipe port="docs" step="html-content"/>
+                <p:pipe port="docs" step="content-docs"/>
             </p:input>
             <p:with-option name="base-dir" select="$content-dir">
                 <p:empty/>
@@ -127,7 +124,7 @@
 
         <px:epub3-nav-create-page-list name="navigation.page-list">
             <p:input port="source">
-                <p:pipe port="docs" step="html-content"/>
+                <p:pipe port="docs" step="content-docs"/>
             </p:input>
         </px:epub3-nav-create-page-list>
         <!--TODO create other nav types (configurable ?)-->
@@ -169,7 +166,7 @@
         <!--TODO adapt to multiple XHTML input docs-->
         <p:xslt>
             <p:input port="source">
-                <p:pipe port="docs" step="html-content"/>
+                <p:pipe port="docs" step="content-docs"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -186,7 +183,6 @@
     <!--=========================================================================-->
     <p:documentation>Generate the EPUB 3 package document</p:documentation>
     <p:group name="package-doc">
-
         <p:output port="fileset" primary="true"/>
         <p:output port="doc">
             <p:pipe port="result" step="package-doc.create"/>
@@ -194,22 +190,12 @@
 
         <p:variable name="opf-base" select="concat($content-dir,'package.opf')"/>
 
-        <p:group name="resources">
-            <p:output port="result"/>
-            <p:add-attribute match="/*" attribute-name="xml:base">
-                <p:with-option name="attribute-value" select="$content-dir"/>
-                <p:input port="source">
-                    <p:pipe port="fileset" step="html-resources"/>
-                </p:input>
-            </p:add-attribute>
-        </p:group>
-        <p:sink/>
         <px:epub3-pub-create-package-doc name="package-doc.create">
             <p:input port="spine-filesets">
-                <p:pipe port="fileset" step="html-content"/>
+                <p:pipe port="fileset.out.docs" step="content-docs"/>
             </p:input>
             <p:input port="publication-resources">
-                <p:pipe port="result" step="resources"/>
+                <p:pipe port="fileset.out.resources" step="content-docs"/>
             </p:input>
             <p:input port="metadata">
                 <p:pipe port="metadata" step="main"/>
@@ -217,7 +203,7 @@
             </p:input>
             <p:input port="content-docs">
                 <p:pipe port="doc" step="navigation"/>
-                <p:pipe port="docs" step="html-content"/>
+                <p:pipe port="docs" step="content-docs"/>
             </p:input>
             <p:with-option name="result-uri" select="$opf-base"/>
             <p:with-option name="compatibility-mode" select="'false'"/>
@@ -226,9 +212,9 @@
 
         <px:fileset-join name="package-doc.join-filesets">
             <p:input port="source">
-                <p:pipe port="fileset" step="html-content"/>
+                <p:pipe port="fileset.out.docs" step="content-docs"/>
+                <p:pipe port="fileset.out.resources" step="content-docs"/>
                 <p:pipe port="fileset" step="navigation"/>
-                <p:pipe port="result" step="resources"/>
             </p:input>
         </px:fileset-join>
 
@@ -271,7 +257,7 @@
             <p:pipe step="ocf" port="in-memory.out"/>
             <p:pipe step="package-doc" port="doc"/>
             <p:pipe step="navigation" port="doc"/>
-            <p:pipe step="html-content" port="docs"/>
+            <p:pipe step="content-docs" port="docs"/>
         </p:iteration-source>
         <p:variable name="doc-base" select="base-uri(/*)"/>
         <p:choose>
