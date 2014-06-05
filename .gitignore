@@ -22,7 +22,7 @@ Thumbs.db
 .*~
 
 # XSpec result files
-*-result.html
+**/xspec/*-result.html
 
 # Temp directory
 **/temp/

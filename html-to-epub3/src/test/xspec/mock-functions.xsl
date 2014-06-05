@@ -29,11 +29,17 @@
         <xsl:param name="uri" as="xs:string?"/>
         <xsl:sequence select="$uri"/>
     </xsl:function>
+    
+    <xsl:function name="pf:normalize-uri" as="xs:string">
+        <xsl:param name="uri" as="xs:string?"/>
+        <xsl:param name="fragment" as="xs:boolean?"/>
+        <xsl:sequence select="if (contains($uri,'#')) then substring-before($uri,'#') else $uri"/>
+    </xsl:function>
 
     <xsl:function name="pf:replace-path" as="xs:string">
         <xsl:param name="uri" as="xs:string?"/>
         <xsl:param name="path" as="xs:string?"/>
-        <xsl:sequence select="$uri"/>
+        <xsl:sequence select="if (starts-with($uri,'#')) then $uri else replace($uri,'^[^#]+',$path)"/>
     </xsl:function>
 
     <xsl:function name="pf:unescape-uri" as="xs:string">
