@@ -15,6 +15,7 @@
   <xsl:param name="base" select="base-uri(/)"/>
 
   <xsl:key name="refs" match="*[@ref]" use="tokenize(@ref,'\s+')"/>
+  <xsl:key name="described" match="*[@desc]" use="@desc"/>
 
   <xsl:template match="/">
     <xsl:call-template name="html">
@@ -468,6 +469,11 @@
       />'.</xsl:message>
   </xsl:template>
   <xsl:template match="description" mode="#all"/>
+  <xsl:template match="description[key('described',@xml:id)[f:is-desc-unused(.)]]">
+    <div>
+      <xsl:apply-templates select="@*|node()"/>
+    </div>
+  </xsl:template>
   <xsl:template match="description" mode="details" priority="10">
     <xsl:choose>
       <xsl:when test="some $child in node() satisfies f:is-phrase($child)">
@@ -488,7 +494,7 @@
     </xsl:choose>
   </xsl:template>
   <xsl:function name="f:description-string" as="xs:string">
-    <xsl:param name="desc" as="element()"/>
+    <xsl:param name="desc" as="element()?"/>
     <xsl:choose>
       <xsl:when test="some $child in $desc/node() satisfies f:is-phrase($child)">
         <xsl:sequence select="normalize-space(string($desc))"/>
@@ -603,16 +609,19 @@
      - description child
      - direct content (implicit description[@by='author'])
      -->
-    <xsl:variable name="alt" as="xs:string" select="f:description-string(
-      if (@desc) then id(tokenize(@desc,'\s+'))[not(@xlink:href)][1]
-      else if (description) then description
-      else .
+    <xsl:variable name="alt" as="xs:string?" select="f:description-string(
+      if (description) then description
+      else if (normalize-space(.)) then .
+      else if (@desc) then id(tokenize(@desc,'\s+'))[not(@xlink:href)][1]
+      else ()
       )"/>
     
     <xsl:variable name="captions" select="../(hd|caption|citation)[f:references(.,current())]"/>
     <xsl:variable name="shared-captions"
       select="..[f:has-role(.,'figure')]/(hd|caption|citation)[f:references-all(.,../(object|table))]"/>
     <xsl:variable name="dedicated-captions" select="$captions except $shared-captions"/>
+    <xsl:variable name="republisher-anno"
+      select="key('refs',@xml:id)[self::annotation][@by='republisher'][1]"/>
     <xsl:choose>
       <xsl:when test="$dedicated-captions">
         <figure>
@@ -623,6 +632,11 @@
           </xsl:if>
           <img src="{@src}" alt="{$alt}">
             <xsl:apply-templates select="@*"/>
+             
+            <xsl:if test="f:is-desc-unused(.) or $republisher-anno">
+              <xsl:attribute name="aria-describedby" select="if (f:is-desc-unused(.)) then @desc
+                                                             else $republisher-anno/@xml:id"/>
+            </xsl:if>
           </img>
           <xsl:if test="$dedicated-captions[1] >> .">
             <figcaption>
@@ -634,6 +648,10 @@
       <xsl:otherwise>
         <img src="{@src}" alt="{$alt}">
           <xsl:apply-templates select="@*"/>
+          <xsl:if test="f:is-desc-unused(.) or $republisher-anno">
+            <xsl:attribute name="aria-describedby" select="if (f:is-desc-unused(.)) then @desc
+              else $republisher-anno/@xml:id"/>
+          </xsl:if>
         </img>
       </xsl:otherwise>
     </xsl:choose>
@@ -1042,6 +1060,12 @@
       <xsl:apply-templates select="node() | @*"/>
     </xsl:copy>    
   </xsl:template>
+    
+  <!--===========================================================-->
+  <!-- Feature :: DIAGRAM Descriptions                           -->
+  <!--===========================================================-->
+    
+  <xsl:include href="diagram-to-html.xsl"/> 
   
   <!--===========================================================-->
   <!-- Identity templates                                        -->
@@ -1141,5 +1165,9 @@
   <xsl:function name="f:simplify-captions" as="node()*">
     <xsl:param name="captions" as="element()*"/>
     <xsl:sequence select="if (count($captions)=1 and $captions[self::caption]) then $captions/node() else $captions"/>
+  </xsl:function>
+  <xsl:function name="f:is-desc-unused" as="xs:boolean">
+    <xsl:param name="elem" as="element()"/>
+    <xsl:sequence select="$elem/@desc and ($elem/description or normalize-space($elem))"/>
   </xsl:function>
 </xsl:stylesheet>
