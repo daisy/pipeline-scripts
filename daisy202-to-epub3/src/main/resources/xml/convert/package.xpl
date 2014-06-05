@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="pxi:daisy202-to-epub3-package" name="package" exclude-inline-prefixes="#all"
-    version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="pxi:daisy202-to-epub3-package"
+    name="package" exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation>Compile the OPF.</p:documentation>
 
@@ -24,7 +24,8 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">The EPUB3 Media Overlays.</p:documentation>
     </p:input>
     <p:input port="resources" primary="false">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Files other than the Content Documents in the spine and the Media Overlays (i.e. the Navigation Document, the NCX, the audio, images, etc.).</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">Files other than the Content Documents in the spine and the Media Overlays (i.e. the Navigation Document, the NCX, the audio, images,
+            etc.).</p:documentation>
     </p:input>
 
     <p:output port="opf-package" sequence="true" primary="true">
@@ -39,7 +40,8 @@
     <p:option name="pub-id" required="true">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">The publication identifier.</p>
-            <p>See also: <a class="see" href="http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier">http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier</a></p>
+            <p>See also: <a class="see" href="http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier"
+                >http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier</a></p>
         </p:documentation>
     </p:option>
     <p:option name="compatibility-mode" required="true">
@@ -60,15 +62,20 @@
     <p:variable name="result-uri" select="concat($publication-dir,'package.opf')"/>
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">Compile OPF metadata.</p:documentation>
-    <p:xslt name="opf-metadata">
-        <p:with-param name="pub-id" select="$pub-id"/>
+    <p:identity>
         <p:input port="source">
             <p:pipe port="ncc" step="package"/>
         </p:input>
+    </p:identity>
+    <px:message message="Extracting metadata from NCC..."/>
+    <p:xslt>
+        <p:with-param name="pub-id" select="$pub-id"/>
         <p:input port="stylesheet">
             <p:document href="ncc-metadata-to-opf-metadata.xsl"/>
         </p:input>
     </p:xslt>
+    <px:message message="Metadata successfully extracted and converted to OPF"/>
+    <p:identity name="opf-metadata"/>
     <p:sink/>
 
     <p:group name="spine">
@@ -87,17 +94,20 @@
             </p:add-attribute>
             <px:fileset-join/>
         </p:for-each>
+        <px:message message="Created filesets for each spine item"/>
     </p:group>
     <p:sink/>
 
-    <px:fileset-join name="manifest">
+    <px:fileset-join>
         <p:input port="source">
             <p:pipe port="spine" step="package"/>
             <p:pipe port="resources" step="package"/>
         </p:input>
     </px:fileset-join>
+    <px:message message="Created manifest fileset"/>
+    <p:identity name="manifest"/>
     <p:sink/>
-    
+
     <px:epub3-pub-create-package-doc>
         <p:with-option name="result-uri" select="$result-uri"/>
         <p:with-option name="compatibility-mode" select="$compatibility-mode"/>
@@ -119,6 +129,7 @@
             <p:pipe port="mediaoverlay" step="package"/>
         </p:input>
     </px:epub3-pub-create-package-doc>
+    <px:message message="Package document created successfully"/>
     <p:identity name="opf-package"/>
 
     <p:group>
@@ -142,6 +153,7 @@
             </p:input>
         </px:fileset-join>
         <px:mediatype-detect/>
+        <px:message message="Added package document to result fileset"/>
     </p:group>
     <p:identity name="result-fileset"/>
 

@@ -117,10 +117,13 @@
     </px:epub3-nav-aggregate>
     <p:xslt>
         <!-- TODO: This XSLT is here temporarily until px:epub3-nav-aggregate supports title and language customization -->
-        <p:with-param name="title" select="//html:title">
+        <p:with-param name="title" select="/*/html:head/html:title">
             <p:pipe port="ncc-navigation" step="main"/>
         </p:with-param>
-        <p:with-param name="lang" select="(//@html:lang | //@xml:lang)[1]">
+        <p:with-param name="lang" select="(/*/@lang, /*/@xml:lang, /*/html:head/html:meta[lower-case(@name)='dc:language']/@content)[1]">
+            <p:pipe port="ncc-navigation" step="main"/>
+        </p:with-param>
+        <p:with-param name="identifier" select="(/*/html:head/html:meta[lower-case(@name)='dc:identifier']/@content)[1]">
             <p:pipe port="ncc-navigation" step="main"/>
         </p:with-param>
         <p:input port="stylesheet">
@@ -128,6 +131,7 @@
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
                     <xsl:output indent="yes" method="xml"/>
                     <xsl:param name="title" required="yes"/>
+                    <xsl:param name="identifier" required="yes"/>
                     <xsl:param name="lang" select="''"/>
                     <xsl:template match="@*|node()">
                         <xsl:copy>
@@ -147,6 +151,17 @@
                     <xsl:template match="html:title">
                         <xsl:copy>
                             <xsl:value-of select="$title"/>
+                        </xsl:copy>
+                    </xsl:template>
+                    <xsl:template match="html:head">
+                        <xsl:copy>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates select="html:meta[@charset]"/>
+                            <xsl:element name="meta" namespace="http://www.w3.org/1999/xhtml">
+                                <xsl:attribute name="name" select="'dc:identifier'"/>
+                                <xsl:attribute name="content" select="$identifier"/>
+                            </xsl:element>
+                            <xsl:apply-templates select="node()[not(self::html:meta[@charset or lower-case(@name)='dc:identifier'])]"/>
                         </xsl:copy>
                     </xsl:template>
                 </xsl:stylesheet>
@@ -169,6 +184,7 @@
         <p:with-option name="attribute-value" select="concat($content-dir,'ncc.xhtml')"/>
     </p:add-attribute>
     <p:delete match="/*/@xml:base"/>
+    <px:message message="Successfully created navigation document (ncc.xhtml)"/>
     <p:identity name="result.navigation"/>
     <p:sink/>
 
@@ -197,6 +213,7 @@
                     <p:pipe port="result" step="ncx.spine"/>
                 </p:input>
             </p:insert>
+            <px:message message="Creating NCX..."/>
             <p:xslt name="ncx.ncx-without-docauthors">
                 <p:input port="parameters">
                     <p:empty/>
@@ -235,6 +252,7 @@
                 <p:with-option name="attribute-value" select="concat($content-dir,'ncx.xml')"/>
             </p:add-attribute>
             <p:delete match="/*/@xml:base"/>
+            <px:message message="Successfully created NCX"/>
         </p:when>
         <p:otherwise>
             <p:identity>
@@ -257,6 +275,7 @@
                 </p:with-option>
                 <p:with-option name="media-type" select="'application/x-dtbncx+xml'"/>
             </px:fileset-add-entry>
+            <px:message message="NCX added to the fileset"/>
         </p:when>
         <p:otherwise>
             <p:identity/>
@@ -268,6 +287,7 @@
         </p:with-option>
         <p:with-option name="media-type" select="'application/xhtml+xml'"/>
     </px:fileset-add-entry>
+    <px:message message="Navigation Document added to the fileset"/>
     <p:identity name="result.fileset"/>
     <p:sink/>
 
@@ -285,9 +305,7 @@
                         <p:pipe port="result" step="result.navigation"/>
                     </p:input>
                 </p:identity>
-                <px:message>
-                    <p:with-option name="message" select="'The navigation document is in the spine; replaced it with the updated version'"/>
-                </px:message>
+                <px:message message="The navigation document is in the spine; replaced it with the updated version"/>
             </p:when>
             <p:otherwise>
                 <p:identity/>

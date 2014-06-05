@@ -98,20 +98,9 @@
         </p:choose>
         <p:delete match="/*/@xml:base"/>
     </p:viewport>
-    <px:message>
-        <p:with-option name="message" select="concat('dereferenced all links in ',$content-base)"/>
+    <px:message message="dereferenced all links in $1">
+        <p:with-option name="param1" select="$content-base"/>
     </px:message>
-    <!--
-        Is this necessary? Seems to cause http://www.daisy.org/forums/18667
-    <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="nav-unwrap-untitled-toc-levels.xsl"/>
-        </p:input>
-    </p:xslt>
-    -->
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>

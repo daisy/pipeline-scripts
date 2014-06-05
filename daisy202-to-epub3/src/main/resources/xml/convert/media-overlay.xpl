@@ -50,34 +50,21 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating media overlays.</p:documentation>
     </p:import>
 
-    <p:declare-step type="pxi:fix-textrefs">
-        <p:input port="source"/>
-        <p:output port="result"/>
-        <p:viewport match="/*//mo:seq[@epub:textref]">
-            <p:add-attribute match="/*" attribute-name="epub:textref">
-                <p:with-option name="attribute-value" select="/*/@epub:textref/replace(.,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
-            </p:add-attribute>
-            <pxi:fix-textrefs/>
-        </p:viewport>
-    </p:declare-step>
-
     <p:for-each name="daisy-smil-iterate">
         <p:iteration-source>
             <p:pipe port="daisy-smil" step="mediaoverlay"/>
         </p:iteration-source>
         <p:variable name="original-uri" select="base-uri(/*)"/>
         <px:mediaoverlay-upgrade-smil/>
-        <px:message>
-            <p:with-option name="message" select="concat('upgraded the SMIL file ',$original-uri)"/>
+        <px:message message="upgraded the SMIL file $1">
+            <p:with-option name="param1" select="$original-uri"/>
         </px:message>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="$original-uri"/>
         </p:add-attribute>
     </p:for-each>
     <px:mediaoverlay-join name="mediaoverlay-joined"/>
-    <px:message>
-        <p:with-option name="message" select="'joined all the media overlays'"/>
-    </px:message>
+    <px:message message="joined all the media overlays"/>
     <p:sink/>
 
     <p:choose>
@@ -110,6 +97,7 @@
                     <p:pipe port="result" step="content"/>
                 </p:input>
             </px:mediaoverlay-rearrange>
+            <px:message message="SMIL fragments have been rearranged according to the content order"/>
 
             <p:for-each>
                 <p:add-attribute match="/*" attribute-name="xml:base">
@@ -135,15 +123,25 @@
                                         <xsl:apply-templates select="node()"/>
                                     </xsl:copy>
                                 </xsl:template>
+                                <xsl:template match="mo:seq[@epub:textref]">
+                                    <xsl:copy>
+                                        <xsl:apply-templates select="@*"/>
+                                        <xsl:attribute name="attribute-value" select="replace(@epub:textref,'^(.+)\.[^\.]*#(.*)$','$1.xhtml#$2')"/>
+                                        <xsl:apply-templates select="node()"/>
+                                    </xsl:copy>
+                                </xsl:template>
                             </xsl:stylesheet>
                         </p:inline>
                     </p:input>
                 </p:xslt>
-                <pxi:fix-textrefs/>
+                <px:message message="updated text references in $1">
+                    <p:with-option name="param1" select="replace(base-uri(/*),'.*/','')"/>
+                </px:message>
             </p:for-each>
 
         </p:when>
         <p:otherwise>
+            <px:message message="No SMIL files will be included in result fileset"/>
             <p:identity>
                 <p:input port="source">
                     <p:empty/>
