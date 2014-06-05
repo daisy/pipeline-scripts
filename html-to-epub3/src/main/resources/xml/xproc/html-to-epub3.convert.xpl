@@ -42,21 +42,9 @@
     <!--=========================================================================-->
 
     <p:group name="html-resources">
-        <p:output port="docs" primary="true" sequence="true"/>
         <p:output port="fileset">
             <p:pipe port="result" step="fileset"/>
         </p:output>
-        <p:for-each name="html-cleaned">
-            <p:output port="result" sequence="true"/>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document href="../xslt/html-clean-resources.xsl"/>
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
-        </p:for-each>
         <p:for-each>
             <p:xslt>
                 <p:input port="stylesheet">
@@ -71,12 +59,6 @@
         </p:for-each>
         <px:fileset-join/>
         <px:mediatype-detect name="fileset"/>
-        <p:for-each>
-            <p:iteration-source>
-                <p:pipe port="result" step="html-cleaned"/>
-            </p:iteration-source>
-            <p:delete match="//@*[starts-with(name(),'data-original-')]"/>
-        </p:for-each>
     </p:group>
 
     <!--=========================================================================-->
@@ -91,6 +73,9 @@
         <p:with-option name="content-dir" select="$content-dir">
             <p:empty/>
         </p:with-option>
+        <p:input port="html">
+            <p:pipe port="input" step="main"/>
+        </p:input>
         <p:input port="fileset.in.resources">
             <p:pipe port="fileset" step="html-resources"/>
         </p:input>
@@ -258,6 +243,7 @@
             <p:pipe step="package-doc" port="doc"/>
             <p:pipe step="navigation" port="doc"/>
             <p:pipe step="content-docs" port="docs"/>
+            <p:pipe step="content-docs" port="resources"/>
         </p:iteration-source>
         <p:variable name="doc-base" select="base-uri(/*)"/>
         <p:choose>

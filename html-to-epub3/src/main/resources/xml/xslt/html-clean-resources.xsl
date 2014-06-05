@@ -2,18 +2,24 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns="http://www.w3.org/1999/xhtml" xpath-default-namespace="http://www.w3.org/1999/xhtml"
     xmlns:f="http://www.daisy.org/ns/pipeline/internal-functions"
+    xmlns:d="http://www.daisy.org/ns/pipeline/data"
     xmlns:pf="http://www.daisy.org/ns/pipeline/functions" xmlns:svg="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:m="http://www.w3.org/1998/Math/MathML"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0" exclude-result-prefixes="#all">
 
     <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
+    <!--    <xsl:import href="../../../../test/xspec/mock-functions.xsl"/>-->
 
     <xsl:output indent="yes"/>
 
 
-    <!--TODO implement a custom HTML-compliant base-uri() function-->
+    <!--TODO implement a custom HTML-compliant base-uri() function ?-->
     <xsl:variable name="doc-base"
         select="if (/html/head/base[@href][1]) then resolve-uri(normalize-space(/html/head/base[@href][1]/@href),base-uri(/)) else base-uri(/)"/>
+
+    <!--A fileset is available in the default collection, to check if rsesources exist or are renamed-->
+    <xsl:variable name="fileset" select="collection()[/d:fileset][1]" as="document-node()?"/>
+    <xsl:key name="resources" match="/d:fileset/d:file" use="@original-href"/>
 
 
     <xsl:template match="node() | @*">
@@ -23,8 +29,111 @@
     </xsl:template>
 
 
-    <!--TODO handle SVG references-->
-    <!--TODO filter references to self-->
+    <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+     |  External Descriptions                                                      |
+    <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
+    <xsl:template match="head">
+        <xsl:copy>
+            <xsl:apply-templates select="node() | @*"/>
+            <xsl:if
+                test="(//@aria-describedat|//@longdesc)
+                       [pf:is-relative(.) and not(starts-with(.,'#'))
+                        and pf:get-extension(f:clean-uri(.,false()))=('xhtml','html','htm')]">
+                <!-- http://snook.ca/archives/html_and_css/hiding-content-for-accessibility -->
+                <style>
+                    <xsl:sequence select="concat(
+                        '&#xa;.dp2-invisible {&#xa;',
+                        '  position: absolute !important;&#xa;',
+                        '  height: 1px; width: 1px; &#xa;',
+                        '  overflow: hidden;&#xa;',
+                        '  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */&#xa;',
+                        '  clip: rect(1px, 1px, 1px, 1px);&#xa;',
+                        '}&#xa;'
+                        )"/>
+                </style>
+            </xsl:if>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="body">
+        <xsl:copy>
+            <xsl:apply-templates select="node() | @*"/>
+            <!--External descriptions are copied as hidden iframes at the end of the document-->
+            <xsl:apply-templates select="//@aria-describedat|//@longdesc" mode="iframe"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <!--copy descriptions pointing to local elements as aria-describedby-->
+    <xsl:template
+        match="@longdesc[starts-with(.,'#')]
+              |@aria-describedat[starts-with(.,'#')]"
+        priority="2">
+        <xsl:attribute name="aria-describedby" select="substring-after(.,'#')"/>
+    </xsl:template>
+
+    <!--A key to the external description attributes-->
+    <xsl:key name="desc" match="@aria-describedat|@longdesc" use="f:clean-uri(.,false())"/>
+
+    <xsl:template
+        match="@longdesc[pf:is-relative(.)][../empty(@aria-describedat|@aria-describedby)]">
+        <xsl:variable name="desc-uri" select="f:clean-uri(.)"/>
+        <xsl:variable name="desc-path" select="replace($desc-uri,'([^#]+)(#.*)?','$1')"/>
+        <!--keep the longdesc if the resource exists-->
+        <xsl:if test="$desc-uri">
+            <xsl:attribute name="longdesc" select="f:clean-uri(.)"/>
+        </xsl:if>
+        <!--add an aria-describedby if the resource is HTML-->
+        <xsl:if test="pf:get-extension($desc-path)=('xhtml','html','htm')">
+            <xsl:attribute name="aria-describedby" select="generate-id(key('desc',$desc-path)[1])"/>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="@aria-describedat[pf:is-absolute(.)]">
+        <xsl:attribute name="longdesc" select="."/>
+        <xsl:attribute name="aria-describedby" select="generate-id(.)"/>
+    </xsl:template>
+
+    <xsl:template match="@aria-describedat">
+        <xsl:variable name="desc-path" select="f:clean-uri(.,false())"/>
+        <xsl:choose>
+            <xsl:when test="not($desc-path)"/>
+            <xsl:when test="pf:get-extension($desc-path)=('xhtml','html','htm')">
+                <!--connvert as aria-describedby (with hidden iframe) if the resource is HTML-->
+                <xsl:attribute name="aria-describedby"
+                    select="generate-id(key('desc',$desc-path)[1])"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <!--keep as-is-->
+                <xsl:attribute name="aria-describedat" select="."/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="@aria-describedat[pf:is-absolute(.)]" mode="iframe">
+        <aside class="dp2-invisible">
+            <iframe id="{generate-id(.)}" src="{.}"/>
+        </aside>
+    </xsl:template>
+    <xsl:template
+        match="@aria-describedat[pf:is-relative(.) and not(starts-with(.,'#'))]
+              |@longdesc[not(starts-with(.,'#')) and not(../(@aria-describedat|@aria-describedby))]"
+        mode="iframe">
+        <xsl:variable name="desc-path" select="f:clean-uri(.,false())"/>
+        <xsl:variable name="is-html" as="xs:boolean"
+            select="pf:get-extension($desc-path)=('xhtml','html','htm')"/>
+        <xsl:if test="$is-html and key('desc',$desc-path)[1] is .">
+            <aside class="dp2-invisible">
+                <iframe id="{generate-id(.)}" src="{f:clean-uri(.)}"/>
+            </aside>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template match="@longdesc|@aria-describedat" mode="iframe"/>
+
+
+
+    <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+     |  Other Resources                                                            |
+    <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
 
 
     <!--<xsl:template match="/processing-instruction('xml-stylesheet')">
@@ -61,9 +170,7 @@
                 />
             </xsl:when>
             <xsl:otherwise>
-                <link href="{f:safe-uri(@href)}" data-original-href="{normalize-space(@href)}">
-                    <xsl:copy-of select="@* except @href | node()"/>
-                </link>
+                <xsl:sequence select="f:copy-if-clean(@href)"/>
             </xsl:otherwise>
             <!--FIXME parse CSS-->
         </xsl:choose>
@@ -84,7 +191,7 @@
                 <xsl:message select="'[WARNING] Discarding script of non-core type.'"/>
             </xsl:when>
             <xsl:when test="@src">
-                <script src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}" type="text/javascript"><xsl:copy-of select="@* except (@src,@type)"/></script>
+                <xsl:sequence select="f:copy-if-clean(@src)"/>
             </xsl:when>
             <xsl:otherwise>
                 <script type="{if (normalize-space(@type)=('','text/javascript','text/ecmascript',
@@ -143,9 +250,7 @@
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <img src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-                    <xsl:copy-of select="@* except @src | node()"/>
-                </img>
+                <xsl:sequence select="f:copy-if-clean(@src)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -156,12 +261,7 @@
                 <xsl:message select="concat('[WARNING] Discarding remote iframe ''',@src,'''.')"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="safe-uri"
-                    select="if (pf:get-extension(@src)='xhtml') then f:safe-uri(@src) 
-                    else f:safe-uri(pf:replace-path(@src,replace(pf:get-path(@src),'\.[^.]+$','.xhtml')))"/>
-                <iframe src="{$safe-uri}" data-original-href="{normalize-space(@src)}">
-                    <xsl:copy-of select="@* except @src | node()"/>
-                </iframe>
+                <xsl:sequence select="f:copy-if-clean(@src)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -173,14 +273,10 @@
                     select="concat('[WARNING] Discarding remote embedded resource ''',@src,'''.')"/>
             </xsl:when>
             <xsl:when test="f:is-core-audio(@src,@type)">
-                <audio src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-                    <xsl:apply-templates select="@* except (@src,@type,@width,@height)"/>
-                </audio>
+                <xsl:sequence select="f:copy-if-clean(@src,'audio',(@type,@width,@height))"/>
             </xsl:when>
             <xsl:when test="f:is-core-image(@src,@type)">
-                <img src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}" alt="">
-                    <xsl:apply-templates select="@* except (@src,@type)"/>
-                </img>
+                <xsl:sequence select="f:copy-if-clean(@src,'img',(@type))"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message
@@ -197,9 +293,7 @@
             </xsl:when>
             <xsl:when
                 test="f:is-core-audio(@data,@type) or f:is-core-image(@data,@type) or exists(* except param)">
-                <object data="{f:safe-uri(@data)}" data-original-href="{normalize-space(@src)}">
-                    <xsl:apply-templates select="@* except @data | node()"/>
-                </object>
+                <xsl:sequence select="f:copy-if-clean(@data)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message
@@ -213,9 +307,7 @@
         <xsl:choose>
             <xsl:when
                 test="f:is-core-audio(@src,()) or exists(* except track) or normalize-space(.)">
-                <audio src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-                    <xsl:apply-templates select="@* except @src | node()"/>
-                </audio>
+                <xsl:sequence select="f:copy-if-clean(@src)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message
@@ -241,9 +333,7 @@
     <xsl:template match="video[@src]">
         <xsl:choose>
             <xsl:when test="exists(* except track) or normalize-space(.)">
-                <video src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-                    <xsl:apply-templates select="@* except @src | node()"/>
-                </video>
+                <xsl:sequence select="f:copy-if-clean(@src)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message
@@ -266,15 +356,11 @@
     </xsl:template>
 
     <xsl:template match="source">
-        <source src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-            <xsl:apply-templates select="@* except @src"/>
-        </source>
+        <xsl:sequence select="f:copy-if-clean(@src)"/>
     </xsl:template>
 
     <xsl:template match="track">
-        <track src="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-            <xsl:apply-templates select="@* except @src"/>
-        </track>
+        <xsl:sequence select="f:copy-if-clean(@src)"/>
     </xsl:template>
 
     <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
@@ -302,10 +388,9 @@
     </xsl:template>
 
     <xsl:template match="svg:font-face-uri">
-        <svg:font-face-uri src="{f:safe-uri(@xlink:href)}"
-            data-original-href="{normalize-space(@xlink:href)}">
-            <xsl:apply-templates select="@* except @xlink:href | node()"/>
-        </svg:font-face-uri>
+
+        <xsl:sequence select="f:copy-if-clean(@xlink:href)"/>
+
     </xsl:template>
 
     <xsl:template match="svg:handler">
@@ -313,10 +398,7 @@
     </xsl:template>
 
     <xsl:template match="svg:image">
-        <svg:image src="{f:safe-uri(@xlink:href)}"
-            data-original-href="{normalize-space(@xlink:href)}">
-            <xsl:apply-templates select="@* except @xlink:href | node()"/>
-        </svg:image>
+        <xsl:sequence select="f:copy-if-clean(@xlink:href)"/>
     </xsl:template>
 
     <xsl:template match="svg:script[@xlink:href]"/>
@@ -332,15 +414,26 @@
 
 
     <xsl:template match="m:math[@altimg]">
-        <m:math altimg="{f:safe-uri(@altimg)}" data-original-href="{normalize-space(@altimg)}">
-            <xsl:apply-templates select="@* except @altimg | node()"/>
-        </m:math>
+        <xsl:variable name="clean-uri" select="f:clean-uri(@altimg)"/>
+        <xsl:choose>
+            <xsl:when test="$clean-uri">
+                <m:math altimg="{f:clean-uri(@altimg)}">
+                    <xsl:apply-templates select="@* except @altimg | node()"/>
+                </m:math>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message
+                    select="concat('[WARNING] Discarding missing math/@altimg ''',@altimg,'''.')"/>
+                <m:math>
+                    <xsl:apply-templates select="@* except @altimg | node()"/>
+                </m:math>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
 
     <xsl:template match="m:mglyph[@src]">
-        <m:math altimg="{f:safe-uri(@src)}" data-original-href="{normalize-space(@src)}">
-            <xsl:apply-templates select="@* except @src | node()"/>
-        </m:math>
+        <xsl:sequence select="f:copy-if-clean(@src)"/>
     </xsl:template>
 
     <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
@@ -364,10 +457,61 @@
     </xsl:function>
 
 
-    <xsl:function name="f:safe-uri" as="xs:string">
-        <xsl:param name="uri" as="xs:string?"/>
+    <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+     |  Resource Resolver                                                          |
+    <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
+    <xsl:function name="f:clean-uri" as="xs:string?">
+        <xsl:param name="uri" as="attribute()?"/>
+        <xsl:sequence select="f:clean-uri($uri,true())"/>
+    </xsl:function>
+    <xsl:function name="f:clean-uri" as="xs:string?">
+        <xsl:param name="uri" as="attribute()?"/>
+        <xsl:param name="fragment" as="xs:boolean?"/>
+        <!--FIXME test with fragments, e.g. frag-only, no frag, etc-->
+        <xsl:variable name="resolved"
+            select="resolve-uri(pf:normalize-uri($uri,false()),base-uri($uri))"/>
+        <xsl:variable name="clean-path" select="key('resources',$resolved,$fileset)/@href"/>
+        <!--<xsl:message select="'=================='"/>
+        <xsl:message select="concat('uri: ',$uri)"/>
+        <xsl:message select="concat('resolved: ',resolve-uri(pf:normalize-uri($uri,false()),base-uri($uri)))"/>
+        <xsl:message select="concat('cleanpath: ',key('resources',$resolved,$fileset)/@href)"/>
+        <xsl:message select="concat('return: ',if ($clean-path) then pf:replace-path($uri,$clean-path) else ())"/>-->
         <xsl:sequence
-            select="pf:replace-path($uri,escape-html-uri(replace(pf:unescape-uri(pf:get-path($uri)),'[^\p{L}\p{N}\-/_.]','_')))"
+            select="if ($clean-path) then 
+                        if ($fragment) then
+                            pf:replace-path($uri,$clean-path)
+                        else
+                            $clean-path
+                        else ()"
         />
+    </xsl:function>
+
+    <!--–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+     |  Util Templates                                                             |
+    <|–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
+
+    <xsl:function name="f:copy-if-clean">
+        <xsl:param name="att" as="attribute()?"/>
+        <xsl:sequence select="f:copy-if-clean($att,(),())"/>
+    </xsl:function>
+    <xsl:function name="f:copy-if-clean">
+        <xsl:param name="att" as="attribute()?"/>
+        <xsl:param name="elm-name" as="xs:string?"/>
+        <xsl:param name="skip-att" as="attribute()*"/>
+
+        <xsl:variable name="elm" as="element()?" select="$att/.."/>
+        <xsl:variable name="clean-uri" as="xs:string?" select="f:clean-uri($att)"/>
+        <xsl:choose>
+            <xsl:when test="$clean-uri">
+                <xsl:element name="{if($elm-name) then $elm-name else $elm/name()}">
+                    <xsl:attribute name="{$att/name()}" select="$clean-uri"/>
+                    <xsl:apply-templates select="$elm/@* except ($att,$skip-att) | $elm/node()"/>
+                </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message
+                    select="concat('[WARNING] Discarding missing ',$elm/name(),' ''',$att,'''.')"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 </xsl:stylesheet>
