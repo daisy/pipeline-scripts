@@ -7,16 +7,16 @@
     <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>modules-parent</artifactId>
     <version>1.0</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-parent</artifactId>
   <version>1.8-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
-  
+
   <dependencyManagement>
     <dependencies>
       <!--
@@ -46,7 +46,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -58,23 +58,52 @@
         </configuration>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId> org.apache.maven.plugins </groupId>
+                    <artifactId> maven-scm-plugin </artifactId>
+                    <versionRange> [1.8.1,) </versionRange>
+                    <goals>
+                      <goal>checkout</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>
+                      shell-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0-beta-1,)
+                    </versionRange>
+                    <goals>
+                      <goal>shell</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
-  
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>http://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>sonatype-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+
 </project>
