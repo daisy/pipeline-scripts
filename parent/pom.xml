@@ -17,6 +17,14 @@
 
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
 
+  <scm>
+    <connection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</connection>
+    <url>scm:git:git@github.com:daisy/pipeline-mod-braille.git</url>
+    <developerConnection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+
   <dependencyManagement>
     <dependencies>
       <!--
