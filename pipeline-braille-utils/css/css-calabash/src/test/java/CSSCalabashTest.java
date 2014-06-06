@@ -71,9 +71,9 @@ public class CSSCalabashTest {
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("css-core").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xproc-engine-api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xproc-engine-daisy-pipeline").versionAsInProject(),
-			wrappedBundle(mavenBundle().groupId("org.daisy").artifactId("xprocspec").version("1.0.0-SNAPSHOT"))
+			wrappedBundle(mavenBundle().groupId("org.daisy").artifactId("xprocspec").version("1.0.0"))
 				.bundleSymbolicName("org.daisy.xprocspec")
-				.bundleVersion("1.0.0.SNAPSHOT"),
+				.bundleVersion("1.0.0"),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xprocspec-runner").versionAsInProject(),
 			mavenBundle().groupId("commons-io").artifactId("commons-io").versionAsInProject(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/classes/"),

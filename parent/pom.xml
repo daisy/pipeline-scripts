@@ -43,10 +43,29 @@
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
         <artifactId>framework-bom</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.8</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!--
+          Other Modules BoM (for tests)
+      -->
+      <dependency>
+        <groupId>org.daisy.pipeline.modules</groupId>
+        <artifactId>common-utils-aggregator</artifactId>
+        <version>1.8</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.pipeline.modules</groupId>
+        <artifactId>script-utils-aggregator</artifactId>
+        <version>1.8</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
       <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
