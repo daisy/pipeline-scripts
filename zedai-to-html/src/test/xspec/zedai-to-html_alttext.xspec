@@ -69,4 +69,20 @@
             <img src="image.png" alt="description"/>
         </x:expect>
     </x:scenario>
+    <x:scenario label="Alttext :: As child content when external description also exists">
+        <x:context>
+            <z:object src="image.png" desc="desc">
+                <z:description>description</z:description>
+            </z:object>
+            <z:description xml:id="desc">
+                <z:p>other</z:p>
+            </z:description>
+        </x:context>
+        <x:expect label="">
+            <img src="image.png" alt="description" aria-describedby="desc"/>
+            <div id="desc">
+                <p>other</p>
+            </div>
+        </x:expect>
+    </x:scenario>
 </x:description>

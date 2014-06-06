@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
-	xmlns:zai="http://www.daisy.org/ns/z3998/authoring/"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+	xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
 	xmlns:d="http://www.daisy.org/ns/z3998/authoring/features/description/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="xd" version="1.0">
-	
+	xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
+
+	<xsl:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/xslt/zedai-to-html.xsl"/>
+
 	<xsl:template match="/" priority="1">
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
 				<style type="text/css">
-					body {
-						font-family : arial, sans-serif;
-						font-size : 1em
+					body{
+					    font-family:arial, sans-serif;
+					    font-size:1em
 					}
-					h1 {
-						font-size: 1.2em;
+					h1{
+					    font-size:1.2em;
 					}
-					h2 {
-						font-size: 1.1em;
-						color: rgb(0,0,110)
+					h2{
+					    font-size:1.1em;
+					    color:rgb(0, 0, 110)
 					}
-					h2.about {
-						font-size: 1em;
-						color: rgb(0,0,0)
+					h2.about{
+					    font-size:1em;
+					    color:rgb(0, 0, 0)
 					}
-					div.container {
-						border-top: solid 1px rgb(0,0,255);
-						width: 80%;
-						padding: 5px;
-						margin-bottom: 10px;
-						background-color: rgb(255,255,255)
+					div.container{
+					    border-top:solid 1px rgb(0, 0, 255);
+					    width:80%;
+					    padding:5px;
+					    margin-bottom:10px;
+					    background-color:rgb(255, 255, 255)
 					}
-					div.about, div.access {
-						font-size: 0.9em
+					div.about,
+					div.access{
+					    font-size:0.9em
 					}
-					div.annotation {
-						font-size: 0.8em;
-						font-weight: bold;
-						width: 60%;
-						border-top: 1px solid rgb(0,0,0)
+					div.annotation{
+					    font-size:0.8em;
+					    font-weight:bold;
+					    width:60%;
+					    border-top:1px solid rgb(0, 0, 0)
 					}
-					p.anno-hd {
-						color: rgb(0,0,110)
+					p.anno-hd{
+					    color:rgb(0, 0, 110)
 					}
-					img {
-						color: rgb(0,0,255)
+					img{
+					    color:rgb(0, 0, 255)
 					}
-					ul {
-						list-style-type: none
+					ul{
+					    list-style-type:none
 					}
-					.center {
-						text-align: center
-					}
-				</style>
+					.center{
+					    text-align:center
+					}</style>
 			</head>
 			<body>
 				<h1>DIAGRAM Description</h1>
-				
+
 				<xsl:for-each select="//d:description">
 					<xsl:apply-templates select="."/>
 				</xsl:for-each>
@@ -66,98 +67,59 @@
 	</xsl:template>
 
 	<xsl:template match="d:description">
-		<xsl:call-template name="about-this-description">
-			<xsl:with-param name="meta" select="child::d:head"/>
-		</xsl:call-template>
-		
-		<xsl:apply-templates select="child::d:body"/>
-		
-		<xsl:if test="//zai:meta[@property='dc:accessRights']">
-			<xsl:element name="div">
-				<xsl:attribute name="class">access center</xsl:attribute>
-				<xsl:element name="div">
-					<xsl:value-of select="//zai:meta[@property='dc:accessRights']"/>
-				</xsl:element>
-			</xsl:element>
+		<xsl:apply-templates select="d:head"/>
+
+		<xsl:apply-templates select="d:body"/>
+
+		<xsl:if test="//z:meta[@property='dc:accessRights']">
+			<div class="access center">
+				<div>
+					<xsl:value-of select="//z:meta[@property='dc:accessRights']"/>
+				</div>
+			</div>
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="about-this-description">
-		<xsl:param name="meta"/>
-		
-		<xsl:element name="div">
-			<xsl:attribute name="class">container about</xsl:attribute>
-			
-			<xsl:element name="h2">
-				<xsl:attribute name="class">about</xsl:attribute>
-				<xsl:text>About this description</xsl:text>
-			</xsl:element>
-			
+	<xsl:template match="d:head">
+		<div class="container about">
+			<h2 class="about">About this description</h2>
 			<ul>
-				<li><strong>Author:</strong>&#160;&#160;<xsl:value-of select="$meta/zai:meta[@property='dc:creator'][1]"/>, <xsl:value-of select="$meta/zai:meta[@property='diagram:credentials'][1]"/></li>
-				<li><strong>Target Age:</strong> &#160;&#160;<xsl:value-of select="$meta/zai:meta[@property='diagram:targetAge']/@content"/></li>
-				<li><strong>Target Grade:</strong>&#160;&#160;<xsl:value-of select="$meta/zai:meta[@property='diagram:targetGrade']/@content"/></li>
+				<li><strong>Author:</strong>&#160;&#160;<xsl:value-of
+						select="z:meta[@property='dc:creator'][1]"/>, <xsl:value-of
+						select="z:meta[@property='diagram:credentials'][1]"/></li>
+				<li><strong>Target Age:</strong> &#160;&#160;<xsl:value-of
+						select="z:meta[@property='diagram:targetAge']/@content"/></li>
+				<li><strong>Target Grade:</strong>&#160;&#160;<xsl:value-of
+						select="z:meta[@property='diagram:targetGrade']/@content"/></li>
 			</ul>
-		</xsl:element>
+		</div>
 	</xsl:template>
 
-	<xsl:template match="*[parent::d:body][not(self::zai:annotation)]">
-		<xsl:variable name="ename" select="local-name(.)"/>
-		<xsl:element name="div">
-			<xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
-			<xsl:attribute name="class">container</xsl:attribute>
-			<xsl:element name="h2">
-				<xsl:choose>
-					<xsl:when test="$ename='summary'">Summary</xsl:when>
-					<xsl:when test="$ename='longdesc'">Long Description</xsl:when>
-					<xsl:when test="$ename='simplifiedLanguageDescription'">Simplified Language Description</xsl:when>
-					<xsl:when test="$ename='tactile'">Tactile Image</xsl:when>
-					<xsl:when test="$ename='simplifiedImage'">Simplified Image</xsl:when>
-				</xsl:choose>
-			</xsl:element>
+	<xsl:template match="d:body/d:*">
+		<div id="{@xml:id}" class="container">
+			<h2>
+				<xsl:sequence
+					select="
+				if (self::d:summary) then 'Summary'
+				else if (self::d:longdesc) then 'Long Description'
+				else if (self::d:simplifiedLanguageDescription) then 'Simplified Language Description'
+				else if (self::d:tactile) then 'Tactile Image'
+				else if (self::d:simplifiedImage) then 'Simplified Image'
+				else ''
+				"
+				/>
+			</h2>
 			<xsl:apply-templates/>
-			<xsl:if test="//zai:annotation[@ref=current()/@xml:id]">
-				<xsl:element name="div">
-					<xsl:attribute name="class">annotation</xsl:attribute>
-					<p class="anno-hd">Annotation added by <xsl:value-of select="//zai:annotation[@ref=current()/@xml:id]/@by"/>:</p>
-					<xsl:apply-templates select="//zai:annotation[@ref=current()/@xml:id][1]/*"/>
-				</xsl:element>
+			<xsl:if test="//z:annotation[@ref=current()/@xml:id]">
+				<div class="annotation">
+					<p class="anno-hd">Annotation added by <xsl:value-of
+							select="//z:annotation[@ref=current()/@xml:id]/@by"/>:</p>
+					<xsl:apply-templates select="//z:annotation[@ref=current()/@xml:id][1]/*"/>
+				</div>
 			</xsl:if>
-		</xsl:element>
+		</div>
 	</xsl:template>
 
-	<xsl:template match="zai:p">
-		<xsl:element name="p">
-			<xsl:apply-templates/>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="zai:object">
-		<xsl:element name="img">
-			<xsl:attribute name="src">
-				<xsl:value-of select="@src"/>
-			</xsl:attribute>
-			<xsl:attribute name="srctype">
-				<xsl:choose>
-					<xsl:when test="contains(@src, '.svg')">image/svg+xml</xsl:when>
-					<xsl:otherwise>unknown</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:attribute name="alt">
-			<xsl:choose>
-				<xsl:when test="parent::d:tactile">[Tactile image]</xsl:when>
-				<xsl:otherwise>[Simplified image]</xsl:otherwise>
-			</xsl:choose>
-			</xsl:attribute>
-		</xsl:element>
-	</xsl:template>
-	
-	<xsl:template match="zai:annotation[parent::d:body]"/>
-	
-	<xsl:template match="@*|node()">
-		<xsl:copy>
-			<xsl:apply-templates/>
-		</xsl:copy>
-	</xsl:template>
+	<xsl:template match="d:body/z:annotation"/>
 
 </xsl:stylesheet>
