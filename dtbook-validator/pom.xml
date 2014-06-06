@@ -11,8 +11,12 @@
   </parent>
 
   <artifactId>dtbook-validator</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: DTBook Validator</name>
+
+  <scm>
+    <tag>v1.8</tag>
+  </scm>
 </project>
