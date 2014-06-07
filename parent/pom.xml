@@ -133,4 +133,27 @@
     </pluginManagement>
   </build>
 
+  <profiles>
+    <profile>
+      <id>sonatype-oss-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/XmlToPefTest.java</exclude>
+                <exclude>**/CSSCalabashTest.java</exclude>
+                <exclude>**/LibhyphenCoreTest.java</exclude>
+                <exclude>**/LiblouisCoreTest.java</exclude>
+                <exclude>**/LiblouisFormatterTest.java</exclude>
+                <exclude>**/TexHyphenatorCoreTest.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
