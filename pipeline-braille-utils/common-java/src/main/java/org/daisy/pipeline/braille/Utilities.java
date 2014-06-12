@@ -270,9 +270,10 @@ public abstract class Utilities {
 			return decode(URIs.asURI(base).relativize(URIs.asURI(url)).toString());
 		}
 		
+		// URIs treat the + symbol as is, but URLDecoder will decode both + and %20 into a space
 		@SuppressWarnings("deprecation")
 		public static String decode(String uri) {
-			return URLDecoder.decode(uri);
+			return URLDecoder.decode(uri.replace("+", "%2B"));
 		}
 		
 		public static Function<String,String> decode = new Function<String,String>() {
@@ -314,6 +315,11 @@ public abstract class Utilities {
 				return ((File)o).getName();
 			String file = URLs.asURL(o).getFile();
 			return file.substring(file.lastIndexOf('/')+1);
+		}
+		
+		public static File normalize(File file) {
+			try { return file.toPath().toRealPath().normalize().toFile(); }
+			catch (Exception e) { throw new RuntimeException(e); }
 		}
 		
 		public static boolean unpack(URL url, File file) {

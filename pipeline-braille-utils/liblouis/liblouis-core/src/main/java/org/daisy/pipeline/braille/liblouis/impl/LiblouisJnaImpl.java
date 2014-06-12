@@ -1,7 +1,7 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
-import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +14,7 @@ import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTabl
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.Utilities.Strings.insertHyphens;
+import static org.daisy.pipeline.braille.Utilities.Strings.join;
 
 import org.liblouis.Louis;
 import org.liblouis.CompilationException;
@@ -38,12 +39,28 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	protected void activate() {
 		logger.debug("Loading liblouis service");
-		logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
-		final LiblouisTableResolver tableResolver = this.tableResolver;
-		_tableResolver = new TableResolver() {
-			public File[] invoke(String tableList, File base) {
-				return tableResolver.resolveTableList(tokenizeTableList(tableList), base); }};
-		Louis.getLibrary().lou_registerTableResolver(_tableResolver);
+		try {
+			if (LIBLOUIS_EXTERNAL)
+				logger.info("Using external liblouis");
+			else if (this.nativePath == null)
+				throw new RuntimeException("No liblouis library registered");
+			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
+			if (tableResolver == null)
+				throw new RuntimeException("No liblouis table resolver bound");
+			final LiblouisTableResolver tableResolver = this.tableResolver;
+			_tableResolver = new TableResolver() {
+				public File[] invoke(String tableList, File base) {
+					logger.debug("Resolving " + tableList + (base != null ? " against base " + base : ""));
+					File[] resolved = tableResolver.resolveTableList(tokenizeTableList(tableList), base);
+					if (resolved != null)
+						logger.debug("Resolved to " + join(resolved, ","));
+					else
+						logger.error("Table could not be resolved");
+						return resolved; }};
+			Louis.getLibrary().lou_registerTableResolver(_tableResolver); }
+		catch (Throwable e) {
+			logger.error("liblouis service could not be loaded", e);
+			throw e; }
 	}
 	
 	protected void deactivate() {
@@ -52,9 +69,9 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	protected void bindLibrary(BundledNativePath nativePath) {
 		if (!LIBLOUIS_EXTERNAL && this.nativePath == null) {
-			URI libraryPath = nativePath.lookup("liblouis");
+			URL libraryPath = nativePath.resolve(nativePath.lookup("liblouis"));
 			if (libraryPath != null) {
-				Louis.setLibraryPath(asFile(nativePath.resolve(libraryPath)));
+				Louis.setLibraryPath(asFile(libraryPath));
 				this.nativePath = nativePath;
 				logger.debug("Registering liblouis library: " + libraryPath); }}
 	}

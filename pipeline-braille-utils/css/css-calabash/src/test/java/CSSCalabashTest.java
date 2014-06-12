@@ -6,16 +6,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.FileUtils;
-
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
-import org.daisy.maven.xproc.xprocspec.XProcSpecRunner.TestLogger;
-import org.daisy.maven.xproc.xprocspec.XProcSpecRunner.TestResult;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -43,6 +39,8 @@ public class CSSCalabashTest {
 	public Option[] config() {
 		return options(
 			systemProperty("logback.configurationFile").value("file:" + PathUtils.getBaseDir() + "/src/test/resources/logback.xml"),
+			systemProperty("org.daisy.pipeline.xproc.configuration").value(PathUtils.getBaseDir() + "/src/test/resources/config-calabash.xml"),
+			systemProperty("com.xmlcalabash.config.user").value(""),
 			systemPackage("org.w3c.dom.traversal;uses:=\"org.w3c.dom\";version=\"0.0.0.1\""),
 			mavenBundle().groupId("org.slf4j").artifactId("slf4j-api").version("1.7.2"),
 			mavenBundle().groupId("ch.qos.logback").artifactId("logback-core").version("1.0.11"),
@@ -53,31 +51,29 @@ public class CSSCalabashTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("saxon-he").versionAsInProject(),
 			mavenBundle().groupId("org.slf4j").artifactId("jcl-over-slf4j").versionAsInProject(),
 			mavenBundle().groupId("commons-codec").artifactId("commons-codec").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("commons-httpclient").versionAsInProject(),
+			mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpclient-osgi").versionAsInProject(),
+			mavenBundle().groupId("org.apache.httpcomponents").artifactId("httpcore-osgi").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("com.xmlcalabash").versionAsInProject(),
 			mavenBundle().groupId("org.eclipse.persistence").artifactId("javax.persistence").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("common-utils").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("xpath-registry").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("xproc-api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline").artifactId("common-stax").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("framework-core").versionAsInProject(),
 			mavenBundle().groupId("org.codehaus.woodstox").artifactId("woodstox-core-lgpl").versionAsInProject(),
 			mavenBundle().groupId("org.codehaus.woodstox").artifactId("stax2-api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("woodstox-osgi-adapter").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("xmlcatalog").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline").artifactId("modules-api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("modules-registry").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline").artifactId("calabash-adapter").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline").artifactId("calabash-custom-steps").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("css-core").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xproc-engine-api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xproc-engine-daisy-pipeline").versionAsInProject(),
-			wrappedBundle(mavenBundle().groupId("org.daisy").artifactId("xprocspec").version("1.0.0-SNAPSHOT"))
+			wrappedBundle(mavenBundle().groupId("org.daisy").artifactId("xprocspec").version("1.0.0"))
 				.bundleSymbolicName("org.daisy.xprocspec")
-				.bundleVersion("1.0.0.SNAPSHOT"),
+				.bundleVersion("1.0.0"),
 			mavenBundle().groupId("org.daisy.maven").artifactId("xprocspec-runner").versionAsInProject(),
 			mavenBundle().groupId("commons-io").artifactId("commons-io").versionAsInProject(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/classes/"),
@@ -87,39 +83,12 @@ public class CSSCalabashTest {
 	
 	@Test
 	public void runXProcSpec() throws Exception {
-		File testsDir = new File(PathUtils.getBaseDir() + "/src/test/xprocspec");
-		File reportsDir = new File(PathUtils.getBaseDir() + "/target/xprocspec-reports");
-		File surefireReportsDir = new File(PathUtils.getBaseDir() + "/target/surefire-reports");
-		File tempDir = new File(PathUtils.getBaseDir() + "/target/xprocspec");
-		Collection<File> testFiles = FileUtils.listFiles(testsDir, new String[]{"xprocspec"}, true);
-		String[] tests = new String[testFiles.size()];
-		int i = 0;
-		for (File file : testFiles)
-			tests[i++] = file.getAbsolutePath().substring(testsDir.getAbsolutePath().length() + 1);
-		TestLogger testLogger = new TestLogger() {
-			public void info(String message) { System.out.println("[INFO] " + message); }
-			public void warn(String message) { System.out.println("[WARNING] " + message); }
-			public void error(String message) { System.out.println("[ERROR] " + message); }
-			public void debug(String message) { System.out.println("[DEBUG] " + message); }
-		};
-		TestResult[] results = xprocspecRunner.run(testsDir,
-		                                           tests,
-		                                           reportsDir,
-		                                           surefireReportsDir,
-		                                           tempDir,
-		                                           testLogger);
-		int failures = 0;
-		int errors = 0;
-		for (TestResult result : results) {
-			switch (result.state) {
-			case FAILURE:
-				failures++;
-				break;
-			case ERROR:
-				errors++;
-				break;
-			}
-		}
-		assertEquals("Number of failures and errors should be zero", 0L, failures + errors);
+		File baseDir = new File(PathUtils.getBaseDir());
+		boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
+		                                      new File(baseDir, "target/xprocspec-reports"),
+		                                      new File(baseDir, "target/surefire-reports"),
+		                                      new File(baseDir, "target/xprocspec"),
+		                                      new XProcSpecRunner.Reporter.DefaultReporter());
+		assertTrue("XProcSpec tests should run with success", success);
 	}
 }

@@ -3,10 +3,10 @@ package org.daisy.pipeline.braille.liblouis.saxon;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.BooleanValue;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
@@ -61,23 +61,19 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
-					throws XPathException {
-				
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String table = ((StringValue)arguments[0].next()).getStringValue();
-					String text = ((StringValue)arguments[1].next()).getStringValue();
+					String table = ((AtomicSequence)arguments[0]).getStringValue();
+					String text = ((AtomicSequence)arguments[1]).getStringValue();
 					boolean hyphenated = false;
 					byte[] typeform = null;
 					if (arguments.length > 2) {
-						hyphenated = ((BooleanValue)arguments[2].next()).getBooleanValue();
+						hyphenated = ((BooleanValue)arguments[2]).getBooleanValue();
 						if (arguments.length > 3) {
-							if (arguments[3].next() != null) {
-								typeform = ((StringValue)arguments[3].current()).getStringValue().getBytes();
-								for (int i=0; i < typeform.length; i++)
-									typeform[i] -= 48; }}}
-					return SingletonIterator.makeIterator(
-							new StringValue(liblouis.translate(table, text, hyphenated, typeform))); }
+							typeform = ((AtomicSequence)arguments[3]).getStringValue().getBytes();
+							for (int i=0; i < typeform.length; i++)
+								typeform[i] -= 48; }}
+					return new StringValue(liblouis.translate(table, text, hyphenated, typeform)); }
 				catch (Exception e) {
 					logger.error("louis:translate failed", e);
 					throw new XPathException("louis:translate failed"); }

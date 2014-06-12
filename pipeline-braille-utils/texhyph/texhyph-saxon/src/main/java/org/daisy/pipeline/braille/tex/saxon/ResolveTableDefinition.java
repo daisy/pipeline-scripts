@@ -6,11 +6,11 @@ import java.net.URL;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.EmptyAtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.EmptyIterator;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
@@ -64,15 +64,13 @@ public class ResolveTableDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
-					throws XPathException {
-				
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					URI resource = asURI(((StringValue)arguments[0].next()).getStringValue());
+					URI resource = asURI(((AtomicSequence)arguments[0]).getStringValue());
 					URL table = tableResolver.resolve(resource);
 					if (table != null)
-						return SingletonIterator.makeIterator(new StringValue(table.toString()));
-					return EmptyIterator.getInstance(); }
+						return new StringValue(table.toString());
+					return EmptyAtomicSequence.getInstance(); }
 				catch (Exception e) {
 					logger.error("tex:resolve-table failed", e);
 					throw new XPathException("tex:resolve-table failed"); }

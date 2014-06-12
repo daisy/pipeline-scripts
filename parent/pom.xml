@@ -12,11 +12,19 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-parent</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.8.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
-  
+
+  <scm>
+    <connection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</connection>
+    <url>scm:git:git@github.com:daisy/pipeline-mod-braille.git</url>
+    <developerConnection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+
   <dependencyManagement>
     <dependencies>
       <!--
@@ -25,48 +33,39 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>braille-modules-bom</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.8.1-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <!--
-          Other dependencies
+          Framework BoM
       -->
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
-        <artifactId>calabash-adapter</artifactId>
-        <version>1.0.0</version>
+        <artifactId>framework-bom</artifactId>
+        <version>1.8</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!--
+          Other Modules BoM (for tests)
+      -->
+      <dependency>
+        <groupId>org.daisy.pipeline.modules</groupId>
+        <artifactId>common-utils-aggregator</artifactId>
+        <version>1.8</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.core</artifactId>
-        <version>4.2.0</version>
+        <groupId>org.daisy.pipeline.modules</groupId>
+        <artifactId>script-utils-aggregator</artifactId>
+        <version>1.8</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.compendium</artifactId>
-        <version>4.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>15.0</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sf.saxon</groupId>
-        <artifactId>Saxon-HE</artifactId>
-        <version>9.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>com.xmlcalabash</artifactId>
-        <version>1.0.9</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.6.4</version>
-      </dependency>
+
+
       <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
@@ -75,21 +74,86 @@
     </dependencies>
   </dependencyManagement>
 
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>http://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>sonatype-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId> org.apache.maven.plugins </groupId>
+                    <artifactId> maven-scm-plugin </artifactId>
+                    <versionRange> [1.8.1,) </versionRange>
+                    <goals>
+                      <goal>checkout</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>
+                      shell-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0-beta-1,)
+                    </versionRange>
+                    <goals>
+                      <goal>shell</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>sonatype-oss-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/XmlToPefTest.java</exclude>
+                <exclude>**/CSSCalabashTest.java</exclude>
+                <exclude>**/LibhyphenCoreTest.java</exclude>
+                <exclude>**/LiblouisCoreTest.java</exclude>
+                <exclude>**/LiblouisFormatterTest.java</exclude>
+                <exclude>**/TexHyphenatorCoreTest.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

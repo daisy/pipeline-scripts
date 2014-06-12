@@ -44,7 +44,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Lesser General Public License for more details.
 
 
-[pipeline-mod-braille]: https://github.com/daisy-consortium/pipeline-mod-braille
+[pipeline-mod-braille]: https://github.com/daisy/pipeline-mod-braille
 [pipeline]: http://code.google.com/p/daisy-pipeline
 [bert]: http://github.com/bertfrees
 [daisy]: http://www.daisy.org

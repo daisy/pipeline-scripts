@@ -5,11 +5,11 @@ import java.io.File;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.EmptyAtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.EmptyIterator;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
@@ -63,17 +63,17 @@ public class ResolveTableDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				
 				try {
-					String resource = ((StringValue)arguments[0].next()).getStringValue();
+					String resource = ((AtomicSequence)arguments[0]).getStringValue();
 					File[] tableList = tableResolver.resolveTableList(tokenizeTableList(resource), null);
 					if (tableList != null && tableList.length > 0) {
 						String[] files = new String[tableList.length];
 						for (int i = 0; i < tableList.length; i++)
 							files[i] = tableList[i].getCanonicalPath();
-						return SingletonIterator.makeIterator(new StringValue(join(files, ","))); }
-					return EmptyIterator.getInstance(); }
+						return new StringValue(join(files, ",")); }
+					return EmptyAtomicSequence.getInstance(); }
 				catch (Exception e) {
 					logger.error("louis:resolve-table failed", e);
 					throw new XPathException("louis:resolve-table failed"); }

@@ -6,10 +6,10 @@ import java.util.Map;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
@@ -51,7 +51,6 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 		return SequenceType.OPTIONAL_STRING;
 	}
 	
-	
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
 		
@@ -59,14 +58,11 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public SequenceIterator call(SequenceIterator[] arguments, XPathContext context)
-					throws XPathException {
-				
+			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String table = ((StringValue)arguments[0].next()).getStringValue();
-					String braille = ((StringValue)arguments[1].next()).getStringValue();
-					return SingletonIterator.makeIterator(
-							new StringValue(getTable(table).toText(braille))); }
+					String table = ((AtomicSequence)arguments[0]).getStringValue();
+					String braille = ((AtomicSequence)arguments[1]).getStringValue();
+					return new StringValue(getTable(table).toText(braille)); }
 				catch (Exception e) {
 					logger.error("pef:encode failed", e);
 					throw new XPathException("pef:encode failed"); }
