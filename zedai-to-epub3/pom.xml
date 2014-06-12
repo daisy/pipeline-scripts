@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>modules-parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <relativePath />
   </parent>
 
   <artifactId>zedai-to-epub3</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: ZedAI to EPUB 3</name>
