@@ -29,13 +29,13 @@
     <module>bom</module>
     <module>parent</module>
     <module>pipeline-braille-utils/common-java</module>
-    <!-- <module>pipeline-braille-utils/common-utils</module> -->
+    <module>pipeline-braille-utils/common-utils</module>
     <module>pipeline-braille-utils/css/css-core</module>
     <module>pipeline-braille-utils/css/css-calabash</module>
     <module>pipeline-braille-utils/css-utils</module>
     <module>pipeline-braille-utils/pef/pef-calabash</module>
     <module>pipeline-braille-utils/pef/pef-saxon</module>
-    <!-- <module>pipeline-braille-utils/pef/pef-to-html</module> -->
+    <module>pipeline-braille-utils/pef/pef-to-html</module>
     <module>pipeline-braille-utils/pef-utils</module>
     <module>pipeline-braille-utils/liblouis/liblouis-core</module>
     <module>pipeline-braille-utils/liblouis/liblouis-saxon</module>
@@ -43,21 +43,21 @@
     <module>pipeline-braille-utils/liblouis/liblouis-calabash</module>
     <module>pipeline-braille-utils/liblouis/liblouis-native</module>
     <module>pipeline-braille-utils/liblouis/liblouis-formatter</module>
-    <!-- <module>pipeline-braille-utils/liblouis/liblouis-mathml</module> -->
-    <!-- <module>pipeline-braille-utils/liblouis-utils</module> -->
+    <module>pipeline-braille-utils/liblouis/liblouis-mathml</module>
+    <module>pipeline-braille-utils/liblouis-utils</module>
     <module>pipeline-braille-utils/dotify/dotify-saxon</module>
-    <!-- <module>pipeline-braille-utils/dotify-utils</module> -->
+    <module>pipeline-braille-utils/dotify-utils</module>
     <module>pipeline-braille-utils/libhyphen/libhyphen-core</module>
     <module>pipeline-braille-utils/libhyphen/libhyphen-native</module>
     <module>pipeline-braille-utils/libhyphen/libhyphen-saxon</module>
-    <!-- <module>pipeline-braille-utils/libhyphen/libhyphen-libreoffice-tables</module> -->
-    <!-- <module>pipeline-braille-utils/libhyphen-utils</module> -->
+    <module>pipeline-braille-utils/libhyphen/libhyphen-libreoffice-tables</module>
+    <module>pipeline-braille-utils/libhyphen-utils</module>
     <module>pipeline-braille-utils/texhyph/texhyph-core</module>
     <module>pipeline-braille-utils/texhyph/texhyph-saxon</module>
-    <!-- <module>pipeline-braille-utils/texhyph-utils</module> -->
+    <module>pipeline-braille-utils/texhyph-utils</module>
     <module>pipeline-braille-scripts/xml-to-pef</module>
-    <!-- <module>pipeline-braille-scripts/zedai-to-pef</module> -->
-    <!-- <module>pipeline-braille-scripts/dtbook-to-pef</module> -->
+    <module>pipeline-braille-scripts/zedai-to-pef</module>
+    <module>pipeline-braille-scripts/dtbook-to-pef</module>
   </modules>
   
   <build>
