@@ -6,7 +6,7 @@
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="test_generate-liblouis-styles.xpl">
   
-  <x:scenario label="test_01">
+  <x:scenario label="test_01" pending="pending">
     <x:call step="pxi:test-generate-liblouis-styles">
       <x:input port="source">
         <x:document type="inline">
@@ -99,7 +99,7 @@ style d798e10
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_02">
+  <x:scenario label="test_02" pending="pending">
     <x:call step="pxi:test-generate-liblouis-styles">
       <x:input port="source">
         <x:document type="inline">
