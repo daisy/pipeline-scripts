@@ -222,7 +222,7 @@
             <p:output port="in-memory.out" sequence="true">
                 <p:pipe port="in-memory.out" step="media-overlays.inner"/>
             </p:output>
-            <pxi:create-mediaoverlays name="media-overlays.inner">
+            <px:create-mediaoverlays name="media-overlays.inner">
                 <p:input port="content-docs">
                     <p:pipe port="in-memory.out" step="content-docs"/>
                 </p:input>
@@ -230,7 +230,7 @@
                     <p:pipe port="audio-clips" step="audio-clips"/>
                 </p:input>
                 <p:with-option name="content-dir" select="$content-dir"/>
-            </pxi:create-mediaoverlays>
+            </px:create-mediaoverlays>
         </p:when>
         <p:otherwise>
             <p:output port="fileset.out" primary="true"/>
