@@ -10,5 +10,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-to-zedai"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-to-html"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:common-utils"/>
-
+  <nextCatalog catalog="org:daisy:pipeline:modules:mediaoverlay-utils"/>
 </catalog>

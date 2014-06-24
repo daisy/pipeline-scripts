@@ -79,11 +79,10 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/library.xpl"/>
     <p:import href="../internal/ncx-to-nav.xpl"/>
     <p:import href="../internal/dtbook-to-html.xpl"/>
     <p:import href="../internal/list-audio-clips.xpl"/>
-    <p:import href="../internal/create-mediaoverlays.xpl"/>
-
 
 
     <!--=========================================================================-->
@@ -101,7 +100,7 @@
                     if ($daisy-type=('audioFullText','audioPartText','textPartAudio')) then 'text+mo'
                     else if ($daisy-type='textNCX') then 'text'
                     else ''"/>
-    
+
 
     <!--=========================================================================-->
     <!-- LOAD THE DAISY 3 FILESET                                                -->
@@ -131,7 +130,7 @@
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
     </px:fileset-load>
-    
+
     <!--=========================================================================-->
     <!-- CHECK THE DTB TYPE                                                      -->
     <!--=========================================================================-->
@@ -161,7 +160,7 @@
                     <p:pipe port="result" step="smils"/>
                 </p:input>
                 <p:with-option name="content-dir" select="$content-dir"/>
-            </pxi:list-audio-clips>        
+            </pxi:list-audio-clips>
         </p:when>
         <p:otherwise>
             <p:output port="fileset.out" primary="true"/>
@@ -215,7 +214,7 @@
     <!--=========================================================================-->
     <!-- GENERATE MEDIA OVERLAYS                                                 -->
     <!--=========================================================================-->
-    
+
     <!--TODO conditionally, if the MO option is set-->
     <p:choose name="media-overlays">
         <p:when test="$mediaoverlays and $type='text+mo'">
@@ -231,7 +230,7 @@
                     <p:pipe port="audio-clips" step="audio-clips"/>
                 </p:input>
                 <p:with-option name="content-dir" select="$content-dir"/>
-            </pxi:create-mediaoverlays>        
+            </pxi:create-mediaoverlays>
         </p:when>
         <p:otherwise>
             <p:output port="fileset.out" primary="true"/>
@@ -333,7 +332,7 @@
         <p:output port="in-memory.out" sequence="true">
             <p:pipe port="result" step="finalize.in-memory"/>
         </p:output>
-        
+
         <px:fileset-create name="fileset.with-epub-base">
             <p:with-option name="base" select="$epub-dir"/>
         </px:fileset-create>
@@ -349,7 +348,7 @@
                 <p:pipe port="result" step="fileset.without-ocf"/>
             </p:input>
         </px:epub3-ocf-finalize>
-        
+
         <p:identity name="finalize.in-memory">
             <p:input port="source">
                 <p:pipe port="in-memory.out" step="nav-doc"/>
@@ -361,7 +360,7 @@
         </p:identity>
         <p:sink/>
     </p:group>
-    
+
     <px:epub3-store>
         <p:with-option name="href" select="$epub-file"/>
         <p:input port="in-memory.in">
