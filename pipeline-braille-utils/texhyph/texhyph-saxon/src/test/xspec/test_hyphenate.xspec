@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:tex="http://code.google.com/p/texhyphj/"
+               stylesheet="../resources/phony.xsl">
+  
+  <!-- ======= -->
+  <!-- test_01 -->
+  <!-- ======= -->
+  <!--
+  
+  -->
+  <x:scenario label="test_01">
+    <x:call function="tex:hyphenate">
+      <x:param select="resolve-uri('../resources/foobar.tex')"/>
+      <x:param select="'foobar'"/>
+    </x:call>
+    <x:expect label="result" select="'foo&#xAD;bar'"/>
+  </x:scenario>
+  
+  <!-- ======= -->
+  <!-- test_02 -->
+  <!-- ======= -->
+  <!--
+  
+  -->
+  <x:scenario label="test_02">
+    <x:call function="tex:hyphenate">
+      <x:param select="resolve-uri('../resources/foobar.tex')"/>
+      <x:param select="'foo-bar'"/>
+    </x:call>
+    <x:expect label="result" select="'foo-&#x200B;bar'"/>
+  </x:scenario>
+  
+</x:description>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:louis="http://liblouis.org/liblouis"
+               stylesheet="../resources/phony.xsl">
+  
+  <!-- ======= -->
+  <!-- test_01 -->
+  <!-- ======= -->
+  <!--
+  
+  -->
+  <x:scenario label="test_01">
+    <x:call function="louis:translate">
+      <x:param select="resolve-uri('../resources/foobar.cti')"/>
+      <x:param select="'foobar'"/>
+    </x:call>
+    <x:expect label="result" select="'foobar'"/>
+  </x:scenario>
+  
+</x:description>
