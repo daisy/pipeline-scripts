@@ -34,12 +34,12 @@
 	
 	<xsl:function name="re:space-separated" as="xs:string">
 		<xsl:param name="regex" as="xs:string"/>
-		<xsl:sequence select="re:join(($regex,'(\s+',$regex,')*'), '')"/>
+		<xsl:sequence select="concat($regex,'(\s+',$regex,')*')"/>
 	</xsl:function>
 	
 	<xsl:function name="re:comma-separated" as="xs:string">
 		<xsl:param name="regex" as="xs:string"/>
-		<xsl:sequence select="re:join(($regex,'(\s*,\s*',$regex,')*'), '')"/>
+		<xsl:sequence select="concat($regex,'(\s*,\s*',$regex,')*')"/>
 	</xsl:function>
 	
 </xsl:stylesheet>

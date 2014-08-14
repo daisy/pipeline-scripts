@@ -6,7 +6,11 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
-    <xsl:import href="regex-utils.xsl"/>
+    <xsl:import href="base.xsl"/>
+    
+    <!-- ==================== -->
+    <!-- Property Definitions -->
+    <!-- ==================== -->
     
     <xsl:variable name="css:properties" as="xs:string*"
         select="('display',
@@ -41,53 +45,38 @@
                  'text-decoration',
                  'color')"/>
     
-    <xsl:variable name="COLOR" select="'#[0-9A-F]{6}'"/>
-    <xsl:variable name="DOT_PATTERN" select="'\p{IsBraillePatterns}'"/>
-    <xsl:variable name="IDENT" select="'(\p{L}|_)(\p{L}|_|-)*'"/>
-    <xsl:variable name="IDENT_LIST" select="re:space-separated($IDENT)"/>
-    <xsl:variable name="INHERIT" select="'inherit'"/>
-    <xsl:variable name="INTEGER" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
-    <xsl:variable name="NATURAL_NUMBER" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
-    <xsl:variable name="STRING">('.+?'|".+?")</xsl:variable>
-    <xsl:variable name="CONTENT" select="re:or(($STRING,'content\(\)','attr\(.+?\)'))"/>
-    <xsl:variable name="CONTENT_LIST" select="re:space-separated($CONTENT)"/>
-    
-    <xsl:variable name="DECLARATIONS_BLOCK">\{(([^'"\{\}]+|'.+?'|".+?"|\{([^'"\{\}]+|'.+?'|".+?")*\})*)\}</xsl:variable>
-    
-    <xsl:variable name="RULESET" select="re:concat(('((@|::)',$IDENT,'\s+)?',$DECLARATIONS_BLOCK))"/>
-    
-    <xsl:variable name="css:valid-declarations" as="xs:string*"
+    <xsl:variable name="css:values" as="xs:string*"
         select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($INTEGER),
-                 re:exact($INTEGER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact($NATURAL_NUMBER),
-                 re:exact(re:or(($DOT_PATTERN,'none'))),
-                 re:exact(re:or(($DOT_PATTERN,'none'))),
-                 re:exact(re:or(($DOT_PATTERN,'none'))),
-                 re:exact(re:or(($DOT_PATTERN,'none'))),
-                 re:exact(re:or(($INTEGER,$INHERIT))),
-                 re:exact(re:or(($DOT_PATTERN,'demical','lower-alpha','lower-roman','none','upper-alpha','upper-roman',$INHERIT))),
-                 re:exact(re:or(('center','justify','left','right',$INHERIT))),
-                 re:exact(re:or(('always','auto','avoid','left','right', $INHERIT))),
-                 re:exact(re:or(('always','auto','avoid','left','right', $INHERIT))),
-                 re:exact(re:or(('auto','avoid',$INHERIT))),
-                 re:exact(re:or(($INTEGER,$INHERIT))),
-                 re:exact(re:or(($INTEGER,$INHERIT))),
-                 re:exact(re:or(($IDENT,'auto'))),
-                 re:exact(re:comma-separated(re:join(($IDENT,$CONTENT_LIST), '\s+'))),
-                 re:exact(re:space-separated(re:concat(($IDENT,'(\s+',$INTEGER,')?')))),
-                 re:exact(re:or(($IDENT_LIST,'none'))),
-                 re:exact(re:or(('normal','italic','oblique',$INHERIT))),
-                 re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900',$INHERIT))),
-                 re:exact(re:or(('none','underline','overline','line-through','blink',$INHERIT))),
-                 re:exact(re:or(($COLOR,$INHERIT))))"/>
+                 re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
+                 re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
+                 re:exact($css:INTEGER_RE),
+                 re:exact($css:INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
+                 re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
+                 re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
+                 re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
+                 re:exact($css:INTEGER_RE),
+                 re:exact(re:or(($css:BRAILLE_CHAR_RE,'demical','lower-alpha','lower-roman','none','upper-alpha','upper-roman'))),
+                 re:exact(re:or(('center','justify','left','right'))),
+                 re:exact(re:or(('always','auto','avoid','left','right'))),
+                 re:exact(re:or(('always','auto','avoid','left','right'))),
+                 re:exact(re:or(('auto','avoid'))),
+                 re:exact($css:INTEGER_RE),
+                 re:exact($css:INTEGER_RE),
+                 re:exact(re:or(($css:IDENT_RE,'auto'))),
+                 re:exact(re:comma-separated(re:concat(($css:IDENT_RE,'\s+',$css:CONTENT_LIST_RE)))),
+                 re:exact(re:space-separated(re:concat(($css:IDENT_RE,'(\s+',$css:INTEGER_RE,')?')))),
+                 re:exact(re:or(($css:IDENT_LIST_RE,'none'))),
+                 re:exact(re:or(('normal','italic','oblique'))),
+                 re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
+                 re:exact(re:or(('none','underline','overline','line-through','blink'))),
+                 re:exact($css:COLOR_RE))"/>
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
@@ -122,10 +111,10 @@
                  '.*',
                  '.*')"/>
     
-    <xsl:variable name="css:default-values" as="xs:string*"
+    <xsl:variable name="css:initial-values" as="xs:string*"
         select="('inline',
-                 '0.0',
-                 '0.0',
+                 'auto',
+                 'auto',
                  '0.0',
                  '0.0',
                  '0.0',
@@ -188,10 +177,8 @@
                  'print',
                  'print')"/>
     
-    <xsl:variable name="css:inheriting-properties" as="xs:string*"
-        select="('left',
-                 'right',
-                 'text-indent',
+    <xsl:variable name="css:inherited-properties" as="xs:string*"
+        select="('text-indent',
                  'list-style-type',
                  'text-align',
                  'orphans',
@@ -209,33 +196,29 @@
                  'orphans',
                  'widows')"/>
     
-    <xsl:function name="css:get-properties" as="xs:string*">
-        <xsl:sequence select="$css:properties"/>
-    </xsl:function>
-
     <xsl:function name="css:is-property" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(index-of($css:properties, $property))"/>
+        <xsl:sequence select="boolean($property=$css:properties)"/>
     </xsl:function>
     
-    <xsl:function name="css:is-valid-declaration" as="xs:boolean">
+    <xsl:function name="css:is-valid" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="value" as="xs:string"/>
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
-        <xsl:sequence select="if ($index) then matches($value, $css:valid-declarations[$index]) else false()"/>
+        <xsl:sequence select="if ($index) then $value=('inherit', 'initial') or matches($value, $css:values[$index], 'x') else false()"/>
     </xsl:function>
-
-    <xsl:function name="css:get-default-value" as="xs:string?">
+    
+    <xsl:function name="css:initial-value" as="xs:string?">
         <xsl:param name="property" as="xs:string"/>
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
         <xsl:if test="$index">
-            <xsl:sequence select="$css:default-values[$index]"/>
+            <xsl:sequence select="$css:initial-values[$index]"/>
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:is-inheriting-property" as="xs:boolean">
+    <xsl:function name="css:is-inherited" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(index-of($css:inheriting-properties, $property))"/>
+        <xsl:sequence select="boolean(index-of($css:inherited-properties, $property))"/>
     </xsl:function>
     
     <xsl:function name="css:applies-to" as="xs:boolean">

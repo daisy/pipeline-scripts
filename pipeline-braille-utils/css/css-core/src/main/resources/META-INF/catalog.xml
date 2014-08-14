@@ -2,5 +2,5 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille/css-core/supported-css.xsl" uri="../xml/supported-css.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/css-core/braille-css.xsl" uri="../xml/braille-css.xsl"/>
 </catalog>
