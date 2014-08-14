@@ -11,7 +11,7 @@
 	
 	<xsl:param name="prehyphenated" select="'false'"/>
 	
-	<xsl:template match="css:block">
+	<xsl:template match="css:block" mode="#all">
 		<xsl:variable name="table" select="louis:lookup-table(string(@xml:lang))"/>
 		<xsl:if test="not($table)">
 			<xsl:message terminate="yes">

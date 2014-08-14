@@ -19,5 +19,5 @@
   </root>
   
   <logger name="org.daisy" level="DEBUG"/>
-  
+
 </configuration>

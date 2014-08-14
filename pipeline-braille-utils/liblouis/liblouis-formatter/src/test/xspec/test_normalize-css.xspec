@@ -5,7 +5,7 @@
                stylesheet="../../main/resources/xml/normalize-css.xsl">
   
   <!--
-      Concretize inherit (if inherit is not the default)
+      Concretize inherit (if property is not inherited in liblouis)
   -->
   <x:scenario label="test_01">
     <x:context>
@@ -53,34 +53,19 @@
   </x:scenario>
   
   <!--
-      FIXME: concretize inherit if inherit is the default, but the inherited value was dropped
-      (can happen with left, right, text-align and text-indent)
+      FIXME: inherit/auto are not concretized, but the value is also dropped on the ancestor
+      because it doesn't apply to that element (can happen with left, right, text-align and
+      text-indent)
   -->
-  <x:scenario label="test_04" pending="true">
+  <x:scenario label="test_04" pending="failure">
     <x:context>
-      <doc style="left: 2">
+      <doc style="text-align: center">
         <p css:display="block"> foo </p>
       </doc>
     </x:context>
     <x:expect label="result">
       <doc>
-        <p css:display="block" style="left: 2; orphans: 2.0"> foo </p>
-      </doc>
-    </x:expect>
-  </x:scenario>
-  
-  <!--
-      Reorder properties
-  -->
-  <x:scenario label="test_05">
-    <x:context>
-      <doc>
-        <p css:display="block" style="orphans: 3; left: 1"> foo </p>
-      </doc>
-    </x:context>
-    <x:expect label="result">
-      <doc>
-        <p css:display="block" style="left: 1; orphans: 3"> foo </p>
+        <p css:display="block" style="text-align: center; orphans: 2.0"> foo </p>
       </doc>
     </x:expect>
   </x:scenario>
@@ -88,9 +73,9 @@
   <!--
       Concretize inherit on louis:box
   -->
-  <x:scenario label="test_06">
+  <x:scenario label="test_05">
     <x:context>
-      <doc style="left: 2">
+      <doc style="left: 2; text-align: center; text-indent: 0.0">
         <louis:box>
           bar
         </louis:box>
@@ -98,7 +83,7 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:box style="left: 2; right: 0.0; text-align: left; text-indent: 0.0">
+        <louis:box style="text-align: center">
           bar
         </louis:box>
       </doc>
@@ -108,7 +93,7 @@
   <!--
       Drop paged-media properties inside louis:box
   -->
-  <x:scenario label="test_07">
+  <x:scenario label="test_06">
     <x:context>
       <doc>
         <louis:box>
@@ -118,9 +103,31 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:box style="left: 0.0; right: 0.0; text-align: left; text-indent: 0.0">
+        <louis:box>
           <p css:display="block"> foo </p>
         </louis:box>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Don't drop properties that are the default if they are inherited
+  -->
+  <x:scenario label="test_07">
+    <x:context>
+      <doc>
+        <p css:display="block" style="text-align: inherit"> foo </p>
+        <p css:display="block" style="text-align: initial"> foo </p>
+        <p css:display="block" style="text-align: left"> foo </p>
+        <p css:display="block"> foo </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <p css:display="block" style="orphans: 2.0"> foo </p>
+        <p css:display="block" style="text-align: left; orphans: 2.0"> foo </p>
+        <p css:display="block" style="text-align: left; orphans: 2.0"> foo </p>
+        <p css:display="block" style="orphans: 2.0"> foo </p>
       </doc>
     </x:expect>
   </x:scenario>

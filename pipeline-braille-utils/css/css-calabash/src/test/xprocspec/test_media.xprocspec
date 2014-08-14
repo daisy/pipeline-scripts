@@ -57,7 +57,7 @@
   <!--
       FAILS: is this a bug?
   -->
-  <x:scenario label="test_02" pending="true">
+  <x:scenario label="test_02" pending="failure">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
@@ -108,7 +108,7 @@
   <!--
       FAILS: bug: @page inside @media
   -->
-  <x:scenario label="test_03" pending="true">
+  <x:scenario label="test_03" pending="failure">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">

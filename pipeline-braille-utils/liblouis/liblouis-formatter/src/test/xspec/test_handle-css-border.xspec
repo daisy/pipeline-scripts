@@ -16,8 +16,7 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div css:display="block"
-                   style="page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0">
+        <louis:div css:display="block">
           <css:block>
             <louis:border pattern="⠒"/>
           </css:block>
@@ -48,12 +47,12 @@
     <x:expect label="result">
       <doc>
         <louis:div css:display="block"
-                   style="page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; margin-left:1.0; margin-top:1.0">
+                   style="margin-left: 1.0; margin-top: 1.0">
           <css:block>
             <louis:border pattern="⠒"/>
           </css:block>
           <body css:display="block"
-                style="margin-left:1.0; margin-top:1.0">
+                style="margin-left: 1.0; margin-top: 1.0">
             <p>foo</p>
           </body>
         </louis:div>
@@ -73,8 +72,7 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <louis:div css:display="block"
-                   style="page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0">
+        <louis:div css:display="block">
           <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none">
             <body css:display="block">
               <p>foo</p>
@@ -101,10 +99,10 @@
     <x:expect label="result">
       <doc>
         <louis:div css:display="block"
-                   style="page-break-before:auto; page-break-after:auto; page-break-inside:auto; orphans:2.0; widows:2.0; margin-top:1.0">
+                   style="margin-top: 1.0">
           <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none">
             <body css:display="block"
-                  style="margin-left:1.0; margin-bottom:1.0">
+                  style="margin-left: 1.0; margin-bottom: 1.0">
               <p>foo</p>
             </body>
           </louis:box>

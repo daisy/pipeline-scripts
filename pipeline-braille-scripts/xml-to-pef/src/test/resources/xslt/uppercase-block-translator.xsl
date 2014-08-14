@@ -6,7 +6,7 @@
 
 	<xsl:import href="../../../main/resources/xml/translation/block-translator-template.xsl"/>
 	
-	<xsl:template match="css:block">
+	<xsl:template match="css:block" mode="#default after before string-set">
 		<xsl:sequence select="upper-case(string(/*))"/>
 	</xsl:template>
 	

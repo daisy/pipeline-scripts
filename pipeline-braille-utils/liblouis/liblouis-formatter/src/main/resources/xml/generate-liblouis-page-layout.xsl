@@ -5,52 +5,52 @@
     xmlns:louis="http://liblouis.org/liblouis"
     xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+    xmlns:re="regex-utils"
     exclude-result-prefixes="#all"
     version="2.0">
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
-    <xsl:variable name="SIZE_REGEX" select="concat('^\s*', $NATURAL_NUMBER, '\s+', $NATURAL_NUMBER, '\s*$')"/>
-    <xsl:variable name="PRINT_PAGE_REGEX" select="'\s*string\(\s*print-page\s*\)\s*'"/>
-    <xsl:variable name="RUNNING_HEADER_REGEX" select="'\s*string\(\s*running-header\s*\)\s*'"/>
-    <xsl:variable name="RUNNING_FOOTER_REGEX" select="'\s*string\(\s*running-footer\s*\)\s*'"/>
-    <xsl:variable name="BRAILLE_PAGE_REGEX" select="concat('\s*counter\(\s*braille-page\s*(,\s*(', $IDENT, ')\s*)?\)\s*')"/>
+    <xsl:variable name="SIZE_RE" select="re:exact(concat($css:NON_NEGATIVE_INTEGER_RE,'\s+',$css:NON_NEGATIVE_INTEGER_RE))"/>
     
     <xsl:template match="/*">
-        <xsl:variable name="page_stylesheet" as="xs:string" select="string(@css:page)"/>
-        <xsl:variable name="margin-rulesets" as="xs:string*">
-            <xsl:analyze-string select="$page_stylesheet" regex="{$RULESET}">
+        <xsl:variable name="page-stylesheet" as="xs:string" select="string(@css:page)"/>
+        <xsl:variable name="properties" as="element()*"
+            select="css:parse-declaration-list(replace($page-stylesheet, $css:RULE_RE, ''))"/>
+        <xsl:variable name="margin-rules" as="element()*">
+            <xsl:analyze-string select="$page-stylesheet" regex="{$css:RULE_RE}">
                 <xsl:matching-substring>
-                    <xsl:sequence select="."/>
+                    <css:rule selector="{regex-group(2)}"
+                              declaration-list="{replace(regex-group(6), '(^\s+|\s+$)', '')}"/>
                 </xsl:matching-substring>
             </xsl:analyze-string>
         </xsl:variable>
-        <xsl:variable name="other-declarations" as="xs:string*"
-                      select="css:tokenize-declarations(replace($page_stylesheet, $RULESET, ''))"/>
-        <xsl:variable name="size"
-                      select="(for $declaration in css:filter-declaration($other-declarations, 'size')
-                                return normalize-space(substring-after($declaration,':')))[matches(., $SIZE_REGEX)]"/>
-        <xsl:variable name="top-right-content"     select="pxi:get-margin-content($margin-rulesets, '@top-right')"/>
-        <xsl:variable name="bottom-right-content"  select="pxi:get-margin-content($margin-rulesets, '@bottom-right')"/>
-        <xsl:variable name="top-center-content"    select="pxi:get-margin-content($margin-rulesets, '@top-center')"/>
-        <xsl:variable name="bottom-center-content" select="pxi:get-margin-content($margin-rulesets, '@bottom-center')"/>
+        <xsl:variable name="size" as="xs:string"
+            select="($properties[@name='size']/@value[matches(., $SIZE_RE)], '40 25')[1]"/>
+        <xsl:variable name="top-right-content" as="element()*" select="pxi:margin-content($margin-rules, '@top-right')"/>
+        <xsl:variable name="bottom-right-content" as="element()*" select="pxi:margin-content($margin-rules, '@bottom-right')"/>
+        <xsl:variable name="top-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@top-center')"/>
+        <xsl:variable name="bottom-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@bottom-center')"/>
         <xsl:variable name="print-page-position"
-                      select="if (matches($top-right-content, $PRINT_PAGE_REGEX)) then 'top-right'
-                              else if (matches($bottom-right-content, $PRINT_PAGE_REGEX)) then 'bottom-right'
-                              else 'none'"/>
+            select="if ($top-right-content/self::css:string-fn[@identifier='print-page']) then 'top-right' else
+                    if ($bottom-right-content/self::css:string-fn[@identifier='print-page']) then 'bottom-right' else
+                    'none'"/>
         <xsl:variable name="braille-page-position"
-                      select="if (matches($top-right-content, $BRAILLE_PAGE_REGEX)) then 'top-right'
-                              else if (matches($bottom-right-content, $BRAILLE_PAGE_REGEX)) then 'bottom-right'
-                              else 'none'"/>
+            select="if ($top-right-content/self::css:counter-fn[@identifier='braille-page']) then 'top-right' else
+                    if ($bottom-right-content/self::css:counter-fn[@identifier='braille-page']) then 'bottom-right' else
+                    'none'"/>
         <xsl:element name="louis:page-layout">
             <xsl:element name="c:param-set">
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:page-width'"/>
-                    <xsl:attribute name="value" select="if ($size) then tokenize($size, ' ')[1] else '40'"/>
+                    <xsl:attribute name="value" select="tokenize($size, '\s+')[1]"/>
                 </xsl:element>
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:page-height'"/>
-                    <xsl:attribute name="value" select="if ($size) then tokenize($size, ' ')[2] else '25'"/>
+                    <xsl:attribute name="value" select="tokenize($size, '\s+')[2]"/>
                 </xsl:element>
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:print-page-position'"/>
@@ -62,8 +62,8 @@
                 </xsl:element>
                 <xsl:if test="$braille-page-position!='none'">
                     <xsl:variable name="format"
-                                  select="replace(if ($braille-page-position='top-right') then $top-right-content else $bottom-right-content,
-                                                  concat('^.*', $BRAILLE_PAGE_REGEX, '.*$'), '$2')"/>
+                        select="(if ($braille-page-position='top-right') then $top-right-content else $bottom-right-content)
+                                /self::css:counter-fn[@identifier='braille-page'][1]/@style"/>
                     <xsl:element name="c:param">
                         <xsl:attribute name="name" select="'louis:braille-page-format'"/>
                         <xsl:attribute name="value">
@@ -84,30 +84,31 @@
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:page-break-separator'"/>
                     <xsl:attribute name="value"
-                                   select="if (//louis:print-page[@break='true'] and not(//louis:print-page[@break='false']))
-                                           then 'true' else 'false'"/>
+                        select="if (//louis:print-page[@break='true'] and not(//louis:print-page[@break='false']))
+                                then 'true' else 'false'"/>
                 </xsl:element>
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:running-header'"/>
-                    <xsl:attribute name="value" select="if (matches($top-center-content, $RUNNING_HEADER_REGEX))
-                                                        then 'true' else 'false'"/>
+                    <xsl:attribute name="value"
+                        select="if ($top-center-content/self::css:string-fn[@identifier='running-header'])
+                                then 'true' else 'false'"/>
                 </xsl:element>
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:running-footer'"/>
-                    <xsl:attribute name="value" select="if (matches($bottom-center-content, $RUNNING_FOOTER_REGEX))
-                                                        then 'true' else 'false'"/>
+                    <xsl:attribute name="value"
+                        select="if ($bottom-center-content/self::css:string-fn[@identifier='running-footer'])
+                                then 'true' else 'false'"/>
                 </xsl:element>
             </xsl:element>
         </xsl:element>
     </xsl:template>
     
-    <xsl:function name="pxi:get-margin-content" as="xs:string">
-        <xsl:param name="margin-rulesets" as="xs:string*"/>
+    <xsl:function name="pxi:margin-content" as="element()*">
+        <xsl:param name="margin-rules" as="element()*"/>
         <xsl:param name="selector" as="xs:string"/>
-        <xsl:sequence select="string(
-                                for $declaration in css:filter-declaration(css:tokenize-declarations(
-                                                      css:get-declarations($margin-rulesets, $selector)), 'content')
-                                  return substring-after($declaration, ':'))"/>
+        <xsl:sequence select="css:parse-content-list(
+                                css:parse-declaration-list($margin-rules[@selector=$selector][1]/@declaration-list)
+                                [@name='content'][1]/@value, ())"/>
     </xsl:function>
-    
+
 </xsl:stylesheet>

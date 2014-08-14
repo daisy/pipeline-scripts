@@ -4,9 +4,10 @@
     xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-result-prefixes="xs css"
     version="2.0">
-
-    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl" />
     
     <xsl:template match="@*|node()">
@@ -17,12 +18,12 @@
     
     <xsl:template match="*[contains(string(@style), 'list-item')]">
         <xsl:variable name="display" as="xs:string"
-            select="css:get-value(., 'display', true(), true(), false())"/>
+            select="css:specified-properties('display', true(), true(), false(), .)/@value"/>
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="$display='list-item'">
                 <xsl:variable name="list-style-type" as="xs:string"
-                    select="css:get-value(., 'list-style-type', true(), true(), false())"/>
+                    select="css:specified-properties('list-style-type', true(), true(), false(), .)/@value"/>
                 <xsl:if test="$list-style-type!='none'">
                     <xsl:element name="css:marker">
                         <xsl:attribute name="style" select="'display:inline'"/>

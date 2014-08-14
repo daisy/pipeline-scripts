@@ -2,11 +2,29 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:c="http://www.w3.org/ns/xproc-step"
                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:louis="http://liblouis.org/liblouis"
-               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-               script="test_generate-liblouis-styles.xpl">
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css">
   
-  <x:scenario label="test_01" pending="pending">
+  <x:script>
+    <p:declare-step type="pxi:test-generate-liblouis-styles" version="1.0">
+      <p:input port="source" sequence="true"/>
+      <p:output port="result" primary="true"/>
+      <p:output port="secondary" sequence="true">
+        <p:pipe step="xslt" port="secondary"/>
+      </p:output>
+      <p:xslt name="xslt">
+        <p:input port="stylesheet">
+          <p:document href="../../main/resources/xml/generate-liblouis-styles.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+          <p:empty/>
+        </p:input>
+      </p:xslt>
+    </p:declare-step>
+  </x:script>
+  
+  <x:scenario label="test_01" pending="generate-id behaves differently for different versions of saxon/calabash">
     <x:call step="pxi:test-generate-liblouis-styles">
       <x:input port="source">
         <x:document type="inline">
@@ -99,7 +117,7 @@ style d798e10
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_02" pending="pending">
+  <x:scenario label="test_02" pending="generate-id behaves differently for different versions of saxon/calabash">
     <x:call step="pxi:test-generate-liblouis-styles">
       <x:input port="source">
         <x:document type="inline">

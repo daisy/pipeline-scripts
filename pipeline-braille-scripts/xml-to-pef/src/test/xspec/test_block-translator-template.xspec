@@ -12,13 +12,9 @@
     </x:context>
     <x:expect label="result">
       <doc>
-        <h style="{{
- display: block; string-set: running-footer &quot;FOOBAR&quot; }}">FOOBAR</h>
-        <p style="{{
- display: block
- }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
-        <pagenum value="1" style="{{
- display: none; string-set: print-page &quot;1&quot; }}"/>
+        <h style="{{ display: block; string-set: running-footer content() }}">FOOBAR</h>
+        <p style="{{ display: block }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
+        <pagenum value="1" style="{{ display: none; string-set: print-page &quot;1&quot; }}"/>
       </doc>
     </x:expect>
   </x:scenario>

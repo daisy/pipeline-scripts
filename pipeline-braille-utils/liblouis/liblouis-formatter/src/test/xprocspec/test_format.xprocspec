@@ -90,7 +90,7 @@
       - The print page number and the running header/footer can be updated.
         => FIXME: running-footer is updated 1 page too soon
   -->
-  <x:scenario label="test_02" pending="true">
+  <x:scenario label="test_02" pending="failure">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="inline">
@@ -593,7 +593,7 @@
            2. add the following rule to default.css: * { orphans: 0 }
       - A page break can be forced.
   -->
-  <x:scenario label="test_08" pending="true">
+  <x:scenario label="test_08" pending="failure">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="inline">
@@ -751,6 +751,9 @@
   <!--
       - A block can have borders.
       - Boxes can be nested.
+  -->
+  <!--
+      FIXME: paddings should not collapse with margins
   -->
   <x:scenario label="test_09">
     <x:call step="louis:format">
@@ -1403,7 +1406,7 @@
   <!--
       - FIXME: A TOC entry can not reference a boxed item.
   -->
-  <x:scenario label="test_15" pending="true">
+  <x:scenario label="test_15" pending="failure">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1575,7 +1578,7 @@
       - By default, whitespace is normalized (trimmed and collapsed).
       - Whitespace can also be preserved.
   -->
-  <x:scenario label="test_17" pending="fail on Mac OS X">
+  <x:scenario label="test_17" pending="failure on mac">
     <x:call step="louis:format">
       <x:input port="source">
         <x:document type="inline">

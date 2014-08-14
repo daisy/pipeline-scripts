@@ -49,10 +49,10 @@
     <x:expect label="result">
       <doc>
         <louis:div css:display="block"
-                   style="margin-top:1.0; left:1.0">
+                   style="margin-top: 1.0; left: 1.0">
           <louis:border>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</louis:border>
           <body css:display="block"
-                style="margin-top:1.0; left:2.0">
+                style="margin-top: 1.0; left: 2.0">
             <p>foo</p>
           </body>
         </louis:div>
@@ -112,7 +112,7 @@
                    style="margin-top:1.0">
           <louis:box border-top="⠒" border-bottom="none" border-left="⠇" border-right="none" width="19">
             <body css:display="block"
-                  style="margin-bottom:1.0; left:1.0">
+                  style="margin-bottom: 1.0; left: 1.0">
               <p>foo</p>
             </body>
           </louis:box>
@@ -134,7 +134,7 @@
     <x:expect label="result">
       <doc>
         <body css:display="block"
-              style="left:6.0">
+              style="left: 6.0">
           <p>foo</p>
         </body>
       </doc>
@@ -151,9 +151,9 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc style="left:5.0">
+      <doc style="left: 5.0">
         <body css:display="block"
-              style="left:6.0">
+              style="left: 6.0">
           <p>foo</p>
         </body>
       </doc>
@@ -181,10 +181,10 @@
     <x:expect label="result">
       <doc>
         <louis:div css:display="block"
-                   style="left:2.0">
+                   style="left: 2.0">
           <louis:box border-top="none" border-bottom="none" border-left="none" border-right="none" width="18">
             <body css:display="block"
-                  style="left:1.0; text-indent:-1.0">
+                  style="left: 1.0; text-indent: -1.0">
               <p>foo</p>
             </body>
           </louis:box>

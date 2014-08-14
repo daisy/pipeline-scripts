@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    exclude-result-prefixes="#all"
-    version="2.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:louis="http://liblouis.org/liblouis"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                exclude-result-prefixes="#all"
+                version="2.0">
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes" name="louis-styles"/>
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
+    
     <xsl:variable name="braille-page-format" select="pxi:get-page-layout-param(/*, 'louis:braille-page-format')"/>
     
     <xsl:variable name="root" select="/*"/>
-    <xsl:key name="style-string" match="//*[@css:display]|//louis:toc-item" use="string(@style)"/>
+    <xsl:key name="stylesheet" match="//*[@css:display]|//louis:toc-item" use="string(@style)"/>
     
     <xsl:function name="pxi:generate-style-name" as="xs:string">
-        <xsl:param name="style-string" as="xs:string"/>
-        <xsl:value-of select="generate-id($root/key('style-string', $style-string)[1])"/>
+        <xsl:param name="stylesheet" as="xs:string"/>
+        <xsl:value-of select="generate-id($root/key('stylesheet', $stylesheet)[1])"/>
     </xsl:function>
     
     <xsl:template match="@style|@css:display"/>
@@ -90,16 +95,17 @@
         <xsl:sequence select="$style-name"/>
         <xsl:text>&#xa;</xsl:text>
         
-        <xsl:variable name="text-align" select="pxi:get-property-value($style, 'text-align')"/>
-        <xsl:variable name="left" select="pxi:get-property-value($style, 'left')"/>
-        <xsl:variable name="right" select="pxi:get-property-value($style, 'right')"/>
-        <xsl:variable name="margin-top" select="pxi:get-property-value($style, 'margin-top')"/>
-        <xsl:variable name="margin-bottom" select="pxi:get-property-value($style, 'margin-bottom')"/>
-        <xsl:variable name="text-indent" select="pxi:get-property-value($style, 'text-indent')"/>
-        <xsl:variable name="page-break-before" select="pxi:get-property-value($style, 'page-break-before')"/>
-        <xsl:variable name="page-break-after" select="pxi:get-property-value($style, 'page-break-after')"/>
-        <xsl:variable name="page-break-inside" select="pxi:get-property-value($style, 'page-break-inside')"/>
-        <xsl:variable name="orphans" select="pxi:get-property-value($style, 'orphans')"/>
+        <xsl:variable name="properties" as="element()*" select="css:parse-declaration-list($style)"/>
+        <xsl:variable name="text-align" as="xs:string" select="string($properties[@name='text-align'][last()]/@value)"/>
+        <xsl:variable name="left" as="xs:string" select="string($properties[@name='left'][last()]/@value)"/>
+        <xsl:variable name="right" as="xs:string" select="string($properties[@name='right'][last()]/@value)"/>
+        <xsl:variable name="margin-top" as="xs:string" select="string($properties[@name='margin-top'][last()]/@value)"/>
+        <xsl:variable name="margin-bottom" as="xs:string" select="string($properties[@name='margin-bottom'][last()]/@value)"/>
+        <xsl:variable name="text-indent" as="xs:string" select="string($properties[@name='text-indent'][last()]/@value)"/>
+        <xsl:variable name="page-break-before" as="xs:string" select="string($properties[@name='page-break-before'][last()]/@value)"/>
+        <xsl:variable name="page-break-after" as="xs:string" select="string($properties[@name='page-break-after'][last()]/@value)"/>
+        <xsl:variable name="page-break-inside" as="xs:string" select="string($properties[@name='page-break-inside'][last()]/@value)"/>
+        <xsl:variable name="orphans" as="xs:string" select="string($properties[@name='orphans'][last()]/@value)"/>
         
         <!-- format -->
         
@@ -220,21 +226,6 @@
         <xsl:text>&#xa;</xsl:text>
         
     </xsl:template>
-    
-    <xsl:function name="pxi:get-property-value">
-        <xsl:param name="style" as="xs:string"/>
-        <xsl:param name="property-name" as="xs:string"/>
-        <xsl:variable name="property-value" as="xs:string*">
-            <xsl:if test="contains($style, $property-name)">
-                <xsl:for-each select="tokenize($style,';')">
-                    <xsl:if test="normalize-space(substring-before(.,':'))=$property-name">
-                        <xsl:sequence select="normalize-space(substring-after(.,':'))"/>
-                    </xsl:if>
-                </xsl:for-each>
-            </xsl:if>
-        </xsl:variable>
-        <xsl:sequence select="string($property-value[1])"/>
-    </xsl:function>
     
     <xsl:function name="pxi:is-numeric" as="xs:boolean">
         <xsl:param name="value"/>

@@ -8,7 +8,7 @@
     <x:context>
       <doc>
         <body>
-          <p style="counter-reset: braille-page 1">
+          <p style="display: block; counter-reset: braille-page 1">
             foo
           </p>
         </body>
@@ -19,7 +19,7 @@
         <body>
           <p louis:braille-page-reset="1"
              xml:id="..."
-             style="counter-reset: braille-page 1">
+             style="display: block">
             foo
           </p>
         </body>

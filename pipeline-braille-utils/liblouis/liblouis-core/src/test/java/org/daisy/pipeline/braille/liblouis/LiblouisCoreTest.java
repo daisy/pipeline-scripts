@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
 import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -53,8 +54,8 @@ public class LiblouisCoreTest {
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
-			forThisPlatform(mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("liblouis-native").versionAsInProject()),
+			brailleModule("common-java"),
+			forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()

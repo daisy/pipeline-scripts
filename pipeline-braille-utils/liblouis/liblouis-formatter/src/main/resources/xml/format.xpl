@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="louis:format" name="format"
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    exclude-inline-prefixes="d px pxi c pef xsl"
-    version="1.0">
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:louis="http://liblouis.org/liblouis"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                exclude-inline-prefixes="px pxi c pef xsl"
+                version="1.0">
     
     <p:input port="source" sequence="true" primary="true"/>
     <p:output port="result" sequence="false" primary="true"/>
@@ -99,11 +98,7 @@
                             </xsl:copy>
                         </xsl:template>
                         <xsl:template match="@style">
-                            <xsl:variable name="main-declarations"
-                                          select="css:get-declarations(css:tokenize-stylesheet(string(.)), ())"/>
-                            <xsl:if test="normalize-space(string($main-declarations))!=''">
-                                <xsl:attribute name="style" select="$main-declarations"/>
-                            </xsl:if>
+                            <xsl:sequence select="css:style-attribute(css:parse-stylesheet(string(.))[not(@selector)][1]/@declaration-list)"/>
                         </xsl:template>
                     </xsl:stylesheet>
                 </p:inline>
@@ -238,7 +233,7 @@
                 <p:pipe step="liblouis-page-layout" port="result"/>
             </p:input>
         </p:insert>
-        <p:delete match="/*/@css:page"/>
+        <p:delete match="//@css:page"/>
     </p:for-each>
     
     <p:for-each name="handle-css-border">
@@ -291,9 +286,9 @@
                         <xsl:copy>
                             <xsl:apply-templates select="@*"/>
                             <xsl:if test="collection()//*[@target=($id,concat('#',$id))
-                                                          and (self::css:target-text or
-                                                               self::css:target-string or
-                                                               self::css:target-counter)]">
+                                                          and (self::css:target-text-fn or
+                                                               self::css:target-string-fn or
+                                                               self::css:target-counter-fn)]">
                                 <xsl:attribute name="css:target" select="'true'"/>
                             </xsl:if>
                             <xsl:apply-templates select="node()"/>
@@ -317,12 +312,12 @@
                                    @style or
                                    @css:display or
                                    @css:target or
-                                   self::css:string or
-                                   self::css:counter or
-                                   self::css:target-text or
-                                   self::css:target-string or
-                                   self::css:target-counter or
-                                   self::css:leader or
+                                   self::css:string-fn or
+                                   self::css:counter-fn or
+                                   self::css:target-text-fn or
+                                   self::css:target-string-fn or
+                                   self::css:target-counter-fn or
+                                   self::css:leader-fn or
                                    self::css:block or
                                    self::louis:space or
                                    self::louis:print-page or

@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:c="http://www.w3.org/ns/xproc-step"
+               xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-               xmlns:louis="http://liblouis.org/liblouis"
-               script="test_generate-toc.xpl">
+               xmlns:louis="http://liblouis.org/liblouis">
+  
+  <x:script>
+    <p:declare-step type="pxi:test-generate-toc" version="1.0">
+      <p:input port="source" sequence="true"/>
+      <p:output port="result" sequence="true"/>
+      <p:import href="../../main/resources/xml/utils/xslt-for-each.xpl"/>
+      <pxi:xslt-for-each>
+        <p:input port="stylesheet">
+          <p:document href="../../main/resources/xml/generate-toc-items.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+          <p:empty/>
+        </p:input>
+      </pxi:xslt-for-each>
+      <pxi:xslt-for-each>
+        <p:input port="stylesheet">
+          <p:document href="../../main/resources/xml/group-toc-items.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+          <p:empty/>
+        </p:input>
+      </pxi:xslt-for-each>
+    </p:declare-step>
+  </x:script>
   
   <x:scenario label="test_01">
     <x:call step="pxi:test-generate-toc">
       <x:input port="source">
         <x:document type="inline">
-          <toc xml:base="file:/users/me/toc.xml">
-            <css:block>
-              <css:target-text target="h1"/>
-              <css:leader pattern="⠄⠄"/>
-              <css:target-counter target="h1" identifier="braille-page"/>
-              <css:target-string target="h1" identifier="print-page"/>
-            </css:block>
-            <css:block>
-              <css:target-text target="h2"/>
-              <css:leader pattern="⠄⠄"/>
-              <css:target-counter target="h2" identifier="braille-page"/>
-              <css:target-string target="h2" identifier="print-page"/>
-            </css:block>
+          <doc xml:base="file:/users/me/toc.xml" css:display="block" style="right: 2">
+            <toc css:display="block">
+              <css:block>
+                <css:target-text-fn target="h1"/>
+                <css:leader-fn pattern="⠄⠄"/>
+                <css:target-counter-fn target="h1" identifier="braille-page"/>
+                <css:target-string-fn target="h1" identifier="print-page"/>
+              </css:block>
+              <css:block>
+                <css:target-text-fn target="h2"/>
+                <css:leader-fn pattern="⠄⠄"/>
+                <css:target-counter-fn target="h2" identifier="braille-page"/>
+                <css:target-string-fn target="h2" identifier="print-page"/>
+              </css:block>
+            </toc>
             <h xml:id="h1"> foo </h>
             <h xml:id="h2"> bar </h>
             <louis:page-layout>
@@ -30,7 +56,7 @@
                 <c:param name="louis:page-width" value="30"/>
               </c:param-set>
             </louis:page-layout>
-          </toc>
+          </doc>
         </x:document>
       </x:input>
     </x:call>
@@ -39,13 +65,15 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <toc xml:base="file:/users/me/toc.xml">
-          <louis:div css:display="block" style="left: 0; right: 0.0">
-            <louis:toc href="file:/users/me/toc.xml" width="30" print-pages="true" braille-pages="true" leader="⠄">
-              <louis:toc-item ref="h1" style="left:0.0; text-indent:0.0"/>
-              <louis:toc-item ref="h2" style="left:0.0; text-indent:0.0"/>
-            </louis:toc>
-          </louis:div>
+        <doc xml:base="file:/users/me/toc.xml" css:display="block" style="right: 2">
+          <toc css:display="block">
+            <louis:div css:display="block" style="left: 0.0; right: 2.0">
+              <louis:toc href="file:/users/me/toc.xml" width="28" print-pages="true" braille-pages="true" leader="⠄">
+                <louis:toc-item ref="h1" style="left: 0.0; text-indent: 0.0"/>
+                <louis:toc-item ref="h2" style="left: 0.0; text-indent: 0.0"/>
+              </louis:toc>
+            </louis:div>
+          </toc>
           <h xml:id="h1">foo</h>
           <h xml:id="h2">bar</h>
           <louis:page-layout>
@@ -53,7 +81,7 @@
               <c:param name="louis:page-width" value="30"/>
             </c:param-set>
           </louis:page-layout>
-        </toc>
+        </doc>
       </x:document>
     </x:expect>
   </x:scenario>
@@ -64,17 +92,17 @@
         <x:document type="inline">
           <toc xml:base="file:/users/me/toc.xml">
             <css:block>
-              <css:target-text target="h1"/>
-              <css:target-string target="h1" identifier="print-page"/>
+              <css:target-text-fn target="h1"/>
+              <css:target-string-fn target="h1" identifier="print-page"/>
             </css:block>
             <css:block>
-              <css:target-text target="h2"/>
+              <css:target-text-fn target="h2"/>
               ..
-              <css:target-string target="h2" identifier="print-page"/>
+              <css:target-string-fn target="h2" identifier="print-page"/>
             </css:block>
             <css:block>
-              <css:target-text target="h3"/>
-              <css:target-string target="h3" identifier="print-page"/>
+              <css:target-text-fn target="h3"/>
+              <css:target-string-fn target="h3" identifier="print-page"/>
             </css:block>
             <louis:print-page>1</louis:print-page>
             <h xml:id="h1"> foo </h>
@@ -95,19 +123,19 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
-          <louis:div css:display="block" style="left: 0; right: 0.0">
+          <louis:div css:display="block" style="left: 0.0; right: 0.0">
             <louis:toc href="file:/users/me/toc.xml" width="30" print-pages="true">
-              <louis:toc-item ref="h1" style="left:0.0; text-indent:0.0"/>
+              <louis:toc-item ref="h1" style="left: 0.0; text-indent: 0.0"/>
             </louis:toc>
           </louis:div>
           <css:block>
-              <css:target-text> bar </css:target-text>
+              <css:target-text-fn> bar </css:target-text-fn>
               ..
-              <css:target-string>2</css:target-string>
+              <css:target-string-fn>2</css:target-string-fn>
             </css:block>
           <css:block>
-              <css:target-text/>
-              <css:target-string/>
+              <css:target-text-fn/>
+              <css:target-string-fn/>
           </css:block>
           <louis:print-page>1</louis:print-page>
           <h xml:id="h1"> foo </h>
@@ -129,13 +157,13 @@
         <x:document type="inline">
           <toc xml:base="file:/users/me/toc.xml">
             <css:block style="left: 0">
-              <css:target-text target="h1"/>
+              <css:target-text-fn target="h1"/>
             </css:block>
             <css:block style="left: 2">
-              <css:target-text target="h2"/>
+              <css:target-text-fn target="h2"/>
             </css:block>
             <css:block style="right: 2">
-              <css:target-text target="h3"/>
+              <css:target-text-fn target="h3"/>
             </css:block>
             <h xml:id="h1"> foo </h>
             <h xml:id="h2"> bar </h>
@@ -155,15 +183,15 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
-          <louis:div css:display="block" style="left: 0; right: 0.0">
+          <louis:div css:display="block" style="left: 0.0; right: 0.0">
             <louis:toc href="file:/users/me/toc.xml" width="30">
-              <louis:toc-item ref="h1" style="left:0; text-indent:0.0"/>
-              <louis:toc-item ref="h2" style="left:2; text-indent:0.0"/>
+              <louis:toc-item ref="h1" style="left: 0; text-indent: 0.0"/>
+              <louis:toc-item ref="h2" style="left: 2; text-indent: 0.0"/>
             </louis:toc>
           </louis:div>
-          <louis:div css:display="block" style="left: 0; right: 2.0">
+          <louis:div css:display="block" style="left: 0.0; right: 2.0">
             <louis:toc href="file:/users/me/toc.xml" width="28">
-              <louis:toc-item ref="h3" style="left:0.0; text-indent:0.0"/>
+              <louis:toc-item ref="h3" style="left: 0.0; text-indent: 0.0"/>
             </louis:toc>
           </louis:div>
           <h xml:id="h1"> foo </h>

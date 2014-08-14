@@ -57,9 +57,9 @@
     <x:context>
       <doc>
         <div css:display="block">
-          <css:target-text/>
-          <css:leader/>
-          <css:target-counter/>
+          <css:target-text-fn/>
+          <css:leader-fn/>
+          <css:target-counter-fn/>
           <div css:display="block">
             xxx
           </div>
@@ -70,9 +70,9 @@
       <doc>
         <div css:display="block">
           <css:block>
-            <css:target-text/>
-            <css:leader/>
-            <css:target-counter/>
+            <css:target-text-fn/>
+            <css:leader-fn/>
+            <css:target-counter-fn/>
           </css:block>
           <div css:display="block">
             <css:block>

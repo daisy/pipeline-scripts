@@ -5,6 +5,9 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:template match="@*|node()">
@@ -14,22 +17,23 @@
     </xsl:template>
     
     <xsl:template match="*[matches(string(@style), '::before|::after')]">
-        <xsl:variable name="stylesheet" as="xs:string*" select="css:tokenize-stylesheet(string(@style))"/>
-        <xsl:variable name="before_style" as="xs:string?" select="css:get-declarations($stylesheet, '::before')"/>
-        <xsl:variable name="after_style" as="xs:string?" select="css:get-declarations($stylesheet, '::after')"/>
+        <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
+        <xsl:variable name="before-style" as="xs:string?" select="$rules[@selector='::before'][1]/@declaration-list"/>
+        <xsl:variable name="after-style" as="xs:string?" select="$rules[@selector='::after'][1]/@declaration-list"/>
         <xsl:choose>
-            <xsl:when test="$before_style or $after_style">
+            <xsl:when test="$before-style or $after-style">
                 <xsl:copy>
-                    <xsl:apply-templates select="@*"/>
-                    <xsl:if test="$before_style">
+                    <xsl:sequence select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="css:style-attribute(css:serialize-stylesheet($rules[not(@selector=('::before','::after'))]))"/>
+                    <xsl:if test="$before-style">
                         <xsl:element name="css:before">
-                            <xsl:attribute name="style" select="$before_style"/>
+                            <xsl:attribute name="style" select="$before-style"/>
                         </xsl:element>
                     </xsl:if>
                     <xsl:apply-templates select="node()"/>
-                    <xsl:if test="$after_style">
+                    <xsl:if test="$after-style">
                         <xsl:element name="css:after">
-                            <xsl:attribute name="style" select="$after_style"/>
+                            <xsl:attribute name="style" select="$after-style"/>
                         </xsl:element>
                     </xsl:if>
                 </xsl:copy>

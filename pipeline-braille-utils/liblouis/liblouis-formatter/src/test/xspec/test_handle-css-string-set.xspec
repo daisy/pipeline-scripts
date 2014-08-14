@@ -17,9 +17,9 @@
       <doc>
         <body>
           <louis:print-page break="false">1</louis:print-page>
-          <pagenum num="1" style="string-set: print-page attr(num)"/>
+          <pagenum num="1" style="display: inline"/>
           <louis:print-page break="true">2</louis:print-page>
-          <pagenum num="2" style="string-set: print-page attr(num); display: page-break"/>
+          <pagenum num="2" style="display: page-break"/>
         </body>
       </doc>
     </x:expect>
@@ -41,7 +41,7 @@
           <louis:running-header>
             foo
           </louis:running-header>
-          <h style="display:block; string-set: running-header content()">
+          <h style="display: block">
             foo
           </h>
         </body>

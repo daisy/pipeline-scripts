@@ -20,14 +20,14 @@
     
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/common-utils/formatting/encoding-functions.xsl" />
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xsl" />
     
     <xsl:template match="/*">
         <louis:result>
             <xsl:if test="$border-top!='none'">
                 <louis:line>
                     <xsl:sequence select="pxi:repeat-char($border-top,
-                        number($width) + (if ($border-left='none') then 0 else 1) + (if ($border-right='none') then 0 else 1))"/>
+                        xs:integer(number($width)) + (if ($border-left='none') then 0 else 1) + (if ($border-right='none') then 0 else 1))"/>
                 </louis:line>
             </xsl:if>
             <xsl:for-each select="tokenize(pxi:right-trim-formfeeds(string(.)), '&#x0C;')">
@@ -36,7 +36,7 @@
             <xsl:if test="$border-bottom!='none'">
                 <louis:line>
                     <xsl:sequence select="pxi:repeat-char($border-bottom,
-                        number($width) + (if ($border-left='none') then 0 else 1) + (if ($border-right='none') then 0 else 1))"/>
+                        xs:integer(number($width)) + (if ($border-left='none') then 0 else 1) + (if ($border-right='none') then 0 else 1))"/>
                 </louis:line>
             </xsl:if>
         </louis:result>
@@ -76,7 +76,7 @@
     
     <xsl:template name="line">
         <xsl:variable name="line" select="brl:nabcc-to-unicode-braille(pxi:space-to-nbsp(concat(
-            pxi:repeat-char(' ', - number($crop-left)),
+            pxi:repeat-char(' ', - xs:integer(number($crop-left))),
             substring(., number($crop-left) + 1, number($width)))))"/>
         <louis:line>
             <xsl:if test="$border-left!='none'">
@@ -85,7 +85,7 @@
             <xsl:value-of select="$line"/>
             <xsl:choose>
                 <xsl:when test="$border-right!='none'">
-                    <xsl:value-of select="pxi:repeat-char('&#xA0;', number($width) - string-length($line))"/>
+                    <xsl:value-of select="pxi:repeat-char('&#xA0;', xs:integer(number($width)) - string-length($line))"/>
                     <xsl:value-of select="$border-right"/>
                 </xsl:when>
                 <xsl:when test="$border-left='none' and string-length($line)=0">
@@ -112,8 +112,8 @@
     
     <xsl:function name="pxi:repeat-char" as="xs:string">
         <xsl:param name="char" as="xs:string"/>
-        <xsl:param name="times" />
-        <xsl:sequence select="if ($times &gt; 0) then concat($char, pxi:repeat-char($char, $times - 1)) else ''"/>
+        <xsl:param name="times" as="xs:integer"/>
+        <xsl:sequence select="string-join(for $x in 1 to $times return $char, '')"/>
     </xsl:function>
     
 </xsl:stylesheet>

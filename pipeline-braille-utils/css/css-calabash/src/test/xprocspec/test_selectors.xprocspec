@@ -431,7 +431,7 @@
   <!--
       TODO: Root selector
   -->
-  <x:scenario label="test_11" pending="true">
+  <x:scenario label="test_11" pending="failure">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">

@@ -5,6 +5,9 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:template match="@*|node()">
@@ -14,21 +17,22 @@
     </xsl:template>
     
     <xsl:template match="*[contains(string(@style), '@page')]">
-        <xsl:param name="current_page_style" as="xs:string?" tunnel="yes"/>
-        <xsl:variable name="page_style" as="xs:string?"
-                      select="css:get-declarations(css:tokenize-stylesheet(string(@style)), '@page')"/>
+        <xsl:param name="current-page-style" as="xs:string?" tunnel="yes"/>
+        <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
+        <xsl:variable name="page-style" as="xs:string?" select="$rules[@selector='@page'][1]/@declaration-list"/>
         <xsl:choose>
-            <xsl:when test="$page_style">
+            <xsl:when test="$page-style">
                 <xsl:copy>
-                    <xsl:apply-templates select="@*"/>
-                    <xsl:if test="not($current_page_style=$page_style)">
-                        <xsl:attribute name="css:page" select="$page_style"/>
+                    <xsl:sequence select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="css:style-attribute(css:serialize-stylesheet($rules[not(@selector='@page')]))"/>
+                    <xsl:if test="not($current-page-style=$page-style)">
+                        <xsl:attribute name="css:page" select="$page-style"/>
                         <xsl:if test="not(@xml:id)">
                             <xsl:attribute name="xml:id" select="generate-id()"/>
                         </xsl:if>
                     </xsl:if>
                     <xsl:apply-templates select="node()">
-                        <xsl:with-param name="current_page_style" select="$page_style" tunnel="yes"/>
+                        <xsl:with-param name="current-page-style" select="$page-style" tunnel="yes"/>
                     </xsl:apply-templates>
                 </xsl:copy>
             </xsl:when>

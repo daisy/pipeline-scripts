@@ -118,7 +118,7 @@
         <p:output port="result.invalid" sequence="true">
             <p:pipe step="select-from-invalid" port="not-matched"/>
         </p:output>
-        <p:wrap-sequence wrapper="wrap" name="wrap-update">
+        <p:wrap-sequence wrapper="_" name="wrap-update">
             <p:input port="source">
                 <p:pipe step="update-liblouis-results" port="update"/>
             </p:input>
@@ -167,26 +167,26 @@
     
     <!-- ================================================================== -->
     
-    <p:wrap-sequence wrapper="wrap" name="source.all">
+    <p:wrap-sequence wrapper="_" name="source.all">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
     </p:wrap-sequence>
     <p:sink/>
     
-    <p:wrap-sequence wrapper="wrap" name="temp-result.all">
+    <p:wrap-sequence wrapper="_" name="temp-result.all">
         <p:input port="source">
             <p:pipe step="main" port="temp-result.valid"/>
             <p:pipe step="main" port="temp-result.invalid"/>
-            <p:inline><dummy/></p:inline>
+            <p:inline><_/></p:inline>
         </p:input>
     </p:wrap-sequence>
     <p:sink/>
     
-    <p:wrap-sequence wrapper="wrap" name="temp-result.valid.all">
+    <p:wrap-sequence wrapper="_" name="temp-result.valid.all">
         <p:input port="source">
             <p:pipe step="main" port="temp-result.valid"/>
-            <p:inline><dummy/></p:inline>
+            <p:inline><_/></p:inline>
         </p:input>
     </p:wrap-sequence>
     <p:sink/>

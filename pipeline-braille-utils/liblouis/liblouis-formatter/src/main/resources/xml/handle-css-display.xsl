@@ -6,6 +6,9 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
+    <!--
+        css-utils [2.0.0,3.0.0)
+    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:template match="@*|node()">
@@ -15,28 +18,24 @@
     </xsl:template>
     
     <xsl:template match="*[contains(string(@style), 'display')]">
-        <xsl:variable name="display" select="css:get-value(., 'display', true(), true(), false())"/>
+        <xsl:variable name="properties"
+            select="css:specified-properties('#all display', true(), true(), true(), .)"/>
+        <xsl:variable name="display" as="xs:string" select="$properties[@name='display']/@value"/>
         <xsl:choose>
             <xsl:when test="$display=('none','page-break')">
                 <xsl:sequence select=".//louis:print-page|
                                       .//louis:running-header|
                                       .//louis:running-footer"/>
             </xsl:when>
-            <xsl:when test="$display=('block','list-item')">
-                <xsl:copy>
-                    <xsl:sequence select="@*[not(name()='style')]"/>
-                    <xsl:variable name="style" as="xs:string?"
-                                  select="css:remove-from-declarations(string(@style), ('display'))"/>
-                    <xsl:if test="$style">
-                        <xsl:attribute name="style" select="$style"/>
-                    </xsl:if>
-                    <xsl:attribute name="css:display" select="'block'"/>
-                    <xsl:apply-templates select="node()"/>
-                </xsl:copy>
-            </xsl:when>
             <xsl:otherwise>
                 <xsl:copy>
-                    <xsl:apply-templates select="@*|node()"/>
+                    <xsl:sequence select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
+                                            $properties[not(@name='display')]))"/>
+                    <xsl:if test="$display=('block','list-item')">
+                        <xsl:attribute name="css:display" select="'block'"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()"/>
                 </xsl:copy>
             </xsl:otherwise>
         </xsl:choose>

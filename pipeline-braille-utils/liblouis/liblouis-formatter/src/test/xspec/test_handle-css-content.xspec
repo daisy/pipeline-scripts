@@ -20,9 +20,7 @@
       <doc>
         <body>
           <p style="display: block">
-            <css:before style="display: block;
-                               margin-left: 2;
-                               content: 'bar'">bar</css:before>
+            <css:before style="display: block; margin-left: 2">bar</css:before>
             foo
           </p>
         </body>
@@ -44,7 +42,7 @@
       <doc>
         <body>
           <p foo="bar">
-            <css:after style="content: attr(foo)">bar</css:after>
+            <css:after>bar</css:after>
           </p>
         </body>
       </doc>
@@ -63,15 +61,11 @@
     </x:context>
     <x:expect label="result">
       <toc>
-        <entry ref="h1" style="display: block;
-                               content: target-text(attr(ref)) ' '
-                                        leader('⠄⠄') ' '
-                                        target-counter(attr(ref), braille-page) ' '
-                                        target-string(attr(ref), print-page)">
-          <css:target-text target="h1"/>
-          <css:leader pattern="⠄⠄"/>
-          <css:target-counter target="h1" identifier="braille-page"/>
-          <css:target-string target="h1" identifier="print-page"/>
+        <entry ref="h1" style="display: block">
+          <css:target-text-fn target="h1"/>
+          <css:leader-fn pattern="⠄⠄"/>
+          <css:target-counter-fn target="h1" identifier="braille-page"/>
+          <css:target-string-fn target="h1" identifier="print-page"/>
         </entry>
       </toc>
     </x:expect>

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    exclude-result-prefixes="xs louis css pxi"
-    version="2.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:louis="http://liblouis.org/liblouis"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                exclude-result-prefixes="xs louis css pxi"
+                version="2.0">
   
-  <xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl" />
+  <!--
+      css-utils [2.0.0,3.0.0)
+  -->
+  <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
   
   <!--
     @parameter node: the input node (element or text)
     @returns: the typeform string:
-      A string with the same length as the string-value of the input node, 
+      A string with the same length as the string-value of the input node,
       where each character indicates the typeform (italic, bold, etc.) of the
       corresponding character in the string-value. The typeform values are:
       - 0 = plain text
@@ -30,13 +33,13 @@
       </xsl:when>
       <xsl:when test="$node/self::text()">
         <xsl:variable name="typeform" as="xs:integer*">
-          <xsl:if test="css:get-value($node/parent::*, 'font-style', true(), true(), false())=('italic','oblique')">
+          <xsl:if test="css:specified-properties('font-style', true(), true(), false(), $node/parent::*)/@value=('italic','oblique')">
             <xsl:sequence select="1"/>
           </xsl:if>
-          <xsl:if test="css:get-value($node/parent::*, 'font-weight', true(), true(), false())='bold'">
+          <xsl:if test="css:specified-properties('font-weight', true(), true(), false(), $node/parent::*)/@value='bold'">
             <xsl:sequence select="2"/>
           </xsl:if>
-          <xsl:if test="css:get-value($node/parent::*, 'text-decoration', true(), true(), false())='underline'">
+          <xsl:if test="css:specified-properties('text-decoration', true(), true(), false(), $node/parent::*)/@value='underline'">
             <xsl:sequence select="4"/>
           </xsl:if>
         </xsl:variable>

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="pxi:attach-liblouis-config" name="attach-liblouis-config"
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:louis="http://liblouis.org/liblouis"
-    exclude-inline-prefixes="#all"
-    version="1.0">
+<p:declare-step type="pxi:attach-liblouis-config" name="main"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:louis="http://liblouis.org/liblouis"
+                exclude-inline-prefixes="#all"
+                version="1.0">
     
-    <p:input port="source" sequence="true" primary="true"/>
+    <p:input port="source" sequence="true"/>
+    <p:output port="result" sequence="true"/>
+    
     <p:option name="directory" required="true"/>
-    <p:output port="result" sequence="true" primary="true"/>
     
     <p:import href="utils/fileset-add-tempfile.xpl"/>
     <p:import href="utils/select-by-position.xpl"/>
@@ -106,11 +107,11 @@ skip           &amp;xpath(//louis:semantics)
     
     <p:for-each name="attach-liblouis-styles">
         <p:iteration-source>
-            <p:pipe step="attach-liblouis-config" port="source"/>
+            <p:pipe step="main" port="source"/>
         </p:iteration-source>
         <pxi:select-by-position name="select">
             <p:input port="source">
-                <p:pipe step="attach-liblouis-config" port="source"/>
+                <p:pipe step="main" port="source"/>
             </p:input>
             <p:with-option name="position" select="p:iteration-position()">
                 <p:empty/>
