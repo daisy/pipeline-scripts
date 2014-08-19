@@ -327,6 +327,9 @@
             </p:input>
             <p:with-option name="result-uri" select="$opf-base"/>
             <p:with-option name="compatibility-mode" select="'false'"/>
+            <p:with-option name="nav-uri" select="base-uri(/*)">
+                <p:pipe port="html-file" step="navigation-doc"/>
+            </p:with-option>
             <!--TODO configurability for other META-INF files ?-->
         </px:epub3-pub-create-package-doc>
 
