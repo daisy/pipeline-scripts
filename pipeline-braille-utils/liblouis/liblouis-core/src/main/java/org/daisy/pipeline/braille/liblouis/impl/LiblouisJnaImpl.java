@@ -139,6 +139,13 @@ public class LiblouisJnaImpl implements Liblouis {
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
 		}
+		
+		public String display(String braille) {
+			try {
+				return translator.display(braille); }
+			catch (TranslationException e) {
+				throw new RuntimeException(e); }
+		}
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);

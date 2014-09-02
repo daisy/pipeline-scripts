@@ -14,4 +14,9 @@ public interface LiblouisTranslator {
 	 */
 	public String hyphenate(String text);
 	
+	/**
+	 * @param braille The braille string to be encoded
+	 */
+	public String display(String braille);
+	
 }
