@@ -59,7 +59,10 @@ public interface ResourceLookup<Q,R> {
 			map = readProperties(properties);
 		}
 		public R lookup(Q query) {
-			return parseValue(map.get(query));
+			String value = map.get(query);
+			if (value != null)
+				return parseValue(value);
+			return null;
 		}
 		private Map<Q,String> readProperties(URL url) {
 			Map<Q,String> map = new HashMap<Q,String>();

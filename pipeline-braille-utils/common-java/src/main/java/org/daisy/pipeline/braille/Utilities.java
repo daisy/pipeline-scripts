@@ -383,6 +383,22 @@ public abstract class Utilities {
 			else
 				throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed");
 		}
+		
+		public static String toString(Locale locale, char separator) {
+			StringBuilder string = new StringBuilder();
+			String language = locale.getLanguage();
+			String country = locale.getCountry();
+			String variant = locale.getVariant();
+			string.append(language);
+			if (country.length() > 0 || variant.length() > 0)
+				string.append(separator);
+			if (country.length() > 0)
+				string.append(country);
+			if (variant.length() > 0) {
+				string.append(separator);
+				string.append(variant); }
+			return string.toString();
+		}
 	}
 	
 	/*
