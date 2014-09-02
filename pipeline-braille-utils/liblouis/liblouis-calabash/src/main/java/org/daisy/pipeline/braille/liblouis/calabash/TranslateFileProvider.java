@@ -16,6 +16,7 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.URLs.decode;
@@ -201,9 +202,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 										"All configuration files and semantic action files must be placed in " + configPath);
 							semanticFileNames.add(decode(path.relativize(uri).toString())); }}}
 				
-				String table = null;
+				URI[] table = null;
 				if (getOption(_table) != null)
-					table = getOption(_table).getString();
+					table = tokenizeTableList(getOption(_table).getString());
 				
 				// Write XML document to file
 				XdmNode xml = source.read();

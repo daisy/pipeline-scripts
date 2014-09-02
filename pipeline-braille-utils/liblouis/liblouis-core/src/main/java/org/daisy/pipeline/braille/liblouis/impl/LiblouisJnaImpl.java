@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +9,10 @@ import java.util.Map;
 import org.daisy.pipeline.braille.BundledNativePath;
 import org.daisy.pipeline.braille.Utilities.Pair;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
+import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 
+import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
 import static org.daisy.pipeline.braille.Utilities.Files.asFile;
 import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
@@ -89,46 +92,53 @@ public class LiblouisJnaImpl implements Liblouis {
 		this.tableResolver = null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String translate(String table, String text, boolean hyphenated, byte[] typeform) {
-		try {
-			Translator translator = compile(table);
-			byte[] hyphens = null;
-			if (hyphenated) {
-				Pair<String,byte[]> input = extractHyphens(text, SHY, ZWSP);
-				text = input._1;
-				hyphens = input._2; }
-			TranslationResult result = translator.translate(text, hyphens, typeform);
-			return insertHyphens(result.getBraille(), result.getHyphenPositions(), SHY, ZWSP); }
-		catch (TranslationException e) {
-			throw new RuntimeException(e); }
-		catch (CompilationException e) {
-			throw new RuntimeException(e); }
-	}
+	private Map<String,LiblouisTranslator> translatorCache = new HashMap<String,LiblouisTranslator>();
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String hyphenate(String table, String text) {
-		try {
-			Translator translator = compile(table);
-			return insertHyphens(text, translator.hyphenate(text), SHY, ZWSP); }
-		catch (TranslationException e) {
-			throw new RuntimeException(e); }
-		catch (CompilationException e) {
-			throw new RuntimeException(e); }
-	}
-	
-	private Map<String,Translator> translatorCache = new HashMap<String,Translator>();
-
-	private Translator compile(String table) throws CompilationException {
-		Translator translator = translatorCache.get(table);
+	public LiblouisTranslator get(URI[] table) {
+		String tableString = serializeTableList(table);
+		LiblouisTranslator translator = translatorCache.get(tableString);
 		if (translator == null) {
-			translator = new Translator(table);
-			translatorCache.put(table, translator); }
+			try {
+				translator = new LiblouisTranslatorJnaImpl(new Translator(tableString));
+				translatorCache.put(tableString, translator); }
+			catch (CompilationException e) {
+				throw new RuntimeException(e); }}
 		return translator;
+	}
+	
+	private static class LiblouisTranslatorJnaImpl implements LiblouisTranslator {
+		
+		private Translator translator;
+		
+		private LiblouisTranslatorJnaImpl(Translator translator) {
+			this.translator = translator;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public String translate(String text, boolean hyphenated, byte[] typeform) {
+			try {
+				byte[] hyphens = null;
+				if (hyphenated) {
+					Pair<String,byte[]> input = extractHyphens(text, SHY, ZWSP);
+					text = input._1;
+					hyphens = input._2; }
+				TranslationResult result = translator.translate(text, hyphens, typeform);
+				return insertHyphens(result.getBraille(), result.getHyphenPositions(), SHY, ZWSP); }
+			catch (TranslationException e) {
+				throw new RuntimeException(e); }
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public String hyphenate(String text) {
+			try {
+				return insertHyphens(text, translator.hyphenate(text), SHY, ZWSP); }
+			catch (TranslationException e) {
+				throw new RuntimeException(e); }
+		}
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);

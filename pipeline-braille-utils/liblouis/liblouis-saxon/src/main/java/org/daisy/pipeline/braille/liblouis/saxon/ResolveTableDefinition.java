@@ -61,10 +61,7 @@ public class ResolveTableDefinition extends ExtensionFunctionDefinition {
 	public ExtensionFunctionCall makeCallExpression() {
 		
 		return new ExtensionFunctionCall() {
-			
-			@SuppressWarnings({ "rawtypes", "unchecked" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-				
 				try {
 					String resource = ((AtomicSequence)arguments[0]).getStringValue();
 					File[] tableList = tableResolver.resolveTableList(tokenizeTableList(resource), null);

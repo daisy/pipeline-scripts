@@ -10,7 +10,7 @@ public interface Liblouisutdml {
 	/**
 	 * @param configFiles: array of file names (nullable)
 	 * @param semanticFiles: array of file names (nullable)
-	 * @param table: fully qualified table URL (nullable)
+	 * @param table: liblouis table list (nullable)
 	 * @param otherSettings: key/value pairs (nullable)
 	 * @param input: the input file
 	 * @param output: path to the output file
@@ -20,7 +20,7 @@ public interface Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			String table,
+			URI[] table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,

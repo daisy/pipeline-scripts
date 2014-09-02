@@ -12,6 +12,8 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.liblouis.Liblouis;
+import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +61,6 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
-			
-			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					String table = ((AtomicSequence)arguments[0]).getStringValue();
@@ -73,7 +73,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 							typeform = ((AtomicSequence)arguments[3]).getStringValue().getBytes();
 							for (int i=0; i < typeform.length; i++)
 								typeform[i] -= 48; }}
-					return new StringValue(liblouis.translate(table, text, hyphenated, typeform)); }
+					return new StringValue(liblouis.get(tokenizeTableList(table)).translate(text, hyphenated, typeform)); }
 				catch (Exception e) {
 					logger.error("louis:translate failed", e);
 					throw new XPathException("louis:translate failed"); }

@@ -57,10 +57,7 @@ public class LookupTableDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	public ExtensionFunctionCall makeCallExpression() {
-		
 		return new ExtensionFunctionCall() {
-			
-			@SuppressWarnings({ "rawtypes", "unchecked" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				String locale = ((AtomicSequence)arguments[0]).getStringValue();
 				URI[] tableList = tableLookup.lookup(parseLocale(locale));

@@ -26,8 +26,6 @@ import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver;
 
-import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +86,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			String table,
+			URI[] table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,
@@ -152,8 +150,8 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 			throw new RuntimeException("Error during liblouisutdml conversion", e); }
 	}
 	
-	private String resolveTable(String table) throws IOException {
-		File[] resolved = tableResolver.resolveTableList(tokenizeTableList(table), null);
+	private String resolveTable(URI[] table) throws IOException {
+		File[] resolved = tableResolver.resolveTableList(table, null);
 		if (resolved == null)
 			throw new RuntimeException("Liblouis table " + table + " could not be resolved");
 		String[] files = new String[resolved.length];
