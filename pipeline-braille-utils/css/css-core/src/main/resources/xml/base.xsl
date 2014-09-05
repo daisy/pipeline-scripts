@@ -57,7 +57,7 @@
         <string>
         # groups: 0
     -->
-    <xsl:variable name="css:STRING_RE">'.*?'|".*?"</xsl:variable>
+    <xsl:variable name="css:STRING_RE">'[^']*'|"[^"]*"</xsl:variable>
     
     <!--
         content()
@@ -149,7 +149,24 @@
                                                         (',$css:TARGET_COUNTER_FN_RE,')|
                                                         (',$css:LEADER_FN_RE,')')"/>
     
+    <!--
+        # groups: ?
+    -->
     <xsl:variable name="css:CONTENT_LIST_RE" select="re:space-separated($css:CONTENT_RE)"/>
+    
+    <!--
+        # groups: ?
+        $1: <identifier>
+        $4: <content-list>
+    -->
+    <xsl:variable name="css:STRING_SET_PAIR_RE" select="concat('(',$css:IDENT_RE,')\s+(',$css:CONTENT_LIST_RE,')')"/>
+    
+    <!--
+        #groups: 7
+        $1: <identifier>
+        $5: <integer>
+    -->
+    <xsl:variable name="css:COUNTER_RESET_PAIR_RE" select="concat('(',$css:IDENT_RE,')(\s+(',$css:INTEGER_RE,'))?')"/>
     
     <!--
         # groups: 2
@@ -161,7 +178,7 @@
         $2: selector
         $6: declaration list
     -->
-    <xsl:variable name="css:RULE_RE" select="re:concat(('(((@|::)',$css:IDENT_RE,')\s+)?\{(',$css:DECLARATION_LIST_RE, ')\}'))"/>
+    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,')\s+)?\{(',$css:DECLARATION_LIST_RE,')\}')"/>
     
     <!-- ======= -->
     <!-- Parsing -->
@@ -217,7 +234,7 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:parse-content-list">
+    <xsl:function name="css:parse-content-list" as="element()*">
         <xsl:param name="content-list" as="xs:string?"/>
         <xsl:param name="context" as="element()?"/>
         <xsl:if test="$content-list">
@@ -286,6 +303,33 @@
                             <css:leader-fn pattern="{substring(regex-group(45), 2, string-length(regex-group(45))-2)}"/>
                         </xsl:when>
                     </xsl:choose>
+                </xsl:matching-substring>
+            </xsl:analyze-string>
+        </xsl:if>
+    </xsl:function>
+    
+    <xsl:function name="css:parse-string-set" as="element()*">
+        <xsl:param name="pairs" as="xs:string?"/>
+        <!--
+            force eager matching
+        -->
+        <xsl:variable name="regexp" select="concat($css:STRING_SET_PAIR_RE,'(\s*,|$)')"/>
+        <xsl:if test="$pairs">
+            <xsl:analyze-string select="$pairs" regex="{$regexp}" flags="x">
+                <xsl:matching-substring>
+                    <css:string-set identifier="{regex-group(1)}" value="{regex-group(4)}"/>
+                </xsl:matching-substring>
+            </xsl:analyze-string>
+        </xsl:if>
+    </xsl:function>
+    
+    <xsl:function name="css:parse-counter-reset" as="element()*">
+        <xsl:param name="pairs" as="xs:string?"/>
+        <xsl:if test="$pairs">
+            <xsl:analyze-string select="$pairs" regex="{$css:COUNTER_RESET_PAIR_RE}" flags="x">
+                <xsl:matching-substring>
+                    <css:counter-reset identifier="{regex-group(1)}"
+                                       value="{if (regex-group(5)!='') then regex-group(5) else '0'}"/>
                 </xsl:matching-substring>
             </xsl:analyze-string>
         </xsl:if>

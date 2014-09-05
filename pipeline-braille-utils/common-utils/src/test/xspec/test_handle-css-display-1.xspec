@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/formatting/handle-css-display-1.xsl">
+  
+  <x:scenario label="test_01">
+    <x:context>
+      <doc>
+        <head style="display:none" css:counter-reset="foo">
+          <meta name="author" content="Bert" css:string-set="author 'Bert'"/>
+          <meta css:counter-reset="bar"/>
+        </head>
+        <body>
+          <p style="display:block" css:counter-reset="baz">
+            foo
+          </p>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <css:temp css:counter-reset="foo bar"
+                  css:string-set="author 'Bert'"/>
+        <body>
+          <css:block css:counter-reset="baz">
+            foo
+          </css:block>
+        </body>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

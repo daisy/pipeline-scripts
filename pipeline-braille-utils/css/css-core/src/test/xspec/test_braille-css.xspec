@@ -100,13 +100,33 @@
 	</x:scenario>
 	
 	<x:scenario label="test_09">
+		<x:call function="css:parse-string-set">
+			<x:param select="'print-page &quot;page &quot; attr(num), running-header &quot;foo&quot;'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:string-set identifier="print-page" value="&quot;page &quot; attr(num)"/>
+			<css:string-set identifier="running-header" value="&quot;foo&quot;"/>
+		</x:expect>
+	</x:scenario>
+	
+	<x:scenario label="test_10">
+		<x:call function="css:parse-counter-reset">
+			<x:param select="'foo 2 bar'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:counter-reset identifier="foo" value="2"/>
+			<css:counter-reset identifier="bar" value="0"/>
+		</x:expect>
+	</x:scenario>
+	
+	<x:scenario label="test_11">
 		<x:context mode="css:serialize">
 			<css:target-string-fn target="#foo" identifier="print-page"/>
 		</x:context>
 		<x:expect label="result" select="'target-string(#foo, print-page)'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_10">
+	<x:scenario label="test_12">
 		<x:call function="css:serialize-stylesheet">
 			<x:param>
 				<css:rule selector="@page" declaration-list="size: 40 25;"/>
@@ -116,7 +136,7 @@
 		<x:expect label="result" select="'@page { size: 40 25; } { display:block }'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_11">
+	<x:scenario label="test_13">
 		<x:call function="css:serialize-declaration-list">
 			<x:param>
 				<css:property name="display" value="none"/>
@@ -126,7 +146,7 @@
 		<x:expect label="result" select="'display: none; string-set: print-page attr(value)'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_12">
+	<x:scenario label="test_14">
 		<x:context mode="css:eval">
 			<css:string value="foobar"/>
 		</x:context>
