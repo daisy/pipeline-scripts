@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
+               stylesheet="../../main/resources/xml/generate-obfl-layout-master.xsl">
+  
+  <x:scenario label="test_01">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="''"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="40" page-height="25" duplex="false">
+        <default-template>
+          <header/>
+          <footer/>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'size: 15 15;
+                        @top-right { content: counter(braille-page, lower-roman) }
+                        @bottom-center { content: &quot;footer&quot; }'"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="false">
+        <default-template>
+          <header>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <current-page style="lower-roman"/>
+            </field>
+          </header>
+          <footer>
+            <field>
+              <string value="footer"/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

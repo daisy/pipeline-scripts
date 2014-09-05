@@ -8,7 +8,7 @@
     <x:call step="dotify:obfl-to-pef">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="en">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
             <layout-master name="a" page-width="15" page-height="15" duplex="false">
               <default-template>
                 <header/>

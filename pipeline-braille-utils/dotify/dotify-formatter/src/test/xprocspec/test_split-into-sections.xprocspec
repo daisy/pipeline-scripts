@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
+               script="../../main/resources/xml/split-into-sections.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="pxi:split-into-sections">
+      <x:input port="source">
+        <x:document type="inline">
+          <css:block css:counter-reset="braille-page 1 foo">
+            <css:block>
+              foo
+            </css:block>
+            <css:block css:counter-reset="braille-page 2">
+              bar
+            </css:block>
+            <css:block>
+              baz
+            </css:block>
+          </css:block>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <css:block obfl:initial-page-number="1" css:counter-reset="foo 0" part="first">
+          <css:block> foo </css:block>
+        </css:block>
+      </x:document>
+      <x:document type="inline">
+        <css:block obfl:initial-page-number="2" part="last">
+          <css:block> bar </css:block>
+          <css:block> baz </css:block>
+        </css:block>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:call step="pxi:split-into-sections">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc>
+            <css:inline>
+              <body css:page="foo">
+                <frontmatter css:page="bar">
+                  xxx
+                </frontmatter>
+                <bodymatter>
+                  xxx
+                </bodymatter>
+                <rearmatter css:page="baz">
+                  xxx
+                </rearmatter>
+              </body>
+            </css:inline>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <doc>
+          <css:inline part="first"/>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc css:page="foo">
+          <css:inline part="middle">
+            <body/>
+          </css:inline>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc css:page="bar">
+          <css:inline part="middle">
+            <body>
+              <frontmatter> xxx </frontmatter>
+            </body>
+          </css:inline>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc css:page="foo">
+          <css:inline part="middle">
+            <body>
+              <bodymatter> xxx </bodymatter>
+            </body>
+          </css:inline>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc css:page="baz">
+          <css:inline part="middle">
+            <body>
+              <rearmatter> xxx </rearmatter>
+            </body>
+          </css:inline>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc css:page="foo">
+          <css:inline part="middle">
+            <body/>
+          </css:inline>
+        </doc>
+      </x:document>
+      <x:document type="inline">
+        <doc>
+          <css:inline part="last"/>
+        </doc>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
