@@ -59,11 +59,11 @@
   </p:option>
 
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-tts/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
   <p:import href="dtbook-to-daisy3.convert.xpl"/>
-  
+
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
   <p:sink/>
   <p:xslt name="output-dir-uri">
@@ -150,33 +150,46 @@
     </p:input>
   </px:fileset-join>
 
-  <!-- Optional call to the Text-To-Speech processor. -->
-  <px:tts-for-dtbook name="tts">
-    <p:input port="content.in">
-      <p:pipe port="matched" step="first-dtbook"/>
-    </p:input>
-    <p:input port="fileset.in">
-      <p:pipe port="fileset.out" step="load"/>
-    </p:input>
-    <p:with-option name="audio" select="$audio"/>
-    <p:with-option name="aural-css" select="$aural-css"/>
-    <p:with-option name="ssml-of-lexicons-uris" select="$ssml-of-lexicons-uris"/>
-  </px:tts-for-dtbook>
+  <p:choose name="css-inlining">
+    <p:xpath-context>
+      <p:empty/>
+    </p:xpath-context>
+    <p:when test="$audio = 'true'">
+      <p:output port="result" primary="true"/>
+      <px:inline-css-speech>
+	<p:input port="source">
+	  <p:pipe port="matched" step="first-dtbook"/>
+	</p:input>
+	<p:input port="fileset.in">
+	  <p:pipe port="fileset.out" step="load"/>
+	</p:input>
+	<p:with-option name="aural-sheet-uri" select="$aural-css"/>
+	<p:with-option name="content-type" select="'application/x-dtbook+xml'"/>
+      </px:inline-css-speech>
+    </p:when>
+    <p:otherwise>
+      <p:output port="result" primary="true"/>
+      <p:identity>
+	<p:input port="source">
+	  <p:pipe port="matched" step="first-dtbook"/>
+	</p:input>
+      </p:identity>
+    </p:otherwise>
+  </p:choose>
 
   <px:dtbook-to-daisy3-convert name="convert">
     <p:input port="in-memory.in">
-      <p:pipe port="content.out" step="tts"/>
+      <p:pipe port="result" step="css-inlining"/>
     </p:input>
     <p:input port="fileset.in">
       <p:pipe port="result" step="fileset.with-css"/>
-    </p:input>
-    <p:input port="audio-map">
-      <p:pipe port="audio-map" step="tts"/>
     </p:input>
     <p:with-option name="publisher" select="$publisher"/>
     <p:with-option name="output-fileset-base" select="/*/@href">
       <p:pipe port="result" step="output-dir-uri"/>
     </p:with-option>
+    <p:with-option name="audio" select="$audio"/>
+    <p:with-option name="ssml-of-lexicons-uris" select="$ssml-of-lexicons-uris"/>
   </px:dtbook-to-daisy3-convert>
 
   <px:fileset-store>
