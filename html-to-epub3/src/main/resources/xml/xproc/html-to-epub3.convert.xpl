@@ -132,7 +132,7 @@
             <px:fileset-create>
                 <p:with-option name="base" select="$content-dir"/>
             </px:fileset-create>
-            <px:fileset-add-entry media-type="application/xml+xhtml">
+            <px:fileset-add-entry media-type="application/xhtml+xml">
                 <p:with-option name="href" select="$nav-base"/>
             </px:fileset-add-entry>
             <px:message message="Navigation Document Created."/>

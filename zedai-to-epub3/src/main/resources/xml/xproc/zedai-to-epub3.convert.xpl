@@ -237,7 +237,7 @@
             <px:fileset-create>
                 <p:with-option name="base" select="$content-dir"/>
             </px:fileset-create>
-            <px:fileset-add-entry media-type="application/xml+xhtml" name="navigation-doc.result.fileset">
+            <px:fileset-add-entry media-type="application/xhtml+xml" name="navigation-doc.result.fileset">
                 <p:with-option name="href" select="$nav-base"/>
             </px:fileset-add-entry>
             <p:add-attribute match="/*" attribute-name="xml:base">
