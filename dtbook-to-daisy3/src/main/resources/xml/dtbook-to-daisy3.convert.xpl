@@ -20,6 +20,15 @@
     </p:documentation>
   </p:input>
 
+  <p:input port="config">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <h2 px:role="name">Text-To-Speech configuration file</h2>
+      <p px:role="desc">Configuration file that contains Text-To-Speech
+      properties, links to aural CSS stylesheets and links to PLS
+      lexicons.</p>
+    </p:documentation>
+  </p:input>
+
   <p:output port="in-memory.out" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <h2 px:role="name">Output documents</h2>
@@ -79,15 +88,6 @@
     </p:documentation>
   </p:option>
 
-  <p:option name="ssml-of-lexicons-uris" required="false" px:type="anyURI" select="''">
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">Lexicons SSML pointers</h2>
-      <p px:role="desc">URI of an SSML file which contains a list of
-      lexicon elements with their URI. The lexicons will be provided
-      to the Text-To-Speech processors.</p>
-    </p:documentation>
-  </p:option>
-
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
@@ -138,8 +138,10 @@
     <p:input port="fileset.in">
       <p:pipe port="fileset.in" step="main"/>
     </p:input>
+    <p:input port="config">
+      <p:pipe port="config" step="main"/>
+    </p:input>
     <p:with-option name="audio" select="$audio"/>
-    <p:with-option name="ssml-of-lexicons-uris" select="$ssml-of-lexicons-uris"/>
   </px:tts-for-dtbook>
 
   <p:delete name="filtered-dtbook-fileset"

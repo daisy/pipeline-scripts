@@ -35,26 +35,10 @@
     </p:documentation>
   </p:option>
 
-  <p:option name="audio" required="false" px:type="boolean" select="'true'">
+  <p:option name="tts-config" required="false" px:type="anyURI" select="''">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">Enable Text-To-Speech</h2>
-      <p px:role="desc">Whether to use a speech synthesizer to produce audio files.</p>
-    </p:documentation>
-  </p:option>
-
-  <p:option name="aural-css" required="false" px:type="anyURI" select="''">
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">Aural CSS sheet</h2>
-      <p px:role="desc">Path of an additional Aural CSS stylesheet for the Text-To-Speech.</p>
-    </p:documentation>
-  </p:option>
-
-  <p:option name="ssml-of-lexicons-uris" required="false" px:type="anyURI" select="''">
-    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">Lexicons SSML pointers</h2>
-      <p px:role="desc">URI of an SSML file which contains a list of
-      lexicon elements with their URI. The lexicons will be provided
-      to the Text-To-Speech processors.</p>
+      <h2 px:role="name"> Text-To-Speech configuration file</h2>
+      <p px:role="desc">Configuration file for the Text-To-Speech.</p>
     </p:documentation>
   </p:option>
 
@@ -150,11 +134,28 @@
     </p:input>
   </px:fileset-join>
 
+  <p:choose name="loaded-tts-config">
+    <p:when test="$tts-config != ''">
+      <p:output port="result" primary="true"/>
+      <p:load>
+	<p:with-option name="href" select="$tts-config"/>
+      </p:load>
+    </p:when>
+    <p:otherwise>
+      <p:output port="result" primary="true">
+	<p:inline>
+	  <d:config/>
+	</p:inline>
+      </p:output>
+      <p:sink/>
+    </p:otherwise>
+  </p:choose>
+
   <p:choose name="css-inlining">
     <p:xpath-context>
       <p:empty/>
     </p:xpath-context>
-    <p:when test="$audio = 'true'">
+    <p:when test="$tts-config != ''">
       <p:output port="result" primary="true"/>
       <px:inline-css-speech>
 	<p:input port="source">
@@ -163,7 +164,9 @@
 	<p:input port="fileset.in">
 	  <p:pipe port="fileset.out" step="load"/>
 	</p:input>
-	<p:with-option name="aural-sheet-uri" select="$aural-css"/>
+	<p:input port="config">
+	  <p:pipe port="result" step="loaded-tts-config"/>
+	</p:input>
 	<p:with-option name="content-type" select="'application/x-dtbook+xml'"/>
       </px:inline-css-speech>
     </p:when>
@@ -184,12 +187,14 @@
     <p:input port="fileset.in">
       <p:pipe port="result" step="fileset.with-css"/>
     </p:input>
+    <p:input port="config">
+      <p:pipe port="result" step="loaded-tts-config"/>
+    </p:input>
     <p:with-option name="publisher" select="$publisher"/>
     <p:with-option name="output-fileset-base" select="/*/@href">
       <p:pipe port="result" step="output-dir-uri"/>
     </p:with-option>
-    <p:with-option name="audio" select="$audio"/>
-    <p:with-option name="ssml-of-lexicons-uris" select="$ssml-of-lexicons-uris"/>
+    <p:with-option name="audio" select="$tts-config != ''"/>
   </px:dtbook-to-daisy3-convert>
 
   <px:fileset-store>
