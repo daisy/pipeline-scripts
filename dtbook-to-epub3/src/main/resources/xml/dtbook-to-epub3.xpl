@@ -7,7 +7,7 @@
         <h1 px:role="name">DTBook to EPUB3</h1>
         <p px:role="desc">Converts multiple dtbooks to epub3 format</p>
     </p:documentation>
-    
+
     <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">DTBook file(s)</h2>
@@ -28,7 +28,7 @@
             <p px:role="desc">Directory where both temp-files and the resulting EPUB3 publication is stored.</p>
         </p:documentation>
     </p:option>
-    
+
     <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Temporary directory</h2>
@@ -43,11 +43,20 @@
         </p:documentation>
     </p:option>
 
+    <p:option name="tts-config" required="false" px:type="anyURI" select="''">
+      <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+	<h2 px:role="name"> Text-To-Speech configuration file</h2>
+	<p px:role="desc">Configuration file for the Text-To-Speech.</p>
+      </p:documentation>
+    </p:option>
+
+
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
 
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
     <p:sink/>
@@ -85,15 +94,63 @@
         </p:variable>
         <p:variable name="epub-file-uri" select="concat($output-dir-uri,$output-name,'.epub')"/>
 
-        <px:dtbook-load name="load">
+	<px:dtbook-load name="load">
             <p:input port="source">
                 <p:pipe port="source" step="dtbook-to-epub3"/>
             </p:input>
         </px:dtbook-load>
 
+	<p:choose name="load-tts-config">
+	  <p:when test="$tts-config != ''">
+	    <p:xpath-context>
+	      <p:empty/>
+	    </p:xpath-context>
+	    <p:output port="result" primary="true"/>
+	    <p:load>
+	      <p:with-option name="href" select="$tts-config"/>
+	    </p:load>
+	  </p:when>
+	  <p:otherwise>
+	    <p:output port="result" primary="true">
+	      <p:inline>
+		<d:config/>
+	      </p:inline>
+	    </p:output>
+	    <p:sink/>
+	  </p:otherwise>
+	</p:choose>
+	<p:choose name="css-inlining">
+	  <p:when test="$tts-config != ''">
+	    <p:output port="result" primary="true"/>
+	    <px:inline-css-speech>
+	      <p:input port="source">
+	    	<p:pipe port="in-memory.out" step="load"/>
+	      </p:input>
+	      <p:input port="fileset.in">
+	    	<p:pipe port="fileset.out" step="load"/>
+	      </p:input>
+	      <p:input port="config">
+	    	<p:pipe port="result" step="load-tts-config"/>
+	      </p:input>
+	      <p:with-option name="content-type" select="'application/x-dtbook+xml'"/>
+	    </px:inline-css-speech>
+	  </p:when>
+	  <p:otherwise>
+	    <p:output port="result" primary="true"/>
+	    <p:identity>
+	      <p:input port="source">
+		<p:pipe port="in-memory.out" step="load"/>
+	      </p:input>
+	    </p:identity>
+	  </p:otherwise>
+	</p:choose>
+
         <px:dtbook-to-zedai-convert name="convert.dtbook-to-zedai">
+	    <p:input port="fileset.in">
+	        <p:pipe port="fileset.out" step="load"/>
+	    </p:input>
             <p:input port="in-memory.in">
-                <p:pipe port="in-memory.out" step="load"/>
+	      <p:pipe port="result" step="css-inlining"/>
             </p:input>
             <p:with-option name="opt-output-dir" select="concat($output-dir-uri,'zedai/')"/>
             <p:with-option name="opt-zedai-filename" select="concat($output-name,'.xml')"/>
@@ -113,7 +170,11 @@
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="convert.dtbook-to-zedai"/>
             </p:input>
+            <p:input port="tts-config">
+	      <p:pipe port="result" step="load-tts-config"/>
+            </p:input>
             <p:with-option name="output-dir" select="$temp-dir"/>
+            <p:with-option name="audio" select="$tts-config != ''"/>
         </px:zedai-to-epub3-convert>
 
         <px:epub3-store name="store">
