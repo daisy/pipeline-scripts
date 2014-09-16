@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
   xmlns:f="http://www.daisy.org/ns/functions-internal" xmlns:its="http://www.w3.org/2005/11/its"
-  xmlns:m="http://www.w3.org/1998/Math/MathML"
+  xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:tts="http://www.daisy.org/ns/pipeline/tts"
   xmlns:pf="http://www.daisy.org/ns/functions" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xpath-default-namespace="http://www.daisy.org/ns/z3998/authoring/"
@@ -36,6 +36,7 @@
         <!--<meta name="dcterms:date" content="2010-03-27T13:50:05-02:00"/>-->
       </head>
       <body>
+	<xsl:copy-of select="$nodes/ancestor-or-self::*/@tts:*"/>
         <xsl:apply-templates select="$nodes"/>
       </body>
     </html>
@@ -615,7 +616,7 @@
       else if (@desc) then id(tokenize(@desc,'\s+'))[not(@xlink:href)][1]
       else ()
       )"/>
-    
+
     <xsl:variable name="captions" select="../(hd|caption|citation)[f:references(.,current())]"/>
     <xsl:variable name="shared-captions"
       select="..[f:has-role(.,'figure')]/(hd|caption|citation)[f:references-all(.,../(object|table))]"/>
@@ -632,7 +633,7 @@
           </xsl:if>
           <img src="{@src}" alt="{$alt}">
             <xsl:apply-templates select="@*"/>
-             
+
             <xsl:if test="f:is-desc-unused(.) or $republisher-anno">
               <xsl:attribute name="aria-describedby" select="if (f:is-desc-unused(.)) then @desc
                                                              else $republisher-anno/@xml:id"/>
@@ -980,7 +981,7 @@
   <!-- TODO translate: => i, dfn ? -->
   <xsl:template match="term" mode="#all">
     <xsl:element
-      name="{if (id(@ref)=(parent::*,preceding-sibling::*,following-sibling::*)) 
+      name="{if (id(@ref)=(parent::*,preceding-sibling::*,following-sibling::*))
                then 'dfn'
                else 'i'}">
       <!--TODO translate: @role-->
@@ -1058,15 +1059,15 @@
   <xsl:template match="m:*|m:*/@*">
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="node() | @*"/>
-    </xsl:copy>    
+    </xsl:copy>
   </xsl:template>
-    
+
   <!--===========================================================-->
   <!-- Feature :: DIAGRAM Descriptions                           -->
   <!--===========================================================-->
-    
-  <xsl:include href="diagram-to-html.xsl"/> 
-  
+
+  <xsl:include href="diagram-to-html.xsl"/>
+
   <!--===========================================================-->
   <!-- Identity templates                                        -->
   <!--===========================================================-->
@@ -1092,6 +1093,10 @@
     <xsl:if test="$epub-type">
       <xsl:attribute name="epub:type" select="$epub-type"/>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="@tts:*" mode="#all">
+    <xsl:copy/>
   </xsl:template>
 
   <!--Do not copy attributes by default-->

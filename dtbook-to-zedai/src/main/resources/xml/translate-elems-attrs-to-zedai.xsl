@@ -8,10 +8,11 @@
     xmlns:d="http://www.daisy.org/ns/z3998/authoring/features/description/"
     xmlns:f="http://www.daisy.org/ns/pipeline/internal-functions"
     xmlns:m="http://www.w3.org/1998/Math/MathML"
+    xmlns:tts="http://www.daisy.org/ns/pipeline/tts"
     xmlns="http://www.daisy.org/ns/z3998/authoring/" exclude-result-prefixes="#all">
 
     <xsl:import href="translate-mathml-to-zedai.xsl"/>
-    
+
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>Direct translation element and attribute names from DTBook to ZedAI. Most of the work
             regarding content model normalization has already been done.</desc>
@@ -20,9 +21,9 @@
     <xsl:param name="css-filename"/>
 
     <xsl:output indent="yes" method="xml"/>
-    
+
     <xsl:key name="ids" match="*" use="@id"/>
-    
+
 
     <xsl:template match="/">
         <xsl:message>Translate to ZedAI</xsl:message>
@@ -39,7 +40,7 @@
     <xsl:template match="comment() | text()">
         <xsl:copy/>
     </xsl:template>
-    
+
     <!-- a common set of attributes -->
     <xsl:template name="attrs">
         <xsl:if test="@id">
@@ -48,6 +49,7 @@
         <xsl:copy-of select="@xml:space"/>
         <xsl:copy-of select="@class"/>
         <xsl:copy-of select="@xml:lang"/>
+	<xsl:copy-of select="@tts:*"/>
         <xsl:if test="@dir">
             <xsl:attribute name="its:dir" select="@dir"/>
         </xsl:if>
@@ -78,7 +80,7 @@
                 <meta property="z3998:name" content="book"/>
                 <meta property="z3998:version" content="1.0"/>
             </meta>
-            
+
             <xsl:if test="exists(//m:math)">
                 <meta rel="z3998:feature"
                     resource="http://www.daisy.org/z3998/2012/auth/features/mathml/1.0/">
@@ -86,16 +88,16 @@
                     <meta property="z3998:version" content="1.0"/>
                 </meta>
             </xsl:if>
-            
+
             <meta rel="z3998:rdfa-context"
                 resource="http://www.daisy.org/z3998/2012/vocab/context/default/"/>
 
             <!-- this dummy identifier value will be filled in by an external step -->
             <meta property="dc:identifier" content="@@"/>
 
-            <!-- 
-                note that the translation of existing dtbook to zedai metadata, 
-                including using a pre-existing value for dc:publisher, 
+            <!--
+                note that the translation of existing dtbook to zedai metadata,
+                including using a pre-existing value for dc:publisher,
                 happens in a different step.
                 This just ensures a value for dc:publisher if there is none present in the source doc
             -->
@@ -208,7 +210,7 @@
             <xsl:call-template name="attrs"/>
 
             <xsl:copy-of select="@depth"/>
-            
+
             <!-- convert @start to a numeric value when needed -->
             <xsl:choose>
                 <xsl:when test="@start and boolean(number(@start)+1)">
@@ -290,7 +292,7 @@
                 <xsl:attribute name="tmp:width" select="@width"/>
             </xsl:if>
 
-            
+
             <xsl:if test="not(@id)">
                 <xsl:attribute name="xml:id" select="$imgID"/>
             </xsl:if>
@@ -485,7 +487,7 @@
     <xsl:template match="dtb:blockquote|dtb:q">
         <quote>
             <xsl:call-template name="attrs"/>
-            
+
             <!-- if no ID, then give a new ID if needed to anchor the citation -->
             <xsl:if test="not(@id) and (dtb:cite or dtb:author or dtb:title)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
@@ -617,7 +619,7 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="dtb:tfoot"/>
-            
+
         </table>
     </xsl:template>
 
@@ -863,13 +865,13 @@
             <xsl:if test="not(parent::dtb:q or @id)">
                 <xsl:attribute name="xml:id" select="generate-id()"/>
             </xsl:if>
-            
+
             <xsl:apply-templates/>
         </citation>
     </xsl:template>
     <xsl:template match="dtb:cite/dtb:title">
         <!-- Anchor to the ancestor quote if it exists, else to the parent cite -->
-        <span property="title" about="{concat('#',if (../parent::dtb:q) then 
+        <span property="title" about="{concat('#',if (../parent::dtb:q) then
                 if (../../@id) then ../../@id else ../../generate-id()
             else if (../@id) then ../@id else ../generate-id())}">
             <xsl:call-template name="attrs"/>
@@ -878,7 +880,7 @@
     </xsl:template>
     <xsl:template match="dtb:cite/dtb:author">
         <!-- Anchor to the ancestor quote if it exists, else to the parent cite -->
-        <name property="author" about="{concat('#',if (../parent::dtb:q) then 
+        <name property="author" about="{concat('#',if (../parent::dtb:q) then
             if (../../@id) then ../../@id else ../../generate-id()
             else if (../@id) then ../@id else ../generate-id())}">
             <xsl:call-template name="attrs"/>
@@ -961,9 +963,9 @@
     </xsl:template>
 
     <xsl:template
-        match="tmp:annotation-block/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup | 
-        dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup | 
-        dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup | 
+        match="tmp:annotation-block/dtb:linegroup | dtb:caption/dtb:linegroup | dtb:level/dtb:linegroup |
+        dtb:level1/dtb:linegroup | dtb:level2/dtb:linegroup | dtb:level3/dtb:linegroup | dtb:level4/dtb:linegroup |
+        dtb:level5/dtb:linegroup | dtb:level6/dtb:linegroup | dtb:td/dtb:linegroup | dtb:prodnote/dtb:linegroup |
         dtb:sidebar/dtb:linegroup | dtb:th/dtb:linegroup | dtb:poem/dtb:linegroup">
 
         <block>
@@ -1020,12 +1022,12 @@
                         <xsl:attribute name="ref" select="replace(@href, '#', '')"/>
                     </xsl:otherwise>
                 </xsl:choose>
-                
+
             </xsl:if>
             <xsl:copy-of select="@rev"/>
             <xsl:copy-of select="@rel"/>
             <xsl:apply-templates/>
-            
+
         </xsl:element>
     </xsl:template>
 
@@ -1050,7 +1052,7 @@
         <xsl:choose>
             <!-- when it has a block-level sibling, wrap in a p element -->
             <xsl:when
-                test="preceding-sibling::*/local-name() = $definition-list-block-elems or 
+                test="preceding-sibling::*/local-name() = $definition-list-block-elems or
                 following-sibling::*/local-name() = $definition-list-block-elems">
                 <p>
                     <definition>
@@ -1072,7 +1074,7 @@
         <xsl:choose>
             <!-- when it has a block-level sibling, wrap in a p element -->
             <xsl:when
-                test="preceding-sibling::*/local-name() = $definition-list-block-elems or 
+                test="preceding-sibling::*/local-name() = $definition-list-block-elems or
                 following-sibling::*/local-name() = $definition-list-block-elems">
                 <p>
                     <term>
@@ -1101,7 +1103,7 @@
         <block role="poem" xml:id="{if (@id) then @id else generate-id()}">
             <xsl:call-template name="attrs"/>
             <!-- if no ID, then give a new ID -->
-            
+
             <xsl:for-each-group group-adjacent="boolean(self::dtb:line)" select="*">
                 <xsl:choose>
                     <xsl:when test="current-grouping-key()">
@@ -1164,8 +1166,8 @@
     <xsl:template match="*" mode="code-block">
         <xsl:apply-templates select="."/>
     </xsl:template>
-        
-    
+
+
 
     <xsl:template match="tmp:code-phrase">
         <code>
@@ -1186,8 +1188,8 @@
         </span>
     </xsl:template>
     <xsl:template match="tmp:code-phrase/dtb:br"/>
-    
-    <!--TODO move to external common utils implementation if/when UTFX support catalogs-->  
+
+    <!--TODO move to external common utils implementation if/when UTFX support catalogs-->
     <xsl:function name="f:roman-to-decimal" as="xs:integer">
         <xsl:param name="roman" as="xs:string"/>
         <!-- TODO: throw error for strings containing characters other than MDCLXVI (case insensitive), the seven characters still in use. -->
@@ -1203,5 +1205,5 @@
         <xsl:message select="$alpha"/>
         <xsl:sequence select="string-to-codepoints(lower-case($alpha))-96"/>
     </xsl:function>
-    
+
 </xsl:stylesheet>
