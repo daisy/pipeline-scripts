@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <i18n>
   <!-- messages imported from Pipeline 1 (so most of them will probably not be used in the ported version of the script) -->
-  <!-- TODO: remove @id when i18n utility has been updated (it should use @string instead of @id) -->
-  <translation string="Schema $1 could not be instantiated." id="Schema $1 could not be instantiated.">
+  <translation string="Schema $1 could not be instantiated.">
     <text xml:lang="en">Schema $1 could not be instantiated.</text>
   </translation>
-  <translation string="Delegate $1 could not be instantiated." id="Delegate $1 could not be instantiated.">
+  <translation string="Delegate $1 could not be instantiated.">
     <text xml:lang="en">Delegate $1 could not be instantiated.</text>
   </translation>
-  <translation string="An error occurred while validating the fileset: $1." id="An error occurred while validating the fileset: $1.">
+  <translation string="An error occurred while validating the fileset: $1.">
     <text xml:lang="en">An error occurred while validating the fileset: $1.</text>
   </translation>
-  <translation string="An error occurred while validating using schema: $1." id="An error occurred while validating using schema: $1.">
+  <translation string="An error occurred while validating using schema: $1.">
     <text xml:lang="en">An error occurred while validating using schema: $1.</text>
   </translation>
-  <translation string="Schema type $1 is not supported." id="Schema type $1 is not supported.">
+  <translation string="Schema type $1 is not supported.">
     <text xml:lang="en">Schema type $1 is not supported.</text>
   </translation>
-  <translation string="An error occurred while validating using against inline DTD: $1." id="An error occurred while validating using against inline DTD: $1.">
+  <translation string="An error occurred while validating using against inline DTD: $1.">
     <text xml:lang="en">An error occurred while validating using against inline DTD: $1.</text>
   </translation>
-  <translation string="$1 issues were reported." id="$1 issues were reported.">
+  <translation string="$1 issues were reported.">
     <text xml:lang="en">$1 issues were reported.</text>
   </translation>
-  <translation string="No errors or warnings reported. Congratulations!" id="No errors or warnings reported. Congratulations!">
+  <translation string="No errors or warnings reported. Congratulations!">
     <text xml:lang="en">No errors or warnings reported. Congratulations!</text>
   </translation>
-  <translation string="Cant recognize $1 as the manifest of a fileset." id="Cant recognize $1 as the manifest of a fileset.">
+  <translation string="Cant recognize $1 as the manifest of a fileset.">
     <text xml:lang="en">Cant recognize $1 as the manifest of a fileset.</text>
   </translation>
-  <translation string="Exceptions occurred during validation process. Transformer aborting." id="Exceptions occurred during validation process. Transformer aborting.">
+  <translation string="Exceptions occurred during validation process. Transformer aborting.">
     <text xml:lang="en">Exceptions occurred during validation process. Transformer aborting.</text>
   </translation>
-  <translation string="No validation resources could be applied to input. Transformer aborting." id="No validation resources could be applied to input. Transformer aborting.">
+  <translation string="No validation resources could be applied to input. Transformer aborting.">
     <text xml:lang="en">No validation resources could be applied to input. Transformer aborting.</text>
   </translation>
-  <translation string="Schema identifier $1 could not be associated with a local resource: will attempt to fetch schema online"
-    id="Schema identifier $1 could not be associated with a local resource: will attempt to fetch schema online">
+  <translation string="Schema identifier $1 could not be associated with a local resource: will attempt to fetch schema online">
     <text xml:lang="en">Schema identifier $1 could not be associated with a local resource: will attempt to fetch schema online</text>
   </translation>
-  <translation string="The input fileset is not of the required type $1." id="The input fileset is not of the required type $1.">
+  <translation string="The input fileset is not of the required type $1.">
     <text xml:lang="en">The input fileset is not of the required type $1.</text>
   </translation>
-  <translation string="Set error severity threshold breached. Transformer aborting." id="Set error severity threshold breached. Transformer aborting.">
+  <translation string="Set error severity threshold breached. Transformer aborting.">
     <text xml:lang="en">Set error severity threshold breached. Transformer aborting.</text>
   </translation>
-  <translation string="Validating using the $1 $2." id="Validating using the $1 $2.">
+  <translation string="Validating using the $1 $2.">
     <text xml:lang="en">Validating using the $1 $2.</text>
   </translation>
-  <translation string="Validating a $1." id="Validating a $1.">
+  <translation string="Validating a $1.">
     <text xml:lang="en">Validating a $1.</text>
   </translation>
-  <translation string="Proceeding with inline DTD validation." id="Proceeding with inline DTD validation.">
+  <translation string="Proceeding with inline DTD validation.">
     <text xml:lang="en">Proceeding with inline DTD validation.</text>
   </translation>
-  <translation string="Proceeding with (inline and/or external) schema validation with $1 schemas." id="Proceeding with (inline and/or external) schema validation with $1 schemas.">
+  <translation string="Proceeding with (inline and/or external) schema validation with $1 schemas.">
     <text xml:lang="en">Proceeding with (inline and/or external) schema validation with $1 schemas.</text>
   </translation>
-  <translation string="Completed fileset instantiation (DTD, URI validation)." id="Completed fileset instantiation (DTD, URI validation).">
+  <translation string="Completed fileset instantiation (DTD, URI validation).">
     <text xml:lang="en">Completed fileset instantiation (DTD, URI validation).</text>
   </translation>
-  <translation string="Completed full validation of input fileset." id="Completed full validation of input fileset.">
+  <translation string="Completed full validation of input fileset.">
     <text xml:lang="en">Completed full validation of input fileset.</text>
   </translation>
-  <translation string="Completed validation using inline DTDs." id="Completed validation using inline DTDs.">
+  <translation string="Completed validation using inline DTDs.">
     <text xml:lang="en">Completed validation using inline DTDs.</text>
   </translation>
-  <translation string="Completed validation using inline and/or inparameter Schemas." id="Completed validation using inline and/or inparameter Schemas.">
+  <translation string="Completed validation using inline and/or inparameter Schemas.">
     <text xml:lang="en">Completed validation using inline and/or inparameter Schemas.</text>
   </translation>
 </i18n>

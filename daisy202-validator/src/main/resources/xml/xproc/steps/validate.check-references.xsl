@@ -19,7 +19,7 @@
     </xsl:template>
 
     <xsl:template
-        match="html:*[@href]/@href | html:*[@src]/@src | html:*[@cite]/@cite | html:*[@longdesc]/@longdesc | html:object[@data]/@data | html:form[@action]/@action | html:head[@profile]/@profile">
+        match="html:*/@href | html:*/@src | html:*/@cite | html:*/@longdesc | html:object/@data | html:form/@action | html:head/@profile">
         <xsl:param name="base-uri" tunnel="yes"/>
         <xsl:param name="fileset" tunnel="yes"/>
         <xsl:param name="xml-documents" tunnel="yes"/>

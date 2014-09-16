@@ -13,11 +13,6 @@
     <public publicId="-//DAISY//DTD msmil v2.02//EN" uri="../xml/schemas/d202/d202msmil.dtd" />
     <public publicId="-//DAISY//RNG msmil v2.02//EN" uri="../xml/schemas/d202/d202msmil.rng" />
     <public publicId="-//DAISY//DTD discinfo v2.02//EN" uri="../xml/schemas/d202/d202discinfo.dtd" />
-    <!--<system systemId="d202meta.rng" uri="../xml/schemas/d202/d202meta.rng" />-->
-    <!--<system systemId="../relaxngcommon/attributes.rng" uri="./relaxngcommon/attributes.rng" />-->
-    <!--<system systemId="attributes.rng" uri="./relaxngcommon/attributes.rng" />-->
-    <!--<system systemId="../relaxngcommon/datatypes.rng" uri="./relaxngcommon/datatypes.rng" />-->
-    <!--<system systemId="datatypes.rng" uri="./relaxngcommon/datatypes.rng" />-->
     
     <nextCatalog catalog="org:daisy:pipeline:modules:daisy202-utils"/>
     <nextCatalog catalog="org:daisy:pipeline:modules:common-utils"/>

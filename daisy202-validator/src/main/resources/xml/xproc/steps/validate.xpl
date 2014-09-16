@@ -194,7 +194,7 @@
             <p:pipe port="result" step="ncc"/>
         </p:input>
         <p:input port="schema">
-            <p:document href="../../schemas/d202/d202smil.rng"/>
+            <p:document href="../../schemas/d202/d202ncc.rng"/>
         </p:input>
     </l:relax-ng-report>
     <p:sink/>
@@ -295,7 +295,7 @@
                             <d:message severity="error">
                                 <d:desc>DESC</d:desc>
                                 <d:file>FILE</d:file>
-                                <d:location>/smil/head/meta[@name='ncc:totalTime']</d:location>
+                                <d:location>/smil/head/meta[@name='ncc:totalElapsedTime']</d:location>
                             </d:message>
                         </p:inline>
                     </p:input>
