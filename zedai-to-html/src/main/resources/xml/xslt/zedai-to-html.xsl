@@ -25,9 +25,9 @@
 
   <xsl:template name="html">
     <xsl:param name="nodes" as="node()*"/>
-    <!--TODO translate: xml:lang-->
     <!--TODO config: externalize the profile definition-->
-    <html xml:lang="en">
+    <xsl:variable name="lang" select="$nodes/ancestor::*/@xml:lang[1]"/>
+    <html xml:lang="{if ($lang) then $lang else 'en'}">
       <head>
         <meta charset="UTF-8"/>
         <title><!--TODO translate: title--></title>
@@ -615,7 +615,7 @@
       else if (@desc) then id(tokenize(@desc,'\s+'))[not(@xlink:href)][1]
       else ()
       )"/>
-    
+
     <xsl:variable name="captions" select="../(hd|caption|citation)[f:references(.,current())]"/>
     <xsl:variable name="shared-captions"
       select="..[f:has-role(.,'figure')]/(hd|caption|citation)[f:references-all(.,../(object|table))]"/>
@@ -632,7 +632,7 @@
           </xsl:if>
           <img src="{@src}" alt="{$alt}">
             <xsl:apply-templates select="@*"/>
-             
+
             <xsl:if test="f:is-desc-unused(.) or $republisher-anno">
               <xsl:attribute name="aria-describedby" select="if (f:is-desc-unused(.)) then @desc
                                                              else $republisher-anno/@xml:id"/>
@@ -980,7 +980,7 @@
   <!-- TODO translate: => i, dfn ? -->
   <xsl:template match="term" mode="#all">
     <xsl:element
-      name="{if (id(@ref)=(parent::*,preceding-sibling::*,following-sibling::*)) 
+      name="{if (id(@ref)=(parent::*,preceding-sibling::*,following-sibling::*))
                then 'dfn'
                else 'i'}">
       <!--TODO translate: @role-->
@@ -1058,15 +1058,15 @@
   <xsl:template match="m:*|m:*/@*">
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="node() | @*"/>
-    </xsl:copy>    
+    </xsl:copy>
   </xsl:template>
-    
+
   <!--===========================================================-->
   <!-- Feature :: DIAGRAM Descriptions                           -->
   <!--===========================================================-->
-    
-  <xsl:include href="diagram-to-html.xsl"/> 
-  
+
+  <xsl:include href="diagram-to-html.xsl"/>
+
   <!--===========================================================-->
   <!-- Identity templates                                        -->
   <!--===========================================================-->
