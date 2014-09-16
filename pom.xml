@@ -32,7 +32,7 @@
     <!-- <module>html-to-epub3</module> -->
     <!-- <module>nimas-fileset-validator</module> -->
     <!-- <module>zedai-to-epub3</module> -->
-    <!-- <module>zedai-to-html</module> -->
+    <module>zedai-to-html</module>
   </modules>
 
   <!-- BoM of the default script modules (for use in assemblies) -->
@@ -101,7 +101,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>zedai-to-html</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
