@@ -101,7 +101,10 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>OSGI-INF/dotify-translate.xml</Service-Component>
+            <Service-Component>
+              OSGI-INF/dotify-translate.xml,
+              OSGI-INF/dotify-translator-lookup.xml
+            </Service-Component>
           </instructions>
         </configuration>
       </plugin>

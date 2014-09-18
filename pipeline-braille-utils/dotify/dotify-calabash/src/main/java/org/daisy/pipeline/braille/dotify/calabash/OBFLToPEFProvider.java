@@ -4,6 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.transform.stream.StreamSource;
 
 import com.xmlcalabash.core.XProcRuntime;
@@ -19,13 +22,57 @@ import net.sf.saxon.s9api.Serializer;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.daisy.dotify.api.engine.FormatterEngine;
+import org.daisy.dotify.api.engine.FormatterEngineFactoryService;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.writer.MediaTypes;
 import org.daisy.dotify.api.writer.PagedMediaWriter;
-import org.daisy.dotify.consumer.engine.FormatterEngineMaker;
-import org.daisy.dotify.consumer.writer.PagedMediaWriterFactoryMaker;
+import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
+import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
+
+import org.daisy.pipeline.braille.Cached;
 
 public class OBFLToPEFProvider implements XProcStepProvider {
+	
+	private List<PagedMediaWriterFactoryService> pagedMediaWriterFactoryServices
+		= new ArrayList<PagedMediaWriterFactoryService>();
+	
+	protected void bindPagedMediaWriterFactoryService(PagedMediaWriterFactoryService service) {
+		pagedMediaWriterFactoryServices.add(service);
+	}
+	
+	protected void unbindPagedMediaWriterFactoryService(PagedMediaWriterFactoryService service) {
+		pagedMediaWriterFactoryServices.remove(service);
+		pagedMediaWriterFactoryServiceForTarget.invalidateCache();
+	}
+	
+	private Cached<String,PagedMediaWriterFactoryService> pagedMediaWriterFactoryServiceForTarget
+		= new Cached<String,PagedMediaWriterFactoryService>() {
+			public PagedMediaWriterFactoryService delegate(String target) {
+				target = target.toLowerCase();
+				for (PagedMediaWriterFactoryService s : pagedMediaWriterFactoryServices)
+					if (s.supportsMediaType(target))
+						return s;
+				throw new RuntimeException("Cannot find a PagedMediaWriter factory for " + target);
+			}
+		};
+	
+	private PagedMediaWriter newPagedMediaWriter(String target) throws PagedMediaWriterConfigurationException {
+		return pagedMediaWriterFactoryServiceForTarget.get(target).newFactory(target).newPagedMediaWriter();
+	}
+	
+	private FormatterEngineFactoryService formatterEngineFactoryService = null;
+	
+	protected void bindFormatterEngineFactoryService(FormatterEngineFactoryService service) {
+		formatterEngineFactoryService = service;
+	}
+	
+	protected void unbindFormatterEngineFactoryService(FormatterEngineFactoryService service) {
+		formatterEngineFactoryService = null;
+	}
+	
+	private FormatterEngine newFormatterEngine(String locale, String mode, PagedMediaWriter writer) {
+		return formatterEngineFactoryService.newFormatterEngine(locale, mode, writer);
+	}
 	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
@@ -71,10 +118,9 @@ public class OBFLToPEFProvider implements XProcStepProvider {
 				s.close();
 				
 				// Convert
-				PagedMediaWriter writer = PagedMediaWriterFactoryMaker.newInstance()
-						.newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
-				FormatterEngine engine = FormatterEngineMaker.newInstance()
-						.newFormatterEngine("und", BrailleTranslatorFactory.MODE_BYPASS, writer); // zxx
+				PagedMediaWriter writer = newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
+				FormatterEngine engine = newFormatterEngine(
+					"und", BrailleTranslatorFactory.MODE_BYPASS, writer); // zxx
 				s = new ByteArrayOutputStream();
 				engine.convert(obflStream, s);
 				obflStream.close();

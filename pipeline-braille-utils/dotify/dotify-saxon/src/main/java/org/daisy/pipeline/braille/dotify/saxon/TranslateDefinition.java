@@ -17,7 +17,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TranslateDefinition extends ExtensionFunctionDefinition {
-
+	
+	private DotifyTranslatorLookup lookup = null;
+	
+	protected void bindTranslatorLookup(DotifyTranslatorLookup lookup) {
+		this.lookup = lookup;
+	}
+	
+	protected void unbindTranslatorLookup(DotifyTranslatorLookup lookup) {
+		this.lookup = null;
+	}
+	
 	private static final StructuredQName funcname = new StructuredQName("dotify",
 			"http://code.google.com/p/dotify/", "translate");
 	
@@ -65,8 +75,6 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			private static final long serialVersionUID = 1L;
 		};
 	}
-	
-	private DotifyTranslatorLookup lookup = new DotifyTranslatorLookup();
 	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);

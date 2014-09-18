@@ -14,20 +14,9 @@ public interface ResourceResolver {
 	 */
 	public URL resolve(URI resource);
 	
-	public static abstract class CachedResolver implements ResourceResolver {
-		private final Map<URI,URL> cache = new HashMap<URI,URL>();
-		public abstract URL delegate(URI resource);
+	public static abstract class CachedResolver extends Cached<URI,URL> implements ResourceResolver {
 		public URL resolve(URI resource) {
-			if (cache.containsKey(resource))
-				return cache.get(resource);
-			URL resolved = delegate(resource);
-			if (resolved != null) {
-				cache.put(resource, resolved);
-				return resolved; }
-			return null;
-		}
-		public void invalidateCache() {
-			cache.clear();
+			return get(resource);
 		}
 	}
 }

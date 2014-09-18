@@ -1,11 +1,13 @@
 package org.daisy.pipeline.braille.dotify;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
+import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
-import org.daisy.dotify.consumer.translator.BrailleTranslatorFactoryMaker;
 import org.daisy.pipeline.braille.ResourceLookup;
 import org.daisy.pipeline.braille.Utilities.Locales;
 
@@ -20,14 +22,32 @@ public class DotifyTranslatorLookup implements ResourceLookup<Locale,BrailleTran
 		return cachedLookup.lookup(query);
 	}
 	
-	private final BrailleTranslatorFactoryMaker factory = BrailleTranslatorFactoryMaker.newInstance();
+	private final List<BrailleTranslatorFactoryService> factoryServices = new ArrayList<BrailleTranslatorFactoryService>();
+	
+	protected void bindBrailleTranslatorFactoryService(BrailleTranslatorFactoryService service) {
+		factoryServices.add(service);
+		cachedLookup.invalidateCache();
+	}
+	
+	protected void unbindBrailleTranslatorFactoryService(BrailleTranslatorFactoryService service) {
+		factoryServices.remove(service);
+		cachedLookup.invalidateCache();
+	}
+	
+	private BrailleTranslator newTranslator(String locale, String grade) throws TranslatorConfigurationException {
+		for (BrailleTranslatorFactoryService s : factoryServices)
+			if (s.supportsSpecification(locale, grade))
+				return s.newFactory().newTranslator(locale, grade);
+		throw new RuntimeException("Cannot locate a factory for "
+		                           + locale.toLowerCase() + "(" + grade.toUpperCase() + ")");
+	}
 	
 	private final ResourceLookup<Locale,BrailleTranslator> lookup
 		= LocaleBasedLookup.<BrailleTranslator>newInstance(
 			new ResourceLookup<Locale,BrailleTranslator>() {
 				public BrailleTranslator lookup(Locale locale) {
 					try {
-						BrailleTranslator translator = factory.newTranslator(
+						BrailleTranslator translator = newTranslator(
 							Locales.toString(locale, '-'), BrailleTranslatorFactory.MODE_UNCONTRACTED);
 						translator.setHyphenating(false);
 						return translator; }

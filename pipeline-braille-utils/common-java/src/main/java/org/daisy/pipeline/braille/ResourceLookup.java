@@ -27,20 +27,9 @@ public interface ResourceLookup<Q,R> {
 		}
 	}
 	
-	public static abstract class CachedLookup<Q,R> implements ResourceLookup<Q,R> {
-		private final Map<Q,R> cache = new HashMap<Q,R>();
-		public abstract R delegate(Q query);
+	public static abstract class CachedLookup<Q,R> extends Cached<Q,R> implements ResourceLookup<Q,R> {
 		public R lookup(Q query) {
-			if (cache.containsKey(query))
-				return cache.get(query);
-			R resource = delegate(query);
-			if (resource != null) {
-				cache.put(query, resource);
-				return resource; }
-			return null;
-		}
-		public void invalidateCache() {
-			cache.clear();
+			return get(query);
 		}
 		public static <Q,R> CachedLookup<Q,R> newInstance(final ResourceLookup<Q,R> delegate) {
 			return new CachedLookup<Q,R>() {
