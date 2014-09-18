@@ -59,34 +59,26 @@
                             page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
             <default-template>
                 <header>
-                    <xsl:if test="exists(($top-left, $top-right))">
+                    <xsl:if test="exists(($top-left, $top-center, $top-right))">
                         <field>
                             <xsl:sequence select="if (exists($top-left)) then $top-left else $empty-string"/>
                         </field>
-                    </xsl:if>
-                    <xsl:if test="$top-center">
                         <field>
                             <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
                         </field>
-                    </xsl:if>
-                    <xsl:if test="exists(($top-left, $top-right))">
                         <field>
                             <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
                         </field>
                     </xsl:if>
                 </header>
                 <footer>
-                    <xsl:if test="exists(($bottom-left, $bottom-right))">
+                    <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
                         <field>
                             <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
                         </field>
-                    </xsl:if>
-                    <xsl:if test="$bottom-center">
                         <field>
                             <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
                         </field>
-                    </xsl:if>
-                    <xsl:if test="exists(($bottom-left, $bottom-right))">
                         <field>
                             <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
                         </field>
@@ -101,19 +93,12 @@
     </xsl:template>
     
     <xsl:template match="css:counter-fn[@identifier='braille-page']" mode="eval-content-list">
-        <xsl:if test="@style='prefix-p'">
-            <string value="p"/>
-        </xsl:if>
         <current-page style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                    then @style else 'default'}"/>
     </xsl:template>
     
-    <xsl:template match="css:string-fn[@identifier='print-page']" mode="eval-content-list">
-        <marker-reference marker="pagenum" direction="backward" scope="sequence"/>
-    </xsl:template>
-    
     <xsl:template match="css:string-fn" mode="eval-content-list">
-        <xsl:message>NOT IMPLEMENTED</xsl:message>
+        <marker-reference marker="{@identifier}" direction="backward" scope="sequence"/>
     </xsl:template>
     
     <xsl:template match="css:attr-fn" mode="eval-content-list">

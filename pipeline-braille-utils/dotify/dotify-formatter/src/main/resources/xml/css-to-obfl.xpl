@@ -42,41 +42,55 @@
     </p:for-each>
     
     <p:for-each>
-        <px:handle-css-before-after/>
-        <px:handle-css-page/>
+        <px:css-parse-stylesheet/>
+        <px:css-make-pseudo-elements/>
+        <px:css-parse-declaration-list properties="content string-set counter-reset white-space display"/>
+        <px:css-eval-content-list/>
     </p:for-each>
     
-    <p:for-each>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:inline>
-                    <xsl:stylesheet version="2.0">
-                        <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
-                        <xsl:template match="@*|node()">
-                            <xsl:copy>
-                                <xsl:apply-templates select="@*|node()"/>
-                            </xsl:copy>
-                        </xsl:template>
-                        <xsl:template match="@style">
-                            <xsl:sequence select="css:style-attribute(css:parse-stylesheet(string(.))[not(@selector)][1]/@declaration-list)"/>
-                        </xsl:template>
-                    </xsl:stylesheet>
-                </p:inline>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-    </p:for-each>
+    <px:css-label-anchors/>
     
     <p:for-each>
-        <px:handle-css-content/>
-        <px:handle-css-string-set/>
-        <px:handle-css-counter-reset/>
-        <px:handle-css-white-space/>
-        <px:handle-css-display/>
+        <px:css-eval-string-set/>
+        <px:css-preserve-white-space/>
+        <px:css-make-boxes/>
+        <px:css-make-anonymous-inline-boxes/>
+    </p:for-each>
+    
+    <px:css-shift-string-set/>
+    <px:css-shift-counter-reset/>
+    
+    <p:for-each>
         <pxi:split-into-sections/>
     </p:for-each>
+    
+    <p:for-each>
+        <p:rename match="css:box[@type='inline']
+                                [matches(string(.), '^[\s&#x2800;]*$') and
+                                 not(descendant::css:white-space or
+                                     descendant::css:string-fn or
+                                     descendant::css:counter-fn or
+                                     descendant::css:target-text-fn or
+                                     descendant::css:target-string-fn or
+                                     descendant::css:target-counter-fn or
+                                     descendant::css:leader-fn)]"
+                  new-name="css:_"/>
+    </p:for-each>
+    
+    <p:wrap-sequence wrapper="_"/>
+    <p:label-elements match="css:_[@css:anchor]/css:box" attribute="css:anchor" replace="false"
+                      label="parent::*/@css:anchor"/>
+    <p:delete match="@css:anchor[.=(ancestor::*|preceding::*)/@css:anchor]"/>
+    <p:delete match="css:_/@css:anchor"/>
+    <p:unwrap match="css:_[not(@*)]"/>
+    <p:filter select="/_/css:root"/>
+    
+    <p:for-each>
+        <px:css-make-anonymous-block-boxes/>
+    </p:for-each>
+    
+    <px:css-repeat-string-set/>
+    <p:split-sequence test="//css:box"/>
     
     <p:xslt template-name="main">
         <p:input port="stylesheet">

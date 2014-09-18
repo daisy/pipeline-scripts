@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/formatting/css-shift-counter-reset.xsl">
+  
+  <x:scenario label="test_01">
+    <x:context>
+      <css:root>
+        <css:box type="inline" name="doc">
+          <css:_ css:counter-reset="foo bar"/>
+          <css:box type="block" name="p" css:counter-entry="baz">
+            foo
+          </css:box>
+        </css:box>
+      </css:root>
+    </x:context>
+    <x:expect label="result">
+      <css:root>
+        <css:box type="inline" name="doc">
+          <css:_/>
+          <css:box type="block" name="p" css:counter-entry="foo bar baz">
+            foo
+          </css:box>
+        </css:box>
+      </css:root>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

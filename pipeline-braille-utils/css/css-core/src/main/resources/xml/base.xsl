@@ -430,6 +430,14 @@
         <xsl:sequence select="concat(@name,': ',@value)"/>
     </xsl:template>
     
+    <xsl:template match="css:string-set" mode="css:serialize" as="xs:string">
+        <xsl:sequence select="concat(@identifier,' ',@value)"/>
+    </xsl:template>
+    
+    <xsl:template match="css:counter-reset" mode="css:serialize" as="xs:string">
+        <xsl:sequence select="concat(@identifier,' ',@value)"/>
+    </xsl:template>
+    
     <xsl:template match="css:string" mode="css:serialize" as="xs:string">
         <xsl:sequence select="concat('&quot;',@value,'&quot;')"/>
     </xsl:template>
@@ -490,9 +498,25 @@
         <xsl:sequence select="string-join($serialized-components, ' ')"/>
     </xsl:function>
     
+    <xsl:function name="css:serialize-string-set" as="xs:string">
+        <xsl:param name="pairs" as="element()*"/>
+        <xsl:variable name="serialized-pairs" as="xs:string*">
+            <xsl:apply-templates select="$pairs" mode="css:serialize"/>
+        </xsl:variable>
+        <xsl:sequence select="string-join($serialized-pairs, ', ')"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-counter-reset" as="xs:string">
+        <xsl:param name="pairs" as="element()*"/>
+        <xsl:variable name="serialized-pairs" as="xs:string*">
+            <xsl:apply-templates select="$pairs" mode="css:serialize"/>
+        </xsl:variable>
+        <xsl:sequence select="string-join($serialized-pairs, ' ')"/>
+    </xsl:function>
+    
     <xsl:function name="css:style-attribute" as="attribute()?">
-        <xsl:param name="style" as="xs:string"/>
-        <xsl:if test="$style!=''">
+        <xsl:param name="style" as="xs:string?"/>
+        <xsl:if test="$style and $style!=''">
             <xsl:attribute name="style" select="$style"/>
         </xsl:if>
     </xsl:function>

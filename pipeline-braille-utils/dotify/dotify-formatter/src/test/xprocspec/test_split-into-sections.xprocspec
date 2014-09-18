@@ -9,17 +9,13 @@
     <x:call step="pxi:split-into-sections">
       <x:input port="source">
         <x:document type="inline">
-          <css:block css:counter-reset="braille-page 1 foo">
-            <css:block>
-              foo
-            </css:block>
-            <css:block css:counter-reset="braille-page 2">
-              bar
-            </css:block>
-            <css:block>
-              baz
-            </css:block>
-          </css:block>
+          <css:root>
+            <css:box type="block" css:counter-reset="braille-page 1 foo">
+              <css:box> foo </css:box>
+              <css:box css:counter-reset="braille-page 2"> bar </css:box>
+              <css:box> baz </css:box>
+            </css:box>
+          </css:root>
         </x:document>
       </x:input>
     </x:call>
@@ -28,15 +24,19 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:block obfl:initial-page-number="1" css:counter-reset="foo 0" part="first">
-          <css:block> foo </css:block>
-        </css:block>
+        <css:root obfl:initial-page-number="1">
+          <css:box type="block" part="first">
+            <css:box> foo </css:box>
+          </css:box>
+        </css:root>
       </x:document>
       <x:document type="inline">
-        <css:block obfl:initial-page-number="2" part="last">
-          <css:block> bar </css:block>
-          <css:block> baz </css:block>
-        </css:block>
+        <css:root obfl:initial-page-number="2">
+          <css:box type="block" part="last">
+            <css:box> bar </css:box>
+            <css:box> baz </css:box>
+          </css:box>
+        </css:root>
       </x:document>
     </x:expect>
   </x:scenario>
@@ -45,21 +45,17 @@
     <x:call step="pxi:split-into-sections">
       <x:input port="source">
         <x:document type="inline">
-          <doc>
-            <css:inline>
-              <body css:page="foo">
-                <frontmatter css:page="bar">
-                  xxx
-                </frontmatter>
-                <bodymatter>
-                  xxx
-                </bodymatter>
-                <rearmatter css:page="baz">
-                  xxx
-                </rearmatter>
-              </body>
-            </css:inline>
-          </doc>
+          <css:root css:page="foo">
+            <css:box type="block">
+              <css:_ css:page="bar">
+                <css:box> xxx </css:box>
+              </css:_>
+              <css:box> xxx </css:box>
+              <css:_ css:page="baz">
+                <css:box> xxx </css:box>
+              </css:_>
+            </css:box>
+          </css:root>
         </x:document>
       </x:input>
     </x:call>
@@ -68,55 +64,35 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <doc>
-          <css:inline part="first"/>
-        </doc>
+        <css:root css:page="foo">
+          <css:box type="block" part="first"/>
+        </css:root>
       </x:document>
       <x:document type="inline">
-        <doc css:page="foo">
-          <css:inline part="middle">
-            <body/>
-          </css:inline>
-        </doc>
+        <css:root css:page="bar">
+          <css:box type="block" part="middle">
+            <css:box> xxx </css:box>
+          </css:box>
+        </css:root>
       </x:document>
       <x:document type="inline">
-        <doc css:page="bar">
-          <css:inline part="middle">
-            <body>
-              <frontmatter> xxx </frontmatter>
-            </body>
-          </css:inline>
-        </doc>
+        <css:root css:page="foo">
+          <css:box type="block" part="middle">
+            <css:box> xxx </css:box>
+          </css:box>
+        </css:root>
       </x:document>
       <x:document type="inline">
-        <doc css:page="foo">
-          <css:inline part="middle">
-            <body>
-              <bodymatter> xxx </bodymatter>
-            </body>
-          </css:inline>
-        </doc>
+        <css:root css:page="baz">
+          <css:box type="block" part="middle">
+            <css:box> xxx </css:box>
+          </css:box>
+        </css:root>
       </x:document>
       <x:document type="inline">
-        <doc css:page="baz">
-          <css:inline part="middle">
-            <body>
-              <rearmatter> xxx </rearmatter>
-            </body>
-          </css:inline>
-        </doc>
-      </x:document>
-      <x:document type="inline">
-        <doc css:page="foo">
-          <css:inline part="middle">
-            <body/>
-          </css:inline>
-        </doc>
-      </x:document>
-      <x:document type="inline">
-        <doc>
-          <css:inline part="last"/>
-        </doc>
+        <css:root css:page="foo">
+          <css:box type="block" part="last"/>
+        </css:root>
       </x:document>
     </x:expect>
   </x:scenario>
