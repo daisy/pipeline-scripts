@@ -9,6 +9,7 @@
     <p:import href="formatting/css-make-anonymous-inline-boxes.xpl"/>
     <p:import href="formatting/css-make-boxes.xpl"/>
     <p:import href="formatting/css-make-pseudo-elements.xpl"/>
+    <p:import href="formatting/css-padding-to-margin.xpl"/>
     <p:import href="formatting/css-parse-declaration-list.xpl"/>
     <p:import href="formatting/css-parse-stylesheet.xpl"/>
     <p:import href="formatting/css-preserve-white-space.xpl"/>

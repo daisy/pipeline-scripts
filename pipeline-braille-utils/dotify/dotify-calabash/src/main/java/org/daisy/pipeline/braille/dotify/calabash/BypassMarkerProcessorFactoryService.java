@@ -1,6 +1,5 @@
 package org.daisy.pipeline.braille.dotify.calabash;
 
-import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.MarkerProcessor;
 import org.daisy.dotify.api.translator.MarkerProcessorConfigurationException;
 import org.daisy.dotify.api.translator.MarkerProcessorFactory;
@@ -12,7 +11,7 @@ import static org.daisy.pipeline.braille.Utilities.Strings.join;
 public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {
 	
 	public boolean supportsSpecification(String locale, String mode) {
-		return BrailleTranslatorFactory.MODE_BYPASS.equals(mode);
+		return OBFLToPEFProvider.MODE_BYPASS.equals(mode);
 	}
 	
 	public MarkerProcessorFactory newFactory() {
@@ -21,7 +20,7 @@ public class BypassMarkerProcessorFactoryService implements MarkerProcessorFacto
 	
 	private class BypassMarkerProcessorFactory implements MarkerProcessorFactory {
 		public MarkerProcessor newMarkerProcessor(String locale, String mode) throws MarkerProcessorConfigurationException {
-			if (BrailleTranslatorFactory.MODE_BYPASS.equals(mode))
+			if (OBFLToPEFProvider.MODE_BYPASS.equals(mode))
 				return new BypassMarkerProcessor();
 			throw new MarkerProcessorConfigurationException("Factory does not support " + locale + "/" + mode) {};
 		}

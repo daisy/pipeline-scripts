@@ -387,7 +387,7 @@
                               else $properties"/>
         <xsl:variable name="declarations" as="element()*"
             select="css:parse-declaration-list(css:parse-stylesheet(
-                      $context/@style)/self::css:rule[not(@selector)][1]/@declaration-list)"/>
+                      $context/@style)/self::css:rule[not(@selector)][last()]/@declaration-list)"/>
         <xsl:variable name="declarations" as="element()*"
             select="if ('#all'=$properties) then $declarations else $declarations[@name=$properties and not(@name='#all')]"/>
         <xsl:variable name="declarations" as="element()*">
@@ -400,7 +400,7 @@
             select="if ($validate) then $properties[css:is-property(.)] else $properties"/>
         <xsl:variable name="declarations" as="element()*"
             select="(for $property in distinct-values($declarations/self::css:property/@name) return
-                       $declarations/self::css:property[@name=$property][1],
+                       $declarations/self::css:property[@name=$property][last()],
                      for $property in distinct-values($properties) return
                        if ($declarations/self::css:property[@name=$property]) then ()
                        else if (css:is-inherited($property)) then css:property($property, 'inherit')

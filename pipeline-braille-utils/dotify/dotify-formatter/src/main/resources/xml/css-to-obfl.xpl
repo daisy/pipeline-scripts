@@ -86,6 +86,8 @@
     <p:filter select="/_/css:root"/>
     
     <p:for-each>
+        <px:css-parse-declaration-list properties="padding-left padding-right padding-top padding-bottom"/>
+        <px:css-padding-to-margin/>
         <px:css-make-anonymous-block-boxes/>
     </p:for-each>
     

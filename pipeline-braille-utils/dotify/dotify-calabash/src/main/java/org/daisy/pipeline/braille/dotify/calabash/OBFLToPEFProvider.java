@@ -23,7 +23,6 @@ import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.daisy.dotify.api.engine.FormatterEngine;
 import org.daisy.dotify.api.engine.FormatterEngineFactoryService;
-import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.writer.MediaTypes;
 import org.daisy.dotify.api.writer.PagedMediaWriter;
 import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
@@ -32,6 +31,15 @@ import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
 import org.daisy.pipeline.braille.Cached;
 
 public class OBFLToPEFProvider implements XProcStepProvider {
+	
+	/* Use special bypass mode so that
+	 * - BypassTranslatorFactoryService and BypassMarkerProcessorFactoryService
+	 *   from this package are used instead of the default ones in
+	 *   dotify.impl.translator
+	 * - BrailleTextBorderFactoryService from dotify.impl.translator (which
+	 *   for some reason doesn't support mode "bypass") can be used
+	 */
+	protected final static String MODE_BYPASS = "pipeline_bypass";
 	
 	private List<PagedMediaWriterFactoryService> pagedMediaWriterFactoryServices
 		= new ArrayList<PagedMediaWriterFactoryService>();
@@ -119,8 +127,7 @@ public class OBFLToPEFProvider implements XProcStepProvider {
 				
 				// Convert
 				PagedMediaWriter writer = newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
-				FormatterEngine engine = newFormatterEngine(
-					"und", BrailleTranslatorFactory.MODE_BYPASS, writer); // zxx
+				FormatterEngine engine = newFormatterEngine("und", MODE_BYPASS, writer); // zxx
 				s = new ByteArrayOutputStream();
 				engine.convert(obflStream, s);
 				obflStream.close();

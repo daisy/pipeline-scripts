@@ -21,7 +21,7 @@ import org.daisy.dotify.text.BreakPointHandler;
 public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryService {
 	
 	public boolean supportsSpecification(String locale, String mode) {
-		return BrailleTranslatorFactory.MODE_BYPASS.equals(mode);
+		return OBFLToPEFProvider.MODE_BYPASS.equals(mode);
 	}
 	
 	public Collection<TranslatorSpecification> listSpecifications() {
@@ -36,7 +36,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	
 	private static class BypassTranslatorFactory implements BrailleTranslatorFactory {
 		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
-			if (BrailleTranslatorFactory.MODE_BYPASS.equals(mode))
+			if (OBFLToPEFProvider.MODE_BYPASS.equals(mode))
 				return new BypassTranslator();
 			throw new TranslatorConfigurationException("Factory does not support " + locale + "/" + mode);
 		}
@@ -119,7 +119,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		}
 		
 		public String getTranslatorMode() {
-			return BrailleTranslatorFactory.MODE_BYPASS;
+			return OBFLToPEFProvider.MODE_BYPASS;
 		}
 	}
 }
