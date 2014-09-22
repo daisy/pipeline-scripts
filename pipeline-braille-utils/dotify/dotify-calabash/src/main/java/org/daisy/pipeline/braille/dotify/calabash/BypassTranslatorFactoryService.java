@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.dotify.calabash;
 
 import java.util.Collection;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.ImmutableList;
@@ -54,14 +55,33 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			return hyphenating;
 		}
 		
-		private final static Pattern softHyphens = Pattern.compile("[\u00ad\u200b]+");
+		private final static Pattern integers = Pattern.compile("[0-9]+");
+		
+		// for translating page numbers
+		private static String translateIntegers(String text) {
+			Matcher m = integers.matcher(text);
+			int idx = 0;
+			StringBuilder sb = new StringBuilder();
+			for (; m.find(); idx = m.end()) {
+				sb.append(text.substring(idx, m.start()));
+				try {
+					sb.append(translateInteger(Integer.parseInt(m.group()))); }
+				catch (Exception e) {
+					throw new RuntimeException("Coding error", e); }}
+			if (idx == 0)
+				return text;
+			sb.append(text.substring(idx));
+			return sb.toString();
+		}
+		
+		private final static String numsign = "\u283c";
 		
 		private final static String[] digitTable = new String[]{
 			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
 		
 		private static String translateInteger(int integer) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("\u283c");
+			sb.append(numsign);
 			if (integer == 0)
 				sb.append(digitTable[0]);
 			while (integer > 0) {
@@ -70,20 +90,23 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			return sb.toString();
 		}
 		
+		// for calculating margin character (see org.daisy.dotify.formatter.impl.FormatterContext)
+		private static String translateSpace(String text) {
+			return text.replaceAll(" ", "\u2800");
+		}
+		
+		private final static Pattern softHyphens = Pattern.compile("[\u00ad\u200b]+");
+		
 		private static String filterOutSoftHyphens(String text) {
 			return softHyphens.matcher(text).replaceAll("");
 		}
 		
 		private String doTranslate(String text) {
-			if (" ".equals(text))
-				return "\u2800"; // for calculating margin character
-				                 // (see org.daisy.dotify.formatter.impl.FormatterContext)
-			try {
-				return translateInteger(Integer.parseInt(text)); } // for translating page numbers
-			catch (Exception e) {}
-			if (isHyphenating())
-				return text;
-			return filterOutSoftHyphens(text);
+			text = translateSpace(text);
+			text = translateIntegers(text);
+			if (!isHyphenating())
+				text = filterOutSoftHyphens(text);
+			return text;
 		}
 		
 		public BrailleTranslatorResult translate(String text) {
