@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               script="../../main/resources/xml/label-anchors.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="css:label-anchors">
+      <x:input port="source">
+        <x:document type="inline">
+          <frontmatter>
+            <toc>
+              <entry>
+                <css:target-text-fn target="#h1"/>
+                <css:leader-fn pattern="⠄⠄"/>
+                <css:target-counter-fn target="#h1" identifier="braille-page"/>
+                <css:target-string-fn target="#h1" identifier="print-page"/>
+              </entry>
+            </toc>
+          </frontmatter>
+        </x:document>
+        <x:document type="inline">
+          <bodymatter>
+            <h id="h1">
+              foo
+            </h>
+          </bodymatter>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+          <frontmatter>
+            <toc>
+              <entry>
+                <css:target-text-fn target="h1"/>
+                <css:leader-fn pattern="⠄⠄"/>
+                <css:target-counter-fn target="h1" identifier="braille-page"/>
+                <css:target-string-fn target="h1" identifier="print-page"/>
+              </entry>
+            </toc>
+          </frontmatter>
+        </x:document>
+        <x:document type="inline">
+          <bodymatter>
+            <h id="h1" css:anchor="h1">
+              foo
+            </h>
+          </bodymatter>
+        </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

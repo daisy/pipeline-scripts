@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="pxi:split-into-sections"
                 xmlns:p="http://www.w3.org/ns/xproc"
-                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
-                exclude-inline-prefixes="p px pxi xsl"
+                exclude-inline-prefixes="p pxi xsl"
                 version="1.0">
     
     <!--
@@ -18,7 +17,7 @@
     <p:input port="source"/>
     <p:output port="result" sequence="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     
     <p:xslt>
         <p:input port="stylesheet">
@@ -54,7 +53,7 @@
         </p:input>
     </p:xslt>
     
-    <px:css-split split-before="*[@css:page or @obfl:initial-page-number]" split-after="*[@css:page]"/>
+    <css:split split-before="*[@css:page or @obfl:initial-page-number]" split-after="*[@css:page]"/>
     
     <p:split-sequence test="//css:box"/>
     

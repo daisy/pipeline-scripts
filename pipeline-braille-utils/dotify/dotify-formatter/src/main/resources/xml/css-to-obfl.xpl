@@ -16,7 +16,7 @@
     <p:input port="source" sequence="true"/>
     <p:output port="result" sequence="false"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="split-into-sections.xpl"/>
     
     <p:for-each>
@@ -42,23 +42,23 @@
     </p:for-each>
     
     <p:for-each>
-        <px:css-parse-stylesheet/>
-        <px:css-make-pseudo-elements/>
-        <px:css-parse-declaration-list properties="content string-set counter-reset white-space display"/>
-        <px:css-eval-content-list/>
+        <css:parse-stylesheet/>
+        <css:make-pseudo-elements/>
+        <css:parse-declaration-list properties="content string-set counter-reset white-space display"/>
+        <css:eval-content-list/>
     </p:for-each>
     
-    <px:css-label-anchors/>
+    <css:label-anchors/>
     
     <p:for-each>
-        <px:css-eval-string-set/>
-        <px:css-preserve-white-space/>
-        <px:css-make-boxes/>
-        <px:css-make-anonymous-inline-boxes/>
+        <css:eval-string-set/>
+        <css:preserve-white-space/>
+        <css:make-boxes/>
+        <css:make-anonymous-inline-boxes/>
     </p:for-each>
     
-    <px:css-shift-string-set/>
-    <px:css-shift-counter-reset/>
+    <css:shift-string-set/>
+    <css:shift-counter-reset/>
     
     <p:for-each>
         <pxi:split-into-sections/>
@@ -86,12 +86,12 @@
     <p:filter select="/_/css:root"/>
     
     <p:for-each>
-        <px:css-parse-declaration-list properties="padding-left padding-right padding-top padding-bottom"/>
-        <px:css-padding-to-margin/>
-        <px:css-make-anonymous-block-boxes/>
+        <css:parse-declaration-list properties="padding-left padding-right padding-top padding-bottom"/>
+        <css:padding-to-margin/>
+        <css:make-anonymous-block-boxes/>
     </p:for-each>
     
-    <px:css-repeat-string-set/>
+    <css:repeat-string-set/>
     <p:split-sequence test="//css:box"/>
     
     <p:xslt template-name="main">
