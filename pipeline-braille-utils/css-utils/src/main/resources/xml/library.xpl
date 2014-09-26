@@ -21,5 +21,6 @@
     <p:import href="shift-counter-reset.xpl"/>
     <p:import href="shift-string-set.xpl"/>
     <p:import href="split.xpl"/>
+    <p:import href="new-definition.xpl"/>
     
 </p:library>

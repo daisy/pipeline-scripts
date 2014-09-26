@@ -207,16 +207,12 @@
                  'orphans',
                  'widows')"/>
     
-    <xsl:function name="css:is-property" as="xs:boolean">
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean($property=$css:properties)"/>
-    </xsl:function>
-    
     <xsl:function name="css:is-valid" as="xs:boolean">
-        <xsl:param name="property" as="xs:string"/>
-        <xsl:param name="value" as="xs:string"/>
-        <xsl:variable name="index" select="index-of($css:properties, $property)"/>
-        <xsl:sequence select="if ($index) then $value=('inherit', 'initial') or matches($value, $css:values[$index], 'x') else false()"/>
+        <xsl:param name="css:property" as="element()"/>
+        <xsl:variable name="index" select="index-of($css:properties, $css:property/@name)"/>
+        <xsl:sequence select="if ($index)
+                              then $css:property/@value=('inherit', 'initial') or matches($css:property/@value, $css:values[$index], 'x')
+                              else false()"/>
     </xsl:function>
     
     <xsl:function name="css:initial-value" as="xs:string?">

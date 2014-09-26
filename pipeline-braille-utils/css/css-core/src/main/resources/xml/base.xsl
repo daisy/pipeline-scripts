@@ -341,7 +341,7 @@
     
     <xsl:template match="css:property" mode="css:validate">
         <xsl:param name="validate" as="xs:boolean"/>
-        <xsl:if test="not($validate) or css:is-valid(@name, @value)">
+        <xsl:if test="not($validate) or css:is-valid(.)">
             <xsl:sequence select="."/>
         </xsl:if>
     </xsl:template>
@@ -397,7 +397,7 @@
         </xsl:variable>
         <xsl:variable name="properties" as="xs:string*" select="$properties[not(.='#all')]"/>
         <xsl:variable name="properties" as="xs:string*"
-            select="if ($validate) then $properties[css:is-property(.)] else $properties"/>
+            select="if ($validate) then $properties[.=$css:properties] else $properties"/>
         <xsl:variable name="declarations" as="element()*"
             select="(for $property in distinct-values($declarations/self::css:property/@name) return
                        $declarations/self::css:property[@name=$property][last()],
