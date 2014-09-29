@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.xml.transform.URIResolver;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -32,6 +33,7 @@ import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermIdent;
+import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
@@ -226,6 +228,15 @@ public class InlineProvider implements XProcStepProvider {
 		}
 	}
 	
+	private static Function<Object,String> termToString = new Function<Object,String>() {
+		public String apply(Object term) {
+			if (term instanceof TermInteger)
+				return String.valueOf(((TermInteger)term).getIntValue());
+			else
+				return String.valueOf(term);
+		}
+	};
+	
 	private static void insertStyle(StringBuilder builder, NodeData nodeData) {
 		List<String> keys = new ArrayList<String>(nodeData.getPropertyNames());
 		keys.remove("page");
@@ -234,7 +245,7 @@ public class InlineProvider implements XProcStepProvider {
 			builder.append(key).append(": ");
 			Term<?> value = nodeData.getValue(key, true);
 			if (value != null)
-				builder.append(value.toString());
+				builder.append(termToString.apply(value));
 			else {
 				CSSProperty prop = nodeData.getProperty(key);
 				builder.append(prop); }
@@ -286,6 +297,6 @@ public class InlineProvider implements XProcStepProvider {
 	}
 	
 	private static void insertDeclaration(StringBuilder builder, Declaration decl) {
-		builder.append(decl.getProperty()).append(": ").append(join(decl, "")).append("; ");
+		builder.append(decl.getProperty()).append(": ").append(join(decl, " ", termToString)).append("; ");
 	}
 }

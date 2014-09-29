@@ -131,23 +131,43 @@ public abstract class Utilities {
 	public static abstract class Strings {
 		
 		@SuppressWarnings("unchecked")
-		public static String join(Iterator<? extends Object> strings, final String separator) {
+		public static String join(Iterator<? extends Object> strings, final Object separator, final Function<Object,String> toStringFunction) {
 			if (!strings.hasNext()) return "";
-			String seed = strings.next().toString();
+			String seed = toStringFunction.apply(strings.next());
 			return Iterators.<String,Object>fold(
 				(Iterator<Object>)strings,
 				new Function2<String,Object,String>() {
 					public String apply(String s1, Object s2) {
-						return s1 + separator + String.valueOf(s2); }},
+						return s1 + toStringFunction.apply(separator) + toStringFunction.apply(s2); }},
 				seed);
 		}
 		
-		public static String join(Iterable<?> strings, final String separator) {
+		public static String join(Iterator<? extends Object> strings, final Object separator) {
+			return join(strings, separator, com.google.common.base.Functions.toStringFunction());
+		}
+		
+		public static String join(Iterable<?> strings, final Object separator, final Function<Object,String> toStringFunction) {
+			return join(strings.iterator(), separator, toStringFunction);
+		}
+		
+		public static String join(Iterable<?> strings, final Object separator) {
 			return join(strings.iterator(), separator);
 		}
 		
-		public static String join(Object[] strings, String separator) {
+		public static String join(Iterable<?> strings) {
+			return join(strings, "");
+		}
+		
+		public static String join(Object[] strings, Object separator, final Function<Object,String> toStringFunction) {
+			return join(Arrays.asList(strings), separator, toStringFunction);
+		}
+		
+		public static String join(Object[] strings, Object separator) {
 			return join(Arrays.asList(strings), separator);
+		}
+		
+		public static String join(Object[] strings) {
+			return join(strings, "");
 		}
 		
 		public static String normalizeSpace(Object object) {

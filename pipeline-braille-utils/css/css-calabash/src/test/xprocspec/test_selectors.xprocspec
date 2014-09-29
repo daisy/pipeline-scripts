@@ -239,12 +239,12 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <h foo="foo" style="display: block; margin-left: 1.0;"/>
+          <h foo="foo" style="display: block; margin-left: 1;"/>
           <p foo="foo" style="display: block;"/>
-          <p foo="bar" style="display: block; margin-bottom: 1.0; margin-right: 1.0; margin-top: 1.0;"/>
+          <p foo="bar" style="display: block; margin-bottom: 1; margin-right: 1; margin-top: 1;"/>
           <p foo="barz" style="display: block;"/>
-          <p foo="bar-z" style="display: block; margin-bottom: 1.0;"/>
-          <p foo="bar baz" style="display: block; margin-top: 1.0;"/>
+          <p foo="bar-z" style="display: block; margin-bottom: 1;"/>
+          <p foo="bar baz" style="display: block; margin-top: 1;"/>
           <p>foo</p>
         </body>
       </x:document>
@@ -284,7 +284,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <h class="foo" style="display: block; margin-left: 1.0;"/>
+          <h class="foo" style="display: block; margin-left: 1;"/>
           <p class="foo" style="display: block;"/>
           <p class="foobar"/>
           <p class="foo bar" style="display: block;"/>
@@ -326,7 +326,7 @@
       <x:document type="inline">
         <body>
           <p id="foo" style="display: block;"/>
-          <p id="bar" style="margin-left: 1.0;"/>
+          <p id="bar" style="margin-left: 1;"/>
           <p id="baz"/>
         </body>
       </x:document>
@@ -375,14 +375,14 @@
       <x:document type="inline">
         <body>
           <ul>
-            <li style="margin-left: 1.0;"/>
+            <li style="margin-left: 1;"/>
             <li/>
-            <li style="margin-top: 1.0;">
+            <li style="margin-top: 1;">
               <ol>
-                <li style="margin-bottom: 1.0; margin-left: 1.0; margin-right: 1.0;"/>
+                <li style="margin-bottom: 1; margin-left: 1; margin-right: 1;"/>
               </ol>
             </li>
-            <li style="margin-right: 1.0;"/>
+            <li style="margin-right: 1;"/>
           </ul>
         </body>
       </x:document>

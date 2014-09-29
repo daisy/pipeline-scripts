@@ -18,7 +18,7 @@
     </xsl:template>
     
     <!--
-        regex-groups: 7
+        regex-groups: 5
         $1: counter
         $5: value
     -->

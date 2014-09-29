@@ -67,10 +67,10 @@
       <x:document type="inline">
         <doc xml:base="file:/users/me/toc.xml" css:display="block" style="right: 2">
           <toc css:display="block">
-            <louis:div css:display="block" style="left: 0.0; right: 2.0">
+            <louis:div css:display="block" style="left: 0; right: 2">
               <louis:toc href="file:/users/me/toc.xml" width="28" print-pages="true" braille-pages="true" leader="⠄">
-                <louis:toc-item ref="h1" style="left: 0.0; text-indent: 0.0"/>
-                <louis:toc-item ref="h2" style="left: 0.0; text-indent: 0.0"/>
+                <louis:toc-item ref="h1" style="left: 0; text-indent: 0"/>
+                <louis:toc-item ref="h2" style="left: 0; text-indent: 0"/>
               </louis:toc>
             </louis:div>
           </toc>
@@ -123,9 +123,9 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
-          <louis:div css:display="block" style="left: 0.0; right: 0.0">
+          <louis:div css:display="block" style="left: 0; right: 0">
             <louis:toc href="file:/users/me/toc.xml" width="30" print-pages="true">
-              <louis:toc-item ref="h1" style="left: 0.0; text-indent: 0.0"/>
+              <louis:toc-item ref="h1" style="left: 0; text-indent: 0"/>
             </louis:toc>
           </louis:div>
           <css:block>
@@ -183,15 +183,15 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <toc xml:base="file:/users/me/toc.xml">
-          <louis:div css:display="block" style="left: 0.0; right: 0.0">
+          <louis:div css:display="block" style="left: 0; right: 0">
             <louis:toc href="file:/users/me/toc.xml" width="30">
-              <louis:toc-item ref="h1" style="left: 0; text-indent: 0.0"/>
-              <louis:toc-item ref="h2" style="left: 2; text-indent: 0.0"/>
+              <louis:toc-item ref="h1" style="left: 0; text-indent: 0"/>
+              <louis:toc-item ref="h2" style="left: 2; text-indent: 0"/>
             </louis:toc>
           </louis:div>
-          <louis:div css:display="block" style="left: 0.0; right: 2.0">
+          <louis:div css:display="block" style="left: 0; right: 2">
             <louis:toc href="file:/users/me/toc.xml" width="28">
-              <louis:toc-item ref="h3" style="left: 0.0; text-indent: 0.0"/>
+              <louis:toc-item ref="h3" style="left: 0; text-indent: 0"/>
             </louis:toc>
           </louis:div>
           <h xml:id="h1"> foo </h>

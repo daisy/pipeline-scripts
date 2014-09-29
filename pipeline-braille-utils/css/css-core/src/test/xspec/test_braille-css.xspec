@@ -19,7 +19,7 @@
 			<x:param select="xs:integer(2)"/>
 		</x:call>
 		<x:expect label="result">
-			<css:property name="left" value="2.0"/>
+			<css:property name="left" value="2"/>
 		</x:expect>
 	</x:scenario>
 	

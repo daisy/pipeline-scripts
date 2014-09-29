@@ -43,15 +43,16 @@
     
     <!--
         <integer>
-        # groups: 2
+        # groups: 0
     -->
-    <xsl:variable name="css:INTEGER_RE" select="'(0|-?[1-9][0-9]*)(\.0*)?'"/>
+    <xsl:variable name="css:INTEGER_RE" select="'0|-?[1-9][0-9]*'"/>
+
     
     <!--
         non-negative <integer>
-        # groups: 2
+        # groups: 0
     -->
-    <xsl:variable name="css:NON_NEGATIVE_INTEGER_RE" select="'(0|[1-9][0-9]*)(\.0*)?'"/>
+    <xsl:variable name="css:NON_NEGATIVE_INTEGER_RE" select="'0|[1-9][0-9]*'"/>
     
     <!--
         <string>
@@ -162,7 +163,7 @@
     <xsl:variable name="css:STRING_SET_PAIR_RE" select="concat('(',$css:IDENT_RE,')\s+(',$css:CONTENT_LIST_RE,')')"/>
     
     <!--
-        #groups: 7
+        #groups: 5
         $1: <identifier>
         $5: <integer>
     -->
@@ -189,7 +190,7 @@
         <xsl:param name="value"/>
         <xsl:choose>
             <xsl:when test="$value instance of xs:integer">
-                <css:property name="{$name}" value="{format-number($value, '0.0')}"/>
+                <css:property name="{$name}" value="{format-number($value, '0')}"/>
             </xsl:when>
             <xsl:otherwise>
                 <css:property name="{$name}" value="{$value}"/>

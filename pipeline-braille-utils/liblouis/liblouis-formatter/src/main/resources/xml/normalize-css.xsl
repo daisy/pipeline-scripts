@@ -27,14 +27,14 @@
     <xsl:variable name="liblouis-initial-values" as="xs:string*"
         select="('auto',
                  'auto',
-                 '0.0',
-                 '0.0',
+                 '0',
+                 '0',
                  'left',
-                 '0.0',
+                 '0',
                  'auto',
                  'auto',
                  'auto',
-                 '0.0')"/>
+                 '0')"/>
     
     <xsl:template match="@*|text()|comment()|processing-instruction()">
         <xsl:copy/>

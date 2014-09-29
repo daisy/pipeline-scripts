@@ -53,7 +53,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <frontmatter style="@page { size: 40.0 25.0; @top-right { content: counter(braille-page, lower-roman); } @bottom-right { content: string(print-page); } }">
+          <frontmatter style="@page { size: 40 25; @top-right { content: counter(braille-page, lower-roman); } @bottom-right { content: string(print-page); } }">
             <p>foobar</p>
           </frontmatter>
           <bodymatter>

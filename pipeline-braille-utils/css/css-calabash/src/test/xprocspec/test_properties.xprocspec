@@ -34,8 +34,8 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <h style="border-bottom: ⠒; border-left: none; border-right: none; border-top: ⠒; display: block; margin-bottom: 1.0; margin-left: 3.0; margin-right: 3.0; margin-top: 1.0; padding-bottom: 0.0; padding-left: 3.0; padding-right: 3.0; padding-top: 0.0;">foo</h>
-          <p style="display: block; margin-bottom: 3.0; margin-left: 4.0; margin-right: 2.0; margin-top: 1.0;">bar</p>
+          <h style="border-bottom: ⠒; border-left: none; border-right: none; border-top: ⠒; display: block; margin-bottom: 1; margin-left: 3; margin-right: 3; margin-top: 1; padding-bottom: 0; padding-left: 3; padding-right: 3; padding-top: 0;">foo</h>
+          <p style="display: block; margin-bottom: 3; margin-left: 4; margin-right: 2; margin-top: 1;">bar</p>
         </body>
       </x:document>
     </x:expect>
@@ -70,7 +70,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p style="display: block; left: 1.0; right: 2.0;">foo</p>
+          <p style="display: block; left: 1; right: 2;">foo</p>
         </body>
       </x:document>
     </x:expect>
