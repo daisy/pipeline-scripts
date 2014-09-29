@@ -40,6 +40,7 @@ Submodules
   liblouisutdml.
 - [`liblouis-mathml`](../liblouis/liblouis-mathml): XProc step for
   translating MathML to Braille using liblouisutdml.
-
+- [`liblouis-pef`](../liblouis/liblouis-pef)
+- [`liblouis-dotify`](../liblouis/liblouis-dotify)
 
 [liblouis]: https://code.google.com/p/liblouis
