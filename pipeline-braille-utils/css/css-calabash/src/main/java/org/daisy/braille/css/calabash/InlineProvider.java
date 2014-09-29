@@ -33,6 +33,7 @@ import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.domassign.Analyzer;
+import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -61,19 +62,18 @@ import static org.daisy.pipeline.braille.Utilities.Strings.normalizeSpace;
 
 public class InlineProvider implements XProcStepProvider {
 	
+	private SupportedBrailleCSS supportedCSS;
+	private DeclarationTransformer declarationTransformer;
+	
+	public InlineProvider() {
+		supportedCSS = new SupportedBrailleCSS();
+		CSSFactory.registerSupportedCSS(supportedCSS);
+		declarationTransformer = new BrailleCSSDeclarationTransformer();
+	}
+	
 	@Override
 	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
 		return new Inline(runtime, step);
-	}
-	
-	private static SupportedBrailleCSS supportedCSS;
-	
-	static {
-		supportedCSS = new SupportedBrailleCSS();
-		// FIXME: SupportedCSS can be set only once! must be done *before* NodeData is initialized
-		CSSFactory.registerSupportedCSS(supportedCSS);
-		// FIXME: DeclarationTransformer can be set only once! must be done *before* NodeData is initialized
-		CSSFactory.registerDeclarationTransformer(new BrailleCSSDeclarationTransformer());
 	}
 	
 	public void setUriResolver(URIResolver resolver) {
@@ -119,7 +119,7 @@ public class InlineProvider implements XProcStepProvider {
 	
 	private static final QName _style = new QName("style");
 	
-	private static class InlineCSSWriter extends TreeWriter {
+	private class InlineCSSWriter extends TreeWriter {
 		
 		private final StyleMap brailleStylemap;
 		private final StyleMap printStylemap;
@@ -129,6 +129,9 @@ public class InlineProvider implements XProcStepProvider {
 		                       XProcRuntime xproc) throws Exception {
 			super(xproc);
 			
+			CSSFactory.registerSupportedCSS(supportedCSS);
+			CSSFactory.registerDeclarationTransformer(declarationTransformer);
+	
 			URI baseURI = new URI(document.getBaseURI());
 			
 			// media embossed
@@ -177,7 +180,9 @@ public class InlineProvider implements XProcStepProvider {
 				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
 				if (afterData != null)
 					insertPseudoStyle(style, afterData, Selector.PseudoDeclaration.AFTER);
-				BrailleCSSProperty.Page pageProperty = brailleData.<BrailleCSSProperty.Page>getProperty("page", false);
+				BrailleCSSProperty.Page pageProperty = null;
+				if (brailleData != null)
+					pageProperty = brailleData.<BrailleCSSProperty.Page>getProperty("page", false);
 				if (pageProperty != null) {
 					RulePage page;
 					if (pageProperty == BrailleCSSProperty.Page.identifier)
