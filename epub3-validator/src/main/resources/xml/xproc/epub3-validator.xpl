@@ -69,7 +69,7 @@
         <p:with-option name="mode" select="if ($mode='') then (if (matches(lower-case($epub),'\.(opf|xml)$')) then 'expanded' else 'epub') else $mode"/>
         <p:with-option name="version" select="if ($version='') then '3' else $version"/>
     </px:epubcheck>
-
+    
     <p:xslt name="xml-report.not-wrapped">
         <p:input port="parameters">
             <p:empty/>
