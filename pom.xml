@@ -29,7 +29,7 @@
     <!-- <module>dtbook-to-odt</module> -->
     <!-- <module>dtbook-to-zedai</module> -->
     <!-- <module>dtbook-validator</module> -->
-    <!-- <module>epub3-validator</module> -->
+    <module>epub3-validator</module>
     <!-- <module>epub3-to-daisy202</module> -->
     <!-- <module>html-to-dtbook</module> -->
     <!-- <module>html-to-epub3</module> -->
@@ -91,11 +91,11 @@
         <artifactId>epub3-to-daisy202</artifactId>
         <version>1.0.0</version>
       </dependency>
-      <!-- <dependency>
+      <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>epub3-validator</artifactId>
         <version>1.0.1-SNAPSHOT</version>
-      </dependency> -->
+      </dependency>
       <!-- <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>html-to-dtbook</artifactId>
