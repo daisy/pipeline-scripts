@@ -36,4 +36,4 @@ Submodules
 - [`css-calabash`](../css/css-calabash): XProc bindings.
 
 
-[braillecss]: http://code.google.com/p/daisy-pipeline/wiki/BrailleCSSProperties
+[braillecss]: http://snaekobbi.github.io/braille-css-spec
