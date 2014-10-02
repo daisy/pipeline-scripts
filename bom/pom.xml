@@ -220,7 +220,13 @@
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
-                <version>1.13.0-p1</version>
+                <version>1.17-p1-SNAPSHOT</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.liblouis</groupId>

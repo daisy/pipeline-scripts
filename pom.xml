@@ -24,7 +24,6 @@
     <tag>HEAD</tag>
   </scm>
 
-  
   <modules>
     <module>bom</module>
     <module>parent</module>
@@ -46,6 +45,8 @@
     <module>pipeline-braille-utils/liblouis/liblouis-mathml</module>
     <module>pipeline-braille-utils/liblouis-utils</module>
     <module>pipeline-braille-utils/dotify/dotify-saxon</module>
+    <module>pipeline-braille-utils/dotify/dotify-calabash</module>
+    <module>pipeline-braille-utils/dotify/dotify-formatter</module>
     <module>pipeline-braille-utils/dotify-utils</module>
     <module>pipeline-braille-utils/libhyphen/libhyphen-core</module>
     <module>pipeline-braille-utils/libhyphen/libhyphen-native</module>
