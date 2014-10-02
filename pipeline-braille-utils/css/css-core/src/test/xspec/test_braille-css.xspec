@@ -70,6 +70,7 @@
 			<x:param select="'@page { size: 15 15; @bottom-right { content: counter(braille-page, lower-roman) }'"/>
 		</x:call>
 		<x:expect label="result">
+			<css:rule declaration-list="@page {{ size: 15 15; "/>
 			<css:rule selector="@bottom-right" declaration-list="content: counter(braille-page, lower-roman)"/>
 		</x:expect>
 	</x:scenario>

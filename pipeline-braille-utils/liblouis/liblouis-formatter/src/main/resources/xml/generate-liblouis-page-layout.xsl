@@ -14,26 +14,17 @@
     -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
-    <xsl:variable name="SIZE_RE" select="re:exact(concat($css:NON_NEGATIVE_INTEGER_RE,'\s+',$css:NON_NEGATIVE_INTEGER_RE))"/>
-    
     <xsl:template match="/*">
         <xsl:variable name="page-stylesheet" as="xs:string" select="string(@css:page)"/>
+        <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet($page-stylesheet)"/>
         <xsl:variable name="properties" as="element()*"
-            select="css:parse-declaration-list(replace($page-stylesheet, $css:RULE_RE, ''))"/>
-        <xsl:variable name="margin-rules" as="element()*">
-            <xsl:analyze-string select="$page-stylesheet" regex="{$css:RULE_RE}">
-                <xsl:matching-substring>
-                    <css:rule selector="{regex-group(2)}"
-                              declaration-list="{replace(regex-group(6), '(^\s+|\s+$)', '')}"/>
-                </xsl:matching-substring>
-            </xsl:analyze-string>
-        </xsl:variable>
+                      select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="size" as="xs:string"
-            select="($properties[@name='size']/@value[matches(., $SIZE_RE)], '40 25')[1]"/>
-        <xsl:variable name="top-right-content" as="element()*" select="pxi:margin-content($margin-rules, '@top-right')"/>
-        <xsl:variable name="bottom-right-content" as="element()*" select="pxi:margin-content($margin-rules, '@bottom-right')"/>
-        <xsl:variable name="top-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@top-center')"/>
-        <xsl:variable name="bottom-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@bottom-center')"/>
+                      select="($properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
+        <xsl:variable name="top-right-content" as="element()*" select="pxi:margin-content($rules, '@top-right')"/>
+        <xsl:variable name="bottom-right-content" as="element()*" select="pxi:margin-content($rules, '@bottom-right')"/>
+        <xsl:variable name="top-center-content" as="element()*" select="pxi:margin-content($rules, '@top-center')"/>
+        <xsl:variable name="bottom-center-content" as="element()*" select="pxi:margin-content($rules, '@bottom-center')"/>
         <xsl:variable name="print-page-position"
             select="if ($top-right-content/self::css:string[@name='print-page']) then 'top-right' else
                     if ($bottom-right-content/self::css:string[@name='print-page']) then 'bottom-right' else

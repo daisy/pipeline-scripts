@@ -170,16 +170,22 @@
     <xsl:variable name="css:COUNTER_RESET_PAIR_RE" select="concat('(',$css:IDENT_RE,')(\s+(',$css:INTEGER_RE,'))?')"/>
     
     <!--
-        # groups: 2
+        # groups: 1
     -->
-    <xsl:variable name="css:DECLARATION_LIST_RE">([^'"\{\}]+|'.+?'|".+?"|\{([^'"\{\}]+|'.+?'|".+?")*\})*</xsl:variable>
+    <xsl:variable name="css:DECLARATION_LIST_RE">([^'"\{\}]+|'[^']*'|"[^"]*")*</xsl:variable>
     
     <!--
-        # groups: 7
+        # groups: 8
         $2: selector
         $6: declaration list
     -->
-    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,')\s+)?\{(',$css:DECLARATION_LIST_RE,')\}')"/>
+    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,')\s+)?\{(
+                                                       (
+                                                         ',$css:DECLARATION_LIST_RE,'
+                                                         |
+                                                         \{(',$css:DECLARATION_LIST_RE,')\}
+                                                       )*
+                                                     )\}')"/>
     
     <!-- ======= -->
     <!-- Parsing -->
@@ -201,26 +207,21 @@
     <xsl:function name="css:parse-stylesheet" as="element()*">
         <xsl:param name="stylesheet" as="xs:string?"/>
         <xsl:if test="$stylesheet">
-            <xsl:variable name="rules" as="element()*">
-                <xsl:analyze-string select="$stylesheet" regex="{$css:RULE_RE}">
-                    <xsl:matching-substring>
-                        <xsl:element name="css:rule">
-                            <xsl:if test="regex-group(1)!=''">
-                                <xsl:attribute name="selector" select="regex-group(2)"/>
-                            </xsl:if>
-                            <xsl:attribute name="declaration-list" select="replace(regex-group(6), '(^\s+|\s+$)', '')"/>
-                        </xsl:element>
-                    </xsl:matching-substring>
-                </xsl:analyze-string>
-            </xsl:variable>
-            <xsl:choose>
-                <xsl:when test="exists($rules)">
-                    <xsl:sequence select="$rules"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <css:rule declaration-list="{$stylesheet}"/>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:variable name="declarations" as="xs:string"
+                          select="replace($stylesheet, $css:RULE_RE, '', 'x')"/>
+            <xsl:if test="not(normalize-space($declarations)='')">
+                <css:rule declaration-list="{$declarations}"/>
+            </xsl:if>
+            <xsl:analyze-string select="$stylesheet" regex="{$css:RULE_RE}" flags="x">
+                <xsl:matching-substring>
+                    <xsl:element name="css:rule">
+                        <xsl:if test="regex-group(1)!=''">
+                            <xsl:attribute name="selector" select="regex-group(2)"/>
+                        </xsl:if>
+                        <xsl:attribute name="declaration-list" select="replace(regex-group(6), '(^\s+|\s+$)', '')"/>
+                    </xsl:element>
+                </xsl:matching-substring>
+            </xsl:analyze-string>
         </xsl:if>
     </xsl:function>
     
