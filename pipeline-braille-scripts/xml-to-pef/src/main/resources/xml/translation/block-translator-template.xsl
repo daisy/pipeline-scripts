@@ -145,24 +145,30 @@
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='string-set']" mode="translate-declaration-list">
+		<xsl:if test="@value!='none'">
+			<xsl:variable name="translated-string-set-pairs" as="element()*">
+				<xsl:apply-templates select="css:parse-string-set(@value)" mode="translate-string-set-pair"/>
+			</xsl:variable>
+			<xsl:copy>
+				<xsl:sequence select="@name"/>
+				<xsl:attribute name="value" select="css:serialize-string-set($translated-string-set-pairs)"/>
+			</xsl:copy>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="css:string-set" mode="translate-string-set-pair" as="element()">
 		<xsl:param name="context" as="element()" tunnel="yes"/>
-		<xsl:variable name="translated-value" as="xs:string*">
-			<xsl:for-each select="tokenize(@value, ',')">
-				<xsl:variable name="identifier" as="xs:string" select="replace(., '^\s*(\S+)\s.*$', '$1')"/>
-				<xsl:variable name="content-list" as="xs:string" select="substring-after(., $identifier)"/>
-				<xsl:if test="matches($identifier, $css:IDENT_RE)">
-					<xsl:variable name="translated-content-list" as="element()*">
-						<xsl:apply-templates select="css:parse-content-list($content-list, $context)" mode="translate-content-list">
-							<xsl:with-param name="string-name" select="$identifier" tunnel="yes"/>
-						</xsl:apply-templates>
-					</xsl:variable>
-					<xsl:sequence select="concat($identifier, ' ', if (exists($translated-content-list))
-					                                               then css:serialize-content-list($translated-content-list)
-					                                               else '&quot;&quot;')"/>
-				</xsl:if>
-			</xsl:for-each>
-		</xsl:variable>
-		<xsl:sequence select="css:property('string-set', string-join($translated-value, ', '))"/>
+		<xsl:copy>
+			<xsl:sequence select="@name"/>
+			<xsl:variable name="translated-content-list" as="element()*">
+				<xsl:apply-templates select="css:parse-content-list(@value, $context)" mode="translate-content-list">
+					<xsl:with-param name="string-name" select="@name" tunnel="yes"/>
+				</xsl:apply-templates>
+			</xsl:variable>
+			<xsl:attribute name="value" select="if (exists($translated-content-list))
+			                                    then css:serialize-content-list($translated-content-list)
+			                                    else '&quot;&quot;'"/>
+		</xsl:copy>
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='content']" mode="translate-declaration-list">
