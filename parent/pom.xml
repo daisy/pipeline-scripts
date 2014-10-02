@@ -106,7 +106,7 @@
       <dependency>
         <groupId>org.daisy.maven</groupId>
         <artifactId>xspec-runner</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>

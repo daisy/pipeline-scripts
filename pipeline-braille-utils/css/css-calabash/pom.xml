@@ -39,7 +39,6 @@
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-core</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -60,7 +59,6 @@
     <dependency>
       <groupId>org.apache.servicemix.bundles</groupId>
       <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
-      <version>3.2_2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
