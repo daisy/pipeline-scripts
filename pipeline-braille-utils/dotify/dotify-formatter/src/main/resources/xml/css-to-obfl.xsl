@@ -232,19 +232,19 @@
         <xsl:message>Unknown property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn">
+    <xsl:template match="css:text[@target]">
         <xsl:message>NOT IMPLEMENTED</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-string-fn">
+    <xsl:template match="css:string[@name][@target]">
         <xsl:message>NOT IMPLEMENTED</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-counter-fn">
+    <xsl:template match="css:counter[@target]">
         <xsl:message>NOT IMPLEMENTED</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:leader-fn">
+    <xsl:template match="css:leader">
         <leader pattern="{@pattern}"/>
     </xsl:template>
     
@@ -257,10 +257,10 @@
         <xsl:variable name="value" as="xs:string*">
             <xsl:apply-templates select="css:parse-content-list(@value, ())" mode="eval-string-set"/>
         </xsl:variable>
-        <marker class="{@identifier}" value="{string-join($value,'')}"/>
+        <marker class="{@name}" value="{string-join($value,'')}"/>
     </xsl:template>
     
-    <xsl:template match="css:string" mode="eval-string-set" as="xs:string">
+    <xsl:template match="css:string[@value]" mode="eval-string-set" as="xs:string">
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     

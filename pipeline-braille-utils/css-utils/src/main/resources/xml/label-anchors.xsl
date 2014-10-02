@@ -26,9 +26,9 @@
     <xsl:template name="try-anchor">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="collection()//*[self::css:target-text-fn or
-                                            self::css:target-string-fn or
-                                            self::css:target-counter-fn]
+            <xsl:when test="collection()//*[self::css:text[@target] or
+                                            self::css:string[@name][@target] or
+                                            self::css:counter[@target]]
                                            [replace(@target,'^#','')=$name]">
                 <xsl:copy>
                     <xsl:apply-templates select="@*"/>
@@ -42,9 +42,9 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn/@target|
-                         css:target-string-fn/@target|
-                         css:target-counter-fn/@target">
+    <xsl:template match="css:text/@target|
+                         css:string[@name]/@target|
+                         css:counter/@target">
         <xsl:attribute name="target" select="replace(.,'^#','')"/>
     </xsl:template>
     

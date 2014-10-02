@@ -22,30 +22,30 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="css:string" mode="eval-content-list">
+    <xsl:template match="css:string[@value]" mode="eval-content-list">
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     
-    <xsl:template match="css:attr-fn" mode="eval-content-list">
+    <xsl:template match="css:attr" mode="eval-content-list">
         <xsl:param name="context" as="element()"/>
         <xsl:variable name="name" select="string(@name)"/>
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn|css:target-string-fn|css:target-counter-fn|css:leader-fn"
+    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:leader"
                   mode="eval-content-list">
         <xsl:sequence select="."/>
     </xsl:template>
     
-    <xsl:template match="css:string-fn" mode="eval-content-list">
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
         <xsl:message>string() function not supported in content property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:counter-fn" mode="eval-content-list">
+    <xsl:template match="css:counter[not(@target)]" mode="eval-content-list">
         <xsl:message>counter() function not supported in content property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:content-fn" mode="eval-content-list">
+    <xsl:template match="css:content" mode="eval-content-list">
         <xsl:message>content() function not supported in content property</xsl:message>
     </xsl:template>
     

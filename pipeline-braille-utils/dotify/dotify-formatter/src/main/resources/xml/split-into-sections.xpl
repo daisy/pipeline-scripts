@@ -35,12 +35,12 @@
                             <xsl:variable name="pairs" as="element()*"
                                           select="(css:parse-counter-reset(@css:counter-entry),
                                                    css:parse-counter-reset(@css:counter-reset))"/>
-                            <xsl:if test="$pairs[@identifier!='braille-page']">
+                            <xsl:if test="$pairs[@name!='braille-page']">
                                 <xsl:message>counter-reset only supported for braille-page</xsl:message>
                             </xsl:if>
-                            <xsl:if test="$pairs[@identifier='braille-page']">
+                            <xsl:if test="$pairs[@name='braille-page']">
                                 <xsl:attribute name="obfl:initial-page-number"
-                                               select="$pairs[@identifier='braille-page'][last()]/@value"/>
+                                               select="$pairs[@name='braille-page'][last()]/@value"/>
                             </xsl:if>
                             <xsl:apply-templates/>
                         </xsl:copy>

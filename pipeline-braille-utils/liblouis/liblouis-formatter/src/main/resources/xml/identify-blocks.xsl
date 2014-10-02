@@ -19,12 +19,10 @@
                     </xsl:when>
                     <xsl:when test="matches(string-join(current-group()/string(.), ''), '^[\s&#x2800;]*$')
                                     and not(current-group()/descendant-or-self::louis:space or
-                                            current-group()/descendant-or-self::css:string-fn or
-                                            current-group()/descendant-or-self::css:counter-fn or
-                                            current-group()/descendant-or-self::css:target-text-fn or
-                                            current-group()/descendant-or-self::css:target-string-fn or
-                                            current-group()/descendant-or-self::css:target-counter-fn or
-                                            current-group()/descendant-or-self::css:leader-fn)">
+                                            current-group()/descendant-or-self::css:string or
+                                            current-group()/descendant-or-self::css:counter or
+                                            current-group()/descendant-or-self::css:text or
+                                            current-group()/descendant-or-self::css:leader)">
                         <xsl:sequence select="current-group()"/>
                     </xsl:when>
                     <xsl:otherwise>

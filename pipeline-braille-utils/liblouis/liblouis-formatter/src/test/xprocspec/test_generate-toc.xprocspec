@@ -37,16 +37,16 @@
           <doc xml:base="file:/users/me/toc.xml" css:display="block" style="right: 2">
             <toc css:display="block">
               <css:block>
-                <css:target-text-fn target="h1"/>
-                <css:leader-fn pattern="⠄⠄"/>
-                <css:target-counter-fn target="h1" identifier="braille-page"/>
-                <css:target-string-fn target="h1" identifier="print-page"/>
+                <css:text target="h1"/>
+                <css:leader pattern="⠄⠄"/>
+                <css:counter target="h1" name="braille-page"/>
+                <css:string target="h1" name="print-page"/>
               </css:block>
               <css:block>
-                <css:target-text-fn target="h2"/>
-                <css:leader-fn pattern="⠄⠄"/>
-                <css:target-counter-fn target="h2" identifier="braille-page"/>
-                <css:target-string-fn target="h2" identifier="print-page"/>
+                <css:text target="h2"/>
+                <css:leader pattern="⠄⠄"/>
+                <css:counter target="h2" name="braille-page"/>
+                <css:string target="h2" name="print-page"/>
               </css:block>
             </toc>
             <h xml:id="h1"> foo </h>
@@ -92,17 +92,17 @@
         <x:document type="inline">
           <toc xml:base="file:/users/me/toc.xml">
             <css:block>
-              <css:target-text-fn target="h1"/>
-              <css:target-string-fn target="h1" identifier="print-page"/>
+              <css:text target="h1"/>
+              <css:string target="h1" name="print-page"/>
             </css:block>
             <css:block>
-              <css:target-text-fn target="h2"/>
+              <css:text target="h2"/>
               ..
-              <css:target-string-fn target="h2" identifier="print-page"/>
+              <css:string target="h2" name="print-page"/>
             </css:block>
             <css:block>
-              <css:target-text-fn target="h3"/>
-              <css:target-string-fn target="h3" identifier="print-page"/>
+              <css:text target="h3"/>
+              <css:string target="h3" name="print-page"/>
             </css:block>
             <louis:print-page>1</louis:print-page>
             <h xml:id="h1"> foo </h>
@@ -129,13 +129,13 @@
             </louis:toc>
           </louis:div>
           <css:block>
-              <css:target-text-fn> bar </css:target-text-fn>
+              <css:text> bar </css:text>
               ..
-              <css:target-string-fn>2</css:target-string-fn>
+              <css:string>2</css:string>
             </css:block>
           <css:block>
-              <css:target-text-fn/>
-              <css:target-string-fn/>
+              <css:text/>
+              <css:string/>
           </css:block>
           <louis:print-page>1</louis:print-page>
           <h xml:id="h1"> foo </h>
@@ -157,13 +157,13 @@
         <x:document type="inline">
           <toc xml:base="file:/users/me/toc.xml">
             <css:block style="left: 0">
-              <css:target-text-fn target="h1"/>
+              <css:text target="h1"/>
             </css:block>
             <css:block style="left: 2">
-              <css:target-text-fn target="h2"/>
+              <css:text target="h2"/>
             </css:block>
             <css:block style="right: 2">
-              <css:target-text-fn target="h3"/>
+              <css:text target="h3"/>
             </css:block>
             <h xml:id="h1"> foo </h>
             <h xml:id="h2"> bar </h>

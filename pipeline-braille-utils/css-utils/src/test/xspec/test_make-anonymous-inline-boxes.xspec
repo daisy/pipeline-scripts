@@ -56,9 +56,9 @@
     <x:context>
       <css:root>
         <css:box type="block">
-          <css:target-text-fn/>
-          <css:leader-fn/>
-          <css:target-counter-fn/>
+          <css:text target="x"/>
+          <css:leader/>
+          <css:counter target="x"/>
           <css:box type="block">
             xxx
           </css:box>
@@ -69,9 +69,9 @@
       <css:root>
         <css:box type="block">
           <css:box type="inline">
-            <css:target-text-fn/>
-            <css:leader-fn/>
-            <css:target-counter-fn/>
+            <css:text target="x"/>
+            <css:leader/>
+            <css:counter target="x"/>
           </css:box>
           <css:box type="block">
             <css:box type="inline">

@@ -286,9 +286,9 @@
                         <xsl:copy>
                             <xsl:apply-templates select="@*"/>
                             <xsl:if test="collection()//*[@target=($id,concat('#',$id))
-                                                          and (self::css:target-text-fn or
-                                                               self::css:target-string-fn or
-                                                               self::css:target-counter-fn)]">
+                                                          and (self::css:text[@target] or
+                                                               self::css:string[@name][@target] or
+                                                               self::css:counter[@target])]">
                                 <xsl:attribute name="css:target" select="'true'"/>
                             </xsl:if>
                             <xsl:apply-templates select="node()"/>
@@ -312,12 +312,10 @@
                                    @style or
                                    @css:display or
                                    @css:target or
-                                   self::css:string-fn or
-                                   self::css:counter-fn or
-                                   self::css:target-text-fn or
-                                   self::css:target-string-fn or
-                                   self::css:target-counter-fn or
-                                   self::css:leader-fn or
+                                   self::css:string or
+                                   self::css:counter or
+                                   self::css:text or
+                                   self::css:leader or
                                    self::css:block or
                                    self::louis:space or
                                    self::louis:print-page or

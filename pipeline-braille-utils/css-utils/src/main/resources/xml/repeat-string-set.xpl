@@ -57,8 +57,8 @@
                 <p:pipe step="current-section" port="result"/>
             </p:input>
             <p:input port="insertion"
-                     select="for $i in distinct-values(//css:string-set/@identifier)
-                             return (//css:string-set[@identifier=$i])[last()]">
+                     select="for $n in distinct-values(//css:string-set/@name)
+                             return (//css:string-set[@name=$n])[last()]">
                 <p:pipe step="preceding-sections" port="result"/>
             </p:input>
         </p:insert>

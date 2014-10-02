@@ -59,17 +59,17 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="css:string" mode="eval-content-list">
+    <xsl:template match="css:string[@value]" mode="eval-content-list">
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     
-    <xsl:template match="css:attr-fn" mode="eval-content-list">
+    <xsl:template match="css:attr" mode="eval-content-list">
         <xsl:param name="context" as="element()"/>
         <xsl:variable name="name" select="string(@name)"/>
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:content-fn" mode="eval-content-list">
+    <xsl:template match="css:content" mode="eval-content-list">
         <xsl:param name="context" as="element()"/>
         <xsl:sequence select="$context/child::node()"/>
     </xsl:template>

@@ -94,8 +94,8 @@
 			</x:param>
 		</x:call>
 		<x:expect label="result">
-			<css:target-string-fn target="#foo" identifier="print-page"/>
-			<css:counter-fn identifier="braille-page" style="lower-roman"/>
+			<css:string target="#foo" name="print-page"/>
+			<css:counter name="braille-page" style="lower-roman"/>
 		</x:expect>
 	</x:scenario>
 	
@@ -104,8 +104,8 @@
 			<x:param select="'print-page &quot;page &quot; attr(num), running-header &quot;foo&quot;'"/>
 		</x:call>
 		<x:expect label="result">
-			<css:string-set identifier="print-page" value="&quot;page &quot; attr(num)"/>
-			<css:string-set identifier="running-header" value="&quot;foo&quot;"/>
+			<css:string-set name="print-page" value="&quot;page &quot; attr(num)"/>
+			<css:string-set name="running-header" value="&quot;foo&quot;"/>
 		</x:expect>
 	</x:scenario>
 	
@@ -114,14 +114,14 @@
 			<x:param select="'foo 2 bar'"/>
 		</x:call>
 		<x:expect label="result">
-			<css:counter-reset identifier="foo" value="2"/>
-			<css:counter-reset identifier="bar" value="0"/>
+			<css:counter-reset name="foo" value="2"/>
+			<css:counter-reset name="bar" value="0"/>
 		</x:expect>
 	</x:scenario>
 	
 	<x:scenario label="test_11">
 		<x:context mode="css:serialize">
-			<css:target-string-fn target="#foo" identifier="print-page"/>
+			<css:string target="#foo" name="print-page"/>
 		</x:context>
 		<x:expect label="result" select="'target-string(#foo, print-page)'"/>
 	</x:scenario>

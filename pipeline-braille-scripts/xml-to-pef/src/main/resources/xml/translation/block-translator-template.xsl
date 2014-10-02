@@ -103,8 +103,7 @@
 	</xsl:template>
 	
 	<xsl:template match="css:rule|css:property|
-	                     css:content-fn|css:string-fn|css:counter-fn|
-	                     css:target-text-fn|css:target-string-fn|css:target-counter-fn|css:leader-fn"
+	                     css:content|css:string[@name]|css:counter|css:text|css:leader"
 	              mode="translate-rule-list translate-declaration-list translate-content-list">
 		<xsl:sequence select="."/>
 	</xsl:template>
@@ -176,7 +175,7 @@
 					                                  else '&quot;&quot;')"/>
 	</xsl:template>
 	
-	<xsl:template match="css:string|css:attr-fn" mode="translate-content-list" as="element()?">
+	<xsl:template match="css:string[@value]|css:attr" mode="translate-content-list" as="element()?">
 		<xsl:param name="context" as="element()" tunnel="yes"/>
 		<xsl:param name="mode" as="xs:string" tunnel="yes"/>
 		<xsl:variable name="evaluated-string" as="xs:string">

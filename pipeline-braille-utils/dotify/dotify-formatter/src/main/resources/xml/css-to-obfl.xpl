@@ -68,12 +68,10 @@
         <p:rename match="css:box[@type='inline']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
                                  not(descendant::css:white-space or
-                                     descendant::css:string-fn or
-                                     descendant::css:counter-fn or
-                                     descendant::css:target-text-fn or
-                                     descendant::css:target-string-fn or
-                                     descendant::css:target-counter-fn or
-                                     descendant::css:leader-fn)]"
+                                     descendant::css:string or
+                                     descendant::css:counter or
+                                     descendant::css:text or
+                                     descendant::css:leader)]"
                   new-name="css:_"/>
     </p:for-each>
     

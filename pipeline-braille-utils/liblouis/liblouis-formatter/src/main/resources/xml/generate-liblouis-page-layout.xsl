@@ -35,12 +35,12 @@
         <xsl:variable name="top-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@top-center')"/>
         <xsl:variable name="bottom-center-content" as="element()*" select="pxi:margin-content($margin-rules, '@bottom-center')"/>
         <xsl:variable name="print-page-position"
-            select="if ($top-right-content/self::css:string-fn[@identifier='print-page']) then 'top-right' else
-                    if ($bottom-right-content/self::css:string-fn[@identifier='print-page']) then 'bottom-right' else
+            select="if ($top-right-content/self::css:string[@name='print-page']) then 'top-right' else
+                    if ($bottom-right-content/self::css:string[@name='print-page']) then 'bottom-right' else
                     'none'"/>
         <xsl:variable name="braille-page-position"
-            select="if ($top-right-content/self::css:counter-fn[@identifier='braille-page']) then 'top-right' else
-                    if ($bottom-right-content/self::css:counter-fn[@identifier='braille-page']) then 'bottom-right' else
+            select="if ($top-right-content/self::css:counter[@name='braille-page']) then 'top-right' else
+                    if ($bottom-right-content/self::css:counter[@name='braille-page']) then 'bottom-right' else
                     'none'"/>
         <xsl:element name="louis:page-layout">
             <xsl:element name="c:param-set">
@@ -63,7 +63,7 @@
                 <xsl:if test="$braille-page-position!='none'">
                     <xsl:variable name="format"
                         select="(if ($braille-page-position='top-right') then $top-right-content else $bottom-right-content)
-                                /self::css:counter-fn[@identifier='braille-page'][1]/@style"/>
+                                /self::css:counter[@name='braille-page'][1]/@style"/>
                     <xsl:element name="c:param">
                         <xsl:attribute name="name" select="'louis:braille-page-format'"/>
                         <xsl:attribute name="value">
@@ -90,13 +90,13 @@
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:running-header'"/>
                     <xsl:attribute name="value"
-                        select="if ($top-center-content/self::css:string-fn[@identifier='running-header'])
+                        select="if ($top-center-content/self::css:string[@name='running-header'])
                                 then 'true' else 'false'"/>
                 </xsl:element>
                 <xsl:element name="c:param">
                     <xsl:attribute name="name" select="'louis:running-footer'"/>
                     <xsl:attribute name="value"
-                        select="if ($bottom-center-content/self::css:string-fn[@identifier='running-footer'])
+                        select="if ($bottom-center-content/self::css:string[@name='running-footer'])
                                 then 'true' else 'false'"/>
                 </xsl:element>
             </xsl:element>

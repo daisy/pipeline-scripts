@@ -88,40 +88,40 @@
         </layout-master>
     </xsl:function>
     
-    <xsl:template match="css:string" mode="eval-content-list">
+    <xsl:template match="css:string[@value]" mode="eval-content-list">
         <string value="{string(@value)}"/>
     </xsl:template>
     
-    <xsl:template match="css:counter-fn[@identifier='braille-page']" mode="eval-content-list">
+    <xsl:template match="css:counter[@name='braille-page']" mode="eval-content-list">
         <current-page style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                    then @style else 'default'}"/>
     </xsl:template>
     
-    <xsl:template match="css:string-fn" mode="eval-content-list">
-        <marker-reference marker="{@identifier}" direction="backward" scope="sequence"/>
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
+        <marker-reference marker="{@name}" direction="backward" scope="sequence"/>
     </xsl:template>
     
-    <xsl:template match="css:attr-fn" mode="eval-content-list">
+    <xsl:template match="css:attr" mode="eval-content-list">
         <xsl:message>attr() function not supported in page header and footer</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:content-fn" mode="eval-content-list">
+    <xsl:template match="css:content" mode="eval-content-list">
         <xsl:message>content() function not supported in page header and footer</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn" mode="eval-content-list">
+    <xsl:template match="css:text[@target]" mode="eval-content-list">
         <xsl:message>target-text() function not supported in page header and footer</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-string-fn" mode="eval-content-list">
+    <xsl:template match="css:string[@name][@target]" mode="eval-content-list">
         <xsl:message>target-string() function not supported in page header and footer</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-counter-fn" mode="eval-content-list">
+    <xsl:template match="css:counter[@target]" mode="eval-content-list">
         <xsl:message>target-counter() function not supported in page header and footer</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:leader-fn" mode="eval-content-list">
+    <xsl:template match="css:leader" mode="eval-content-list">
         <xsl:message>leader() function not supported in page header and footer</xsl:message>
     </xsl:template>
     

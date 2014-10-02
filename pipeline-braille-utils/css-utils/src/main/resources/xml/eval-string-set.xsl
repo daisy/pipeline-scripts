@@ -31,7 +31,7 @@
     
     <xsl:template match="css:string-set" mode="eval-string-set-pair" as="element()">
         <xsl:copy>
-            <xsl:sequence select="@identifier"/>
+            <xsl:sequence select="@name"/>
             <xsl:variable name="evaluated-content" as="xs:string*">
                 <xsl:apply-templates select="css:parse-content-list(@value, ())" mode="eval-content-list"/>
             </xsl:variable>
@@ -40,42 +40,42 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="css:string" mode="eval-content-list" as="xs:string">
+    <xsl:template match="css:string[@value]" mode="eval-content-list" as="xs:string">
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     
-    <xsl:template match="css:attr-fn" mode="eval-content-list" as="xs:string">
+    <xsl:template match="css:attr" mode="eval-content-list" as="xs:string">
         <xsl:param name="context" as="element()" tunnel="yes"/>
         <xsl:variable name="name" select="string(@name)"/>
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:content-fn" mode="eval-content-list" as="xs:string">
+    <xsl:template match="css:content" mode="eval-content-list" as="xs:string">
         <xsl:param name="context" as="element()" tunnel="yes"/>
         <xsl:sequence select="string($context)"/>
     </xsl:template>
     
-    <xsl:template match="css:string-fn" mode="eval-content-list">
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
         <xsl:message>string() function not supported in string-set property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:counter-fn" mode="eval-content-list">
+    <xsl:template match="css:counter[not(@target)]" mode="eval-content-list">
         <xsl:message>counter() function not supported in string-set property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn" mode="eval-content-list">
+    <xsl:template match="css:text[@target]" mode="eval-content-list">
         <xsl:message>target-text() function not supported in string-set property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-string-fn" mode="eval-content-list">
+    <xsl:template match="css:string[@name][@target]" mode="eval-content-list">
         <xsl:message>target-string() function not supported in string-set property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:target-counter-fn" mode="eval-content-list">
+    <xsl:template match="css:counter[@target]" mode="eval-content-list">
         <xsl:message>target-counter() function not supported in string-set property</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:leader-fn" mode="eval-content-list">
+    <xsl:template match="css:leader" mode="eval-content-list">
         <xsl:message>leader() function not supported in string-set property</xsl:message>
     </xsl:template>
     

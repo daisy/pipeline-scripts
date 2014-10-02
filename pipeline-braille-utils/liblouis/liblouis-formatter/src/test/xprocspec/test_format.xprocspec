@@ -1512,7 +1512,6 @@
                                                 content: target-text(attr(ref))
                                                          leader('⠄')
                                                          target-counter(attr(ref), braille-page)"/>
-
                   <entry ref="chapter_2" style="display: block;
                                                 content: target-text(attr(ref))
                                                          leader('⠄')
@@ -1756,7 +1755,6 @@
                 <toc>
                   <entry ref="chapter_1" style="display: block;
                                                 content: target-text(attr(ref))"/>
-
                   <entry ref="chapter_2" style="display: block;
                                                 content: target-text(attr(ref))"/>
                 </toc>
@@ -1818,7 +1816,6 @@
                 <toc>
                   <entry ref="r1" style="display: block;
                                           content: target-text(attr(ref))"/>
-
                   <entry ref="r2" style="display: block;
                                           content: target-text(attr(ref))"/>
                 </toc>

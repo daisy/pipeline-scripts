@@ -37,17 +37,17 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:string" mode="eval-content-list">
+    <xsl:template match="css:string[@value]" mode="eval-content-list">
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     
-    <xsl:template match="css:attr-fn" mode="eval-content-list">
+    <xsl:template match="css:attr" mode="eval-content-list">
         <xsl:param name="context" as="element()"/>
         <xsl:variable name="name" select="string(@name)"/>
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:target-text-fn|css:target-string-fn|css:target-counter-fn|css:leader-fn"
+    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:leader"
                   mode="eval-content-list">
         <xsl:sequence select="."/>
     </xsl:template>
