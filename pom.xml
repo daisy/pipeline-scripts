@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>scripts-aggregator</artifactId>
-  <version>1.8.1</version>
+  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Aggregator POM for the Default Scripts</name>
@@ -96,7 +96,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>zedai-to-epub3</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -105,8 +105,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <scm>
-    <tag>v1.8.1</tag>
-  </scm>
 </project>
