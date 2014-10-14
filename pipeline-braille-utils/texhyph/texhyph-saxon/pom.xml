@@ -19,32 +19,29 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.compendium</artifactId>
-      <scope>provided</scope>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>texhyph-core</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>texhyph-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-java</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!--
+        OSGi runtime dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        test dependencies
+    -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xspec-runner</artifactId>

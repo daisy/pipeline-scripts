@@ -47,7 +47,6 @@ public class LiblouisUtilsTest {
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
 			brailleModule("css-utils"),
-			// for css-calabash:
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			xspecBundles(),
 			junitBundles()

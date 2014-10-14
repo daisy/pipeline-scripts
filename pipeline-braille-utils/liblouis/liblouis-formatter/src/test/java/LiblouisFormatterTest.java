@@ -52,7 +52,6 @@ public class LiblouisFormatterTest {
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("brailleutils-core").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("brailleutils-catalog").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),

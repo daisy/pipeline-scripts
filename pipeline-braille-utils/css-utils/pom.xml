@@ -18,26 +18,22 @@
   <name>DAISY Pipeline 2 Braille Module :: css-utils</name>
   
   <dependencies>
+    <!--
+        OSGi runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-core</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-calabash</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!--
+        test dependencies
+    -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>

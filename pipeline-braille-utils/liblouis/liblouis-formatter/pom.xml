@@ -26,103 +26,107 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <!--
+        OSGi runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-calabash</artifactId>
-      <scope>test</scope>
+      <artifactId>common-utils</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-native</artifactId>
-      <classifier>linux</classifier>
-      <scope>test</scope>
+      <artifactId>liblouis-calabash</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>css-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>css-calabash</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>pef-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-saxon</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-to-html</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-calabash</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-utils</artifactId>
-      <scope>test</scope>
+      <version>1.1.2-SNAPSHOT</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>file-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>common-utils</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>html-utils</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>fileset-utils</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        for file-utils
+    -->
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient-osgi</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore-osgi</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>woodstox-osgi-adapter</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>modules-registry</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.persistence</groupId>
+      <artifactId>javax.persistence</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        for fileset-utils
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>common-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>html-utils</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>zip-utils</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>mediatype-utils</artifactId>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!--
+        for brailleutils-core
+    -->
     <dependency>
       <groupId>org.daisy.libs</groupId>
       <artifactId>jing</artifactId>
-      <version>20120724.0.0</version>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-catalog</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!--
+        test dependencies
+    -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>

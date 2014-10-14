@@ -48,7 +48,7 @@
         <scope>import</scope>
       </dependency>
       <!--
-          Other Modules BoM (for tests)
+          Other Modules BoM
       -->
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -65,7 +65,35 @@
         <scope>import</scope>
       </dependency>
       <!--
-          for testing
+          OSGi runtime dependencies
+      -->
+      <dependency>
+        <groupId>org.daisy.libs</groupId>
+        <artifactId>saxon-he</artifactId>
+        <version>9.5.1.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.libs</groupId>
+        <artifactId>jing</artifactId>
+        <version>20120724.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient-osgi</artifactId>
+        <version>4.2.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore-osgi</artifactId>
+        <version>4.2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>javax.persistence</artifactId>
+        <version>2.0.3</version>
+      </dependency>
+      <!--
+          test dependencies
       -->
       <dependency>
         <groupId>org.daisy.xprocspec</groupId>
@@ -223,5 +251,16 @@
       </build>
     </profile>
   </profiles>
-
+  
+  <!--
+      for javax.persistence
+  -->
+  <repositories>
+    <repository>
+      <id>eclipselink</id>
+      <name>EclipseLink Releases</name>
+      <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+    </repository>
+  </repositories>
+  
 </project>

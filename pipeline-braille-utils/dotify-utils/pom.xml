@@ -17,4 +17,25 @@
 
   <name>DAISY Pipeline 2 Braille Module :: dotify-utils</name>
 
+  <dependencies>
+    <!--
+        OSGi runtime dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>dotify-saxon</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>dotify-calabash</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-formatter</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
 </project>

@@ -18,9 +18,13 @@
   <name>DAISY Pipeline 2 Braille Module :: liblouis-native</name>
 
   <dependencies>
+    <!--
+        OSGi runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-java</artifactId>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 

@@ -13,9 +13,13 @@
   <packaging>bundle</packaging>
   <name>DAISY Pipeline 2 Braille Module :: libhyphen-native</name>
   <dependencies>
+    <!--
+        OSGi runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-java</artifactId>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
   <dependencyManagement>

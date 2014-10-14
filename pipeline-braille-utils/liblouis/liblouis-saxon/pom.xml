@@ -35,12 +35,17 @@
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!--
+        OSGi runtime dependencies
+    -->
     <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-native</artifactId>
-      <classifier>linux</classifier>
-      <scope>test</scope>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <scope>runtime</scope>
     </dependency>
+    <!--
+        test dependencies
+    -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xspec-runner</artifactId>

@@ -17,4 +17,15 @@
 
   <name>DAISY Pipeline 2 Braille Module :: texhyph-utils</name>
 
+  <dependencies>
+    <!--
+        OSGi runtime dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>texhyph-saxon</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
 </project>
