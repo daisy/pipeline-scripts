@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 exclude-result-prefixes="#all"
                 version="2.0">
+    
+    <xsl:include href="library.xsl"/>
     
     <xsl:template match="/*">
         <css:root>
@@ -28,7 +31,20 @@
                 <xsl:element name="css:box">
                     <xsl:attribute name="type" select="if (@css:display=('block','list-item')) then 'block' else 'inline'"/>
                     <xsl:attribute name="name" select="name()"/>
-                    <xsl:sequence select="@style|(@css:* except @css:display)"/>
+                    <xsl:apply-templates select="@style|@css:*"/>
+                    <xsl:if test="@css:display='list-item'">
+                        <!--
+                            implied by display: list-item
+                        -->
+                        <xsl:attribute name="css:counter-increment" select="'list-item'"/>
+                        <xsl:variable name="list-style-type" as="xs:string"
+                                      select="css:specified-properties('list-style-type', true(), true(), true(), .)/@value"/>
+                        <xsl:if test="$list-style-type!='none'">
+                            <css:box type="inline" name="css:marker">
+                                <css:counter name="list-item" style="{$list-style-type}"/>
+                            </css:box>
+                        </xsl:if>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </xsl:element>
             </xsl:otherwise>
@@ -39,12 +55,13 @@
         <xsl:element name="css:box">
             <xsl:attribute name="type" select="'inline'"/>
             <xsl:attribute name="name" select="name()"/>
-            <xsl:sequence select="@style|@css:*"/>
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="@style|@css:*|node()"/>
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="text()">
+    <xsl:template match="@css:display|@css:list-style-type"/>
+    
+    <xsl:template match="@*|text()">
         <xsl:sequence select="."/>
     </xsl:template>
     

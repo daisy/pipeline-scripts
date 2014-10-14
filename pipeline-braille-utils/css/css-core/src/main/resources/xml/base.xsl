@@ -6,11 +6,12 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
     
+    <xsl:import href="regex-utils.xsl"/>
+    <xsl:import href="counters.xsl"/>
+    
     <!-- ====== -->
     <!-- Syntax -->
     <!-- ====== -->
-    
-    <xsl:import href="regex-utils.xsl"/>
     
     <!--
         <color>
@@ -104,12 +105,13 @@
     <xsl:variable name="css:TARGET_STRING_FN_RE" select="concat('target-string\(\s*(',$css:ATTR_FN_RE,')\s*,\s*(',$css:IDENT_RE,')\s*\)')"/>
     
     <!--
-        target-counter(<target>,<ident>)
-        # groups: 8
+        target-counter(<target>,<ident>,<counter-style>?)
+        # groups: 12
         $1: <url>
         $6: <ident>
+        $10: <counter-style>
     -->
-    <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:ATTR_FN_RE,')\s*,\s*(',$css:IDENT_RE,')\s*\)')"/>
+    <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:ATTR_FN_RE,')\s*,\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:IDENT_RE,')\s*)?\)')"/>
     
     <!--
         leader(<braille-string>)
@@ -119,7 +121,7 @@
     <xsl:variable name="css:LEADER_FN_RE" select="concat('leader\(\s*(',$css:BRAILLE_STRING_RE,')\s*\)')"/>
     
     <!--
-        # groups: 46
+        # groups: 50
         $1: <string>
         $2: content()
         $3: attr(<name>)
@@ -134,11 +136,12 @@
         $26: target-string(<url>,<ident>)
         $27:               <url>
         $32:                     <ident>
-        $35: target-counter(<url>,<ident>)
+        $35: target-counter(<url>,<ident>,<counter-style>?)
         $36:                <url>
-        $44: leader(<braille-string>)
-        $45:        <braille-string>
         $41:                      <ident>
+        $45:                              <counter-style>
+        $48: leader(<braille-string>)
+        $49:        <braille-string>
     -->
     <xsl:variable name="css:CONTENT_RE" select="concat('(',$css:STRING_RE,')|
                                                         (',$css:CONTENT_FN_RE,')|
@@ -167,7 +170,7 @@
         $1: <ident>
         $5: <integer>
     -->
-    <xsl:variable name="css:COUNTER_RESET_PAIR_RE" select="concat('(',$css:IDENT_RE,')(\s+(',$css:INTEGER_RE,'))?')"/>
+    <xsl:variable name="css:COUNTER_SET_PAIR_RE" select="concat('(',$css:IDENT_RE,')(\s+(',$css:INTEGER_RE,'))?')"/>
     
     <!--
         # groups: 1
@@ -292,17 +295,22 @@
                                         name="{regex-group(32)}"/>
                         </xsl:when>
                         <!--
-                            target-counter(<url>,<ident>)
+                            target-counter(<url>,<ident>,<counter-style>?)
                         -->
                         <xsl:when test="regex-group(35)!=''">
-                            <css:counter target="{string($context/@*[name()=regex-group(37)])}"
-                                         name="{regex-group(41)}"/>
+                            <xsl:element name="css:counter">
+                                <xsl:attribute name="target" select="string($context/@*[name()=regex-group(37)])"/>
+                                <xsl:attribute name="name" select="regex-group(41)"/>
+                                <xsl:if test="regex-group(45)!=''">
+                                    <xsl:attribute name="style" select="regex-group(45)"/>
+                                </xsl:if>
+                            </xsl:element>
                         </xsl:when>
                         <!--
                             leader(<braille-string>)
                         -->
-                        <xsl:when test="regex-group(44)!=''">
-                            <css:leader pattern="{substring(regex-group(45), 2, string-length(regex-group(45))-2)}"/>
+                        <xsl:when test="regex-group(48)!=''">
+                            <css:leader pattern="{substring(regex-group(49), 2, string-length(regex-group(49))-2)}"/>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:matching-substring>
@@ -325,13 +333,14 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:parse-counter-reset" as="element()*">
+    <xsl:function name="css:parse-counter-set" as="element()*">
         <xsl:param name="pairs" as="xs:string?"/>
+        <xsl:param name="initial" as="xs:integer"/>
         <xsl:if test="$pairs">
-            <xsl:analyze-string select="$pairs" regex="{$css:COUNTER_RESET_PAIR_RE}" flags="x">
+            <xsl:analyze-string select="$pairs" regex="{$css:COUNTER_SET_PAIR_RE}" flags="x">
                 <xsl:matching-substring>
-                    <css:counter-reset name="{regex-group(1)}"
-                                       value="{if (regex-group(5)!='') then regex-group(5) else '0'}"/>
+                    <css:counter-set name="{regex-group(1)}"
+                                     value="{if (regex-group(5)!='') then regex-group(5) else format-number($initial,'0')}"/>
                 </xsl:matching-substring>
             </xsl:analyze-string>
         </xsl:if>
@@ -436,7 +445,7 @@
         <xsl:sequence select="concat(@name,' ',@value)"/>
     </xsl:template>
     
-    <xsl:template match="css:counter-reset" mode="css:serialize" as="xs:string">
+    <xsl:template match="css:counter-set" mode="css:serialize" as="xs:string">
         <xsl:sequence select="concat(@name,' ',@value)"/>
     </xsl:template>
     
@@ -508,7 +517,7 @@
         <xsl:sequence select="string-join($serialized-pairs, ', ')"/>
     </xsl:function>
     
-    <xsl:function name="css:serialize-counter-reset" as="xs:string">
+    <xsl:function name="css:serialize-counter-set" as="xs:string">
         <xsl:param name="pairs" as="element()*"/>
         <xsl:variable name="serialized-pairs" as="xs:string*">
             <xsl:apply-templates select="$pairs" mode="css:serialize"/>

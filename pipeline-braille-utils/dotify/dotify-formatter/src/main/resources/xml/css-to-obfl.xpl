@@ -17,7 +17,6 @@
     <p:output port="result" sequence="false"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
-    <p:import href="split-into-sections.xpl"/>
     
     <p:for-each>
         <p:add-xml-base/>
@@ -44,7 +43,8 @@
     <p:for-each>
         <css:parse-stylesheet/>
         <css:make-pseudo-elements/>
-        <css:parse-declaration-list properties="content string-set counter-reset white-space display"/>
+        <css:parse-declaration-list properties="content white-space display list-style-type
+                                                string-set counter-reset counter-set counter-increment"/>
         <css:eval-content-list/>
     </p:for-each>
     
@@ -58,10 +58,22 @@
     </p:for-each>
     
     <css:shift-string-set/>
-    <css:shift-counter-reset/>
+    <css:eval-counter exclude-counters="braille-page"/>
     
     <p:for-each>
-        <pxi:split-into-sections/>
+        <css:parse-counter-set counters="braille-page"/>
+        <css:split split-before="*[@css:page or @css:counter-set-braille-page]" split-after="*[@css:page]"/>
+        <p:split-sequence test="//css:box"/>
+        <p:for-each>
+            <p:label-elements match="/css:root[descendant::*/@css:page]" attribute="css:page"
+                              label="(descendant::*/@css:page)[last()]"/>
+            <p:label-elements match="/css:root[descendant::*[not(@part=('middle','last'))]/@css:counter-set-braille-page]"
+                              attribute="css:counter-set-braille-page"
+                              label="(descendant::*[not(@part=('middle','last'))]/@css:counter-set-braille-page)[last()]"/>
+            <p:delete match="/css:root//*/@css:page"/>
+            <p:delete match="/css:root//*/@css:counter-set-braille-page"/>
+            <p:unwrap match="css:_[not(@*)]"/>
+        </p:for-each>
     </p:for-each>
     
     <p:for-each>

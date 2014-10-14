@@ -385,7 +385,7 @@
               </section>
               <section style="display: block;
                               page-break-before: always;
-                              counter-reset: braille-page 10">
+                              counter-set: braille-page 10">
                 ⠤⠤⠤
               </section>
               <section style="display: block;
@@ -565,7 +565,7 @@
               <bodymatter>
                 ⠤⠤⠤
               </bodymatter>
-              <rearmatter style="{ counter-reset: braille-page 1 }
+              <rearmatter style="{ counter-set: braille-page 1 }
                                  @page {
                                  size: 15 5;
                                  @bottom-right { content: counter(braille-page, lower-roman) }}">
