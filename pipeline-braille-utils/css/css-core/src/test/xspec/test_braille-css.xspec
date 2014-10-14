@@ -214,6 +214,16 @@
 		<x:expect label="result" select="('x',' ⠚ ','')"/>
 	</x:scenario>
 	
+	<x:scenario label="test_18">
+		<x:call function="css:parse-text-transform">
+			<x:param select="'translator (locale:en-US) (grade:2)'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:ident value="translator"/>
+			<css:query value="(locale:en-US) (grade:2)"/>
+		</x:expect>
+	</x:scenario>
+	
 	<x:scenario label="test_19">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="100"/>
@@ -251,7 +261,8 @@
 			<x:param name="value" select="1998"/>
 			<x:param name="style">
 				<css:counter-style system="additive"
-				                   additive-symbols="1000 M, 900 CM, 500 D, 400 CD, 100 C, 90 XC, 50 L, 40 XL, 10 X, 9 IX, 5 V, 4 IV, 1 I"/>
+				                   additive-symbols="1000 M, 900 CM, 500 D, 400 CD, 100 C, 90 XC, 50 L, 40 XL, 10 X, 9 IX, 5 V, 4 IV, 1 I"
+				                   text-transform="none"/>
 			</x:param>
 		</x:call>
 		<x:expect label="result" select="'MCMXCVIII'"/>

@@ -7,6 +7,8 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
     
+    <xsl:import href="transform.xsl"/>
+    
     <!-- ======== -->
     <!-- Counters -->
     <!-- ======== -->
@@ -167,9 +169,28 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="$formatted-value">
-                <xsl:sequence select="if ($with-prefix-suffix)
+                <xsl:variable name="formatted-value" as="xs:string"
+                              select="if ($with-prefix-suffix)
                                       then concat($style/@prefix,$formatted-value,$style/@suffix)
                                       else $formatted-value"/>
+                <xsl:variable name="text-transform" as="xs:string" select="$style/@text-transform"/>
+                <xsl:choose>
+                    <xsl:when test="$text-transform='none'">
+                        <xsl:sequence select="$formatted-value"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="formatted-value" as="text()">
+                            <xsl:value-of select="$formatted-value"/>
+                        </xsl:variable>
+                        <xsl:variable name="formatted-value" as="node()*">
+                            <xsl:apply-templates mode="css:text-transform" select="$formatted-value">
+                                <xsl:with-param name="text-transform" tunnel="yes"
+                                                select="css:parse-text-transform($text-transform)"/>
+                            </xsl:apply-templates>
+                        </xsl:variable>
+                        <xsl:sequence select="string-join($formatted-value/string(.),'')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="css:counter-representation">

@@ -279,6 +279,7 @@
                     <xsl:attribute name="prefix" select="($style/@prefix,'')[1]"/>
                     <xsl:attribute name="suffix" select="($style/@suffix,'. ')[1]"/>
                     <xsl:attribute name="fallback" select="($style/@fallback,'. ')[1]"/>
+                    <xsl:attribute name="text-transform" select="($style/@text-transform,'auto')[1]"/>
                 </xsl:element>
             </xsl:when>
             <xsl:otherwise>
@@ -287,7 +288,8 @@
                                    negative="-"
                                    prefix=""
                                    suffix=". "
-                                   fallback="decimal"/>
+                                   fallback="decimal"
+                                   text-transform="auto"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
@@ -296,14 +298,17 @@
         <css:counter-style name="decimal"
                            system="numeric"
                            symbols="'⠚' '⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊'"
-                           negative="⠤"/>
+                           negative="⠤"
+                           text-transform="none"/>
         <css:counter-style name="lower-alpha"
                            system="alphabetic"
-                           symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"/>
+                           symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"
+                           text-transform="none"/>
         <css:counter-style name="lower-roman"
                            system="additive"
                            range="1 3999"
-                           additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"/>
+                           additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
+                           text-transform="none"/>
     </xsl:variable>
     
     <xsl:function name="css:custom-counter-style" as="element()?">
