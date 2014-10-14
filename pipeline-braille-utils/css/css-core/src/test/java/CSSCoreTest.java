@@ -1,10 +1,15 @@
 import java.io.File;
+import java.util.Hashtable;
 
 import javax.inject.Inject;
 
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
+import org.daisy.pipeline.braille.common.Translator;
+import org.daisy.pipeline.braille.common.TranslatorProvider;
+
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -12,6 +17,7 @@ import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,6 +34,8 @@ import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
+import org.osgi.framework.BundleContext;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class CSSCoreTest {
@@ -41,10 +49,28 @@ public class CSSCoreTest {
 			felixDeclarativeServices(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			brailleModule("common-utils"),
 			thisBundle(),
 			xspecBundles(),
 			junitBundles()
 		);
+	}
+	
+	@Inject
+	private BundleContext context;
+	
+	@Before
+	public void registerUppercaseTranslatorProvider() {
+		context.registerService(
+			TranslatorProvider.class.getName(),
+			new TranslatorProvider<Translator>() {
+				public Translator get(String query) {
+					if (query.equals("(uppercase)"))
+						return new Translator() {
+							public String translate(String text) {
+								return text.toUpperCase(); }};
+					return null; }},
+			new Hashtable<String,Object>());
 	}
 	
 	@Inject

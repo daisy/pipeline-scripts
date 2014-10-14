@@ -44,18 +44,18 @@
         <body>
           <ul>
             <li>
-              <css:marker> ⠁ </css:marker>
+              <css:marker> ⠼⠁ </css:marker>
             </li>
             <li>
-              <css:marker> ⠃ </css:marker>
+              <css:marker> ⠼⠃ </css:marker>
             </li>
           </ul>
           <ul>
             <li>
-              <css:marker> ⠁ </css:marker>
+              <css:marker> ⠼⠁ </css:marker>
             </li>
             <li>
-              <css:marker> ⠃ </css:marker>
+              <css:marker> ⠼⠃ </css:marker>
             </li>
           </ul>
         </body>

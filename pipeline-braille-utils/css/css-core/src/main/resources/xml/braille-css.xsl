@@ -2,11 +2,17 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
     <xsl:import href="base.xsl"/>
+    
+    <!--
+        pf:translate
+    -->
+    <xsl:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xsl"/>
     
     <!-- ==================== -->
     <!-- Property Definitions -->
@@ -299,20 +305,56 @@
                            system="numeric"
                            symbols="'⠚' '⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊'"
                            negative="⠤"
-                           text-transform="none"/>
+                           text-transform="prefix '⠼'"/>
         <css:counter-style name="lower-alpha"
                            system="alphabetic"
                            symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"
                            text-transform="none"/>
+        <css:counter-style name="upper-alpha"
+                           system="alphabetic"
+                           symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"
+                           text-transform="capsign '⠠'"/>
         <css:counter-style name="lower-roman"
                            system="additive"
                            range="1 3999"
                            additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
                            text-transform="none"/>
+        <css:counter-style name="upper-roman"
+                           system="additive"
+                           range="1 3999"
+                           additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
+                           text-transform="capsign '⠠'"/>
     </xsl:variable>
     
     <xsl:function name="css:custom-counter-style" as="element()?">
         <xsl:param name="name" as="xs:string"/>
     </xsl:function>
+    
+    <!-- ================= -->
+    <!-- Text Transforming -->
+    <!-- ================= -->
+    
+    <xsl:template match="text()" mode="css:text-transform">
+        <xsl:param name="text-transform" as="element()*" tunnel="yes"/>
+        <xsl:variable name="system" as="xs:string" select="$text-transform[1]/@value"/>
+        <xsl:choose>
+            <xsl:when test="$system='translator'">
+                <xsl:value-of select="pf:translate($text-transform[2]/@value, string(.))"/>
+            </xsl:when>
+            <xsl:when test="$system='prefix'">
+                <xsl:value-of select="$text-transform[2]/@value"/>
+                <xsl:sequence select="."/>
+            </xsl:when>
+            <xsl:when test="$system='capsign'">
+                <xsl:value-of select="if (string-length(string(.)) &gt; 1)
+                                      then concat($text-transform[2]/@value,$text-transform[2]/@value)
+                                      else $text-transform[2]/@value"/>
+                <xsl:sequence select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:next-match/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
 </xsl:stylesheet>
