@@ -567,4 +567,25 @@
         </xsl:if>
     </xsl:template>
     
+    <!-- ======= -->
+    <!-- Strings -->
+    <!-- ======= -->
+    
+    <xsl:function name="css:string" as="element()*">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="context" as="element()"/>
+        <xsl:variable name="last-set" as="element()?"
+                      select="$context/(self::*|preceding::*|ancestor::*)
+                              [contains(@css:string-set,$name) or contains(@css:string-entry,$name)]
+                              [last()]"/>
+        <xsl:if test="$last-set">
+            <xsl:variable name="value" as="xs:string?"
+                          select="(css:parse-string-set($last-set/@css:string-entry),
+                                   css:parse-string-set($last-set/@css:string-set))
+                                  [@name=$name][last()]/@value"/>
+            <xsl:sequence select="if ($value) then css:parse-content-list($value, $context)
+                                  else css:string($name, $last-set/(preceding::*|ancestor::*)[last()])"/>
+        </xsl:if>
+    </xsl:function>
+    
 </xsl:stylesheet>

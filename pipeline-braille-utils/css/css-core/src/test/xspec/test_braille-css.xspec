@@ -303,4 +303,23 @@
 		<x:expect label="result" select="'⠼⠉'"/>
 	</x:scenario>
 	
+	<x:scenario label="test_27">
+		<x:call function="css:string">
+			<x:param select="'print-page'"/>
+			<x:param select="//p[last()]">
+				<body>
+					<pagenum css:string-set="print-page '1'"/>
+					<p/>
+					<pagenum css:string-set="print-page '2'"/>
+					<p/>
+					<pagenum css:string-set="print-page '3'"/>
+					<p/>
+				</body>
+			</x:param>
+		</x:call>
+		<x:expect label="result">
+			<css:string value="3"/>
+		</x:expect>
+	</x:scenario>
+	
 </x:description>
