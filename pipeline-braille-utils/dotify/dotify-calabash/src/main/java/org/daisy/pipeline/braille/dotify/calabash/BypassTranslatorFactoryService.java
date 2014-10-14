@@ -102,7 +102,6 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		}
 		
 		private String doTranslate(String text) {
-			text = translateSpace(text);
 			text = translateIntegers(text);
 			if (!isHyphenating())
 				text = filterOutSoftHyphens(text);
@@ -115,10 +114,10 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			
 			return new BrailleTranslatorResult() {
 				public String nextTranslatedRow(int limit, boolean force) {
-					return bph.nextRow(limit, force).getHead();
+					return translateSpace(bph.nextRow(limit, force).getHead());
 				}
 				public String getTranslatedRemainder() {
-					return bph.getRemaining();
+					return translateSpace(bph.getRemaining());
 				}
 				public int countRemaining() {
 					return getTranslatedRemainder().length();
