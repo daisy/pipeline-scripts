@@ -1,6 +1,8 @@
 package org.daisy.pipeline.braille.libhyphen;
 
-public interface LibhyphenTranslator {
+import org.daisy.pipeline.braille.common.Translator;
+
+public interface LibhyphenTranslator extends Translator {
 	
 	/**
 	 * @param text The text to be hyphenated.

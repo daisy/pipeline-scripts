@@ -6,6 +6,7 @@ import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
+import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -37,11 +38,15 @@ public class LibhyphenSaxonTest {
 	public Option[] config() {
 		return options(
 			logbackConfigFile(),
+			domTraversalPackage(),
 			logbackBundles(),
 			felixDeclarativeServices(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
+			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			brailleModule("common-utils"),
+			brailleModule("css-core"),
 			brailleModule("libhyphen-core"),
 			forThisPlatform(brailleModule("libhyphen-native")),
 			thisBundle(),

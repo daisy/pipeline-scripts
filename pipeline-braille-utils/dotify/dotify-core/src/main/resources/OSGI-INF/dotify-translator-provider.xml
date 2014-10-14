@@ -3,6 +3,7 @@
     <scr:implementation class="org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider"/>
     <scr:service>
         <scr:provide interface="org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider"/>
+        <scr:provide interface="org.daisy.pipeline.braille.common.TranslatorProvider"/>
     </scr:service>
     <scr:reference bind="bindBrailleTranslatorFactoryService"
         unbind="unbindBrailleTranslatorFactoryService"

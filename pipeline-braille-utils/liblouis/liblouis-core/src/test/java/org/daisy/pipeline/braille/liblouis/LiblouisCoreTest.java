@@ -10,6 +10,7 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
+import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -20,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.ops4j.pax.exam.Configuration;
@@ -51,13 +53,17 @@ public class LiblouisCoreTest {
 	public Option[] config() {
 		return options(
 			logbackConfigFile(),
+			domTraversalPackage(),
 			logbackBundles(),
 			felixDeclarativeServices(),
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
+			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			bundlesAndDependencies("net.sf.saxon.saxon-he"),
 			brailleModule("common-utils"),
+			brailleModule("css-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
@@ -79,6 +85,16 @@ public class LiblouisCoreTest {
 	public void testGetTableFromLocale() {
 		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableProvider.get(parseLocale("foo")));
 		assertNull(tableProvider.get(parseLocale("bar")));
+	}
+	
+	@Test
+	public void testGetTranslatorFromQuery1() {
+		assertNotNull(liblouis.get("(locale:foo)"));
+	}
+	
+	@Test
+	public void testGetTranslatorFromQuery2() {
+		assertNotNull(liblouis.get("(table:'foobar.cti')"));
 	}
 	
 	@Test

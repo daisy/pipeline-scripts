@@ -1,8 +1,9 @@
 package org.daisy.pipeline.braille.dotify;
 
 import org.daisy.dotify.api.translator.BrailleTranslator;
+import org.daisy.pipeline.braille.common.Translator;
 
-public class DotifyTranslator {
+public class DotifyTranslator implements Translator {
 	
 	private BrailleTranslator translator;
 	

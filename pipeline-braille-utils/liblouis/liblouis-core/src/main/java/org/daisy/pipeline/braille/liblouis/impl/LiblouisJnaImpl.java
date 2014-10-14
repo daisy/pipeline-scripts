@@ -3,10 +3,15 @@ package org.daisy.pipeline.braille.liblouis.impl;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 
+import com.google.common.base.Optional;
+
+import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
 import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import org.daisy.pipeline.braille.common.util.Pair;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
@@ -15,6 +20,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.daisy.pipeline.braille.liblouis.Liblouis;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableProvider;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
@@ -35,6 +41,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	private BundledNativePath nativePath;
 	private LiblouisTableResolver tableResolver;
+	private LiblouisTableProvider tableProvider;
 	
 	// Hold a reference to avoid garbage collection
 	private TableResolver _tableResolver;
@@ -91,6 +98,14 @@ public class LiblouisJnaImpl implements Liblouis {
 		this.tableResolver = null;
 	}
 	
+	protected void bindTableProvider(LiblouisTableProvider tableProvider) {
+		this.tableProvider = tableProvider;
+	}
+	
+	protected void unbindTableProvider(LiblouisTableProvider tableProvider) {
+		this.tableProvider = null;
+	}
+	
 	private Cached<URI[],LiblouisTranslator> translators = new Cached<URI[],LiblouisTranslator>() {
 		public LiblouisTranslator delegate(URI[] table) {
 			if (tableResolver.resolveTableList(table, null) == null)
@@ -104,6 +119,19 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	public LiblouisTranslator get(URI[] table) {
 		return translators.get(table);
+	}
+	
+	public LiblouisTranslator get(String query) {
+		try {
+			Map<String,Optional<String>> q = parseQuery(query);
+			if (q.containsKey("table"))
+				return get(tokenizeTableList(q.get("table").get()));
+			if (tableProvider != null && q.containsKey("locale")) {
+				URI[] table = tableProvider.get(parseLocale(q.get("locale").get()));
+				if (table != null)
+					return get(table); }}
+		catch (Exception e) {}
+		return null;
 	}
 	
 	private static class LiblouisTranslatorJnaImpl implements LiblouisTranslator {
@@ -128,6 +156,10 @@ public class LiblouisJnaImpl implements Liblouis {
 				return insertHyphens(result.getBraille(), result.getHyphenPositions(), SHY, ZWSP); }
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
+		}
+		
+		public String translate(String text) {
+			return translate(text, false, null);
 		}
 		
 		/**

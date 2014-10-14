@@ -3,15 +3,21 @@ package org.daisy.pipeline.braille.dotify;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import com.google.common.base.Optional;
+
+import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.TranslatorProvider;
 import org.daisy.pipeline.braille.common.util.Locales;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
-public class DotifyTranslatorProvider implements Provider<Locale,DotifyTranslator> {
+public class DotifyTranslatorProvider implements TranslatorProvider<DotifyTranslator> {
 	
 	/**
 	 * Try to find a translator based on the given locale.
@@ -20,6 +26,15 @@ public class DotifyTranslatorProvider implements Provider<Locale,DotifyTranslato
 	 */
 	public DotifyTranslator get(Locale query) {
 		return cachedProvider.get(query);
+	}
+	
+	public DotifyTranslator get(String query) {
+		try {
+			Map<String,Optional<String>> q = parseQuery(query);
+			if (q.containsKey("locale")) {
+				return get(parseLocale(q.get("locale").get())); }}
+		catch (Exception e) {}
+		return null;
 	}
 	
 	private final List<BrailleTranslatorFactoryService> factoryServices = new ArrayList<BrailleTranslatorFactoryService>();

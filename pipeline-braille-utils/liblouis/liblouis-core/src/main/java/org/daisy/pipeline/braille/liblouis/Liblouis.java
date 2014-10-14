@@ -2,7 +2,9 @@ package org.daisy.pipeline.braille.liblouis;
 
 import java.net.URI;
 
-public interface Liblouis {
+import org.daisy.pipeline.braille.common.TranslatorProvider;
+
+public interface Liblouis extends TranslatorProvider<LiblouisTranslator> {
 	
 	/**
 	 * Get a LiblouisTranslator for the specified liblouis table. A liblouis

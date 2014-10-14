@@ -1,6 +1,8 @@
 package org.daisy.pipeline.braille.liblouis;
 
-public interface LiblouisTranslator {
+import org.daisy.pipeline.braille.common.Translator;
+
+public interface LiblouisTranslator extends Translator {
 	
 	/**
 	 * @param text The text to be translated.
