@@ -30,7 +30,7 @@
 			<x:param select="true()"/>
 			<x:param select="true()"/>
 			<x:param select="//bar">
-				<foo style="display: block">
+				<foo css:display="block" css:page="size: 10 10">
 					<bar style="display: inherit; left: invalid; page-break-before: initial; string-set: print-page attr(num)"/>
 				</foo>
 			</x:param>

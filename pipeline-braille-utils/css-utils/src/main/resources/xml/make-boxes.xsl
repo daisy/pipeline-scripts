@@ -7,7 +7,7 @@
     
     <xsl:include href="library.xsl"/>
     
-    <xsl:template match="/*">
+    <xsl:template match="/*" priority="1">
         <css:root>
             <xsl:next-match/>
         </css:root>
@@ -49,6 +49,10 @@
                 </xsl:element>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="css:string|css:counter|css:text|css:leader|css:white-space">
+        <xsl:sequence select="."/>
     </xsl:template>
     
     <xsl:template match="*">

@@ -60,11 +60,7 @@
         <!--
             make attributes
         -->
-        <xsl:apply-templates select="$properties"/>
-    </xsl:template>
-    
-    <xsl:template match="css:property">
-        <xsl:attribute name="css:{@name}" select="@value"/>
+        <xsl:apply-templates select="$properties" mode="css:property-as-attribute"/>
     </xsl:template>
     
 </xsl:stylesheet>

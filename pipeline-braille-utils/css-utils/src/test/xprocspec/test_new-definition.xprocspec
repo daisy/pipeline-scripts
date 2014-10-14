@@ -9,8 +9,8 @@
     <x:call step="css:new-definition">
       <x:input port="source">
         <x:document type="inline">
-          <css:root>
-            <css:box type="block" style="text-align: center">
+          <css:root css:page="size: 10 10">
+            <css:box type="block" css:text-align="center">
               <css:box type="block"/>
             </css:box>
           </css:root>
@@ -18,7 +18,7 @@
       </x:input>
       <x:input port="definition">
         <x:document type="inline">
-          <xsl:stylesheet version="2.0" xmlns:new="css-new-definition">
+          <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
             <xsl:variable name="new:properties" as="xs:string*" select="('text-align')"/>
             <xsl:function name="new:is-valid" as="xs:boolean">
               <xsl:param name="css:property" as="element()"/>
@@ -49,7 +49,7 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root>
+        <css:root css:page="size: 10 10">
           <css:box type="block" style="text-align: center">
             <css:box type="block" style="text-align: center"/>
           </css:box>

@@ -73,7 +73,7 @@
     <xsl:template match="css:property" mode="property">
         <xsl:param name="type" as="xs:string"/>
         <xsl:variable name="property-attribute" as="attribute()">
-            <xsl:attribute name="css:{@name}" select="@value"/>
+            <xsl:apply-templates select="." mode="css:property-as-attribute"/>
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="$type='block'">

@@ -207,6 +207,14 @@
         </xsl:choose>
     </xsl:function>
     
+    <xsl:template match="@css:*" mode="css:attribute-as-property" as="element()">
+        <css:property name="{local-name()}" value="{string()}"/>
+    </xsl:template>
+    
+    <xsl:template match="css:property" mode="css:property-as-attribute" as="attribute()">
+        <xsl:attribute name="css:{@name}" select="@value"/>
+    </xsl:template>
+    
     <xsl:function name="css:parse-stylesheet" as="element()*">
         <xsl:param name="stylesheet" as="xs:string?"/>
         <xsl:if test="$stylesheet">
@@ -396,9 +404,13 @@
                       select="if ($properties instance of xs:string)
                               then tokenize(normalize-space($properties), ' ')
                               else $properties"/>
+        <xsl:variable name="declarations" as="element()*">
+            <xsl:apply-templates select="$context/@css:*[local-name()=$properties]" mode="css:attribute-as-property"/>
+        </xsl:variable>
         <xsl:variable name="declarations" as="element()*"
-            select="css:parse-declaration-list(css:parse-stylesheet(
-                      $context/@style)/self::css:rule[not(@selector)][last()]/@declaration-list)"/>
+            select="(css:parse-declaration-list(css:parse-stylesheet(
+                       $context/@style)/self::css:rule[not(@selector)][last()]/@declaration-list),
+                     $declarations)"/>
         <xsl:variable name="declarations" as="element()*"
             select="if ('#all'=$properties) then $declarations else $declarations[@name=$properties and not(@name='#all')]"/>
         <xsl:variable name="declarations" as="element()*">

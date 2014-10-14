@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-                xmlns:new="css-new-definition"
+                xmlns:new="css:new-definition"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
@@ -11,7 +11,7 @@
     <xsl:template match="*">
         <xsl:copy>
             <xsl:sequence select="@*"/>
-            <xsl:apply-templates select="@*|node()"/>
+            <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
     
@@ -35,7 +35,7 @@
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:copy>
-            <xsl:sequence select="@* except @style"/>
+            <xsl:sequence select="@* except (@style|@css:*[local-name()=$new:properties])"/>
             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list($properties[self::keep]/*))"/>
             <xsl:apply-templates>
                 <xsl:with-param name="parent-properties" tunnel="yes"

@@ -2,7 +2,8 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                type="css:new-definition" name="main"
+                type="css:new-definition"
+                name="main"
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
