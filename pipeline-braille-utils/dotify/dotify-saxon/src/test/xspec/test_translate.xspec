@@ -11,7 +11,7 @@
   -->
   <x:scenario label="test_01">
     <x:call function="dotify:translate">
-      <x:param select="'sv-SE'"/>
+      <x:param select="'(locale:sv-SE)'"/>
       <x:param select="'foobar'"/>
     </x:call>
     <x:expect label="result" select="'⠋⠕⠕⠃⠁⠗'"/>

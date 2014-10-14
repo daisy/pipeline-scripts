@@ -11,8 +11,8 @@
   -->
   <x:scenario label="test_01">
     <x:call function="louis:hyphenate">
-      <x:param select="string-join((resolve-uri('../resources/foobar.cti'),
-                                    resolve-uri('../resources/foobar.dic')), ',')"/>
+      <x:param select="concat('(table: &quot;',resolve-uri('../resources/foobar.cti'),',',
+                                               resolve-uri('../resources/foobar.dic'),'&quot;)')"/>
       <x:param select="'foobar'"/>
     </x:call>
     <x:expect label="result" select="'foo&#xAD;bar'"/>
@@ -26,8 +26,8 @@
   -->
   <x:scenario label="test_02">
     <x:call function="louis:hyphenate">
-      <x:param select="string-join((resolve-uri('../resources/foobar.cti'),
-                                    resolve-uri('../resources/foobar.dic')), ',')"/>
+      <x:param select="concat('(table: &quot;',resolve-uri('../resources/foobar.cti'),',',
+                                               resolve-uri('../resources/foobar.dic'),'&quot;)')"/>
       <x:param select="'foo-bar'"/>
     </x:call>
     <x:expect label="result" select="'foo-&#x200B;bar'"/>

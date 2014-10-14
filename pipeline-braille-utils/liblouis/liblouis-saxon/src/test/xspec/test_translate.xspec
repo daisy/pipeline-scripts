@@ -11,7 +11,7 @@
   -->
   <x:scenario label="test_01">
     <x:call function="louis:translate">
-      <x:param select="resolve-uri('../resources/foobar.cti')"/>
+      <x:param select="concat('(table: &quot;',resolve-uri('../resources/foobar.cti'),'&quot;)')"/>
       <x:param select="'foobar'"/>
     </x:call>
     <x:expect label="result" select="'foobar'"/>

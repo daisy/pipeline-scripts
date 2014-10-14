@@ -10,7 +10,6 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider;
 
 import org.slf4j.Logger;
@@ -64,9 +63,9 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			@Override
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String locale = ((AtomicSequence)arguments[0]).getStringValue();
+					String query = ((AtomicSequence)arguments[0]).getStringValue();
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(provider.get(parseLocale(locale)).translate(text)); }
+					return new StringValue(provider.get(query).translate(text)); }
 				catch (Exception e) {
 					logger.error("dotify:translate failed", e);
 					throw new XPathException("dotify:translate failed"); }

@@ -11,7 +11,6 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.liblouis.Liblouis;
-import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String table = ((AtomicSequence)arguments[0]).getStringValue();
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(liblouis.get(tokenizeTableList(table)).hyphenate(text)); }
+					return new StringValue(liblouis.get(table).hyphenate(text)); }
 				catch (Exception e) {
 					logger.error("louis:hyphenate failed", e);
 					throw new XPathException("louis:hyphenate failed"); }

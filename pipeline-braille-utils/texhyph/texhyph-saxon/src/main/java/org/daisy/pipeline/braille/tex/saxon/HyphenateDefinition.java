@@ -12,7 +12,6 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.tex.TexHyphenatorProvider;
 
 import org.slf4j.Logger;
@@ -64,9 +63,9 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					URI table = asURI(((AtomicSequence)arguments[0]).getStringValue());
+					String query = ((AtomicSequence)arguments[0]).getStringValue();
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(provider.get(table).hyphenate(text)); }
+					return new StringValue(provider.get(query).hyphenate(text)); }
 				catch (Exception e) {
 					logger.error("tex:hyphenate failed", e);
 					throw new XPathException("tex:hyphenate failed"); }
