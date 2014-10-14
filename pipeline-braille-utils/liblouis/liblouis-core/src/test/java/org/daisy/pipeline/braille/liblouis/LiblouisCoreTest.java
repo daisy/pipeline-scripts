@@ -7,7 +7,9 @@ import javax.inject.Inject;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
+import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -54,6 +56,7 @@ public class LiblouisCoreTest {
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
+			bundlesAndDependencies("net.sf.saxon.saxon-he"),
 			brailleModule("common-utils"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle(),
