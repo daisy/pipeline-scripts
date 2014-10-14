@@ -42,7 +42,6 @@ public class LiblouisUtilsTest {
 			felixDeclarativeServices(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			brailleModule("common-java"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),

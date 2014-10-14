@@ -23,7 +23,7 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-java</artifactId>
+      <artifactId>common-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
@@ -197,7 +197,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Import-Package>org.daisy.pipeline.braille</Import-Package>
+            <Import-Package>org.daisy.pipeline.braille.common</Import-Package>
             <Service-Component>OSGI-INF/liblouis-native.xml</Service-Component>
           </instructions>
         </configuration>

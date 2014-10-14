@@ -59,8 +59,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import static org.daisy.pipeline.braille.Utilities.Strings.join;
-import static org.daisy.pipeline.braille.Utilities.Strings.normalizeSpace;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.Strings.normalizeSpace;
 
 public class InlineProvider implements XProcStepProvider {
 	

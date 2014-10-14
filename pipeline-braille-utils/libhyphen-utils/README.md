@@ -9,9 +9,6 @@ Chromium, etc.
 -------------------------------------------------
 
 - `hyphen:hyphenate`: Hyphenate a text string using Hyphen.
-- `hyphen:lookup-table`: Find a hyphenation table based on a language
-  code.
-- `hyphen:resolve-table`: Resolve a hyphenation table URI.
 
 Submodules
 ----------

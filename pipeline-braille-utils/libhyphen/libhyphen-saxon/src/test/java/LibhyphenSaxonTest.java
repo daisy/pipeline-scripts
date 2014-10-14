@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -40,9 +41,9 @@ public class LibhyphenSaxonTest {
 			felixDeclarativeServices(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("libhyphen-core").versionAsInProject(),
-			forThisPlatform(mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("libhyphen-native").versionAsInProject()),
+			brailleModule("common-utils"),
+			brailleModule("libhyphen-core"),
+			forThisPlatform(brailleModule("libhyphen-native")),
 			thisBundle(),
 			xspecBundles(),
 			junitBundles()

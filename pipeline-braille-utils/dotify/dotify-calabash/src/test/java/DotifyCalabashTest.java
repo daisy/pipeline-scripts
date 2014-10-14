@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
@@ -45,11 +46,11 @@ public class DotifyCalabashTest {
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("pef-calabash").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("pef-saxon").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("pef-to-html").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("pef-utils").versionAsInProject(),
+			brailleModule("common-utils"),
+			brailleModule("pef-calabash"),
+			brailleModule("pef-saxon"),
+			brailleModule("pef-to-html"),
+			brailleModule("pef-utils"),
 			xprocspecBundles(),
 			thisBundle(),
 			junitBundles()

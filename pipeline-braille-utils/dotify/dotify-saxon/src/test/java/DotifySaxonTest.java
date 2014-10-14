@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
@@ -37,10 +38,11 @@ public class DotifySaxonTest {
 			logbackConfigFile(),
 			logbackBundles(),
 			felixDeclarativeServices(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
+			brailleModule("common-utils"),
+			brailleModule("dotify-core"),
 			thisBundle(),
 			xspecBundles(),
 			junitBundles()

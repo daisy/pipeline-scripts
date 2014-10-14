@@ -56,7 +56,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-		return SequenceType.OPTIONAL_STRING;
+		return SequenceType.SINGLE_STRING;
 	}
 	
 	public ExtensionFunctionCall makeCallExpression() {

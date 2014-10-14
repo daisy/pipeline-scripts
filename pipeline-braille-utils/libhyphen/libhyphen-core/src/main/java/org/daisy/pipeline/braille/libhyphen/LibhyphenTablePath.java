@@ -7,21 +7,18 @@ import java.util.NoSuchElementException;
 
 import org.osgi.service.component.ComponentContext;
 
-import org.daisy.pipeline.braille.BundledResourcePath;
-import org.daisy.pipeline.braille.ResourceLookup;
+import org.daisy.pipeline.braille.common.BundledResourcePath;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPattern;
+import static org.daisy.pipeline.braille.common.util.URLs.decode;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import com.google.common.base.Functions;
-import com.google.common.base.Predicates;
-
 import static com.google.common.base.Functions.toStringFunction;
-
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
-import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern;
-import static org.daisy.pipeline.braille.Utilities.URLs.decode;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
-
-public class LibhyphenTablePath extends BundledResourcePath implements LibhyphenTableLookup {
+public class LibhyphenTablePath extends BundledResourcePath implements LibhyphenTableProvider {
 	
 	@Override
 	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
@@ -35,11 +32,11 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 	 * Lookup a table based on a locale, using the fact that table names are
 	 * always in the form `hyph_language[_COUNTRY[_variant]].dic`
 	 */
-	public URI lookup(Locale locale) {
-		return lookup.lookup(locale);
+	public URI get(Locale locale) {
+		return provider.get(locale);
 	}
 	
-	private ResourceLookup<Locale,URI> lookup = new CachedLookup<Locale,URI>() {
+	private Provider<Locale,URI> provider = new CachedProvider<Locale,URI>() {
 		public URI delegate(Locale locale) {
 			String language = locale.getLanguage().toLowerCase();
 			String country = locale.getCountry().toUpperCase();

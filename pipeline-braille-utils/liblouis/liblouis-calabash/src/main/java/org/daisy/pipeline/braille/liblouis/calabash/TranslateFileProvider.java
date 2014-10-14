@@ -16,10 +16,11 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import static org.daisy.pipeline.braille.common.util.URLs.decode;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.URLs.decode;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;

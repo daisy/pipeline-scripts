@@ -27,10 +27,6 @@
       <artifactId>liblouis-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-java</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
@@ -108,9 +104,7 @@
           <instructions>
             <Service-Component>
               OSGI-INF/liblouis-translate.xml,
-              OSGI-INF/liblouis-hyphenate.xml,
-              OSGI-INF/liblouis-lookup-table.xml,
-              OSGI-INF/liblouis-resolve-table.xml
+              OSGI-INF/liblouis-hyphenate.xml
             </Service-Component>
           </instructions>
         </configuration>

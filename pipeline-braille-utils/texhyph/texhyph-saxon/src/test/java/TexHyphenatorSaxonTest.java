@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
@@ -38,8 +39,8 @@ public class TexHyphenatorSaxonTest {
 			logbackBundles(),
 			felixDeclarativeServices(),
 			mavenBundle().groupId("com.googlecode.texhyphj").artifactId("texhyphj").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("texhyph-core").versionAsInProject(),
+			brailleModule("common-utils"),
+			brailleModule("texhyph-core"),
 			thisBundle(),
 			xspecBundles(),
 			junitBundles()

@@ -6,7 +6,7 @@ import org.daisy.dotify.api.translator.MarkerProcessorFactory;
 import org.daisy.dotify.api.translator.MarkerProcessorFactoryService;
 import org.daisy.dotify.api.translator.TextAttribute;
 
-import static org.daisy.pipeline.braille.Utilities.Strings.join;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
 
 public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {
 	

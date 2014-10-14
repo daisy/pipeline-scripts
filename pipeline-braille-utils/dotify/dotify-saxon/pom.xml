@@ -19,12 +19,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.daisy.dotify</groupId>
-      <artifactId>dotify.api</artifactId>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>dotify-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-java</artifactId>
+      <artifactId>common-utils</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
@@ -112,8 +112,7 @@
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/dotify-translate.xml,
-              OSGI-INF/dotify-translator-lookup.xml
+              OSGI-INF/dotify-translate.xml
             </Service-Component>
           </instructions>
         </configuration>

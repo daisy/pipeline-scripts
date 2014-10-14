@@ -2,6 +2,9 @@ package org.daisy.pipeline.braille.libhyphen;
 
 import javax.inject.Inject;
 
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+
+import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -20,8 +23,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
-
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
@@ -36,8 +37,8 @@ public class LibhyphenCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", libhyphen.hyphenate(asURI("foobar.dic"), "foobar"));
-		assertEquals("foo-\u200Bbar", libhyphen.hyphenate(asURI("foobar.dic"), "foo-bar"));
+		assertEquals("foo\u00ADbar", libhyphen.get(asURI("foobar.dic")).hyphenate("foobar"));
+		assertEquals("foo-\u200Bbar", libhyphen.get(asURI("foobar.dic")).hyphenate("foo-bar"));
 	}
 	
 	@Configuration
@@ -49,8 +50,8 @@ public class LibhyphenCoreTest {
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("common-java").versionAsInProject(),
-			forThisPlatform(mavenBundle().groupId("org.daisy.pipeline.modules.braille").artifactId("libhyphen-native").versionAsInProject()),
+			brailleModule("common-utils"),
+			forThisPlatform(brailleModule("libhyphen-native")),
 			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()

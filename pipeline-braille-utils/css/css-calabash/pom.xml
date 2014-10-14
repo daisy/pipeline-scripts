@@ -42,7 +42,7 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-java</artifactId>
+      <artifactId>common-utils</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

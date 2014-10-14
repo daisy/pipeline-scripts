@@ -28,7 +28,7 @@ import org.daisy.dotify.api.writer.PagedMediaWriter;
 import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
 import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
 
-import org.daisy.pipeline.braille.Cached;
+import org.daisy.pipeline.braille.common.Cached;
 
 public class OBFLToPEFProvider implements XProcStepProvider {
 	

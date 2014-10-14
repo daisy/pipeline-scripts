@@ -9,9 +9,6 @@ Building blocks related to the Braille translation library
 
 - `louis:translate`: Translate a text string to Braille using liblouis.
 - `louis:hyphenate`: Hyphenate a text string using liblouis.
-- `louis:lookup-table`: Find a liblouis table based on a language
-  code.
-- `louis:resolve-table`: Resolve a liblouis table URI.
 - `louis:get-typeform`: Convert text marked up with XML into the
   *typeform* byte string that liblouis needs for character-level
   formatting.

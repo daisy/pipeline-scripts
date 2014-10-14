@@ -7,7 +7,7 @@ import java.net.URI;
 import org.daisy.braille.table.BrailleConverter;
 
 import org.daisy.pipeline.braille.liblouis.Liblouis;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
@@ -50,7 +50,7 @@ public class LiblouisDisplayTableBrailleConverterTest {
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("brailleutils-core").versionAsInProject(),
-			brailleModule("common-java"),
+			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle(),

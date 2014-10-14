@@ -4,9 +4,9 @@ import java.net.URI;
 
 import javax.inject.Inject;
 
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
@@ -43,7 +43,7 @@ public class LiblouisCoreTest {
 	LiblouisTableResolver resolver;
 	
 	@Inject
-	LiblouisTableLookup lookup;
+	LiblouisTableProvider tableProvider;
 	
 	@Configuration
 	public Option[] config() {
@@ -54,7 +54,7 @@ public class LiblouisCoreTest {
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
-			brailleModule("common-java"),
+			brailleModule("common-utils"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
@@ -73,9 +73,9 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
-	public void testLookupTable() {
-		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, lookup.lookup(parseLocale("foo")));
-		assertNull(lookup.lookup(parseLocale("bar")));
+	public void testGetTableFromLocale() {
+		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableProvider.get(parseLocale("foo")));
+		assertNull(tableProvider.get(parseLocale("bar")));
 	}
 	
 	@Test

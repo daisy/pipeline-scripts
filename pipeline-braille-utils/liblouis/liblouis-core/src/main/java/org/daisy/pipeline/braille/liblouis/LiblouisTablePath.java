@@ -8,16 +8,15 @@ import java.util.Map;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
-import org.daisy.pipeline.braille.BundledResourcePath;
-import org.daisy.pipeline.braille.ResourceLookup;
-
-import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
-import static org.daisy.pipeline.braille.Utilities.Strings.join;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import org.daisy.pipeline.braille.common.BundledResourcePath;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import org.osgi.service.component.ComponentContext;
 
-public class LiblouisTablePath extends BundledResourcePath implements LiblouisTableLookup {
+public class LiblouisTablePath extends BundledResourcePath implements LiblouisTableProvider {
 	
 	private static final String MANIFEST = "manifest";
 	
@@ -32,17 +31,17 @@ public class LiblouisTablePath extends BundledResourcePath implements LiblouisTa
 			URL manifestURL = context.getBundleContext().getBundle().getEntry(manifestPath);
 			if (manifestURL == null)
 				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
-			initLocaleBasedLookup(manifestURL); }
+			initLocaleBasedProvider(manifestURL); }
 	}
 	
-	private ResourceLookup<Locale,URI[]> localeBasedLookup = new ResourceLookup.NULL<Locale,URI[]>();
+	private Provider<Locale,URI[]> localeBasedProvider = new Provider.NULL<Locale,URI[]>();
 	
-	public URI[] lookup(Locale locale) {
-		return localeBasedLookup.lookup(locale);
+	public URI[] get(Locale locale) {
+		return localeBasedProvider.get(locale);
 	}
 	
-	private void initLocaleBasedLookup(URL manifestURL) {
-		localeBasedLookup = new PropertiesLookup<Locale,URI[]>(manifestURL) {
+	private void initLocaleBasedProvider(URL manifestURL) {
+		localeBasedProvider = new SimpleMappingProvider<Locale,URI[]>(manifestURL) {
 			public Locale parseKey(String locale) {
 				return parseLocale(locale);
 			}

@@ -2,9 +2,6 @@ package org.daisy.pipeline.braille.tex.saxon;
 
 import java.net.URI;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -15,9 +12,11 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.tex.TexHyphenator;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.tex.TexHyphenatorProvider;
 
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
@@ -25,14 +24,14 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("tex",
 			"http://code.google.com/p/texhyphj/", "hyphenate");
 	
-	private TexHyphenator hyphenator = null;
+	private TexHyphenatorProvider provider = null;
 	
-	protected void bindHyphenator(TexHyphenator hyphenator) {
-		this.hyphenator = hyphenator;
+	protected void bindHyphenatorProvider(TexHyphenatorProvider provider) {
+		this.provider = provider;
 	}
 	
-	protected void unbindHyphenator(TexHyphenator hyphenator) {
-		this.hyphenator = null;
+	protected void unbindHyphenatorProvider(TexHyphenatorProvider provider) {
+		this.provider = null;
 	}
 	
 	public StructuredQName getFunctionQName() {
@@ -50,7 +49,8 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	public SequenceType[] getArgumentTypes() {
-		return new SequenceType[] { SequenceType.SINGLE_STRING,
+		return new SequenceType[] {
+				SequenceType.SINGLE_STRING,
 				SequenceType.SINGLE_STRING };
 	}
 	
@@ -66,7 +66,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 				try {
 					URI table = asURI(((AtomicSequence)arguments[0]).getStringValue());
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(hyphenator.hyphenate(table, text)); }
+					return new StringValue(provider.get(table).hyphenate(text)); }
 				catch (Exception e) {
 					logger.error("tex:hyphenate failed", e);
 					throw new XPathException("tex:hyphenate failed"); }
@@ -75,4 +75,5 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);
+	
 }

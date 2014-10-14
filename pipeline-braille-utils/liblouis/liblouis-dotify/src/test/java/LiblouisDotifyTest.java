@@ -43,7 +43,7 @@ public class LiblouisDotifyTest {
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
-			brailleModule("common-java"),
+			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),

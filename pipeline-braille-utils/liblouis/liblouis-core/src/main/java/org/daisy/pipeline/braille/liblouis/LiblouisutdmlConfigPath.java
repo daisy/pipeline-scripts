@@ -2,7 +2,8 @@ package org.daisy.pipeline.braille.liblouis;
 
 import java.util.Map;
 
-import org.daisy.pipeline.braille.BundledResourcePath;
+import org.daisy.pipeline.braille.common.BundledResourcePath;
+
 import org.osgi.service.component.ComponentContext;
 
 public class LiblouisutdmlConfigPath extends BundledResourcePath {

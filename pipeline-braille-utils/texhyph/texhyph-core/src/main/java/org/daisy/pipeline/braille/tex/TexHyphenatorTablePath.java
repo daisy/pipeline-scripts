@@ -7,13 +7,13 @@ import java.util.Map;
 
 import org.osgi.service.component.ComponentContext;
 
-import org.daisy.pipeline.braille.BundledResourcePath;
-import org.daisy.pipeline.braille.ResourceLookup;
+import org.daisy.pipeline.braille.common.BundledResourcePath;
+import org.daisy.pipeline.braille.common.Provider;
 
-import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
-public class TexHyphenatorTablePath extends BundledResourcePath implements TexHyphenatorTableLookup {
+public class TexHyphenatorTablePath extends BundledResourcePath implements TexHyphenatorTableProvider {
 	
 	private static final String MANIFEST = "manifest";
 	
@@ -27,17 +27,17 @@ public class TexHyphenatorTablePath extends BundledResourcePath implements TexHy
 			final URL manifestURL = context.getBundleContext().getBundle().getEntry(manifestPath);
 			if (manifestURL == null)
 				throw new IllegalArgumentException("Manifest at location " + manifestPath + " could not be found");
-			initLookup(manifestURL); }
+			initProvider(manifestURL); }
 	}
 	
-	public URI lookup(Locale locale) {
-		return lookup.lookup(locale);
+	public URI get(Locale locale) {
+		return provider.get(locale);
 	}
 	
-	private ResourceLookup<Locale,URI> lookup = new ResourceLookup.NULL<Locale,URI>();
+	private Provider<Locale,URI> provider = new Provider.NULL<Locale,URI>();
 	
-	private void initLookup(URL manifestURL) {
-		lookup = new PropertiesLookup<Locale,URI>(manifestURL) {
+	private void initProvider(URL manifestURL) {
+		provider = new SimpleMappingProvider<Locale,URI>(manifestURL) {
 			public Locale parseKey(String locale) {
 				return parseLocale(locale);
 			}

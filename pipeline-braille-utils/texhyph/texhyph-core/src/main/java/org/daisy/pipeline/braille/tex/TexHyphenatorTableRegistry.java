@@ -3,22 +3,22 @@ package org.daisy.pipeline.braille.tex;
 import java.net.URI;
 import java.util.Locale;
 
-import org.daisy.pipeline.braille.ResourceLookup;
-import org.daisy.pipeline.braille.ResourceRegistry;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.ResourceRegistry;
 
 public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTablePath>
-	                                    implements TexHyphenatorTableLookup, TexHyphenatorTableResolver {
+	                                    implements TexHyphenatorTableProvider, TexHyphenatorTableResolver {
 	
 	@Override
 	protected void register(TexHyphenatorTablePath path) {
 		super.register(path);
-		cachedLookup.invalidateCache();
+		cache.invalidateCache();
 	}
 	
 	@Override
 	protected void unregister (TexHyphenatorTablePath path) {
 		super.unregister(path);
-		cachedLookup.invalidateCache();
+		cache.invalidateCache();
 	}
 	
 	/**
@@ -26,17 +26,17 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public URI lookup(Locale locale) {
-		return cachedLookup.lookup(locale);
+	public URI get(Locale locale) {
+		return cache.get(locale);
 	}
 	
-	private final DispatchingLookup<Locale,URI> dispatchingLookup = new DispatchingLookup<Locale,URI>() {
-		public Iterable<? extends ResourceLookup<Locale,URI>> dispatch() {
+	private final DispatchingProvider<Locale,URI> dispatchingProvider = new DispatchingProvider<Locale,URI>() {
+		public Iterable<? extends Provider<Locale,URI>> dispatch() {
 			return paths.values();
 		}
 	};
 	
-	private final ResourceLookup<Locale,URI> lookup = LocaleBasedLookup.<URI>newInstance(dispatchingLookup);
-	private final CachedLookup<Locale,URI> cachedLookup = CachedLookup.<Locale,URI>newInstance(lookup);
+	private final Provider<Locale,URI> provider = LocaleBasedProvider.<URI>newInstance(dispatchingProvider);
+	private final CachedProvider<Locale,URI> cache = CachedProvider.<Locale,URI>newInstance(provider);
 	
 }

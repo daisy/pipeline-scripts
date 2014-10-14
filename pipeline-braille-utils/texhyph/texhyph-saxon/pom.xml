@@ -103,9 +103,7 @@
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/tex-hyphenate.xml,
-              OSGI-INF/tex-lookup-table.xml,
-              OSGI-INF/tex-resolve-table.xml
+              OSGI-INF/tex-hyphenate.xml
             </Service-Component>
           </instructions>
         </configuration>

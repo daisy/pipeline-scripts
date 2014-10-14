@@ -7,30 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Files.fileName;
-import static org.daisy.pipeline.braille.Utilities.Predicates.matchesGlobPattern;
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
-import static org.daisy.pipeline.braille.Utilities.URLs.asURL;
-
-import org.daisy.pipeline.braille.ResourceLookup;
-import org.daisy.pipeline.braille.ResourcePath;
-import org.daisy.pipeline.braille.ResourceRegistry;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.ResourcePath;
+import org.daisy.pipeline.braille.common.ResourceRegistry;
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import static org.daisy.pipeline.braille.common.util.Files.fileName;
+import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPattern;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
 import com.google.common.base.Predicate;
 
-public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements LiblouisTableLookup, LiblouisTableResolver {
+public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements LiblouisTableProvider, LiblouisTableResolver {
 	
 	@Override
 	protected void register(LiblouisTablePath path) {
 		super.register(path);
-		cachedLookup.invalidateCache();
+		cachedProvider.invalidateCache();
 	}
 	
 	@Override
 	protected void unregister(LiblouisTablePath path) {
 		super.unregister(path);
-		cachedLookup.invalidateCache();
+		cachedProvider.invalidateCache();
 	}
 	
 	/**
@@ -38,19 +37,18 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public URI[] lookup(Locale query) {
-		return cachedLookup.lookup(query);
+	public URI[] get(Locale query) {
+		return cachedProvider.get(query);
 	}
 	
-	private final DispatchingLookup<Locale,URI[]> dispatchingLookup = new DispatchingLookup<Locale,URI[]>() {
-		public Iterable<? extends ResourceLookup<Locale,URI[]>> dispatch() {
+	private final DispatchingProvider<Locale,URI[]> dispatchingProvider = new DispatchingProvider<Locale,URI[]>() {
+		public Iterable<? extends Provider<Locale,URI[]>> dispatch() {
 			return paths.values();
 		}
 	};
 	
-	private final ResourceLookup<Locale,URI[]> lookup = LocaleBasedLookup.<URI[]>newInstance(dispatchingLookup);
-	
-	private final CachedLookup<Locale,URI[]> cachedLookup = CachedLookup.<Locale,URI[]>newInstance(lookup);
+	private final Provider<Locale,URI[]> provider = LocaleBasedProvider.<URI[]>newInstance(dispatchingProvider);
+	private final CachedProvider<Locale,URI[]> cachedProvider = CachedProvider.<Locale,URI[]>newInstance(provider);
 	
 	@Override
 	public URL resolve(URI resource) {

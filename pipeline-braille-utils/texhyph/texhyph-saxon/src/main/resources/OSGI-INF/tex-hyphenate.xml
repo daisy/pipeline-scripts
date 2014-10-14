@@ -4,11 +4,11 @@
     <scr:service>
         <scr:provide interface="net.sf.saxon.lib.ExtensionFunctionDefinition"/>
     </scr:service>
-    <scr:reference bind="bindHyphenator"
-        unbind="unbindHyphenator"
-        interface="org.daisy.pipeline.braille.tex.TexHyphenator"
+    <scr:reference bind="bindHyphenatorProvider"
+        unbind="unbindHyphenatorProvider"
+        interface="org.daisy.pipeline.braille.tex.TexHyphenatorProvider"
         cardinality="1..1"
-        name="TexHyphenator"
+        name="TexHyphenatorProvider"
         policy="dynamic"/>
 </scr:component>
 

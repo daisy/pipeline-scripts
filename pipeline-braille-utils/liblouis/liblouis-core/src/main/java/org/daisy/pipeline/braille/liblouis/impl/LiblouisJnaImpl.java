@@ -3,21 +3,20 @@ package org.daisy.pipeline.braille.liblouis.impl;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.daisy.pipeline.braille.BundledNativePath;
-import org.daisy.pipeline.braille.Utilities.Pair;
+import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.Cached;
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import org.daisy.pipeline.braille.common.util.Pair;
+import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
+import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
+
 import org.daisy.pipeline.braille.liblouis.Liblouis;
-import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
-import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
-
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Strings.extractHyphens;
-import static org.daisy.pipeline.braille.Utilities.Strings.insertHyphens;
-import static org.daisy.pipeline.braille.Utilities.Strings.join;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.liblouis.Louis;
 import org.liblouis.CompilationException;
@@ -72,7 +71,7 @@ public class LiblouisJnaImpl implements Liblouis {
 	
 	protected void bindLibrary(BundledNativePath nativePath) {
 		if (!LIBLOUIS_EXTERNAL && this.nativePath == null) {
-			URL libraryPath = nativePath.resolve(nativePath.lookup("liblouis"));
+			URL libraryPath = nativePath.resolve(nativePath.get("liblouis"));
 			if (libraryPath != null) {
 				Louis.setLibraryPath(asFile(libraryPath));
 				this.nativePath = nativePath;
@@ -88,22 +87,23 @@ public class LiblouisJnaImpl implements Liblouis {
 		this.tableResolver = tableResolver;
 	}
 	
-	protected void unbindTableResolver(LiblouisTableResolver path) {
+	protected void unbindTableResolver(LiblouisTableResolver tableResolver) {
 		this.tableResolver = null;
 	}
 	
-	private Map<String,LiblouisTranslator> translatorCache = new HashMap<String,LiblouisTranslator>();
+	private Cached<URI[],LiblouisTranslator> translators = new Cached<URI[],LiblouisTranslator>() {
+		public LiblouisTranslator delegate(URI[] table) {
+			if (tableResolver.resolveTableList(table, null) == null)
+				return null;
+			try {
+				return new LiblouisTranslatorJnaImpl(new Translator(serializeTableList(table))); }
+			catch (CompilationException e) {
+				throw new RuntimeException(e); }
+		}
+	};
 	
 	public LiblouisTranslator get(URI[] table) {
-		String tableString = serializeTableList(table);
-		LiblouisTranslator translator = translatorCache.get(tableString);
-		if (translator == null) {
-			try {
-				translator = new LiblouisTranslatorJnaImpl(new Translator(tableString));
-				translatorCache.put(tableString, translator); }
-			catch (CompilationException e) {
-				throw new RuntimeException(e); }}
-		return translator;
+		return translators.get(table);
 	}
 	
 	private static class LiblouisTranslatorJnaImpl implements LiblouisTranslator {

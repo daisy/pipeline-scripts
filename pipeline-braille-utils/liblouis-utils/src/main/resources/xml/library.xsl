@@ -5,8 +5,6 @@
         Import this library whenever one of the following functions is used:
         * louis:translate
         * louis:hyphenate
-        * louis:lookup-table
-        * louis:resolve-table
         * louis:get-typeform
     -->
     

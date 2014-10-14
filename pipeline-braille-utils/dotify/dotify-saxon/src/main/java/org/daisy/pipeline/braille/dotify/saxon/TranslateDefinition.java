@@ -10,22 +10,22 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.dotify.DotifyTranslatorLookup;
-import static org.daisy.pipeline.braille.Utilities.Locales.parseLocale;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
+import org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
-	private DotifyTranslatorLookup lookup = null;
+	private DotifyTranslatorProvider provider = null;
 	
-	protected void bindTranslatorLookup(DotifyTranslatorLookup lookup) {
-		this.lookup = lookup;
+	protected void bindTranslatorProvider(DotifyTranslatorProvider provider) {
+		this.provider = provider;
 	}
 	
-	protected void unbindTranslatorLookup(DotifyTranslatorLookup lookup) {
-		this.lookup = null;
+	protected void unbindTranslatorProvider(DotifyTranslatorProvider provider) {
+		this.provider = null;
 	}
 	
 	private static final StructuredQName funcname = new StructuredQName("dotify",
@@ -66,7 +66,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String locale = ((AtomicSequence)arguments[0]).getStringValue();
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(lookup.lookup(parseLocale(locale)).translate(text).getTranslatedRemainder()); }
+					return new StringValue(provider.get(parseLocale(locale)).translate(text)); }
 				catch (Exception e) {
 					logger.error("dotify:translate failed", e);
 					throw new XPathException("dotify:translate failed"); }

@@ -4,11 +4,11 @@
     <scr:service>
         <scr:provide interface="net.sf.saxon.lib.ExtensionFunctionDefinition"/>
     </scr:service>
-    <scr:reference bind="bindTranslatorLookup"
-        unbind="unbindTranslatorLookup"
-        interface="org.daisy.pipeline.braille.dotify.DotifyTranslatorLookup"
+    <scr:reference bind="bindTranslatorProvider"
+        unbind="unbindTranslatorProvider"
+        interface="org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider"
         cardinality="1..1"
-        name="DotifyTranslatorLookup"
+        name="DotifyTranslatorProvider"
         policy="static"/>
 </scr:component>
 

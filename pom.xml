@@ -27,7 +27,6 @@
   <modules>
     <module>bom</module>
     <module>parent</module>
-    <module>pipeline-braille-utils/common-java</module>
     <module>pipeline-braille-utils/common-utils</module>
     <module>pipeline-braille-utils/css/css-core</module>
     <module>pipeline-braille-utils/css/css-calabash</module>
@@ -44,6 +43,7 @@
     <module>pipeline-braille-utils/liblouis/liblouis-formatter</module>
     <module>pipeline-braille-utils/liblouis/liblouis-mathml</module>
     <module>pipeline-braille-utils/liblouis-utils</module>
+    <module>pipeline-braille-utils/dotify/dotify-core</module>
     <module>pipeline-braille-utils/dotify/dotify-saxon</module>
     <module>pipeline-braille-utils/dotify/dotify-calabash</module>
     <module>pipeline-braille-utils/dotify/dotify-formatter</module>

@@ -9,9 +9,6 @@ re-implemented in [texhyphj][].
 -------------------------------------------------
 
 - `tex:hyphenate`: Hyphenate a text string using texhyphj.
-- `tex:lookup-table`: Find a hyphenation table based on a language
-  code.
-- `tex:resolve-table`: Resolve a hyphenation table URI.
 
 Submodules
 ----------

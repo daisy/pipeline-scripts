@@ -15,13 +15,13 @@ import java.util.Map;
 
 import com.google.common.base.Function;
 
-import static org.daisy.pipeline.braille.Utilities.Files.asFile;
-import static org.daisy.pipeline.braille.Utilities.Files.isAbsoluteFile;
-import static org.daisy.pipeline.braille.Utilities.Strings.join;
-import static org.daisy.pipeline.braille.Utilities.URLs.asURL;
+import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.ResourceResolver;
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
-import org.daisy.pipeline.braille.BundledNativePath;
-import org.daisy.pipeline.braille.ResourceResolver;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver;
@@ -51,7 +51,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
 	protected void bindExecutable(BundledNativePath nativePath) {
 		if (!LIBLOUISUTDML_EXTERNAL && this.nativePath == null) {
-			URI executablePath = nativePath.lookup("file2brl");
+			URI executablePath = nativePath.get("file2brl");
 			if (executablePath != null) {
 				file2brl = asFile(nativePath.resolve(executablePath));
 				this.nativePath = nativePath;

@@ -4,8 +4,6 @@
     <!--
         Import this (dummy) library whenever one of the following functions is used:
         * hyphen:hyphenate
-        * hyphen:lookup-table
-        * hyphen:resolve-table
     -->
     
 </xsl:stylesheet>

@@ -9,7 +9,7 @@
         <scr:property name="path" type="String" value="/tables"/>
         <scr:property name="manifest" type="String" value="/manifest.xml"/>
     </scr:component>
-    <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Liblouis Hyphenation Tables" activate="activate">
+    <scr:component name="Liblouis Hyphenation Tables" activate="activate">
         <scr:implementation class="org.daisy.pipeline.braille.libhyphen.LibhyphenTablePath"/>
         <scr:service>
             <scr:provide interface="org.daisy.pipeline.braille.libhyphen.LibhyphenTablePath"/>

@@ -14,7 +14,7 @@ import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.libhyphen.Libhyphen;
 
-import static org.daisy.pipeline.braille.Utilities.URIs.asURI;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,8 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	public SequenceType[] getArgumentTypes() {
-		return new SequenceType[] { SequenceType.SINGLE_STRING,
+		return new SequenceType[] {
+				SequenceType.SINGLE_STRING,
 				SequenceType.SINGLE_STRING };
 	}
 	
@@ -66,7 +67,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 				try {
 					URI table = asURI(((AtomicSequence)arguments[0]).getStringValue());
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(libhyphen.hyphenate(table, text)); }
+					return new StringValue(libhyphen.get(table).hyphenate(text)); }
 				catch (Exception e) {
 					logger.error("hyphen:hyphenate failed", e);
 					throw new XPathException("hyphen:hyphenate failed"); }
