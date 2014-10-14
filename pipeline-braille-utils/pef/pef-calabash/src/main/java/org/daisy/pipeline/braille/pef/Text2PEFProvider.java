@@ -34,6 +34,7 @@ public class Text2PEFProvider implements XProcStepProvider {
 		private static final QName _table = new QName("table");
 		private static final QName _title = new QName("title");
 		private static final QName _creator = new QName("creator");
+		private static final QName _duplex = new QName("duplex");
 		
 		private ReadablePipe source = null;
 		private WritablePipe result = null;
@@ -78,6 +79,7 @@ public class Text2PEFProvider implements XProcStepProvider {
 				TextHandler.Builder b = new TextHandler.Builder(textFile, pefFile);
 				b.title(getOption(_title, ""));
 				b.author(getOption(_creator, ""));
+				b.duplex(getOption(_duplex, false));
 				b.converterId(getOption(_table).getString());
 				TextHandler handler = b.build();
 				handler.parse();

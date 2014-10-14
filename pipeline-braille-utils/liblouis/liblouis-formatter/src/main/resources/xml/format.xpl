@@ -405,7 +405,7 @@
             </p:input>
             <p:with-option name="base" select="/*/@href"/>
         </pxi:select-by-base>
-        <pef:text2pef>
+        <pef:text2pef duplex="false">
             <p:with-option name="table" select="$pef-table"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>

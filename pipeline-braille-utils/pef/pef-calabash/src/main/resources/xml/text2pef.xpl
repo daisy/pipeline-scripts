@@ -11,5 +11,6 @@
     <p:option name="temp-dir" required="true" px:type="anyDirURI"/>
     <p:option name="title" required="false"/>
     <p:option name="creator" required="false"/>
+    <p:option name="duplex" required="false"/>
     
 </p:declare-step>

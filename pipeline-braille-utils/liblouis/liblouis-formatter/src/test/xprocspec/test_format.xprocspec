@@ -45,7 +45,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="30" rowgap="0" duplex="true">
+            <volume rows="5" cols="30" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -141,7 +141,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <volume rows="5" cols="20" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -227,7 +227,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <volume rows="5" cols="20" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -313,7 +313,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="15" rowgap="0" duplex="true">
+            <volume rows="5" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -421,7 +421,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="15" rowgap="0" duplex="true">
+            <volume rows="5" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -492,7 +492,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="15" rowgap="0" duplex="true">
+            <volume rows="5" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -558,7 +558,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="15" rowgap="0" duplex="true">
+            <volume rows="5" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -668,7 +668,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="6" cols="10" rowgap="0" duplex="true">
+            <volume rows="6" cols="10" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
@@ -822,7 +822,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="15" cols="20" rowgap="0" duplex="true">
+            <volume rows="15" cols="20" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
@@ -887,7 +887,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="2" cols="30" rowgap="0" duplex="true">
+            <volume rows="2" cols="30" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤⠆⠀⠤⠤⠤⠆⠀⠤⠤⠤⠆⠀⠤⠤⠤</row>
@@ -989,7 +989,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="8" cols="14" rowgap="0" duplex="true">
+            <volume rows="8" cols="14" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠀⠀⠀⠀⠀⠤⠤⠤</row>
@@ -1135,7 +1135,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="9" cols="23" rowgap="0" duplex="true">
+            <volume rows="9" cols="23" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
@@ -1250,7 +1250,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="8" cols="15" rowgap="0" duplex="true">
+            <volume rows="8" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠊</row>
@@ -1359,7 +1359,7 @@
         </meta>
     </head>
     <body>
-        <volume rows="5" cols="15" rowgap="0" duplex="true">
+        <volume rows="5" cols="15" rowgap="0" duplex="false">
             <section>
                 <page>
                     <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
@@ -1458,7 +1458,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="7" cols="15" rowgap="0" duplex="true">
+            <volume rows="7" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠃</row>
@@ -1540,7 +1540,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="7" cols="15" rowgap="0" duplex="true">
+            <volume rows="7" cols="15" rowgap="0" duplex="false">
               <section rows="4">
                 <page>
                   <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
@@ -1627,7 +1627,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="6" cols="40" rowgap="0" duplex="true">
+            <volume rows="6" cols="40" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠀⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿</row>
@@ -1711,7 +1711,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="3" cols="30" rowgap="0" duplex="true">
+            <volume rows="3" cols="30" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
@@ -1777,7 +1777,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="3" cols="15" rowgap="0" duplex="true">
+            <volume rows="3" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿</row>
@@ -1843,7 +1843,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="3" cols="15" rowgap="0" duplex="true">
+            <volume rows="3" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿⠿⠿</row>
@@ -1900,7 +1900,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="3" cols="15" rowgap="0" duplex="true">
+            <volume rows="3" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠀⠇⠿⠿⠿⠿</row>
@@ -1984,7 +1984,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="10" cols="15" rowgap="0" duplex="true">
+            <volume rows="10" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿</row>
@@ -2066,7 +2066,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="8" cols="15" rowgap="0" duplex="true">
+            <volume rows="8" cols="15" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠿⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
