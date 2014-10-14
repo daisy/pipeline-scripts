@@ -38,7 +38,7 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="/css:root/@css:counter-set-braille-page">
+    <xsl:template match="/css:root/@css:counter-set-page">
         <xsl:attribute name="initial-page-number" select="."/>
     </xsl:template>
     

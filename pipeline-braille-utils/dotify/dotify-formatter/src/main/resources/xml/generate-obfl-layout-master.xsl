@@ -80,7 +80,7 @@
         <string value="{string(@value)}"/>
     </xsl:template>
     
-    <xsl:template match="css:counter[@name='braille-page']" mode="eval-content-list">
+    <xsl:template match="css:counter[@name='page']" mode="eval-content-list">
         <current-page style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                    then @style else 'default'}"/>
     </xsl:template>

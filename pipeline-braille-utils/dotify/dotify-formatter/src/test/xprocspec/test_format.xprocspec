@@ -372,7 +372,7 @@
           <doc>
             <body style="@page {
                          size: 15 5;
-                         @bottom-right { content: counter(braille-page) }}">
+                         @bottom-right { content: counter(page) }}">
               <section style="display: block;">
                 ⠤⠤⠤
               </section>
@@ -385,7 +385,7 @@
               </section>
               <section style="display: block;
                               page-break-before: always;
-                              counter-set: braille-page 10">
+                              counter-set: page 10">
                 ⠤⠤⠤
               </section>
               <section style="display: block;
@@ -394,7 +394,7 @@
               </section>
               <section style="@page {
                               size: 15 5;
-                              @top-right { content: counter(braille-page) }}">
+                              @top-right { content: counter(page) }}">
                 ⠤⠤⠤
               </section>
             </body>
@@ -556,19 +556,19 @@
           <doc>
             <body style="@page {
                          size: 15 5;
-                         @bottom-right { content: counter(braille-page) }}">
+                         @bottom-right { content: counter(page) }}">
               <frontmatter style="@page {
                                   size: 15 5;
-                                  @bottom-right { content: '⠏' counter(braille-page) }}">
+                                  @bottom-right { content: '⠏' counter(page) }}">
                 ⠤⠤⠤
               </frontmatter>
               <bodymatter>
                 ⠤⠤⠤
               </bodymatter>
-              <rearmatter style="{ counter-set: braille-page 1 }
+              <rearmatter style="{ counter-set: page 1 }
                                  @page {
                                  size: 15 5;
-                                 @bottom-right { content: counter(braille-page, lower-roman) }}">
+                                 @bottom-right { content: counter(page, lower-roman) }}">
                 ⠤⠤⠤
               </rearmatter>
             </body>
@@ -703,7 +703,7 @@
           <doc>
             <body style="@page {
                          size: 15 5;
-                         @bottom-right { content: string(print-page) ' ' counter(braille-page) }}">
+                         @bottom-right { content: string(print-page) ' ' counter(page) }}">
               <section style="string-set: print-page '⠤⠤'">
                 ⠤⠤⠤
               </section>

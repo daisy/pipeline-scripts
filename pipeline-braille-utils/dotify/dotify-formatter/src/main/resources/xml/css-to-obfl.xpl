@@ -58,20 +58,20 @@
     </p:for-each>
     
     <css:shift-string-set/>
-    <css:eval-counter exclude-counters="braille-page"/>
+    <css:eval-counter exclude-counters="page"/>
     
     <p:for-each>
-        <css:parse-counter-set counters="braille-page"/>
-        <css:split split-before="*[@css:page or @css:counter-set-braille-page]" split-after="*[@css:page]"/>
+        <css:parse-counter-set counters="page"/>
+        <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]"/>
         <p:split-sequence test="//css:box"/>
         <p:for-each>
             <p:label-elements match="/css:root[descendant::*/@css:page]" attribute="css:page"
                               label="(descendant::*/@css:page)[last()]"/>
-            <p:label-elements match="/css:root[descendant::*[not(@part=('middle','last'))]/@css:counter-set-braille-page]"
-                              attribute="css:counter-set-braille-page"
-                              label="(descendant::*[not(@part=('middle','last'))]/@css:counter-set-braille-page)[last()]"/>
+            <p:label-elements match="/css:root[descendant::*[not(@part=('middle','last'))]/@css:counter-set-page]"
+                              attribute="css:counter-set-page"
+                              label="(descendant::*[not(@part=('middle','last'))]/@css:counter-set-page)[last()]"/>
             <p:delete match="/css:root//*/@css:page"/>
-            <p:delete match="/css:root//*/@css:counter-set-braille-page"/>
+            <p:delete match="/css:root//*/@css:counter-set-page"/>
             <p:unwrap match="css:_[not(@*)]"/>
         </p:for-each>
     </p:for-each>

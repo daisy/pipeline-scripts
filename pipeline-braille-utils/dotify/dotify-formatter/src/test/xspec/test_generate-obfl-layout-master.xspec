@@ -22,7 +22,7 @@
   <x:scenario label="test_02">
     <x:call function="obfl:generate-layout-master">
       <x:param select="'size: 15 15;
-                        @top-right { content: counter(braille-page, lower-roman) }
+                        @top-right { content: counter(page, lower-roman) }
                         @bottom-center { content: &quot;footer&quot; }'"/>
       <x:param select="'x'"/>
     </x:call>
