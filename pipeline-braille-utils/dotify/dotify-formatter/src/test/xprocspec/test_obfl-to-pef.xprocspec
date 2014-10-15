@@ -29,6 +29,12 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="../resources/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="../resources/pef-2008-1.sch"/>
+    </x:expect>
     <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
