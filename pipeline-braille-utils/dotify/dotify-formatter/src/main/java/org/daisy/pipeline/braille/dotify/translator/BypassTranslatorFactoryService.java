@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.calabash;
+package org.daisy.pipeline.braille.dotify.translator;
 
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -21,8 +21,17 @@ import org.daisy.dotify.text.BreakPointHandler;
  */
 public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryService {
 	
+	/* Use special mode so that
+	 * - BypassTranslatorFactoryService and BypassMarkerProcessorFactoryService
+	 *   from this package are used instead of the default ones in
+	 *   dotify.impl.translator
+	 * - BrailleTextBorderFactoryService from dotify.impl.translator (which
+	 *   for some reason doesn't support mode "bypass") can be used
+	 */
+	protected final static String MODE = "dotify:format";
+	
 	public boolean supportsSpecification(String locale, String mode) {
-		return OBFLToPEFProvider.MODE_BYPASS.equals(mode);
+		return MODE.equals(mode);
 	}
 	
 	public Collection<TranslatorSpecification> listSpecifications() {
@@ -37,7 +46,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	
 	private static class BypassTranslatorFactory implements BrailleTranslatorFactory {
 		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
-			if (OBFLToPEFProvider.MODE_BYPASS.equals(mode))
+			if (MODE.equals(mode))
 				return new BypassTranslator();
 			throw new TranslatorConfigurationException("Factory does not support " + locale + "/" + mode);
 		}
@@ -141,7 +150,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		}
 		
 		public String getTranslatorMode() {
-			return OBFLToPEFProvider.MODE_BYPASS;
+			return MODE;
 		}
 	}
 }

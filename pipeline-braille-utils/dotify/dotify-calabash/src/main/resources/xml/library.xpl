@@ -6,6 +6,8 @@
     <p:declare-step type="dotify:obfl-to-pef">
         <p:input port="source" sequence="false"/>
         <p:output port="result" sequence="false"/>
+        <p:option name="locale" required="true"/>
+        <p:option name="mode" required="true"/>
     </p:declare-step>
     
 </p:library>

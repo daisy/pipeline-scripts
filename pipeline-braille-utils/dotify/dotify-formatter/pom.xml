@@ -20,6 +20,22 @@
   <name>DAISY Pipeline 2 Braille Module :: dotify-formatter</name>
   
   <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>common-utils</artifactId>
+    </dependency>
     <!--
         OSGi runtime dependencies
     -->
@@ -31,6 +47,11 @@
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-calabash</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.translator.impl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
@@ -98,6 +119,31 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>manifest-before-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Service-Component>
+              OSGI-INF/bypass-translator-factory-service.xml,
+              OSGI-INF/bypass-markerprocessor-factory-service.xml
+            </Service-Component>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>

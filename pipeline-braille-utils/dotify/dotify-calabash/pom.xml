@@ -20,11 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>org.daisy.dotify</groupId>
-      <artifactId>dotify.formatter.impl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <artifactId>dotify.api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -49,7 +45,7 @@
     -->
     <dependency>
       <groupId>org.daisy.dotify</groupId>
-      <artifactId>dotify.translator.impl</artifactId>
+      <artifactId>dotify.formatter.impl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
@@ -85,78 +81,16 @@
       <artifactId>javax.persistence</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!--
-        test dependencies
-    -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-utils</artifactId>
-      <version>1.1.2-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xproc-engine-daisy-pipeline</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.xprocspec</groupId>
-      <artifactId>xprocspec</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xprocspec-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>pax-exam-helper</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.ops4j.pax.exam</groupId>
-        <artifactId>maven-paxexam-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-depends-file</id>
-            <goals>
-              <goal>generate-depends-file</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>manifest-before-test</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/bypass-translator-factory-service.xml,
-              OSGI-INF/bypass-markerprocessor-factory-service.xml,
               OSGI-INF/obfl-to-pef.xml
             </Service-Component>
           </instructions>

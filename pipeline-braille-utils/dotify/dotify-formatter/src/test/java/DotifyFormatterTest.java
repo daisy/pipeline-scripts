@@ -12,6 +12,7 @@ import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
 
@@ -63,6 +64,7 @@ public class DotifyFormatterTest {
 			brailleModule("dotify-calabash"),
 			xspecBundles(),
 			xprocspecBundles(),
+			thisBundle(),
 			junitBundles()
 		);
 	}

@@ -16,6 +16,7 @@ import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 
+import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 
@@ -31,15 +32,6 @@ import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
 import org.daisy.pipeline.braille.common.Cached;
 
 public class OBFLToPEFProvider implements XProcStepProvider {
-	
-	/* Use special bypass mode so that
-	 * - BypassTranslatorFactoryService and BypassMarkerProcessorFactoryService
-	 *   from this package are used instead of the default ones in
-	 *   dotify.impl.translator
-	 * - BrailleTextBorderFactoryService from dotify.impl.translator (which
-	 *   for some reason doesn't support mode "bypass") can be used
-	 */
-	protected final static String MODE_BYPASS = "pipeline_bypass";
 	
 	private List<PagedMediaWriterFactoryService> pagedMediaWriterFactoryServices
 		= new ArrayList<PagedMediaWriterFactoryService>();
@@ -87,31 +79,34 @@ public class OBFLToPEFProvider implements XProcStepProvider {
 		return new OBFLToPEF(runtime, step);
 	}
 	
-	public class OBFLToPEF extends DefaultStep {
+	private static final QName _locale = new QName("locale");
+	private static final QName _mode = new QName("mode");
 	
+	public class OBFLToPEF extends DefaultStep {
+		
 		private ReadablePipe source = null;
 		private WritablePipe result = null;
 		
 		private OBFLToPEF(XProcRuntime runtime, XAtomicStep step) {
 			super(runtime, step);
 		}
-	
+		
 		@Override
 		public void setInput(String port, ReadablePipe pipe) {
 			source = pipe;
 		}
-	
+		
 		@Override
 		public void setOutput(String port, WritablePipe pipe) {
 			result = pipe;
 		}
-	
+		
 		@Override
 		public void reset() {
 			source.resetReader();
 			result.resetWriter();
 		}
-	
+		
 		@Override
 		public void run() throws SaxonApiException {
 			super.run();
@@ -127,7 +122,9 @@ public class OBFLToPEFProvider implements XProcStepProvider {
 				
 				// Convert
 				PagedMediaWriter writer = newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
-				FormatterEngine engine = newFormatterEngine("und", MODE_BYPASS, writer); // zxx
+				FormatterEngine engine = newFormatterEngine(getOption(_locale).getString(),
+				                                            getOption(_mode).getString(),
+				                                            writer);
 				s = new ByteArrayOutputStream();
 				engine.convert(obflStream, s);
 				obflStream.close();

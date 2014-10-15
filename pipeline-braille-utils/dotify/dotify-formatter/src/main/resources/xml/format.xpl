@@ -16,6 +16,6 @@
     
     <pxi:css-to-obfl name="obfl"/>
     
-    <dotify:obfl-to-pef/>
+    <dotify:obfl-to-pef locale="und" mode="dotify:format"/>
     
 </p:declare-step>
