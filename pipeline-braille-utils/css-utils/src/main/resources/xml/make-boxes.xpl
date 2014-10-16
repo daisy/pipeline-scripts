@@ -7,7 +7,7 @@
     
     <!--
         Generate boxes from elements, based on their @css:display attribute. Elements that don't
-        generate boxes but still have information attached (e.g. @css:page, @css: or anchor
+        generate boxes but still have information attached (e.g. @css:page, @css:id or
         @css:string-set) become "css:_" elements.
     -->
     

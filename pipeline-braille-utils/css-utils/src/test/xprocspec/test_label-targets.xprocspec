@@ -2,10 +2,10 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-               script="../../main/resources/xml/label-anchors.xpl">
+               script="../../main/resources/xml/label-targets.xpl">
   
   <x:scenario label="test_01">
-    <x:call step="css:label-anchors">
+    <x:call step="css:label-targets">
       <x:input port="source">
         <x:document type="inline">
           <frontmatter>
@@ -46,7 +46,7 @@
         </x:document>
         <x:document type="inline">
           <bodymatter>
-            <h id="h1" css:anchor="h1">
+            <h id="h1" css:id="h1">
               foo
             </h>
           </bodymatter>

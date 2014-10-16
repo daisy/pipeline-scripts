@@ -12,18 +12,18 @@
     </xsl:template>
     
     <xsl:template match="*[@xml:id]" priority="0.6">
-        <xsl:call-template name="try-anchor">
+        <xsl:call-template name="try-id">
             <xsl:with-param name="name" select="replace(@xml:id,'^#','')"/>
         </xsl:call-template>
     </xsl:template>
     
     <xsl:template match="*[@id]">
-        <xsl:call-template name="try-anchor">
+        <xsl:call-template name="try-id">
             <xsl:with-param name="name" select="replace(@id,'^#','')"/>
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template name="try-anchor">
+    <xsl:template name="try-id">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="collection()//*[self::css:text[@target] or
@@ -32,7 +32,7 @@
                                            [replace(@target,'^#','')=$name]">
                 <xsl:copy>
                     <xsl:apply-templates select="@*"/>
-                    <xsl:attribute name="css:anchor" select="$name"/>
+                    <xsl:attribute name="css:id" select="$name"/>
                     <xsl:apply-templates select="node()"/>
                 </xsl:copy>
             </xsl:when>

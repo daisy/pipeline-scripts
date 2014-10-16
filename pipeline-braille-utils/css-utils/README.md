@@ -15,7 +15,7 @@ Building blocks related to [Braille CSS][braillecss].
 - `css:eval-counter`
 - `css:eval-string-set`
 - `css:inline`: Inline a CSS stylesheet in XML.
-- `css:label-anchors`
+- `css:label-targets`
 - `css:make-anonymous-block-boxes`
 - `css:make-anonymous-inline-boxes`
 - `css:make-boxes`

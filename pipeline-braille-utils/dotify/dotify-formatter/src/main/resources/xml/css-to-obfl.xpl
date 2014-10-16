@@ -48,7 +48,7 @@
         <css:eval-content-list/>
     </p:for-each>
     
-    <css:label-anchors/>
+    <css:label-targets/>
     
     <p:for-each>
         <css:eval-string-set/>
@@ -88,10 +88,10 @@
     </p:for-each>
     
     <p:wrap-sequence wrapper="_"/>
-    <p:label-elements match="css:_[@css:anchor]/css:box" attribute="css:anchor" replace="false"
-                      label="parent::*/@css:anchor"/>
-    <p:delete match="@css:anchor[.=(ancestor::*|preceding::*)/@css:anchor]"/>
-    <p:delete match="css:_/@css:anchor"/>
+    <p:label-elements match="css:_[@css:id]/css:box" attribute="css:id" replace="false"
+                      label="parent::*/@css:id"/>
+    <p:delete match="@css:id[.=(ancestor::*|preceding::*)/@css:id]"/>
+    <p:delete match="css:_/@css:id"/>
     <p:unwrap match="css:_[not(@*)]"/>
     <p:filter select="/_/css:root"/>
     

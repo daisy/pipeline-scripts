@@ -2,14 +2,14 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-                type="css:label-anchors"
+                type="css:label-targets"
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
     <!--
-        Add a @css:anchor attribute to elements that are references by a target-text, target-string
+        Add a @css:id attribute to elements that are references by a target-text, target-string
         or target-counter function. It is not impossible that two or more elements get the same
-        anchor name.
+        id.
     -->
     
     <p:input port="source" sequence="true"/>
@@ -19,7 +19,7 @@
     
     <px:xslt-for-each>
         <p:input port="stylesheet">
-            <p:document href="label-anchors.xsl"/>
+            <p:document href="label-targets.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>

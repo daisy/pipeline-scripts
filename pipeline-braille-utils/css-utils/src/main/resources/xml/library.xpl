@@ -9,7 +9,7 @@
     <p:import href="eval-content-list.xpl"/>
     <p:import href="eval-counter.xpl"/>
     <p:import href="eval-string-set.xpl"/>
-    <p:import href="label-anchors.xpl"/>
+    <p:import href="label-targets.xpl"/>
     <p:import href="make-anonymous-block-boxes.xpl"/>
     <p:import href="make-anonymous-inline-boxes.xpl"/>
     <p:import href="make-boxes.xpl"/>

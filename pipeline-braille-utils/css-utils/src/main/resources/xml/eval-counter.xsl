@@ -27,7 +27,7 @@
                 <xsl:choose>
                     <xsl:when test="@target">
                         <xsl:variable name="target" as="xs:string" select="@target"/>
-                        <xsl:variable name="target" as="element()?" select="//*[@css:anchor=$target][1]"/>
+                        <xsl:variable name="target" as="element()?" select="//*[@css:id=$target][1]"/>
                         <xsl:if test="$target">
                             <xsl:call-template name="css:counter">
                                 <xsl:with-param name="name" select="@name"/>
