@@ -35,7 +35,7 @@
     </p:documentation>
   </p:option>
 
-  <p:option name="tts-config" required="false" px:type="anyURI" select="''">
+  <p:option name="tts-config" required="false" px:type="anyFileURI" select="''">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <h2 px:role="name"> Text-To-Speech configuration file</h2>
       <p px:role="desc">Configuration file for the Text-To-Speech.</p>
