@@ -14,37 +14,11 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     
-    <p:choose>
-        <p:when test="$default-stylesheet!=''">
-            <p:add-attribute match="/link" attribute-name="href" name="link">
-                <p:input port="source">
-                    <p:inline>
-                        <link rel="stylesheet" media="embossed" type="text/css"/>
-                    </p:inline>
-                </p:input>
-                <p:with-option name="attribute-value" select="$default-stylesheet"/>
-            </p:add-attribute>
-            <p:insert match="//*[name()='head'][1]" position="first-child">
-                <p:input port="source">
-                    <p:pipe port="source" step="styling"/>
-                </p:input>
-                <p:input port="insertion">
-                    <p:pipe step="link" port="result"/>
-                </p:input>
-            </p:insert>
-        </p:when>
-        <p:otherwise>
-            <p:identity>
-                <p:input port="source">
-                    <p:pipe port="source" step="styling"/>
-                </p:input>
-            </p:identity>
-        </p:otherwise>
-    </p:choose>
-    
     <!-- Inline CSS -->
     
-    <css:inline/>
+    <css:inline>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+    </css:inline>
     
     <!-- Number lists -->
     

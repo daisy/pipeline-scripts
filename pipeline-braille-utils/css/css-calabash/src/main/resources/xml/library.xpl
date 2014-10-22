@@ -5,6 +5,7 @@
     <p:declare-step type="css:inline">
         <p:input port="source" sequence="false" primary="true"/>
         <p:output port="result" sequence="false" primary="true"/>
+        <p:option name="default-stylesheet" required="false"/>
     </p:declare-step>
 
 </p:library>
