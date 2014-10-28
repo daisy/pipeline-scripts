@@ -141,6 +141,7 @@
       <p:pipe port="config" step="main"/>
     </p:input>
     <p:with-option name="audio" select="$audio"/>
+    <p:with-option name="output-dir" select="$output-fileset-base"/>
   </px:tts-for-dtbook>
 
   <p:delete name="filtered-dtbook-fileset"
