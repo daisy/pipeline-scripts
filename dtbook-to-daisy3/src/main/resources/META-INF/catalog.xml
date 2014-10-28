@@ -11,6 +11,7 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-tts"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:css-speech"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:tts-helpers"/>
 </catalog>
