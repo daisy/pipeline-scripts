@@ -90,7 +90,6 @@
 
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-tts/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/library.xpl"/>
