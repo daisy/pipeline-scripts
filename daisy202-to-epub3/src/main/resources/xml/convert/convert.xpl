@@ -49,39 +49,124 @@
     <p:variable name="content-dir" select="concat($publication-dir,'Content/')"/>
     <p:variable name="daisy-dir" select="base-uri(/*)">
         <p:pipe port="fileset.in" step="main"/>
-    </p:variable>
-
-    <!-- Make a fileset and a document sequence of all the SMIL files in reading order -->
-    <px:fileset-load media-types="application/smil+xml" name="smil-flow.in-memory">
-        <p:input port="fileset">
-            <p:pipe port="fileset.in" step="main"/>
-        </p:input>
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.in" step="main"/>
-        </p:input>
-    </px:fileset-load>
-
+    </p:variable> 
+    
+    <p:group name="pre-processing">
+        <p:output port="ncc" primary="true">
+            <p:pipe port="result" step="ncc"/>
+        </p:output>
+        <p:output port="smils" sequence="true">
+            <p:pipe port="smils" step="pre-processing.do"/>
+        </p:output>
+        <p:output port="htmls" sequence="true">
+            <p:pipe port="htmls" step="pre-processing.do"/>
+        </p:output>
+        
+        <!-- load the NCC -->
+        <px:fileset-filter href="*/ncc.html" name="ncc-fileset">
+            <p:input port="source">
+                <p:pipe port="fileset.in" step="main"/>
+            </p:input>
+        </px:fileset-filter>
+        <px:fileset-load>
+            <p:input port="in-memory">
+                <p:pipe port="in-memory.in" step="main"/>
+            </p:input>
+        </px:fileset-load>
+        <p:identity name="ncc"/>
+        <px:assert message="There must be exactly one NCC-file" test-count-min="1" test-count-max="1" error-code="PDE06"/>
+        
+        <!-- Load original SMIL files -->
+        <px:fileset-load media-types="application/smil+xml" name="original-smils">
+            <p:input port="fileset">
+                <p:pipe port="fileset.in" step="main"/>
+            </p:input>
+            <p:input port="in-memory">
+                <p:pipe port="in-memory.in" step="main"/>
+            </p:input>
+        </px:fileset-load>
+        
+        <!-- Load original HTML files -->
+        <px:fileset-filter media-types="application/xhtml+xml text/html">
+            <p:input port="source">
+                <p:pipe port="fileset.in" step="main"/>
+            </p:input>
+        </px:fileset-filter>
+        <px:fileset-diff>
+            <p:input port="secondary">
+                <p:pipe port="result" step="ncc-fileset"/>
+            </p:input>
+        </px:fileset-diff>
+        <px:fileset-load name="original-htmls">
+            <p:input port="in-memory">
+                <p:pipe port="in-memory.in" step="main"/>
+            </p:input>
+        </px:fileset-load>
+        
+        <!--pre-process the file set if it's an NCC-only book-->
+        <p:count limit="1"/>
+        <p:choose name="pre-processing.do">
+            <p:when test="number(/*)=0">
+                <p:output port="htmls" sequence="true">
+                    <p:pipe port="htmls" step="iter-smils"/>
+                </p:output>
+                <p:output port="smils" sequence="true">
+                    <p:pipe port="smils" step="iter-smils"/>
+                </p:output>
+                <p:for-each name="iter-smils">
+                    <p:iteration-source>
+                        <p:pipe port="result" step="original-smils"/>
+                    </p:iteration-source>
+                    <p:output port="htmls" sequence="true">
+                        <p:pipe port="result" step="new-html"/>
+                    </p:output>
+                    <p:output port="smils" sequence="true">
+                        <p:pipe port="result" step="new-smil"/>
+                    </p:output>
+                    <p:string-replace name="new-smil" 
+                        match="text/@src"
+                        replace="replace(.,'^[^#]+',replace(base-uri(),'(.*/)?([^/]+)\.[^.]*','$2.html'))" />
+                    <p:xslt name="new-html">
+                        <p:input port="source">
+                            <p:pipe port="result" step="ncc"/>
+                        </p:input>
+                        <p:input port="stylesheet">
+                            <p:document href="ncc-to-content.xsl"/>
+                        </p:input>
+                        <p:with-param name="base" select="replace(base-uri(/*),'^(.+)\.[^.]+(#.*)?$','$1.html$2')"/>
+                        <p:with-param name="ids"
+                            select="
+                            string-join(distinct-values(//text/substring-after(@src,'#')),' ')"/>
+                    </p:xslt>
+                </p:for-each>
+            </p:when>
+            <p:otherwise>
+                <p:output port="htmls" sequence="true">
+                    <p:pipe port="result" step="original-htmls"/>
+                </p:output>
+                <p:output port="smils" sequence="true">
+                    <p:pipe port="result" step="original-smils"/>
+                </p:output>
+                <p:sink/>
+            </p:otherwise>
+        </p:choose>
+    </p:group>
+    
     <!-- Make a map of all links from the SMIL files to the HTML files -->
     <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
         <p:input port="daisy-smil">
-            <p:pipe port="result" step="smil-flow.in-memory"/>
+            <p:pipe port="smils" step="pre-processing"/>
         </p:input>
     </pxi:daisy202-to-epub3-resolve-links-create-mapping>
     <p:sink/>
 
     <!-- Make a Navigation Document based on the DAISY 2.02 NCC. -->
 
-    <px:fileset-load media-types="application/xhtml+xml text/html" href="*/ncc.html">
-        <p:input port="fileset">
-            <p:pipe port="fileset.in" step="main"/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="ncc" step="pre-processing"/>
         </p:input>
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.in" step="main"/>
-        </p:input>
-    </px:fileset-load>
-    <p:identity name="ncc"/>
-
-    <px:assert message="There must be exactly one NCC-file" test-count-min="1" test-count-max="1" error-code="PDE06"/>
+    </p:identity>
     <px:message message="Extracting dc:identifier from NCC"/>
     <p:add-attribute name="pub-id" match="/*" attribute-name="value">
         <p:with-option name="attribute-value" select="/html:html/html:head/html:meta[@name='dc:identifier']/@content"/>
@@ -97,7 +182,7 @@
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="ncc">
-            <p:pipe port="result" step="ncc"/>
+            <p:pipe port="ncc" step="pre-processing"/>
         </p:input>
         <p:input port="resolve-links-mapping">
             <p:pipe port="result" step="resolve-links-mapping"/>
@@ -106,28 +191,7 @@
     <p:sink/>
 
     <!-- Convert the content files. -->
-    <px:fileset-load media-types="application/xhtml+xml text/html">
-        <p:input port="fileset">
-            <p:pipe port="fileset.in" step="main"/>
-        </p:input>
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.in" step="main"/>
-        </p:input>
-    </px:fileset-load>
-    <p:for-each>
-        <p:choose>
-            <p:when test="matches(lower-case(base-uri(/*)),'/ncc.html$')">
-                <p:identity>
-                    <p:input port="source">
-                        <p:empty/>
-                    </p:input>
-                </p:identity>
-            </p:when>
-            <p:otherwise>
-                <p:identity/>
-            </p:otherwise>
-        </p:choose>
-    </p:for-each>
+
     <pxi:daisy202-to-epub3-content name="content-without-navigation">
         <p:with-option name="publication-dir" select="$publication-dir">
             <p:empty/>
@@ -138,6 +202,9 @@
         <p:with-option name="daisy-dir" select="$daisy-dir">
             <p:empty/>
         </p:with-option>
+        <p:input port="content-flow">
+            <p:pipe port="htmls" step="pre-processing"/>
+        </p:input>
         <p:input port="resolve-links-mapping">
             <p:pipe port="result" step="resolve-links-mapping"/>
         </p:input>
@@ -215,7 +282,7 @@
         <p:with-option name="publication-dir" select="$publication-dir"/>
         <p:with-option name="content-dir" select="$content-dir"/>
         <p:input port="daisy-smil">
-            <p:pipe port="result" step="smil-flow.in-memory"/>
+            <p:pipe port="smils" step="pre-processing"/>
         </p:input>
         <p:input port="content">
             <p:pipe port="content" step="content-docs"/>
@@ -225,7 +292,7 @@
     <pxi:daisy202-to-epub3-resources name="resources">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">List all referenced auxilliary resources (audio, stylesheets, images, etc.).</p:documentation>
         <p:input port="daisy-smil">
-            <p:pipe port="result" step="smil-flow.in-memory"/>
+            <p:pipe port="smils" step="pre-processing"/>
         </p:input>
         <p:input port="daisy-content">
             <p:pipe port="content" step="content-docs"/>
@@ -248,7 +315,7 @@
             <p:pipe port="fileset" step="navigation"/>
         </p:input>
         <p:input port="ncc">
-            <p:pipe port="result" step="ncc"/>
+            <p:pipe port="ncc" step="pre-processing"/>
         </p:input>
         <p:input port="navigation">
             <p:pipe port="navigation" step="navigation"/>
