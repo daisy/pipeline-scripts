@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-      <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>modules-parent</artifactId>
-      <version>1.0</version>
-      <relativePath/>
+    <groupId>org.daisy.pipeline.modules</groupId>
+    <artifactId>modules-parent</artifactId>
+    <version>1.1</version>
+    <relativePath />
   </parent>
 
   <artifactId>epub3-to-daisy202</artifactId>
@@ -15,57 +15,5 @@
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: EPUB3 to DAISY 2.02</name>
-
-  <repositories>
-      <repository>
-          <id>central</id>
-          <name>Maven Central</name>
-          <url>http://repo.maven.apache.org/maven2/</url>
-      </repository>
-  </repositories>
-
-  <pluginRepositories>
-      <pluginRepository>
-          <id>sonatype-nexus-snapshots</id>
-          <name>oss.sonatype.org github Release Repository Snapshot Repository</name>
-          <releases>
-              <enabled>false</enabled>
-          </releases>
-          <snapshots>
-              <enabled>true</enabled>
-          </snapshots>
-          <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-      </pluginRepository>
-  </pluginRepositories>
-
-  <!--<build>
-    <plugins>
-      <plugin>
-        <groupId>org.daisy.maven</groupId>
-        <artifactId>xproc-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>xprocspec</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.daisy.maven</groupId>
-            <artifactId>xproc-engine-calabash</artifactId>
-            <version>1.0-SNAPSHOT</version>
-          </dependency>
-          <dependency>
-            <groupId>org.daisy</groupId>
-            <artifactId>xprocspec</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>-->
 
 </project>
