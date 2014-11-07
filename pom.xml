@@ -20,19 +20,19 @@
 
   <!-- List of the modules to build all-at-once -->
   <modules>
-    <!-- <module>daisy202-to-epub3</module> -->
-    <!-- <module>daisy3-to-epub3</module> -->
+    <module>daisy202-to-epub3</module>
+    <module>daisy3-to-epub3</module>
     <module>dtbook-to-daisy3</module>
     <module>dtbook-to-epub3</module>
-    <!-- <module>dtbook-to-html</module> -->
+    <module>dtbook-to-html</module>
     <module>dtbook-to-odt</module>
     <module>dtbook-to-zedai</module>
-    <!-- <module>dtbook-validator</module> -->
-    <!-- <module>epub3-validator</module> -->
+    <module>dtbook-validator</module>
+    <module>epub3-validator</module>
     <module>epub3-to-daisy202</module>
-    <!-- <module>html-to-dtbook</module> -->
-    <!-- <module>html-to-epub3</module> -->
-    <!-- <module>nimas-fileset-validator</module> -->
+    <module>html-to-dtbook</module>
+    <module>html-to-epub3</module>
+    <module>nimas-fileset-validator</module>
     <module>zedai-to-epub3</module>
     <module>zedai-to-html</module>
   </modules>
@@ -43,12 +43,12 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>daisy202-to-epub3</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>daisy3-to-epub3</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -63,7 +63,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>dtbook-to-html</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -78,7 +78,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>dtbook-validator</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -88,7 +88,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>epub3-validator</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -98,12 +98,12 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>html-to-epub3</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>nimas-fileset-validator</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
