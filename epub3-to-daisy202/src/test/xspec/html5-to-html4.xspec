@@ -145,12 +145,20 @@
     </x:scenario>
 
     <!-- attlist.meta -->
-    <x:scenario label="when processing the meta element attributes">
+    <x:scenario label="when processing the meta element attributes with no @charset">
         <x:context>
-            <html:meta http-equiv="http-equiv" name="name" content="content" charset="charset"/>
+            <html:meta http-equiv="http-equiv" name="name" content="content" />
         </x:context>
         <x:expect label="the http-equiv, name and content attributes should be copied but the charset attribute should be dropped">
             <html:meta http-equiv="http-equiv" name="name" content="content"/>
+        </x:expect>
+    </x:scenario>
+    <x:scenario label="when processing the meta element attributes with @charset">
+        <x:context>
+            <html:meta http-equiv="http-equiv" name="name" content="content" charset="charset"/>
+        </x:context>
+        <x:expect label="the http-equiv and content attributes are generated based on @charset">
+            <html:meta http-equiv="Content-Type" name="name" content="text/html; charset=charset"/>
         </x:expect>
     </x:scenario>
 

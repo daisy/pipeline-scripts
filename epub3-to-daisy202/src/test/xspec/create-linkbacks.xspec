@@ -4,8 +4,8 @@
 
     <x:scenario label="A basic smil/html mapping">
         <x:context>
-            <html:html xml:base="content.html">
-                <smil xml:base="smil.smil" xmlns="">
+            <html:html xml:base="http://example.org/content.html">
+                <smil xml:base="http://example.org/smil.smil" xmlns="">
                     <head/>
                     <body>
                         <seq dur="28.901s">
@@ -23,7 +23,7 @@
             </html:html>
         </x:context>
         <x:expect label="should be inserted as a linkback">
-            <html:html xml:base="content.html">
+            <html:html xml:base="http://example.org/content.html">
                 <html:head/>
                 <html:body>
                     <html:span id="content-id"><html:a href="smil.smil#smil-par">TEXT</html:a></html:span>
