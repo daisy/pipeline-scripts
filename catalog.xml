@@ -7,6 +7,7 @@
   <nextCatalog catalog="./dtbook-to-html/src/main/resources/META-INF/catalog.xml"/>
   <nextCatalog catalog="./dtbook-to-zedai/src/main/resources/META-INF/catalog.xml"/>
   <nextCatalog catalog="./dtbook-validator/src/main/resources/META-INF/catalog.xml"/>
+  <nextCatalog catalog="./epub3-to-daisy202/src/main/resources/META-INF/catalog.xml"/>
   <nextCatalog catalog="./epub3-validator/src/main/resources/META-INF/catalog.xml"/>
   <nextCatalog catalog="./html-to-dtbook/src/main/resources/META-INF/catalog.xml"/>
   <nextCatalog catalog="./html-to-epub3/src/main/resources/META-INF/catalog.xml"/>
