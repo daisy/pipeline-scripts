@@ -22,7 +22,7 @@
   <!--
       TODO: this should be in parent
   -->
-  <dependencyManagement>
+  <!--<dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
@@ -178,7 +178,7 @@
       <artifactId>pax-exam-helper</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+  </dependencies>-->
   
   <build>
     <resources>
@@ -207,6 +207,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>shell-maven-plugin</artifactId>
+        <version>1.0-beta-1</version>
         <executions>
           <execution>
             <id>generate-ott</id>
@@ -234,7 +235,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>org.ops4j.pax.exam</groupId>
         <artifactId>maven-paxexam-plugin</artifactId>
         <executions>
@@ -245,7 +246,32 @@
             </goals>
           </execution>
         </executions>
+      </plugin>-->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <testExcludes>
+                <exclude>DtbookToOdtTest.java</exclude>
+              </testExcludes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
+      <!--<plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/DtbookToOdtTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>-->
     </plugins>
   </build>
   
