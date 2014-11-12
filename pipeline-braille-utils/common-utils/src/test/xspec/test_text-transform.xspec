@@ -4,7 +4,7 @@
                stylesheet="../resources/phony.xsl">
   
   <x:scenario label="test_01">
-    <x:call function="pf:translate">
+    <x:call function="pf:text-transform">
       <x:param select="'(uppercase)'"/>
       <x:param select="'foobar'"/>
     </x:call>

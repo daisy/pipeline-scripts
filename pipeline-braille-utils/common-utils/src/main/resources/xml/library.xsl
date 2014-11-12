@@ -3,7 +3,7 @@
     
     <!--
         Import this library whenever one of the following functions is used:
-        * pf:translate
+        * pf:text-transform
         * brl:unicode-braille-to-escape-sequence
         * brl:unicode-braille-to-nabcc
         * brl:nabcc-to-unicode-braille

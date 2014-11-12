@@ -27,14 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "pf:translate",
+	name = "pf:text-transform",
 	service = { ExtensionFunctionDefinition.class }
 )
 @SuppressWarnings({"serial"})
-public class TranslateDefinition extends ExtensionFunctionDefinition {
+public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("pf",
-			"http://www.daisy.org/ns/pipeline/functions", "translate");
+			"http://www.daisy.org/ns/pipeline/functions", "text-transform");
 	
 	@Reference(
 		name = "TextTransformProvider",
@@ -96,12 +96,12 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					return new StringValue(translator.transform(text)); }
 				catch (Exception e) {
-					logger.error("pf:translate failed", e);
-					throw new XPathException("pf:translate failed"); }
+					logger.error("pf:text-transform failed", e);
+					throw new XPathException("pf:text-transform failed"); }
 			}
 		};
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
+	private static final Logger logger = LoggerFactory.getLogger(TextTransformDefinition.class);
 	
 }

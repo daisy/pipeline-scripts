@@ -339,7 +339,7 @@
         <xsl:variable name="system" as="xs:string" select="$text-transform[1]/@value"/>
         <xsl:choose>
             <xsl:when test="$system='translator'">
-                <xsl:value-of select="pf:translate($text-transform[2]/@value, string(.))"/>
+                <xsl:value-of select="pf:text-transform($text-transform[2]/@value, string(.))"/>
             </xsl:when>
             <xsl:when test="$system='prefix'">
                 <xsl:value-of select="$text-transform[2]/@value"/>
