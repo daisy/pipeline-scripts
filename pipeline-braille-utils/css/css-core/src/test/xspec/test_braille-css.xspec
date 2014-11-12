@@ -125,7 +125,7 @@
 		<x:context mode="css:serialize">
 			<css:string target="#foo" name="print-page"/>
 		</x:context>
-		<x:expect label="result" select="'target-string(#foo, print-page)'"/>
+		<x:expect label="result" select="'target-string(url(&quot;#foo&quot;), print-page)'"/>
 	</x:scenario>
 	
 	<x:scenario label="test_12">
