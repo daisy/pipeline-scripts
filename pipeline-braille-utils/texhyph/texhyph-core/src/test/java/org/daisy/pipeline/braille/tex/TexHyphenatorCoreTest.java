@@ -38,8 +38,8 @@ public class TexHyphenatorCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", provider.get(asURI("foobar.tex")).hyphenate("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get(asURI("foobar.tex")).hyphenate("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.tex')").iterator().next().hyphenate("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.tex')").iterator().next().hyphenate("foo-bar"));
 	}
 	
 	@Configuration
@@ -56,7 +56,7 @@ public class TexHyphenatorCoreTest {
 			bundlesAndDependencies("net.sf.saxon.saxon-he"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle(),
+			thisBundle(true),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

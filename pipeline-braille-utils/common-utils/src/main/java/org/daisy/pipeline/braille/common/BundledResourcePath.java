@@ -18,16 +18,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.daisy.pipeline.braille.common.util.Iterators.partition;
 import static org.daisy.pipeline.braille.common.util.Files;
+import static org.daisy.pipeline.braille.common.util.Iterators.partition;
+import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPattern;
+import static org.daisy.pipeline.braille.common.util.Tuple2;
 import static org.daisy.pipeline.braille.common.util.URIs;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.normalize;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 import static org.daisy.pipeline.braille.common.util.URLs.decode;
-import static org.daisy.pipeline.braille.common.util.Pair;
-import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPattern;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
@@ -126,7 +126,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 				Predicates.<URI>alwaysTrue();
 		Function<String,Collection<String>> getFilePaths = new Function<String,Collection<String>>() {
 			public Collection<String> apply(String path) {
-				Pair<Collection<String>,Collection<String>> entries = partition(
+				Tuple2<Collection<String>,Collection<String>> entries = partition(
 					Iterators.<String>forEnumeration(bundle.getEntryPaths(path)),
 					new Predicate<String>() { public boolean apply(String s) { return s.endsWith("/"); }});
 				Collection<String> files = new ArrayList<String>();

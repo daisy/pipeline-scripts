@@ -13,40 +13,57 @@ import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.pipeline.braille.common.Provider;
-import org.daisy.pipeline.braille.common.TranslatorProvider;
+import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
-public class DotifyTranslatorProvider implements TranslatorProvider<DotifyTranslator> {
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Component(
+	name = "org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider",
+	service = { DotifyTranslatorProvider.class, TextTransform.Provider.class }
+)
+public class DotifyTranslatorProvider implements TextTransform.Provider<DotifyTranslator> {
 	
 	/**
 	 * Try to find a translator based on the given locale.
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public DotifyTranslator get(Locale query) {
-		return cachedProvider.get(query);
+	public Iterable<DotifyTranslator> get(Locale query) {
+		return translators.get(query);
 	}
 	
-	public DotifyTranslator get(String query) {
-		try {
-			Map<String,Optional<String>> q = parseQuery(query);
-			if (q.containsKey("locale")) {
-				return get(parseLocale(q.get("locale").get())); }}
-		catch (Exception e) {}
-		return null;
+	public Iterable<DotifyTranslator> get(String query) {
+		Map<String,Optional<String>> q = parseQuery(query);
+		if (q.containsKey("locale"))
+			return get(parseLocale(q.get("locale").get()));
+		return Optional.<DotifyTranslator>absent().asSet();
 	}
 	
 	private final List<BrailleTranslatorFactoryService> factoryServices = new ArrayList<BrailleTranslatorFactoryService>();
 	
+	@Reference(
+		name = "BrailleTranslatorFactoryService",
+		unbind = "unbindBrailleTranslatorFactoryService",
+		service = BrailleTranslatorFactoryService.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
 	protected void bindBrailleTranslatorFactoryService(BrailleTranslatorFactoryService service) {
 		factoryServices.add(service);
-		cachedProvider.invalidateCache();
+		translators.invalidateCache();
 	}
 	
 	protected void unbindBrailleTranslatorFactoryService(BrailleTranslatorFactoryService service) {
 		factoryServices.remove(service);
-		cachedProvider.invalidateCache();
+		translators.invalidateCache();
 	}
 	
 	private BrailleTranslator newTranslator(String locale, String grade) throws TranslatorConfigurationException {
@@ -57,22 +74,19 @@ public class DotifyTranslatorProvider implements TranslatorProvider<DotifyTransl
 		                           + locale.toLowerCase() + "(" + grade.toUpperCase() + ")");
 	}
 	
-	private final Provider<Locale,DotifyTranslator> provider
-		= LocaleBasedProvider.<DotifyTranslator>newInstance(
-			new Provider<Locale,DotifyTranslator>() {
-				public DotifyTranslator get(Locale locale) {
+	private final CachedProvider<Locale,DotifyTranslator> translators
+		= CachedProvider.<Locale,DotifyTranslator>newInstance(
+			new LocaleBasedProvider<Locale,DotifyTranslator>() {
+				public Iterable<DotifyTranslator> delegate(Locale locale) {
 					try {
 						BrailleTranslator translator = newTranslator(
 							Locales.toString(locale, '-'), BrailleTranslatorFactory.MODE_UNCONTRACTED);
 						translator.setHyphenating(false);
-						return new DotifyTranslator(translator); }
+						return Optional.<DotifyTranslator>of(new DotifyTranslator(translator)).asSet(); }
 					catch (TranslatorConfigurationException e) {
-						throw new RuntimeException(e); }
-				}
-			}
-	);
+						logger.warn("Could not create translator for locale " + locale, e); }
+					return Optional.<DotifyTranslator>absent().asSet(); }});
 	
-	private final CachedProvider<Locale,DotifyTranslator> cachedProvider
-		= CachedProvider.<Locale,DotifyTranslator>newInstance(provider);
+	private static final Logger logger = LoggerFactory.getLogger(DotifyTranslatorProvider.class);
 	
 }

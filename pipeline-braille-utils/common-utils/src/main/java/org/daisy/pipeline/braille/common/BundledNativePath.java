@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -45,14 +46,14 @@ public class BundledNativePath extends BundledResourcePath implements Provider<S
 	/**
 	 * Get an executable or a shared library.
 	 * @param name The name (without the extension)
-	 * @return The executable or library, or null.
+	 * @return A collection of executables or libraries.
 	 */
-	public URI get(String name) {
+	public Iterable<URI> get(String name) {
 		URI path;
 		if ((path = getExecutable(name)) != null) {}
 		else if ((path = getSharedLibrary(name)) != null) {}
-		else { return null; }
-		return canonicalize(path);
+		else { return Optional.<URI>absent().asSet(); }
+		return Optional.<URI>of(canonicalize(path)).asSet();
 	}
 	
 	private URI getExecutable(String name) {

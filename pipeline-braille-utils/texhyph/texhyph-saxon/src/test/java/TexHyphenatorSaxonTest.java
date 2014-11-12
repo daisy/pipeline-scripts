@@ -46,7 +46,7 @@ public class TexHyphenatorSaxonTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("texhyph-core"),
-			thisBundle(),
+			thisBundle(true),
 			xspecBundles(),
 			junitBundles()
 		);

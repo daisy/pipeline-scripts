@@ -97,34 +97,27 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <executions>
-          <!--
-              Make the manifest available when the tests are executed
-          -->
-          <execution>
-            <id>manifest-before-test</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/liblouis-jna-impl.xml,
               OSGI-INF/liblouis-table-registry.xml,
               OSGI-INF/liblouisutdml-config-registry.xml,
               OSGI-INF/liblouisutdml-process-builder-impl.xml
             </Service-Component>
             <Export-Package>org.daisy.pipeline.braille.liblouis</Export-Package>
             <Private-Package>org.daisy.pipeline.braille.liblouis.impl</Private-Package>
+            <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>
+        <executions>
+          <execution>
+            <id>bundle-before-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -1,18 +1,20 @@
 import java.io.File;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Optional;
+
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.Translator;
-import org.daisy.pipeline.braille.common.TranslatorProvider;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
+import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 
-import static org.daisy.pipeline.pax.exam.Options.brailleModule;
-import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
@@ -32,7 +34,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.osgi.framework.BundleContext;
@@ -47,7 +48,7 @@ public class CommonUtilsTest {
 			logbackConfigFile(),
 			logbackBundles(),
 			felixDeclarativeServices(),
-			thisBundle(),
+			thisBundle(true),
 			xspecBundles(),
 			junitBundles()
 		);
@@ -57,17 +58,27 @@ public class CommonUtilsTest {
 	private BundleContext context;
 	
 	@Before
-	public void registerUppercaseTranslatorProvider() {
-		context.registerService(
-			TranslatorProvider.class.getName(),
-			new TranslatorProvider<Translator>() {
-				public Translator get(String query) {
-					if (query.equals("(uppercase)"))
-						return new Translator() {
-							public String translate(String text) {
-								return text.toUpperCase(); }};
-					return null; }},
-			new Hashtable<String,Object>());
+	public void registerUppercaseTransformProvider() {
+		final UppercaseTransform transform = new UppercaseTransform();
+		TextTransform.Provider<UppercaseTransform> provider
+			= new TextTransform.Provider<UppercaseTransform>() {
+				public Iterable<UppercaseTransform> get(String query) {
+					return Optional.<UppercaseTransform>fromNullable(
+						query.equals("(uppercase)") ? transform : null).asSet(); }};
+		Hashtable<String,Object> properties = new Hashtable<String,Object>();
+		context.registerService(TextTransform.Provider.class.getName(), provider, properties);
+	}
+	
+	private static class UppercaseTransform extends ContextUnawareTextTransform {
+		public String transform(String text) {
+			return text.toUpperCase();
+		}
+	}
+	
+	@Test
+	public void testExtractHyphens() throws Exception {
+		assertEquals("[0, 0, 1, 0, 0]", Arrays.toString(extractHyphens("foo\u00ADbar", '\u00AD')._2));
+		assertEquals("[0, 0, 0, 2, 0, 0]", Arrays.toString(extractHyphens("foo-\u200Bbar", null, '\u200B')._2));
 	}
 	
 	@Inject

@@ -5,9 +5,6 @@
         Import this library whenever one of the following functions is used:
         * louis:translate
         * louis:hyphenate
-        * louis:get-typeform
     -->
-    
-    <xsl:import href="get-typeform.xsl"/>
     
 </xsl:stylesheet>

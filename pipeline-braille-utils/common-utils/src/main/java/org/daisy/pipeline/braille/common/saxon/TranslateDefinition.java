@@ -2,6 +2,7 @@ package org.daisy.pipeline.braille.common.saxon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -12,40 +13,52 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.common.Cached;
-import org.daisy.pipeline.braille.common.Translator;
-import org.daisy.pipeline.braille.common.TranslatorProvider;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.common.TextTransform;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings({"serial","rawtypes","unchecked"})
+@Component(
+	name = "pf:translate",
+	service = { ExtensionFunctionDefinition.class }
+)
+@SuppressWarnings({"serial"})
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("pf",
 			"http://www.daisy.org/ns/pipeline/functions", "translate");
 	
-	protected void bindTranslatorProvider(TranslatorProvider provider) {
+	@Reference(
+		name = "TextTransformProvider",
+		unbind = "unbindTextTransformProvider",
+		service = TextTransform.Provider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void bindTextTransformProvider(TextTransform.Provider<?> provider) {
 		providers.add(provider);
-		logger.debug("Adding braille translator provider: {}", provider);
+		logger.debug("Adding TextTransform provider: {}", provider);
 	}
 	
-	protected void unbindTranslatorProvider(TranslatorProvider provider) {
+	protected void unbindTextTransformProvider(TextTransform.Provider<?> provider) {
 		providers.remove(provider);
 		translators.invalidateCache();
-		logger.debug("Removing braille translator provider: {}", provider);
+		logger.debug("Removing TextTransform provider: {}", provider);
 	}
 	
-	private List<TranslatorProvider> providers = new ArrayList<TranslatorProvider>();
+	private List<Provider<String,? extends TextTransform>> providers = new ArrayList<Provider<String,? extends TextTransform>>();
 	
-	private Cached<String,Translator> translators = new Cached<String,Translator>() {
-		public Translator delegate(String query) {
-			for (TranslatorProvider provider : providers) {
-				Translator t = (Translator)provider.get(query);
-				if (t != null) return t; }
-			return null;
-		}
-	};
+	private CachedProvider<String,TextTransform> translators
+		= CachedProvider.<String,TextTransform>newInstance(
+			DispatchingProvider.<String,TextTransform>newInstance(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;
@@ -77,10 +90,11 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = arguments[0].head().getStringValue();
 					String text = arguments[1].head().getStringValue();
-					Translator translator = translators.get(query);
-					if (translator == null)
-						throw new RuntimeException("Could not find a translator for query: " + query);
-					return new StringValue(translator.translate(text)); }
+					TextTransform translator;
+					try { translator = translators.get(query).iterator().next(); }
+					catch (NoSuchElementException e) {
+						throw new RuntimeException("Could not find a translator for query: " + query); }
+					return new StringValue(translator.transform(text)); }
 				catch (Exception e) {
 					logger.error("pf:translate failed", e);
 					throw new XPathException("pf:translate failed"); }

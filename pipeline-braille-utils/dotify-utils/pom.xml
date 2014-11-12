@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-formatter</artifactId>
+      <artifactId>dotify-formatter</artifactId>
       <scope>runtime</scope>
     </dependency>
   </dependencies>

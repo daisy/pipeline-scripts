@@ -49,7 +49,7 @@ public class LiblouisSaxonTest {
 			brailleModule("css-core"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
-			thisBundle(),
+			thisBundle(true),
 			xspecBundles(),
 			junitBundles()
 		);

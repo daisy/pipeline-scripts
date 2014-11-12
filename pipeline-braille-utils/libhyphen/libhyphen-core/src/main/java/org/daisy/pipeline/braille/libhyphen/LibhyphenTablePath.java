@@ -3,9 +3,12 @@ package org.daisy.pipeline.braille.libhyphen;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
-import org.osgi.service.component.ComponentContext;
+import com.google.common.base.Functions;
+import static com.google.common.base.Functions.toStringFunction;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 import org.daisy.pipeline.braille.common.BundledResourcePath;
 import org.daisy.pipeline.braille.common.Provider;
@@ -13,15 +16,12 @@ import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPatte
 import static org.daisy.pipeline.braille.common.util.URLs.decode;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
-import com.google.common.base.Functions;
-import static com.google.common.base.Functions.toStringFunction;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import org.osgi.service.component.ComponentContext;
 
 public class LibhyphenTablePath extends BundledResourcePath implements LibhyphenTableProvider {
 	
 	@Override
-	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?,?> properties) throws Exception {
 		if (properties.get(UNPACK) != null)
 			throw new IllegalArgumentException(UNPACK + " property not supported");
 		super.activate(context, properties);
@@ -32,12 +32,12 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 	 * Lookup a table based on a locale, using the fact that table names are
 	 * always in the form `hyph_language[_COUNTRY[_variant]].dic`
 	 */
-	public URI get(Locale locale) {
+	public Iterable<URI> get(Locale locale) {
 		return provider.get(locale);
 	}
 	
-	private Provider<Locale,URI> provider = new CachedProvider<Locale,URI>() {
-		public URI delegate(Locale locale) {
+	private Provider<Locale,URI> provider = new LocaleBasedProvider<Locale,URI>() {
+		public Iterable<URI> delegate(Locale locale) {
 			String language = locale.getLanguage().toLowerCase();
 			String country = locale.getCountry().toUpperCase();
 			String variant = locale.getVariant().toLowerCase();
@@ -46,19 +46,19 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 				resource = asURI(String.format("hyph_%s_%s_%s.dic", language, country, variant));
 			else if (!"".equals(country))
 				resource = asURI(String.format("hyph_%s_%s.dic", language, country));
-			else {
+			else
 				resource = asURI(String.format("hyph_%s.dic", language));
-				if (!resources.contains(resource))
-					try {
-						return Iterables.<URI>find(
-							resources,
-							Predicates.compose(
-								matchesGlobPattern(String.format("hyph_%s_*.dic", language)),
-								Functions.compose(decode, toStringFunction()))); }
-					catch (NoSuchElementException e) {}}
 			if (resources.contains(resource))
-				return canonicalize(resource);
-			return null;
+				return Optional.<URI>of(canonicalize(resource)).asSet();
+			return Optional.<URI>absent().asSet();
+		}
+		@Override
+		public Iterable<URI> fallback(Locale locale) {
+			return Iterables.<URI>filter(
+				resources,
+				Predicates.compose(
+					matchesGlobPattern(String.format("hyph_%s_*.dic", locale.getLanguage().toLowerCase())),
+					Functions.compose(decode, toStringFunction())));
 		}
 	};
 }

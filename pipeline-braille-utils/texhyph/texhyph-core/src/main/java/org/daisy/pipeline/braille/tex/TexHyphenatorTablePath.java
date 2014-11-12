@@ -5,20 +5,19 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-import org.osgi.service.component.ComponentContext;
-
 import org.daisy.pipeline.braille.common.BundledResourcePath;
 import org.daisy.pipeline.braille.common.Provider;
-
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+
+import org.osgi.service.component.ComponentContext;
 
 public class TexHyphenatorTablePath extends BundledResourcePath implements TexHyphenatorTableProvider {
 	
 	private static final String MANIFEST = "manifest";
 	
 	@Override
-	protected void activate(ComponentContext context, Map<?, ?> properties) throws Exception {
+	protected void activate(ComponentContext context, Map<?,?> properties) throws Exception {
 		if (properties.get(UNPACK) != null)
 			throw new IllegalArgumentException(UNPACK + " property not supported");
 		super.activate(context, properties);
@@ -30,7 +29,7 @@ public class TexHyphenatorTablePath extends BundledResourcePath implements TexHy
 			initProvider(manifestURL); }
 	}
 	
-	public URI get(Locale locale) {
+	public Iterable<URI> get(Locale locale) {
 		return provider.get(locale);
 	}
 	

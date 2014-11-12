@@ -3,11 +3,13 @@ import java.util.Hashtable;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Optional;
+
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.Translator;
-import org.daisy.pipeline.braille.common.TranslatorProvider;
+import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
@@ -62,14 +64,15 @@ public class CSSCoreTest {
 	@Before
 	public void registerUppercaseTranslatorProvider() {
 		context.registerService(
-			TranslatorProvider.class.getName(),
-			new TranslatorProvider<Translator>() {
-				public Translator get(String query) {
-					if (query.equals("(uppercase)"))
-						return new Translator() {
-							public String translate(String text) {
-								return text.toUpperCase(); }};
-					return null; }},
+			TextTransform.Provider.class.getName(),
+			new TextTransform.Provider<TextTransform>() {
+				public Iterable<TextTransform> get(String query) {
+					return Optional.<TextTransform>fromNullable(
+						query.equals("(uppercase)")
+							? new ContextUnawareTextTransform() {
+								public String transform(String text) {
+									return text.toUpperCase(); }}
+							: null).asSet(); }},
 			new Hashtable<String,Object>());
 	}
 	

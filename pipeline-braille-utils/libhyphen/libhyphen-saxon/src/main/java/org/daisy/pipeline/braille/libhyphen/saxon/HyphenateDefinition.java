@@ -1,5 +1,7 @@
 package org.daisy.pipeline.braille.libhyphen.saxon;
 
+import java.util.NoSuchElementException;
+
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -11,10 +13,20 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.libhyphen.Libhyphen;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Component(
+	name = "hyphen:hyphenate",
+	service = { ExtensionFunctionDefinition.class }
+)
 @SuppressWarnings("serial")
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
@@ -23,6 +35,13 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private Libhyphen libhyphen = null;
 	
+	@Reference(
+		name = "Libhyphen",
+		unbind = "unbindLibhyphen",
+		service = Libhyphen.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
 	protected void bindLibhyphen(Libhyphen libhyphen) {
 		this.libhyphen = libhyphen;
 	}
@@ -57,13 +76,15 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
-			
-			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();
+					LibhyphenHyphenator hyphenator;
+					try { hyphenator = libhyphen.get(query).iterator().next(); }
+					catch (NoSuchElementException e) {
+						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(libhyphen.get(query).hyphenate(text)); }
+					return new StringValue(hyphenator.hyphenate(text)); }
 				catch (Exception e) {
 					logger.error("hyphen:hyphenate failed", e);
 					throw new XPathException("hyphen:hyphenate failed"); }
@@ -72,4 +93,5 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);
+	
 }

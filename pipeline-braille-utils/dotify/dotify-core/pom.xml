@@ -30,8 +30,18 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
-
+  
   <build>
     <plugins>
       <plugin>
@@ -39,9 +49,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>
-              OSGI-INF/dotify-translator-provider.xml
-            </Service-Component>
+            <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>
       </plugin>

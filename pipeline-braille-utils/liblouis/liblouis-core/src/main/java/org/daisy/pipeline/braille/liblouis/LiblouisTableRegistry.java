@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.common.base.Predicate;
+
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourcePath;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
@@ -16,20 +18,18 @@ import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPatte
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
-import com.google.common.base.Predicate;
-
 public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements LiblouisTableProvider, LiblouisTableResolver {
 	
 	@Override
 	protected void register(LiblouisTablePath path) {
 		super.register(path);
-		cachedProvider.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	@Override
 	protected void unregister(LiblouisTablePath path) {
 		super.unregister(path);
-		cachedProvider.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	/**
@@ -37,18 +37,16 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public URI[] get(Locale query) {
-		return cachedProvider.get(query);
+	public Iterable<URI[]> get(Locale query) {
+		return provider.get(query);
 	}
 	
-	private final DispatchingProvider<Locale,URI[]> dispatchingProvider = new DispatchingProvider<Locale,URI[]>() {
-		public Iterable<? extends Provider<Locale,URI[]>> dispatch() {
-			return paths.values();
-		}
-	};
-	
-	private final Provider<Locale,URI[]> provider = LocaleBasedProvider.<URI[]>newInstance(dispatchingProvider);
-	private final CachedProvider<Locale,URI[]> cachedProvider = CachedProvider.<Locale,URI[]>newInstance(provider);
+	private final CachedProvider<Locale,URI[]> provider
+		= CachedProvider.<Locale,URI[]>newInstance(
+			LocaleBasedProvider.<URI[]>newInstance(
+				new DispatchingProvider<Locale,URI[]>() {
+					public Iterable<? extends Provider<Locale,URI[]>> dispatch() {
+						return paths.values(); }}));
 	
 	@Override
 	public URL resolve(URI resource) {

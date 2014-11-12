@@ -1,10 +1,10 @@
-package org.daisy.pipeline.braille.tex;
+package org.daisy.pipeline.braille.libhyphen;
 
 import java.net.URI;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
 
-public abstract class TexHyphenator implements Hyphenator {
+public abstract class LibhyphenHyphenator implements Hyphenator {
 	
 	public String transform(String text) {
 		return hyphenate(text);
@@ -14,6 +14,6 @@ public abstract class TexHyphenator implements Hyphenator {
 		return hyphenate(text);
 	}
 	
-	public abstract URI asTexHyphenatorTable();
+	public abstract URI asLibhyphenTable();
 	
 }

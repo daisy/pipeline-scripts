@@ -46,52 +46,6 @@
       <artifactId>css-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!--
-        test dependencies
-    -->
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xspec-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>saxon-adapter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>pax-exam-helper</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.ops4j.pax.exam</groupId>
-        <artifactId>maven-paxexam-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-depends-file</id>
-            <goals>
-              <goal>generate-depends-file</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
   
 </project>

@@ -1,21 +1,36 @@
 package org.daisy.pipeline.braille.liblouis.saxon;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.AtomicSequence;
 import net.sf.saxon.om.Sequence;
+import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.BooleanValue;
+import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.liblouis.Liblouis;
+import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Component(
+	name = "louis:translate",
+	service = { ExtensionFunctionDefinition.class }
+)
 @SuppressWarnings("serial")
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
@@ -24,6 +39,13 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private Liblouis liblouis = null;
 	
+	@Reference(
+		name = "Liblouis",
+		unbind = "unbindLiblouis",
+		service = Liblouis.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
 	protected void bindLiblouis(Liblouis liblouis) {
 		this.liblouis = liblouis;
 	}
@@ -49,30 +71,29 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] {
 				SequenceType.SINGLE_STRING,
-				SequenceType.SINGLE_STRING,
-				SequenceType.SINGLE_BOOLEAN,
-				SequenceType.OPTIONAL_STRING};
+				SequenceType.ATOMIC_SEQUENCE,
+				SequenceType.ATOMIC_SEQUENCE};
 	}
 	
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-		return SequenceType.SINGLE_STRING;
+		return SequenceType.ATOMIC_SEQUENCE;
 	}
 	
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = ((AtomicSequence)arguments[0]).getStringValue();
-					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					boolean hyphenated = false;
-					byte[] typeform = null;
+					String query = arguments[0].head().getStringValue();
+					LiblouisTranslator translator;
+					try { translator = liblouis.get(query).iterator().next(); }
+					catch (NoSuchElementException e) {
+						throw new RuntimeException("Could not find a translator for query: " + query); }
+					String[] text = sequenceToArray(arguments[1]);
 					if (arguments.length > 2) {
-						hyphenated = ((BooleanValue)arguments[2]).getBooleanValue();
-						if (arguments.length > 3) {
-							typeform = ((AtomicSequence)arguments[3]).getStringValue().getBytes();
-							for (int i=0; i < typeform.length; i++)
-								typeform[i] -= 48; }}
-					return new StringValue(liblouis.get(query).translate(text, hyphenated, typeform)); }
+						String[] style = sequenceToArray(arguments[2]);
+						return arrayToSequence(translator.transform(text, style)); }
+					else
+						return arrayToSequence(translator.transform(text)); }
 				catch (Exception e) {
 					logger.error("louis:translate failed", e);
 					throw new XPathException("louis:translate failed"); }
@@ -80,5 +101,20 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		};
 	}
 	
+	private static String[] sequenceToArray(Sequence seq) throws XPathException {
+		List<String> list = new ArrayList<String>();
+		for (SequenceIterator i = seq.iterate(); i.next() != null;)
+			list.add(i.current().getStringValue());
+		return list.toArray(new String[list.size()]);
+	}
+	
+	private static Sequence arrayToSequence(String[] array) {
+		List<StringValue> list = new ArrayList<StringValue>();
+		for (String s : array)
+			list.add(new StringValue(s));
+		return new SequenceExtent(list);
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
+	
 }

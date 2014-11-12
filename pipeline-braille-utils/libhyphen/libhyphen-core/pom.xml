@@ -79,7 +79,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
+  
   <build>
     <plugins>
       <plugin>
@@ -97,30 +97,23 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <executions>
-          <!--
-              Make the manifest available when the tests are executed
-          -->
-          <execution>
-            <id>manifest-before-test</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/libhyphen.xml,
               OSGI-INF/libhyphen-table-registry.xml
             </Service-Component>
+            <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>
+        <executions>
+          <execution>
+            <id>bundle-before-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

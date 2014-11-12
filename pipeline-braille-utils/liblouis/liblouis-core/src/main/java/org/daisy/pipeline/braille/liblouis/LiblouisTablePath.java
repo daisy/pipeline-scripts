@@ -34,14 +34,14 @@ public class LiblouisTablePath extends BundledResourcePath implements LiblouisTa
 			initLocaleBasedProvider(manifestURL); }
 	}
 	
-	private Provider<Locale,URI[]> localeBasedProvider = new Provider.NULL<Locale,URI[]>();
+	private Provider<Locale,URI[]> provider = new Provider.NULL<Locale,URI[]>();
 	
-	public URI[] get(Locale locale) {
-		return localeBasedProvider.get(locale);
+	public Iterable<URI[]> get(Locale locale) {
+		return provider.get(locale);
 	}
 	
 	private void initLocaleBasedProvider(URL manifestURL) {
-		localeBasedProvider = new SimpleMappingProvider<Locale,URI[]>(manifestURL) {
+		provider = new SimpleMappingProvider<Locale,URI[]>(manifestURL) {
 			public Locale parseKey(String locale) {
 				return parseLocale(locale);
 			}

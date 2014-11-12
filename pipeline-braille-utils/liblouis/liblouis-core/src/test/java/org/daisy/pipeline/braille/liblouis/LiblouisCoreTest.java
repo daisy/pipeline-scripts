@@ -1,12 +1,15 @@
 package org.daisy.pipeline.braille.liblouis;
 
 import java.net.URI;
-
 import javax.inject.Inject;
 
+import com.google.common.collect.Iterables;
+
+import org.daisy.pipeline.braille.common.Hyphenator;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
@@ -21,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.ops4j.pax.exam.Configuration;
@@ -65,7 +67,7 @@ public class LiblouisCoreTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
-			thisBundle(),
+			thisBundle(true),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);
@@ -83,32 +85,44 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testGetTableFromLocale() {
-		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableProvider.get(parseLocale("foo")));
-		assertNull(tableProvider.get(parseLocale("bar")));
+		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableProvider.get(parseLocale("foo")).iterator().next());
+		assertNull(Iterables.<URI[]>getFirst(tableProvider.get(parseLocale("bar")), null));
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery1() {
-		assertNotNull(liblouis.get("(locale:foo)"));
+		liblouis.get("(locale:foo)").iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery2() {
-		assertNotNull(liblouis.get("(table:'foobar.cti')"));
+		liblouis.get("(table:'foobar.cti')").iterator().next();
 	}
 	
 	@Test
 	public void testTranslate() {
-		assertEquals("foobar", liblouis.get(new URI[]{asURI("foobar.cti")}).translate("foobar", false, null));
+		assertEquals("foobar", liblouis.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
+	}
+	
+	@Test
+	public void testTranslateStyled() {
+		assertEquals("foobar", liblouis.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
+	}
+	
+	@Test
+	public void testTranslateSegments() {
+		LiblouisTranslator translator = liblouis.get("(table:'foobar.cti')").iterator().next();
+		assertEquals(new String[]{"foo","bar"}, translator.transform(new String[]{"foo","bar"}));
+		assertEquals(new String[]{"foo","","bar"}, translator.transform(new String[]{"foo","","bar"}));
 	}
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", liblouis.get(new URI[]{asURI("foobar.cti"),asURI("foobar.dic")}).hyphenate("foobar"));
+		assertEquals("foo\u00ADbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foobar"));
 	}
 	
 	@Test
 	public void testHyphenateCompoundWord() {
-		assertEquals("foo-\u200Bbar", liblouis.get(new URI[]{asURI("foobar.cti"),asURI("foobar.dic")}).hyphenate("foo-bar"));
+		assertEquals("foo-\u200Bbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foo-bar"));
 	}
 }

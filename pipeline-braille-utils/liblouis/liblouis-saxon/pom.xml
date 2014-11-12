@@ -23,12 +23,21 @@
       <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
     <!--
@@ -87,27 +96,20 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <_dsannotations>*</_dsannotations>
+          </instructions>
+        </configuration>
         <executions>
           <execution>
-            <id>manifest-before-test</id>
+            <id>bundle-before-test</id>
             <phase>generate-test-resources</phase>
             <goals>
-              <goal>manifest</goal>
+              <goal>bundle</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Service-Component>
-              OSGI-INF/liblouis-translate.xml,
-              OSGI-INF/liblouis-hyphenate.xml
-            </Service-Component>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -48,7 +48,7 @@ public class DotifySaxonTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("dotify-core"),
-			thisBundle(),
+			thisBundle(true),
 			xspecBundles(),
 			junitBundles()
 		);

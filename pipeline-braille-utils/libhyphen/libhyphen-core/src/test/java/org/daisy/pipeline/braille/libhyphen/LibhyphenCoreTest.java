@@ -39,8 +39,8 @@ public class LibhyphenCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", libhyphen.get(asURI("foobar.dic")).hyphenate("foobar"));
-		assertEquals("foo-\u200Bbar", libhyphen.get(asURI("foobar.dic")).hyphenate("foo-bar"));
+		assertEquals("foo\u00ADbar", libhyphen.get("(table:'foobar.dic')").iterator().next().hyphenate("foobar"));
+		assertEquals("foo-\u200Bbar", libhyphen.get("(table:'foobar.dic')").iterator().next().hyphenate("foo-bar"));
 	}
 	
 	@Configuration
@@ -59,7 +59,7 @@ public class LibhyphenCoreTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			forThisPlatform(brailleModule("libhyphen-native")),
-			thisBundle(),
+			thisBundle(true),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

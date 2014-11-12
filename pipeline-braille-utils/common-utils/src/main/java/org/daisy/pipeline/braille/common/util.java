@@ -37,15 +37,90 @@ public abstract class util {
 		public T3 apply(T1 object1, T2 object2);
 	}
 	
-	public static class Pair<T1,T2> {
+	public static class Tuple2<T1,T2> {
 		public final T1 _1;
 		public final T2 _2;
-		public Pair(T1 _1, T2 _2) {
+		public Tuple2(T1 _1, T2 _2) {
 			this._1 = _1;
 			this._2 = _2;
 		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((_1 == null) ? 0 : _1.hashCode());
+			result = prime * result + ((_2 == null) ? 0 : _2.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Tuple2<?,?> other = (Tuple2<?,?>) obj;
+			if (_1 == null) {
+				if (other._1 != null)
+					return false;
+			} else if (!_1.equals(other._1))
+				return false;
+			if (_2 == null) {
+				if (other._2 != null)
+					return false;
+			} else if (!_2.equals(other._2))
+				return false;
+			return true;
+		}
 	}
 	
+	public static class Tuple3<T1,T2,T3> {
+		public final T1 _1;
+		public final T2 _2;
+		public final T3 _3;
+		public Tuple3(T1 _1, T2 _2, T3 _3) {
+			this._1 = _1;
+			this._2 = _2;
+			this._3 = _3;
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((_1 == null) ? 0 : _1.hashCode());
+			result = prime * result + ((_2 == null) ? 0 : _2.hashCode());
+			result = prime * result + ((_3 == null) ? 0 : _3.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Tuple3<?,?,?> other = (Tuple3<?,?,?>) obj;
+			if (_1 == null) {
+				if (other._1 != null)
+					return false;
+			} else if (!_1.equals(other._1))
+				return false;
+			if (_2 == null) {
+				if (other._2 != null)
+					return false;
+			} else if (!_2.equals(other._2))
+				return false;
+			if (_3 == null) {
+				if (other._3 != null)
+					return false;
+			} else if (!_3.equals(other._3))
+				return false;
+			return true;
+		}
+	}
+		
 	public static abstract class Functions {
 		
 		public static Function0<Void> noOp = new Function0<Void> () {
@@ -82,9 +157,9 @@ public abstract class util {
 			return Iterators.<T,T>fold(iterator, function, seed);
 		}
 		
-		public static <T> Pair<Collection<T>,Collection<T>> partition(Iterator<T> iterator, Predicate<? super T> predicate) {
+		public static <T> Tuple2<Collection<T>,Collection<T>> partition(Iterator<T> iterator, Predicate<? super T> predicate) {
 			Multimap<Boolean,T> map = Multimaps.index(iterator, com.google.common.base.Functions.forPredicate(predicate));
-			return new Pair<Collection<T>,Collection<T>>(map.get(true), map.get(false));
+			return new Tuple2<Collection<T>,Collection<T>>(map.get(true), map.get(false));
 		}
 	}
 
@@ -174,49 +249,51 @@ public abstract class util {
 			return String.valueOf(object).replaceAll("\\s+", " ").trim();
 		}
 		
-		public static Pair<String,byte[]> extractHyphens(String string, Character shy, Character zwsp) {
-			if ((shy == null || !string.contains(String.valueOf(shy))) &&
-			    (zwsp == null || !string.contains(String.valueOf(zwsp))))
-				return new Pair<String,byte[]>(string, null);
-			final byte SHY = 1;
-			final byte ZWSP = 2;
-			StringBuffer unhyphenatedString = new StringBuffer();
-			List<Byte> hyphens = new ArrayList<Byte>();
-			boolean seenShy = false;
-			boolean seenZwsp = false;
-			for (int i = 0; i < string.length(); i++) {
-				char c = string.charAt(i);
-				if (c == shy)
-					seenShy = true;
-				else if (c == zwsp)
-					seenZwsp = true;
-				else {
-					unhyphenatedString.append(c);
-					hyphens.add(seenShy ? SHY : seenZwsp ? ZWSP : 0);
-					seenShy = false;
-					seenZwsp = false; }}
-			hyphens.remove(0);
-			return new Pair<String,byte[]>(unhyphenatedString.toString(), Bytes.toArray(hyphens));
+		public static Tuple2<String,byte[]> extractHyphens(String text, Character... characters) {
+			return extractHyphens(null, text, characters);
 		}
 		
-		public static String insertHyphens(String string, byte hyphens[], Character shy, Character zwsp) {
-			if ((shy == null && zwsp == null) || hyphens == null)
-				return string;
-			final byte SHY = 1;
-			final byte ZWSP = 2;
-			if (string.equals("")) return "";
-			if (hyphens.length != string.length()-1)
-				throw new RuntimeException("hyphens.length must be equal to string.length() - 1");
-			StringBuffer hyphenatedString = new StringBuffer();
+		public static Tuple2<String,byte[]> extractHyphens(byte[] addTo, String text, Character... characters) {
+			StringBuilder unhyphenatedText = new StringBuilder();
+			List<Byte> hyphens = new ArrayList<Byte>();
+			byte hyphen = 0;
+			boolean seenHyphen = false;
+			int j = -1;
+			next_char: for (char c : text.toCharArray()) {
+				j++;
+				if (addTo != null && j > 0)
+					hyphen |= addTo[j - 1];
+				for (int i = 0; i < characters.length; i++)
+					if (characters[i] != null && characters[i] == c) {
+						hyphen |= (1 << i);
+						seenHyphen = true;
+						continue next_char; }
+				unhyphenatedText.append(c);
+				hyphens.add(hyphen);
+				hyphen = 0; }
+			if (seenHyphen) {
+				hyphens.remove(0);
+				return new Tuple2<String,byte[]>(unhyphenatedText.toString(), Bytes.toArray(hyphens)); }
+			else
+				return new Tuple2<String,byte[]>(text, addTo);
+		}
+		
+		public static String insertHyphens(String text, byte hyphens[], Character... characters) {
+			if (text.equals("")) return "";
+			if (hyphens == null) return text;
+			if (hyphens.length != text.length()-1)
+				throw new RuntimeException("hyphens.length must be equal to text.length() - 1");
+			StringBuilder hyphenatedText = new StringBuilder();
 			int i;
 			for (i = 0; i < hyphens.length; i++) {
-				hyphenatedString.append(string.charAt(i));
-				if (shy != null && hyphens[i] == SHY)
-					hyphenatedString.append(shy);
-				else if (zwsp != null && hyphens[i] == ZWSP)
-					hyphenatedString.append(zwsp); }
-			hyphenatedString.append(string.charAt(i));
-			return hyphenatedString.toString();
+				hyphenatedText.append(text.charAt(i));
+				for (int j = 0; j < characters.length; j++) {
+					byte b = (byte)(1 << j);
+					Character c = characters[j];
+					if (c != null && (hyphens[i] & b) == b)
+						hyphenatedText.append(c); }}
+			hyphenatedText.append(text.charAt(i));
+			return hyphenatedText.toString();
 		}
 	}
 	

@@ -49,7 +49,7 @@ public class LibhyphenSaxonTest {
 			brailleModule("css-core"),
 			brailleModule("libhyphen-core"),
 			forThisPlatform(brailleModule("libhyphen-native")),
-			thisBundle(),
+			thisBundle(true),
 			xspecBundles(),
 			junitBundles()
 		);

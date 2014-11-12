@@ -1,106 +1,161 @@
 package org.daisy.pipeline.braille.tex;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Map;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 import net.davidashen.text.Hyphenator;
 
 import static org.daisy.braille.css.Query.parseQuery;
-import org.daisy.pipeline.braille.common.Cached;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.ResourceResolver;
-import org.daisy.pipeline.braille.common.TranslatorProvider;
+import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TexHyphenatorProvider implements TranslatorProvider<TexHyphenator> {
+@Component(
+	name = "org.daisy.pipeline.braille.tex.TexHyphenatorProvider",
+	service = {
+		TexHyphenatorProvider.class,
+		TextTransform.Provider.class,
+		
+	}
+)
+public class TexHyphenatorProvider implements TextTransform.Provider<TexHyphenator>,
+                                              org.daisy.pipeline.braille.common.Hyphenator.Provider<TexHyphenator> {
 	
 	private ResourceResolver tableResolver;
 	private TexHyphenatorTableProvider tableProvider;
 	
+	@Activate
 	protected void activate() {
 		logger.debug("Loading TeX hyphenation service");
 	}
 	
+	@Deactivate
 	protected void deactivate() {
 		logger.debug("Unloading TeX hyphenation service");
 	}
 	
-	protected void bindTableResolver(TexHyphenatorTableResolver tableResolver) {
-		this.tableResolver = tableResolver;
+	@Reference(
+		name = "TexHyphenatorTableResolver",
+		unbind = "unbindTableResolver",
+		service = TexHyphenatorTableResolver.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
+	protected void bindTableResolver(TexHyphenatorTableResolver resolver) {
+		tableResolver = resolver;
+		logger.debug("Registering Tex hyphenation table resolver: " + resolver);
 	}
 	
-	protected void unbindTableResolver(TexHyphenatorTableResolver path) {
-		this.tableResolver = null;
+	protected void unbindTableResolver(TexHyphenatorTableResolver resolver) {
+		tableResolver = null;
 	}
 	
-	protected void bindTableProvider(TexHyphenatorTableProvider tableProvider) {
-		this.tableProvider = tableProvider;
+	@Reference(
+		name = "TexHyphenatorTableProvider",
+		unbind = "unbindTableProvider",
+		service = TexHyphenatorTableProvider.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
+	protected void bindTableProvider(TexHyphenatorTableProvider provider) {
+		tableProvider = provider;
+		logger.debug("Registering Tex hyphenation table provider: " + provider);
 	}
 	
-	protected void unbindTableProvider(TexHyphenatorTableProvider tableProvider) {
-		this.tableProvider = null;
+	protected void unbindTableProvider(TexHyphenatorTableProvider provider) {
+		tableProvider = null;
 	}
 	
-	private Cached<URI,TexHyphenator> hyphenators = new Cached<URI,TexHyphenator>() {
-		public TexHyphenator delegate(URI table) {
-			try {
-				Hyphenator hyphenator = new Hyphenator();
-				InputStream stream = resolveTable(table).openStream();
-				hyphenator.loadTable(stream);
-				stream.close();
-				return new TexHyphenatorImpl(hyphenator); }
-			catch (Exception e) {
-				throw new RuntimeException(e); }
-		}
-	};
-	
-	/**
-	 * @param table Can be a file name or path relative to a registered table path,
-	 *     an absolute file, or a fully qualified table URL.
-	 */
-	public TexHyphenator get(URI table) {
-		return hyphenators.get(table);
-	}
-	
-	public TexHyphenator get(String query) {
-		try {
-			Map<String,Optional<String>> q = parseQuery(query);
-			if (q.containsKey("table")) {
-				return get(asURI(q.get("table").get())); }
-			if (tableProvider != null && q.containsKey("locale")) {
-				URI table = tableProvider.get(parseLocale(q.get("locale").get()));
-				if (table != null)
-					return get(table); }}
-		catch (Exception e) {}
+	private TexHyphenator get(URI table) {
+		try { return new TexHyphenatorImpl(table); }
+		catch (Exception e) {
+			logger.warn("Could not create hyphenator for table " + table, e); }
 		return null;
 	}
+	
+	private final static Iterable<TexHyphenator> empty = Optional.<TexHyphenator>absent().asSet();
+	
+	private CachedProvider<String,TexHyphenator> provider
+		= new CachedProvider<String,TexHyphenator>() {
+			public Iterable<TexHyphenator> delegate(String query) {
+				Map<String,Optional<String>> q = parseQuery(query);
+				if (q.containsKey("hyphenator"))
+					if (!"texhyph".equals(q.get("hyphenator").get()) && !"tex".equals(q.get("hyphenator").get()))
+						return empty;
+				if (q.containsKey("table")) {
+					return Optional.<TexHyphenator>fromNullable(
+						TexHyphenatorProvider.this.get(asURI(q.get("table").get()))).asSet(); }
+				Locale locale;
+				if (q.containsKey("locale"))
+					locale = parseLocale(q.get("locale").get());
+				else
+					locale = parseLocale("und");
+				if (tableProvider != null) {
+					return Iterables.<TexHyphenator>filter(
+						Iterables.<URI,TexHyphenator>transform(
+							tableProvider.get(locale),
+							new Function<URI,TexHyphenator>() {
+								public TexHyphenator apply(URI table) {
+									return TexHyphenatorProvider.this.get(table); }}),
+						Predicates.notNull()); }
+				return empty; }};
+	
+	public Iterable<TexHyphenator> get(String query) {
+		return provider.get(query);
+	}
 		
-	private static class TexHyphenatorImpl implements TexHyphenator {
+	private class TexHyphenatorImpl extends TexHyphenator {
 		
-		private Hyphenator hyphenator;
+		private final URI table;
+		private final Hyphenator hyphenator;
 		
-		private TexHyphenatorImpl(Hyphenator hyphenator) {
-			this.hyphenator = hyphenator;
+		/**
+		 * @param table Can be a file name or path relative to a registered
+		 * table path, an absolute file, or a fully qualified table URL.
+		 */
+		private TexHyphenatorImpl(URI table) throws IOException {
+			this.table = table;
+			hyphenator = new Hyphenator();
+			InputStream stream = resolveTable(table).openStream();
+			hyphenator.loadTable(stream);
+			stream.close();
+		}
+		
+		public URI asTexHyphenatorTable() {
+			return table;
 		}
 		
 		public String hyphenate(String text) {
-			try {
-				return hyphenator.hyphenate(text); }
+			try { return hyphenator.hyphenate(text); }
 			catch (Exception e) {
 				throw new RuntimeException("Error during TeX hyphenation", e); }
 		}
 		
-		public String translate(String text) {
-			return hyphenate(text);
+		public String[] hyphenate(String[] text) {
+			throw new UnsupportedOperationException();
 		}
 	}
 	

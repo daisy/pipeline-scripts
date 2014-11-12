@@ -1,24 +1,44 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import org.daisy.pipeline.braille.common.Translator;
+import java.net.URI;
 
-public interface LiblouisTranslator extends Translator {
+import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+
+public abstract class LiblouisTranslator implements CSSStyledTextTransform { // BrailleTranslator, Hyphenator
+	
+	public static abstract class Typeform {
+		public static final byte PLAIN = 0;
+		public static final byte ITALIC = 1;
+		public static final byte BOLD = 2;
+		public static final byte UNDERLINE = 4;
+		public static final byte COMPUTER = 8;
+	}
 	
 	/**
 	 * @param text The text to be translated.
-	 * @param hyphenated Whether or not <code>text</code> is prehyphenated.
-	 * @param typeform The typeform array. Must have the same length as <code>text</code>.
+	 * @param typeform The typeform.
 	 */
-	public String translate(String text, boolean hyphenated, byte[] typeform);
+	public abstract String transform(String text, byte typeform);
+	
+	public String transform(String text, Object style) {
+		throw new IllegalArgumentException("style argument must be a 'typeform' byte or a 'inline CSS' String");
+	}
 	
 	/**
-	 * @param text The text to be hyphenated.
+	 * @param text The text segments to be translated.
+	 * @param typeform The typeform. Array must have the same length as <code>text</code>.
 	 */
-	public String hyphenate(String text);
+	public abstract String[] transform(String[] text, byte[] typeform);
+	
+	public String[] transform(String[] text, Object[] style) {
+		throw new IllegalArgumentException("style argument must be a 'typeform' byte[] or a 'inline CSS' String[]");
+	}
 	
 	/**
 	 * @param braille The braille string to be encoded
 	 */
-	public String display(String braille);
+	public abstract String display(String braille);
+	
+	public abstract URI[] asLiblouisTable();
 	
 }

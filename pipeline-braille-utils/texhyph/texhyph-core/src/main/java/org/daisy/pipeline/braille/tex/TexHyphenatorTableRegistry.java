@@ -12,13 +12,13 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 	@Override
 	protected void register(TexHyphenatorTablePath path) {
 		super.register(path);
-		cache.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	@Override
 	protected void unregister (TexHyphenatorTablePath path) {
 		super.unregister(path);
-		cache.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	/**
@@ -26,17 +26,15 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public URI get(Locale locale) {
-		return cache.get(locale);
+	public Iterable<URI> get(Locale locale) {
+		return provider.get(locale);
 	}
 	
-	private final DispatchingProvider<Locale,URI> dispatchingProvider = new DispatchingProvider<Locale,URI>() {
-		public Iterable<? extends Provider<Locale,URI>> dispatch() {
-			return paths.values();
-		}
-	};
-	
-	private final Provider<Locale,URI> provider = LocaleBasedProvider.<URI>newInstance(dispatchingProvider);
-	private final CachedProvider<Locale,URI> cache = CachedProvider.<Locale,URI>newInstance(provider);
+	private final CachedProvider<Locale,URI> provider
+		= CachedProvider.<Locale,URI>newInstance(
+			LocaleBasedProvider.<URI>newInstance(
+				new DispatchingProvider<Locale,URI>() {
+					public Iterable<? extends Provider<Locale,URI>> dispatch() {
+						return paths.values(); }}));
 	
 }

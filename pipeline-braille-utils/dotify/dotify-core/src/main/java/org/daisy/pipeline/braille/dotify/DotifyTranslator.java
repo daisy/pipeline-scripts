@@ -1,9 +1,9 @@
 package org.daisy.pipeline.braille.dotify;
 
 import org.daisy.dotify.api.translator.BrailleTranslator;
-import org.daisy.pipeline.braille.common.Translator;
+import org.daisy.pipeline.braille.common.TextTransform;
 
-public class DotifyTranslator implements Translator {
+public class DotifyTranslator implements TextTransform {
 	
 	private BrailleTranslator translator;
 	
@@ -11,7 +11,15 @@ public class DotifyTranslator implements Translator {
 		this.translator = translator;
 	}
 	
-	public String translate(String text) {
+	public String transform(String text) {
 		return translator.translate(text).getTranslatedRemainder();
+	}
+	
+	public String[] transform(String[] text) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public BrailleTranslator asBrailleTranslator() {
+		return translator;
 	}
 }

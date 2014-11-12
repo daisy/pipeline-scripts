@@ -23,13 +23,13 @@ public class LibhyphenTableRegistry extends ResourceRegistry<LibhyphenTablePath>
 	@Override
 	protected void register(LibhyphenTablePath path) {
 		super.register(path);
-		cachedProvider.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	@Override
 	protected void unregister (LibhyphenTablePath path) {
 		super.unregister(path);
-		cachedProvider.invalidateCache();
+		provider.invalidateCache();
 	}
 	
 	/**
@@ -37,18 +37,16 @@ public class LibhyphenTableRegistry extends ResourceRegistry<LibhyphenTablePath>
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public URI get(Locale locale) {
-		return cachedProvider.get(locale);
+	public Iterable<URI> get(Locale locale) {
+		return provider.get(locale);
 	}
 	
-	private final DispatchingProvider<Locale,URI> dispatchingProvider = new DispatchingProvider<Locale,URI>() {
-		public Iterable<? extends Provider<Locale,URI>> dispatch() {
-			return paths.values();
-		}
-	};
-	
-	private final Provider<Locale,URI> provider = LocaleBasedProvider.<URI>newInstance(dispatchingProvider);
-	private final CachedProvider<Locale,URI> cachedProvider = CachedProvider.<Locale,URI>newInstance(provider);
+	private final CachedProvider<Locale,URI> provider
+		= CachedProvider.<Locale,URI>newInstance(
+			LocaleBasedProvider.<URI>newInstance(
+				new DispatchingProvider<Locale,URI>() {
+					public Iterable<? extends Provider<Locale,URI>> dispatch() {
+						return paths.values(); }}));
 	
 	@Override
 	public URL resolve(URI resource) {

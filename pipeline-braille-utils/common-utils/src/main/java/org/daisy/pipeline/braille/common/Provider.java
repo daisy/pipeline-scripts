@@ -3,34 +3,38 @@ package org.daisy.pipeline.braille.common;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 
 import org.daisy.pipeline.braille.common.util.Function2;
 
 public interface Provider<Q,X> {
 	
 	/**
-	 * Get an object based on a query.
+	 * Get a collection of objects based on a query.
 	 * @param query
-	 * @return The object that best matches the query, or null if no object can be provided.
+	 * @return The objects for the query, in order of best match.
 	 */
-	public X get(Q query);
+	public Iterable<X> get(Q query);
 	
 	public static class NULL<Q,X> implements Provider<Q,X> {
-		public X get(Q query) {
-			return null;
+		public Iterable<X> get(Q query) {
+			return Optional.<X>absent().asSet();
 		}
 	}
 	
-	public static abstract class CachedProvider<Q,X> extends Cached<Q,X> implements Provider<Q,X> {
+	public static abstract class CachedProvider<Q,X> extends Cached<Q,Iterable<X>> implements Provider<Q,X> {
 		public static <Q,X> CachedProvider<Q,X> newInstance(final Provider<Q,X> delegate) {
 			return new CachedProvider<Q,X>() {
-				public X delegate(Q query) {
+				public Iterable<X> delegate(Q query) {
 					return delegate.get(query);
 				}
 			};
@@ -44,11 +48,11 @@ public interface Provider<Q,X> {
 		public SimpleMappingProvider(URL properties) {
 			map = readProperties(properties);
 		}
-		public X get(Q query) {
+		public Iterable<X> get(Q query) {
 			String value = map.get(query);
 			if (value != null)
-				return parseValue(value);
-			return null;
+				return Optional.<X>fromNullable(parseValue(value)).asSet();
+			return Optional.<X>absent().asSet();
 		}
 		private Map<Q,String> readProperties(URL url) {
 			Map<Q,String> map = new HashMap<Q,String>();
@@ -81,17 +85,21 @@ public interface Provider<Q,X> {
 	}
 	
 	public static abstract class DispatchingProvider<Q,X> implements Provider<Q,X> {
-		public abstract Iterable<? extends Provider<Q,X>> dispatch();
-		public X get(Q query) {
-			for (Provider<Q,X> provider : dispatch()) {
-				X object = provider.get(query);
-				if (object != null)
-					return object; }
-			return null;
+		public abstract Iterable<? extends Provider<Q,? extends X>> dispatch();
+		@SuppressWarnings("unchecked")
+		public Iterable<X> get(final Q query) {
+			return Iterables.<X>concat(Iterables.<Provider<Q,? extends X>,Iterable<X>>transform(
+				Iterables.<Provider<Q,? extends X>>concat(dispatch()),
+				new Function<Provider<Q,? extends X>,Iterable<X>>() {
+					public Iterable<X> apply(Provider<Q,? extends X> provider) {
+						return Iterables.<X>concat(provider.get(query));
+					}
+				}
+			));
 		}
-		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,X>> dispatch) {
+		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,? extends X>> dispatch) {
 			return new DispatchingProvider<Q,X>() {
-				public Iterable<? extends Provider<Q,X>> dispatch() {
+				public Iterable<? extends Provider<Q,? extends X>> dispatch() {
 					return dispatch;
 				}
 			};
@@ -99,32 +107,69 @@ public interface Provider<Q,X> {
 	}
 	
 	public static abstract class LocaleBasedProvider<Q,X> implements Provider<Q,X> {
-		public abstract X delegate(Q query);
+		public abstract Iterable<? extends X> delegate(Q query);
 		public abstract Locale getLocale(Q query);
 		public abstract Q assocLocale(Q query, Locale locale);
-		public X get(Q query) {
-			Locale locale = getLocale(query);
-			if ("".equals(locale.toString()))
-				return null;
-			if (!"".equals(locale.getVariant())) {
-				X object = delegate(query);
-				if (object != null)
-					return object; }
-			if (!"".equals(locale.getCountry())) {
-				X object = delegate(assocLocale(query, new Locale(locale.getLanguage(), locale.getCountry())));
-				if (object != null)
-					return object; }
-			if (!"".equals(locale.getLanguage())) {
-				X object = delegate(assocLocale(query, new Locale(locale.getLanguage())));
-				if (object != null)
-					return object; }
-			return null;
+		public Locale getLocale(Locale query) {
+			return query;
+		}
+		public Locale assocLocale(Locale query, Locale locale) {
+			return locale;
+		}
+		public Iterable<X> get(final Q query) {
+			return new Iterable<X>() {
+				public Iterator<X> iterator() {
+					return new Iterator<X>() {
+						Iterator<? extends X> next = null;
+						int tryNext = 1;
+						Locale locale = getLocale(query);
+						public boolean hasNext() {
+							while (next == null || !next.hasNext()) {
+								switch (tryNext) {
+								case 1:
+									tryNext++;
+									if (!"".equals(locale.toString()))
+										next = delegate(query).iterator();
+									else
+										tryNext = 4;
+									break;
+								case 2:
+									tryNext++;
+									if (!"".equals(locale.getVariant()))
+										next = delegate(assocLocale(query, new Locale(locale.getLanguage(), locale.getCountry()))).iterator();
+									break;
+								case 3:
+									tryNext++;
+									if (!"".equals(locale.getCountry()))
+										next = delegate(assocLocale(query, new Locale(locale.getLanguage()))).iterator();
+									break;
+								case 4:
+									tryNext++;
+									next = fallback(query).iterator();
+									break;
+								default:
+									return false; }}
+							return true;
+						}
+						public X next() {
+							if (!hasNext()) throw new NoSuchElementException();
+							return next.next();
+						}
+						public void remove() {
+							throw new UnsupportedOperationException();
+						}
+					};
+				}
+			};
+		}
+		public Iterable<X> fallback(Q query) {
+			return Optional.<X>absent().asSet();
 		}
 		public static <Q,X> LocaleBasedProvider<Q,X> newInstance(final Provider<Q,X> delegate,
-		                                                       final Function<Q,Locale> getLocale,
-		                                                       final Function2<Q,Locale,Q> assocLocale) {
+		                                                         final Function<Q,Locale> getLocale,
+		                                                         final Function2<Q,Locale,Q> assocLocale) {
 			return new LocaleBasedProvider<Q,X>() {
-				public X delegate(Q query) {
+				public Iterable<? extends X> delegate(Q query) {
 					return delegate.get(query);
 				}
 				public Locale getLocale(Q query) {
@@ -137,14 +182,8 @@ public interface Provider<Q,X> {
 		}
 		public static <X> LocaleBasedProvider<Locale,X> newInstance(final Provider<Locale,X> delegate) {
 			return new LocaleBasedProvider<Locale,X>() {
-				public X delegate(Locale locale) {
+				public Iterable<? extends X> delegate(Locale locale) {
 					return delegate.get(locale);
-				}
-				public Locale getLocale(Locale query) {
-					return query;
-				}
-				public Locale assocLocale(Locale query, Locale locale) {
-					return locale;
 				}
 			};
 		}
