@@ -32,7 +32,6 @@ import org.daisy.braille.css.BrailleCSSProperty.Padding;
 import org.daisy.braille.css.BrailleCSSProperty.Page;
 import org.daisy.braille.css.BrailleCSSProperty.StringSet;
 import org.daisy.braille.css.BrailleCSSProperty.TextIndent;
-import org.daisy.braille.css.BrailleCSSProperty.TypeformIndication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,8 +231,6 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		embossedProperties.add("string-set");
 		props.put("content", Content.NONE);
 		embossedProperties.add("content");
-		props.put("typeform-indication", TypeformIndication.NONE);
-		embossedProperties.add("typeform-indication");
 		
 		/* ----------- */
 		/* media print */

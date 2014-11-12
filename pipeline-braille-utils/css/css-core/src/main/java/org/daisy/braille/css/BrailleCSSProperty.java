@@ -239,29 +239,4 @@ public interface BrailleCSSProperty extends CSSProperty {
 			return text;
 		}
 	}
-	
-	public enum TypeformIndication implements BrailleCSSProperty {
-		indicator_list(""), NONE("none"), INHERIT("inherit");
-
-		private String text;
-
-		private TypeformIndication(String text) {
-			this.text = text;
-		}
-		
-		// NOTE! not inherited in the 'usual' way: indicator list of a node is
-		// the *union* of all indicator lists of its ancestors
-		public boolean inherited() {
-			return true;
-		}
-
-		public boolean equalsInherit() {
-			return this == INHERIT;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
 }
