@@ -21,5 +21,10 @@
     -->
     <p:import href="compare.xpl"/>
     
+    <!--
+        pef:add-metadata
+    -->
+    <p:import href="add-metadata.xpl"/>
+    
 </p:library>
 

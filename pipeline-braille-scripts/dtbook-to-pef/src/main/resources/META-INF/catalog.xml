@@ -7,6 +7,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-to-zedai"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:zedai-to-pef"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:xml-to-pef"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-utils"/>
 </catalog>

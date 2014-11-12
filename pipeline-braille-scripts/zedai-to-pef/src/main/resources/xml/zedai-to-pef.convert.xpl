@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="#all"
-    type="px:zedai-to-pef.convert" name="convert" version="1.0">
+<p:declare-step type="px:zedai-to-pef.convert" version="1.0"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                exclude-inline-prefixes="#all"
+                name="main">
     
-    <p:input port="source" primary="true" px:media-type="application/z3998-auth+xml"/>
-    <p:input port="translators" sequence="true"/>
-    
-    <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
+    <p:input port="source" px:media-type="application/z3998-auth+xml"/>
+    <p:output port="result" px:media-type="application/x-pef+xml"/>
     
     <p:option name="default-stylesheet" required="false" select="''"/>
+    <p:option name="transform" required="false" select="''"/>
     
-    <!-- Empty temporary directory dedicated to this conversion -->
+    <!--
+        Empty temporary directory dedicated to this conversion
+    -->
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     
-    <!-- ================ -->
-    <!-- EXTRACT METADATA -->
-    <!-- ================ -->
+    <css:inline>
+        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+    </css:inline>
+    
+    <px:transform type="css" name="pef">
+        <p:with-option name="query" select="$transform"/>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
+    </px:transform>
     
     <p:xslt name="metadata">
+        <p:input port="source">
+            <p:pipe step="main" port="source"/>
+        </p:input>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/metadata-utils/zedai-to-metadata.xsl"/>
         </p:input>
@@ -30,24 +42,14 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-    <p:sink/>
     
-    <!-- ============== -->
-    <!-- CONVERT TO PEF -->
-    <!-- ============== -->
-    
-    <px:xml-to-pef.convert name="xml-to-pef">
+    <pef:add-metadata>
         <p:input port="source">
-            <p:pipe step="convert" port="source"/>
-        </p:input>
-        <p:input port="translators">
-            <p:pipe step="convert" port="translators"/>
+            <p:pipe step="pef" port="result"/>
         </p:input>
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
-        <p:with-option name="temp-dir" select="$temp-dir"/>
-    </px:xml-to-pef.convert>
+    </pef:add-metadata>
     
 </p:declare-step>

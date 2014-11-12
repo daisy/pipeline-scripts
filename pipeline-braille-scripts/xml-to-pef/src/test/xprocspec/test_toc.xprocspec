@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                xmlns:dc="http://purl.org/dc/elements/1.1/"
-               xmlns:pef="http://www.daisy.org/ns/2008/pef"
-               script="../../main/resources/xml/xml-to-pef.convert.xpl">
+               xmlns:pef="http://www.daisy.org/ns/2008/pef">
+  
+  <x:script>
+    <p:pipeline type="pxi:test" version="1.0">
+      <p:option name="temp-dir" required="true"/>
+      <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
+      <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
+      <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
+      <css:inline/>
+      <px:transform type="css" name="pef" query="(translator:liblouis)(formatter:liblouis)">
+        <p:with-option name="temp-dir" select="$temp-dir"/>
+      </px:transform>
+    </p:pipeline>
+  </x:script>
   
   <x:scenario label="test_01">
-    <x:call step="px:xml-to-pef.convert">
+    <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
           <doc xml:lang="en">
@@ -38,14 +52,6 @@
           </doc>
         </x:document>
       </x:input>
-      <x:input port="translators">
-        <x:document type="file" href="../../main/resources/xml/translation/generic-liblouis-translate.xsl"/>
-      </x:input>
-      <x:input port="metadata">
-        <x:document type="inline">
-          <empty/>
-        </x:document>
-      </x:input>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">
@@ -62,7 +68,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="7" cols="20" rowgap="0" duplex="true">
+            <volume rows="7" cols="20" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠋⠕⠕⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠀⠼⠃</row>

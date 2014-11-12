@@ -15,6 +15,7 @@ import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
 import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
+import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
 
@@ -55,6 +56,10 @@ public class XmlToPefTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			brailleModule("liblouis-saxon"),
@@ -64,6 +69,11 @@ public class XmlToPefTest {
 			brailleModule("liblouis-utils"),
 			brailleModule("liblouis-tables"),
 			brailleModule("libhyphen-core"),
+			brailleModule("dotify-core"),
+			brailleModule("dotify-saxon"),
+			brailleModule("dotify-calabash"),
+			brailleModule("dotify-formatter"),
+			brailleModule("dotify-utils"),
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
 			brailleModule("css-utils"),
@@ -78,6 +88,7 @@ public class XmlToPefTest {
 			pipelineModule("zip-utils"),
 			pipelineModule("mediatype-utils"),
 			pipelineModule("fileset-utils"),
+			thisBundle(true),
 			xspecBundles(),
 			xprocspecBundles(),
 			junitBundles()

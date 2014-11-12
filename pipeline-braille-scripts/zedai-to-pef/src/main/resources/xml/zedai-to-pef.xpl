@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    exclude-inline-prefixes="#all"
-    type="px:zedai-to-pef" name="zedai-to-pef" version="1.0">
+<p:declare-step type="px:zedai-to-pef" version="1.0"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                exclude-inline-prefixes="#all"
+                name="main">
     
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">ZedAI to PEF</h1>
@@ -59,14 +59,6 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="translator" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">translator</h2>
-            <p px:role="desc">The translator(s) (XSLT/XProc step or liblouis/libhyphen table) to be used. Can be a comma separated list. Defaults to a simple liblouis-based translator.</p>
-            <pre><code class="example">generic-translate.xpl</code></pre>
-        </p:documentation>
-    </p:option>
-    
     <p:option name="default-stylesheet" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">default-stylesheet</h2>
@@ -74,6 +66,8 @@
             <pre><code class="example">bana.css</code></pre>
         </p:documentation>
     </p:option>
+    
+    <p:option name="transform" required="false" px:type="string" select="''"/>
     
     <p:import href="zedai-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
@@ -89,30 +83,18 @@
     </px:tempdir>
     <p:sink/>
     
-    <!-- =============== -->
-    <!-- LOAD COMPONENTS -->
-    <!-- =============== -->
-    
-    <px:xml-to-pef.load-translator name="translator">
-        <p:with-option name="translator" select="if ($translator!='') then $translator else
-            'http://www.daisy.org/pipeline/modules/braille/xml-to-pef/translation/generic-liblouis-translate.xsl'"/>
-    </px:xml-to-pef.load-translator>
-    <p:sink/>
-    
     <!-- ============ -->
     <!-- ZEDAI TO PEF -->
     <!-- ============ -->
     
     <px:zedai-to-pef.convert>
         <p:input port="source">
-            <p:pipe step="zedai-to-pef" port="source"/>
-        </p:input>
-        <p:input port="translators">
-            <p:pipe step="translator" port="result"/>
+            <p:pipe step="main" port="source"/>
         </p:input>
         <p:with-option name="default-stylesheet" select="resolve-uri(
             if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
             'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/')"/>
+        <p:with-option name="transform" select="$transform"/>
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
@@ -125,7 +107,7 @@
     <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
-            <p:pipe step="zedai-to-pef" port="source"/>
+            <p:pipe step="main" port="source"/>
         </p:with-option>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-brf" select="$include-brf"/>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="#all"
-    type="px:dtbook-to-pef.convert" name="dtbook-to-pef.convert" version="1.0">
+<p:declare-step type="px:dtbook-to-pef.convert" version="1.0"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                exclude-inline-prefixes="#all"
+                name="main">
     
-    <p:input port="source" primary="true" px:media-type="application/x-dtbook+xml"/>
-    <p:input port="translators" sequence="true"/>
-    
-    <p:output port="result" primary="true" px:media-type="application/x-pef+xml"/>
+    <p:input port="source" px:media-type="application/x-dtbook+xml"/>
+    <p:output port="result" px:media-type="application/x-pef+xml"/>
     
     <p:option name="default-stylesheet" required="false" select="''"/>
+    <p:option name="transform" required="false" select="''"/>
     
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
@@ -58,10 +57,8 @@
         </p:with-option>
     </p:split-sequence>
     <px:zedai-to-pef.convert>
-        <p:input port="translators">
-            <p:pipe step="dtbook-to-pef.convert" port="translators"/>
-        </p:input>
         <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+        <p:with-option name="transform" select="$transform"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:zedai-to-pef.convert>
     

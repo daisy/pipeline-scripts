@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               stylesheet="../../main/resources/xml/transform/liblouis-block-translate.xsl">
+  
+  <x:scenario label="test_01" pending="white-space:pre not honored">
+    <x:context>
+      <doc xml:lang="en">
+        <p style="display: block">
+          <span style="hyphens: auto; white-space: pre">
+            foo<span style="font-weight: bold">bar</span>
+          </span>
+        </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc xml:lang="en">
+        <p style="{{ display: block }}">
+          <span style="{{ hyphens: manual; white-space: pre }}">
+            ⠋⠕⠕<span>⠃⠜</span>
+          </span>
+        </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
