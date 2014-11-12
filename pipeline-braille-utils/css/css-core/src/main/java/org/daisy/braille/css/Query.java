@@ -19,7 +19,7 @@ public abstract class Query {
 		"\\(\\s*(?<key>" + IDENT_RE+ ")(?:\\s*\\:\\s*(?<value>" + VALUE_RE.pattern() + "))?\\s*\\)"
 		);
 	private static final Pattern FEATURES_RE = Pattern.compile(
-		"\\s*(?:" + FEATURE_RE.pattern() + "\\s*)+"
+		"\\s*(?:" + FEATURE_RE.pattern() + "\\s*)*"
 		);
 		
 	public static Map<String,Optional<String>> parseQuery(String query) {
