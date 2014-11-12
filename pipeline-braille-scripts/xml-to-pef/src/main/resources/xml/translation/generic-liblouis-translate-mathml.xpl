@@ -48,7 +48,7 @@
             <p:with-option name="math-code" select="if (/m:math[lang('en-GB')]) then 'ukmaths' else
                                                     if (/m:math[lang('en')]) then 'nemeth' else
                                                     if (/m:math[lang('de')]) then 'marburg' else
-                                                    if (/m:math[lang('nl')]) then 'wiskunde' else ''">
+                                                    if (/m:math[lang('nl')]) then 'woluwe' else ''">
                 <p:pipe step="math" port="current"/>
             </p:with-option>
         </louis:translate-mathml>

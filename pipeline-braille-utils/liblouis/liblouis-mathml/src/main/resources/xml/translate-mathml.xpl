@@ -1,11 +1,10 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <p:declare-step type="louis:translate-mathml" name="translate-mathml"
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:louis="http://liblouis.org/liblouis"
-    exclude-inline-prefixes="#all"
-    version="1.0">
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:louis="http://liblouis.org/liblouis"
+                exclude-inline-prefixes="#all"
+                version="1.0">
     
     <p:input port="source" px:media-type="application/mathml+xml"/>
     <p:output port="result"/>
@@ -19,7 +18,7 @@
     
     <px:fileset-create base="http://www.daisy.org/pipeline/modules/braille/liblouis-mathml/lbu_files/"/>
     <px:fileset-add-entry name="styles">
-        <p:with-option name="href" select="concat($math-code, '.cfg')"/>
+        <p:with-option name="href" select="concat(lower-case($math-code), '.cfg')"/>
     </px:fileset-add-entry>
     <p:sink/>
     
