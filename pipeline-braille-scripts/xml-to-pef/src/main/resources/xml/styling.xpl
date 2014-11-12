@@ -3,7 +3,7 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:css="http://xmlcalabash.com/ns/extensions/braille-css"
+    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
     exclude-inline-prefixes="#all"
     type="pxi:styling" name="styling" version="1.0">
     
