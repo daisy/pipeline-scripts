@@ -45,7 +45,7 @@ public class CSSCalabashTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle(),
+			thisBundle(true),
 			xprocspecBundles(),
 			junitBundles()
 		);
@@ -53,7 +53,7 @@ public class CSSCalabashTest {
 	
 	@Inject
 	private XProcSpecRunner xprocspecRunner;
-		
+	
 	@Test
 	public void runXProcSpec() throws Exception {
 		File baseDir = new File(PathUtils.getBaseDir());

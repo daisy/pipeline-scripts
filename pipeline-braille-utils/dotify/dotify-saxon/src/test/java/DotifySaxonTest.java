@@ -6,6 +6,7 @@ import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
+import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
@@ -45,6 +46,7 @@ public class DotifySaxonTest {
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("dotify-core"),
