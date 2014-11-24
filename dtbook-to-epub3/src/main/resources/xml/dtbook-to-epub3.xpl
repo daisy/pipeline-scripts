@@ -45,11 +45,17 @@
 
     <p:option name="tts-config" required="false" px:type="anyFileURI" select="''">
       <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-	<h2 px:role="name"> Text-To-Speech configuration file</h2>
+	<h2 px:role="name">Text-To-Speech configuration file</h2>
 	<p px:role="desc">Configuration file for the Text-To-Speech.</p>
       </p:documentation>
     </p:option>
 
+    <p:option name="audio" required="false" px:type="boolean" select="'false'">
+      <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+	<h2 px:role="name">Enable Text-To-Speech</h2>
+	<p px:role="desc">Whether to use a speech synthesizer to produce audio files.</p>
+      </p:documentation>
+    </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
@@ -120,7 +126,7 @@
 	  </p:otherwise>
 	</p:choose>
 	<p:choose name="css-inlining">
-	  <p:when test="$tts-config != ''">
+	  <p:when test="$audio = 'true'">
 	    <p:output port="result" primary="true"/>
 	    <px:inline-css-speech>
 	      <p:input port="source">
@@ -174,7 +180,7 @@
 	      <p:pipe port="result" step="load-tts-config"/>
             </p:input>
             <p:with-option name="output-dir" select="$temp-dir"/>
-            <p:with-option name="audio" select="$tts-config != ''"/>
+            <p:with-option name="audio" select="$audio"/>
         </px:zedai-to-epub3-convert>
 
         <px:epub3-store name="store">

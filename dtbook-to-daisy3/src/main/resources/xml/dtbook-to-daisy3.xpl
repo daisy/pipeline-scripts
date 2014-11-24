@@ -37,8 +37,15 @@
 
   <p:option name="tts-config" required="false" px:type="anyFileURI" select="''">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name"> Text-To-Speech configuration file</h2>
+      <h2 px:role="name">Text-To-Speech configuration file</h2>
       <p px:role="desc">Configuration file for the Text-To-Speech.</p>
+    </p:documentation>
+  </p:option>
+
+  <p:option name="audio" required="false" px:type="boolean" select="'false'">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <h2 px:role="name">Enable Text-To-Speech</h2>
+      <p px:role="desc">Whether to use a speech synthesizer to produce audio files.</p>
     </p:documentation>
   </p:option>
 
@@ -155,7 +162,7 @@
     <p:xpath-context>
       <p:empty/>
     </p:xpath-context>
-    <p:when test="$tts-config != ''">
+    <p:when test="$audio = 'true'">
       <p:output port="result" primary="true"/>
       <px:inline-css-speech>
 	<p:input port="source">
@@ -194,7 +201,7 @@
     <p:with-option name="output-fileset-base" select="/*/@href">
       <p:pipe port="result" step="output-dir-uri"/>
     </p:with-option>
-    <p:with-option name="audio" select="$tts-config != ''"/>
+    <p:with-option name="audio" select="$audio"/>
   </px:dtbook-to-daisy3-convert>
 
   <px:fileset-store>
