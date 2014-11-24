@@ -288,6 +288,7 @@
 	<p:pipe port="tts-config" step="zedai-to-epub3.convert"/>
       </p:input>
       <p:with-option name="audio" select="$audio"/>
+      <p:with-option name="output-dir" select="$output-dir"/>
     </px:tts-for-epub3>
 
     <!--=========================================================================-->
