@@ -340,7 +340,7 @@ public class LiblouisJnaImpl implements Liblouis {
 					int i = 0;
 					for (int j = 0; j < text.length; j++) {
 						if (hyphenate[j])
-							i += unhyphenated.length;
+							i += unhyphenated[j].length();
 						else {
 							if (i > 0)
 								autoHyphens[i - 1] = 0;

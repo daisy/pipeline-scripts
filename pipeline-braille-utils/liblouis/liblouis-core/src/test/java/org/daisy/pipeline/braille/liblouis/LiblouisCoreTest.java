@@ -125,4 +125,11 @@ public class LiblouisCoreTest {
 	public void testHyphenateCompoundWord() {
 		assertEquals("foo-\u200Bbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foo-bar"));
 	}
+	
+	@Test
+	public void testTranslateAndHyphenateSomeSegments() {
+		LiblouisTranslator translator = liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next();
+		assertEquals(new String[]{"foo\u00ADbar ","foobar"},
+		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
+	}
 }
