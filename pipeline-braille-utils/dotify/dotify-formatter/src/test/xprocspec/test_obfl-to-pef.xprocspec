@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:dotify="http://code.google.com/p/dotify/"
-               script="http://www.daisy.org/pipeline/modules/braille/dotify-calabash/library.xpl">
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal">
+  
+  <x:script>
+    <p:declare-step type="pxi:test" version="1.0">
+      <p:input port="source"/>
+      <p:output port="result"/>
+      <p:import href="../../main/resources/xml/obfl-normalize-space.xpl"/>
+      <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-calabash/library.xpl"/>
+      <pxi:obfl-normalize-space/>
+      <dotify:obfl-to-pef locale="und" mode="dotify:format"/>
+    </p:declare-step>
+  </x:script>
   
   <x:scenario label="test_01">
-    <x:call step="dotify:obfl-to-pef">
+    <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
           <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
-            <layout-master name="a" page-width="15" page-height="15" duplex="false">
-              <default-template>
-                <header/>
-                <footer/>
-              </default-template>
-            </layout-master>
-            <sequence master="a">
-              <block>
-                ⠤⠤⠤
-              </block>
-            </sequence>
-          </obfl>
+          <layout-master name="a" page-width="20" page-height="5" duplex="false">
+            <default-template>
+              <header/>
+              <footer>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence"/>
+                </field>
+              </footer>
+            </default-template>
+          </layout-master>
+          <sequence master="a">
+            <block>
+              <marker class="print-page" value="⠤"/>
+              ⠤⠤⠤
+            </block>
+          </sequence>
+        </obfl>
         </x:document>
       </x:input>
-      <x:option name="locale" select="'und'"/>
-      <x:option name="mode" select="'dotify:format'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -43,10 +64,14 @@
             </meta>
           </head>
           <body>
-            <volume cols="15" rows="15" rowgap="0" duplex="false">
+            <volume cols="20" rows="5" rowgap="0" duplex="false">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤</row>
                 </page>
               </section>
             </volume>
@@ -59,8 +84,8 @@
   <!--
       page-number
   -->
-  <x:scenario label="test_02">
-    <x:call step="dotify:obfl-to-pef">
+  <x:scenario label="test_02" pending="issue with dotify sending '??' to translator">
+    <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
           <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
@@ -81,8 +106,6 @@
           </obfl>
         </x:document>
       </x:input>
-      <x:option name="locale" select="'und'"/>
-      <x:option name="mode" select="'dotify:format'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -119,7 +142,7 @@
   </x:scenario>
   
   <x:scenario label="test_03" pending="issue with cross-referening between sequences">
-    <x:call step="dotify:obfl-to-pef">
+    <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
           <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
@@ -142,8 +165,6 @@
           </obfl>
         </x:document>
       </x:input>
-      <x:option name="locale" select="'und'"/>
-      <x:option name="mode" select="'dotify:format'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
@@ -183,7 +204,7 @@
       leader
   -->
   <x:scenario label="test_04" pending="issue with leader">
-    <x:call step="dotify:obfl-to-pef">
+    <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
           <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
@@ -202,8 +223,6 @@
           </obfl>
         </x:document>
       </x:input>
-      <x:option name="locale" select="'und'"/>
-      <x:option name="mode" select="'dotify:format'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
