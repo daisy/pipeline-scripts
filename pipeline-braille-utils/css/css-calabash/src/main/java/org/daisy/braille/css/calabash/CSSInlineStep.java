@@ -41,7 +41,6 @@ import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
 import cz.vutbr.web.domassign.Analyzer;
-import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -69,63 +68,71 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Strings.normalizeSpace;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
-public class InlineProvider implements XProcStepProvider {
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+public class CSSInlineStep extends DefaultStep {
 	
-	private SupportedBrailleCSS supportedCSS;
-	private DeclarationTransformer declarationTransformer;
-	
-	public InlineProvider() {
-		supportedCSS = new SupportedBrailleCSS();
-		CSSFactory.registerSupportedCSS(supportedCSS);
-		declarationTransformer = new BrailleCSSDeclarationTransformer();
-	}
-	
-	@Override
-	public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-		return new Inline(runtime, step);
-	}
-	
-	public void setUriResolver(URIResolver resolver) {
-		CSSFactory.registerURIResolver(resolver);
-	}
+	private ReadablePipe sourcePipe = null;
+	private WritablePipe resultPipe = null;
 	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
 	
-	public class Inline extends DefaultStep {
+	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step) {
+		super(runtime, step);
+	}
 	
-		private ReadablePipe sourcePipe = null;
-		private WritablePipe resultPipe = null;
+	@Override
+	public void setInput(String port, ReadablePipe pipe) {
+		sourcePipe = pipe;
+	}
+	
+	@Override
+	public void setOutput(String port, WritablePipe pipe) {
+		resultPipe = pipe;
+	}
+	
+	@Override
+	public void reset() {
+		sourcePipe.resetReader();
+		resultPipe.resetWriter();
+	}
+	
+	@Override
+	public void run() throws SaxonApiException {
+		super.run();
+		try {
+			XdmNode source = sourcePipe.read();
+			Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
+			URL defaultSheet = asURL(emptyToNull(getOption(_default_stylesheet, "")));
+			resultPipe.write((new InlineCSSWriter(doc, runtime, defaultSheet)).getResult()); }
+		catch (Exception e) {
+			throw new RuntimeException(e); }
+	}
+	
+	@Component(
+		name = "css:inline",
+		service = { XProcStepProvider.class },
+		property = { "type:String={http://www.daisy.org/ns/pipeline/braille-css}inline" }
+	)
+	public static class Provider implements XProcStepProvider {
 		
-		private Inline(XProcRuntime runtime, XAtomicStep step) {
-			super(runtime, step);
-		}
-	
 		@Override
-		public void setInput(String port, ReadablePipe pipe) {
-			sourcePipe = pipe;
+		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
+			return new CSSInlineStep(runtime, step);
 		}
-	
-		@Override
-		public void setOutput(String port, WritablePipe pipe) {
-			resultPipe = pipe;
-		}
-	
-		@Override
-		public void reset() {
-			sourcePipe.resetReader();
-			resultPipe.resetWriter();
-		}
-	
-		@Override
-		public void run() throws SaxonApiException {
-			super.run();
-			try {
-				XdmNode source = sourcePipe.read();
-				Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-				URL defaultSheet = asURL(emptyToNull(getOption(_default_stylesheet, "")));
-				resultPipe.write((new InlineCSSWriter(doc, runtime, defaultSheet)).getResult()); }
-			catch (Exception e) {
-				throw new RuntimeException(e); }
+		
+		@Reference(
+			name = "URIResolver",
+			unbind = "-",
+			service = URIResolver.class,
+			cardinality = ReferenceCardinality.MANDATORY,
+			policy = ReferencePolicy.STATIC
+		)
+		public void setUriResolver(URIResolver resolver) {
+			CSSFactory.registerURIResolver(resolver);
 		}
 	}
 	
@@ -142,8 +149,9 @@ public class InlineProvider implements XProcStepProvider {
 		                       URL defaultSheet) throws Exception {
 			super(xproc);
 			
+			SupportedBrailleCSS supportedCSS = new SupportedBrailleCSS();
 			CSSFactory.registerSupportedCSS(supportedCSS);
-			CSSFactory.registerDeclarationTransformer(declarationTransformer);
+			CSSFactory.registerDeclarationTransformer(new BrailleCSSDeclarationTransformer());
 			
 			URI baseURI = new URI(document.getBaseURI());
 			
