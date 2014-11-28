@@ -30,6 +30,12 @@ import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 
 import org.liblouis.Louis;
 import org.liblouis.CompilationException;
+import static org.liblouis.Logger.Level.ALL;
+import static org.liblouis.Logger.Level.DEBUG;
+import static org.liblouis.Logger.Level.INFO;
+import static org.liblouis.Logger.Level.WARN;
+import static org.liblouis.Logger.Level.ERROR;
+import static org.liblouis.Logger.Level.FATAL;
 import org.liblouis.TableResolver;
 import org.liblouis.Translator;
 
@@ -59,6 +65,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	
 	// Hold a reference to avoid garbage collection
 	private TableResolver _tableResolver;
+	private org.liblouis.Logger _logger;
 	
 	private File unicodeDisFile;
 	
@@ -93,7 +100,17 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			unicodeDisFile = new File(makeUnpackDir(context), "unicode.dis");
 			unpack(
 				context.getBundleContext().getBundle().getEntry("/tables/unicode.dis"),
-				unicodeDisFile); }
+				unicodeDisFile);
+			_logger = new org.liblouis.Logger() {
+				public void invoke(int level, String message) {
+					switch (level) {
+					case ALL: logger.trace(message); break;
+					case DEBUG: logger.debug(message); break;
+					case INFO: logger.info(message); break;
+					case WARN: logger.warn(message); break;
+					case ERROR: logger.error(message); break;
+					case FATAL: logger.error(message); break; }}};
+			Louis.getLibrary().lou_registerLogCallback(_logger); }
 		catch (Throwable e) {
 			logger.error("liblouis service could not be loaded", e);
 			throw e; }
