@@ -36,6 +36,11 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-utils</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!--
         OSGi runtime dependencies
     -->
@@ -128,27 +133,20 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <_dsannotations>*</_dsannotations>
+          </instructions>
+        </configuration>
         <executions>
           <execution>
-            <id>manifest-before-test</id>
+            <id>bundle-before-test</id>
             <phase>generate-test-resources</phase>
             <goals>
-              <goal>manifest</goal>
+              <goal>bundle</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Service-Component>
-              OSGI-INF/bypass-translator-factory-service.xml,
-              OSGI-INF/bypass-markerprocessor-factory-service.xml
-            </Service-Component>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>

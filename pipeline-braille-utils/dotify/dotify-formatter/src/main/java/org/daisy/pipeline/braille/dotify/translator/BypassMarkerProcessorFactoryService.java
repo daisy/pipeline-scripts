@@ -8,6 +8,12 @@ import org.daisy.dotify.api.translator.TextAttribute;
 
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
+import org.osgi.service.component.annotations.Component;
+
+@Component(
+	name = "org.daisy.pipeline.braille.dotify.translator.BypassMarkerProcessorFactoryService",
+	service = { MarkerProcessorFactoryService.class }
+)
 public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {
 	
 	public boolean supportsSpecification(String locale, String mode) {
