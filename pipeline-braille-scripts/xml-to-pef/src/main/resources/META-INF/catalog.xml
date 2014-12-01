@@ -2,7 +2,6 @@
 <!DOCTYPE catalog
   PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/transform/block-translator-template.xsl" uri="../xml/transform/block-translator-template.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-utils"/>

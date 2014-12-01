@@ -6,8 +6,7 @@
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 exclude-result-prefixes="#all">
 	
-	<xsl:import href="block-translator-template.xsl"/>
-	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/library.xsl"/>
+	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl"/>
 	
 	<xsl:template match="css:block" mode="#all">
 		<xsl:variable name="text" as="text()*" select="//text()"/>

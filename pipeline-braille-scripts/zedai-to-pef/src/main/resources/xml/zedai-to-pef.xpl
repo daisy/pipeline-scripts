@@ -70,7 +70,6 @@
     <p:option name="transform" required="false" px:type="string" select="''"/>
     
     <p:import href="zedai-to-pef.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     

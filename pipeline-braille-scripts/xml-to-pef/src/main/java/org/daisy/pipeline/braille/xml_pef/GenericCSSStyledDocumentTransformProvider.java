@@ -11,6 +11,7 @@ import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.common.XProcCSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Activate;

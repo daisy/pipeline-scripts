@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-	xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-	exclude-result-prefixes="#all">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                exclude-result-prefixes="#all">
 	
-	<!--
-	    css-utils [2.0.0,3.0.0)
-	-->
-	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
+	<xsl:import href="../library.xsl"/>
 	
 	<!--
 	    API: implement xsl:template match="css:block"

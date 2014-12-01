@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.xml_pef;
+package org.daisy.pipeline.braille.liblouis.transform;
 
 import java.util.Map;
 import java.net.URI;
@@ -11,30 +11,31 @@ import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.XProcTransform;
+import org.daisy.pipeline.braille.common.XProcCSSBlockTransform;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.ComponentContext;
 
 @Component(
-	name = "org.daisy.pipeline.braille.xml_pef.DotifyCSSBlockTransformProvider",
+	name = "org.daisy.pipeline.braille.liblouis.transform.LiblouisCSSBlockTransformProvider",
 	service = { XProcTransform.Provider.class }
 )
-public class DotifyCSSBlockTransformProvider implements XProcTransform.Provider<XProcCSSBlockTransform> {
+public class LiblouisCSSBlockTransformProvider implements XProcTransform.Provider<XProcCSSBlockTransform> {
 	
 	private URI href;
 	
 	@Activate
 	private void activate(ComponentContext context, final Map<?,?> properties) {
-		href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/dotify-block-translate.xpl"));
+		href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-block-translate.xpl"));
 	}
 	
 	private Cached<String,XProcCSSBlockTransform> transforms
 		= new Cached<String,XProcCSSBlockTransform>() {
 			public XProcCSSBlockTransform delegate(String query) {
-				final URI href = DotifyCSSBlockTransformProvider.this.href;
+				final URI href = LiblouisCSSBlockTransformProvider.this.href;
 				Map<String,Optional<String>> q = parseQuery(query);
-				if (q.containsKey("translator") && !"dotify".equals(q.get("translator").get()))
+				if (q.containsKey("translator") && !"liblouis".equals(q.get("translator").get()))
 					return null;
 				return new XProcCSSBlockTransform() {
 					public Tuple3<URI,QName,Map<String,String>> asXProc() {

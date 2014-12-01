@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-               stylesheet="../resources/xslt/uppercase-block-translator.xsl">
+               stylesheet="../resources/uppercase-block-translator.xsl">
   
   <x:scenario label="test_01">
     <x:context>
