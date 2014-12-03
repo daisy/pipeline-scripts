@@ -77,14 +77,14 @@
         <p:when test="$dtbook-version = '2005-1'">
             <p:identity>
                 <p:input port="source">
-                    <p:document href="./schema/rng/dtbook-2005-1.rng"/>
+                    <p:document href="./schema/rng/dtbook/dtbook-2005-1.rng"/>
                 </p:input>
             </p:identity>
         </p:when>
         <p:when test="$dtbook-version = '1.1.0'">
             <p:identity>
                 <p:input port="source">
-                    <p:document href="./schema/rng/dtbook-1.1.0.rng"/>
+                    <p:document href="./schema/rng/dtbook/dtbook-1.1.0.rng"/>
                 </p:input>
             </p:identity>
         </p:when>

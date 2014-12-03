@@ -79,7 +79,7 @@
         <p:documentation>Helper step: check that referenced images exist on disk.</p:documentation>
     </p:import>
     
-    <p:variable name="dtbook-version" select="dtb:dtbook/@version">
+    <p:variable name="dtbook-version" select="*/@version">
         <p:pipe port="source" step="dtbook-validator.validate"/>
     </p:variable>
     <p:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
