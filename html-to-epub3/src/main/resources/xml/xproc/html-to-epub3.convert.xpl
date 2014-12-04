@@ -11,6 +11,14 @@
     <p:input port="metadata" sequence="true">
         <p:empty/>
     </p:input>
+    <p:input port="tts-config">
+      <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+	<h2 px:role="name">Text-To-Speech configuration file</h2>
+	<p px:role="desc">Configuration file that contains Text-To-Speech
+	properties, links to aural CSS stylesheets and links to PLS
+	lexicons.</p>
+      </p:documentation>
+    </p:input>
 
     <p:output port="fileset.out" primary="true">
         <p:pipe port="result" step="ocf"/>
@@ -20,6 +28,7 @@
     </p:output>
 
     <p:option name="output-dir" required="true"/>
+    <p:option name="audio" required="false" select="'false'"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
@@ -28,6 +37,10 @@
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-tts/library.xpl"/>
+
     <p:import href="html-to-epub3.content.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')">
@@ -140,6 +153,96 @@
     </p:group>
     <p:sink/>
 
+    <!--=========================================================================-->
+    <!-- TTS								         -->
+    <!--=========================================================================-->
+
+    <px:fileset-join name="fileset-for-tts">
+      <!-- TODO: include resources such as lexicons -->
+      <p:input port="source">
+	<p:pipe port="fileset.out.docs" step="content-docs"/>
+	<p:pipe port="fileset" step="navigation"/>
+      </p:input>
+    </px:fileset-join>
+    <px:tts-for-epub3 name="tts">
+      <p:input port="in-memory.in">
+	<p:pipe port="doc" step="navigation"/>
+	<p:pipe port="docs" step="content-docs"/>
+      </p:input>
+      <p:input port="fileset.in">
+	<p:pipe port="result" step="fileset-for-tts"/>
+      </p:input>
+      <p:input port="config">
+	<p:pipe port="tts-config" step="main"/>
+      </p:input>
+      <p:with-option name="audio" select="$audio"/>
+      <p:with-option name="output-dir" select="$output-dir"/>
+    </px:tts-for-epub3>
+
+    <!--=========================================================================-->
+    <!-- GENERATE THE MEDIA-OVERLAYS                                             -->
+    <!--=========================================================================-->
+
+    <p:choose name="mo-work">
+      <p:xpath-context>
+	<p:pipe port="audio-map" step="tts"/>
+      </p:xpath-context>
+      <p:when test="count(/d:audio-clips/*) = 0">
+	<p:output port="audio-filesets" sequence="true">
+	  <p:empty/>
+	</p:output>
+	<p:output port="smil-fileset">
+	  <p:empty/>
+	</p:output>
+	<p:output port="smils" sequence="true">
+	  <p:empty/>
+	</p:output>
+	<p:sink/>
+      </p:when>
+      <p:otherwise>
+	<p:output port="smil-fileset">
+	  <p:pipe port="fileset.out" step="create-mo"/>
+	</p:output>
+	<p:output port="audio-filesets" sequence="true">
+	  <p:pipe port="fileset.out" step="audio-fileset"/>
+	</p:output>
+	<p:output port="smils" sequence="true">
+	  <p:pipe port="in-memory.out" step="create-mo"/>
+	</p:output>
+
+	<!--=========================================================================-->
+	<!-- CREATE THE FILESET THAT LINKS TO THE AUDIO FILES                        -->
+	<!--=========================================================================-->
+	<px:create-audio-fileset name="audio-fileset">
+	  <p:input port="source">
+	    <p:pipe step="tts" port="audio-map"/>
+	  </p:input>
+	  <p:with-option name="output-dir" select="$content-dir">
+	    <p:empty/>
+	  </p:with-option>
+	  <p:with-option name="audio-relative-dir" select="'audio/'">
+	    <p:empty/> <!-- TODO: make it an px:create-mediaoverlays' option as well so as to avoid inconsistencies  -->
+	  </p:with-option>
+	</px:create-audio-fileset>
+
+	<!--=========================================================================-->
+	<!-- CREATE THE SMILS FROM THE AUDIO MAP		                     -->
+	<!--=========================================================================-->
+
+	<px:create-mediaoverlays name="create-mo">
+	  <p:input port="content-docs">
+	    <p:pipe port="content.out" step="tts"/>
+	  </p:input>
+	  <p:input port="audio-map">
+	    <p:pipe port="audio-map" step="tts"/>
+	  </p:input>
+	  <p:with-option name="content-dir" select="$content-dir">
+	    <p:empty/>
+	  </p:with-option>
+	</px:create-mediaoverlays>
+      </p:otherwise>
+    </p:choose>
+
 
     <!--=========================================================================-->
     <!-- METADATA                                                                -->
@@ -163,6 +266,13 @@
     </p:group>
     <p:sink/>
 
+    <px:fileset-join name="publication-resources">
+      <p:input port="source">
+	<p:pipe port="fileset.out.resources" step="content-docs"/>
+	<p:pipe port="audio-filesets" step="mo-work"/>
+      </p:input>
+    </px:fileset-join>
+
     <!--=========================================================================-->
     <!-- GENERATE THE PACKAGE DOCUMENT                                           -->
     <!--=========================================================================-->
@@ -178,17 +288,20 @@
         <px:epub3-pub-create-package-doc name="package-doc.create">
             <p:input port="spine-filesets">
                 <p:pipe port="fileset.out.docs" step="content-docs"/>
+		<p:pipe port="fileset" step="navigation"/>
             </p:input>
             <p:input port="publication-resources">
-                <p:pipe port="fileset.out.resources" step="content-docs"/>
+	        <p:pipe port="result" step="publication-resources"/>
             </p:input>
+	    <p:input port="mediaoverlays">
+	      <p:pipe port="smils" step="mo-work"/>
+	    </p:input>
             <p:input port="metadata">
                 <p:pipe port="metadata" step="main"/>
                 <p:pipe port="result" step="metadata"/>
             </p:input>
             <p:input port="content-docs">
-                <p:pipe port="doc" step="navigation"/>
-                <p:pipe port="docs" step="content-docs"/>
+                <p:pipe port="content.out" step="tts"/>
             </p:input>
             <p:with-option name="result-uri" select="$opf-base"/>
             <p:with-option name="compatibility-mode" select="'false'"/>
@@ -200,6 +313,8 @@
                 <p:pipe port="fileset.out.docs" step="content-docs"/>
                 <p:pipe port="fileset.out.resources" step="content-docs"/>
                 <p:pipe port="fileset" step="navigation"/>
+		<p:pipe port="smil-fileset" step="mo-work"/>
+		<p:pipe port="audio-filesets" step="mo-work"/>
             </p:input>
         </px:fileset-join>
 
@@ -241,9 +356,9 @@
         <p:iteration-source>
             <p:pipe step="ocf" port="in-memory.out"/>
             <p:pipe step="package-doc" port="doc"/>
-            <p:pipe step="navigation" port="doc"/>
-            <p:pipe step="content-docs" port="docs"/>
             <p:pipe step="content-docs" port="resources"/>
+	    <p:pipe step="tts" port="content.out"/>
+	    <p:pipe port="smils" step="mo-work"/>
         </p:iteration-source>
         <p:variable name="doc-base" select="base-uri(/*)"/>
         <p:choose>
