@@ -96,6 +96,14 @@
     </p:documentation>
   </p:option>
 
+  <p:option name="audio-only" required="false" px:type="boolean" select="'true'">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <h2 px:role="name">audio only</h2>
+      <p px:role="desc">SMIL files are not attached to any DTBook</p>
+    </p:documentation>
+  </p:option>
+
+
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
@@ -248,6 +256,7 @@
       <p:with-option name="audio-dir" select="$audio-dir"/>
       <p:with-option name="smil-dir" select="$smil-dir"/>
       <p:with-option name="uid" select="$uid"/>
+      <p:with-option name="audio-only" select="$audio-only"/>
     </px:create-daisy3-smils>
 
     <!-- ===== CONTENT DOCUMENT FILE AND ITS FILESET ENTRY ==== -->
@@ -317,16 +326,30 @@
     </px:fileset-add-entry>
 
     <!-- ===== OPF FILE AND ITS FILESET ENTRY ==== -->
-    <px:fileset-join>
-      <p:input port="source">
-	<p:pipe port="fileset.out" step="create-mo"/>
-	<p:pipe port="fileset.out" step="fileset.audio"/>
-	<p:pipe port="fileset.out" step="fileset.moved"/>
-	<p:pipe port="result" step="fileset.ncx"/>
-	<p:pipe port="result" step="fileset.doc"/>
-	<p:pipe port="result" step="fileset.res"/>
-      </p:input>
-    </px:fileset-join>
+    <p:choose>
+      <p:when test="$audio-only = 'false'">
+	<px:fileset-join>
+	  <p:input port="source">
+	    <p:pipe port="fileset.out" step="create-mo"/>
+	    <p:pipe port="fileset.out" step="fileset.audio"/>
+	    <p:pipe port="fileset.out" step="fileset.moved"/>
+	    <p:pipe port="result" step="fileset.ncx"/>
+	    <p:pipe port="result" step="fileset.doc"/>
+	    <p:pipe port="result" step="fileset.res"/>
+	  </p:input>
+	</px:fileset-join>
+      </p:when>
+      <p:otherwise>
+	<px:fileset-join>
+	  <p:input port="source">
+	    <p:pipe port="fileset.out" step="create-mo"/>
+	    <p:pipe port="fileset.out" step="fileset.audio"/>
+	    <p:pipe port="result" step="fileset.ncx"/>
+	    <p:pipe port="result" step="fileset.res"/>
+	  </p:input>
+	</px:fileset-join>
+      </p:otherwise>
+    </p:choose>
     <px:fileset-add-entry media-type="text/xml">
       <p:with-option name="href" select="$opf-uri"/>
     </px:fileset-add-entry>
@@ -380,6 +403,7 @@
       <p:with-option name="opf-uri" select="$opf-uri"/>
       <p:with-option name="lang" select="$lang"/>
       <p:with-option name="publisher" select="$publisher"/>
+      <p:with-option name="audio-only" select="$audio-only"/>
       <p:with-option name="total-time" select="//*[@duration]/@duration">
       	<p:pipe port="duration" step="create-mo"/>
       </p:with-option>
