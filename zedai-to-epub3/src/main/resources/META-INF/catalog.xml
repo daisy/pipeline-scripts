@@ -12,7 +12,7 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-to-html" />
   <nextCatalog catalog="org:daisy:pipeline:modules:zedai-utils" />
   <nextCatalog catalog="org:daisy:pipeline:modules:common-utils" />
-  <nextCatalog catalog="org:daisy:pipeline:modules:ssml-to-audio" />
+  <nextCatalog catalog="org:daisy:pipeline:modules:tts-helpers" />
   <nextCatalog catalog="org:daisy:pipeline:modules:css-speech" />
   <nextCatalog catalog="org:daisy:pipeline:modules:epub3-tts" />
   <nextCatalog catalog="org:daisy:pipeline:modules:mediaoverlay-utils" />
