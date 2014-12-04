@@ -49,6 +49,15 @@
     </p:documentation>
   </p:option>
 
+  <p:option name="with-text" required="false" px:type="boolean" select="'true'">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <h2 px:role="name">With text</h2>
+      <p px:role="desc">Includes DTBook in output, as opposed to audio only.</p>
+    </p:documentation>
+  </p:option>
+
+  <!-- TODO: throw an error if both 'audio' and 'with-text' are false -->
+
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
@@ -202,6 +211,7 @@
       <p:pipe port="result" step="output-dir-uri"/>
     </p:with-option>
     <p:with-option name="audio" select="$audio"/>
+    <p:with-option name="audio-only" select="$with-text = 'false'"/>
   </px:dtbook-to-daisy3-convert>
 
   <px:fileset-store>
