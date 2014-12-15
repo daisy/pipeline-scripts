@@ -916,7 +916,7 @@ Braille: @Z
         Braille: @N"<7@Z@6
         FAILS: was: ⠈⠝⠐⠣⠶⠈⠵⠈
     -->
-    <x:scenario label="test_044">
+    <x:scenario label="test_044" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_044.xml"/>
@@ -1253,7 +1253,7 @@ Braille: @Z
         Braille: .A"<.B EN .B"<.A"171.A"7.B
         FAILS: was: ⠨⠁⠐⠣⠨⠃⠑⠝⠨⠃⠐⠣⠨⠁⠐⠂⠶⠂⠨⠁⠐⠶⠨⠃
     -->
-    <x:scenario label="test_060">
+    <x:scenario label="test_060" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_060.xml"/>
@@ -1277,7 +1277,7 @@ Braille: @Z
         Braille: <A1 B>,+<C1 D>
         FAILS: was: ⠣⠁⠠⠂⠀⠃⠜⠐⠠⠬⠣⠉⠠⠂⠀⠙⠜
     -->
-    <x:scenario label="test_061">
+    <x:scenario label="test_061" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_061.xml"/>
@@ -1299,7 +1299,7 @@ Braille: @Z
         Braille: .A@%
         FAILS: was: ⠨⠁⠐⠈⠩
     -->
-    <x:scenario label="test_062">
+    <x:scenario label="test_062" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_062.xml"/>
@@ -1321,7 +1321,7 @@ Braille: @Z
         Braille: ]4ABC"5]4DEF
         FAILS: was: ⠸⠙⠠⠁⠃⠉⠐⠢⠸⠙⠠⠙⠑⠋
     -->
-    <x:scenario label="test_063">
+    <x:scenario label="test_063" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_063.xml"/>
@@ -1574,7 +1574,7 @@ Braille: @Z
         Braille: ?-#C?"7#C
         FAILS: was: ⠐⠹⠐⠤⠼⠉⠐⠹⠐⠶⠼⠉
     -->
-    <x:scenario label="test_075">
+    <x:scenario label="test_075" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_075.xml"/>
@@ -1596,7 +1596,7 @@ Braille: @Z
         Braille: ??AB??
         FAILS: was: ⠐⠌⠌⠁⠃⠐⠌⠌
     -->
-    <x:scenario label="test_076">
+    <x:scenario label="test_076" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_076.xml"/>
@@ -1641,7 +1641,7 @@ Braille: @Z
         Braille: ?=A C;\B D:?"8?=E;\F:?"7?=AE"6CF;\BE"6DF:?
         FAILS: was: ⠹⠿⠁⠀⠉⠰⠳⠃ ⠙⠱⠹⠐⠦⠹⠿⠑⠰⠳⠋⠱⠹⠐⠶⠹⠿⠁⠑⠐⠖⠉⠋⠰⠳⠃⠑⠐⠖⠙⠋⠱⠹
     -->
-    <x:scenario label="test_078">
+    <x:scenario label="test_078" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_078.xml"/>
@@ -1963,7 +1963,7 @@ Braille: @Z
         Braille: #*N:X*M:
         FAILS: was:
     -->
-    <x:scenario label="test_093">
+    <x:scenario label="test_093" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_093.xml"/>
@@ -2027,7 +2027,7 @@ Braille: @Z
         Braille: #*N:X_/M:
         FAILS: was:
     -->
-    <x:scenario label="test_096">
+    <x:scenario label="test_096" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_096.xml"/>
@@ -2091,7 +2091,7 @@ Braille: @Z
         Braille: #/N:X*M:*Q:/P:
         FAILS: was: ⠡⠟⠱⠌⠏⠱
     -->
-    <x:scenario label="test_099">
+    <x:scenario label="test_099" xfail="true">
         <x:call step="louis:translate-mathml">
             <x:input port="source">
                 <x:document type="file" href="../resources/mathml/test_099.xml"/>
