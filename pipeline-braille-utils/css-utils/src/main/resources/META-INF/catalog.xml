@@ -7,5 +7,4 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl" uri="../xml/transform/block-translator-template.xsl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-core"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-calabash"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:common-utils" />
 </catalog>

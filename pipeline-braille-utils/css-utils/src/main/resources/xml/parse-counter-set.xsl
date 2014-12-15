@@ -27,7 +27,14 @@
         <xsl:for-each select="if ($counter-names='#all')
                               then $pairs[not(@name=$exclude-counter-names-list)]
                               else $pairs[@name=$counter-names-list]">
-            <xsl:attribute name="css:{$property}-{@name}" select="@value"/>
+            <xsl:choose>
+              <xsl:when test="$property=('counter-reset','counter-increment') and @name='page'">
+                <xsl:message>counter-reset and counter-increment not supported for 'page'</xsl:message>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="css:{$property}-{@name}" select="@value"/>
+              </xsl:otherwise>
+            </xsl:choose>
         </xsl:for-each>
         <xsl:variable name="other-pairs" as="element()*"
                       select="if ($counter-names='#all')

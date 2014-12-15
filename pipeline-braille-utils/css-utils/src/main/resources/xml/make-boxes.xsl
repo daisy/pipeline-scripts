@@ -16,16 +16,7 @@
     <xsl:template match="*[@css:display]">
         <xsl:choose>
             <xsl:when test="@css:display='none'">
-                <xsl:element name="css:_">
-                    <xsl:if test="descendant-or-self::*[@css:string-set]">
-                        <xsl:attribute name="css:string-set"
-                                       select="string-join(descendant-or-self::*/@css:string-set/string(.), ', ')"/>
-                    </xsl:if>
-                    <xsl:if test="descendant-or-self::*[@css:counter-reset]">
-                        <xsl:attribute name="css:counter-reset"
-                                       select="string-join(descendant-or-self::*/@css:counter-reset/string(.), ' ')"/>
-                    </xsl:if>
-                </xsl:element>
+                <xsl:apply-templates select="." mode="display-none"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:element name="css:box">
@@ -51,8 +42,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:string|css:counter|css:text|css:leader|css:white-space">
-        <xsl:sequence select="."/>
+    <xsl:template match="css:_">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template match="*">
@@ -63,9 +56,38 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="@css:display|@css:list-style-type"/>
+    <xsl:template match="*" mode="display-none">
+        <xsl:element name="css:_">
+            <xsl:apply-templates select="@*|node()" mode="#current"/>
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template match="@*|
+                         text()|
+                         css:white-space|
+                         css:text|
+                         css:string|
+                         css:counter|
+                         css:leader">
+        <xsl:sequence select="."/>
+    </xsl:template>
     
-    <xsl:template match="@*|text()">
+    <xsl:template match="@css:display|
+                         @css:list-style-type"/>
+    
+    <xsl:template match="@*|
+                         text()|
+                         css:white-space|
+                         css:text|
+                         css:string|
+                         css:counter|
+                         css:leader" mode="display-none"/>
+    
+    <xsl:template match="@css:id|
+                         @css:counter-reset|
+                         @css:counter-set|
+                         @css:counter-increment|
+                         @css:string-set" mode="display-none">
         <xsl:sequence select="."/>
     </xsl:template>
     

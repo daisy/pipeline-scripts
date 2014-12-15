@@ -4,7 +4,6 @@
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-                xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 exclude-inline-prefixes="pxi xsl"
                 version="1.0">
@@ -43,9 +42,9 @@
     <p:for-each>
         <css:parse-stylesheet/>
         <css:make-pseudo-elements/>
-        <css:parse-declaration-list properties="content white-space display list-style-type
-                                                string-set counter-reset counter-set counter-increment"/>
-        <css:eval-content-list/>
+        <css:parse-properties properties="content white-space display list-style-type
+                                          string-set counter-reset counter-set counter-increment"/>
+        <css:parse-content/>
     </p:for-each>
     
     <css:label-targets/>
@@ -57,26 +56,29 @@
         <css:make-anonymous-inline-boxes/>
     </p:for-each>
     
-    <css:shift-string-set/>
     <css:eval-counter exclude-counters="page"/>
     
     <p:for-each>
         <css:parse-counter-set counters="page"/>
+        <!--
+            Split before and after @css:page and before @css:counter-set-page
+        -->
         <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]"/>
-        <p:split-sequence test="//css:box"/>
-        <p:for-each>
-            <p:label-elements match="/css:root[descendant::*/@css:page]" attribute="css:page"
-                              label="(descendant::*/@css:page)[last()]"/>
-            <p:label-elements match="/css:root[descendant::*[not(@part=('middle','last'))]/@css:counter-set-page]"
-                              attribute="css:counter-set-page"
-                              label="(descendant::*[not(@part=('middle','last'))]/@css:counter-set-page)[last()]"/>
-            <p:delete match="/css:root//*/@css:page"/>
-            <p:delete match="/css:root//*/@css:counter-set-page"/>
-            <p:unwrap match="css:_[not(@*)]"/>
-        </p:for-each>
     </p:for-each>
     
     <p:for-each>
+        <!--
+            Move @css:page and @css:counter-set-page to root element
+        -->
+        <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
+                          label="(descendant::*/@css:page)[last()]"/>
+        <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
+                          label="(descendant::*/@css:counter-set-page)[last()]"/>
+        <p:delete match="/*//*/@css:page"/>
+        <p:delete match="/*//*/@css:counter-set-page"/>
+        <!--
+            Delete empty inline boxes (possible side effect of css:split)
+        -->
         <p:rename match="css:box[@type='inline']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
                                  not(descendant::css:white-space or
@@ -87,16 +89,12 @@
                   new-name="css:_"/>
     </p:for-each>
     
-    <p:wrap-sequence wrapper="_"/>
-    <p:label-elements match="css:_[@css:id]/css:box" attribute="css:id" replace="false"
-                      label="parent::*/@css:id"/>
-    <p:delete match="@css:id[.=(ancestor::*|preceding::*)/@css:id]"/>
-    <p:delete match="css:_/@css:id"/>
-    <p:unwrap match="css:_[not(@*)]"/>
-    <p:filter select="/_/css:root"/>
+    <css:shift-string-set/>
+    <css:shift-id/>
     
     <p:for-each>
-        <css:parse-declaration-list properties="padding-left padding-right padding-top padding-bottom"/>
+        <p:unwrap match="css:_[not(@css:*)]"/>
+        <css:parse-properties properties="padding-left padding-right padding-top padding-bottom"/>
         <css:padding-to-margin/>
         <css:make-anonymous-block-boxes/>
     </p:for-each>

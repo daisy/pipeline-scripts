@@ -50,22 +50,14 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="@css:*">
-        <xsl:choose>
-            <xsl:when test="matches(local-name(),'^counter-(set|reset|increment)-.*$')">
-                <xsl:variable name="name" as="xs:string"
-                              select="replace(local-name(),'^counter-(set|reset|increment)-(.*)$','$2')"/>
-                <xsl:if test="if ($counter-names='#all')
-                              then $name=$exclude-counter-names-list
-                              else not($name=$counter-names-list)">
-                    <xsl:next-match/>
-                </xsl:if>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:next-match/>
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template match="@css:*[matches(local-name(),'^counter-(set|reset|increment)-.*$')]">
+        <xsl:variable name="name" as="xs:string"
+                      select="replace(local-name(),'^counter-(set|reset|increment)-(.*)$','$2')"/>
+        <xsl:if test="if ($counter-names='#all')
+                      then $name=$exclude-counter-names-list
+                      else not($name=$counter-names-list)">
+            <xsl:next-match/>
+        </xsl:if>
     </xsl:template>
-    
     
 </xsl:stylesheet>

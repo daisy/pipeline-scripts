@@ -44,7 +44,7 @@
     
     <xsl:template match="css:box[@type='block']">
         <block>
-            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
+            <xsl:apply-templates select="@* except (@type|@name|@part|@css:string-entry|@css:string-set)"/>
             <xsl:apply-templates select="@css:string-entry"/>
             <xsl:apply-templates select="@css:string-set"/>
             <xsl:apply-templates/>
@@ -52,14 +52,11 @@
     </xsl:template>
     
     <xsl:template match="css:box[@type='inline']">
-        <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
+        <xsl:apply-templates select="@* except (@type|@name|@part|@css:string-entry|@css:string-set)"/>
         <xsl:apply-templates select="@css:string-entry"/>
         <xsl:apply-templates select="@css:string-set"/>
         <xsl:apply-templates/>
     </xsl:template>
-    
-    <xsl:template match="css:box/@name|
-                         css:box/@type"/>
     
     <xsl:template match="css:box/@css:collapsing-margins"/>
     

@@ -6,22 +6,26 @@
   <x:scenario label="test_01">
     <x:context>
       <doc>
-        <head css:display="none" css:counter-reset="foo">
+        <head css:display="none">
           <meta name="author" content="Bert" css:string-set="author 'Bert'"/>
-          <meta css:counter-reset="bar"/>
         </head>
         <body>
-          <p css:display="block" css:counter-reset="baz" style="margin-left: 2" foo="bar"/>
+          <p css:display="block" css:counter-reset="baz" style="margin-left: 2" foo="bar">
+            <css:string value="baz"/>
+          </p>
         </body>
       </doc>
     </x:context>
     <x:expect label="result">
       <css:root>
         <css:box type="inline" name="doc">
-          <css:_ css:counter-reset="foo bar"
-                 css:string-set="author 'Bert'"/>
+          <css:_>
+            <css:_ css:string-set="author 'Bert'"/>
+          </css:_>
           <css:box type="inline" name="body">
-            <css:box type="block" name="p" css:counter-reset="baz" style="margin-left: 2"/>
+            <css:box type="block" name="p" css:counter-reset="baz" style="margin-left: 2">
+              <css:string value="baz"/>
+            </css:box>
           </css:box>
         </css:box>
       </css:root>

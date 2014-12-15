@@ -14,12 +14,11 @@
       <p:for-each>
         <p:label-elements match="/css:root[descendant::*/@css:page]" attribute="css:page"
                           label="(descendant::*/@css:page)[last()]"/>
-        <p:label-elements match="/css:root[descendant::*[not(@part=('middle','last'))]/@css:counter-set-page]"
-                          attribute="css:counter-set-page"
-                          label="(descendant::*[not(@part=('middle','last'))]/@css:counter-set-page)[last()]"/>
+        <p:label-elements match="/css:root[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
+                          label="(descendant::*/@css:counter-set-page)[last()]"/>
         <p:delete match="/css:root//*/@css:page"/>
         <p:delete match="/css:root//*/@css:counter-set-page"/>
-        <p:unwrap match="css:_[not(@*)]"/>
+        <p:unwrap match="css:_[not(@css:*)]"/>
       </p:for-each>
     </p:declare-step>
   </x:script>

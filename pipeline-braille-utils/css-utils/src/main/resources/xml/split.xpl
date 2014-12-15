@@ -89,14 +89,14 @@
     <pxi:split-into-sections-inner/>
     
     <p:for-each>
-        <p:delete match="@xml:id[starts-with(., '__temp__')]|@pxi:split-after"/>
+        <p:delete match="@xml:id[starts-with(., '__temp__')]|@pxi:split-before|@pxi:split-after"/>
     </p:for-each>
     
     <p:for-each>
-        <p:delete match="css:box[@part=('middle','last')]/@css:counter-entry|
-                         css:box[@part=('middle','last')]/@css:counter-reset|
+        <p:delete match="css:box[@part=('middle','last')]/@css:*[matches(local-name(),'^counter-(reset|set|increment)')]|
                          css:box[@part=('middle','last')]/@css:string-entry|
-                         css:box[@part=('middle','last')]/@css:string-set"/>
+                         css:box[@part=('middle','last')]/@css:string-set|
+                         css:box[@part=('middle','last')]/@css:id"/>
     </p:for-each>
     
 </p:declare-step>

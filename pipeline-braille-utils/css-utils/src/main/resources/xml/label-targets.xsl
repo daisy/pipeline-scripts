@@ -26,10 +26,10 @@
     <xsl:template name="try-id">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="collection()//*[self::css:text[@target] or
-                                            self::css:string[@name][@target] or
-                                            self::css:counter[@target]]
-                                           [replace(@target,'^#','')=$name]">
+            <xsl:when test="//*[self::css:text[@target] or
+                                self::css:string[@name][@target] or
+                                self::css:counter[@target]]
+                               [replace(@target,'^#','')=$name]">
                 <xsl:copy>
                     <xsl:apply-templates select="@*"/>
                     <xsl:attribute name="css:id" select="$name"/>

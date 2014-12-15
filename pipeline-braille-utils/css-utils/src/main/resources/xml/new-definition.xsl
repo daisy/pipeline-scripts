@@ -8,6 +8,8 @@
     
     <xsl:include href="library.xsl"/>
     
+    <xsl:variable name="properties-as-attributes" as="xs:boolean" select="true()"/>
+    
     <xsl:template match="*">
         <xsl:copy>
             <xsl:sequence select="@*"/>
@@ -36,7 +38,14 @@
         </xsl:variable>
         <xsl:copy>
             <xsl:sequence select="@* except (@style|@css:*[local-name()=$new:properties])"/>
-            <xsl:sequence select="css:style-attribute(css:serialize-declaration-list($properties[self::keep]/*))"/>
+            <xsl:choose>
+                <xsl:when test="$properties-as-attributes">
+                    <xsl:apply-templates select="$properties[self::keep]/*" mode="css:property-as-attribute"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="css:style-attribute(css:serialize-declaration-list($properties[self::keep]/*))"/>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:apply-templates>
                 <xsl:with-param name="parent-properties" tunnel="yes"
                                 select="($properties[not(self::pending)]/*[not(@value='inherit')],

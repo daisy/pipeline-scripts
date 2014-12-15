@@ -38,15 +38,15 @@
     </xsl:template>
     
     <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
-        <xsl:message>string() function not supported in content property</xsl:message>
+        <xsl:message>string() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:counter[not(@target)]" mode="eval-content-list">
-        <xsl:message>counter() function not supported in content property</xsl:message>
+        <xsl:message>counter() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:content" mode="eval-content-list">
-        <xsl:message>content() function not supported in content property</xsl:message>
+        <xsl:message>content() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
     <xsl:template match="*" mode="eval-content-list">

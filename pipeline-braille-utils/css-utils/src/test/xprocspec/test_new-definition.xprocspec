@@ -50,8 +50,8 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <css:root css:page="size: 10 10">
-          <css:box type="block" style="text-align: center">
-            <css:box type="block" style="text-align: center"/>
+          <css:box type="block" css:text-align="center">
+            <css:box type="block" css:text-align="center"/>
           </css:box>
         </css:root>
       </x:document>

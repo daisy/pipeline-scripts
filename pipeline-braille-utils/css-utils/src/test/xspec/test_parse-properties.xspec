@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-               stylesheet="../../main/resources/xml/parse-declaration-list.xsl">
+               stylesheet="../../main/resources/xml/parse-properties.xsl">
   
   <x:param name="property-names" select="'display counter-reset'"/>
   

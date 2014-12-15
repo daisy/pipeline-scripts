@@ -11,9 +11,9 @@ Building blocks related to [Braille CSS][braillecss].
 [library.xpl](src/main/resources/xml/library.xpl)
 -------------------------------------------------
 
-- `css:eval-content-list`
 - `css:eval-counter`
 - `css:eval-string-set`
+- `css:eval-target-text`
 - `css:inline`: Inline a CSS stylesheet in XML.
 - `css:label-targets`
 - `css:make-anonymous-block-boxes`
@@ -23,10 +23,12 @@ Building blocks related to [Braille CSS][braillecss].
 - `css:new-definition`
 - `css:padding-to-margin`
 - `css:parse-counter-set`
-- `css:parse-declaration-list`
+- `css:parse-content`
+- `css:parse-properties`
 - `css:parse-stylesheet`
 - `css:preserve-white-space`
 - `css:repeat-string-set`
+- `css:shift-id`
 - `css:shift-string-set`
 - `css:split`
 
