@@ -5,6 +5,7 @@
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-inline-prefixes="pxi xsl"
                 version="1.0">
     
@@ -101,6 +102,46 @@
     
     <css:repeat-string-set/>
     <p:split-sequence test="//css:box"/>
+    
+    <p:for-each>
+        <css:new-definition>
+            <p:input port="definition">
+                <p:inline>
+                    <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
+                        <xsl:variable name="new:properties" as="xs:string*"
+                                      select="('margin-left',     'border-left',     'page-break-before',   'text-indent',
+                                               'margin-right',    'border-right',    'page-break-after',    'text-align',
+                                               'margin-top',      'border-top',      'page-break-inside',
+                                               'margin-bottom',   'border-bottom',   'orphans', 'widows')"/>
+                        <xsl:function name="new:is-valid" as="xs:boolean">
+                            <xsl:param name="css:property" as="element()"/>
+                            <xsl:param name="context" as="element()"/>
+                            <xsl:sequence select="css:is-valid($css:property)
+                                                  and not($css:property/@value=('inherit','initial'))
+                                                  and not($css:property/@name=('margin-left','margin-right','text-indent')
+                                                          and number($css:property/@value) &lt; 0)
+                                                  and new:applies-to($css:property/@name, $context)"/>
+                        </xsl:function>
+                        <xsl:function name="new:initial-value" as="xs:string">
+                            <xsl:param name="property" as="xs:string"/>
+                            <xsl:param name="context" as="element()"/>
+                            <xsl:sequence select="css:initial-value($property)"/>
+                        </xsl:function>
+                        <xsl:function name="new:is-inherited" as="xs:boolean">
+                            <xsl:param name="property" as="xs:string"/>
+                            <xsl:param name="context" as="element()"/>
+                            <xsl:sequence select="false()"/>
+                        </xsl:function>
+                        <xsl:function name="new:applies-to" as="xs:boolean">
+                            <xsl:param name="property" as="xs:string"/>
+                            <xsl:param name="context" as="element()"/>
+                            <xsl:sequence select="$context/@type='block'"/>
+                        </xsl:function>
+                    </xsl:stylesheet>
+                </p:inline>
+            </p:input>
+        </css:new-definition>
+    </p:for-each>
     
     <p:xslt template-name="main">
         <p:input port="stylesheet">

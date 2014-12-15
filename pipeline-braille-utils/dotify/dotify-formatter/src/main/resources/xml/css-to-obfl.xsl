@@ -58,87 +58,47 @@
         <xsl:apply-templates/>
     </xsl:template>
     
-    <xsl:template match="css:box/@css:collapsing-margins"/>
-    
-    <xsl:template match="css:box/@style">
-        <xsl:apply-templates select="css:specified-properties('#all', true(), true(), true(), parent::*)"
-                             mode="property">
-            <xsl:with-param name="type" select="parent::*/@type"/>
-        </xsl:apply-templates>
-    </xsl:template>
-    
-    <xsl:template match="css:property" mode="property">
-        <xsl:param name="type" as="xs:string"/>
-        <xsl:variable name="property-attribute" as="attribute()">
-            <xsl:apply-templates select="." mode="css:property-as-attribute"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$type='block'">
-                <xsl:apply-templates select="$property-attribute" mode="block-property"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates select="$property-attribute" mode="inline-property"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="css:box/@css:margin-left|
-                         css:box/@css:margin-right|
-                         css:box/@css:margin-top|
-                         css:box/@css:margin-bottom">
-        <xsl:choose>
-            <xsl:when test="parent::*/@type='block'">
-                <xsl:apply-templates select="." mode="block-property"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates select="." mode="inline-property"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
+    <xsl:template match="@css:collapsing-margins"/>
     
     <xsl:template match="@css:margin-left|
                          @css:margin-right|
                          @css:margin-top|
-                         @css:margin-bottom" mode="block-property">
-        <xsl:variable name="value" as="xs:integer" select="xs:integer(number(.))"/>
-        <xsl:if test="$value &gt; 0">
-            <xsl:attribute name="{local-name()}" select="format-number($value, '0')"/>
-        </xsl:if>
+                         @css:margin-bottom">
+        <xsl:attribute name="{local-name()}" select="format-number(xs:integer(number(.)), '0')"/>
     </xsl:template>
     
-    <xsl:template match="@css:text-indent" mode="block-property">
-        <xsl:variable name="value" as="xs:integer" select="xs:integer(number(.))"/>
-        <xsl:if test="$value &gt; 0">
-                <xsl:attribute name="first-line-indent" select="format-number($value, '0')"/>
-            </xsl:if>
+    <xsl:template match="@css:text-indent">
+        <xsl:attribute name="first-line-indent" select="format-number(xs:integer(number(.)), '0')"/>
     </xsl:template>
     
-    <xsl:template match="@css:text-align" mode="block-property">
+    <xsl:template match="@css:text-align">
         <xsl:attribute name="align" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-before" mode="block-property">
+    <xsl:template match="@css:page-break-before">
         <xsl:if test=".='always'">
             <xsl:attribute name="break-before" select="'page'"/>
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-after" mode="block-property">
+    <xsl:template match="@css:page-break-after">
         <xsl:if test=".='avoid'">
             <xsl:attribute name="keep-with-next" select="'1'"/>
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-inside" mode="block-property">
+    <xsl:template match="@css:page-break-inside">
         <xsl:if test=".='avoid'">
             <xsl:attribute name="keep" select="'all'"/>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="@css:border-left|
-                         @css:border-right" mode="block-property">
+                         @css:border-right">
         <xsl:choose>
-            <xsl:when test=".='none'"/>
+            <xsl:when test=".='none'">
+                <xsl:attribute name="{local-name()}-style" select="'none'"/>
+            </xsl:when>
             <xsl:when test=".=('⠇','⠿','⠸')">
                 <xsl:attribute name="{local-name()}-style" select="'solid'"/>
                 <xsl:choose>
@@ -162,9 +122,11 @@
     </xsl:template>
     
     <xsl:template match="@css:border-top|
-                         @css:border-bottom" mode="block-property">
+                         @css:border-bottom">
         <xsl:choose>
-            <xsl:when test=".='none'"/>
+            <xsl:when test=".='none'">
+                <xsl:attribute name="{local-name()}-style" select="'none'"/>
+            </xsl:when>
             <xsl:when test=".=('⠉','⠛','⠿','⠶','⠤')">
                 <xsl:attribute name="{local-name()}-style" select="'solid'"/>
                 <xsl:choose>
@@ -193,40 +155,8 @@
     </xsl:template>
     
     <xsl:template match="@css:orphans|
-                         @css:widows" mode="block-property">
+                         @css:widows">
         <xsl:message>NOT IMPLEMENTED</xsl:message>
-    </xsl:template>
-    
-    <xsl:template match="@css:display|
-                         @css:white-space|
-                         @css:content|
-                         @css:string-set|
-                         @css:counter-reset|
-                         @css:padding-left|
-                         @css:padding-right|
-                         @css:padding-top|
-                         @css:padding-bottom" mode="block-property inline-property">
-        <xsl:message terminate="yes">Coding error</xsl:message>
-    </xsl:template>
-    
-    <xsl:template match="@css:margin-left|
-                         @css:margin-right|
-                         @css:margin-top|
-                         @css:margin-bottom|
-                         @css:text-indent|
-                         @css:text-align|
-                         @css:page-break-before|
-                         @css:page-break-after|
-                         @css:page-break-inside|
-                         @css:border-left|
-                         @css:border-right|
-                         @css:border-top|
-                         @css:border-bottom|
-                         @css:orphans|
-                         @css:widows" mode="inline-property"/>
-    
-    <xsl:template match="@css:*" mode="block-property inline-property">
-        <xsl:message>Unknown property</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:text[@target]">
