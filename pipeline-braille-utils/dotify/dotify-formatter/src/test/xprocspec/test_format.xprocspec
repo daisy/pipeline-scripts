@@ -1205,6 +1205,78 @@
   </x:scenario>
   
   <!--
+      Lists
+  -->
+  <x:scenario label="test_15">
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <ul style="list-style-type: decimal">
+            <li style="display: list-item"> ⠤⠤⠤ </li>
+            <li style="display: list-item"> ⠤⠤⠤ </li>
+            <li>
+              <ul style="list-style-type: lower-roman; counter-reset: list-item">
+                <li style="display: list-item"> ⠤⠤⠤ </li>
+                <li style="display: list-item"> ⠤⠤⠤ </li>
+              </ul>
+            </li>
+            <li style="display: list-item"> ⠤⠤⠤ </li>
+          </ul>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <layout-master name="body" page-width="40" page-height="25" duplex="false">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="body">
+            <block>⠼⠁ ⠤⠤⠤ </block>
+            <block>⠼⠃ ⠤⠤⠤ </block>
+            <block>⠊ ⠤⠤⠤ </block>
+            <block>⠊⠊ ⠤⠤⠤ </block>
+            <block>⠼⠉ ⠤⠤⠤ </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="25" cols="40" rowgap="0" duplex="false">
+              <section>
+                <page>
+                  <row>⠼⠁⠀⠤⠤⠤</row>
+                  <row>⠼⠃⠀⠤⠤⠤</row>
+                  <row>⠊⠀⠤⠤⠤</row>
+                  <row>⠊⠊⠀⠤⠤⠤</row>
+                  <row>⠼⠉⠀⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
       Cross-references: table of content
   -->
   <x:scenario label="test_16" pending="leader issue">
