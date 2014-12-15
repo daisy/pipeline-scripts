@@ -8,6 +8,12 @@
 	<xsl:import href="../library.xsl"/>
 	
 	<!--
+		Don't wrap document with <"_" style="text-transform:none"/>. This is useful e.g. when the
+		translated document needs to be valid HTML.
+	-->
+	<xsl:param name="no-wrap" required="no" select="'false'"/>
+	
+	<!--
 	    API: implement xsl:template match="css:block"
 	-->
 	<xsl:template mode="#default after before" match="css:block">
@@ -19,25 +25,35 @@
 	</xsl:template>
 	
 	<xsl:template mode="identify-blocks" match="/*">
-		<_ style="text-transform: none">
-			<xsl:variable name="source-style" as="element()*">
-				<xsl:call-template name="css:computed-properties">
-					<xsl:with-param name="properties" select="$text-properties"/>
-					<xsl:with-param name="context" select="$dummy-element"/>
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:variable name="result-style" as="element()*">
-				<xsl:call-template name="css:computed-properties">
-					<xsl:with-param name="properties" select="$text-properties"/>
-					<xsl:with-param name="context" select="$dummy-element"/>
-					<xsl:with-param name="cascaded-properties" tunnel="yes" select="css:property('text-transform','none')"/>
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:next-match>
-				<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
-				<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>
-			</xsl:next-match>
-		</_>
+		<xsl:variable name="source-style" as="element()*">
+			<xsl:call-template name="css:computed-properties">
+				<xsl:with-param name="properties" select="$text-properties"/>
+				<xsl:with-param name="context" select="$dummy-element"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="result-style" as="element()*">
+			<xsl:call-template name="css:computed-properties">
+				<xsl:with-param name="properties" select="$text-properties"/>
+				<xsl:with-param name="context" select="$dummy-element"/>
+				<xsl:with-param name="cascaded-properties" tunnel="yes" select="css:property('text-transform','none')"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$no-wrap='false'">
+				<_ style="text-transform: none">
+					<xsl:next-match>
+						<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
+						<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>
+					</xsl:next-match>
+				</_>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:next-match>
+					<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
+					<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>
+				</xsl:next-match>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:variable name="text-properties" as="xs:string*"
