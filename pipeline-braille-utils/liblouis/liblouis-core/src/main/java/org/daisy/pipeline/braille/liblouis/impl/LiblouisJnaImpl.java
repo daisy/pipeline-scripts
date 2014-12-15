@@ -318,16 +318,20 @@ public class LiblouisJnaImpl implements Liblouis {
 		protected final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 		
 		public String[] transform(String[] text, byte[] typeform, boolean[] hyphenate) {
-			// This byte array is used not only to track the hyphen positions
-			// but also the segment boundaries.
+			
+			// Combine the input segments into a single string. The positions
+			// byte array is used to track the hyphen positions and the
+			// segment boundaries. Styling info is kept in the _typeform byte
+			// array.
 			byte[] positions;
 			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
 			String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
 			t = extractHyphens(t._2, t._1, null, null, US);
 			String _text = t._1;
-			if (t._2 != null)
-				positions = t._2;
-			else
+			if (_text.length() == 0)
+				return unhyphenated;
+			positions = t._2;
+			if (positions == null)
 				positions = new byte[_text.length() - 1];
 			boolean someHyphenate = false;
 			boolean someNotHyphenate = false;
@@ -355,34 +359,79 @@ public class LiblouisJnaImpl implements Liblouis {
 				if (b != Typeform.PLAIN) {
 					_typeform = new byte[_text.length()];
 					int i = 0;
-					int j = 0;
-					while (unhyphenated[j].length() == 0) j++;
-					while (i < _typeform.length) {
-						if (positions != null && i < positions.length && (positions[i] & US) == US) {
-							j++;
-							while (unhyphenated[j].length() == 0) j++; }
-						_typeform[i++] = typeform[j]; }
+					while (unhyphenated[i].length() == 0) i++;
+					for (int j = 0; j < _typeform.length; j++) {
+						if (positions != null && j < positions.length && (positions[j] & 4) == 4) {
+							i++;
+							while (unhyphenated[i].length() == 0) i++; }
+						_typeform[j] = typeform[i]; }
 					break; }
 			try {
+				
+				// Translate
 				TranslationResult r = translator.translate(_text, positions, _typeform);
-				_text = r.getBraille();
-				positions = r.getHyphenPositions();
-				if (positions != null)
-					_text = insertHyphens(_text, positions, SHY, ZWSP, US);
+				
+				// Split output into segments
+				String braille = r.getBraille();
+				byte[] outputPositions = r.getHyphenPositions();
+				if (outputPositions != null)
+					braille = insertHyphens(braille, outputPositions, SHY, ZWSP, US);
 				if (text.length == 1)
-					return new String[]{_text};
+					return new String[]{braille};
 				else {
 					String[] rv = new String[text.length];
 					int i = 0;
-					for (String s : SEGMENT_SPLITTER.split(_text)) {
+					while (unhyphenated[i].length() == 0)
+						rv[i++] = "";
+					for (String s : SEGMENT_SPLITTER.split(braille)) {
+						rv[i++] = s;
+						while (i < text.length && unhyphenated[i].length() == 0)
+							rv[i++] = ""; }
+					if (i == text.length)
+						return rv;
+					else {
+						logger.warn("Text segmentation was lost in the output.\n"
+						            + "Input segments: " + Arrays.toString(text) + "\n"
+						            + "Typeform: " + Arrays.toString(typeform) + "\n"
+						            + "Output segments: " + Arrays.toString(
+							            Iterables.<String>toArray(SEGMENT_SPLITTER.split(braille), String.class)));
+						
+						// If some segment breaks were discarded, fall
+						// back on a fuzzy split method. First number the
+						// segments, translate, and then split at
+						// all positions where the number is increased.
+						i = 0;
+						while (unhyphenated[i].length() == 0) i++;
+						for (int j = 0; j < positions.length; j++) {
+							if ((positions[j] & 4) == 4) {
+								i++;
+								while (i < text.length && unhyphenated[i].length() == 0) i++; }
+							int n = (i % 31) + 1;
+							positions[j] |= (byte)(n << 3); }
+						r = translator.translate(_text, positions, _typeform);
+						braille = r.getBraille();
+						outputPositions = r.getHyphenPositions();
+						i = 0;
 						while (unhyphenated[i].length() == 0)
 							rv[i++] = "";
-						rv[i++] = s; }
-					while(i < text.length) {
-						if (unhyphenated[i].length() > 0)
-							throw new RuntimeException("Text segmentation was lost in the output.");
-						rv[i++] = ""; }
-					return rv; }}
+						StringBuffer b = new StringBuffer();
+						for (int j = 0; j < outputPositions.length; j++) {
+							b.append(braille.charAt(j));
+							int n = outputPositions[j] >> 3;
+							if (n > 0)
+								if (((n - i - 1) % 31) > 0) {
+									rv[i++] = b.toString();
+									b = new StringBuffer();
+									while (((n - i - 1) % 31) > 0)
+										rv[i++] = ""; }}
+						b.append(braille.charAt(braille.length() - 1));
+						rv[i++] = b.toString();
+						while (i < text.length && unhyphenated[i].length() == 0)
+							rv[i++] = "";
+						if (i == text.length)
+							return rv;
+						else
+							throw new RuntimeException("Coding error"); }}}
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
 		}

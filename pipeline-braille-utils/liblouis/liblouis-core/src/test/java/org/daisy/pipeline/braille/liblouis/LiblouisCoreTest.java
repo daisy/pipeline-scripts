@@ -117,6 +117,14 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testTranslateSegmentsFuzzy() {
+		LiblouisTranslator translator = liblouis.get("(table:'foobar.ctb')").iterator().next();
+		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"foo","bar"}));
+		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"fo","obar"}));
+		assertEquals(new String[]{"fu","","bar"}, translator.transform(new String[]{"fo","","obar"}));
+	}
+	
+	@Test
 	public void testHyphenate() {
 		assertEquals("foo\u00ADbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foobar"));
 	}

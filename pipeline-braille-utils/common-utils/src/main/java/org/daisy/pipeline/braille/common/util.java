@@ -271,11 +271,11 @@ public abstract class util {
 				unhyphenatedText.append(c);
 				hyphens.add(hyphen);
 				hyphen = 0; }
-			if (seenHyphen) {
+			if (unhyphenatedText.length() > 0) {
 				hyphens.remove(0);
 				return new Tuple2<String,byte[]>(unhyphenatedText.toString(), Bytes.toArray(hyphens)); }
 			else
-				return new Tuple2<String,byte[]>(text, addTo);
+				return new Tuple2<String,byte[]>("", null);
 		}
 		
 		public static String insertHyphens(String text, byte hyphens[], Character... characters) {
