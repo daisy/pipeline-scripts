@@ -55,6 +55,7 @@
         <css:preserve-white-space/>
         <css:make-boxes/>
         <css:make-anonymous-inline-boxes/>
+        <css:eval-target-text/>
     </p:for-each>
     
     <css:eval-counter exclude-counters="page"/>

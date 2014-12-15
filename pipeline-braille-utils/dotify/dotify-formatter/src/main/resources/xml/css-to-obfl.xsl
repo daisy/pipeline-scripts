@@ -159,20 +159,26 @@
         <xsl:message>NOT IMPLEMENTED</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:text[@target]">
-        <xsl:message>NOT IMPLEMENTED</xsl:message>
+    <xsl:template match="css:string[@name]">
+        <xsl:variable name="target" as="xs:string?" select="@target"/>
+        <xsl:variable name="target" as="element()?"
+                      select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
+        <xsl:if test="$target">
+            <xsl:apply-templates select="css:string(@name, $target)" mode="eval-string-set"/>
+        </xsl:if>
     </xsl:template>
     
-    <xsl:template match="css:string[@name][@target]">
-        <xsl:message>NOT IMPLEMENTED</xsl:message>
-    </xsl:template>
-    
-    <xsl:template match="css:counter[@target]">
-        <xsl:message>NOT IMPLEMENTED</xsl:message>
+    <xsl:template match="css:counter[@target][@name='page']">
+        <page-number ref-id="{@target}" style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
+                                               then @style else 'default'}"/>
     </xsl:template>
     
     <xsl:template match="css:leader">
-        <leader pattern="{@pattern}"/>
+        <leader pattern="{@pattern}" position="100%" align="right"/>
+    </xsl:template>
+    
+    <xsl:template match="css:box/@css:id">
+        <xsl:attribute name="id" select="."/>
     </xsl:template>
     
     <xsl:template match="css:box/@css:string-entry|

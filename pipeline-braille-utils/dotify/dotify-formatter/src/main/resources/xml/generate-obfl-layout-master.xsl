@@ -80,7 +80,7 @@
         <string value="{string(@value)}"/>
     </xsl:template>
     
-    <xsl:template match="css:counter[@name='page']" mode="eval-content-list">
+    <xsl:template match="css:counter[not(@target)][@name='page']" mode="eval-content-list">
         <current-page style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                    then @style else 'default'}"/>
     </xsl:template>
@@ -107,6 +107,10 @@
     
     <xsl:template match="css:counter[@target]" mode="eval-content-list">
         <xsl:message>target-counter() function not supported in page header and footer</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[not(@target)][not(@name='page')]" mode="eval-content-list">
+        <xsl:message>counter() function not supported in page header and footer for other counters than 'page'</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:leader" mode="eval-content-list">
