@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
-               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                xmlns:dotify="http://code.google.com/p/dotify/"
                script="../../main/resources/xml/format.xpl">
   
@@ -27,7 +26,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="a" page-width="30" page-height="5" duplex="false">
@@ -60,10 +59,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -148,7 +147,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="a" page-width="20" page-height="5" duplex="false">
@@ -204,10 +203,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -285,7 +284,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="a" page-width="20" page-height="5" duplex="false">
@@ -327,10 +326,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -405,7 +404,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="a" page-width="15" page-height="5" duplex="false">
@@ -477,10 +476,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -579,7 +578,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="front" page-width="15" page-height="5" duplex="false">
@@ -649,10 +648,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -715,7 +714,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="body" page-width="15" page-height="5" duplex="false">
@@ -745,10 +744,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -774,7 +773,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_08" pending="failure">
+  <x:scenario label="test_08" pending="orphans not implemented">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -842,7 +841,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="body" page-width="10" page-height="6" duplex="false">
@@ -901,10 +900,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -1045,7 +1044,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="body" page-width="20" page-height="15" duplex="false">
@@ -1102,10 +1101,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -1163,7 +1162,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="../resources/obfl-compare.xpl" step="pxi:obfl-compare">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
           <layout-master name="body" page-width="30" page-height="2" duplex="false">
@@ -1180,10 +1179,10 @@
         </obfl>
       </x:document>
     </x:expect>
-    <x:context label="result">
+    <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">

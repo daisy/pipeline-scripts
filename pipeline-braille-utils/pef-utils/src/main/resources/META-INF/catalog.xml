@@ -4,6 +4,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <uri name="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" uri="../xml/library.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xsl" uri="../xml/library.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng" uri="../schema/pef-2008-1.rng"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch" uri="../schema/pef-2008-1.sch"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-saxon"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-to-html"/>

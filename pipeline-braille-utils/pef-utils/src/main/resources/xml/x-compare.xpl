@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="pxi:pef-compare" name="main"
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    xmlns:x="http://www.daisy.org/ns/xprocspec"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    version="1.0">
+<p:declare-step type="x:pef-compare" name="main"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                xmlns:x="http://www.daisy.org/ns/xprocspec"
+                version="1.0">
     
     <p:input port="context" primary="false"/>
     <p:input port="expect" primary="false"/>
@@ -12,7 +11,7 @@
     
     <p:output port="result" primary="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
+    <p:import href="compare.xpl"/>
     
     <pef:compare fail-if-not-equal="false" name="compare">
         <p:input port="source">

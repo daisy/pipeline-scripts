@@ -20,6 +20,7 @@ Building blocks related to [PEF][] (Portable Embosser Format).
 - `pef:store`: Store a PEF document to disk, possibly in an
   ASCII-based format or with an HTML preview.
 - `pef:compare`: Compare two PEF documents.
+- `x:pef-compare`: Compare two PEF documents as a custom [XProcSpec][] assertion.
 
 Submodules
 ----------
@@ -32,3 +33,4 @@ Submodules
 
 [PEF]: http://pef-format.org
 [BrailleUtils]: http://code.google.com/p/brailleutils
+[XProcSpec]: http://josteinaj.github.io/xprocspec

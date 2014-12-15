@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:dotify="http://code.google.com/p/dotify/"
-               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                script="http://www.daisy.org/pipeline/modules/braille/dotify-calabash/library.xpl">
   
   <x:scenario label="test_01">
@@ -30,12 +29,12 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="valid" type="validate" grammar="relax-ng">
-      <x:document type="file" href="../resources/pef-2008-1.rng"/>
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
     </x:expect>
     <x:expect label="valid" type="validate" grammar="schematron">
-      <x:document type="file" href="../resources/pef-2008-1.sch"/>
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
     </x:expect>
-    <x:expect label="result" type="custom" href="../resources/pef-compare.xpl" step="pxi:pef-compare">
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
