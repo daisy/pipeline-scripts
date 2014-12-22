@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.xml.transform.stream.StreamSource;
 
+import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
@@ -33,6 +34,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OBFLToPEFStep extends DefaultStep {
 	
@@ -97,7 +101,8 @@ public class OBFLToPEFStep extends DefaultStep {
 			pefStream.close(); }
 			
 		catch (Exception e) {
-			throw new RuntimeException(e); }
+			logger.error("dotify:obfl-to-pef failed", e);
+			throw new XProcException(step.getNode(), e); }
 	}
 	
 	private PagedMediaWriter newPagedMediaWriter(String target) throws PagedMediaWriterConfigurationException {
@@ -168,4 +173,7 @@ public class OBFLToPEFStep extends DefaultStep {
 			engineFactoryServices.remove(service);
 		}
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(OBFLToPEFStep.class);
+	
 }

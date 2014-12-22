@@ -17,6 +17,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
+import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
@@ -73,6 +74,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CSSInlineStep extends DefaultStep {
 	
 	private ReadablePipe sourcePipe = null;
@@ -109,7 +113,8 @@ public class CSSInlineStep extends DefaultStep {
 			URL defaultSheet = asURL(emptyToNull(getOption(_default_stylesheet, "")));
 			resultPipe.write((new InlineCSSWriter(doc, runtime, defaultSheet)).getResult()); }
 		catch (Exception e) {
-			throw new RuntimeException(e); }
+			logger.error("css:inline failed", e);
+			throw new XProcException(step.getNode(), e); }
 	}
 	
 	@Component(
@@ -324,4 +329,7 @@ public class CSSInlineStep extends DefaultStep {
 	private static void insertDeclaration(StringBuilder builder, Declaration decl) {
 		builder.append(decl.getProperty()).append(": ").append(join(decl, " ", termToString)).append("; ");
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(CSSInlineStep.class);
+	
 }
