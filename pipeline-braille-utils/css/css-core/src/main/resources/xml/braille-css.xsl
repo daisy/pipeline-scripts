@@ -214,6 +214,7 @@
                  'text-align',
                  'page',
                  'white-space',
+                 'hyphens',
                  'font-style',
                  'font-weight',
                  'text-decoration',
