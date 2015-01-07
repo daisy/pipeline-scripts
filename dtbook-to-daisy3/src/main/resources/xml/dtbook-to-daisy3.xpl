@@ -4,6 +4,7 @@
 		xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
 		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
 		xmlns:d="http://www.daisy.org/ns/pipeline/data"
+		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		exclude-inline-prefixes="#all">
 
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -53,6 +54,7 @@
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl"/>
   <p:import href="dtbook-to-daisy3.convert.xpl"/>
 
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
@@ -204,7 +206,7 @@
     <p:with-option name="audio" select="$audio"/>
   </px:dtbook-to-daisy3-convert>
 
-  <px:fileset-store>
+  <px:fileset-store name="store">
     <p:input port="fileset.in">
       <p:pipe port="fileset.out" step="convert"/>
     </p:input>
@@ -212,4 +214,9 @@
       <p:pipe port="in-memory.out" step="convert"/>
     </p:input>
   </px:fileset-store>
+  <px:rm-audio-files cx:depends-on="store">
+    <p:input port="source">
+      <p:pipe port="audio-map" step="convert"/>
+    </p:input>
+  </px:rm-audio-files>
 </p:declare-step>
