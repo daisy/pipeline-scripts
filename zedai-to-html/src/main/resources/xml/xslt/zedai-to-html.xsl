@@ -30,7 +30,8 @@
     <html xml:lang="{if ($lang) then $lang else 'en'}">
       <head>
         <meta charset="UTF-8"/>
-        <title><!--TODO translate: title--></title>
+        <title><xsl:value-of
+          select="$nodes[1]/ancestor::document/head/meta[@property='dcterms:title']/@content"/></title>
         <!--<meta name="dcterms:identifier" content="com.googlecode.zednext.alice"/>-->
         <!--<meta name="dcterms:publisher" content="CSU"/>-->
         <!--<meta name="dcterms:date" content="2010-03-27T13:50:05-02:00"/>-->
