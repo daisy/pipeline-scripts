@@ -105,7 +105,14 @@
                 </m:mroot>
             </m:math>
         </x:context>
-        <x:expect label="should be discarded" test="empty(//(@id|@xml:id))"/>
+        <x:expect label="are kept">
+            <m:math id="foo">
+                <m:mroot id="bar">
+                    <m:mi>x</m:mi>
+                    <m:mn>3</m:mn>
+                </m:mroot>
+            </m:math>
+        </x:expect>
     </x:scenario>
 
     <x:scenario label="MathML @alttext and @altimg">
