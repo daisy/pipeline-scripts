@@ -6,13 +6,13 @@
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>modules-parent</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
     <relativePath />
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-parent</artifactId>
-  <version>1.8</version>
+  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
@@ -21,7 +21,6 @@
     <connection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</connection>
     <url>scm:git:git@github.com:daisy/pipeline-mod-braille.git</url>
     <developerConnection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</developerConnection>
-    <tag>v1.8</tag>
   </scm>
 
 
@@ -33,7 +32,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>braille-modules-bom</artifactId>
-        <version>1.8</version>
+        <version>1.9-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -43,7 +42,7 @@
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
         <artifactId>framework-bom</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -53,14 +52,14 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>common-utils-aggregator</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>script-utils-aggregator</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
