@@ -11,12 +11,8 @@
   </parent>
 
   <artifactId>nimas-fileset-validator</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: NIMAS Fileset Validator</name>
-
-  <scm>
-    <tag>v1.9</tag>
-  </scm>
 </project>

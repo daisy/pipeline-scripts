@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules</groupId>
   <artifactId>dtbook-to-odt</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   
   <name>DAISY Pipeline 2 module :: DTBook to ODT</name>
@@ -272,9 +272,4 @@
       </plugin>-->
     </plugins>
   </build>
-  
-
-  <scm>
-    <tag>v1.9</tag>
-  </scm>
 </project>

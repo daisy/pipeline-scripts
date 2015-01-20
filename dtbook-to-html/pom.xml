@@ -11,12 +11,8 @@
   </parent>
 
   <artifactId>dtbook-to-html</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: DTBook to HTML</name>
-
-  <scm>
-    <tag>v1.9</tag>
-  </scm>
 </project>

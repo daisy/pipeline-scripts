@@ -11,13 +11,8 @@
   </parent>
 
   <artifactId>daisy202-validator</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 module :: DAISY 2.02 Validator</name>
-  
-
-  <scm>
-    <tag>v1.9</tag>
-  </scm>
 </project>
