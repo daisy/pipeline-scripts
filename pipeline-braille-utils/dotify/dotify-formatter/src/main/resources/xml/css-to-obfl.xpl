@@ -180,8 +180,6 @@
                             <xsl:param name="context" as="element()"/>
                             <xsl:sequence select="css:is-valid($css:property)
                                                   and not($css:property/@value=('inherit','initial'))
-                                                  and not($css:property/@name=('margin-left','margin-right','text-indent')
-                                                          and number($css:property/@value) &lt; 0)
                                                   and new:applies-to($css:property/@name, $context)"/>
                         </xsl:function>
                         <xsl:function name="new:initial-value" as="xs:string">
@@ -203,6 +201,7 @@
                 </p:inline>
             </p:input>
         </css:new-definition>
+        <css:adjust-boxes/>
     </p:for-each>
     
     <p:xslt template-name="main">
