@@ -11,6 +11,7 @@ Building blocks related to [Braille CSS][braillecss].
 [library.xpl](src/main/resources/xml/library.xpl)
 -------------------------------------------------
 
+- `css:adjust-boxes`
 - `css:eval-counter`
 - `css:eval-string-set`
 - `css:eval-target-text`

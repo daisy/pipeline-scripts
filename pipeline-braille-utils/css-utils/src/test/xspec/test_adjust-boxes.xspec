@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/adjust-boxes.xsl">
+  
+  <x:scenario label="test_01">
+    <x:context>
+      <css:box type="block" css:margin-left="2">
+        <css:box type="block">xxx</css:box>
+        <css:box type="block" css:margin-left="-2">xxx</css:box>
+        <css:box type="block">xxx</css:box>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:box type="block">
+        <css:box type="block" css:margin-left="2">xxx</css:box>
+        <css:box type="block">xxx</css:box>
+        <css:box type="block" css:margin-left="2">xxx</css:box>
+      </css:box>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:context>
+      <css:box type="block" css:margin-left="2" css:border-top="⠒">
+        <css:box type="block" css:margin-left="-1" css:text-indent="2">xxx</css:box>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:box type="block" css:margin-left="2" css:border-top="⠒">
+        <css:box type="block" css:text-indent="1">xxx</css:box>
+      </css:box>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_03">
+    <x:context>
+      <css:box type="block" css:margin-left="4">
+        <css:box type="block" css:text-indent="-2">xxx</css:box>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:box type="block">
+        <css:box type="block" css:margin-left="4" css:text-indent="-2">xxx</css:box>
+      </css:box>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

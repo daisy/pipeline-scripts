@@ -6,6 +6,7 @@
     -->
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-calabash/library.xpl"/>
     
+    <p:import href="adjust-boxes.xpl"/>
     <p:import href="eval-counter.xpl"/>
     <p:import href="eval-string-set.xpl"/>
     <p:import href="eval-target-text.xpl"/>
