@@ -5,13 +5,26 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <!--
-        Remove @css:string-set attributes from non css:box elements and add them to the following
-        css:box's @css:string-entry attribute.
-    -->
+    <p:documentation>
+        Move 'string-set' declarations to boxes.
+    </p:documentation>
     
-    <p:input port="source" sequence="true"/>
-    <p:output port="result" sequence="true"/>
+    <p:input port="source" sequence="true">
+        <p:documentation>
+            Boxes must be represented by css:box elements. 'string-set' properties must be declared
+            in css:string-set or css:string-entry attributes, and must conform to
+            http://snaekobbi.github.io/braille-css-spec/#the-string-set-property.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result" sequence="true">
+        <p:documentation>
+            For each non css:box element in the input with a css:string-set or css:string-entry
+            attribute, that attribute is moved to the first following css:box element and renamed to
+            css:string-entry. If this css:box element already has a css:string-entry attribute in
+            the input, the 'string-set' declarations are prepended to it.
+        </p:documentation>
+    </p:output>
     
     <p:wrap-sequence wrapper="_"/>
     

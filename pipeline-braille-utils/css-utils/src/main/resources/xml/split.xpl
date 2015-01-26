@@ -7,19 +7,44 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <!--
-        Split a tree into a parts. The split points are specified with the split-before and
-        split-after options. Boxes that are split get a @part attribute (first|middle|last).
-    -->
+    <p:documentation>
+        Split a document into parts.
+    </p:documentation>
     
-    <p:input port="source"/>
-    <p:output port="result" sequence="true"/>
+    <p:input port="source">
+        <p:documentation>
+            The input is a single document.
+        </p:documentation>
+    </p:input>
     
-    <!--
-        must be of the form *[...] ?
-    -->
-    <p:option name="split-before" required="true"/> <!-- XSLTMatchPattern -->
-    <p:option name="split-after" required="true"/> <!-- XSLTMatchPattern -->
+    <p:option name="split-before" required="true">
+        <p:documentation>
+            The 'split-before' option must be an XSLTMatchPattern of the form `*[...]'.
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="split-after" required="true">
+        <p:documentation>
+            The 'split-before' option must be an XSLTMatchPattern of the form `*[...]'.
+        </p:documentation>
+    </p:option>
+    
+    <p:output port="result" sequence="true">
+        <p:documentation>
+            The output is a sequence of one or more documents and is the result of splitting the
+            input document before or after the split points specified with the 'split-before' and
+            'split-after' options. Splitting before an element means duplicating the document,
+            deleting the element and its following nodes from the first copy, and deleting the
+            elements's preceding nodes from the second copy. Similarly, splitting after an element
+            means deleting the element and its preceding nodes from the second copy and deleting the
+            element's following nodes from the first copy. css:box elements that are split get a
+            part attribute with value 'first', 'middle' or 'last'. The attributes css:id,
+            css:string-set, css:string-entry, css:counter-set, css:counter-reset,
+            css:counter-increment, css:counter-set-*, css:counter-reset-* and
+            css:counter-increment-* are omitted on css:box elements with a part attribute equal to
+            'middle' or 'last'.
+        </p:documentation>
+    </p:output>
     
     <p:declare-step type="pxi:split-into-sections-inner">
         <p:input port="source"/>

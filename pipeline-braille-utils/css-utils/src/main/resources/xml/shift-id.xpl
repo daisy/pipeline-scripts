@@ -5,12 +5,26 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <!--
-        Move @css:id attributes from non css:box elements to the following css:box.
-    -->
+    <p:documentation>
+        Move css:id attributes to boxes.
+    </p:documentation>
     
-    <p:input port="source" sequence="true"/>
-    <p:output port="result" sequence="true"/>
+    <p:input port="source" sequence="true">
+        <p:documentation>
+            Boxes must be represented by css:box elements. target-counter() values must be
+            represented by css:counter elements.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result" sequence="true">
+        <p:documentation>
+            For each non css:box element in the input with a css:id attribute, that attribute is
+            moved to the first following css:box element. If this css:box element already has a
+            css:id attribute in the input, the attribute is not overwritten. Instead, any
+            target-counter() values that reference the non css:box element are altered to reference
+            the following css:box element.
+        </p:documentation>
+    </p:output>
     
     <p:wrap-sequence wrapper="_"/>
     

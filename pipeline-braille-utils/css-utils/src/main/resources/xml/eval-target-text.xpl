@@ -5,13 +5,24 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <!--
-        - target-text must be evaluated after make-boxes?
-        - target-content must be evaluated before make-boxes?
-    -->
+    <p:documentation>
+        Evaluate target-text() values.
+    </p:documentation>
     
-    <p:input port="source" sequence="true"/>
-    <p:output port="result" sequence="true"/>
+    <p:input port="source" sequence="true">
+        <p:documentation>
+            target-text() values in the input must be represented by css:text elements. Elements
+            that are referenced by a target-text() value must be indicated with a css:id attribute
+            that matches the css:text element's target attribute.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result" sequence="true">
+        <p:documentation>
+            css:text elements are replaces by the string value of their target element (the element
+            whose css:id attribute corresponds with the css:text element's target attribute).
+        </p:documentation>
+    </p:output>
     
     <p:wrap-sequence wrapper="_"/>
     

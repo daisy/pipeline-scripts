@@ -5,8 +5,28 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <p:input port="source"/>
-    <p:output port="result"/>
+    <p:documentation>
+        Extract pseudo-element rules and at-rules from style sheets.
+    </p:documentation>
+    
+    <p:input port="source">
+        <p:documentation>
+            Style sheets of elements in the input must be declared in style attributes, which must
+            conform to http://snaekobbi.github.io/braille-css-spec/#style-attribute.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result">
+        <p:documentation>
+            Elements in the output will get a css:* attribute for each pseudo-element rule or
+            at-rule in the element's style attribute. For example, the rule `@page { size: 40 25 }'
+            becomes the attribute css:page="size: 40 25", and the rule `::before { content: '⠶' }'
+            becomes the attribute css:before="content: '⠶'". Any attributes in the input with the
+            same name will be overwritten. Only properties defined on the element itself will be
+            retained in the style attribute, as a simple declaration list. The style attribute is
+            dropped when empty.
+        </p:documentation>
+    </p:output>
     
     <p:xslt>
         <p:input port="stylesheet">

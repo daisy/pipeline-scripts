@@ -6,15 +6,25 @@
                 exclude-inline-prefixes="p xsl"
                 version="1.0">
     
-    <!--
-        Assumptions:
-        - root elements have no @css:string-set or @css:string-entry attributes
-    -->
+    <p:documentation>
+        Repeat 'string-set' declarations at the beginning of documents.
+    </p:documentation>
     
-    <p:input port="source" sequence="true"/>
-    <p:output port="result" sequence="true"/>
+    <p:input port="source" sequence="true">
+        <p:documentation>
+            The input is a sequence of one or more documents. 'string-set' properties must be
+            declared in css:string-set or css:string-entry attributes. Root elements of documents
+            should have no css:string-set or css:string-entry attributes.
+        </p:documentation>
+    </p:input>
     
-    <p:import href="shift-string-set.xpl"/>
+    <p:output port="result" sequence="true">
+        <p:documentation>
+            For each document in the input sequence and for each named string, the "entry" value of
+            that named string (if not absent) is declared in a css:string-entry attribute on the
+            document root element.
+        </p:documentation>
+    </p:output>
     
     <p:for-each>
         <p:xslt>

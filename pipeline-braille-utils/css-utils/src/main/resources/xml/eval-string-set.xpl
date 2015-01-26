@@ -5,8 +5,24 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <p:input port="source"/>
-    <p:output port="result"/>
+    <p:documentation>
+        Evaluate 'string-set' properties.
+    </p:documentation>
+    
+    <p:input port="source">
+        <p:documentation>
+            The 'string-set' properties of elements in the input must be declared in css:string-set
+            attributes, and must conform to
+            http://snaekobbi.github.io/braille-css-spec/#the-string-set-property.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result">
+        <p:documentation>
+            Each css:string-set attribute is evaluated, so that in the output each pair in the
+            'string-set' property consists of an identifier and a single string value.
+        </p:documentation>
+    </p:output>
     
     <p:xslt>
         <p:input port="stylesheet">

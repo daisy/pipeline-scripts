@@ -5,21 +5,26 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <!--
-        Group inline boxes that have one or more sibling block boxes, or that have no block box
-        ancestor, inside anonymous block boxes.
-        See http://snaekobbi.github.io/braille-css-spec/#anonymous-boxes.
-    -->
+    <p:documentation>
+        Wrap inline boxes that have sibling block boxes in anonymous block boxes.
+        (http://snaekobbi.github.io/braille-css-spec/#anonymous-boxes).
+    </p:documentation>
     
-    <!--
-        Assumptions:
-        - no block boxes inside inline boxes
-        - all content inside inline boxes
-        - no css:_ left
-    -->
+    <p:input port="source">
+        <p:documentation>
+            The input is assumed to be a tree-of-boxes representation of a document that consists of
+            only a css:root document node, css:box elements and text nodes. There should be no block
+            boxes inside inline boxes, and there should be no css:_ elements.
+        </p:documentation>
+    </p:input>
     
-    <p:input port="source"/>
-    <p:output port="result"/>
+    <p:output port="result">
+        <p:documentation>
+            Adjacent inline boxes with one or more sibling block boxes are grouped and wrapped in an
+            anonymous block box. Inline boxes that are not already contained in a block box
+            are wrapped in an anonymous block box as well.
+        </p:documentation>
+    </p:output>
     
     <p:wrap match="css:box[@type='inline'][parent::css:root or
                                            preceding-sibling::css:box[@type='block'] or

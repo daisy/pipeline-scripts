@@ -5,8 +5,26 @@
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
-    <p:input port="source"/>
-    <p:output port="result"/>
+    <p:documentation>
+        Generate pseudo-elements.
+    </p:documentation>
+    
+    <p:input port="source">
+        <p:documentation>
+            Pseudo-element rules in the input must be declared in css:before and css:after
+            attributes.
+        </p:documentation>
+    </p:input>
+    
+    <p:output port="result">
+        <p:documentation>
+            For each element with a css:before attribute in the input, an empty css:before element
+            will be inserted in the output as the element's first child. Similarly, for each element
+            with a css:after attribute, a css:after element will be inserted as the element's last
+            child. The css:before and css:after attributes are moved to the inserted elements and
+            renamed to 'style'.
+        </p:documentation>
+    </p:output>
     
     <p:xslt>
         <p:input port="stylesheet">

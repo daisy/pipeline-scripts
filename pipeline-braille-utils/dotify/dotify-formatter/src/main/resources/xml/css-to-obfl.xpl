@@ -9,9 +9,9 @@
                 exclude-inline-prefixes="pxi xsl"
                 version="1.0">
     
-    <!--
-        Convert a document with inline Braille CSS to OBFL (Open Braille Formatting Language)
-    -->
+    <p:documentation>
+        Convert a document with inline braille CSS to OBFL (Open Braille Formatting Language).
+    </p:documentation>
     
     <p:input port="source" sequence="true"/>
     <p:output port="result" sequence="false"/>
