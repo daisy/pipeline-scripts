@@ -9,11 +9,11 @@
     <x:call step="css:new-definition">
       <x:input port="source">
         <x:document type="inline">
-          <css:root css:page="size: 10 10">
+          <css:_ css:page="size: 10 10">
             <css:box type="block" css:text-align="center">
               <css:box type="block"/>
             </css:box>
-          </css:root>
+          </css:_>
         </x:document>
       </x:input>
       <x:input port="definition">
@@ -49,11 +49,11 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root css:page="size: 10 10">
+        <css:_ css:page="size: 10 10">
           <css:box type="block" css:text-align="center">
             <css:box type="block" css:text-align="center"/>
           </css:box>
-        </css:root>
+        </css:_>
       </x:document>
     </x:expect>
   </x:scenario>

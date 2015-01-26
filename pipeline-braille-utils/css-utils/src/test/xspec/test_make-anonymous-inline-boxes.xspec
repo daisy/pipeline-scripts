@@ -5,30 +5,28 @@
   
   <x:scenario label="test_01">
     <x:context>
-      <css:root>
-        <css:box type="inline" style="text-align: center">
+      <css:box type="inline" style="text-align: center">
+        <css:box type="block">
+          xxx
           <css:box type="block">
-            xxx
+            <css:white-space>
+            </css:white-space>
             <css:box type="block">
-              <css:white-space>
-              </css:white-space>
-              <css:box type="block">
-                xxx
-              </css:box>
-              <css:white-space>
-                xxx
-              </css:white-space>
+              xxx
             </css:box>
+            <css:white-space>
+              xxx
+            </css:white-space>
           </css:box>
         </css:box>
-      </css:root>
+      </css:box>
     </x:context>
     <x:expect label="result">
-      <css:root>
+      <css:_>
         <css:box type="block" style="text-align: center">
           <css:box type="inline">
-            xxx
-            </css:box>
+          xxx
+          </css:box>
           <css:box type="block">
             <css:box type="inline">
               <css:white-space>
@@ -36,52 +34,48 @@
             </css:box>
             <css:box type="block">
               <css:box type="inline">
-                xxx
-              </css:box>
+              xxx
+            </css:box>
             </css:box>
             <css:box type="inline">
               <css:white-space>
-                xxx
-              </css:white-space>
+              xxx
+            </css:white-space>
             </css:box>
           </css:box>
         </css:box>
-      </css:root>
+      </css:_>
     </x:expect>
   </x:scenario>
   
   <x:scenario label="test_02">
     <x:context>
-      <css:root>
-        <css:box type="block">
+      <css:box type="block">
+        <css:text target="x"/>
+        <css:leader/>
+        <css:counter target="x"/>
+        <css:_ css:id="foo">
+          <css:box type="block">
+            xxx
+          </css:box>
+        </css:_>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:box type="block">
+        <css:box type="inline">
           <css:text target="x"/>
           <css:leader/>
           <css:counter target="x"/>
-          <css:_ css:id="foo">
-            <css:box type="block">
-              xxx
-            </css:box>
-          </css:_>
         </css:box>
-      </css:root>
-    </x:context>
-    <x:expect label="result">
-      <css:root>
-        <css:box type="block">
-          <css:box type="inline">
-            <css:text target="x"/>
-            <css:leader/>
-            <css:counter target="x"/>
+        <css:_ css:id="foo">
+          <css:box type="block">
+            <css:box type="inline">
+            xxx
           </css:box>
-          <css:_ css:id="foo">
-            <css:box type="block">
-              <css:box type="inline">
-              xxx
-            </css:box>
-            </css:box>
-          </css:_>
-        </css:box>
-      </css:root>
+          </css:box>
+        </css:_>
+      </css:box>
     </x:expect>
   </x:scenario>
   

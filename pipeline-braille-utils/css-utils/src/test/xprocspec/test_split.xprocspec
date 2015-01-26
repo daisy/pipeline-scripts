@@ -12,12 +12,12 @@
       <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]"/>
       <p:split-sequence test="//css:box"/>
       <p:for-each>
-        <p:label-elements match="/css:root[descendant::*/@css:page]" attribute="css:page"
+        <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
                           label="(descendant::*/@css:page)[last()]"/>
-        <p:label-elements match="/css:root[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
+        <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
                           label="(descendant::*/@css:counter-set-page)[last()]"/>
-        <p:delete match="/css:root//*/@css:page"/>
-        <p:delete match="/css:root//*/@css:counter-set-page"/>
+        <p:delete match="/*//*/@css:page"/>
+        <p:delete match="/*//*/@css:counter-set-page"/>
         <p:unwrap match="css:_[not(@css:*)]"/>
       </p:for-each>
     </p:declare-step>
@@ -27,7 +27,7 @@
     <x:call step="pxi:test-split">
       <x:input port="source">
         <x:document type="inline">
-          <css:root>
+          <_>
             <css:box type="block" css:page="size: 30 15">
               <front css:page="size: 30 15; @bottom-right { content: counter(page, lower-roman) }">
                 <css:box> foo </css:box>
@@ -39,7 +39,7 @@
                 <css:box css:counter-set-page="1"> baz </css:box>
               </rear>
             </css:box>
-          </css:root>
+          </_>
         </x:document>
       </x:input>
     </x:call>
@@ -48,21 +48,21 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root css:page="size: 30 15">
+        <_ css:page="size: 30 15">
           <css:box type="block" part="first"/>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="size: 30 15; @bottom-right { content: counter(page, lower-roman) }">
+        <_ css:page="size: 30 15; @bottom-right { content: counter(page, lower-roman) }">
           <css:box type="block" part="middle">
             <front>
               <css:box> foo </css:box>
             </front>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="size: 30 15">
+        <_ css:page="size: 30 15">
           <css:box type="block" part="middle">
             <body>
               <css:box> bar </css:box>
@@ -70,16 +70,16 @@
             <rear>
             </rear>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="size: 30 15" css:counter-set-page="1">
+        <_ css:page="size: 30 15" css:counter-set-page="1">
           <css:box type="block" part="last">
             <rear>
               <css:box> baz </css:box>
             </rear>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
     </x:expect>
   </x:scenario>
@@ -88,13 +88,13 @@
     <x:call step="pxi:test-split">
       <x:input port="source">
         <x:document type="inline">
-          <css:root>
+          <_>
             <css:box type="block" css:counter-set-page="1">
               <css:box> foo </css:box>
               <css:box css:counter-set-page="2"> bar </css:box>
               <css:box> baz </css:box>
             </css:box>
-          </css:root>
+          </_>
         </x:document>
       </x:input>
     </x:call>
@@ -103,19 +103,19 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root css:counter-set-page="1">
+        <_ css:counter-set-page="1">
           <css:box type="block" part="first">
             <css:box> foo </css:box>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:counter-set-page="2">
+        <_ css:counter-set-page="2">
           <css:box type="block" part="last">
             <css:box> bar </css:box>
             <css:box> baz </css:box>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
     </x:expect>
   </x:scenario>
@@ -124,7 +124,7 @@
     <x:call step="pxi:test-split">
       <x:input port="source">
         <x:document type="inline">
-          <css:root css:page="foo">
+          <_ css:page="foo">
             <css:box type="block">
               <css:_ css:page="bar">
                 <css:box> xxx </css:box>
@@ -134,7 +134,7 @@
                 <css:box> xxx </css:box>
               </css:_>
             </css:box>
-          </css:root>
+          </_>
         </x:document>
       </x:input>
     </x:call>
@@ -143,35 +143,35 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root css:page="foo">
+        <_ css:page="foo">
           <css:box type="block" part="first"/>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="bar">
+        <_ css:page="bar">
           <css:box type="block" part="middle">
             <css:box> xxx </css:box>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="foo">
+        <_ css:page="foo">
           <css:box type="block" part="middle">
             <css:box> xxx </css:box>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="baz">
+        <_ css:page="baz">
           <css:box type="block" part="middle">
             <css:box> xxx </css:box>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:page="foo">
+        <_ css:page="foo">
           <css:box type="block" part="last"/>
-        </css:root>
+        </_>
       </x:document>
     </x:expect>
   </x:scenario>

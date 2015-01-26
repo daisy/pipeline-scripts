@@ -13,18 +13,18 @@
     <p:input port="source">
         <p:documentation>
             The input is assumed to be a tree-of-boxes representation of a document. In other words,
-            the input should consist of only css:root, css:box and css:_ elements and text nodes.
+            the input should consist of only css:box and css:_ elements and text nodes.
         </p:documentation>
     </p:input>
     
     <p:output port="result">
         <p:documentation>
             Inline boxes that have descendant block boxes are either unwrapped, or if the element
-            has one or more css:* attributes, renamed to css:_. For such elements, the inherited
-            properties (specified in the element's style attribute) are moved to the next preserved
-            descendant box, and 'inherit' values on the next preserved descendant box are
-            concretized. css:root and css:_ elements are retained. All adjacent text that is not
-            already contained in an inline box is wrapped into one.
+            has one or more css:* attributes or if it's the document element, renamed to css:_. For
+            such elements, the inherited properties (specified in the element's style attribute) are
+            moved to the next preserved descendant box, and 'inherit' values on the next preserved
+            descendant box are concretized. css:_ elements are retained. All adjacent text that is
+            not already contained in an inline box is wrapped into an anonymous one.
         </p:documentation>
     </p:output>
     

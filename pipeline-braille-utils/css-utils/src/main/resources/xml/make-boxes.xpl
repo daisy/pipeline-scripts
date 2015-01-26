@@ -28,8 +28,8 @@
             element's 'list-style-type' property is not 'none', the marker box contains a
             css:counter element with name="list-item" and a style attribute with the value of the
             'list-style-type' property. Otherwise, the marker box is empty. Elements that don't
-            generate boxes (elements with a 'display' property of 'none') become css:_ elements.
-            The document node is wrapped in a css:root element.
+            generate boxes (elements with a 'display' property of 'none') become css:_
+            elements. css:_ elements in the input are retained in the output.
         </p:documentation>
     </p:output>
     

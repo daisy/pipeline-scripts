@@ -6,15 +6,6 @@
     
     <xsl:include href="library.xsl"/>
     
-    <!--
-        don't unwrap root
-    -->
-    <xsl:template match="/css:root">
-        <xsl:copy>
-            <xsl:apply-templates select="*"/>
-        </xsl:copy>
-    </xsl:template>
-    
     <xsl:template match="css:_">
         <xsl:copy>
             <xsl:sequence select="@*"/>
@@ -31,7 +22,7 @@
             <xsl:call-template name="inherit-properties"/>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="@css:*">
+            <xsl:when test="@css:* or not(parent::*)">
                 <xsl:element name="css:_">
                     <xsl:sequence select="@css:*"/>
                     <xsl:call-template name="apply-templates">

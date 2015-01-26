@@ -7,10 +7,10 @@
     
     <xsl:include href="library.xsl"/>
     
-    <xsl:template match="/*" priority="1">
-        <css:root>
-            <xsl:next-match/>
-        </css:root>
+    <xsl:template match="css:_">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template match="*[@css:display]">

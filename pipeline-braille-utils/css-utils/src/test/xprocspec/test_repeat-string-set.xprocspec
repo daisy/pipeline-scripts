@@ -8,14 +8,14 @@
     <x:call step="css:repeat-string-set">
       <x:input port="source">
         <x:document type="inline">
-          <css:root>
+          <_>
             <css:box css:string-set="foo 'x', bar 'y'">
               <css:box css:string-set="foo 'z'"/>
             </css:box>
-          </css:root>
+          </_>
         </x:document>
         <x:document type="inline">
-          <css:root/>
+          <_/>
         </x:document>
       </x:input>
     </x:call>
@@ -24,14 +24,14 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root>
+        <_>
           <css:box css:string-set="foo 'x', bar 'y'">
             <css:box css:string-set="foo 'z'"/>
           </css:box>
-        </css:root>
+        </_>
       </x:document>
       <x:document type="inline">
-        <css:root css:string-entry="foo 'z', bar 'y'"/>
+        <_ css:string-entry="foo 'z', bar 'y'"/>
       </x:document>
     </x:expect>
   </x:scenario>

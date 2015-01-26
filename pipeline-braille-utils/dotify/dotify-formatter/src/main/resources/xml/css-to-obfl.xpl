@@ -70,8 +70,9 @@
     
     <p:for-each>
         <!--
-            Move @css:page and @css:counter-set-page to root element
+            Move @css:page and @css:counter-set-page to css:_ root element
         -->
+        <p:wrap wrapper="css:_" match="/*"/>
         <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
                           label="(descendant::*/@css:page)[last()]"/>
         <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
@@ -96,7 +97,7 @@
     <css:shift-string-set/>
     
     <p:for-each>
-        <p:unwrap match="css:_[not(@css:*)]"/>
+        <p:unwrap match="css:_[not(@css:*) and parent::*]"/>
         <css:parse-properties properties="padding-left padding-right padding-top padding-bottom"/>
         <css:padding-to-margin/>
         <css:make-anonymous-block-boxes/>

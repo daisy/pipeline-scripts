@@ -5,16 +5,26 @@
   
   <x:scenario label="test_01">
     <x:context>
-      <css:root>
-        <css:_ css:string-set="foo 'x'"/>
-        <css:box css:string-entry="bar 'y'"/>
-      </css:root>
+      <css:_>
+        <css:box>
+          <css:_ css:string-set="foo 'x'"/>
+        </css:box>
+        <css:box css:string-entry="bar 'y'">
+          <css:box/>
+        </css:box>
+        <css:box/>
+      </css:_>
     </x:context>
     <x:expect label="result">
-      <css:root>
-        <css:_/>
-        <css:box css:string-entry="foo 'x', bar 'y'"/>
-      </css:root>
+      <css:_>
+        <css:box>
+          <css:_/>
+        </css:box>
+        <css:box css:string-entry="foo 'x', bar 'y'">
+          <css:box/>
+        </css:box>
+        <css:box/>
+      </css:_>
     </x:expect>
   </x:scenario>
   

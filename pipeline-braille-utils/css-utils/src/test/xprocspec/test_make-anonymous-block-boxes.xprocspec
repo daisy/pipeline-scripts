@@ -7,7 +7,7 @@
     <x:call step="css:make-anonymous-block-boxes">
       <x:input port="source">
         <x:document type="inline">
-          <css:root>
+          <css:_>
             <css:box type="block">
               <css:box type="inline"/>
               <css:box type="inline"/>
@@ -15,8 +15,8 @@
               <css:box type="inline"/>
             </css:box>
             <css:box type="inline"/>
-          </css:root>
-        </x:document>
+          </css:_>
+          </x:document>
       </x:input>
     </x:call>
     <x:context label="result">
@@ -24,7 +24,7 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:root>
+        <css:_>
           <css:box type="block">
             <css:box type="block">
               <css:box type="inline"/>
@@ -38,7 +38,7 @@
           <css:box type="block">
             <css:box type="inline"/>
           </css:box>
-        </css:root>
+        </css:_>
       </x:document>
     </x:expect>
   </x:scenario>

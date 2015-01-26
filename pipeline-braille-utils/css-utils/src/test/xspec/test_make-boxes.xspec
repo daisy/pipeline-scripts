@@ -17,18 +17,16 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <css:root>
-        <css:box type="inline" name="doc">
-          <css:_>
-            <css:_ css:string-set="author 'Bert'"/>
-          </css:_>
-          <css:box type="inline" name="body">
-            <css:box type="block" name="p" css:counter-reset="baz" style="margin-left: 2">
-              <css:string value="baz"/>
-            </css:box>
+      <css:box type="inline" name="doc">
+        <css:_>
+          <css:_ css:string-set="author 'Bert'"/>
+        </css:_>
+        <css:box type="inline" name="body">
+          <css:box type="block" name="p" css:counter-reset="baz" style="margin-left: 2">
+            <css:string value="baz"/>
           </css:box>
         </css:box>
-      </css:root>
+      </css:box>
     </x:expect>
   </x:scenario>
   

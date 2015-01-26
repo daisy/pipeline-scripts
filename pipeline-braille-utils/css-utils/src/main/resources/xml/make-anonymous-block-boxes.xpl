@@ -13,8 +13,8 @@
     <p:input port="source">
         <p:documentation>
             The input is assumed to be a tree-of-boxes representation of a document that consists of
-            only a css:root document node, css:box elements and text nodes. There should be no block
-            boxes inside inline boxes, and there should be no css:_ elements.
+            only css:box elements and text nodes. There should be no block boxes inside inline
+            boxes, and there should be no css:_ elements except if it's the document element.
         </p:documentation>
     </p:input>
     
@@ -26,9 +26,10 @@
         </p:documentation>
     </p:output>
     
-    <p:wrap match="css:box[@type='inline'][parent::css:root or
-                                           preceding-sibling::css:box[@type='block'] or
-                                           following-sibling::css:box[@type='block']]"
+    <p:wrap match="css:box[@type='inline'][preceding-sibling::css:box[@type='block'] or
+                                           following-sibling::css:box[@type='block'] or
+                                           not(parent::*) or
+                                           parent::css:_]"
             group-adjacent="true()"
             wrapper="css:_box_"/>
     
