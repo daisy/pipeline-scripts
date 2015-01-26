@@ -6,10 +6,9 @@
   <x:scenario label="test_01">
     <x:context>
       <css:root>
-        <doc style="text-align: center">
+        <css:box type="inline" style="text-align: center">
           <css:box type="block">
             xxx
-            <span>xxx</span>
             <css:box type="block">
               <css:white-space>
               </css:white-space>
@@ -21,7 +20,7 @@
               </css:white-space>
             </css:box>
           </css:box>
-        </doc>
+        </css:box>
       </css:root>
     </x:context>
     <x:expect label="result">
@@ -29,8 +28,7 @@
         <css:box type="block" style="text-align: center">
           <css:box type="inline">
             xxx
-            <span>xxx</span>
-          </css:box>
+            </css:box>
           <css:box type="block">
             <css:box type="inline">
               <css:white-space>
@@ -59,9 +57,11 @@
           <css:text target="x"/>
           <css:leader/>
           <css:counter target="x"/>
-          <css:box type="block">
-            xxx
-          </css:box>
+          <css:_ css:id="foo">
+            <css:box type="block">
+              xxx
+            </css:box>
+          </css:_>
         </css:box>
       </css:root>
     </x:context>
@@ -73,11 +73,13 @@
             <css:leader/>
             <css:counter target="x"/>
           </css:box>
-          <css:box type="block">
-            <css:box type="inline">
-            xxx
-          </css:box>
-          </css:box>
+          <css:_ css:id="foo">
+            <css:box type="block">
+              <css:box type="inline">
+              xxx
+            </css:box>
+            </css:box>
+          </css:_>
         </css:box>
       </css:root>
     </x:expect>

@@ -25,7 +25,8 @@
         </p:input>
     </p:xslt>
     
-    <p:delete match="@css:id[string(.)=parent::*/(ancestor::*|preceding::*)/@css:id/string()]"/>
+    <p:delete match="@css:_id_[not(string(.)=(//css:text|//css:string|//css:counter)/@target/string())]"/>
+    <p:rename match="@css:_id_" new-name="css:id"/>
     
     <p:filter select="/_/*"/>
     

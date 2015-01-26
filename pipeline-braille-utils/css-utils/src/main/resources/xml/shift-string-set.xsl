@@ -10,20 +10,20 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="css:_/@css:string-set|
-                         css:_/@css:string-entry|
-                         css:root/@css:string-set|
-                         css:root/@css:string-entry"/>
+    <xsl:template match="*[not(self::css:box)]/@css:string-set|
+                         *[not(self::css:box)]/@css:string-entry"/>
     
     <xsl:template match="css:box">
-        <xsl:variable name="count" select="count(following::css:box|descendant::css:box)"/>
         <xsl:variable name="pending" as="attribute()*"
-                      select="for $e in (//css:_|//css:root)[count(following::css:box|descendant::css:box)=$count+1]
+                      select="for $e in (preceding::*|ancestor::*)[not(self::css:box)]
+                                                                  [@css:string-set|@css:string-entry]
+                                        except (preceding::css:box|ancestor::css:box)
+                                               [last()]/(preceding::*|ancestor::*)
                               return ($e/@css:string-entry,$e/@css:string-set)"/>
         <xsl:choose>
             <xsl:when test="exists($pending)">
                 <xsl:copy>
-                    <xsl:apply-templates select="@*"/>
+                    <xsl:apply-templates select="@* except @css:string-entry"/>
                     <xsl:attribute name="css:string-entry" select="string-join(($pending, @css:string-entry), ', ')"/>
                     <xsl:apply-templates/>
                 </xsl:copy>

@@ -15,9 +15,7 @@
           </css:root>
         </x:document>
         <x:document type="inline">
-          <css:root>
-            <css:box/>
-          </css:root>
+          <css:root/>
         </x:document>
       </x:input>
     </x:call>
@@ -33,9 +31,7 @@
         </css:root>
       </x:document>
       <x:document type="inline">
-        <css:root>
-          <css:box css:string-entry="foo 'z', bar 'y'"/>
-        </css:root>
+        <css:root css:string-entry="foo 'z', bar 'y'"/>
       </x:document>
     </x:expect>
   </x:scenario>

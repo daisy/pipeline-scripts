@@ -386,8 +386,9 @@
         <xsl:param name="context" as="element()"/>
         <xsl:choose>
             <xsl:when test="@value='inherit' and $concretize-inherit">
-                <xsl:sequence select="if ($context/parent::*)
-                                      then css:specified-properties(@name, true(), $concretize-initial, $validate, $context/parent::*)
+                <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except self::css:box)][1]"/>
+                <xsl:sequence select="if ($parent)
+                                      then css:specified-properties(@name, true(), $concretize-initial, $validate, $parent)
                                       else css:property(@name, 'initial')"/>
             </xsl:when>
             <xsl:otherwise>

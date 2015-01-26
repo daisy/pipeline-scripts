@@ -94,6 +94,4 @@
         </p:xslt>
     </p:for-each>
     
-    <css:shift-string-set/>
-    
 </p:declare-step>

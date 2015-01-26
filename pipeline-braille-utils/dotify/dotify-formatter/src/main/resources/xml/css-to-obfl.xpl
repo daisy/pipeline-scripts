@@ -91,8 +91,9 @@
                   new-name="css:_"/>
     </p:for-each>
     
-    <css:shift-string-set/>
     <css:shift-id/>
+    <css:repeat-string-set/>
+    <css:shift-string-set/>
     
     <p:for-each>
         <p:unwrap match="css:_[not(@css:*)]"/>
@@ -101,7 +102,6 @@
         <css:make-anonymous-block-boxes/>
     </p:for-each>
     
-    <css:repeat-string-set/>
     <p:split-sequence test="//css:box"/>
     
     <p:for-each>

@@ -11,20 +11,8 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@xml:id]" priority="0.6">
-        <xsl:call-template name="try-id">
-            <xsl:with-param name="name" select="replace(@xml:id,'^#','')"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    <xsl:template match="*[@id]">
-        <xsl:call-template name="try-id">
-            <xsl:with-param name="name" select="replace(@id,'^#','')"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    <xsl:template name="try-id">
-        <xsl:param name="name" as="xs:string"/>
+    <xsl:template match="*[@xml:id or @id]">
+        <xsl:variable name="name" as="xs:string*" select="(@xml:id|@id)"/>
         <xsl:choose>
             <xsl:when test="//*[self::css:text[@target] or
                                 self::css:string[@name][@target] or
@@ -32,7 +20,9 @@
                                [replace(@target,'^#','')=$name]">
                 <xsl:copy>
                     <xsl:apply-templates select="@*"/>
-                    <xsl:attribute name="css:id" select="$name"/>
+                    <xsl:if test="not(@css:id)">
+                        <xsl:attribute name="css:_id_" select="generate-id(.)"/>
+                    </xsl:if>
                     <xsl:apply-templates select="node()"/>
                 </xsl:copy>
             </xsl:when>
@@ -42,10 +32,18 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:text/@target|
-                         css:string[@name]/@target|
-                         css:counter/@target">
-        <xsl:attribute name="target" select="replace(.,'^#','')"/>
+    <xsl:template match="css:text[@target]|
+                         css:string[@name][@target]|
+                         css:counter[@target]">
+        <xsl:variable name="name" as="xs:string" select="replace(@target,'^#','')"/>
+        <xsl:variable name="target" as="element()?" select="//*[@xml:id=$name or @id=$name][1]"/>
+        <xsl:if test="$target">
+            <xsl:copy>
+                <xsl:sequence select="@* except @target"/>
+                <xsl:attribute name="target" select="($target/@css:id,generate-id($target))[1]"/>
+                <xsl:sequence select="node()"/>
+            </xsl:copy>
+        </xsl:if>
     </xsl:template>
     
 </xsl:stylesheet>

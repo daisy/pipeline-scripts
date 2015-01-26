@@ -42,12 +42,6 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:_">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-    </xsl:template>
-    
     <xsl:template match="*">
         <xsl:element name="css:box">
             <xsl:attribute name="type" select="'inline'"/>

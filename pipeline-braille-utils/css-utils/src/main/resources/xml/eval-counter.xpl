@@ -30,8 +30,6 @@
         <p:with-param name="exclude-counter-names" select="$exclude-counters"/>
     </p:xslt>
     
-    <p:unwrap match="css:_[not(@*)]"/>
-    
     <p:filter select="/_/*"/>
     
 </p:declare-step>

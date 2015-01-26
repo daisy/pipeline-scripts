@@ -16,6 +16,12 @@
                 <css:counter target="#h1" name="braille-page"/>
                 <css:string target="#h1" name="print-page"/>
               </entry>
+              <entry>
+                <css:text target="#h2"/>
+                <css:leader pattern="⠄⠄"/>
+                <css:counter target="h2" name="braille-page"/>
+                <css:string target="#h2" name="print-page"/>
+              </entry>
             </toc>
           </frontmatter>
         </x:document>
@@ -23,6 +29,10 @@
           <bodymatter>
             <h id="h1">
               foo
+            </h>
+            <p xml:id="h1"/>
+            <h xml:id="h2" css:id="bar">
+              bar
             </h>
           </bodymatter>
         </x:document>
@@ -36,18 +46,28 @@
           <frontmatter>
             <toc>
               <entry>
-                <css:text target="h1"/>
+                <css:text target="d705e31"/>
                 <css:leader pattern="⠄⠄"/>
-                <css:counter target="h1" name="braille-page"/>
-                <css:string target="h1" name="print-page"/>
+                <css:counter target="d705e31" name="braille-page"/>
+                <css:string target="d705e31" name="print-page"/>
+              </entry>
+              <entry>
+                <css:text target="bar"/>
+                <css:leader pattern="⠄⠄"/>
+                <css:counter target="bar" name="braille-page"/>
+                <css:string target="bar" name="print-page"/>
               </entry>
             </toc>
           </frontmatter>
         </x:document>
         <x:document type="inline">
           <bodymatter>
-            <h id="h1" css:id="h1">
+            <h id="h1" css:id="d705e31">
               foo
+            </h>
+            <p xml:id="h1"/>
+            <h xml:id="h2" css:id="bar">
+              bar
             </h>
           </bodymatter>
         </x:document>
