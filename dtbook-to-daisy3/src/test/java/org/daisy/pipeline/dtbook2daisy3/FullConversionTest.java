@@ -61,6 +61,7 @@ import org.daisy.zedval.engine.ZedMessage;
 import org.daisy.zedval.engine.ZedReporter;
 import org.daisy.zedval.engine.ZedReporterException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -101,10 +102,10 @@ public class FullConversionTest implements DifferenceListener {
 		// so to avoid the current trick
 
 		// copy the mp3 file to the temporary directory
-		URL mp3 = getClass().getResource("/dtbook-tts/30sec.mp3");
-		String dest = "30sec.mp3";
-		File destOnTmp = new File(System.getProperty("java.io.tmpdir"), dest);
-		FileUtils.copyURLToFile(mp3, destOnTmp);
+		URL mp3Src = getClass().getResource("/dtbook-tts/30sec.mp3");
+		File destOnTmp = new File(System.getProperty("java.io.tmpdir"), "30sec.mp3");
+		Option mp3SrcProp = systemProperty("mp3.src").value(mp3Src.toString());
+		Option mp3DestProp = systemProperty("mp3.dest").value(destOnTmp.getAbsolutePath());
 
 		// modify the XSLT so it refers to the mp3 in the tmp directory
 		InputStream algo = getClass().getResourceAsStream(
@@ -144,7 +145,7 @@ public class FullConversionTest implements DifferenceListener {
 		 * osgi-framework's packages are boot delegated, they won't be aware of
 		 * Zedval's dependencies. Otherwise, if osgi-framework is a regular
 		 * bundle, it obviously does not import Zedval's dependencies. Either
-		 * way, osgi-framwework can't find the classes of Zedval's dependencies.
+		 * way, osgi-framework can't find the classes of Zedval's dependencies.
 		 * This is why we override javax.xml classes with our own bundle that
 		 * includes ZedVal's dependencies. We can't put Zedval as a whole into
 		 * the classpath because daisy-utils attempts to use the classloader
@@ -242,7 +243,9 @@ public class FullConversionTest implements DifferenceListener {
 					   mainDeps,
 					   scriptDeps,
 					   resourcesOnDisk,
-					   targetDirprop);
+					   targetDirprop,
+					   mp3SrcProp,
+					   mp3DestProp);
 	}
 
 	@Inject
@@ -351,6 +354,15 @@ public class FullConversionTest implements DifferenceListener {
 			ZedContextException, ZedFileInitializationException, SAXException,
 			ParserConfigurationException {
 
+
+		URL mp3 = getClass().getResource("/dtbook-tts/30sec.mp3");
+
+		//copy the MP3 file that will be referenced in the SMIL files
+		//it has to be done for every test because it is deleted when the job is done
+		//TODO: change its name so we can run the tests in parallel
+		FileUtils.copyURLToFile(new URL(System.getProperty("mp3.src")),
+								new File(System.getProperty("mp3.dest")));
+		
 		final AtomicInteger numErrors = new AtomicInteger(0);
 
 		ZedReporter reporter = new ZedReporter() {
@@ -413,8 +425,8 @@ public class FullConversionTest implements DifferenceListener {
 		ZedVal zv = new ZedVal();
 		zv.setReporter(reporter);
 		zv.validate(new File(outputDir, "book.opf")); // TODO: look for any
-														// *.opf in the
-														// directory
+												      // *.opf in the
+													  // directory
 
 		Assert.assertEquals("there must not be any validation errors", 0,
 				numErrors.get());
@@ -684,11 +696,13 @@ public class FullConversionTest implements DifferenceListener {
 		runTestsOnFile("/samples/shuffled_programme_tv.xml", true, false);
 	}
 
+	@Ignore
 	@Test
 	public void noAudio19() throws Exception {
 		runTestsOnFile("/samples/minimal.xml", false, false);
 	}
 
+	@Ignore
 	@Test
 	public void withAudio19() throws Exception {
 		runTestsOnFile("/samples/minimal.xml", true, false);

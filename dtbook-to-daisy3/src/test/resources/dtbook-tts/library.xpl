@@ -25,6 +25,7 @@
     <p:option name="output-dir" required="false" select="''"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-break-detection/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
 
     <p:choose name="build-audio-map">
       <p:when test="$audio = 'false'">
@@ -41,13 +42,12 @@
       <p:otherwise>
 	<p:output port="clips" primary="true"/>
 	<p:output port="content">
-	  <p:pipe port="result" step="break"/>
+	  <p:pipe port="result" step="isolate"/>
 	</p:output>
-	<!-- It is necessary to apply NLP to split the content around
-	     the skippable elements (pagenums and noterefs) so they
-	     can be attached to a smilref attribute that won't be the
-	     descendant of any audio clip. Otherwise we risk having
-	     pagenums without @smilref, which is not allowed by the
+	<!-- It is necessary to apply NLP and daisy3-utils to split the content around the
+	     skippable elements (pagenums and noterefs) so they can be attached to a
+	     smilref attribute that won't be the descendant of any audio clip. Otherwise
+	     we risk having pagenums without @smilref, which is not allowed by the
 	     specs. -->
 	<px:dtbook-break-detect name="break">
 	  <p:input port="source">
@@ -55,6 +55,11 @@
 	    <p:pipe port="content.in" step="main"/>
 	  </p:input>
 	</px:dtbook-break-detect>
+	<px:isolate-daisy3-skippable name="isolate">
+	  <p:input port="sentence-ids">
+	    <p:pipe port="sentence-ids" step="break"/>
+	  </p:input>
+	</px:isolate-daisy3-skippable>
 	<p:xslt name="audio-map">
 	  <p:input port="parameters">
 	    <p:empty/>
