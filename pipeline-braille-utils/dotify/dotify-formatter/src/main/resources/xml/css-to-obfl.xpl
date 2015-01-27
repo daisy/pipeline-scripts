@@ -41,47 +41,93 @@
     </p:for-each>
     
     <p:for-each>
-        <css:parse-stylesheet/>
-        <css:make-pseudo-elements/>
+        <css:parse-stylesheet>
+            <p:documentation>
+                Make css:page, css:after and css:before attributes.
+            </p:documentation>
+        </css:parse-stylesheet>
+        <css:make-pseudo-elements>
+            <p:documentation>
+                Make css:before and css:after elements from css:before and css:after attributes.
+            </p:documentation>
+        </css:make-pseudo-elements>
         <css:parse-properties properties="content white-space display list-style-type
-                                          string-set counter-reset counter-set counter-increment"/>
-        <css:parse-content/>
+                                          string-set counter-reset counter-set counter-increment">
+            <p:documentation>
+                Make css:content, css:white-space, css:display, css:list-style-type, css:string-set,
+                css:counter-reset, css:counter-set and css:counter-increment attributes.
+            </p:documentation>
+        </css:parse-properties>
+        <css:parse-content>
+            <p:documentation>
+                Make css:string, css:text and css:counter elements from css:content attributes.
+            </p:documentation>
+        </css:parse-content>
     </p:for-each>
     
-    <css:label-targets/>
+    <css:label-targets>
+        <p:documentation>
+            Make css:id attributes. <!-- depends on parse-content -->
+        </p:documentation>
+    </css:label-targets>
     
     <p:for-each>
-        <css:eval-string-set/>
-        <css:preserve-white-space/>
-        <css:make-boxes/>
+        <css:eval-string-set>
+            <p:documentation>
+                Evaluate css:string-set attributes.
+            </p:documentation>
+        </css:eval-string-set>
+        <css:preserve-white-space>
+            <p:documentation>
+                Make css:white-space elements from css:white-space attributes.
+            </p:documentation>
+        </css:preserve-white-space>
+        <css:make-boxes>
+            <p:documentation>
+                Make css:box elements based on css:display and css:list-style-type attributes.
+            </p:documentation>
+        </css:make-boxes>
         <css:make-anonymous-inline-boxes/>
-        <css:eval-target-text/>
+        <css:eval-target-text>
+            <p:documentation>
+                Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
+            </p:documentation>
+        </css:eval-target-text>
     </p:for-each>
     
-    <css:eval-counter exclude-counters="page"/>
+    <css:eval-counter exclude-counters="page">
+        <p:documentation>
+            Evaluate css:counter elements. <!-- depends on label-targets and parse-content -->
+        </p:documentation>
+    </css:eval-counter>
     
     <p:for-each>
-        <css:parse-counter-set counters="page"/>
-        <!--
-            Split before and after @css:page and before @css:counter-set-page
-        -->
-        <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]"/>
+        <css:parse-counter-set counters="page">
+            <p:documentation>
+                Make css:counter-set-page attributes.
+            </p:documentation>
+        </css:parse-counter-set>
+        <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]">
+            <p:documentation>
+                Split before and after css:page attributes and before css:counter-set-page
+                attributes. <!-- depends on make-boxes -->
+            </p:documentation>
+        </css:split>
     </p:for-each>
     
     <p:for-each>
-        <!--
-            Move @css:page and @css:counter-set-page to css:_ root element
-        -->
-        <p:wrap wrapper="css:_" match="/*"/>
-        <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
-                          label="(descendant::*/@css:page)[last()]"/>
-        <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
-                          label="(descendant::*/@css:counter-set-page)[last()]"/>
-        <p:delete match="/*//*/@css:page"/>
-        <p:delete match="/*//*/@css:counter-set-page"/>
-        <!--
-            Delete empty inline boxes (possible side effect of css:split)
-        -->
+        <p:group>
+            <p:documentation>
+                Move css:page and css:counter-set-page attributes to css:_ root element.
+            </p:documentation>
+            <p:wrap wrapper="css:_" match="/*"/>
+            <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
+                              label="(descendant::*/@css:page)[last()]"/>
+            <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
+                              label="(descendant::*/@css:counter-set-page)[last()]"/>
+            <p:delete match="/*//*/@css:page"/>
+            <p:delete match="/*//*/@css:counter-set-page"/>
+        </p:group>
         <p:rename match="css:box[@type='inline']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
                                  not(descendant::css:white-space or
@@ -89,7 +135,11 @@
                                      descendant::css:counter or
                                      descendant::css:text or
                                      descendant::css:leader)]"
-                  new-name="css:_"/>
+                  new-name="css:_">
+            <p:documentation>
+                Delete empty inline boxes (possible side effect of css:split).
+            </p:documentation>
+        </p:rename>
     </p:for-each>
     
     <css:shift-id/>
@@ -97,10 +147,20 @@
     <css:shift-string-set/>
     
     <p:for-each>
-        <p:unwrap match="css:_[not(@css:*) and parent::*]"/>
-        <css:parse-properties properties="padding-left padding-right padding-top padding-bottom"/>
+        <p:unwrap match="css:_[not(@css:*) and parent::*]">
+            <p:documentation>
+                All css:_ elements (except for root elements) should be gone now. <!-- depends on
+                shift-id and shift-string-set -->
+            </p:documentation>
+        </p:unwrap>
+        <css:parse-properties properties="padding-left padding-right padding-top padding-bottom">
+            <p:documentation>
+                Make css:padding-left, css:padding-right, css:padding-top and css:padding-bottom
+                attributes.
+            </p:documentation>
+        </css:parse-properties>
         <css:padding-to-margin/>
-        <css:make-anonymous-block-boxes/>
+        <css:make-anonymous-block-boxes/> <!-- depends on unwrap css:_ -->
     </p:for-each>
     
     <p:split-sequence test="//css:box"/>
