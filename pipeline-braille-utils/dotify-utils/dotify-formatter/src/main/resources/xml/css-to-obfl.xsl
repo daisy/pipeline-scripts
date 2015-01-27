@@ -43,9 +43,21 @@
 
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und" hyphenate="false">
-            <xsl:for-each select="distinct-values(collection()/*/pxi:page-stylesheet(.))">
+            <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/pxi:page-stylesheet(.))">
                 <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
+            <!--
+            <xsl:for-each select="collection()/*[@css:flow]">
+                <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
+                <collection name="{$flow}">
+                    <xsl:for-each select="*">
+                        <item id="{@css:anchor}">
+                            <xsl:apply-templates select="."/>
+                        </item>
+                    </xsl:for-each>
+                </collection>
+            </xsl:for-each>
+            -->
             <xsl:apply-templates select="collection()/*[not(@css:flow)]">
                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
@@ -78,6 +90,7 @@
             <xsl:apply-templates select="@css:string-entry"/>
             <xsl:apply-templates select="@css:string-set"/>
             <xsl:apply-templates/>
+            <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
         </block>
     </xsl:template>
     
@@ -97,12 +110,14 @@
                     <xsl:apply-templates select="@css:string-entry"/>
                     <xsl:apply-templates select="@css:string-set"/>
                     <xsl:apply-templates/>
+                    <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
                 </span>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates select="@css:string-entry"/>
                 <xsl:apply-templates select="@css:string-set"/>
                 <xsl:apply-templates/>
+                <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -169,6 +184,7 @@
               <xsl:apply-templates select="@css:line-height|
                                            @css:text-align|@css:text-indent|@page-break-inside|@css:orphans|@css:widows"/>
               <xsl:apply-templates/>
+              <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
           </block>
       </block>
     </xsl:template>
@@ -345,6 +361,15 @@
             <xsl:attribute name="id" select="$id"/>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template match="css:box/@css:id" mode="anchor">
+        <xsl:variable name="id" as="xs:string" select="."/>
+        <xsl:if test="collection()/*[@css:flow]/*/@css:anchor=$id">
+            <anchor item="{$id}"/>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="css:box/@css:anchor"/>
     
     <xsl:template match="css:box/@css:string-entry|
                          css:box/@css:string-set">

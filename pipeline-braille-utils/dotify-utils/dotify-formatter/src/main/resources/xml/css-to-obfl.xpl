@@ -52,15 +52,55 @@
         </css:parse-stylesheet>
         <css:make-pseudo-elements>
             <p:documentation>
-                Make css:before and css:after elements from css:before and css:after attributes.
+                Make css:before and css:after pseudo-elements from css:before and css:after
+                attributes.
             </p:documentation>
         </css:make-pseudo-elements>
+        <css:parse-properties properties="string-set counter-reset counter-set counter-increment">
+            <p:documentation>
+                Make css:string-set, css:counter-reset, css:counter-set and css:counter-increment
+                attributes.
+            </p:documentation>
+        </css:parse-properties>
+        <css:eval-string-set>
+            <p:documentation>
+                Evaluate css:string-set attributes.
+            </p:documentation>
+        </css:eval-string-set>
+    </p:for-each>
+    
+    <p:group>
+        <p:documentation>
+            Split into a sequence of flows.
+        </p:documentation>
+        <p:for-each>
+            <css:parse-properties properties="flow">
+                <p:documentation>
+                    Make css:flow attributes.
+                </p:documentation>
+            </css:parse-properties>
+        </p:for-each>
+        <p:wrap wrapper="_" match="/*"/>
+        <css:flow-into name="_1">
+            <p:documentation>
+                Extract named flows based on css:flow attributes.
+            </p:documentation>
+        </css:flow-into>
+        <p:filter select="/_/*" name="_2"/>
+        <p:identity>
+            <p:input port="source">
+                <p:pipe step="_2" port="result"/>
+                <p:pipe step="_1" port="flows"/>
+            </p:input>
+        </p:identity>
+    </p:group>
+    
+    <p:for-each>
         <css:parse-properties properties="content white-space display list-style-type
-                                          string-set counter-reset counter-set counter-increment
                                           page-break-before page-break-after">
             <p:documentation>
-                Make css:content, css:white-space, css:display, css:list-style-type, css:string-set,
-                css:counter-reset, css:counter-set and css:counter-increment attributes.
+                Make css:content, css:white-space, css:display, css:list-style-type,
+                css:page-break-before and css:page-break-after attributes.
             </p:documentation>
         </css:parse-properties>
         <css:parse-content>
@@ -70,18 +110,13 @@
         </css:parse-content>
     </p:for-each>
     
-    <css:label-targets>
+    <css:label-targets name="label-targets">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
         </p:documentation>
     </css:label-targets>
     
     <p:for-each>
-        <css:eval-string-set>
-            <p:documentation>
-                Evaluate css:string-set attributes.
-            </p:documentation>
-        </css:eval-string-set>
         <css:preserve-white-space>
             <p:documentation>
                 Make css:white-space elements from css:white-space attributes.
@@ -89,15 +124,11 @@
         </css:preserve-white-space>
         <css:make-boxes>
             <p:documentation>
-                Make css:box elements based on css:display and css:list-style-type attributes.
+                Make css:box elements based on css:display and css:list-style-type attributes. <!--
+                depends on flow-into and label-targets -->
             </p:documentation>
         </css:make-boxes>
         <css:make-anonymous-inline-boxes/>
-        <css:eval-target-text>
-            <p:documentation>
-                Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
-            </p:documentation>
-        </css:eval-target-text>
     </p:for-each>
     
     <css:eval-counter exclude-counters="page">
@@ -106,70 +137,84 @@
         </p:documentation>
     </css:eval-counter>
     
-    <p:for-each>
-        <css:parse-counter-set counters="page">
+    <css:eval-target-text>
+        <p:documentation>
+            Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
+        </p:documentation>
+    </css:eval-target-text>
+    
+    <p:group>
+        <p:documentation>
+            Split normal flow into sections.
+        </p:documentation>
+        <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
+        <p:for-each>
+            <css:parse-counter-set counters="page">
+                <p:documentation>
+                    Make css:counter-set-page attributes.
+                </p:documentation>
+            </css:parse-counter-set>
+            <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]|
+                                     css:box[@type='block' and @css:page-break-before='right']"
+                       split-after="*[@css:page or @css:page_left or @css:page_right]|
+                                    css:box[@type='block' and @css:page-break-after='right']">
+                <p:documentation>
+                    Split before and after css:page* attributes, before css:counter-set-page attributes,
+                    and before css:page-break-before attributes with value 'right' and after
+                    css:page-break-after attributes with value 'right'. <!-- depends on make-boxes -->
+                </p:documentation>
+            </css:split>
+        </p:for-each>
+        <p:for-each>
+            <p:group>
+                <p:documentation>
+                    Move css:page* and css:counter-set-page attributes to css:_ root element.
+                </p:documentation>
+                <p:wrap wrapper="css:_" match="/*"/>
+                <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
+                                  label="(descendant::*/@css:page)[last()]"/>
+                <p:label-elements match="/*[descendant::*/@css:page_right]" attribute="css:page_right"
+                                  label="(descendant::*/@css:page_right)[last()]"/>
+                <p:label-elements match="/*[descendant::*/@css:page_left]" attribute="css:page_left"
+                                  label="(descendant::*/@css:page_left)[last()]"/>
+                <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
+                                  label="(descendant::*/@css:counter-set-page)[last()]"/>
+                <p:delete match="/*//*/@css:page"/>
+                <p:delete match="/*//*/@css:page_right"/>
+                <p:delete match="/*//*/@css:page_left"/>
+                <p:delete match="/*//*/@css:counter-set-page"/>
+                <p:delete match="@css:page-break-before[.='right']|
+                                 @css:page-break-after[.='right']"/>
+            </p:group>
+            <p:rename match="css:box[@type='inline']
+                             [matches(string(.), '^[\s&#x2800;]*$') and
+                             not(descendant::css:white-space or
+                             descendant::css:string or
+                             descendant::css:counter or
+                             descendant::css:text or
+                             descendant::css:leader)]"
+                      new-name="css:_">
+                <p:documentation>
+                    Delete empty inline boxes (possible side effect of css:split).
+                </p:documentation>
+            </p:rename>
+        </p:for-each>
+        <css:repeat-string-set/>
+        <css:shift-string-set/>
+        <p:identity name="_2"/>
+        <p:identity>
             <p:documentation>
-                Make css:counter-set-page attributes.
+                Add named flows back to the sequence.
             </p:documentation>
-        </css:parse-counter-set>
-        <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]|
-                                 css:box[@type='block' and @css:page-break-before='right']"
-                   split-after="*[@css:page or @css:page_left or @css:page_right]|
-                                css:box[@type='block' and @css:page-break-after='right']">
-            <p:documentation>
-                Split before and after css:page* attributes, before css:counter-set-page attributes,
-                and before css:page-break-before attributes with value 'right' and after
-                css:page-break-after attributes with value 'right'. <!-- depends on make-boxes -->
-            </p:documentation>
-        </css:split>
-    </p:for-each>
+            <p:input port="source">
+                <p:pipe step="_2" port="result"/>
+                <p:pipe step="_1" port="not-matched"/>
+            </p:input>
+        </p:identity>
+        <css:shift-id/>
+    </p:group>
     
     <p:for-each>
-        <p:group>
-            <p:documentation>
-                Move css:page* and css:counter-set-page attributes to css:_ root element.
-            </p:documentation>
-            <p:wrap wrapper="css:_" match="/*"/>
-            <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
-                              label="(descendant::*/@css:page)[last()]"/>
-            <p:label-elements match="/*[descendant::*/@css:page_right]" attribute="css:page_right"
-                              label="(descendant::*/@css:page_right)[last()]"/>
-            <p:label-elements match="/*[descendant::*/@css:page_left]" attribute="css:page_left"
-                              label="(descendant::*/@css:page_left)[last()]"/>
-            <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
-                              label="(descendant::*/@css:counter-set-page)[last()]"/>
-            <p:delete match="/*//*/@css:page"/>
-            <p:delete match="/*//*/@css:page_right"/>
-            <p:delete match="/*//*/@css:page_left"/>
-            <p:delete match="/*//*/@css:counter-set-page"/>
-            <p:delete match="@css:page-break-before[.='right']|
-                             @css:page-break-after[.='right']"/>
-        </p:group>
-        <p:rename match="css:box[@type='inline']
-                                [matches(string(.), '^[\s&#x2800;]*$') and
-                                 not(descendant::css:white-space or
-                                     descendant::css:string or
-                                     descendant::css:counter or
-                                     descendant::css:text or
-                                     descendant::css:leader)]"
-                  new-name="css:_">
-            <p:documentation>
-                Delete empty inline boxes (possible side effect of css:split).
-            </p:documentation>
-        </p:rename>
-    </p:for-each>
-    
-    <css:shift-id/>
-    <css:repeat-string-set/>
-    <css:shift-string-set/>
-    
-    <p:for-each>
-        <p:unwrap match="css:_[not(@css:*) and parent::*]">
-            <p:documentation>
-                All css:_ elements (except for root elements) should be gone now. <!-- depends on
-                shift-id and shift-string-set -->
-            </p:documentation>
-        </p:unwrap>
         <css:parse-properties properties="padding-left padding-right padding-top padding-bottom">
             <p:documentation>
                 Make css:padding-left, css:padding-right, css:padding-top and css:padding-bottom
@@ -177,6 +222,15 @@
             </p:documentation>
         </css:parse-properties>
         <css:padding-to-margin/>
+    </p:for-each>
+    
+    <p:for-each>
+        <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
+            <p:documentation>
+                All css:_ elements (except for root elements) should be gone now. <!-- depends on
+                shift-id and shift-string-set -->
+            </p:documentation>
+        </p:unwrap>
         <css:make-anonymous-block-boxes/> <!-- depends on unwrap css:_ -->
     </p:for-each>
     
