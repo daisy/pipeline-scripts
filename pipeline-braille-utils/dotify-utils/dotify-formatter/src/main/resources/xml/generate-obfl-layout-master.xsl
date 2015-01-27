@@ -40,8 +40,22 @@
                       select="css:parse-declaration-list($default-page-stylesheet[not(@selector)]/@style)"/>
         <xsl:variable name="size" as="xs:string"
                       select="($default-page-properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
+        <xsl:variable name="page-width" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[1]))"/>
+        <xsl:variable name="page-height" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[2]))"/>
+        <xsl:variable name="footnotes-properties" as="element()*"
+                      select="css:parse-declaration-list($default-page-stylesheet[@selector='@footnotes'][1]/@style)"/>
+        <xsl:variable name="footnotes-content" as="element()*"
+                      select="css:parse-content-list($footnotes-properties[@name='content'][1]/@value,())"/>
+        <xsl:variable name="footnotes-border-top" as="xs:string"
+                      select="($footnotes-properties[@name='border-top'][1]/@value,css:initial-value('border-top'))[1]"/>
+        <xsl:variable name="footnotes-max-height" as="xs:string"
+                      select="($footnotes-properties[@name='max-height'][1]/@value,css:initial-value('max-height'))[1]"/>
+        <xsl:variable name="footnotes-max-height" as="xs:integer"
+                      select="if ($footnotes-max-height='none')
+                              then $page-height idiv 2
+                              else xs:integer(number($footnotes-max-height))"/>
         <layout-master name="{$name}" duplex="{if ($duplex) then 'true' else 'false'}" page-number-variable="page"
-                       page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
+                       page-width="{$page-width}" page-height="{$page-height}">
             <xsl:if test="$right-page-stylesheet">
                 <!--
                     FIXME: is this influenced by initial-page-number? see https://github.com/joeha480/dotify/issues/134
@@ -66,6 +80,19 @@
                     <xsl:with-param name="stylesheet" select="$default-page-stylesheet"/>
                 </xsl:call-template>
             </default-template>
+            <xsl:if test="$footnotes-content[not(self::css:flow[@from])]">
+                <xsl:message>only flow() function supported in footnotes area</xsl:message>
+            </xsl:if>
+            <xsl:if test="count($footnotes-content[self::css:flow[@from]]) > 1">
+                <xsl:message>not more than one flow() function supported in footnotes area</xsl:message>
+            </xsl:if>
+            <xsl:for-each select="$footnotes-content[self::css:flow[@from]][1]">
+                <page-area align="bottom" max-height="{$footnotes-max-height}" collection="{@from}">
+                    <xsl:if test="$footnotes-border-top!='none'">
+                        <before><leader pattern="{$footnotes-border-top}" position="100%" align="right"/></before>
+                    </xsl:if>
+                </page-area>
+            </xsl:for-each>
         </layout-master>
     </xsl:function>
     

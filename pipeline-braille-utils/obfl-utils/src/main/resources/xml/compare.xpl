@@ -41,7 +41,7 @@
                                              obfl:toc-sequence/@toc">
                             <xsl:attribute name="{name(.)}" select="concat('toc',index-of($toc_names,string(.)))"/>
                         </xsl:template>
-                        <xsl:template match="@id|@ref-id">
+                        <xsl:template match="@id|@ref-id|obfl:anchor/@item">
                             <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.)))"/>
                         </xsl:template>
                     </xsl:stylesheet>

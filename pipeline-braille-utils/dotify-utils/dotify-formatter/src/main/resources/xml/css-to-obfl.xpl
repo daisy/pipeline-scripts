@@ -30,7 +30,7 @@
         <p:output port="result" sequence="true"/>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:volume, css:after, css:before, css:duplicate,
+                Make css:page, css:volume, css:after, css:before, css:footnote-call, css:duplicate,
                 css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end and
                 css:_obfl-on-toc-end attributes.
             </p:documentation>
@@ -106,8 +106,8 @@
     
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
-            Make css:page and css:volume attributes, css:after, css:before and css:duplicate
-            pseudo-elements, and css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+            Make css:page, css:volume and css:footnote-call attributes, css:after, css:before and
+            css:duplicate pseudo-elements, and css:_obfl-on-toc-start, css:_obfl-on-volume-start,
             css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
@@ -170,7 +170,8 @@
         </css:parse-properties>
         <css:parse-content>
             <p:documentation>
-                Make css:string, css:text and css:counter elements from css:content attributes.
+                Make css:string, css:text and css:counter elements from css:content attributes. <!--
+                depends on make-pseudo-elements and flow-into (::footnote-call pseudo-element) -->
             </p:documentation>
         </css:parse-content>
     </p:for-each>
@@ -385,7 +386,11 @@
                 css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
-        <css:adjust-boxes/>
+        <css:adjust-boxes>
+          <p:documentation>
+            <!-- depends on make-anonymous-block-boxes -->
+          </p:documentation>
+        </css:adjust-boxes>
         <css:new-definition>
             <p:input port="definition">
                 <p:inline>

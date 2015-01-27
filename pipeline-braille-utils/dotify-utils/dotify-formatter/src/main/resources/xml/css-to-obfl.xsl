@@ -289,21 +289,25 @@
                     </xsl:for-each>
                 </xsl:if>
             </xsl:if>
-            <!--
-                <xsl:for-each select="collection()/*[@css:flow]">
+            <xsl:for-each select="collection()/*[@css:flow]">
                 <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
-                <collection name="{$flow}">
-                <xsl:for-each select="*">
-                <item id="{@css:anchor}">
-                <xsl:apply-templates select=".">
-                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                </xsl:apply-templates>
-                </item>
-                </xsl:for-each>
-                </collection>
-                </xsl:for-each>
-            -->
+                <!--
+                    FIXME: not all flows needs to become a collection
+                -->
+                <xsl:if test="not(matches($flow,'^-obfl-on-((toc|volume)-(start|end))/'))">
+                    <collection name="{$flow}">
+                        <xsl:for-each select="*">
+                            <item id="{@css:anchor}">
+                                <xsl:apply-templates select=".">
+                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                    <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                                </xsl:apply-templates>
+                            </item>
+                        </xsl:for-each>
+                    </collection>
+                </xsl:if>
+            </xsl:for-each>
             <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-adjacent="string(@css:page)">
                 <xsl:variable name="layout-master" select="pxi:generate-layout-master-name(current-grouping-key())"/>
                 <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right' or @css:counter-set-page]">
@@ -463,7 +467,7 @@
         <xsl:apply-templates select="@css:line-height|@css:text-align|@css:text-indent|@page-break-inside" mode="#current"/>
         <xsl:apply-templates select="@css:string-set|@css:_obfl-marker" mode="#current"/>
         <xsl:apply-templates mode="#current"/>
-        <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
+        <xsl:apply-templates select="@css:id" mode="anchor"/>
     </xsl:template>
     
     <!--
@@ -517,7 +521,7 @@
         -->
         <xsl:apply-templates select="@css:orphans|@css:widows" mode="#current"/>
         <xsl:apply-templates mode="#current"/>
-        <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
+        <xsl:apply-templates select="@css:id" mode="anchor"/>
     </xsl:template>
     
     <xsl:template match="css:box[@type='table']|
@@ -630,13 +634,13 @@
                     <xsl:sequence select="$attrs"/>
                     <xsl:apply-templates select="@css:string-set|@css:_obfl-marker" mode="#current"/>
                     <xsl:apply-templates mode="#current"/>
-                    <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
+                    <xsl:apply-templates select="@css:id" mode="anchor"/>
                 </span>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates select="@css:string-set|@css:_obfl-marker" mode="#current"/>
                 <xsl:apply-templates mode="#current"/>
-                <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
+                <xsl:apply-templates select="@css:id" mode="anchor"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
