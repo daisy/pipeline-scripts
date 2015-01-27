@@ -20,7 +20,7 @@
                 <css:_ css:flow="{$flow}">
                     <xsl:for-each select="$root//*[@css:flow=$flow]">
                         <xsl:copy>
-                            <xsl:sequence select="@* except (@style|@css:flow|@css:id)"/>
+                            <xsl:sequence select="@* except (@style|@css:flow|@css:footnote-call|@css:id)"/>
                             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
                                                   css:specified-properties(($css:properties,'#all'), true(), false(), false(), .)
                                                   [not(@value='initial')]))"/>
@@ -40,13 +40,20 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="@css:flow"/>
+    <xsl:template match="@css:flow|
+                         @css:footnote-call"/>
+    
+    <xsl:template match="*[@css:flow='footnotes' and @css:footnote-call]" priority="0.6">
+        <css:footnote-call style="{@css:footnote-call}"
+                           css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
+    </xsl:template>
     
     <xsl:template match="*[@css:flow[not(.='normal')]]">
         <css:_ css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
     </xsl:template>
     
-    <xsl:template match="*[not(descendant-or-self::*/@css:flow)]">
+    
+    <xsl:template match="*[not(descendant-or-self::*/(@css:flow|@css:footnote-call))]">
         <xsl:sequence select="."/>
     </xsl:template>
     
