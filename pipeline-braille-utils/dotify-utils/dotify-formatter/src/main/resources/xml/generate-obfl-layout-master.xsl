@@ -375,6 +375,10 @@
     <xsl:template match="css:leader" mode="eval-content-list">
         <xsl:message>leader() function not supported in page header and footer</xsl:message>
     </xsl:template>
+
+    <xsl:template match="css:flow[@from]" mode="eval-content-list">
+        <xsl:message>flow() function not supported in page header and footer</xsl:message>
+    </xsl:template>
     
     <xsl:template match="*" mode="eval-content-list">
         <xsl:message terminate="yes">Coding error</xsl:message>

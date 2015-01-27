@@ -17,6 +17,11 @@
           </_>
         </x:document>
         <x:document type="inline">
+          <css:_ css:flow="foo">
+            <css:box css:anchor="a"/>
+          </css:_>
+        </x:document>
+        <x:document type="inline">
           <_>
             <css:counter name="x" target="b"/>
           </_>
@@ -35,6 +40,11 @@
           <css:box css:id="c"/>
           <css:box/>
         </_>
+      </x:document>
+      <x:document type="inline">
+        <css:_ css:flow="foo">
+          <css:box css:anchor="c"/>
+        </css:_>
       </x:document>
       <x:document type="inline">
         <_>
