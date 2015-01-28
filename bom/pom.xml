@@ -220,6 +220,10 @@
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
+                <!--
+                    depends on https://github.com/snaekobbi/jStyleParser/pull/1 and
+                    https://github.com/snaekobbi/jStyleParser/pull/2
+                -->
                 <version>1.17-p1-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>

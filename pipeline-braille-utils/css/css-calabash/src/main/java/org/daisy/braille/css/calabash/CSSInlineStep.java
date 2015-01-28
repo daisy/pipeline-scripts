@@ -56,6 +56,7 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.util.NamespaceIterator;
 
 import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
+import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
@@ -149,6 +150,8 @@ public class CSSInlineStep extends DefaultStep {
 		private final StyleMap printStylemap;
 		private final Map<String,RulePage> pages;
 		
+		private final CSSParserFactory parserFactory = new BrailleCSSParserFactory();
+		
 		public InlineCSSWriter(Document document,
 		                       XProcRuntime xproc,
 		                       URL defaultSheet) throws Exception {
@@ -157,6 +160,7 @@ public class CSSInlineStep extends DefaultStep {
 			SupportedBrailleCSS supportedCSS = new SupportedBrailleCSS();
 			CSSFactory.registerSupportedCSS(supportedCSS);
 			CSSFactory.registerDeclarationTransformer(new BrailleCSSDeclarationTransformer());
+			CSSFactory.registerCSSParserFactory(parserFactory);
 			
 			URI baseURI = new URI(document.getBaseURI());
 			
@@ -164,7 +168,7 @@ public class CSSInlineStep extends DefaultStep {
 			supportedCSS.setSupportedMedia("embossed");
 			StyleSheet brailleStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
-				brailleStyle = CSSParserFactory.append(defaultSheet, null, SourceType.URL, brailleStyle, defaultSheet);
+				brailleStyle = parserFactory.append(defaultSheet, null, SourceType.URL, brailleStyle, defaultSheet);
 			brailleStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("embossed"), brailleStyle);
 			brailleStylemap = new Analyzer(brailleStyle).evaluateDOM(document, "embossed", false);
 			
@@ -172,7 +176,7 @@ public class CSSInlineStep extends DefaultStep {
 			supportedCSS.setSupportedMedia("print");
 			StyleSheet printStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
-				printStyle = CSSParserFactory.append(defaultSheet, null, SourceType.URL, printStyle, defaultSheet);
+				printStyle = parserFactory.append(defaultSheet, null, SourceType.URL, printStyle, defaultSheet);
 			printStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("print"), printStyle);
 			printStylemap = new Analyzer(printStyle).evaluateDOM(document, "print", false);
 			
