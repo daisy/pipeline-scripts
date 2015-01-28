@@ -15,7 +15,7 @@
     
     <xsl:param name="braille-translator-query" as="xs:string" select="''"/>
     
-    <xsl:key name="page-stylesheet" match="/*" use="pxi:page-stylesheet(.)"/>
+    <xsl:key name="page-stylesheet" match="/*[not(@css:flow)]" use="pxi:page-stylesheet(.)"/>
     
     <xsl:function name="pxi:page-stylesheet" as="xs:string">
         <xsl:param name="elem" as="element()"/>
@@ -27,13 +27,13 @@
     
     <xsl:function name="pxi:generate-layout-master-name" as="xs:string">
         <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:variable name="elem" as="element()" select="(collection()/key('page-stylesheet', $page-stylesheet))[1]"/>
+        <xsl:variable name="elem" as="element()" select="(collection()[not(@css:flow)]/key('page-stylesheet', $page-stylesheet))[1]"/>
         <xsl:sequence select="generate-id($elem)"/>
     </xsl:function>
     
     <xsl:function name="pxi:generate-layout-master" as="element()">
         <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:variable name="elem" as="element()" select="(collection()/key('page-stylesheet', $page-stylesheet))[1]"/>
+        <xsl:variable name="elem" as="element()" select="(collection()/*[not(@css:flow)]/key('page-stylesheet', $page-stylesheet))[1]"/>
         <xsl:sequence select="obfl:generate-layout-master(
                                 $elem/@css:page/string(),
                                 $elem/@css:page_right/string(),
@@ -46,13 +46,58 @@
             <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/pxi:page-stylesheet(.))">
                 <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
+            <xsl:variable name="volume-styles" as="xs:string*"
+                          select="distinct-values(collection()/*[not(@css:flow)]/(self::*|descendant::*[@css:volume])/string(@css:volume))"/>
+            <xsl:if test="count($volume-styles) &gt; 1">
+                <xsl:message terminate="yes">Documents with more than one volume style are not supported.</xsl:message>
+            </xsl:if>
+            <xsl:variable name="volume-area-rules" as="element()*"
+                          select="css:parse-stylesheet($volume-styles[1])[@selector=('@begin','@end')]"/>
+            <xsl:variable name="volume-begin-content" as="element()*"
+                          select="css:parse-content-list(
+                                    css:parse-declaration-list($volume-area-rules[@selector='@begin'][1]/@declaration-list)
+                                    [@name='content'][1]/@value, ())"/>
+            <xsl:variable name="volume-end-content" as="element()*"
+                          select="css:parse-content-list(
+                                    css:parse-declaration-list($volume-area-rules[@selector='@end'][1]/@declaration-list)
+                                    [@name='content'][1]/@value, ())"/>
+            <xsl:if test="$volume-begin-content|$volume-end-content">
+                <xsl:variable name="no-upper-limit" select="'1000'"/>
+                <volume-template sheets-in-volume-max="{$no-upper-limit}">
+                    <xsl:if test="$volume-begin-content">
+                        <pre-content>
+                            <sequence master="{pxi:generate-layout-master-name(
+                                                 (collection()/*[not(@css:flow)])[1]/pxi:page-stylesheet(.))}">
+                                <xsl:apply-templates select="$volume-begin-content" mode="eval-volume-area-content-list">
+                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                </xsl:apply-templates>
+                            </sequence>
+                        </pre-content>
+                    </xsl:if>
+                    <xsl:if test="$volume-end-content">
+                        <post-content>
+                            <sequence master="{pxi:generate-layout-master-name(
+                                                 (collection()/*[not(@css:flow)])[last()]/pxi:page-stylesheet(.))}">
+                                <xsl:apply-templates select="$volume-end-content" mode="eval-volume-area-content-list">
+                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                </xsl:apply-templates>
+                            </sequence>
+                        </post-content>
+                    </xsl:if>
+                </volume-template>
+            </xsl:if>
             <!--
             <xsl:for-each select="collection()/*[@css:flow]">
                 <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
                 <collection name="{$flow}">
                     <xsl:for-each select="*">
                         <item id="{@css:anchor}">
-                            <xsl:apply-templates select="."/>
+                            <xsl:apply-templates select=".">
+                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                            </xsl:apply-templates>
                         </item>
                     </xsl:for-each>
                 </collection>
@@ -78,7 +123,8 @@
     <xsl:template match="/*/@css:counter-set-page|
                          /*/@css:page|
                          /*/@css:page_left|
-                         /*/@css:page_right"/>
+                         /*/@css:page_right|
+                         /*/@css:volume"/>
     
     <xsl:template match="/css:_">
         <xsl:apply-templates select="@*|node()"/>
@@ -101,9 +147,7 @@
         <xsl:choose>
             <xsl:when test="exists($attrs)">
                 <!--
-                    FIXME:
-                    - nested spans are a problem
-                    - id on a span is a problem
+                    FIXME: - nested spans are a problem - id on a span is a problem
                 -->
                 <span>
                     <xsl:sequence select="$attrs"/>
@@ -453,6 +497,57 @@
     </xsl:template>
     
     <xsl:template match="@*|*">
+        <xsl:message terminate="yes">Coding error</xsl:message>
+    </xsl:template>
+    
+    <!-- ================================== -->
+    <!-- MODE eval-volume-area-content-list -->
+    <!-- ================================== -->
+    
+    <xsl:template match="css:string[@value]" mode="eval-volume-area-content-list">
+        <xsl:value-of select="@value"/>
+    </xsl:template>
+    
+    <xsl:template match="css:flow[@from]" mode="eval-volume-area-content-list">
+        <xsl:variable name="flow" as="xs:string" select="@from"/>
+        <block>
+            <xsl:apply-templates select="collection()/*[@css:flow=$flow]/*"/>
+        </block>
+    </xsl:template>
+    
+    <xsl:template match="css:attr" mode="eval-volume-area-content-list">
+        <xsl:message>attr() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:content" mode="eval-volume-area-content-list">
+        <xsl:message>content() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-volume-area-content-list">
+        <xsl:message>string() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[not(@target)]" mode="eval-volume-area-content-list">
+        <xsl:message>counter() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:text[@target]" mode="eval-volume-area-content-list">
+        <xsl:message>target-text() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:string[@name][@target]" mode="eval-volume-area-content-list">
+        <xsl:message>target-string() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[@target]" mode="eval-volume-area-content-list">
+        <xsl:message>target-counter() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:leader" mode="eval-volume-area-content-list">
+        <xsl:message>leader() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="eval-volume-area-content-list">
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>
     

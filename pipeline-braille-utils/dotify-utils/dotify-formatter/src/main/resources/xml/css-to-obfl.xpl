@@ -47,7 +47,8 @@
     <p:for-each>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:page_right, css:page_left, css:after and css:before attributes.
+                Make css:page, css:page_right, css:page_left, css:volume, css:after and css:before
+                attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <css:make-pseudo-elements>
@@ -154,21 +155,24 @@
                     Make css:counter-set-page attributes.
                 </p:documentation>
             </css:parse-counter-set>
-            <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]|
+            <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:volume or @css:counter-set-page]|
                                      css:box[@type='block' and @css:page-break-before='right']"
-                       split-after="*[@css:page or @css:page_left or @css:page_right]|
+                       split-after="*[@css:page or @css:page_left or @css:page_right or @css:volume]|
                                     css:box[@type='block' and @css:page-break-after='right']">
                 <p:documentation>
-                    Split before and after css:page* attributes, before css:counter-set-page attributes,
-                    and before css:page-break-before attributes with value 'right' and after
-                    css:page-break-after attributes with value 'right'. <!-- depends on make-boxes -->
+                    Split before and after css:page* attributes, before css:counter-set-page
+                    attributes, before and after css:volume attributes and before
+                    css:page-break-before attributes with value 'right' and after
+                    css:page-break-after attributes with value 'right'. <!-- depends on make-boxes
+                    -->
                 </p:documentation>
             </css:split>
         </p:for-each>
         <p:for-each>
             <p:group>
                 <p:documentation>
-                    Move css:page* and css:counter-set-page attributes to css:_ root element.
+                    Move css:page*, css:counter-set-page and css:volume attributes to css:_ root
+                    element.
                 </p:documentation>
                 <p:wrap wrapper="css:_" match="/*"/>
                 <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
@@ -179,10 +183,13 @@
                                   label="(descendant::*/@css:page_left)[last()]"/>
                 <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
                                   label="(descendant::*/@css:counter-set-page)[last()]"/>
+                <p:label-elements match="/*[descendant::*/@css:volume]" attribute="css:volume"
+                                  label="(descendant::*/@css:volume)[last()]"/>
                 <p:delete match="/*//*/@css:page"/>
                 <p:delete match="/*//*/@css:page_right"/>
                 <p:delete match="/*//*/@css:page_left"/>
                 <p:delete match="/*//*/@css:counter-set-page"/>
+                <p:delete match="/*//*/@css:volume"/>
                 <p:delete match="@css:page-break-before[.='right']|
                                  @css:page-break-after[.='right']"/>
             </p:group>
@@ -329,7 +336,8 @@
         <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
     </p:for-each>
     
-    <p:split-sequence test="//css:box[@type='block']
+    <p:split-sequence test="/*/@css:flow or
+                            //css:box[@type='block']
                                      [@css:border-top|
                                       @css:border-bottom|
                                       @css:margin-top|
