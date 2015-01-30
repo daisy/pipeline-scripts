@@ -58,12 +58,12 @@
                 @volume {
                   max-length: 100;
                   @begin {
-                    content: 'foo';
+                    content: flow(toc);
                   }
                 }
                 @volume:first {
                   @begin {
-                    content: 'bar';
+                    content: flow(cover) flow(toc);
                   }
                 }
               </style>
@@ -76,7 +76,7 @@
       <x:document type="port" port="result" select="//document"/>
     </x:context>
     <x:expect label="root-style" type="xpath" test="/*/@style"
-              equals='"@volume { max-length: 100; @begin { content: &apos;foo&apos;; } } @volume:first { max-length: 100; @begin { content: &apos;bar&apos;; } }"'/>
+              equals='"@volume { max-length: 100; @begin { content: flow(toc); } } @volume:first { max-length: 100; @begin { content: flow(cover)  flow(toc); } }"'/>
   </x:scenario>
   
 </x:description>
