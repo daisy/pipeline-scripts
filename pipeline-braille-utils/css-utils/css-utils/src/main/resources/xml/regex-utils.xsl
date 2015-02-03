@@ -31,4 +31,14 @@
 		<xsl:sequence select="concat('(',$regex,')(\s*,\s*(',$regex,'))*')"/>
 	</xsl:function>
 	
+	<xsl:function name="re:or-groups" as="xs:integer">
+		<xsl:param name="groups" as="xs:integer*"/>
+		<xsl:sequence select="sum($groups) + count($groups)"/>
+	</xsl:function>
+	
+	<xsl:function name="re:space-separated-groups" as="xs:integer">
+		<xsl:param name="groups" as="xs:integer"/>
+		<xsl:sequence select="3 + $groups + $groups"/>
+	</xsl:function>
+	
 </xsl:stylesheet>

@@ -11,10 +11,10 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc style="{{ text-transform: none }}">
-        <h style="{{ display: block; string-set: running-footer &quot;foobar&quot; }}">FOOBAR</h>
-        <p style="{{ display: block }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
-        <pagenum style="{{ display: none; string-set: print-page &quot;ii&quot; }}" />
+      <doc style="text-transform: none">
+        <h style="display: block; string-set: running-footer &quot;foobar&quot;">FOOBAR</h>
+        <p style="display: block ::after {{ content: &quot;BAR&quot; }}">FOO</p>
+        <pagenum style="display: none; string-set: print-page &quot;ii&quot;" />
       </doc>
     </x:expect>
   </x:scenario>
@@ -26,7 +26,7 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc xml:lang="en" style="{{ text-transform: none }}">
+      <doc xml:lang="en" style="text-transform: none">
         <br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>
       </doc>
     </x:expect>
@@ -39,7 +39,7 @@
       </div>
     </x:context>
     <x:expect label="result">
-      <div style="{{ hyphens: manual; text-transform: none }}">
+      <div style="hyphens: manual; text-transform: none">
         <p>FOO=BAR</p>
       </div>
     </x:expect>

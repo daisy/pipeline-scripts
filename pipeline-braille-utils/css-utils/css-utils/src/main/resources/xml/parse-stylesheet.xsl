@@ -17,11 +17,11 @@
     </xsl:template>
     
     <xsl:template match="css:rule[not(@selector)]">
-        <xsl:sequence select="css:style-attribute(@declaration-list)"/>
+        <xsl:sequence select="css:style-attribute(@style)"/>
     </xsl:template>
     
     <xsl:template match="css:rule">
-        <xsl:attribute name="css:{replace(replace(@selector, '^(@|::)', ''),':','_')}" select="@declaration-list"/>
+        <xsl:attribute name="css:{replace(@selector, '^(@|::|:)', '')}" select="@style"/>
     </xsl:template>
     
 </xsl:stylesheet>

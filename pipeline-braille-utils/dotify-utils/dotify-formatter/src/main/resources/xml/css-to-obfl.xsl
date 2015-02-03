@@ -15,15 +15,7 @@
     
     <xsl:param name="braille-translator-query" as="xs:string" select="''"/>
     
-    <xsl:key name="page-stylesheet" match="/*[not(@css:flow)]" use="pxi:page-stylesheet(.)"/>
-    
-    <xsl:function name="pxi:page-stylesheet" as="xs:string">
-        <xsl:param name="elem" as="element()"/>
-        <xsl:value-of select="string-join(
-                                for $attr in ($elem/@css:page,$elem/@css:page_right,$elem/@css:page_left) return
-                                  concat('@',replace(local-name($attr),'_',':'),' { ',string($attr),' }'),
-                                ' ')"/>
-    </xsl:function>
+    <xsl:key name="page-stylesheet" match="/*[not(@css:flow)]" use="string(@css:page)"/>
     
     <xsl:function name="pxi:generate-layout-master-name" as="xs:string">
         <xsl:param name="page-stylesheet" as="xs:string"/>
@@ -35,15 +27,13 @@
         <xsl:param name="page-stylesheet" as="xs:string"/>
         <xsl:variable name="elem" as="element()" select="(collection()/*[not(@css:flow)]/key('page-stylesheet', $page-stylesheet))[1]"/>
         <xsl:sequence select="obfl:generate-layout-master(
-                                $elem/@css:page/string(),
-                                $elem/@css:page_right/string(),
-                                $elem/@css:page_left/string(),
+                                $elem/string(@css:page),
                                 pxi:generate-layout-master-name($page-stylesheet))"/>
     </xsl:function>
 
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und" hyphenate="false">
-            <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/pxi:page-stylesheet(.))">
+            <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:page))">
                 <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
             <xsl:variable name="volume-styles" as="xs:string*"
@@ -55,11 +45,11 @@
                           select="css:parse-stylesheet($volume-styles[1])[@selector=('@begin','@end')]"/>
             <xsl:variable name="volume-begin-content" as="element()*"
                           select="css:parse-content-list(
-                                    css:parse-declaration-list($volume-area-rules[@selector='@begin'][1]/@declaration-list)
+                                    css:parse-declaration-list($volume-area-rules[@selector='@begin'][1]/@style)
                                     [@name='content'][1]/@value, ())"/>
             <xsl:variable name="volume-end-content" as="element()*"
                           select="css:parse-content-list(
-                                    css:parse-declaration-list($volume-area-rules[@selector='@end'][1]/@declaration-list)
+                                    css:parse-declaration-list($volume-area-rules[@selector='@end'][1]/@style)
                                     [@name='content'][1]/@value, ())"/>
             <xsl:if test="$volume-begin-content|$volume-end-content">
                 <xsl:variable name="no-upper-limit" select="'1000'"/>
@@ -67,7 +57,7 @@
                     <xsl:if test="$volume-begin-content">
                         <pre-content>
                             <sequence master="{pxi:generate-layout-master-name(
-                                                 (collection()/*[not(@css:flow)])[1]/pxi:page-stylesheet(.))}">
+                                                 (collection()/*[not(@css:flow)])[1]/string(@css:page))}">
                                 <xsl:apply-templates select="$volume-begin-content" mode="eval-volume-area-content-list">
                                     <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                     <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
@@ -78,7 +68,7 @@
                     <xsl:if test="$volume-end-content">
                         <post-content>
                             <sequence master="{pxi:generate-layout-master-name(
-                                                 (collection()/*[not(@css:flow)])[last()]/pxi:page-stylesheet(.))}">
+                                                 (collection()/*[not(@css:flow)])[last()]/string(@css:page))}">
                                 <xsl:apply-templates select="$volume-end-content" mode="eval-volume-area-content-list">
                                     <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                     <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
@@ -112,7 +102,7 @@
     
     <xsl:template match="/*" priority="0.6">
         <xsl:element name="sequence">
-            <xsl:attribute name="master" select="pxi:generate-layout-master-name(pxi:page-stylesheet(.))"/>
+            <xsl:attribute name="master" select="pxi:generate-layout-master-name(string(@css:page))"/>
             <xsl:if test="@css:counter-set-page">
                 <xsl:attribute name="initial-page-number" select="@css:counter-set-page"/>
             </xsl:if>

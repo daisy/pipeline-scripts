@@ -99,7 +99,7 @@
 	
 	<xsl:template match="css:rule[not(@selector) or @selector=('::before', '::after')]" mode="translate-rule-list">
 		<xsl:param name="context" as="element()" tunnel="yes"/>
-		<xsl:variable name="properties" as="element()*" select="css:parse-declaration-list(@declaration-list)"/>
+		<xsl:variable name="properties" as="element()*" select="css:parse-declaration-list(@style)"/>
 		<xsl:variable name="properties" as="element()*" select="if (@selector or $context/parent::* or $properties[@name='text-transform'])
 		                                                        then $properties
 		                                                        else ($properties,css:property('text-transform','auto'))"/>
@@ -114,7 +114,7 @@
 		<xsl:if test="$translated-properties">
 			<xsl:copy>
 				<xsl:sequence select="@selector"/>
-				<xsl:attribute name="declaration-list" select="css:serialize-declaration-list($translated-properties)"/>
+				<xsl:attribute name="style" select="css:serialize-declaration-list($translated-properties)"/>
 			</xsl:copy>
 		</xsl:if>
 	</xsl:template>
@@ -217,7 +217,7 @@
 					                        css:serialize-declaration-list(
 					                          css:parse-declaration-list(
 					                            css:parse-stylesheet($context/@style)
-					                              /self::css:rule[@selector=concat('::',$mode)][last()]/@declaration-list)
+					                              /self::css:rule[@selector=concat('::',$mode)][last()]/@style)
 					                            [@name=$inline-properties
 					                             and not(@name='content')
 					                             and not(@value=css:initial-value(@name))]))"/>

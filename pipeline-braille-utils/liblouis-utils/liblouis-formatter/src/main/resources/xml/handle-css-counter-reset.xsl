@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:louis="http://liblouis.org/liblouis"
-    xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    exclude-result-prefixes="#all"
-    version="2.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:louis="http://liblouis.org/liblouis"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                exclude-result-prefixes="#all"
+                version="2.0">
     
-    <!--
-        css-utils [2.0.0,3.0.0)
-    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:template match="@*|node()">
@@ -17,12 +14,10 @@
         </xsl:copy>
     </xsl:template>
     
-    <!--
-        regex-groups: 5
-        $1: counter
-        $5: value
-    -->
     <xsl:variable name="COUNTER_RESET_RE" select="concat('(',$css:IDENT_RE,')(\s+(', $css:INTEGER_RE, '))?')"/>
+    <xsl:variable name="COUNTER_RESET_RE_counter" select="1"/>
+    <xsl:variable name="COUNTER_RESET_RE_value" select="$COUNTER_RESET_RE_counter + $css:IDENT_RE_groups + 2"/>
+    <xsl:variable name="COUNTER_RESET_RE_groups" select="$COUNTER_RESET_RE_value + $css:INTEGER_RE_groups"/>
     
     <xsl:template match="*[contains(string(@style), 'counter-reset')]">
         <xsl:variable name="properties"
@@ -33,8 +28,10 @@
             <xsl:if test="$counter-reset!='none'">
                 <xsl:analyze-string select="$counter-reset" regex="{$COUNTER_RESET_RE}">
                     <xsl:matching-substring>
-                        <xsl:if test="regex-group(1)='braille-page'">
-                            <xsl:attribute name="louis:braille-page-reset" select="if (regex-group(5)!='') then regex-group(5) else '1'"/>
+                        <xsl:if test="regex-group($COUNTER_RESET_RE_counter)='braille-page'">
+                            <xsl:attribute name="louis:braille-page-reset"
+                                           select="if (regex-group($COUNTER_RESET_RE_value)!='')
+                                                   then regex-group($COUNTER_RESET_RE_value) else '1'"/>
                         </xsl:if>
                     </xsl:matching-substring>
                 </xsl:analyze-string>

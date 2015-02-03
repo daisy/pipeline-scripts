@@ -98,7 +98,7 @@
                             </xsl:copy>
                         </xsl:template>
                         <xsl:template match="@style">
-                            <xsl:sequence select="css:style-attribute(css:parse-stylesheet(string(.))[not(@selector)][1]/@declaration-list)"/>
+                            <xsl:sequence select="css:style-attribute(css:parse-stylesheet(string(.))[not(@selector)]/@style)"/>
                         </xsl:template>
                     </xsl:stylesheet>
                 </p:inline>

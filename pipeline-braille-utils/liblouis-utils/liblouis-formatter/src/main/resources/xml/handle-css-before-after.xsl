@@ -18,8 +18,8 @@
     
     <xsl:template match="*[matches(string(@style), '::before|::after')]">
         <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
-        <xsl:variable name="before-style" as="xs:string?" select="$rules[@selector='::before'][1]/@declaration-list"/>
-        <xsl:variable name="after-style" as="xs:string?" select="$rules[@selector='::after'][1]/@declaration-list"/>
+        <xsl:variable name="before-style" as="xs:string?" select="$rules[@selector='::before']/@style"/>
+        <xsl:variable name="after-style" as="xs:string?" select="$rules[@selector='::after']/@style"/>
         <xsl:choose>
             <xsl:when test="$before-style or $after-style">
                 <xsl:copy>
