@@ -306,7 +306,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_10">
+  <x:scenario label="test_10" pending="generated variable name in marker-references makes test very brittle">
     <x:call function="obfl:generate-layout-master">
       <x:param select="'{ size: 28 28 }
                         :right {

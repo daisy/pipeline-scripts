@@ -30,68 +30,124 @@
                                 $elem/string(@css:page),
                                 pxi:generate-layout-master-name($page-stylesheet))"/>
     </xsl:function>
-
+    
+    <!--
+        Based on a sequence of @volume rules, return a sequence of "use-when" expressions for which
+        each volume is quaranteed to match exactly one of them. Should in theory not be needed
+        because volume templates are matched in the order they appear.
+    -->
+    <xsl:function name="obfl:volume-stylesheets-use-when" as="xs:string*">
+        <xsl:param name="stylesheets" as="element()*"/>
+        <xsl:for-each select="$stylesheets">
+            <xsl:variable name="i" select="position()"/>
+            <xsl:choose>
+                <xsl:when test="not(@selector)">
+                    <xsl:sequence select="obfl:not(obfl:or($stylesheets[position()&lt;$i or @selector]/obfl:volume-stylesheets-use-when(.)))"/>
+                </xsl:when>
+                <xsl:when test="@selector=':first'">
+                    <xsl:sequence select="obfl:and((
+                                            '(= $volume 1)',
+                                            obfl:not(obfl:or($stylesheets[position()&lt;$i and @selector]/obfl:volume-stylesheets-use-when(.)))))"/>
+                </xsl:when>
+                <xsl:when test="matches(@selector,'^:nth\([1-9][0-9]*\)$')">
+                    <xsl:sequence select="obfl:and((
+                                            concat('(= $volume ',substring(@selector,6)),
+                                            obfl:not(obfl:or($stylesheets[position()&lt;$i and @selector]/obfl:volume-stylesheets-use-when(.)))))"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="'nil'"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+    </xsl:function>
+    
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und" hyphenate="false">
             <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:page))">
                 <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
-            <xsl:variable name="volume-styles" as="xs:string*"
-                          select="distinct-values(collection()/*[not(@css:flow)]/(self::*|descendant::*[@css:volume])/string(@css:volume))"/>
-            <xsl:if test="count($volume-styles) &gt; 1">
+            <xsl:variable name="volume-stylesheet" as="xs:string*"
+                          select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))"/>
+            <xsl:if test="count($volume-stylesheet) &gt; 1">
                 <xsl:message terminate="yes">Documents with more than one volume style are not supported.</xsl:message>
             </xsl:if>
-            <xsl:variable name="volume-area-rules" as="element()*"
-                          select="css:parse-stylesheet($volume-styles[1])[@selector=('@begin','@end')]"/>
-            <xsl:variable name="volume-begin-content" as="element()*"
-                          select="css:parse-content-list(
-                                    css:parse-declaration-list($volume-area-rules[@selector='@begin'][1]/@style)
-                                    [@name='content'][1]/@value, ())"/>
-            <xsl:variable name="volume-end-content" as="element()*"
-                          select="css:parse-content-list(
-                                    css:parse-declaration-list($volume-area-rules[@selector='@end'][1]/@style)
-                                    [@name='content'][1]/@value, ())"/>
-            <xsl:if test="$volume-begin-content|$volume-end-content">
-                <xsl:variable name="no-upper-limit" select="'1000'"/>
-                <volume-template sheets-in-volume-max="{$no-upper-limit}">
-                    <xsl:if test="$volume-begin-content">
-                        <pre-content>
-                            <sequence master="{pxi:generate-layout-master-name(
-                                                 (collection()/*[not(@css:flow)])[1]/string(@css:page))}">
-                                <xsl:apply-templates select="$volume-begin-content" mode="eval-volume-area-content-list">
-                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                                </xsl:apply-templates>
-                            </sequence>
-                        </pre-content>
-                    </xsl:if>
-                    <xsl:if test="$volume-end-content">
-                        <post-content>
-                            <sequence master="{pxi:generate-layout-master-name(
-                                                 (collection()/*[not(@css:flow)])[last()]/string(@css:page))}">
-                                <xsl:apply-templates select="$volume-end-content" mode="eval-volume-area-content-list">
-                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                                </xsl:apply-templates>
-                            </sequence>
-                        </post-content>
-                    </xsl:if>
-                </volume-template>
+            <xsl:variable name="volume-stylesheet" as="xs:string" select="$volume-stylesheet[1]"/>
+            <xsl:if test="$volume-stylesheet!=''">
+                <xsl:variable name="volume-stylesheets" as="element()*" select="css:parse-stylesheet($volume-stylesheet)"/>
+                <xsl:variable name="volume-stylesheets" as="element()*">
+                    <xsl:choose>
+                        <xsl:when test="$volume-stylesheets[matches(@selector,'^:')]">
+                            <xsl:sequence select="$volume-stylesheets"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <css:rule style="{$volume-stylesheet}"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="volume-stylesheets-use-when" as="xs:string*" select="obfl:volume-stylesheets-use-when($volume-stylesheets)"/>
+                <xsl:if test="not(obfl:or($volume-stylesheets-use-when)='nil')">
+                    <xsl:variable name="no-upper-limit" select="'1000'"/>
+                    <xsl:for-each select="$volume-stylesheets">
+                        <xsl:variable name="i" select="position()"/>
+                        <xsl:variable name="use-when" as="xs:string" select="$volume-stylesheets-use-when[$i]"/>
+                        <xsl:if test="not($use-when='nil')">
+                            <xsl:variable name="stylesheet" as="element()*" select="css:parse-stylesheet(@style)"/>
+                            <xsl:variable name="properties" as="element()*"
+                                          select="css:parse-declaration-list($stylesheet[not(@selector)]/@style)"/>
+                            <xsl:variable name="volume-area-rules" as="element()*" select="$stylesheet[@selector=('@begin','@end')]"/>
+                            <xsl:variable name="volume-begin-content" as="element()*"
+                                          select="css:parse-content-list(
+                                                  css:parse-declaration-list($volume-area-rules[@selector='@begin'][1]/@style)
+                                                  [@name='content'][1]/@value,())"/>
+                            <xsl:variable name="volume-end-content" as="element()*"
+                                          select="css:parse-content-list(
+                                                  css:parse-declaration-list($volume-area-rules[@selector='@end'][1]/@style)
+                                                  [@name='content'][1]/@value,())"/>
+                            <volume-template sheets-in-volume-max="{($properties[@name='max-length' and css:is-valid(.)]/string(@value),$no-upper-limit)[1]}">
+                                <xsl:if test="not($use-when='t')">
+                                    <xsl:attribute name="use-when" select="$use-when"/>
+                                </xsl:if>
+                                <xsl:if test="$volume-begin-content">
+                                    <pre-content>
+                                        <sequence master="{pxi:generate-layout-master-name(
+                                                          (collection()/*[not(@css:flow)])[1]/string(@css:page))}">
+                                            <xsl:apply-templates select="$volume-begin-content" mode="eval-volume-area-content-list">
+                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                            </xsl:apply-templates>
+                                        </sequence>
+                                    </pre-content>
+                                </xsl:if>
+                                <xsl:if test="$volume-end-content">
+                                    <post-content>
+                                        <sequence master="{pxi:generate-layout-master-name(
+                                                          (collection()/*[not(@css:flow)])[last()]/string(@css:page))}">
+                                            <xsl:apply-templates select="$volume-end-content" mode="eval-volume-area-content-list">
+                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                            </xsl:apply-templates>
+                                        </sequence>
+                                    </post-content>
+                                </xsl:if>
+                            </volume-template>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:if>
             </xsl:if>
             <!--
-            <xsl:for-each select="collection()/*[@css:flow]">
+                <xsl:for-each select="collection()/*[@css:flow]">
                 <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
                 <collection name="{$flow}">
-                    <xsl:for-each select="*">
-                        <item id="{@css:anchor}">
-                            <xsl:apply-templates select=".">
-                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                            </xsl:apply-templates>
-                        </item>
-                    </xsl:for-each>
+                <xsl:for-each select="*">
+                <item id="{@css:anchor}">
+                <xsl:apply-templates select=".">
+                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                </xsl:apply-templates>
+                </item>
+                </xsl:for-each>
                 </collection>
-            </xsl:for-each>
+                </xsl:for-each>
             -->
             <xsl:apply-templates select="collection()/*[not(@css:flow)]">
                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
@@ -541,4 +597,33 @@
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>
     
+    <!-- ======================== -->
+    <!-- OBFL evaluation language -->
+    <!-- ======================== -->
+    
+    <xsl:function name="obfl:not" as="xs:string">
+        <xsl:param name="sexpr" as="xs:string"/>
+        <xsl:sequence select="if ($sexpr='nil') then 't'
+                              else if ($sexpr='t') then 'nil'
+                              else concat('(! ',$sexpr,')')"/>
+    </xsl:function>
+    
+    <xsl:function name="obfl:and" as="xs:string">
+        <xsl:param name="sexprs" as="xs:string*"/>
+        <xsl:variable name="sexprs2" as="xs:string*" select="distinct-values($sexprs)[not(.='t')]"/>
+        <xsl:sequence select="if (not(exists($sexprs2))) then 't'
+                              else if ('nil'=$sexprs2) then 'nil'
+                              else if (count($sexprs2)=1) then $sexprs2[1]
+                              else concat('(&amp; ',string-join($sexprs2,' '),')')"/>
+    </xsl:function>
+    
+    <xsl:function name="obfl:or" as="xs:string">
+        <xsl:param name="sexprs" as="xs:string*"/>
+        <xsl:variable name="sexprs2" as="xs:string*" select="distinct-values($sexprs)[not(.='nil')]"/>
+        <xsl:sequence select="if (not(exists($sexprs2))) then 'nil'
+                              else if ('t'=$sexprs2) then 't'
+                              else if (count($sexprs2)=1) then $sexprs2[1]
+                              else concat('(| ',string-join($sexprs2,' '),')')"/>
+    </xsl:function>
+
 </xsl:stylesheet>
