@@ -12,4 +12,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:common-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:metadata-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
 </catalog>
