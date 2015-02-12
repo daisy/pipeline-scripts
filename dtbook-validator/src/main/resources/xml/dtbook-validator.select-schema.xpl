@@ -39,10 +39,6 @@
         </p:documentation>
     </p:option>
     
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl">
-        <p:documentation>Calabash extension steps.</p:documentation>
-    </p:import>
-    
     <!-- Based on the DTBook and MathML version, provide the correct RelaxNG schema on the output port -->
     <p:choose name="choose-schema">
         <p:when test="$dtbook-version = '2005-3' and $mathml-version = '3.0'">

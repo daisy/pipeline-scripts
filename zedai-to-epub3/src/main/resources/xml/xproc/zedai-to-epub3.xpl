@@ -51,7 +51,6 @@
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
-    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
     <p:variable name="input-uri" select="base-uri(/)"/>
 
