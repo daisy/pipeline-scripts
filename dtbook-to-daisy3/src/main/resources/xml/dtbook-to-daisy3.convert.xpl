@@ -395,6 +395,7 @@
       <p:with-option name="opf-uri" select="$opf-uri"/>
       <p:with-option name="lang" select="$lang"/>
       <p:with-option name="publisher" select="$publisher"/>
+      <p:with-option name="audio-only" select="$audio-only"/>
       <p:with-option name="total-time" select="//*[@duration]/@duration">
       	<p:pipe port="duration" step="create-mo"/>
       </p:with-option>
