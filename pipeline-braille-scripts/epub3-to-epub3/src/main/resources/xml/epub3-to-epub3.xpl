@@ -191,6 +191,8 @@
             </p:input>
             <p:with-option name="default-stylesheet" select="$stylesheet"/>
         </css:inline>
+        <p:delete match="/html:html/html:head/html:style[@type='text/css']|
+                         /html:html/html:head/html:link[@type='text/css' and @rel='stylesheet']"/>
         <px:transform name="transform">
             <p:with-option name="query" select="concat('(input:html)(input:css)(output:html)(output:css)(output:braille)(translator:liblouis)',
                                                         '(locale:',$lang,')')"/>
