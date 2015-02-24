@@ -122,6 +122,12 @@ public class LiblouisCoreTest {
 		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"fo","obar"}));
 		assertEquals(new String[]{"fu","","bar"}, translator.transform(new String[]{"fo","","obar"}));
+		assertEquals(new String[]{"x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ",
+		                          "x ", "x ", "x ", "x ", "fu", "bar"},
+		             translator.transform(new String[]{
+		                          "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ",
+		                          "x ", "x ", "x ", "x ", "fo", "obar"}));
+
 	}
 	
 	@Test
