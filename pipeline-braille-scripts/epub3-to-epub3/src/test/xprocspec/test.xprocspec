@@ -58,6 +58,7 @@
 					<c:file name="EPUB/C00000-9-footnotes_braille.xhtml"/>
 					<c:file name="EPUB/nav_braille.xhtml"/>
 					<c:file name="META-INF/container.xml"/>
+					<c:file name="META-INF/metadata.xml"/>
 					<c:file name="EPUB/package-braille.opf"/>
 					<c:file name="EPUB/renditionMapping.html"/>
 				</c:zipfile>

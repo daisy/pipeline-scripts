@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:opf="http://www.idpf.org/2007/opf"
@@ -34,6 +35,23 @@
 			                                                    /resolve-uri(@href,base-uri(.)),
 			                         $braille-rendition.package-document.base)"/>
 			<xsl:sequence select="@* except @href"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="opf:metadata/opf:meta[@property='dcterms:modified']">
+		<xsl:copy>
+			<xsl:sequence select="@property"/>
+			<xsl:value-of select="format-dateTime(adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT0H')),
+			                                      '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]Z')"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="opf:metadata/opf:meta[@name='dcterms:modified']">
+		<xsl:copy>
+			<xsl:sequence select="@name"/>
+			<xsl:attribute name="content"
+			               select="format-dateTime(adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT0H')),
+			                                       '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]Z')"/>
 		</xsl:copy>
 	</xsl:template>
 	
