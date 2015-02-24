@@ -2,6 +2,7 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                xmlns:c="http://www.w3.org/ns/xproc-step"
+               xmlns:rendition="http://www.idpf.org/2013/rendition"
                script="../../main/resources/xml/epub3-to-epub3.xpl">
 	
 	<x:scenario label="valentin">
@@ -70,7 +71,8 @@
 				<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container" version="1.0">
 					<rootfiles>
 						<rootfile full-path="EPUB/package.opf" media-type="application/oebps-package+xml"/>
-						<rootfile full-path="EPUB/package-braille.opf" media-type="application/oebps-package+xml"/>
+						<rootfile full-path="EPUB/package-braille.opf" media-type="application/oebps-package+xml"
+								  rendition:accessMode="tactile" rendition:label="Pre-translated to braille"/>
 					</rootfiles>
 					<link href="EPUB/renditionMapping.html" rel="mapping" media-type="application/xhtml+xml"/>
 				</container>
