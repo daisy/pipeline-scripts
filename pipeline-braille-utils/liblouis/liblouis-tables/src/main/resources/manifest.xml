@@ -64,7 +64,7 @@
     <entry key="nl">unicode.dis,nl-BE-g1.ctb,hyph_nl_NL.dic,braille-patterns.cti</entry>
     <entry key="nl_BE">unicode.dis,nl-BE-g1.ctb,hyph_nl_NL.dic,braille-patterns.cti</entry>
     <entry key="nl_NL">unicode.dis,Nl-Nl-g1.utb,hyph_nl_NL.dic,braille-patterns.cti</entry>
-    <entry key="no">unicode.dis,no-no-g3.ctb,hyph_no_NO.dic,braille-patterns.cti</entry>
+    <entry key="no">unicode.dis,no-no-g3.ctb,hyph_nb_NO.dic,braille-patterns.cti</entry>
     <entry key="or">unicode.dis,spaces.ctb,or.ctb,braille-patterns.cti</entry>
     <entry key="pa">unicode.dis,spaces.ctb,pa.ctb,braille-patterns.cti</entry>
     <entry key="pi">unicode.dis,spaces.ctb,pi.ctb,braille-patterns.cti</entry>
