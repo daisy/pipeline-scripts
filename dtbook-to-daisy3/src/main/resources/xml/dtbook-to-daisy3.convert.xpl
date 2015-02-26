@@ -92,7 +92,7 @@
   <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-tts/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl"/>
 
   <!-- Find the first DTBook file within the input documents. -->
   <p:variable name="dtbook-uri"

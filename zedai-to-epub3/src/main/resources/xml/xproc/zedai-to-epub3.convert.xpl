@@ -32,7 +32,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/library.xpl" />
+    <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl" />
     <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/library.xpl" />
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-tts/library.xpl"/>
 
