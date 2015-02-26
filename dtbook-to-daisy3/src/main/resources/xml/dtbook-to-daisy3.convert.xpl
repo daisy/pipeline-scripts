@@ -5,6 +5,8 @@
 		xmlns:dc="http://purl.org/dc/elements/1.1/"
 		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
 		xmlns:d="http://www.daisy.org/ns/pipeline/data"
+		xmlns:m="http://www.w3.org/1998/Math/MathML"
+		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		exclude-inline-prefixes="#all">
 
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -93,6 +95,7 @@
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-tts/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/ssml-to-audio/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
 
   <!-- Find the first DTBook file within the input documents. -->
   <p:variable name="dtbook-uri"
@@ -163,6 +166,7 @@
       <p:pipe port="result" step="create-ncx"/>
       <p:pipe port="result" step="create-resources"/>
       <p:pipe port="smil.out" step="create-mo"/>
+      <p:pipe port="in-memory.out" step="math-additions"/>
     </p:output>
     <p:output port="fileset.out">
       <p:pipe port="result" step="fileset.with-opf"/>
@@ -201,7 +205,12 @@
     </p:variable>
     <p:variable name="publisher" select="if ($publisher) then $publisher
 					 else (if ($dcpublisher) then $dcpublisher else 'unknown')"/>
-
+    <p:variable name="mathml-fallback-uri" select="concat($output-fileset-base, 'mathml-fallback.xsl')"/>
+    <p:variable name="math-presence-check" select="(//m:math)[1]/name()">
+      <p:pipe port="content.out" step="tts"/>
+    </p:variable>
+    <p:variable name="math-img" select="'math-formulae.png'"/>
+    <p:variable name="math-img-in-bundle" select="resolve-uri('../images/math_formulae.png', static-base-uri())"/>
 
     <!-- TODO: automatic upgrade? -->
     <!-- TODO: it could be moved or copied to dtbook-to-daisy3.xpl -->
@@ -223,10 +232,12 @@
     </p:choose>
 
     <!-- ===== ADD WHAT IS MAYBE MISSING IN THE DTBOOK ===== -->
+    <!-- (todo: peform this before the TTS so that the extra text will be synthesized) -->
     <px:fix-dtbook-structure>
       <p:input port="source">
     	<p:pipe port="content.out" step="tts"/>
       </p:input>
+      <p:with-option name="mathml-formulae-img" select="$math-img"/>
     </px:fix-dtbook-structure>
 
     <!-- ===== SMIL FILES AND THEIR FILESET ENTRIES ===== -->
@@ -308,12 +319,77 @@
       </p:with-option>
     </px:fileset-add-entry>
 
+    <!-- ===== MATHML XSLT FALLBACK and ALTIMG FALLBACK ==== -->
+    <!-- (todo: move this to daisy3-utils?) -->
+    <p:choose name="math-additions">
+      <p:when test="$math-presence-check = ''">
+	<p:output port="fileset.out">
+	  <p:empty/>
+	</p:output>
+	<p:output port="in-memory.out">
+	  <p:empty/>
+	</p:output>
+	<px:message message="No MathML found in DTBook"/><p:sink/>
+      </p:when>
+      <p:otherwise>
+	<p:output port="fileset.out">
+	  <p:pipe port="result" step="fallback-fileset"/>
+	</p:output>
+	<p:output port="in-memory.out">
+	  <p:pipe port="result" step="mathml-xslt-fallback"/>
+	</p:output>
+	<px:message message="Adding MathML resources..."/>
+
+	<!-- xslt fallback -->
+	<p:load href="mathml-fallback.xsl"/>
+	<p:add-attribute match="/*" attribute-name="xml:base" name="mathml-xslt-fallback">
+	  <p:with-option name="attribute-value" select="$mathml-fallback-uri"/>
+	</p:add-attribute>
+	<px:fileset-create>
+	  <p:with-option name="base" select="$output-fileset-base"/>
+	</px:fileset-create>
+	<px:fileset-add-entry media-type="application/xslt+xml">
+	  <p:with-option name="href" select="$mathml-fallback-uri"/>
+	</px:fileset-add-entry>
+
+	<!-- altimg fallback -->
+	<p:choose name="fallback-fileset">
+	  <p:when test="//m:math[not(@altimg)]">
+	    <p:xpath-context>
+	      <p:pipe port="content.out" step="tts"/>
+	    </p:xpath-context>
+	    <p:output port="result" primary="true">
+	      <p:pipe port="result" step="fileset.mathml"/>
+	    </p:output>
+	    <p:variable name="math-img-ondisk" select="resolve-uri($math-img, $output-fileset-base)"/>
+	    <p:identity name="current-fileset"/>
+	    <px:copy-resource fail-on-error="true" name="copy-resource">
+	      <p:with-option name="href" select="$math-img-in-bundle"/>
+	      <p:with-option name="target" select="$math-img-ondisk"/>
+	    </px:copy-resource><p:sink/>
+	    <px:fileset-add-entry name="fileset.mathml" media-type="image/png" cx:depends-on="copy-resource">
+	      <p:input port="source">
+		<p:pipe port="result" step="current-fileset"/>
+	      </p:input>
+	      <p:with-option name="href" select="$math-img"/>
+	      <p:with-option name="original-href" select="$math-img-ondisk"/>
+	    </px:fileset-add-entry>
+	  </p:when>
+	  <p:otherwise>
+	    <p:output port="result" primary="true"/>
+	    <p:identity/>
+	  </p:otherwise>
+	</p:choose>
+      </p:otherwise>
+    </p:choose>
+
     <!-- ===== OPF FILE AND ITS FILESET ENTRY ==== -->
     <px:fileset-join>
       <p:input port="source">
 	<p:pipe port="fileset.out" step="create-mo"/>
 	<p:pipe port="fileset.out" step="fileset.audio"/>
 	<p:pipe port="fileset.out" step="fileset.moved"/>
+	<p:pipe port="fileset.out" step="math-additions"/>
 	<p:pipe port="result" step="fileset.ncx"/>
 	<p:pipe port="result" step="fileset.doc"/>
 	<p:pipe port="result" step="fileset.res"/>
@@ -332,12 +408,43 @@
     	  <p:add-attribute match="/*" attribute-name="indent" attribute-value="true"/>
     	</p:when>
     	<p:when test="contains(/*/@media-type, 'dtbook')">
-    	  <p:add-attribute match="/*" attribute-name="doctype-public">
-    	    <p:with-option name="attribute-value" select="concat('-//NISO//DTD dtbook ', $dtd-version, '//EN')"/>
-    	  </p:add-attribute>
-    	  <p:add-attribute match="/*" attribute-name="doctype-system">
-    	    <p:with-option name="attribute-value" select="concat('http://www.daisy.org/z3986/2005/dtbook-', $dtd-version, '.dtd')"/>
-    	  </p:add-attribute>
+	  <p:variable name="math-prefix" select="substring-before((//m:math)[1]/name(), ':')">
+            <!-- Hopefully, the MathML namespace prefixes are all the same. -->
+            <p:pipe port="updated-content" step="create-mo"/>
+          </p:variable>
+          <p:variable name="smilref-prefix" select="substring-before(name((//m:*[@dtbook:smilref])[1]/@dtbook:smilref), ':')">
+            <!-- Hopefully, the DTBook namespace prefixes are all the same for MathML elements. -->
+            <p:pipe port="updated-content" step="create-mo"/>
+          </p:variable>
+          <p:variable name="dtbook-prefix" select="if ($smilref-prefix) then $smilref-prefix else 'dtbook'"/>
+          <!-- TODO: use MathML2 DTD instead of MathML3 DTD when MathML2 detected -->
+          <p:variable name="math-extension" select="if (not($math-prefix)) then '' else concat(' [
+						    &lt;!ENTITY % MATHML.prefixed &quot;INCLUDE&quot;&gt;
+						    &lt;!ENTITY % MATHML.prefix &quot;', $math-prefix, '&quot;&gt;
+						    &lt;!ENTITY % MATHML.Common.attrib
+						    &quot;xlink:href    CDATA       #IMPLIED
+						    xlink:type     CDATA       #IMPLIED
+						    class          CDATA       #IMPLIED
+						    style          CDATA       #IMPLIED
+						    id             ID          #IMPLIED
+						    xref           IDREF       #IMPLIED
+						    other          CDATA       #IMPLIED
+						    xmlns:', $dtbook-prefix, '   CDATA       #FIXED ''http://www.daisy.org/z3986/2005/dtbook/''
+						    ',$dtbook-prefix,':smilref CDATA       #IMPLIED&quot;&gt;
+						    &lt;!ENTITY % mathML3 PUBLIC &quot;-//W3C//DTD MathML 3.0//EN&quot;
+						    &quot;http://www.w3.org/Math/DTD/mathml3/mathml3.dtd&quot;&gt;
+						    %mathML3;
+						    &lt;!ENTITY % externalFlow &quot;| ', $math-prefix, ':math&quot;&gt;
+						    &lt;!ENTITY % externalNamespaces &quot;xmlns:', $math-prefix, ' CDATA #FIXED
+						    ''http://www.w3.org/1998/Math/MathML''&quot;&gt;]')"/>
+          <p:variable name="doctype-public" select="concat('-//NISO//DTD dtbook ', $dtd-version, '//EN')"/>
+          <p:variable name="doctype-system" select="concat('http://www.daisy.org/z3986/2005/dtbook-', $dtd-version, '.dtd')"/>
+          <p:add-attribute match="/*" attribute-name="doctype">
+            <p:with-option name="attribute-value"
+			   select="concat('&lt;!DOCTYPE dtbook PUBLIC &quot;',
+				   $doctype-public, '&quot; &quot;', $doctype-system,
+				   '&quot;', $math-extension, '&gt;')"/>
+          </p:add-attribute>
     	</p:when>
 	<p:when test="contains(/*/@media-type, 'ncx')">
 	  <p:add-attribute match="/*" attribute-name="doctype-public"
@@ -372,6 +479,8 @@
       <p:with-option name="opf-uri" select="$opf-uri"/>
       <p:with-option name="lang" select="$lang"/>
       <p:with-option name="publisher" select="$publisher"/>
+       <p:with-option name="mathml-xslt-fallback"
+		      select="if ($math-presence-check) then $mathml-fallback-uri else ''"/>
       <p:with-option name="total-time" select="//*[@duration]/@duration">
       	<p:pipe port="duration" step="create-mo"/>
       </p:with-option>
