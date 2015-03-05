@@ -78,7 +78,7 @@
     <entry key="sk">unicode.dis,sk-sk-g1.utb,braille-patterns.cti</entry>
     <entry key="sl">unicode.dis,sl-si-g1.utb,braille-patterns.cti</entry>
     <entry key="sr">unicode.dis,sr-g1.ctb,braille-patterns.cti</entry>
-    <entry key="sv">unicode.dis,Se-Se-g1.utb,hyph_sv_SE.dic,braille-patterns.cti</entry>
+    <entry key="sv">unicode.dis,Se-Se-g1.utb,braille-patterns.cti</entry>
     <entry key="ta">unicode.dis,spaces.ctb,ta.ctb,braille-patterns.cti</entry>
     <entry key="te">unicode.dis,spaces.ctb,te.ctb,braille-patterns.cti</entry>
     <entry key="tr">unicode.dis,tr.ctb,braille-patterns.cti</entry>
