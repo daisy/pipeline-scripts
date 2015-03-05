@@ -42,6 +42,9 @@ public class DotifyTranslatorProvider implements TextTransform.Provider<DotifyTr
 	
 	public Iterable<DotifyTranslator> get(String query) {
 		Map<String,Optional<String>> q = parseQuery(query);
+		if (q.containsKey("translator"))
+			if (!"dotify".equals(q.get("translator").get()))
+				return Optional.<DotifyTranslator>absent().asSet();
 		if (q.containsKey("locale"))
 			return get(parseLocale(q.get("locale").get()));
 		return Optional.<DotifyTranslator>absent().asSet();
