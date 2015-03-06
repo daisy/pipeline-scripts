@@ -51,6 +51,7 @@
                  'white-space',
                  'hyphens',
                  'size',
+                 'text-transform',
                  'font-style',
                  'font-weight',
                  'text-decoration',
@@ -89,6 +90,7 @@
                  re:exact(re:or(('normal','pre-wrap','pre-line'))),
                  re:exact(re:or(('auto','manual','none'))),
                  re:exact(concat('(',$css:NON_NEGATIVE_INTEGER_RE,')\s+(',$css:NON_NEGATIVE_INTEGER_RE,')')),
+                 re:exact(re:or(($css:IDENT_LIST_RE,'auto'))),
                  re:exact(re:or(('normal','italic','oblique'))),
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
                  re:exact(re:or(('none','underline','overline','line-through','blink'))),
@@ -130,6 +132,7 @@
                  '.*',
                  '.*',
                  '.*',
+                 '.*',
                  '.*')"/>
     
     <xsl:variable name="css:initial-values" as="xs:string*"
@@ -165,6 +168,7 @@
                  'normal',
                  'manual',
                  '40 25',
+                 'auto',
                  'normal',
                  'normal',
                  'none',
@@ -172,6 +176,7 @@
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed',
