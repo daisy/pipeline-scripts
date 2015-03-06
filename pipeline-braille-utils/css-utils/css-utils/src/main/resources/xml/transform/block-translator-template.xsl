@@ -77,8 +77,8 @@
 											<xsl:attribute name="xml:space" select="$space"/>
 										</xsl:if>
 										<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-										                        css:specified-properties($inline-properties, true(), false(), false(), $this)
-										                        [not(@value='initial')]))"/>
+										                        css:computed-properties($inline-properties, false(), $this)
+										                        [not(@value=css:initial-value(@name))]))"/>
 										<xsl:for-each select="current-group()">
 											<xsl:sequence select="."/>
 										</xsl:for-each>
