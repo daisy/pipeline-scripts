@@ -289,6 +289,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			for (int i = 0; i < cssStyle.length; i++) {
 				Map<String,String> style = CSS_PARSER.split(cssStyle[i]);
 				typeform[i] = typeformFromInlineCSS(style);
+				if (style.containsKey("text-transform"))
+					typeform[i] |= typeformFromTextTransform(style.get("text-transform"));
 				hyphenate[i] = false;
 				if (style.containsKey("hyphens") && "auto".equals(style.get("hyphens")))
 					hyphenate[i] = true; }
@@ -497,7 +499,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 	
 	/**
-	 * @parameter cssStyle An inline CSS style
+	 * @parameter style An inline CSS style
 	 * @returns the corresponding typeform. Possible values are:
 	 * - 0 = PLAIN
 	 * - 1 = ITALIC (font-style: italic|oblique)
@@ -515,13 +517,42 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		for (String prop : style.keySet()) {
 			String value = style.get(prop);
 			if (prop.equals("font-style") && (value.equals("italic") || value.equals("oblique")))
-				typeform += Typeform.ITALIC;
+				typeform |= Typeform.ITALIC;
 			else if (prop.equals("font-weight") && value.equals("bold"))
-				typeform += Typeform.BOLD;
+				typeform |= Typeform.BOLD;
 			else if (prop.equals("text-decoration") && value.equals("underline"))
-				typeform += Typeform.UNDERLINE;
+				typeform |= Typeform.UNDERLINE;
 			else
 				logger.warn("Inline CSS property {} not supported", prop); }
+		return typeform;
+	}
+	
+	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
+	
+	/**
+	 * @parameter textTransform A text-transform value as a space separated list of keywords.
+	 * @returns the corresponding typeform. Possible values are:
+	 * - 0 = PLAIN
+	 * - 1 = ITALIC (louis-ital)
+	 * - 2 = BOLD (louis-bold)
+	 * - 4 = UNDERLINE (louis-under)
+	 * - 8 = COMPUTER (louis-comp)
+	 * These values can be added for multiple emphasis.
+	 * @see http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString
+	 */
+	protected static byte typeformFromTextTransform(String textTransform) {
+		byte typeform = Typeform.PLAIN;
+		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+			if (tt.equals("louis-ital"))
+				typeform |= Typeform.ITALIC;
+			else if (tt.equals("louis-bold"))
+				typeform |= Typeform.BOLD;
+			else if (tt.equals("louis-under"))
+				typeform |= Typeform.UNDERLINE;
+			else if (tt.equals("louis-comp"))
+				typeform |= Typeform.COMPUTER;
+			else
+				logger.warn("text-transform: {} not supported", tt); }
 		return typeform;
 	}
 	
