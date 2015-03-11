@@ -1,12 +1,8 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import java.net.URI;
 import javax.inject.Inject;
 
-import com.google.common.collect.Iterables;
-
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
-import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 
@@ -23,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -36,6 +31,7 @@ import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -49,9 +45,6 @@ public class LiblouisCoreTest {
 	
 	@Inject
 	LiblouisTableResolver resolver;
-	
-	@Inject
-	LiblouisTableRegistry tableRegistry;
 	
 	@Configuration
 	public Option[] config() {
@@ -68,7 +61,9 @@ public class LiblouisCoreTest {
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			forThisPlatform(brailleModule("liblouis-native")),
+			// depends on https://github.com/liblouis/liblouis/pull/41
+			systemProperty("org.daisy.pipeline.liblouis.external").value("true"),
+			// forThisPlatform(brailleModule("liblouis-native")),
 			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-core"),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
@@ -86,12 +81,6 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
-	public void testGetTableFromLocale() {
-		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableRegistry.get(parseLocale("foo")).iterator().next().asURIs());
-		assertNull(Iterables.<LiblouisTable>getFirst(tableRegistry.get(parseLocale("bar")), null));
-	}
-	
-	@Test
 	public void testGetTranslatorFromQuery1() {
 		provider.get("(locale:foo)").iterator().next();
 	}
@@ -99,6 +88,11 @@ public class LiblouisCoreTest {
 	@Test
 	public void testGetTranslatorFromQuery2() {
 		provider.get("(table:'foobar.cti')").iterator().next();
+	}
+	
+	@Test
+	public void testGetTranslatorFromQuery3() {
+		provider.get("(locale:foo_BAR)").iterator().next();
 	}
 	
 	@Test

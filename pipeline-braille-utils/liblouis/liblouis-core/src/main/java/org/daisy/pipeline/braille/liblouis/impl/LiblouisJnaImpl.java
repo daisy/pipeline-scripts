@@ -3,18 +3,22 @@ package org.daisy.pipeline.braille.liblouis.impl;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
 import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
+import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
@@ -64,6 +68,12 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
 			if (tableRegistry == null)
 				throw new RuntimeException("No liblouis table registry bound");
+			tableRegistry.onPathChange(
+				new Function<LiblouisTableRegistry,Void>() {
+					public Void apply(LiblouisTableRegistry r) {
+						indexed = false;
+						provider.invalidateCache();
+						return null; }});
 			final LiblouisTableResolver tableResolver = tableRegistry;
 			_tableResolver = new TableResolver() {
 				public File[] invoke(String tableList, File base) {
@@ -73,11 +83,26 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 						logger.debug("Resolved to " + join(resolved, ","));
 					else
 						logger.error("Table could not be resolved");
-						return resolved; }};
+					return resolved; }};
 			Louis.getLibrary().lou_registerTableResolver(_tableResolver); }
 		catch (Throwable e) {
 			logger.error("liblouis service could not be loaded", e);
 			throw e; }
+	}
+	
+	private boolean indexed = false;
+	
+	private void lazyIndex() {
+		if (indexed)
+			return;
+		logger.debug("Indexing tables");
+		Louis.getLibrary().lou_indexTables(
+			Iterables.toArray(
+				Iterables.<URI,String>transform(
+					tableRegistry.listAllTables(),
+					toStringFunction()),
+			String.class));
+		indexed = true;
 	}
 	
 	@Deactivate
@@ -113,48 +138,80 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindTableResolver(LiblouisTableRegistry registry) {
+	protected void bindTableRegistry(LiblouisTableRegistry registry) {
 		tableRegistry = registry;
 		logger.debug("Registering Liblouis table registry: " + registry);
 	}
 	
-	protected void unbindTableResolver(LiblouisTableRegistry resolver) {
+	protected void unbindTableRegistry(LiblouisTableRegistry registry) {
 		tableRegistry = null;
 	}
 	
 	public Iterable<Translator> get(String query) {
 		return provider.get(query);
 	}
-	
-	private final static Iterable<Translator> empty = Optional.<Translator>absent().asSet();
-	
+
 	private CachedProvider<String,Translator> provider
 	= new CachedProvider<String,Translator>() {
 		public Iterable<Translator> delegate(final String query) {
-			final Map<String,Optional<String>> q = parseQuery(query);
+			return provider_.get(new HashMap<String,Optional<String>>(parseQuery(query)));
+		}
+		@Override
+		public void invalidateCache() {
+			super.invalidateCache();
+			provider__.invalidateCache();
+		}
+	};
+	
+	private Provider<Map<String,Optional<String>>,Translator> provider_
+	= new LocaleBasedProvider<Map<String,Optional<String>>,Translator>() {
+		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
+			return provider__.get(query);
+		}
+		public Locale getLocale(Map<String,Optional<String>> query) {
 			Optional<String> o;
-			if ((o = q.get("table")) != null) {
-				String table = o.get();
-				try {
-					return Optional.of(new Translator(table)).asSet(); }
-				catch (CompilationException e) {
-					logger.warn("Could not compile translator " + table, e);
-					return empty; }}
-			else if ((o = q.get("locale")) != null) {
-				Locale locale = parseLocale(o.get());
-				return Iterables.<Translator>filter(
-					Iterables.<LiblouisTable,Translator>transform(
-						tableRegistry.get(locale),
-						new Function<LiblouisTable,Translator>() {
-							public Translator apply(LiblouisTable table) {
-								try {
-									return new Translator(table.toString()); }
-								catch (CompilationException e) {
-									logger.warn("Could not compile translator " + table, e);
-									return null; }}}),
-					Predicates.notNull()); }
+			if ((o = query.get("locale")) != null)
+				return parseLocale(o.get());
 			else
-				return empty;
+				return null;
+		}
+		public Map<String,Optional<String>> assocLocale(Map<String,Optional<String>> query, Locale locale) {
+			query.put("locale", Optional.<String>of(Locales.toString(locale, '_')));
+			return query;
+		}
+	};
+	
+	private CachedProvider<Map<String,Optional<String>>,Translator> provider__
+	= new CachedProvider<Map<String,Optional<String>>,Translator>() {
+		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
+			return Iterables.<Translator>filter(
+				new ImmutableLazyValue<Translator>() {
+					public Translator delegate() {
+						try {
+							Optional<String> o;
+							if ((o = query.get("table")) != null)
+								return new Translator(o.get());
+							else if (query.size() > 0) {
+								StringBuilder b = new StringBuilder();
+								for (String k : query.keySet()) {
+									if (!k.matches("[a-zA-Z0-9_-]+")) {
+										logger.warn("Invalid syntax for feature key: " + k);
+										return null; }
+									b.append(k);
+									o = query.get(k);
+									if (o.isPresent()) {
+										String v = o.get();
+										if (!v.matches("[a-zA-Z0-9_-]+")) {
+											logger.warn("Invalid syntax for feature value: " + v);
+											return null; }
+										b.append(":" + v); }
+									b.append(" "); }
+								lazyIndex();
+								return Translator.find(b.toString()); }}
+						catch (CompilationException e) {
+							logger.warn("Could not compile translator", e); }
+						return null; }},
+				Predicates.notNull());
 		}
 	};
 	

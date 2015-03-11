@@ -128,9 +128,8 @@ public interface Provider<Q,X> {
 								switch (tryNext) {
 								case 1:
 									tryNext++;
-									if (!"".equals(locale.toString()))
-										next = delegate(query).iterator();
-									else
+									next = delegate(query).iterator();
+									if (locale == null || "".equals(locale.toString()))
 										tryNext = 4;
 									break;
 								case 2:

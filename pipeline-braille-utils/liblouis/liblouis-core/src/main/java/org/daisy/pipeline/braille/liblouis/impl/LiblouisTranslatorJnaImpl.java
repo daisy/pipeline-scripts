@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import static com.google.common.base.Objects.toStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
@@ -118,11 +119,12 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * - table or liblouis-table: A liblouis table is a list of URIs that can be either a file name,
 	 *     a file path relative to a registered tablepath, an absolute file URI, or a fully
 	 *     qualified table identifier. The tablepath that contains the first `sub-table' in the list
-	 *     will be used as the base for resolving the subsequent sub-tables.
+	 *     will be used as the base for resolving the subsequent sub-tables. This feature is not
+	 *     compatible with other features except `translator', `hyphenator' and `locale'.
 	 *
 	 * - locale: Matches only liblouis translators with that locale.
 	 *
-	 * No other features are allowed.
+	 * Other features are passed on to lou_findTable.
 	 *
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
@@ -405,6 +407,40 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				return translator.display(braille); }
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
+		}
+		
+		@Override
+		public String toString() {
+			return toStringHelper(this).add("translator", translator).add("hyphenator", hyphenator).toString();
+		}
+	
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int hash = 1;
+			hash = prime * hash + translator.hashCode();
+			hash = prime * hash + ((hyphenator == null) ? 0 : hyphenator.hashCode());
+			return hash;
+		}
+	
+		@Override
+		public boolean equals(Object object) {
+			if (this == object)
+				return true;
+			if (object == null)
+				return false;
+			if (object.getClass() != LiblouisTranslatorImpl.class)
+				return false;
+			LiblouisTranslatorImpl that = (LiblouisTranslatorImpl)object;
+			if (!this.translator.equals(that.translator))
+				return false;
+			if (this.hyphenator == null && that.hyphenator != null)
+				return false;
+			if (this.hyphenator != null && that.hyphenator == null)
+				return false;
+			if (!this.hyphenator.equals(that.hyphenator))
+				return false;
+			return true;
 		}
 	}
 	
