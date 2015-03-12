@@ -30,7 +30,7 @@
     <entry key="eo">unicode.dis,eo-g1.ctb,braille-patterns.cti</entry>
     <entry key="es">unicode.dis,es-g1.ctb,hyph_es_ES.dic,braille-patterns.cti</entry>
     <entry key="et">unicode.dis,et.ctb,braille-patterns.cti</entry>
-    <entry key="fi">unicode.dis,fi-fi.ctb,braille-patterns.cti</entry>
+    <entry key="fi">unicode.dis,fi.utb,braille-patterns.cti</entry>
     <entry key="fr">unicode.dis,Fr-Fr-g2.ctb,hyph_fr_FR.dic,braille-patterns.cti</entry>
     <entry key="fr_CA">unicode.dis,Fr-Ca-g2.ctb,hyph_fr_FR.dic,braille-patterns.cti</entry>
     <entry key="fr_FR">unicode.dis,Fr-Fr-g2.ctb,hyph_fr_FR.dic,braille-patterns.cti</entry>

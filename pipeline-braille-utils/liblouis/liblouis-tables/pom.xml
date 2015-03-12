@@ -19,8 +19,8 @@
 
   <properties>
     <liblouis.version>2.6.2</liblouis.version>
-    <liblouis.tarball.url>https://github.com/liblouis/liblouis/releases/download/v2.6.2/liblouis-2.6.2.tar.gz</liblouis.tarball.url>
-    <liblouis.tarball.sha1>490437e79e648ef55c17f3e599eb1fc57ca781d0</liblouis.tarball.sha1>
+    <liblouis.tarball.url>https://github.com/liblouis/liblouis/tarball/v${liblouis.version}</liblouis.tarball.url>
+    <liblouis.tarball.sha1>4ed13d7aeedbd5a59bbb63f592fcd3a8e559ccb6</liblouis.tarball.sha1>
   </properties>
   
   <dependencies>
@@ -87,7 +87,7 @@
                     <exclude name="*/tables/README" />
                   </patternset>
                   <mapper>
-                    <globmapper from="liblouis-${liblouis.version}/*" to="*" />
+                    <globmapper from="liblouis-liblouis-6e85a44/*" to="*" />
                   </mapper>
                 </untar>
               </target>
