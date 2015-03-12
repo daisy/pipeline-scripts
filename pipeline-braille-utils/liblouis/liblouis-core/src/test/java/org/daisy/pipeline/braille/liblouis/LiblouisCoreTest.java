@@ -71,12 +71,12 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
-	public void testResolveTable() {
+	public void testResolveTableFile() {
 		assertEquals("foobar.cti", asFile(resolver.resolve(asURI("foobar.cti"))).getName());
 	}
 	
 	@Test
-	public void testResolveTableList() {
+	public void testResolveTable() {
 		assertEquals("foobar.cti", (resolver.resolveLiblouisTable(new LiblouisTable("foobar.cti"), null)[0]).getName());
 	}
 	

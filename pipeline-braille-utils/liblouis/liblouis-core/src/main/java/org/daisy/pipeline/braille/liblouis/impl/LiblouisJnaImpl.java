@@ -76,9 +76,9 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 						return null; }});
 			final LiblouisTableResolver tableResolver = tableRegistry;
 			_tableResolver = new TableResolver() {
-				public File[] invoke(String tableList, File base) {
-					logger.debug("Resolving " + tableList + (base != null ? " against base " + base : ""));
-					File[] resolved = tableResolver.resolveLiblouisTable(new LiblouisTable(tableList), base);
+				public File[] invoke(String table, File base) {
+					logger.debug("Resolving " + table + (base != null ? " against base " + base : ""));
+					File[] resolved = tableResolver.resolveLiblouisTable(new LiblouisTable(table), base);
 					if (resolved != null)
 						logger.debug("Resolved to " + join(resolved, ","));
 					else
@@ -99,7 +99,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		Louis.getLibrary().lou_indexTables(
 			Iterables.toArray(
 				Iterables.<URI,String>transform(
-					tableRegistry.listAllTables(),
+					tableRegistry.listAllTableFiles(),
 					toStringFunction()),
 			String.class));
 		indexed = true;

@@ -24,7 +24,7 @@ public class LiblouisTablePath extends BundledResourcePath {
 		lazyUnpack(context);
 	}
 	
-	public Iterable<URI> listTables() {
+	public Iterable<URI> listTableFiles() {
 		return Iterables.<URI,URI>transform(
 			resources,
 			new Function<URI,URI>() {

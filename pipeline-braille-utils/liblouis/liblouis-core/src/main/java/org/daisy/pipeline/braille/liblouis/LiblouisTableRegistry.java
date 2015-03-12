@@ -64,23 +64,23 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	}
 	
 	public File[] resolveLiblouisTable(LiblouisTable table, File base) {
-		URI[] tableList = table.asURIs();
-		File[] resolved = new File[tableList.length];
+		URI[] subTables = table.asURIs();
+		File[] tableFiles = new File[subTables.length];
 		List<ResourcePath> paths = new ArrayList<ResourcePath>(this.paths.values());
 		paths.add(fileSystem);
-		for (int i = 0; i < tableList.length; i++) {
-			URI subTable = tableList[i];
+		for (int i = 0; i < subTables.length; i++) {
+			URI subTable = subTables[i];
 			if (base != null)
 				subTable = asURI(base).resolve(subTable);
 			for (ResourcePath path : paths) {
-				resolved[i] = asFile(path.resolve(subTable));
-				if (resolved[i] != null) {
+				tableFiles[i] = asFile(path.resolve(subTable));
+				if (tableFiles[i] != null) {
 					paths.remove(path);
 					paths.add(0, path);
 					break; }}
-			if (resolved[i] == null)
+			if (tableFiles[i] == null)
 				return null; }
-		return resolved;
+		return tableFiles;
 	}
 	
 	private final ResourcePath fileSystem = new LiblouisFileSystem();
@@ -126,17 +126,17 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 				logger.error("Could not apply callback function " + f, e); }
 	}
 	
-	private static Function<LiblouisTablePath,Iterable<URI>> listTables = new Function<LiblouisTablePath,Iterable<URI>>() {
+	private static Function<LiblouisTablePath,Iterable<URI>> listTableFiles = new Function<LiblouisTablePath,Iterable<URI>>() {
 		public Iterable<URI> apply(LiblouisTablePath path) {
-			return path.listTables();
+			return path.listTableFiles();
 		}
 	};
 	
-	public Iterable<URI> listAllTables() {
+	public Iterable<URI> listAllTableFiles() {
 		return Iterables.<URI>concat(
 			Iterables.<LiblouisTablePath,Iterable<URI>>transform(
 				paths.values(),
-				listTables));
+				listTableFiles));
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisTableRegistry.class);

@@ -28,7 +28,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
-import static org.daisy.pipeline.braille.liblouis.LiblouisTable.tokenizeTableList;
+import static org.daisy.pipeline.braille.liblouis.LiblouisTable.tokenizeTable;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 
@@ -177,7 +177,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 							Iterable<LiblouisTranslator> translators = empty;
 							if (!"none".equals(hyphenator)) {
 								if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
-									for (URI t : tokenizeTableList(table.getTable()))
+									for (URI t : tokenizeTable(table.getTable()))
 										if (t.toString().endsWith(".dic")) {
 											translators = Optional.<LiblouisTranslator>of(
 												new LiblouisTranslatorHyphenatorImpl(table)).asSet();
