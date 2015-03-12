@@ -126,7 +126,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	
 	private LibhyphenHyphenator get(URI table) {
 		try { return new LibhyphenHyphenatorImpl(table); }
-		catch (Exception e) {
+		catch (Throwable e) {
 			logger.warn("Could not create hyphenator for table " + table, e); }
 		return null;
 	}

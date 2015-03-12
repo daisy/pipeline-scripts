@@ -1,0 +1,4 @@
+#+locale:fi
+include ../unicode.dis
+include ../fi.utb
+include ../braille-patterns.cti

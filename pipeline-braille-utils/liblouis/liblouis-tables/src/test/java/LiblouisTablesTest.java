@@ -19,6 +19,7 @@ import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +34,7 @@ import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -43,15 +45,15 @@ public class LiblouisTablesTest {
 	
 	@Test
 	public void testCompileAllTablesInManifest() throws IOException {
-		URL manifest = asURL(new File(new File(PathUtils.getBaseDir()), "target/classes/manifest.xml"));
-		manifest.openConnection();
-		InputStream reader = manifest.openStream();
-		Properties properties = new Properties();
-		properties.loadFromXML(reader);
-		for (String key : properties.stringPropertyNames()) {
-			String table = properties.getProperty(key);
+		File manifest = new File(new File(PathUtils.getBaseDir()), "target/classes/tables/manifest");
+		for (File f : manifest.listFiles()) {
+			String table = "manifest/" + f.getName();
 			assertNotEmpty("Table " + table + " does not compile", provider.get("(table:'" + table + "')")); }
-		reader.close();
+	}
+	
+	@Test
+	public void testQueryTranslator() {
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[0].toString().endsWith("manifest/nl_BE"));
 	}
 	
 	private void assertNotEmpty(String message, Iterable<?> iterable) {
@@ -78,7 +80,9 @@ public class LiblouisTablesTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("liblouis-core"),
-			forThisPlatform(brailleModule("liblouis-native")),
+			// depends on https://github.com/liblouis/liblouis/pull/41
+			systemProperty("org.daisy.pipeline.liblouis.external").value("true"),
+			// forThisPlatform(brailleModule("liblouis-native")),
 			brailleModule("libhyphen-core"),
 			thisBundle(),
 			junitBundles()

@@ -1,0 +1,4 @@
+#+locale:vi
+include ../unicode.dis
+include ../vi.ctb
+include ../braille-patterns.cti

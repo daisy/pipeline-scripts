@@ -1,0 +1,4 @@
+#+locale:ro
+include ../unicode.dis
+include ../ro.ctb
+include ../braille-patterns.cti

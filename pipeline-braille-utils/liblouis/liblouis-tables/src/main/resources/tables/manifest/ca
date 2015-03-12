@@ -1,0 +1,4 @@
+#+locale:ca
+include ../unicode.dis
+include ../ca-g1.ctb
+include ../braille-patterns.cti

@@ -1,0 +1,4 @@
+#+locale:ckb
+include ../unicode.dis
+include ../ckb-g1.ctb
+include ../braille-patterns.cti

@@ -1,0 +1,4 @@
+#+locale:lv
+include ../unicode.dis
+include ../Lv-Lv-g1.utb
+include ../braille-patterns.cti

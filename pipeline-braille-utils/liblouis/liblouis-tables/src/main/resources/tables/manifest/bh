@@ -1,0 +1,5 @@
+#+locale:bh
+include ../unicode.dis
+include ../spaces.ctb
+include ../bh.ctb
+include ../braille-patterns.cti

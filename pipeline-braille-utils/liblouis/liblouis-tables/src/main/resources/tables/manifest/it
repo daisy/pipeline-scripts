@@ -1,0 +1,5 @@
+#+locale:it
+include ../unicode.dis
+include ../it-it-comp6.utb
+include ../hyph_it_IT.dic
+include ../braille-patterns.cti

@@ -1,0 +1,5 @@
+#+locale:cs
+include ../unicode.dis
+include ../cs-g1.ctb
+include ../hyph_cs_CZ.dic
+include ../braille-patterns.cti

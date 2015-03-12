@@ -1,0 +1,5 @@
+#+locale:bn
+include ../unicode.dis
+include ../spaces.ctb
+include ../be-in-g1.utb
+include ../braille-patterns.cti

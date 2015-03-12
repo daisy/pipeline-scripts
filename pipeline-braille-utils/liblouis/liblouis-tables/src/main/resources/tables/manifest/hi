@@ -1,0 +1,4 @@
+#+locale:hi
+include ../unicode.dis
+include ../hi-in-g1.utb
+include ../braille-patterns.cti

@@ -1,0 +1,4 @@
+#+locale:gez
+include ../unicode.dis
+include ../ethio-g1.ctb
+include ../braille-patterns.cti
