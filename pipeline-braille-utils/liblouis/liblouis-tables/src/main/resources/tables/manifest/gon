@@ -1,5 +1,4 @@
 #+locale:gon
-include ../unicode.dis
 include ../spaces.ctb
 include ../gon.ctb
 include ../braille-patterns.cti

@@ -1,4 +1,3 @@
 #+locale:da
-include ../unicode.dis
 include ../da-dk-g26.ctb
 include ../braille-patterns.cti

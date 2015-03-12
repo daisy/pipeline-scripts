@@ -1,4 +1,3 @@
 #+locale:sk
-include ../unicode.dis
 include ../sk-sk-g1.utb
 include ../braille-patterns.cti

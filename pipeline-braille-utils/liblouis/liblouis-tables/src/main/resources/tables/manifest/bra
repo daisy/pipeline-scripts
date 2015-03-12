@@ -1,5 +1,4 @@
 #+locale:bra
-include ../unicode.dis
 include ../spaces.ctb
 include ../br-in-g1.utb
 include ../braille-patterns.cti

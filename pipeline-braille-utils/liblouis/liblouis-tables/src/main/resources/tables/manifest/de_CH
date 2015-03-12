@@ -1,5 +1,4 @@
 #+locale:de_CH
-include ../unicode.dis
 include ../de-ch-g2.ctb
 include ../hyph_de_DE.dic
 include ../braille-patterns.cti

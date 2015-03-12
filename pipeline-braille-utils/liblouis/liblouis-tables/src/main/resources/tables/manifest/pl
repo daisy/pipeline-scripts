@@ -1,5 +1,4 @@
 #+locale:pl
-include ../unicode.dis
 include ../Pl-Pl-g1.utb
 include ../hyph_pl_PL.dic
 include ../braille-patterns.cti

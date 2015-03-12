@@ -53,7 +53,12 @@ public class LiblouisTablesTest {
 	
 	@Test
 	public void testQueryTranslator() {
-		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[0].toString().endsWith("manifest/nl_BE"));
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[1].toString().endsWith("manifest/nl_BE"));
+	}
+	
+	@Test
+	public void testUnicodeBraille() {
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().transform("foobar").matches("[\\s\\t\\n\u00a0\u00ad\u200b\u2800-\u28ff]*"));
 	}
 	
 	private void assertNotEmpty(String message, Iterable<?> iterable) {

@@ -1,5 +1,4 @@
 #+locale:mun
-include ../unicode.dis
 include ../spaces.ctb
 include ../mun.ctb
 include ../braille-patterns.cti

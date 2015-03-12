@@ -1,4 +1,3 @@
 #+locale:ga
-include ../unicode.dis
 include ../ga-g2.ctb
 include ../braille-patterns.cti

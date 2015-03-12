@@ -1,5 +1,4 @@
 #+locale:as
-include ../unicode.dis
 include ../spaces.ctb
 include ../as-in-g1.utb
 include ../braille-patterns.cti

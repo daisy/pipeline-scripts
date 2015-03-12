@@ -1,4 +1,3 @@
 #+locale:hr
-include ../unicode.dis
 include ../hr.ctb
 include ../braille-patterns.cti

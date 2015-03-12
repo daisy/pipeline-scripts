@@ -1,4 +1,3 @@
 #+locale:sr
-include ../unicode.dis
 include ../sr-g1.ctb
 include ../braille-patterns.cti

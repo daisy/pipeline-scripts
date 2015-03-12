@@ -1,5 +1,4 @@
 #+locale:en_CA
-include ../unicode.dis
 include ../en_CA.ctb
 include ../hyph_en_US.dic
 include ../braille-patterns.cti

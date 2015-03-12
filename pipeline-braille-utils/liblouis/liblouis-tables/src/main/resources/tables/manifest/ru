@@ -1,4 +1,3 @@
 #+locale:ru
-include ../unicode.dis
 include ../ru-ru-g1.utb
 include ../braille-patterns.cti

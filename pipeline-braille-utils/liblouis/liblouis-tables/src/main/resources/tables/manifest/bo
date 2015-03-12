@@ -1,4 +1,3 @@
 #+locale:bo
-include ../unicode.dis
 include ../bo.ctb
 include ../braille-patterns.cti

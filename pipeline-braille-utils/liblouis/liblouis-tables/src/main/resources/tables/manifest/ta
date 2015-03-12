@@ -1,5 +1,4 @@
 #+locale:ta
-include ../unicode.dis
 include ../spaces.ctb
 include ../ta.ctb
 include ../braille-patterns.cti

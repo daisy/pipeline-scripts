@@ -17,10 +17,12 @@ import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
 import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.util.Files.unpack;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry;
@@ -37,6 +39,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.ComponentContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +60,10 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	// Hold a reference to avoid garbage collection
 	private TableResolver _tableResolver;
 	
+	private File unicodeDisFile;
+	
 	@Activate
-	protected void activate() {
+	protected void activate(ComponentContext context) {
 		logger.debug("Loading liblouis service");
 		try {
 			if (LIBLOUIS_EXTERNAL)
@@ -84,10 +89,23 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 					else
 						logger.error("Table could not be resolved");
 					return resolved; }};
-			Louis.getLibrary().lou_registerTableResolver(_tableResolver); }
+			Louis.getLibrary().lou_registerTableResolver(_tableResolver);
+			unicodeDisFile = new File(makeUnpackDir(context), "unicode.dis");
+			unpack(
+				context.getBundleContext().getBundle().getEntry("/tables/unicode.dis"),
+				unicodeDisFile); }
 		catch (Throwable e) {
 			logger.error("liblouis service could not be loaded", e);
 			throw e; }
+	}
+	
+	private static File makeUnpackDir(ComponentContext context) {
+		File directory;
+		for (int i = 0; true; i++) {
+			directory = context.getBundleContext().getDataFile("resources" + i);
+			if (!directory.exists()) break; }
+		directory.mkdirs();
+		return directory;
 	}
 	
 	private boolean indexed = false;
@@ -187,29 +205,32 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			return Iterables.<Translator>filter(
 				new ImmutableLazyValue<Translator>() {
 					public Translator delegate() {
-						try {
-							Optional<String> o;
-							if ((o = query.get("table")) != null)
-								return new Translator(o.get());
-							else if (query.size() > 0) {
-								StringBuilder b = new StringBuilder();
-								for (String k : query.keySet()) {
-									if (!k.matches("[a-zA-Z0-9_-]+")) {
-										logger.warn("Invalid syntax for feature key: " + k);
+						String table = null;
+						Optional<String> o;
+						if ((o = query.get("table")) != null)
+							table = o.get();
+						else if (query.size() > 0) {
+							StringBuilder b = new StringBuilder();
+							for (String k : query.keySet()) {
+								if (!k.matches("[a-zA-Z0-9_-]+")) {
+									logger.warn("Invalid syntax for feature key: " + k);
+									return null; }
+								b.append(k);
+								o = query.get(k);
+								if (o.isPresent()) {
+									String v = o.get();
+									if (!v.matches("[a-zA-Z0-9_-]+")) {
+										logger.warn("Invalid syntax for feature value: " + v);
 										return null; }
-									b.append(k);
-									o = query.get(k);
-									if (o.isPresent()) {
-										String v = o.get();
-										if (!v.matches("[a-zA-Z0-9_-]+")) {
-											logger.warn("Invalid syntax for feature value: " + v);
-											return null; }
-										b.append(":" + v); }
-									b.append(" "); }
-								lazyIndex();
-								return Translator.find(b.toString()); }}
-						catch (CompilationException e) {
-							logger.warn("Could not compile translator", e); }
+									b.append(":" + v); }
+								b.append(" "); }
+							lazyIndex();
+							table = Louis.getLibrary().lou_findTable(b.toString()); }
+						if (table != null)
+							try {
+								return new Translator(asURI(unicodeDisFile) + "," + table); }
+							catch (CompilationException e) {
+								logger.warn("Could not compile translator", e); }
 						return null; }},
 				Predicates.notNull());
 		}

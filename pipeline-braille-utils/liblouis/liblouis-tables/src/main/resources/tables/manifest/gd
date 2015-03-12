@@ -1,4 +1,3 @@
 #+locale:gd
-include ../unicode.dis
 include ../gd.ctb
 include ../braille-patterns.cti

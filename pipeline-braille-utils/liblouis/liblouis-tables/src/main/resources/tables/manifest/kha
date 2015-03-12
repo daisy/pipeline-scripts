@@ -1,5 +1,4 @@
 #+locale:kha
-include ../unicode.dis
 include ../spaces.ctb
 include ../kh-in-g1.utb
 include ../braille-patterns.cti

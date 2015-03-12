@@ -1,4 +1,3 @@
 #+locale:cy
-include ../unicode.dis
 include ../cy-cy-g2.ctb
 include ../braille-patterns.cti

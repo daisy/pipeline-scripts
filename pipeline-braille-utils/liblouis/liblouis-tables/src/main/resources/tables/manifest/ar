@@ -1,4 +1,3 @@
 #+locale:ar
-include ../unicode.dis
 include ../ar-ar-g1.utb
 include ../braille-patterns.cti

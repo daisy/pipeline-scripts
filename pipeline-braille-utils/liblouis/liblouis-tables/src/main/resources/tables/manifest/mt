@@ -1,4 +1,3 @@
 #+locale:mt
-include ../unicode.dis
 include ../mt.ctb
 include ../braille-patterns.cti

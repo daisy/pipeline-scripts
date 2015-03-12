@@ -1,5 +1,4 @@
 #+locale:awa
-include ../unicode.dis
 include ../spaces.ctb
 include ../aw-in-g1.utb
 include ../braille-patterns.cti

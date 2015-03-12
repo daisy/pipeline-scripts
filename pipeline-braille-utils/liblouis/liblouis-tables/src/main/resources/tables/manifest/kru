@@ -1,5 +1,4 @@
 #+locale:kru
-include ../unicode.dis
 include ../spaces.ctb
 include ../kru.ctb
 include ../braille-patterns.cti

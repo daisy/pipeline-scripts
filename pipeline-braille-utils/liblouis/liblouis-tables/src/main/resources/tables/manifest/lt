@@ -1,4 +1,3 @@
 #+locale:lt
-include ../unicode.dis
 include ../lt.ctb
 include ../braille-patterns.cti

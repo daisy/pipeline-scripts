@@ -1,4 +1,3 @@
 #+locale:is
-include ../unicode.dis
 include ../is-chardefs6.cti
 include ../braille-patterns.cti

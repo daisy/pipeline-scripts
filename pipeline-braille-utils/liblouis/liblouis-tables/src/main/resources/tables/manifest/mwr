@@ -1,5 +1,4 @@
 #+locale:mwr
-include ../unicode.dis
 include ../spaces.ctb
 include ../mwr.ctb
 include ../braille-patterns.cti

@@ -1,5 +1,4 @@
 #+locale:dra
-include ../unicode.dis
 include ../spaces.ctb
 include ../dra.ctb
 include ../braille-patterns.cti

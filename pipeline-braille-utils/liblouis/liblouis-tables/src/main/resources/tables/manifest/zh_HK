@@ -1,4 +1,3 @@
 #+locale:zh_HK
-include ../unicode.dis
 include ../zh-hk.ctb
 include ../braille-patterns.cti

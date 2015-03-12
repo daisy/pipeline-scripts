@@ -1,4 +1,3 @@
 #+locale:fi
-include ../unicode.dis
-include ../fi.utb
+include ../fi-fi.ctb
 include ../braille-patterns.cti

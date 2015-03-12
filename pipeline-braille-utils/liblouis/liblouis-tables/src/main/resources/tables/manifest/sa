@@ -1,5 +1,4 @@
 #+locale:sa
-include ../unicode.dis
 include ../spaces.ctb
 include ../sa-in-g1.utb
 include ../braille-patterns.cti

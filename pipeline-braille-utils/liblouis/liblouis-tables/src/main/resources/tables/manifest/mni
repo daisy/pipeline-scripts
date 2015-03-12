@@ -1,5 +1,4 @@
 #+locale:mni
-include ../unicode.dis
 include ../spaces.ctb
 include ../mn-in-g1.utb
 include ../braille-patterns.cti
