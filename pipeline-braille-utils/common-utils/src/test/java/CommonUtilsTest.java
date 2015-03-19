@@ -58,7 +58,7 @@ public class CommonUtilsTest {
 			calabashConfigFile(),
 			logbackBundles(),
 			felixDeclarativeServices(),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "common-utils"),
 			xspecBundles(),
 			xprocspecBundles(),
 			junitBundles()

@@ -74,7 +74,7 @@ public class LiblouisFormatterTest {
 			pipelineModule("fileset-utils"),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle(),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-formatter"),
 			junitBundles()
 		);
 	}

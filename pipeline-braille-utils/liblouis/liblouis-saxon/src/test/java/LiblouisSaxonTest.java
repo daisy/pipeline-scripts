@@ -51,7 +51,7 @@ public class LiblouisSaxonTest {
 			brailleModule("css-core"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-saxon"),
 			xspecBundles(),
 			junitBundles()
 		);

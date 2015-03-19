@@ -58,7 +58,7 @@ public class LiblouisMathMLTest {
 			pipelineModule("zip-utils"),
 			pipelineModule("mediatype-utils"),
 			pipelineModule("fileset-utils"),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-mathml"),
 			xprocspecBundles(),
 			junitBundles()
 		);

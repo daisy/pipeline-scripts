@@ -51,7 +51,7 @@ public class LibhyphenSaxonTest {
 			brailleModule("css-core"),
 			brailleModule("libhyphen-core"),
 			forThisPlatform(brailleModule("libhyphen-native")),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "libhyphen-saxon"),
 			xspecBundles(),
 			junitBundles()
 		);

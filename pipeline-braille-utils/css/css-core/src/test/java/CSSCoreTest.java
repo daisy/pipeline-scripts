@@ -54,7 +54,7 @@ public class CSSCoreTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
-			thisBundle(),
+			thisBundle("org.daisy.pipeline.modules.braille", "css-core"),
 			xspecBundles(),
 			junitBundles()
 		);

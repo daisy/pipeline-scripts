@@ -53,7 +53,7 @@ public class LiblouisDisplayTableBrailleConverterTest {
 			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
-			thisBundle(),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-pef"),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

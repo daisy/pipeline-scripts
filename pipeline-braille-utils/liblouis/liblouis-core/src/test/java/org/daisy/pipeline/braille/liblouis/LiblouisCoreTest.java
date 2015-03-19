@@ -67,7 +67,7 @@ public class LiblouisCoreTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-core"),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

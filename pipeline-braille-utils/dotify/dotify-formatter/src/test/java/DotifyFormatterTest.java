@@ -65,7 +65,7 @@ public class DotifyFormatterTest {
 			brailleModule("dotify-calabash"),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "dotify-formatter"),
 			junitBundles()
 		);
 	}

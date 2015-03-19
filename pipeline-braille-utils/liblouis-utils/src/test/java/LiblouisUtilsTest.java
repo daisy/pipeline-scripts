@@ -80,7 +80,7 @@ public class LiblouisUtilsTest {
 			pipelineModule("fileset-utils"),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-utils"),
 			junitBundles()
 		);
 	}

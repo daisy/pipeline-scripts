@@ -50,7 +50,7 @@ public class DotifySaxonTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("dotify-core"),
-			thisBundle(true),
+			thisBundle("org.daisy.pipeline.modules.braille", "dotify-saxon"),
 			xspecBundles(),
 			junitBundles()
 		);
