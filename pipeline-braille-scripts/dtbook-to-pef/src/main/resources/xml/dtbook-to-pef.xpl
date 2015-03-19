@@ -64,7 +64,13 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="transform" required="false" px:type="string" select="''"/>
+    <p:option name="transform" required="false" px:type="string" select="''">
+        <p:documentation>
+            <h2 px:role="name">transform</h2>
+            <p px:role="desc">A transformer query.</p>
+            <pre><code class="default">(translator:liblouis)(formatter:liblouis)</code></pre>
+        </p:documentation>
+    </p:option>
     
     <p:import href="dtbook-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
@@ -90,7 +96,8 @@
         <p:with-option name="default-stylesheet" select="resolve-uri(
             if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
             'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/')"/>
-        <p:with-option name="transform" select="$transform"/>
+        <p:with-option name="transform" select="if ($transform!='') then $transform
+                                                else '(translator:liblouis)(formatter:liblouis)'"/>
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
