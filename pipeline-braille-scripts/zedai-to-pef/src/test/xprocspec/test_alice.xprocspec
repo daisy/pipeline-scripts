@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+               script="../../main/resources/xml/zedai-to-pef.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="px:zedai-to-pef">
+      <x:input port="source">
+        <x:document type="file" href="../resources/alice.xml"/>
+      </x:input>
+      <x:option name="include-preview" select="'true'"/>
+      <x:option name="output-dir" select="$temp-dir"/>
+    </x:call>
+  </x:scenario>
+  
+</x:description>
