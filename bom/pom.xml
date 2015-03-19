@@ -269,7 +269,12 @@
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
-                <version>3.5.2</version>
+                <version>4.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.maven</groupId>
+                <artifactId>xprocspec-runner</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <!--
                 Runtime dependency for jstyleparser
@@ -278,6 +283,27 @@
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
                 <version>3.5.2_1</version>
+            </dependency>
+            <!-- runtime dependencies -->
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
+                <version>3.2_2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries.spifly</groupId>
+                <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries</groupId>
+                <artifactId>org.apache.aries.util</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-all</artifactId>
+                <version>4.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
