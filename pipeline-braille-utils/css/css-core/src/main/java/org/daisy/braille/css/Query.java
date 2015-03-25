@@ -1,5 +1,6 @@
 package org.daisy.braille.css;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,11 +25,12 @@ public abstract class Query {
 		
 	public static Map<String,Optional<String>> parseQuery(String query) {
 		if (FEATURES_RE.matcher(query).matches()) {
-			ImmutableMap.Builder<String,Optional<String>> b
-				= ImmutableMap.<String,Optional<String>>builder();
+			HashMap<String,Optional<String>> map = new HashMap<String,Optional<String>>();
 			Matcher m = FEATURE_RE.matcher(query);
 			while(m.find()) {
 				String key = m.group("key");
+				if (map.containsKey(key))
+					continue;
 				String value = m.group("value");
 				if (value != null) {
 					Matcher m2 = VALUE_RE.matcher(value);
@@ -45,8 +47,8 @@ public abstract class Query {
 						value = integer;
 					else
 						throw new RuntimeException("Coding error"); }
-				b.put(key, Optional.<String>fromNullable(value)); }
-			return b.build(); }
+				map.put(key, Optional.<String>fromNullable(value)); }
+			return ImmutableMap.copyOf(map); }
 		throw new RuntimeException("Could not parse query: " + query);
 	}
 	

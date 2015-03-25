@@ -37,7 +37,7 @@
     </p:viewport>
     
     <px:transform type="css" name="pef">
-        <p:with-option name="query" select="$transform"/>
+        <p:with-option name="query" select="concat($transform,'(locale:',$lang,')')"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:transform>
     

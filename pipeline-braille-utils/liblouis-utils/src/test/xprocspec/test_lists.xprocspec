@@ -14,7 +14,7 @@
       <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
       <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
       <css:inline/>
-      <px:transform type="css" name="pef" query="(translator:liblouis)(formatter:liblouis)">
+      <px:transform type="css" name="pef" query="(locale:en)(translator:liblouis)(formatter:liblouis)">
         <p:with-option name="temp-dir" select="$temp-dir"/>
       </px:transform>
     </p:pipeline>
@@ -24,7 +24,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <doc xml:lang="en">
+          <doc>
             <head>
               <style media="embossed" type="text/css">
                 @page { size: 20 20 }

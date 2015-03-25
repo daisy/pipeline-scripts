@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.dotify;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -12,7 +13,6 @@ import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -40,15 +40,29 @@ public class DotifyTranslatorProvider implements TextTransform.Provider<DotifyTr
 		return translators.get(query);
 	}
 	
+	/**
+	 * Recognized features:
+	 *
+	 * - translator: Will only match if the value is `dotify'.
+	 * - locale: Required. Matches only Dotify translators for that locale. An
+	 *     automatic fallback mechanism is used: if nothing is found for
+	 *     language-COUNTRY-variant, then language-COUNTRY is searched, then language.
+	 *
+	 * No other features are allowed.
+	 */
 	public Iterable<DotifyTranslator> get(String query) {
-		Map<String,Optional<String>> q = parseQuery(query);
-		if (q.containsKey("translator"))
-			if (!"dotify".equals(q.get("translator").get()))
-				return Optional.<DotifyTranslator>absent().asSet();
-		if (q.containsKey("locale"))
-			return get(parseLocale(q.get("locale").get()));
-		return Optional.<DotifyTranslator>absent().asSet();
+		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+		Optional<String> o;
+		if ((o = q.remove("translator")) != null)
+			if (!o.get().equals("dotify"))
+				return empty;
+		if ((o = q.remove("locale")) != null)
+			if (q.isEmpty())
+				return get(parseLocale(o.get()));
+		return empty;
 	}
+	
+	private final static Iterable<DotifyTranslator> empty = Optional.<DotifyTranslator>absent().asSet();
 	
 	private final List<BrailleTranslatorFactoryService> factoryServices = new ArrayList<BrailleTranslatorFactoryService>();
 	
@@ -86,7 +100,7 @@ public class DotifyTranslatorProvider implements TextTransform.Provider<DotifyTr
 							Locales.toString(locale, '-'), BrailleTranslatorFactory.MODE_UNCONTRACTED);
 						translator.setHyphenating(false);
 						return Optional.<DotifyTranslator>of(new DotifyTranslator(translator)).asSet(); }
-					catch (TranslatorConfigurationException e) {
+					catch (Exception e) {
 						logger.warn("Could not create translator for locale " + locale, e); }
 					return Optional.<DotifyTranslator>absent().asSet(); }});
 	

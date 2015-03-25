@@ -4,13 +4,13 @@
             xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
             exclude-inline-prefixes="#all">
 	
+	<p:option name="query" select="''"/>
+	
 	<p:xslt>
 		<p:input port="stylesheet">
 			<p:document href="liblouis-block-translate.xsl"/>
 		</p:input>
-		<p:input port="parameters">
-			<p:empty/>
-		</p:input>
+		<p:with-param name="query" select="$query"/>
 	</p:xslt>
 	
 </p:pipeline>

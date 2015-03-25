@@ -8,6 +8,8 @@
 	
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl"/>
 	
+	<xsl:param name="query"/>
+	
 	<xsl:template match="css:block" mode="#all">
 		<xsl:variable name="text" as="text()*" select="//text()"/>
 		<xsl:variable name="style" as="xs:string*">
@@ -18,7 +20,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:apply-templates select="node()[1]" mode="treewalk">
-			<xsl:with-param name="new-text-nodes" select="louis:translate(concat('(locale:',string(@xml:lang),')'), $text, $style)"/>
+			<xsl:with-param name="new-text-nodes" select="louis:translate(concat($query,'(locale:',string(@xml:lang),')'), $text, $style)"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
