@@ -7,4 +7,3 @@ The top-level scripts that are presented to the end-user.
   document into a PEF.
 - [`zedai-to-pef`](zedai-to-pef): Transforms a ZedAI (DAISY 4 XML)
   document into a PEF.
-- [`xml-to-pef`](xml-to-pef): Base for the scripts above.

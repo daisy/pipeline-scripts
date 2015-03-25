@@ -49,4 +49,26 @@ public abstract class Query {
 			return b.build(); }
 		throw new RuntimeException("Could not parse query: " + query);
 	}
+	
+	public static String serializeQuery(Map<String,Optional<String>> query) {
+		StringBuilder b = new StringBuilder();
+		for (String k : query.keySet()) {
+			if (!k.matches(IDENT_RE))
+				throw new RuntimeException();
+			b.append("(" + k);
+			Optional<String> o = query.get(k);
+			if (o.isPresent()) {
+				String v = o.get();
+				b.append(":");
+				if (v.matches(IDENT_RE) || v.matches(INTEGER_RE))
+					b.append(v);
+				else if (v.contains("'")) {
+					if (v.contains("\""))
+						throw new RuntimeException();
+					b.append("\"" + v + "\""); }
+				else
+					b.append("'" + v + "'"); }
+			b.append(")"); }
+			return b.toString();
+	}
 }

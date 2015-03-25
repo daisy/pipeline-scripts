@@ -40,6 +40,11 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>css-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-saxon</artifactId>
       <scope>runtime</scope>
     </dependency>

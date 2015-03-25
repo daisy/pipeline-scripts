@@ -56,7 +56,6 @@
     <module>pipeline-braille-utils/texhyph/texhyph-core</module>
     <module>pipeline-braille-utils/texhyph/texhyph-saxon</module>
     <!-- <module>pipeline-braille-utils/texhyph-utils</module> -->
-    <module>pipeline-braille-scripts/xml-to-pef</module>
     <module>pipeline-braille-scripts/zedai-to-pef</module>
     <module>pipeline-braille-scripts/dtbook-to-pef</module>
   </modules>

@@ -77,7 +77,6 @@ public class ZedaiToPefTest {
 			brailleModule("pef-saxon"),
 			brailleModule("pef-to-html"),
 			brailleModule("pef-utils"),
-			brailleModule("xml-to-pef"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			pipelineModule("file-utils"),
 			pipelineModule("common-utils"),
