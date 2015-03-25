@@ -9,7 +9,7 @@
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl"/>
 	
 	<xsl:template match="css:block" mode="#all">
-		<xsl:sequence select="dotify:translate(concat('(locale:',@xml:lang,')'), string(/*))"/>
+		<xsl:value-of select="dotify:translate(concat('(locale:',@xml:lang,')'), string(/*))"/>
 	</xsl:template>
 	
 </xsl:stylesheet>
