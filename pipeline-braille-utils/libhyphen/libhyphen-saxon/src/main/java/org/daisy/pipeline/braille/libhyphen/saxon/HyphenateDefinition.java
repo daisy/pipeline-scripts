@@ -12,7 +12,6 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.libhyphen.Libhyphen;
 import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -33,21 +32,21 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("hyphen",
 			"http://hunspell.sourceforge.net/Hyphen", "hyphenate");
 	
-	private Libhyphen libhyphen = null;
+	private LibhyphenHyphenator.Provider provider = null;
 	
 	@Reference(
-		name = "Libhyphen",
-		unbind = "unbindLibhyphen",
-		service = Libhyphen.class,
+		name = "LibhyphenHyphenatorProvider",
+		unbind = "unbindLibhyphenHyphenatorProvider",
+		service = LibhyphenHyphenator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLibhyphen(Libhyphen libhyphen) {
-		this.libhyphen = libhyphen;
+	protected void bindLibhyphenHyphenatorProvider(LibhyphenHyphenator.Provider provider) {
+		this.provider = provider;
 	}
 	
-	protected void unbindLibhyphen(Libhyphen libhyphen) {
-		this.libhyphen = null;
+	protected void unbindLibhyphenHyphenatorProvider(LibhyphenHyphenator.Provider provider) {
+		this.provider = null;
 	}
 	
 	public StructuredQName getFunctionQName() {
@@ -80,7 +79,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();
 					LibhyphenHyphenator hyphenator;
-					try { hyphenator = libhyphen.get(query).iterator().next(); }
+					try { hyphenator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();

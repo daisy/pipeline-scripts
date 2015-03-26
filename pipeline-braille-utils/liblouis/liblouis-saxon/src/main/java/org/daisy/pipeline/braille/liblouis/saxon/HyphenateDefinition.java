@@ -16,7 +16,6 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.liblouis.Liblouis;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -37,21 +36,21 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "hyphenate");
 	
-	private Liblouis liblouis = null;
+	private LiblouisTranslator.Provider provider = null;
 	
 	@Reference(
-		name = "Liblouis",
-		unbind = "unbindLiblouis",
-		service = Liblouis.class,
+		name = "LiblouisTranslatorProvider",
+		unbind = "unbindLiblouisTranslatorProvider",
+		service = LiblouisTranslator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouis(Liblouis liblouis) {
-		this.liblouis = liblouis;
+	protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		this.provider = provider;
 	}
 	
-	protected void unbindLiblouis(Liblouis liblouis) {
-		this.liblouis = null;
+	protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		this.provider = null;
 	}
 	
 	public StructuredQName getFunctionQName() {
@@ -86,7 +85,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					Hyphenator hyphenator;
 					try {
 						hyphenator = (Hyphenator)Iterables.<LiblouisTranslator>filter(
-							liblouis.get(query), isHyphenator).iterator().next(); }
+							provider.get(query), isHyphenator).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();

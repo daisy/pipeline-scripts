@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.libhyphen;
+package org.daisy.pipeline.braille.libhyphen.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +19,6 @@ import com.google.common.collect.Iterables;
 
 import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
-import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
@@ -31,6 +30,9 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.daisy.pipeline.braille.common.util.Tuple2;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTableProvider;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -43,15 +45,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "org.daisy.pipeline.braille.libhyphen.Libhyphen",
+	name = "org.daisy.pipeline.braille.libhyphen.LibhyphenJnaImpl",
 	service = {
-		Libhyphen.class,
+		LibhyphenHyphenator.Provider.class,
 		TextTransform.Provider.class,
 		org.daisy.pipeline.braille.common.Hyphenator.Provider.class
 	}
 )
-public class Libhyphen implements TextTransform.Provider<LibhyphenHyphenator>,
-                                  org.daisy.pipeline.braille.common.Hyphenator.Provider<LibhyphenHyphenator> {
+public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
@@ -141,7 +142,7 @@ public class Libhyphen implements TextTransform.Provider<LibhyphenHyphenator>,
 						return empty;
 				if (q.containsKey("table")) {
 					return Optional.<LibhyphenHyphenator>fromNullable(
-						Libhyphen.this.get(asURI(q.get("table").get()))).asSet(); }
+						LibhyphenJnaImpl.this.get(asURI(q.get("table").get()))).asSet(); }
 				Locale locale;
 				if (q.containsKey("locale"))
 					locale = parseLocale(q.get("locale").get());
@@ -153,7 +154,7 @@ public class Libhyphen implements TextTransform.Provider<LibhyphenHyphenator>,
 							tableProvider.get(locale),
 							new Function<URI,LibhyphenHyphenator>() {
 								public LibhyphenHyphenator apply(URI table) {
-									return Libhyphen.this.get(table); }}),
+									return LibhyphenJnaImpl.this.get(table); }}),
 						Predicates.notNull()); }
 				return empty; }};
 	
@@ -228,6 +229,6 @@ public class Libhyphen implements TextTransform.Provider<LibhyphenHyphenator>,
 		return asFile(resolvedTable);
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(Libhyphen.class);
+	private static final Logger logger = LoggerFactory.getLogger(LibhyphenJnaImpl.class);
 	
 }

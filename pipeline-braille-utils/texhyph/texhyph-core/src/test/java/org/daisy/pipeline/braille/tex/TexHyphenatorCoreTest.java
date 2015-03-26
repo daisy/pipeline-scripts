@@ -34,7 +34,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 public class TexHyphenatorCoreTest {
 	
 	@Inject
-	TexHyphenatorProvider provider;
+	TexHyphenator.Provider provider;
 	
 	@Test
 	public void testHyphenate() {

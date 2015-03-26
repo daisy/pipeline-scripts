@@ -8,14 +8,15 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.google.common.base.Predicate;
+import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.base.Predicates.alwaysTrue;
+import static com.google.common.base.Predicates.instanceOf;
 import com.google.common.collect.Iterables;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.extensions.Eval;
-import com.xmlcalabash.io.ReadablePipe;
-import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
@@ -26,9 +27,6 @@ import net.sf.saxon.s9api.QName;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
-import org.daisy.pipeline.braille.common.Provider;
-import org.daisy.pipeline.braille.common.Provider.CachedProvider;
-import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
@@ -43,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 public class PxTransformStep extends Eval {
 	
-	private final Provider<String,XProcTransform> provider;
+	private final Iterable<XProcTransform.Provider<?>> providers;
 	private final ReadableDocument pipeline;
 	
 	private static final QName _query = new QName("query");
@@ -54,9 +52,9 @@ public class PxTransformStep extends Eval {
 	private static final QName _namespace = new QName("namespace");
 	private static final QName _value = new QName("value");
 	
-	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Provider<String,XProcTransform> provider) {
+	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<XProcTransform.Provider<?>> providers) {
 		super(runtime, step);
-		this.provider = provider;
+		this.providers = providers;
 		pipeline = new ReadableDocument(runtime);
 		setInput("pipeline", pipeline);
 	}
@@ -84,23 +82,20 @@ public class PxTransformStep extends Eval {
 		if (!setup) {
 			String query = getOption(_query).getString();
 			final String type = getOption(_type, "#any");
-			XProcTransform transform;
+			Predicate<Object> filter;
+			if (type.equals("mathml") || type.equals("math"))
+				filter = instanceOf(MathMLTransform.Provider.class);
+			else if (type.equals("css-block") || type.equals("block"))
+				filter = instanceOf(CSSBlockTransform.Provider.class);
+			else if (type.equals("css") || type.equals("embossed"))
+				filter = instanceOf(CSSStyledDocumentTransform.Provider.class);
+			else if (type.equals("#any"))
+				filter = alwaysTrue();
+			else
+				filter = alwaysFalse();
+			XProcTransform transform = null;
 			try {
-				transform = Iterables.<XProcTransform>filter(
-					provider.get(query),
-					new Predicate<XProcTransform>() {
-						public boolean apply(XProcTransform transform) {
-							if (type.equals("mathml") || type.equals("math"))
-								return transform instanceof MathMLTransform;
-							else if (type.equals("css-block") || type.equals("block"))
-								return transform instanceof CSSBlockTransform;
-							else if (type.equals("css") || type.equals("embossed"))
-								return transform instanceof CSSStyledDocumentTransform;
-							else if (type.equals("#any"))
-								return true;
-							else
-								return false; }}
-				).iterator().next(); }
+				transform = Iterables.<XProcTransform.Provider<?>>filter(providers, filter).iterator().next().get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);
@@ -158,7 +153,7 @@ public class PxTransformStep extends Eval {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PxTransformStep(runtime, step, provider);
+			return new PxTransformStep(runtime, step, providers);
 		}
 		
 		@Reference(
@@ -175,16 +170,10 @@ public class PxTransformStep extends Eval {
 		
 		public void unbindXProcTransformProvider(XProcTransform.Provider<?> provider) {
 			providers.remove(provider);
-			this.provider.invalidateCache();
 			logger.debug("Removing XProcTransform provider: {}", provider);
 		}
 		
-		private List<Provider<String,? extends XProcTransform>> providers
-			= new ArrayList<Provider<String,? extends XProcTransform>>();
-		
-		private CachedProvider<String,XProcTransform> provider
-			= CachedProvider.<String,XProcTransform>newInstance(
-				DispatchingProvider.<String,XProcTransform>newInstance(providers));
+		private List<XProcTransform.Provider<?>> providers = new ArrayList<XProcTransform.Provider<?>>();
 		
 	}
 	

@@ -13,4 +13,8 @@ package org.daisy.pipeline.braille.common;
  * and, depending on the `hyphen' property, pre-hyphenated. Structure that is
  * important for further CSS processing must be preserved.
  */
-public interface CSSBlockTransform extends Transform {}
+public interface CSSBlockTransform extends Transform {
+	
+	public interface Provider<T extends CSSBlockTransform> extends Transform.Provider<T> {}
+	
+}

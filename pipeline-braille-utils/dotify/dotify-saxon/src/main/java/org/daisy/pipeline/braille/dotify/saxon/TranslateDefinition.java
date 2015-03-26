@@ -13,7 +13,6 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
-import org.daisy.pipeline.braille.dotify.DotifyTranslatorProvider;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -29,20 +28,20 @@ import org.slf4j.LoggerFactory;
 )
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
-	private DotifyTranslatorProvider provider = null;
+	private DotifyTranslator.Provider provider = null;
 	
 	@Reference(
 		name = "DotifyTranslatorProvider",
 		unbind = "unbindTranslatorProvider",
-		service = DotifyTranslatorProvider.class,
+		service = DotifyTranslator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindTranslatorProvider(DotifyTranslatorProvider provider) {
+	protected void bindTranslatorProvider(DotifyTranslator.Provider provider) {
 		this.provider = provider;
 	}
 	
-	protected void unbindTranslatorProvider(DotifyTranslatorProvider provider) {
+	protected void unbindTranslatorProvider(DotifyTranslator.Provider provider) {
 		this.provider = null;
 	}
 	

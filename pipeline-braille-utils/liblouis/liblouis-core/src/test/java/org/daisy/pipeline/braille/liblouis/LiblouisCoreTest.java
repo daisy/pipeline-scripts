@@ -43,7 +43,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 public class LiblouisCoreTest {
 	
 	@Inject
-	Liblouis liblouis;
+	LiblouisTranslator.Provider provider;
 	
 	@Inject
 	LiblouisTableResolver resolver;
@@ -91,34 +91,34 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testGetTranslatorFromQuery1() {
-		liblouis.get("(locale:foo)").iterator().next();
+		provider.get("(locale:foo)").iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery2() {
-		liblouis.get("(table:'foobar.cti')").iterator().next();
+		provider.get("(table:'foobar.cti')").iterator().next();
 	}
 	
 	@Test
 	public void testTranslate() {
-		assertEquals("foobar", liblouis.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
+		assertEquals("foobar", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testTranslateStyled() {
-		assertEquals("foobar", liblouis.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
+		assertEquals("foobar", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
 	}
 	
 	@Test
 	public void testTranslateSegments() {
-		LiblouisTranslator translator = liblouis.get("(table:'foobar.cti')").iterator().next();
+		LiblouisTranslator translator = provider.get("(table:'foobar.cti')").iterator().next();
 		assertEquals(new String[]{"foo","bar"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"foo","","bar"}, translator.transform(new String[]{"foo","","bar"}));
 	}
 	
 	@Test
 	public void testTranslateSegmentsFuzzy() {
-		LiblouisTranslator translator = liblouis.get("(table:'foobar.ctb')").iterator().next();
+		LiblouisTranslator translator = provider.get("(table:'foobar.ctb')").iterator().next();
 		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"fo","obar"}));
 		assertEquals(new String[]{"fu","","bar"}, translator.transform(new String[]{"fo","","obar"}));
@@ -132,17 +132,17 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foobar"));
+		assertEquals("foo\u00ADbar", ((Hyphenator)provider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foobar"));
 	}
 	
 	@Test
 	public void testHyphenateCompoundWord() {
-		assertEquals("foo-\u200Bbar", ((Hyphenator)liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foo-bar"));
+		assertEquals("foo-\u200Bbar", ((Hyphenator)provider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foo-bar"));
 	}
 	
 	@Test
 	public void testTranslateAndHyphenateSomeSegments() {
-		LiblouisTranslator translator = liblouis.get("(table:'foobar.cti,foobar.dic')").iterator().next();
+		LiblouisTranslator translator = provider.get("(table:'foobar.cti,foobar.dic')").iterator().next();
 		assertEquals(new String[]{"foo\u00ADbar ","foobar"},
 		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
 	}

@@ -13,7 +13,6 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.tex.TexHyphenator;
-import org.daisy.pipeline.braille.tex.TexHyphenatorProvider;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,20 +32,20 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("tex",
 			"http://code.google.com/p/texhyphj/", "hyphenate");
 	
-	private TexHyphenatorProvider provider = null;
+	private TexHyphenator.Provider provider = null;
 	
 	@Reference(
 		name = "TexHyphenatorProvider",
 		unbind = "unbindHyphenatorProvider",
-		service = TexHyphenatorProvider.class,
+		service = TexHyphenator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindHyphenatorProvider(TexHyphenatorProvider provider) {
+	protected void bindHyphenatorProvider(TexHyphenator.Provider provider) {
 		this.provider = provider;
 	}
 	
-	protected void unbindHyphenatorProvider(TexHyphenatorProvider provider) {
+	protected void unbindHyphenatorProvider(TexHyphenator.Provider provider) {
 		this.provider = null;
 	}
 	

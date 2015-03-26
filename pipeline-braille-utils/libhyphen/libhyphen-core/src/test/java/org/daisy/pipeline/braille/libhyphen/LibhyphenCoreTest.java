@@ -35,12 +35,12 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 public class LibhyphenCoreTest {
 	
 	@Inject
-	Libhyphen libhyphen;
+	LibhyphenHyphenator.Provider provider;
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", libhyphen.get("(table:'foobar.dic')").iterator().next().hyphenate("foobar"));
-		assertEquals("foo-\u200Bbar", libhyphen.get("(table:'foobar.dic')").iterator().next().hyphenate("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.dic')").iterator().next().hyphenate("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.dic')").iterator().next().hyphenate("foo-bar"));
 	}
 	
 	@Configuration

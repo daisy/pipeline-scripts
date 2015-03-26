@@ -15,6 +15,6 @@ public interface XProcTransform extends Transform {
 	 */
 	public Tuple3<URI,QName,Map<String,String>> asXProc();
 	
-	public interface Provider<T extends XProcTransform>
-		extends org.daisy.pipeline.braille.common.Provider<String,T> {}
+	public interface Provider<T extends XProcTransform> extends Transform.Provider<T> {}
+	
 }

@@ -27,7 +27,6 @@ import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
 
-import org.daisy.pipeline.braille.liblouis.Liblouis;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableProvider;
@@ -54,9 +53,12 @@ import org.slf4j.LoggerFactory;
 
 @Component(
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl",
-	service = { Liblouis.class, TextTransform.Provider.class }
+	service = {
+		LiblouisTranslator.Provider.class,
+		TextTransform.Provider.class
+	}
 )
-public class LiblouisJnaImpl implements Liblouis {
+public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';

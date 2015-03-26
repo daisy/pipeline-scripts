@@ -11,12 +11,10 @@ import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.value.BooleanValue;
 import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.liblouis.Liblouis;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -37,21 +35,21 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "translate");
 	
-	private Liblouis liblouis = null;
+	private LiblouisTranslator.Provider provider = null;
 	
 	@Reference(
-		name = "Liblouis",
-		unbind = "unbindLiblouis",
-		service = Liblouis.class,
+		name = "LiblouisTranslatorProvider",
+		unbind = "unbindLiblouisTranslatorProvider",
+		service = LiblouisTranslator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouis(Liblouis liblouis) {
-		this.liblouis = liblouis;
+	protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		this.provider = provider;
 	}
 	
-	protected void unbindLiblouis(Liblouis liblouis) {
-		this.liblouis = null;
+	protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		this.provider = null;
 	}
 	
 	public StructuredQName getFunctionQName() {
@@ -85,7 +83,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = arguments[0].head().getStringValue();
 					LiblouisTranslator translator;
-					try { translator = liblouis.get(query).iterator().next(); }
+					try { translator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					String[] text = sequenceToArray(arguments[1]);

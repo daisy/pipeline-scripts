@@ -16,4 +16,6 @@ public abstract class LibhyphenHyphenator implements Hyphenator {
 	
 	public abstract URI asLibhyphenTable();
 	
+	public interface Provider extends Hyphenator.Provider<LibhyphenHyphenator> {}
+	
 }

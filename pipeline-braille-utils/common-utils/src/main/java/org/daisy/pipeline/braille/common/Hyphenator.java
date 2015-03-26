@@ -13,6 +13,6 @@ public interface Hyphenator extends TextTransform {
 	public String hyphenate(String text);
 	public String[] hyphenate(String[] text);
 	
-	public interface Provider<T extends Hyphenator>
-		extends org.daisy.pipeline.braille.common.Provider<String,T> {}
+	public interface Provider<T extends Hyphenator> extends TextTransform.Provider<T> {}
+	
 }

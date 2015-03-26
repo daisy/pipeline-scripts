@@ -7,4 +7,8 @@ package org.daisy.pipeline.braille.common;
  * href="http://snaekobbi.github.io/braille-css-spec">http://snaekobbi.github.io/braille-css-spec</a>. The
  * resulting braille document must be a PEF.
  */
-public interface CSSStyledDocumentTransform extends Transform {}
+public interface CSSStyledDocumentTransform extends Transform {
+	
+	public interface Provider<T extends CSSStyledDocumentTransform> extends Transform.Provider<T> {}
+	
+}
