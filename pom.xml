@@ -35,6 +35,7 @@
     <!-- <module>pipeline-braille-utils/pef/pef-saxon</module> -->
     <!-- <module>pipeline-braille-utils/pef/pef-to-html</module> -->
     <module>pipeline-braille-utils/pef-utils</module>
+    <module>pipeline-braille-utils/obfl-utils</module>
     <module>pipeline-braille-utils/liblouis/liblouis-core</module>
     <module>pipeline-braille-utils/liblouis/liblouis-saxon</module>
     <!-- <module>pipeline-braille-utils/liblouis/liblouis-tables</module> -->
