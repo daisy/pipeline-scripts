@@ -21,9 +21,7 @@ into subdirectories in a logical and consistent way.
 
 See also
 --------
- - the [ZedAI to PEF script user guide](http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEFUsage)
- - the [TODO list](http://code.google.com/p/daisy-pipeline/wiki/BraillePrototypeFeatureSet)
- - the [development wiki page](http://code.google.com/p/daisy-pipeline/wiki/BrailleProductionDev)
+ - [ZedAI to PEF script user guide](http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEFDoc)
 
 Authors
 -------
