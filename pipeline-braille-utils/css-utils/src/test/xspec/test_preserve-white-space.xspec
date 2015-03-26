@@ -9,7 +9,7 @@
       <doc>
         <div>
           xxx
-          <div css:white-space="pre">
+          <div css:white-space="pre-wrap">
             <div css:white-space="default">
               xxx
             </div>
@@ -17,6 +17,9 @@
               xxx
             </div>
             xxx
+          </div>
+          <div css:white-space="pre-line">
+            xxx      xxx
           </div>
         </div>
       </doc>
@@ -34,6 +37,9 @@
             </css:white-space></div><css:white-space>
             xxx
           </css:white-space></div>
+          <div><css:white-space>
+</css:white-space>            xxx      xxx<css:white-space>
+</css:white-space>          </div>
         </div>
       </doc>
     </x:expect>

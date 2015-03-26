@@ -218,12 +218,30 @@
         <xsl:value-of select="string(@value)"/>
     </xsl:template>
     
+    <xsl:template match="text()">
+        <xsl:sequence select="."/>
+    </xsl:template>
+    
     <xsl:template match="css:white-space">
         <xsl:apply-templates/>
     </xsl:template>
     
-    <xsl:template match="text()">
-       <xsl:sequence select="."/>
+    <xsl:template match="css:white-space/text()">
+        <xsl:analyze-string select="." regex="\n">
+            <xsl:matching-substring>
+                <br/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:analyze-string select="." regex="\s+">
+                    <xsl:matching-substring>
+                        <xsl:value-of select="concat(replace(.,'.','&#x00A0;'),'&#x200B;')"/>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:value-of select="."/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
     </xsl:template>
     
     <xsl:template match="@*|*">

@@ -65,7 +65,7 @@ public class DotifyFormatterTest {
 			brailleModule("dotify-calabash"),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle(),
+			thisBundle(true),
 			junitBundles()
 		);
 	}

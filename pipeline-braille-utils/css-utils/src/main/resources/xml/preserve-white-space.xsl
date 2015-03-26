@@ -16,15 +16,15 @@
         <xsl:copy>
             <xsl:sequence select="@* except @css:white-space"/>
             <xsl:call-template name="apply-templates">
-                <xsl:with-param name="preserve" select="@css:white-space='pre'" tunnel="yes"/>
+                <xsl:with-param name="white-space" select="@css:white-space" tunnel="yes"/>
             </xsl:call-template>
         </xsl:copy>
     </xsl:template>
     
     <xsl:template name="apply-templates">
-        <xsl:param name="preserve" as="xs:boolean" select="false()" tunnel="yes"/>
+        <xsl:param name="white-space" as="xs:string" select="'normal'" tunnel="yes"/>
         <xsl:choose>
-            <xsl:when test="$preserve">
+            <xsl:when test="$white-space=('pre-wrap','pre-line')">
                 <xsl:for-each-group select="*|text()" group-adjacent="boolean(self::*)">
                     <xsl:choose>
                         <xsl:when test="current-grouping-key()">
@@ -32,10 +32,23 @@
                                 <xsl:apply-templates select="."/>
                             </xsl:for-each>
                         </xsl:when>
-                        <xsl:when test="string-join(current-group()/string(.), '')!=''">
+                        <xsl:when test="string-join(current-group()/string(.),'')=''"/>
+                        <xsl:when test="$white-space='pre-wrap'">
                             <xsl:element name="css:white-space">
                                 <xsl:sequence select="current-group()"/>
                             </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="$white-space='pre-line'">
+                            <xsl:analyze-string select="string-join(current-group()/string(.),'')" regex="\n+">
+                                <xsl:matching-substring>
+                                    <xsl:element name="css:white-space">
+                                        <xsl:value-of select="."/>
+                                    </xsl:element>
+                                </xsl:matching-substring>
+                                <xsl:non-matching-substring>
+                                    <xsl:value-of select="."/>
+                                </xsl:non-matching-substring>
+                            </xsl:analyze-string>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:for-each-group>
