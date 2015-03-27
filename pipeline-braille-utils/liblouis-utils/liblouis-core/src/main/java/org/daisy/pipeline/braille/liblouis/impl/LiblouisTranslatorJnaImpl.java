@@ -19,6 +19,8 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -131,7 +133,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
 	public Iterable<LiblouisTranslator> get(String query) {
-		return provider.get(query);
+		return logSelect(query, provider.get(query), logger);
 	}
 	
 	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
@@ -183,7 +185,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 									for (URI t : tokenizeTable(table.getTable()))
 										if (t.toString().endsWith(".dic")) {
 											translators = Optional.<LiblouisTranslator>of(
-												new LiblouisTranslatorHyphenatorImpl(table)).asSet();
+												logCreate(new LiblouisTranslatorHyphenatorImpl(table), logger)).asSet();
 											break; }
 								if (!"liblouis".equals("hyphenator")) {
 									if (locale == null) {
@@ -204,12 +206,12 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 													hyphenators,
 													new Function<Hyphenator,LiblouisTranslator>() {
 														public LiblouisTranslator apply(Hyphenator hyphenator) {
-															return new LiblouisTranslatorImpl(table, hyphenator); }}),
+															return logCreate(new LiblouisTranslatorImpl(table, hyphenator), logger); }}),
 												Predicates.notNull())); }}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 								translators = Iterables.<LiblouisTranslator>concat(
 									translators,
-									Optional.<LiblouisTranslator>of(new LiblouisTranslatorImpl(table)).asSet());
+									Optional.<LiblouisTranslator>of(logCreate(new LiblouisTranslatorImpl(table), logger)).asSet());
 							return translators;
 						}
 					}
@@ -456,6 +458,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			try { return translator.hyphenate(text); }
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
+		}
+		
+		@Override
+		public String toString() {
+			return toStringHelper(this).add("translator", translator).add("hyphenator", "self").toString();
 		}
 	}
 	
