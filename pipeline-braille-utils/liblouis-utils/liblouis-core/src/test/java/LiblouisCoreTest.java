@@ -111,7 +111,7 @@ public class LiblouisCoreTest extends AbstractTest {
 	
 	@Test
 	public void testGetTranslatorFromQuery3() {
-		provider.withContext(messageBus).get(query("(locale:foo_BAR)")).iterator().next();
+		provider.withContext(messageBus).get(query("(locale:foo_BA)")).iterator().next();
 	}
 	
 	@Test(expected=NoSuchElementException.class)
