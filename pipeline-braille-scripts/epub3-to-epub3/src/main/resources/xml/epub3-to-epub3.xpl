@@ -82,32 +82,9 @@
     </px:fileset-load>
     <p:sink/>
     
-    <!--
-        container.xml
-    -->
-    
-    <px:unzip file="META-INF/container.xml" content-type="application/xml">
+    <px:unzip file="META-INF/container.xml" content-type="application/xml" name="original-container">
         <p:with-option name="href" select="$source"/>
     </px:unzip>
-    <p:insert position="last-child" match="/ocf:container/ocf:rootfiles">
-        <p:input port="insertion">
-            <p:inline xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-                <rootfile full-path="EPUB/package-braille.opf" media-type="application/oebps-package+xml"
-                          rendition:accessMode="tactile" rendition:label="Pre-translated to braille"/>
-            </p:inline>
-        </p:input>
-    </p:insert>
-    <p:insert position="last-child" match="/ocf:container">
-        <p:input port="insertion">
-            <p:inline xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-                <link href="EPUB/renditionMapping.html" rel="mapping" media-type="application/xhtml+xml"/>
-            </p:inline>
-        </p:input>
-    </p:insert>
-    <p:add-attribute match="/*" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="resolve-uri('META-INF/container.xml',$target.base)"/>
-    </p:add-attribute>
-    <p:delete match="/*/@xml:base" name="container"/>
     
     <!--
         default rendition package document
@@ -119,7 +96,7 @@
     </px:unzip>
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="resolve-uri(//ocf:rootfile[1]/@full-path,$target.base)">
-            <p:pipe step="container" port="result"/>
+            <p:pipe step="original-container" port="result"/>
         </p:with-option>
     </p:add-attribute>
     <p:delete match="/*/@xml:base" name="default-rendition.package-document"/>
@@ -145,7 +122,7 @@
         braille rendition package document
     -->
     
-    <p:xslt>
+    <p:xslt name="braille-rendition.package-document">
         <p:input port="source">
             <p:pipe step="default-rendition.package-document" port="result"/>
             <p:pipe step="braille-rendition.fileset" port="result"/>
@@ -156,7 +133,6 @@
         <p:with-param name="braille-rendition.package-document.base"
                       select="resolve-uri('EPUB/package-braille.opf',$target.base)"/>
     </p:xslt>
-    <p:delete match="/*/@xml:base" name="braille-rendition.package-document"/>
     
     <!--
         metadata.xml
@@ -282,6 +258,56 @@
     </p:add-attribute>
     <p:delete match="/*/@xml:base" name="rendition-mapping"/>
     
+    <!--
+        braille rendition package document with new dc:language
+    -->
+    
+    <p:xslt>
+        <p:input port="source">
+            <p:pipe step="braille-rendition.package-document" port="result"/>
+            <p:pipe step="braille-rendition.html" port="result"/>
+        </p:input>
+        <p:input port="stylesheet">
+            <p:document href="braille-rendition.package-document-with-dc-language.xsl"/>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
+    <p:delete match="/*/@xml:base" name="braille-rendition.package-document-with-dc-language"/>
+    
+    <!--
+        container.xml
+    -->
+    
+    <p:insert position="last-child" match="/ocf:container/ocf:rootfiles">
+        <p:input port="source">
+            <p:pipe step="original-container" port="result"/>
+        </p:input>
+        <p:input port="insertion">
+            <p:inline xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+                <rootfile full-path="EPUB/package-braille.opf" media-type="application/oebps-package+xml"
+                          rendition:accessMode="tactile" rendition:label="Pre-translated to braille"/>
+            </p:inline>
+        </p:input>
+    </p:insert>
+    <p:add-attribute match="/ocf:container/ocf:rootfiles/ocf:rootfile[last()]" attribute-name="rendition:language">
+        <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language[1]/string(.)">
+            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
+        </p:with-option>
+    </p:add-attribute>
+    <p:insert position="last-child" match="/ocf:container">
+        <p:input port="insertion">
+            <p:inline xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+                <link href="EPUB/renditionMapping.html" rel="mapping" media-type="application/xhtml+xml"/>
+            </p:inline>
+        </p:input>
+    </p:insert>
+    <p:add-attribute match="/*" attribute-name="xml:base">
+        <p:with-option name="attribute-value" select="resolve-uri('META-INF/container.xml',$target.base)"/>
+    </p:add-attribute>
+    <p:delete match="/*/@xml:base" name="container"/>
+    
     <!-- ===== -->
     <!-- Store -->
     <!-- ===== -->
@@ -302,7 +328,7 @@
             <p:pipe step="source.in-memory" port="result"/>
             <p:pipe step="container" port="result"/>
             <p:pipe step="metadata" port="result"/>
-            <p:pipe step="braille-rendition.package-document" port="result"/>
+            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
             <p:pipe step="braille-rendition.html" port="result"/>
             <p:pipe step="rendition-mapping" port="result"/>
         </p:input>

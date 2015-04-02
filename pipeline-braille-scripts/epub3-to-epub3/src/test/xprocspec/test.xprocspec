@@ -73,7 +73,8 @@
 					<rootfiles>
 						<rootfile full-path="EPUB/package.opf" media-type="application/oebps-package+xml"/>
 						<rootfile full-path="EPUB/package-braille.opf" media-type="application/oebps-package+xml"
-								  rendition:accessMode="tactile" rendition:label="Pre-translated to braille"/>
+								  rendition:accessMode="tactile" rendition:label="Pre-translated to braille"
+								  rendition:language="en"/>
 					</rootfiles>
 					<link href="EPUB/renditionMapping.html" rel="mapping" media-type="application/xhtml+xml"/>
 				</container>
