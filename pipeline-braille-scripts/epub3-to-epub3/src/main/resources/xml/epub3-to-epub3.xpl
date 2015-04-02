@@ -207,6 +207,18 @@
             <p:with-option name="query" select="concat('(input:html)(input:css)(output:html)(output:css)(output:braille)(translator:liblouis)',
                                                         '(locale:',$lang,')')"/>
         </px:transform>
+        <p:xslt>
+            <p:input port="source">
+                <p:pipe step="transform" port="result"/>
+                <p:pipe step="braille-rendition.fileset" port="result"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="update-cross-references.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
         <p:delete match="@style" name="result"/>
         <p:group>
             <p:variable name="braille-rendition.html.base" select="base-uri(/*)">
