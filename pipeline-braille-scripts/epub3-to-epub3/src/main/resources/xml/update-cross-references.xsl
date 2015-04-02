@@ -4,6 +4,7 @@
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:html="http://www.w3.org/1999/xhtml"
+                xmlns:smil="http://www.w3.org/ns/SMIL"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -19,7 +20,9 @@
 	
 	<xsl:template match="html:a/@href|
 	                     html:img/src|
-	                     html:link[@rel='next']/@href">
+	                     html:link[@rel='next']/@href|
+	                     smil:text/@src|
+	                     smil:audio/@src">
 		<xsl:variable name="absolute-href" as="xs:anyURI" select="resolve-uri(.,$original-base)"/>
 		<xsl:variable name="tokens" as="xs:string*" select="pf:tokenize-uri($absolute-href)"/>
 		<xsl:variable name="absolute-href-without-fragment" as="xs:string" select="pf:recompose-uri($tokens[position()&lt;5])"/>

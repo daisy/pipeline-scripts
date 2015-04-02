@@ -271,6 +271,41 @@
     <p:delete match="/*/@xml:base" name="rendition-mapping"/>
     
     <!--
+        braille rendition smil files
+    -->
+    
+    <px:fileset-filter media-types="application/smil+xml" name="braille-rendition.smil.fileset">
+        <p:input port="source">
+            <p:pipe step="braille-rendition.fileset" port="result"/>
+        </p:input>
+    </px:fileset-filter>
+    <p:label-elements match="d:file" attribute="original-href">
+        <p:with-option name="label" select="concat('resolve-uri(@original-href,&quot;',$source.base,'&quot;)')"/>
+    </p:label-elements>
+    <px:fileset-load>
+        <p:input port="in-memory">
+            <p:empty/>
+        </p:input>
+    </px:fileset-load>
+    <p:for-each>
+        <p:add-xml-base name="_1"/>
+        <p:xslt>
+            <p:input port="source">
+                <p:pipe step="_1" port="result"/>
+                <p:pipe step="braille-rendition.fileset" port="result"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="update-cross-references.xsl"/>
+            </p:input>
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+        </p:xslt>
+        <p:delete match="/*/@xml:base"/>
+    </p:for-each>
+    <p:identity name="braille-rendition.smil"/>
+    
+    <!--
         braille rendition package document with new dc:language
     -->
     
@@ -327,6 +362,7 @@
     <px:fileset-join>
         <p:input port="source">
             <p:pipe step="braille-rendition.html.fileset" port="result"/>
+            <p:pipe step="braille-rendition.smil.fileset" port="result"/>
             <p:pipe step="source.fileset" port="result"/>
         </p:input>
     </px:fileset-join>
@@ -342,6 +378,7 @@
             <p:pipe step="metadata" port="result"/>
             <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
             <p:pipe step="braille-rendition.html" port="result"/>
+            <p:pipe step="braille-rendition.smil" port="result"/>
             <p:pipe step="rendition-mapping" port="result"/>
         </p:input>
     </px:fileset-store>

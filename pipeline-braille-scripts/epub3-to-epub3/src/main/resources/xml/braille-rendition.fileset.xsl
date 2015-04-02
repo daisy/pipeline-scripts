@@ -26,6 +26,9 @@
 				<xsl:when test="@media-type='application/xhtml+xml'">
 					<xsl:attribute name="href" select="replace($original-href,'^(.+)\.x?html|(.+)$','$1$2_braille.xhtml')"/>
 				</xsl:when>
+				<xsl:when test="@media-type='application/smil+xml'">
+					<xsl:attribute name="href" select="replace($original-href,'^(.+)\.smil|(.+)$','$1$2_braille.smil')"/>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:attribute name="href" select="$original-href"/>
 				</xsl:otherwise>
