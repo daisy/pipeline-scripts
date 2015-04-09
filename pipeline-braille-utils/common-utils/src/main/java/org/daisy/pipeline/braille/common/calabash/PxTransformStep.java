@@ -28,6 +28,7 @@ import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.MathMLTransform;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -95,7 +96,7 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = Iterables.<XProcTransform.Provider<?>>filter(providers, filter).iterator().next().get(query).iterator().next(); }
+				transform = (XProcTransform)DispatchingProvider.newInstance(Iterables.filter(providers, filter)).get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);
