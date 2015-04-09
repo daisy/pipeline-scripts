@@ -2,6 +2,8 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -70,10 +72,12 @@ public class LiblouisMathMLTest {
 	@Test
 	public void runXProcSpec() throws Exception {
 		File baseDir = new File(PathUtils.getBaseDir());
-		boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
+		boolean success = xprocspecRunner.run(ImmutableMap.<String,File>of("test_transform_mathml",
+		                                                                   new File(baseDir, "src/test/xprocspec/test_transform_mathml.xprocspec")),
 		                                      new File(baseDir, "target/xprocspec-reports"),
 		                                      new File(baseDir, "target/surefire-reports"),
 		                                      new File(baseDir, "target/xprocspec"),
+		                                      null,
 		                                      new XProcSpecRunner.Reporter.DefaultReporter());
 		assertTrue("XProcSpec tests should run with success", success);
 	}
