@@ -1,6 +1,8 @@
 [pipeline-mod-braille][]
 ========================
 
+[![Build Status](https://travis-ci.org/daisy/pipeline-mod-braille.png?branch=master)](https://travis-ci.org/daisy/pipeline-mod-braille)
+
 Braille Production Modules for the [DAISY Pipeline 2][pipeline].
 
 Project layout
