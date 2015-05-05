@@ -12,15 +12,15 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-tables</artifactId>
-  <version>2.5.4-p1-SNAPSHOT</version>
+  <version>2.6.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 Braille Module :: liblouis-tables</name>
 
   <properties>
-    <liblouis.version>2.5.4</liblouis.version>
-    <liblouis.tarball.url>http://www.liblouis.org/downloads/liblouis-2.5.4.tar.gz</liblouis.tarball.url>
-    <liblouis.tarball.sha1>d2c6727973760560235daab7a8830f19b31adb49</liblouis.tarball.sha1>
+    <liblouis.version>2.6.2</liblouis.version>
+    <liblouis.tarball.url>https://github.com/liblouis/liblouis/tarball/v${liblouis.version}</liblouis.tarball.url>
+    <liblouis.tarball.sha1>4ed13d7aeedbd5a59bbb63f592fcd3a8e559ccb6</liblouis.tarball.sha1>
   </properties>
   
   <dependencies>
@@ -36,6 +36,14 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>libhyphen-core</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <!--
+        test dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>pax-exam-helper</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   
@@ -79,11 +87,23 @@
                     <exclude name="*/tables/README" />
                   </patternset>
                   <mapper>
-                    <globmapper from="liblouis-${liblouis.version}/*" to="*" />
+                    <globmapper from="liblouis-liblouis-6e85a44/*" to="*" />
                   </mapper>
                 </untar>
               </target>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>maven-paxexam-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-depends-file</id>
+            <goals>
+              <goal>generate-depends-file</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -99,6 +119,15 @@
             <Service-Component>OSGI-INF/liblouis-default-tables.xml</Service-Component>
           </instructions>
         </configuration>
+        <executions>
+          <execution>
+            <id>manifest-before-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

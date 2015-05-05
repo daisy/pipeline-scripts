@@ -38,7 +38,7 @@
     <module>pipeline-braille-utils/obfl-utils</module>
     <module>pipeline-braille-utils/liblouis/liblouis-core</module>
     <module>pipeline-braille-utils/liblouis/liblouis-saxon</module>
-    <!-- <module>pipeline-braille-utils/liblouis/liblouis-tables</module> -->
+    <module>pipeline-braille-utils/liblouis/liblouis-tables</module>
     <module>pipeline-braille-utils/liblouis/liblouis-calabash</module>
     <module>pipeline-braille-utils/liblouis/liblouis-native</module>
     <module>pipeline-braille-utils/liblouis/liblouis-formatter</module>
