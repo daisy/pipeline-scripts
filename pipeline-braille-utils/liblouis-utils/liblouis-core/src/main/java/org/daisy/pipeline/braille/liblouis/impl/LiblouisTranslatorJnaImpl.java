@@ -359,10 +359,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 					int i = 0;
 					while (unhyphenated[i].length() == 0) i++;
 					for (int j = 0; j < _typeform.length; j++) {
+						_typeform[j] = typeform[i];
 						if (positions != null && j < positions.length && (positions[j] & 4) == 4) {
 							i++;
-							while (unhyphenated[i].length() == 0) i++; }
-						_typeform[j] = typeform[i]; }
+							while (unhyphenated[i].length() == 0) i++; }}
 					break; }
 			try {
 				
