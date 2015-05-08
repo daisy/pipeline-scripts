@@ -84,7 +84,7 @@
   <!--
       page-number
   -->
-  <x:scenario label="test_02" pending="issue with dotify sending '??' to translator">
+  <x:scenario label="test_02">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">

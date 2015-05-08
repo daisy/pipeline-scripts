@@ -141,143 +141,26 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 					public boolean hasNext() { throw new UnsupportedOperationException(); }
 					public String getTranslatedRemainder() { return "\u2800"; }};
 			
-			// Otherwise the input text must consist of only digits, braille
-			// pattern characters and pre-hyphenation characters
+			// If input text is "??", it will be used for creating a placeholder for content that
+			// can not be computed yet (forward references, see org.daisy.dotify.formatter.impl.BlockContentManager).
+			// Because normally this will never end up in the resulting PEF, it is okay to return it
+			// untranslated.
+			if ("??".equals(text))
+				return new BrailleTranslatorResultImpl(text, false);
+			
+			// Otherwise the input text must consist of only digits, braille pattern characters and
+			// pre-hyphenation characters.
+			// FIXME: Strictly speaking a BrailleTranslator should be able to translate
+			// everything. We shouldn't just assume that the input will always be digits, braille
+			// pattern characters, white space characters, hyphenation characters, or "??". This
+			// assumption might not be valid anymore with future versions of Dotify.
 			if (!validInput.matcher(text).matches())
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			
-			final String translated = translateIntegers(text);
-			final boolean hyphenating = isHyphenating();
+			String translated = translateIntegers(text);
+			boolean hyphenating = isHyphenating();
 			
-			return new BrailleTranslatorResult() {
-				private PeekingIterator<Character> input = Iterators.<Character>peekingIterator(
-					Lists.<Character>charactersOf(translated).iterator());
-				private StringBuilder charBuffer = new StringBuilder();
-				
-				/**
-				 * Array with soft wrap opportunity info
-				 * - SPACE and ZWSP create normal soft wrap opportunities
-				 * - SHY create soft wrap opportunities that insert a hyphen glyph
-				 * - normal soft wrap opportunities override soft wrap opportunities that insert a hyphen glyph
-				 * - soft wrap opportunities that insert a hyphen glyph are ignored when hyphenation is disabled
-				 *
-				 * @see <a href="http://snaekobbi.github.io/braille-css-spec/#h3_line-breaking">Braille CSS – § 9.4 Line Breaking</a>
-				 */
-				private ArrayList<Byte> swoBuffer = new ArrayList<Byte>();
-				
-				/**
-				 * Fill the character and soft wrap opportunity buffers
-				 * - until the buffers are at least 'size' long
-				 * - or until the remaining input is empty
-				 * - and while the remaining input starts with SPACE, NBSP or BRAILLE PATTERN BLANK
-				 */
-				private void fillBuffer(int size) {
-					int bufSize = charBuffer.length();
-					loop: while (input.hasNext()) {
-						char next = input.peek();
-						switch (next) {
-						case SHY:
-							if (hyphenating && bufSize > 0)
-								swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITH_HYPHEN));
-							break;
-						case ZWSP:
-							if (bufSize > 0)
-								swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-							break;
-						case SPACE:
-							if (bufSize > 0)
-								swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-							charBuffer.append(BRAILLE_PATTERN_BLANK);
-							bufSize ++;
-							swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
-							break;
-						case NBSP:
-						case BRAILLE_PATTERN_BLANK:
-							charBuffer.append(BRAILLE_PATTERN_BLANK);
-							bufSize ++;
-							swoBuffer.add((byte)0x0);
-							break;
-						default:
-							if (bufSize >= size) break loop;
-							charBuffer.append(next);
-							bufSize ++;
-							swoBuffer.add((byte)0x0); }
-						input.next(); }
-				}
-				
-				/**
-				 * Flush the first 'size' elements of the character and soft wrap opportunity buffers
-				 * Assumes that 'size &lt;= charBuffer.length()'
-				 */
-				private void flushBuffer(int size) {
-					charBuffer = new StringBuilder(charBuffer.substring(size));
-					swoBuffer = new ArrayList<Byte>(swoBuffer.subList(size, swoBuffer.size()));
-				}
-				
-				public String nextTranslatedRow(int limit, boolean force) {
-					fillBuffer(limit);
-					int bufSize = charBuffer.length();
-					
-					// no need to break if remaining text is shorter than line
-					if (bufSize <= limit) {
-						String rv = charBuffer.toString();
-						charBuffer.setLength(0);
-						swoBuffer.clear();
-						return rv; }
-					
-					// break at SPACE or ZWSP
-					if ((swoBuffer.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
-						String rv = charBuffer.substring(0, limit);
-						
-						// strip leading SPACE in remaining text
-						while (limit < bufSize && swoBuffer.get(limit) == SOFT_WRAP_AFTER_SPACE) limit++;
-						flushBuffer(limit);
-						return rv; }
-					
-					// try to break later if the overflowing characters are blank
-					for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == BRAILLE_PATTERN_BLANK; i++)
-						if ((swoBuffer.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
-							String rv = charBuffer.substring(0, limit);
-							flushBuffer(i);
-							return rv; }
-					
-					// try to break sooner
-					for (int i = limit - 1; i > 0; i--) {
-						
-						// break at SPACE, ZWSP or SHY
-						if (swoBuffer.get(i - 1) > 0) {
-							String rv = charBuffer.substring(0, i);
-							
-							// insert hyphen glyph at SHY
-							if (swoBuffer.get(i - 1) == 0x1)
-								rv += HYPHENATE_CHARACTER;
-							flushBuffer(i);
-							return rv; }}
-					
-					// force hard break
-					if (force) {
-						String rv = charBuffer.substring(0, limit);
-						flushBuffer(limit);
-						return rv; }
-					
-					return "";
-				}
-				
-				public String getTranslatedRemainder() {
-					while (input.hasNext()) fillBuffer(1000);
-					return charBuffer.toString();
-				}
-				
-				public int countRemaining() {
-					while (input.hasNext()) fillBuffer(1000);
-					return charBuffer.length();
-				}
-				
-				public boolean hasNext() {
-					fillBuffer(1);
-					return charBuffer.length() > 0;
-				}
-			};
+			return new BrailleTranslatorResultImpl(translated, hyphenating);
 		}
 		
 		public BrailleTranslatorResult translate(String text, String locale) {
@@ -294,6 +177,143 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		
 		public String getTranslatorMode() {
 			return MODE;
+		}
+		
+		private static class BrailleTranslatorResultImpl implements BrailleTranslatorResult {
+			
+			private final PeekingIterator<Character> input;
+			private final boolean hyphenating;
+			
+			private BrailleTranslatorResultImpl(String text, boolean hyphenating) {
+				this.input = Iterators.<Character>peekingIterator(Lists.<Character>charactersOf(text).iterator());
+				this.hyphenating = hyphenating;
+			}
+			
+			private StringBuilder charBuffer = new StringBuilder();
+			
+			/**
+			 * Array with soft wrap opportunity info
+			 * - SPACE and ZWSP create normal soft wrap opportunities
+			 * - SHY create soft wrap opportunities that insert a hyphen glyph
+			 * - normal soft wrap opportunities override soft wrap opportunities that insert a hyphen glyph
+			 * - soft wrap opportunities that insert a hyphen glyph are ignored when hyphenation is disabled
+			 *
+			 * @see <a href="http://snaekobbi.github.io/braille-css-spec/#h3_line-breaking">Braille CSS – § 9.4 Line Breaking</a>
+			 */
+			private ArrayList<Byte> swoBuffer = new ArrayList<Byte>();
+			
+			/**
+			 * Fill the character and soft wrap opportunity buffers
+			 * - until the buffers are at least 'size' long
+			 * - or until the remaining input is empty
+			 * - and while the remaining input starts with SPACE, NBSP or BRAILLE PATTERN BLANK
+			 */
+			private void fillBuffer(int size) {
+				int bufSize = charBuffer.length();
+				loop: while (input.hasNext()) {
+					char next = input.peek();
+					switch (next) {
+					case SHY:
+						if (hyphenating && bufSize > 0)
+							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITH_HYPHEN));
+						break;
+					case ZWSP:
+						if (bufSize > 0)
+							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
+						break;
+					case SPACE:
+						if (bufSize > 0)
+							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
+						charBuffer.append(BRAILLE_PATTERN_BLANK);
+						bufSize ++;
+						swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
+						break;
+					case NBSP:
+					case BRAILLE_PATTERN_BLANK:
+						charBuffer.append(BRAILLE_PATTERN_BLANK);
+						bufSize ++;
+						swoBuffer.add((byte)0x0);
+						break;
+					default:
+						if (bufSize >= size) break loop;
+						charBuffer.append(next);
+						bufSize ++;
+						swoBuffer.add((byte)0x0); }
+					input.next(); }
+			}
+			
+			/**
+			 * Flush the first 'size' elements of the character and soft wrap opportunity buffers
+			 * Assumes that 'size &lt;= charBuffer.length()'
+			 */
+			private void flushBuffer(int size) {
+				charBuffer = new StringBuilder(charBuffer.substring(size));
+				swoBuffer = new ArrayList<Byte>(swoBuffer.subList(size, swoBuffer.size()));
+			}
+			
+			public String nextTranslatedRow(int limit, boolean force) {
+				fillBuffer(limit);
+				int bufSize = charBuffer.length();
+				
+				// no need to break if remaining text is shorter than line
+				if (bufSize <= limit) {
+					String rv = charBuffer.toString();
+					charBuffer.setLength(0);
+					swoBuffer.clear();
+					return rv; }
+				
+				// break at SPACE or ZWSP
+				if ((swoBuffer.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
+					String rv = charBuffer.substring(0, limit);
+					
+					// strip leading SPACE in remaining text
+					while (limit < bufSize && swoBuffer.get(limit) == SOFT_WRAP_AFTER_SPACE) limit++;
+					flushBuffer(limit);
+					return rv; }
+				
+				// try to break later if the overflowing characters are blank
+				for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == BRAILLE_PATTERN_BLANK; i++)
+					if ((swoBuffer.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
+						String rv = charBuffer.substring(0, limit);
+						flushBuffer(i);
+						return rv; }
+				
+				// try to break sooner
+				for (int i = limit - 1; i > 0; i--) {
+					
+					// break at SPACE, ZWSP or SHY
+					if (swoBuffer.get(i - 1) > 0) {
+						String rv = charBuffer.substring(0, i);
+						
+						// insert hyphen glyph at SHY
+						if (swoBuffer.get(i - 1) == 0x1)
+							rv += HYPHENATE_CHARACTER;
+						flushBuffer(i);
+						return rv; }}
+				
+				// force hard break
+				if (force) {
+					String rv = charBuffer.substring(0, limit);
+					flushBuffer(limit);
+					return rv; }
+				
+				return "";
+			}
+			
+			public String getTranslatedRemainder() {
+				while (input.hasNext()) fillBuffer(1000);
+				return charBuffer.toString();
+			}
+			
+			public int countRemaining() {
+				while (input.hasNext()) fillBuffer(1000);
+				return charBuffer.length();
+			}
+			
+			public boolean hasNext() {
+				fillBuffer(1);
+				return charBuffer.length() > 0;
+			}
 		}
 	}
 }
