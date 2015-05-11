@@ -255,22 +255,22 @@
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.api</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.common</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.translator.impl</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.hyphenator.impl</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
