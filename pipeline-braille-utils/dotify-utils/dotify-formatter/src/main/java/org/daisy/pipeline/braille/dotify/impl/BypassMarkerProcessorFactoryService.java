@@ -17,7 +17,7 @@ import org.osgi.service.component.annotations.Component;
 public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {
 	
 	public boolean supportsSpecification(String locale, String mode) {
-		return BypassTranslatorFactoryService.MODE.equals(mode);
+		return BypassTranslatorFactoryService.MODE.matcher(mode).matches();
 	}
 	
 	public MarkerProcessorFactory newFactory() {
@@ -27,7 +27,7 @@ public class BypassMarkerProcessorFactoryService implements MarkerProcessorFacto
 	@SuppressWarnings("serial")
 	private class BypassMarkerProcessorFactory implements MarkerProcessorFactory {
 		public MarkerProcessor newMarkerProcessor(String locale, String mode) throws MarkerProcessorConfigurationException {
-			if (BypassTranslatorFactoryService.MODE.equals(mode))
+			if (BypassTranslatorFactoryService.MODE.matcher(mode).matches())
 				return new BypassMarkerProcessor();
 			throw new MarkerProcessorConfigurationException("Factory does not support " + locale + "/" + mode) {};
 		}

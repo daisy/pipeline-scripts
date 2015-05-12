@@ -67,6 +67,16 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-tables</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>pef-utils</artifactId>
       <scope>test</scope>
     </dependency>

@@ -10,6 +10,7 @@ import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
+import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
@@ -56,6 +57,9 @@ public class DotifyFormatterTest {
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
+			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
+			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
+			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("pef-core"),
 			brailleModule("pef-calabash"),
@@ -70,6 +74,12 @@ public class DotifyFormatterTest {
 			brailleModule("dotify-saxon"),
 			brailleModule("dotify-calabash"),
 			brailleModule("dotify-utils"),
+			brailleModule("liblouis-core"),
+			forThisPlatform(brailleModule("liblouis-native")),
+			// because of bug in lou_indexTables we need to include liblouis-tables even though we're not using it
+			brailleModule("liblouis-tables"),
+			brailleModule("libhyphen-core"),
+			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			xspecBundles(),
 			xprocspecBundles(),
 			thisBundle("org.daisy.pipeline.modules.braille", "dotify-formatter"),
