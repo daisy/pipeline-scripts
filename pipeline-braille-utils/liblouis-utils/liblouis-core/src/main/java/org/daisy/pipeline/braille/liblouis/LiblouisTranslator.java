@@ -2,8 +2,9 @@ package org.daisy.pipeline.braille.liblouis;
 
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 
-public abstract class LiblouisTranslator implements CSSStyledTextTransform, BrailleTranslator {
+public interface LiblouisTranslator extends CSSStyledTextTransform, BrailleTranslator {
 	
 	public static abstract class Typeform {
 		public static final byte PLAIN = 0;
@@ -17,15 +18,15 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform, Brai
 	 * @param text The text to be translated.
 	 * @param typeform The typeform.
 	 */
-	public abstract String transform(String text, byte typeform);
+	public String transform(String text, byte typeform);
 	
 	/**
 	 * @param text The text segments to be translated.
 	 * @param typeform The typeform. Array must have the same length as <code>text</code>.
 	 */
-	public abstract String[] transform(String[] text, byte[] typeform);
+	public String[] transform(String[] text, byte[] typeform);
 	
-	public abstract LiblouisTable asLiblouisTable();
+	public LiblouisTable asLiblouisTable();
 	
 	public interface Provider extends CSSStyledTextTransform.Provider<LiblouisTranslator>,
 	                                  BrailleTranslator.Provider<LiblouisTranslator> {}

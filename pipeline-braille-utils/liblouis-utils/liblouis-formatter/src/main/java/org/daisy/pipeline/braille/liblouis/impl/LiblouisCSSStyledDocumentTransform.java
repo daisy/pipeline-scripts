@@ -22,6 +22,7 @@ import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
@@ -112,7 +113,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 			}
 		}
 		
-		private class TransformImpl implements LiblouisCSSStyledDocumentTransform {
+		private class TransformImpl extends AbstractTransform implements LiblouisCSSStyledDocumentTransform {
 			
 			private final CSSBlockTransform cssBlockTransform;
 			private final Tuple3<URI,QName,Map<String,String>> xproc;

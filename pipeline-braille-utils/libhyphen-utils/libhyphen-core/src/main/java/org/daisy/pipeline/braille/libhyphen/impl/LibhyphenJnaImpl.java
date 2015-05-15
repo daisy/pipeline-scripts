@@ -25,6 +25,7 @@ import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -173,7 +174,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	private final static char US = '\u001F';
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 	
-	private class LibhyphenHyphenatorImpl implements LibhyphenHyphenator {
+	private class LibhyphenHyphenatorImpl extends AbstractTransform implements LibhyphenHyphenator {
 		
 		private final URI table;
 		private final Hyphenator hyphenator;

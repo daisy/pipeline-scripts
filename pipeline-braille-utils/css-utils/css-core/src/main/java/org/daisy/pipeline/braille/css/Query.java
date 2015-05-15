@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 
 public abstract class Query {
 		
-	private static final String IDENT_RE = "(?:\\p{L}|_)(?:\\p{L}|_|-)*";
+	private static final String IDENT_RE = "[_a-zA-Z][_a-zA-Z0-9-]*";
 	private static final String STRING_RE = "'[^']*'|\"[^\"]*\"";
 	private static final String INTEGER_RE = "0|-?[1-9][0-9]*";
 	private static final Pattern VALUE_RE = Pattern.compile(

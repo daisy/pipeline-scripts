@@ -1,11 +1,15 @@
 package org.daisy.pipeline.braille.common;
 
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import static com.google.common.collect.Iterables.transform;
 
@@ -20,6 +24,19 @@ import org.slf4j.Logger;
  * method.
  */
 public interface Transform {
+	
+	public String getIdentifier();
+	
+	public static abstract class AbstractTransform implements Transform {
+		final String id = "transform" + getUniqueId();
+		public String getIdentifier() {
+			return id;
+		}
+		private static AtomicLong i = new AtomicLong(0);
+		private static long getUniqueId() {
+			return i.incrementAndGet();
+		}
+	}
 	
 	public interface Provider<T extends Transform> extends org.daisy.pipeline.braille.common.Provider<String,T>,
 	                                                       Contextual<Logger,Transform.Provider<T>> {
@@ -94,6 +111,9 @@ public interface Transform {
 		}
 		
 		public static abstract class AbstractProvider<T extends Transform> extends Transform.Provider.MemoizingProvider<T> {
+			private final static Pattern ID_FEATURE_RE = Pattern.compile(
+				"\\s*\\(\\s*id\\s*\\:\\s*(?<id>[_a-zA-Z][_a-zA-Z0-9-]*)\\s*\\)\\s*"
+			);
 			private final Function<WithSideEffect<T,Logger>,T> applyContext;
 			protected AbstractProvider(Logger context) {
 				super(context);
@@ -105,10 +125,41 @@ public interface Transform {
 			}
 			protected abstract Iterable<WithSideEffect<T,Logger>> __get(String query);
 			protected final Iterable<T> _get(String query) {
-				return filterOutThrowsWithSideEffectException(
-					transform(
-						__get(query),
-						applyContext));
+				Matcher m = ID_FEATURE_RE.matcher(query);
+				if (m.matches()) {
+					String id = m.group("id");
+					return Optional.fromNullable(fromId.get(id)).asSet(); }
+				else
+					return rememberId(
+						filterOutThrowsWithSideEffectException(
+							transform(
+								__get(query),
+								applyContext)));
+			}
+			private final Map<String,T> fromId = new HashMap<String,T>();
+			private Iterable<T> rememberId(final Iterable<T> iterable) {
+				return new Iterable<T>() {
+					public Iterator<T> iterator() {
+						return new Iterator<T>() {
+							Iterator<T> i = null;
+							public boolean hasNext() {
+								if (i == null) i = iterable.iterator();
+								return i.hasNext();
+							}
+							public T next() {
+								T t;
+								if (i == null) i = iterable.iterator();
+								t = i.next();
+								fromId.put(t.getIdentifier(), t);
+								return t;
+							}
+							public void remove() {
+								if (i == null) i = iterable.iterator();
+								i.remove();
+							}
+						};
+					}
+				};
 			}
 			private static <T> Iterable<T> filterOutThrowsWithSideEffectException(final Iterable<T> iterable) {
 				return new Iterable<T>() {

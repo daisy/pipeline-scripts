@@ -22,6 +22,7 @@ import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
@@ -249,7 +250,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		}
 	}
 	
-	private static class LiblouisTranslatorImpl extends LiblouisTranslator {
+	private static class LiblouisTranslatorImpl extends AbstractTransform implements LiblouisTranslator {
 		
 		private final LiblouisTable table;
 		protected final Translator translator;

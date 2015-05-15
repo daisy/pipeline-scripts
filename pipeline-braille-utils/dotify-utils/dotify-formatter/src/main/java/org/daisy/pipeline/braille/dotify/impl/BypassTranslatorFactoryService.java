@@ -25,6 +25,7 @@ import org.daisy.pipeline.braille.common.Provider.MemoizingProvider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -119,7 +120,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	/**
 	 * BrailleTranslator that can translate numbers.
 	 */
-	private static class NumberBrailleTranslator implements BrailleTranslator {
+	private static class NumberBrailleTranslator extends AbstractTransform implements BrailleTranslator {
 		
 		private final static String NUMSIGN = "\u283c";
 		private final static String[] DIGIT_TABLE = new String[]{

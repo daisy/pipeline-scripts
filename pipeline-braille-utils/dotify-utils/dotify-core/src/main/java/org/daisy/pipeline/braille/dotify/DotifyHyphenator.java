@@ -16,6 +16,7 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
@@ -27,7 +28,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DotifyHyphenator implements Hyphenator {
+public class DotifyHyphenator extends AbstractTransform implements Hyphenator {
 	
 	private HyphenatorInterface hyphenator;
 	

@@ -19,6 +19,7 @@ import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -77,12 +78,23 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 				String newQuery = serializeQuery(q);
 				if (!cssBlockTransformProvider.get(newQuery).iterator().hasNext())
 					return null;
-				final Map<String,String> options = ImmutableMap.of("query", newQuery);
-				return new DotifyCSSStyledDocumentTransform() {
-					public Tuple3<URI,QName,Map<String,String>> asXProc() {
-						return new Tuple3<URI,QName,Map<String,String>>(href, null, options); }};
+				return new TransformImpl(newQuery);
 			}
 		};
+		
+		private class TransformImpl extends AbstractTransform implements DotifyCSSStyledDocumentTransform {
+			
+			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			
+			private TransformImpl(String cssBlockTransformQuery) {
+				Map<String,String> options = ImmutableMap.of("query", cssBlockTransformQuery);
+				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+			}
+			
+			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+				return xproc;
+			}
+		}
 		
 		@Reference(
 			name = "CSSBlockTransformProvider",

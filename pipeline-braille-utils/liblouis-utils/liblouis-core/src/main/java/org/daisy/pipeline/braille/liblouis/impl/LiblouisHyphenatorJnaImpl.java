@@ -15,6 +15,7 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -122,12 +123,12 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 			return transform(
 				tables,
 				new Function<Translator,LiblouisHyphenator>() {
-						public LiblouisHyphenator apply(Translator table) {
-							return new LiblouisHyphenatorImpl(table); }});
+					public LiblouisHyphenator apply(Translator table) {
+						return new LiblouisHyphenatorImpl(table); }});
 		}
 	};
 	
-	private static class LiblouisHyphenatorImpl implements LiblouisHyphenator {
+	private static class LiblouisHyphenatorImpl extends AbstractTransform implements LiblouisHyphenator {
 		
 		private final LiblouisTable table;
 		private final Translator translator;

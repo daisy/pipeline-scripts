@@ -18,6 +18,7 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
@@ -77,12 +78,23 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 				String newQuery = serializeQuery(q);
 				if (!dotifyTranslatorProvider.get(newQuery).iterator().hasNext())
 					return null;
-				final Map<String,String> options = ImmutableMap.of("query", newQuery);
-				return new DotifyCSSBlockTransform() {
-					public Tuple3<URI,QName,Map<String,String>> asXProc() {
-						return new Tuple3<URI,QName,Map<String,String>>(href, null, options); }};
+				return new TransformImpl(newQuery);
 			}
 		};
+		
+		private class TransformImpl extends AbstractTransform implements DotifyCSSBlockTransform {
+			
+			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			
+			private TransformImpl(String translatorQuery) {
+				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
+				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+			}
+			
+			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+				return xproc;
+			}
+		}
 		
 		@Reference(
 			name = "DotifyTranslatorProvider",

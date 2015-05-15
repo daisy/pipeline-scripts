@@ -24,6 +24,7 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -176,7 +177,7 @@ public class TexHyphenatorDotifyImpl implements TexHyphenator.Provider {
 	/*
 	 * Code originally taken from org.daisy.dotify.impl.hyphenator.latex.HyphenationConfig
 	 */
-	private class TexHyphenatorImpl implements TexHyphenator {
+	private class TexHyphenatorImpl extends AbstractTransform implements TexHyphenator {
 		
 		private final static String LEFT_HYPHEN_MIN_KEY = "beginLimit";
 		private final static String RIGHT_HYPHEN_MIN_KEY = "endLimit";

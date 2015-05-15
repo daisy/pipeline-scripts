@@ -21,7 +21,7 @@ public interface TextTransform extends Transform {
 	 */
 	public String[] transform(String[] text);
 	
-	public static abstract class ContextUnawareTextTransform implements TextTransform {
+	public static abstract class ContextUnawareTextTransform extends AbstractTransform implements TextTransform {
 		public String[] transform(String[] text) {
 			String[] ret = new String[text.length];
 			for (int i = 0; i < text.length; i++)

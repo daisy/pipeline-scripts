@@ -14,6 +14,7 @@ import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
@@ -139,7 +140,7 @@ public class DotifyFormatterTest {
 		assertTrue("XProcSpec tests should run with success", success);
 	}
 	
-	private static class NumberBrailleTranslator implements BrailleTranslator, CSSStyledTextTransform {
+	private static class NumberBrailleTranslator extends AbstractTransform implements BrailleTranslator, CSSStyledTextTransform {
 		
 		private final static String NUMSIGN = "\u283c";
 		private final static String[] DIGIT_TABLE = new String[]{

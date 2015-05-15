@@ -19,6 +19,7 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -138,7 +139,7 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 					notNull()); }
 			return empty; }};
 	
-	private class TexHyphenatorImpl implements TexHyphenator {
+	private class TexHyphenatorImpl extends AbstractTransform implements TexHyphenator {
 		
 		private final URI table;
 		private final net.davidashen.text.Hyphenator hyphenator;

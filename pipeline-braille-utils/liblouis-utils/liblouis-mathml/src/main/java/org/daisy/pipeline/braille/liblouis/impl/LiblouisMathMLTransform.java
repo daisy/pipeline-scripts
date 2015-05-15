@@ -13,6 +13,7 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Memoizing;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
@@ -54,19 +55,8 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 		
 		private Memoizing<MathCode,LiblouisMathMLTransform> translators
 		= new Memoizing<MathCode,LiblouisMathMLTransform>() {
-			public LiblouisMathMLTransform _apply(final MathCode code) {
-				final URI href = Provider.this.href;
-				return logCreate(
-					new LiblouisMathMLTransform() {
-						private final Map<String,String> options = ImmutableMap.of("math-code", code.name());
-						public Tuple3<URI,QName,Map<String,String>> asXProc() {
-							return new Tuple3<URI,QName,Map<String,String>>(href, null, options);
-						}
-						@Override
-						public String toString() {
-							return toStringHelper(LiblouisMathMLTransform.class.getSimpleName()).add("mathCode", code).toString();
-						}
-					}).apply(logger);
+			public LiblouisMathMLTransform _apply(MathCode code) {
+				return logCreate( new TransformImpl(code) ).apply(logger);
 			}
 		};
 		
@@ -81,6 +71,27 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 		
 		public Transform.Provider<LiblouisMathMLTransform> withContext(Logger context) {
 			return this;
+		}
+		
+		private class TransformImpl extends AbstractTransform implements LiblouisMathMLTransform {
+			
+			private final MathCode code;
+			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			
+			private TransformImpl(MathCode code) {
+				this.code = code;
+				Map<String,String> options = ImmutableMap.of("math-code", code.name());
+				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+			}
+			
+			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+				return xproc;
+			}
+			
+			@Override
+			public String toString() {
+				return toStringHelper(LiblouisMathMLTransform.class.getSimpleName()).add("mathCode", code).toString();
+			}
 		}
 		
 		private static MathCode mathCodeFromLocale(Locale locale) {

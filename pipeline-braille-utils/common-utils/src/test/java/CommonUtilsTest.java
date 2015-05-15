@@ -13,6 +13,7 @@ import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
@@ -77,7 +78,7 @@ public class CommonUtilsTest {
 		context.registerService(XProcTransform.Provider.class.getName(), provider, properties);
 	}
 	
-	private static class UppercaseTransform implements BrailleTranslator, XProcTransform {
+	private static class UppercaseTransform extends AbstractTransform implements BrailleTranslator, XProcTransform {
 		public String transform(String text) {
 			return text.toUpperCase();
 		}
