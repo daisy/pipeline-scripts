@@ -62,6 +62,7 @@ public interface LiblouisCSSBlockTransform {
 		/**
 		 * Recognized features:
 		 *
+		 * - id: If present it must be the only feature. Will match a transformer with a unique ID.
 		 * - translator: Will only match if the value is `liblouis'.
 		 * - locale: If present the value will be used instead of any xml:lang attributes.
 		 *
@@ -98,7 +99,7 @@ public interface LiblouisCSSBlockTransform {
 				new Function<LiblouisTranslator,BrailleTranslator>() {
 					public BrailleTranslator _apply(LiblouisTranslator translator) {
 						return __apply(
-							logCreate(new TransformImpl(q.toString(), translator, htmlOut))
+							logCreate(new TransformImpl(translator, htmlOut))
 						);
 					}
 				}
@@ -116,7 +117,7 @@ public interface LiblouisCSSBlockTransform {
 			private final XProc xproc;
 			
 			private TransformImpl(String translatorQuery, LiblouisTranslator translator, boolean htmlOut) {
-				Map<String,String> options = ImmutableMap.of("query", translatorQuery,
+				Map<String,String> options = ImmutableMap.of("text-transform", mutableQuery().add("id", translator.getIdentifier()).toString(),
 				                                             // This will omit the <_ style="text-transform:none">
 				                                             // wrapper. It is assumed that if (output:html) is set, the
 				                                             // result is known to be braille (which is the case if

@@ -144,6 +144,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	/**
 	 * Recognized features:
 	 *
+	 * - id: If present it must be the only feature. Will match a transformer with a unique ID.
+	 *
 	 * - translator: Will only match if the value is `liblouis'
 	 *
 	 * - hyphenator: A value `none' will disable hyphenation. `liblouis' will match only liblouis

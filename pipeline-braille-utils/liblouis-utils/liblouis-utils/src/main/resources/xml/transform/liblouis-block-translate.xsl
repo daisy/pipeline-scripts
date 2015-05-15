@@ -8,7 +8,7 @@
 	
 	<xsl:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl"/>
 	
-	<xsl:param name="query"/>
+	<xsl:param name="text-transform"/>
 	
 	<xsl:template match="css:block" mode="#default before after">
 		<xsl:variable name="text" as="text()*" select="//text()"/>
@@ -17,7 +17,13 @@
 		</xsl:variable>
 		<xsl:variable name="lang" select="ancestor-or-self::*[@xml:lang][1]/string(@xml:lang)"/>
 		<xsl:apply-templates select="node()[1]" mode="treewalk">
-			<xsl:with-param name="new-text-nodes" select="louis:translate(concat($query,'(locale:',$lang,')'), $text, $style)"/>
+			<!--
+			    FIXME: xml:lang is not used in query anymore because the appropriate way to use
+			    sub-translators is to compute them prior to the conversion, and the given query
+			    should be of the form (id:...). Also xml:lang may vary inside a block. The new way
+			    to pass locale information will be through text attributes. (pf:text-transform)
+			-->
+			<xsl:with-param name="new-text-nodes" select="louis:translate($text-transform, $text, $style)"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	

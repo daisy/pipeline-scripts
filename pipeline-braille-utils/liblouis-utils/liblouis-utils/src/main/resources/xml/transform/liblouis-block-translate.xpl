@@ -5,7 +5,7 @@
             xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
             exclude-inline-prefixes="#all">
 	
-	<p:option name="query" select="''"/>
+	<p:option name="text-transform" select="''"/>
 	<p:option name="no-wrap" select="'false'"/>
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
@@ -16,7 +16,7 @@
 		<p:input port="stylesheet">
 			<p:document href="liblouis-block-translate.xsl"/>
 		</p:input>
-		<p:with-param name="query" select="$query"/>
+		<p:with-param name="text-transform" select="$text-transform"/>
 		<p:with-param name="no-wrap" select="$no-wrap"/>
 	</p:xslt>
 	
