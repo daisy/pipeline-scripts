@@ -200,22 +200,23 @@
         <xsl:attribute name="vertical-align" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-before">
-        <xsl:if test=".='always'">
-            <xsl:attribute name="break-before" select="'page'"/>
-        </xsl:if>
+    <xsl:template match="@css:page-break-before[.='always']">
+        <xsl:attribute name="break-before" select="'page'"/>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-after">
-        <xsl:if test=".='avoid'">
-            <xsl:attribute name="keep-with-next" select="'1'"/>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="@css:page-break-inside">
-        <xsl:if test=".='avoid'">
+    <xsl:template match="@css:page-break-after[.='avoid']">
+        <xsl:attribute name="keep-with-next" select="'1'"/>
+        <!--
+            keep-with-next="1" requires that keep="all". This gives it a slighly different meaning
+            than "page-break-after: avoid", but it will do.
+        -->
+        <xsl:if test="not(parent::*/@css:page-break-inside[.='avoid'])">
             <xsl:attribute name="keep" select="'all'"/>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="@css:page-break-inside[.='avoid']">
+        <xsl:attribute name="keep" select="'all'"/>
     </xsl:template>
     
     <xsl:template match="@css:border-left|
