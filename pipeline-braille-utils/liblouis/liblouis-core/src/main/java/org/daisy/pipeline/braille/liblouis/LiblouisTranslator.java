@@ -1,7 +1,5 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import java.net.URI;
-
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 
@@ -40,7 +38,7 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform { // 
 	 */
 	public abstract String display(String braille);
 	
-	public abstract URI[] asLiblouisTable();
+	public abstract LiblouisTable asLiblouisTable();
 	
 	public interface Provider extends TextTransform.Provider<LiblouisTranslator> {}
 	

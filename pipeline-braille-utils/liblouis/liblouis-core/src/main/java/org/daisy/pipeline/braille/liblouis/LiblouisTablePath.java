@@ -5,18 +5,13 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-
 import org.daisy.pipeline.braille.common.BundledResourcePath;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
-import static org.daisy.pipeline.braille.common.util.Strings.join;
-import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import org.osgi.service.component.ComponentContext;
 
-public class LiblouisTablePath extends BundledResourcePath implements LiblouisTableProvider {
+public class LiblouisTablePath extends BundledResourcePath implements Provider<Locale,LiblouisTable> {
 	
 	private static final String MANIFEST = "manifest";
 	
@@ -34,37 +29,25 @@ public class LiblouisTablePath extends BundledResourcePath implements LiblouisTa
 			initLocaleBasedProvider(manifestURL); }
 	}
 	
-	private Provider<Locale,URI[]> provider = new Provider.NULL<Locale,URI[]>();
+	private Provider<Locale,LiblouisTable> provider = new Provider.NULL<Locale,LiblouisTable>();
 	
-	public Iterable<URI[]> get(Locale locale) {
+	public Iterable<LiblouisTable> get(Locale locale) {
 		return provider.get(locale);
 	}
 	
 	private void initLocaleBasedProvider(URL manifestURL) {
-		provider = new SimpleMappingProvider<Locale,URI[]>(manifestURL) {
+		provider = new SimpleMappingProvider<Locale,LiblouisTable>(manifestURL) {
 			public Locale parseKey(String locale) {
 				return parseLocale(locale);
 			}
-			public URI[] parseValue(String tableList) {
-				URI[] tokenized = tokenizeTableList(tableList);
+			public LiblouisTable parseValue(String tableList) {
+				URI[] tokenized = LiblouisTable.tokenizeTableList(tableList);
 				for (int i = 0; i < tokenized.length; i++) {
 					URI canonical = canonicalize(tokenized[i]);
 					if (canonical != null)
 						tokenized[i] = canonical; }
-				return tokenized;
+				return new LiblouisTable(tokenized);
 			}
 		};
-	}
-	
-	public static URI[] tokenizeTableList(String tableList) {
-		return Iterables.toArray(
-			Iterables.<String,URI>transform(
-				Splitter.on(',').split(tableList),
-				asURI),
-			URI.class);
-	}
-	
-	public static String serializeTableList(URI[] tableList) {
-		return join(tableList, ",");
 	}
 }

@@ -18,8 +18,27 @@ import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPatte
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
-public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements LiblouisTableProvider, LiblouisTableResolver {
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+@Component(
+	name = "org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry",
+	service = {
+		LiblouisTableRegistry.class,
+		LiblouisTableResolver.class
+	}
+)
+public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements Provider<Locale,LiblouisTable>, LiblouisTableResolver {
 	
+	@Reference(
+		name = "LiblouisTablePath",
+		unbind = "unregister",
+		service = LiblouisTablePath.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
 	@Override
 	protected void register(LiblouisTablePath path) {
 		super.register(path);
@@ -37,15 +56,15 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	 * An automatic fallback mechanism is used: if nothing is found for
 	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
 	 */
-	public Iterable<URI[]> get(Locale query) {
+	public Iterable<LiblouisTable> get(Locale query) {
 		return provider.get(query);
 	}
 	
-	private final CachedProvider<Locale,URI[]> provider
-		= CachedProvider.<Locale,URI[]>newInstance(
-			LocaleBasedProvider.<URI[]>newInstance(
-				new DispatchingProvider<Locale,URI[]>() {
-					public Iterable<? extends Provider<Locale,URI[]>> dispatch() {
+	private final CachedProvider<Locale,LiblouisTable> provider
+		= CachedProvider.<Locale,LiblouisTable>newInstance(
+			LocaleBasedProvider.<LiblouisTable>newInstance(
+				new DispatchingProvider<Locale,LiblouisTable>() {
+					public Iterable<? extends Provider<Locale,LiblouisTable>> dispatch() {
 						return paths.values(); }}));
 	
 	@Override
@@ -56,7 +75,8 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 		return resolved;
 	}
 	
-	public File[] resolveTableList(URI[] tableList, File base) {
+	public File[] resolveLiblouisTable(LiblouisTable table, File base) {
+		URI[] tableList = table.asURIs();
 		File[] resolved = new File[tableList.length];
 		List<ResourcePath> paths = new ArrayList<ResourcePath>(this.paths.values());
 		paths.add(fileSystem);

@@ -100,7 +100,6 @@
         <configuration>
           <instructions>
             <Service-Component>
-              OSGI-INF/liblouis-table-registry.xml,
               OSGI-INF/liblouisutdml-config-registry.xml,
               OSGI-INF/liblouisutdml-process-builder-impl.xml
             </Service-Component>

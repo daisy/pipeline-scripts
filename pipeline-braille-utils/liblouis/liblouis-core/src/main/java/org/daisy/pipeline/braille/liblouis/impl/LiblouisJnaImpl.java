@@ -27,9 +27,8 @@ import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
 
-import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.serializeTableList;
-import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
-import org.daisy.pipeline.braille.liblouis.LiblouisTableProvider;
+import org.daisy.pipeline.braille.liblouis.LiblouisTable;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
@@ -65,8 +64,7 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	private final static boolean LIBLOUIS_EXTERNAL = Boolean.getBoolean("org.daisy.pipeline.liblouis.external");
 	
 	private BundledNativePath nativePath;
-	private LiblouisTableResolver tableResolver;
-	private LiblouisTableProvider tableProvider;
+	private LiblouisTableRegistry tableRegistry;
 	
 	// Hold a reference to avoid garbage collection
 	private TableResolver _tableResolver;
@@ -80,13 +78,13 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 			else if (this.nativePath == null)
 				throw new RuntimeException("No liblouis library registered");
 			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
-			if (tableResolver == null)
-				throw new RuntimeException("No liblouis table resolver bound");
-			final LiblouisTableResolver tableResolver = this.tableResolver;
+			if (tableRegistry == null)
+				throw new RuntimeException("No liblouis table registry bound");
+			final LiblouisTableResolver tableResolver = tableRegistry;
 			_tableResolver = new TableResolver() {
 				public File[] invoke(String tableList, File base) {
 					logger.debug("Resolving " + tableList + (base != null ? " against base " + base : ""));
-					File[] resolved = tableResolver.resolveTableList(tokenizeTableList(tableList), base);
+					File[] resolved = tableResolver.resolveLiblouisTable(new LiblouisTable(tableList), base);
 					if (resolved != null)
 						logger.debug("Resolved to " + join(resolved, ","));
 					else
@@ -125,35 +123,19 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	}
 	
 	@Reference(
-		name = "LiblouisTableResolver",
-		unbind = "unbindTableResolver",
-		service = LiblouisTableResolver.class,
+		name = "LiblouisTableRegistry",
+		unbind = "unbindTableRegistry",
+		service = LiblouisTableRegistry.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindTableResolver(LiblouisTableResolver resolver) {
-		tableResolver = resolver;
-		logger.debug("Registering Liblouis table resolver: " + resolver);
+	protected void bindTableResolver(LiblouisTableRegistry registry) {
+		tableRegistry = registry;
+		logger.debug("Registering Liblouis table registry: " + registry);
 	}
 	
-	protected void unbindTableResolver(LiblouisTableResolver resolver) {
-		tableResolver = null;
-	}
-	
-	@Reference(
-		name = "LiblouisTableProvider",
-		unbind = "unbindTableProvider",
-		service = LiblouisTableProvider.class,
-		cardinality = ReferenceCardinality.MANDATORY,
-		policy = ReferencePolicy.STATIC
-	)
-	protected void bindTableProvider(LiblouisTableProvider provider) {
-		tableProvider = provider;
-		logger.debug("Registering Liblouis table provider: " + provider);
-	}
-	
-	protected void unbindTableProvider(LiblouisTableProvider provider) {
-		tableProvider = null;
+	protected void unbindTableResolver(LiblouisTableRegistry resolver) {
+		tableRegistry = null;
 	}
 	
 	@Reference(
@@ -184,19 +166,19 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	
 	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
 	
-	private Iterable<LiblouisTranslator> get(final URI[] table, String hyphenator, Locale locale) {
-		if (tableResolver.resolveTableList(table, null) != null) {
+	private Iterable<LiblouisTranslator> get(final LiblouisTable table, String hyphenator, Locale locale) {
+		if (tableRegistry.resolveLiblouisTable(table, null) != null) {
 			Iterable<LiblouisTranslator> translators = empty;
 			if (!"none".equals(hyphenator)) {
 				if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator)) {
-					for (URI t : table)
+					for (URI t : table.asURIs())
 						if (t.toString().endsWith(".dic")) {
 							try {
 								translators = Optional.<LiblouisTranslator>fromNullable(
 									new LiblouisTranslatorHyphenatorImpl(table)
 								).asSet(); }
 							catch (CompilationException e) {
-								logger.warn("Could not create translator for table: " + Arrays.toString(table), e); }
+								logger.warn("Could not create translator for table: " + table, e); }
 							break; }}
 				String hyphenatorQuery = "(locale:" + locale + ")";
 				if (!"auto".equals(hyphenator))
@@ -210,7 +192,7 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 								public LiblouisTranslator apply(Hyphenator hyphenator) {
 									try { return new LiblouisTranslatorImpl(table, hyphenator); }
 									catch (CompilationException e) {
-										logger.warn("Could not create translator for table: " + Arrays.toString(table), e); }
+										logger.warn("Could not create translator for table: " + table, e); }
 									return null; }}),
 						Predicates.notNull())); }
 			try {
@@ -218,9 +200,9 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 					translators,
 					Optional.<LiblouisTranslator>fromNullable(new LiblouisTranslatorImpl(table)).asSet()); }
 			catch (CompilationException e) {
-				logger.warn("Could not create translator for table: " + Arrays.toString(table), e); }
+				logger.warn("Could not create translator for table: " + table, e); }
 			return translators; }
-		logger.debug("Could not resolve table: " + Arrays.toString(table));
+		logger.debug("Could not resolve table: " + table);
 		return empty;
 	}
 	
@@ -236,13 +218,13 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 				final String hyphenator = q.containsKey("hyphenator") ? q.get("hyphenator").get() : "auto";
 				final Locale locale = q.containsKey("locale") ? parseLocale(q.get("locale").get()) : parseLocale("und");
 				if (table != null)
-					return LiblouisJnaImpl.this.get(tokenizeTableList(table), hyphenator, locale);
-				if (tableProvider != null)
+					return LiblouisJnaImpl.this.get(new LiblouisTable(table), hyphenator, locale);
+				if (tableRegistry != null)
 					return Iterables.<LiblouisTranslator>concat(
-						Iterables.<URI[],Iterable<LiblouisTranslator>>transform(
-							tableProvider.get(locale),
-							new Function<URI[],Iterable<LiblouisTranslator>>() {
-								public Iterable<LiblouisTranslator> apply(URI[] table) {
+						Iterables.<LiblouisTable,Iterable<LiblouisTranslator>>transform(
+							tableRegistry.get(locale),
+							new Function<LiblouisTable,Iterable<LiblouisTranslator>>() {
+								public Iterable<LiblouisTranslator> apply(LiblouisTable table) {
 									return LiblouisJnaImpl.this.get(table, hyphenator, locale); }}));
 				return empty; }};
 	
@@ -252,7 +234,7 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	
 	private static class LiblouisTranslatorImpl extends LiblouisTranslator {
 		
-		private final URI[] table;
+		private final LiblouisTable table;
 		protected final Translator translator;
 		private final Hyphenator hyphenator;
 		
@@ -263,18 +245,18 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 		 * first `sub-table' in the list will be used as the base for resolving
 		 * the subsequent sub-tables.
 		 */
-		private LiblouisTranslatorImpl(URI[] table) throws CompilationException {
+		private LiblouisTranslatorImpl(LiblouisTable table) throws CompilationException {
 			this(table, null);
 		}
 		
-		private LiblouisTranslatorImpl(URI[] table, Hyphenator hyphenator) throws CompilationException {
+		private LiblouisTranslatorImpl(LiblouisTable table, Hyphenator hyphenator) throws CompilationException {
 			this.table = table;
-			translator = new Translator(serializeTableList(table));
+			translator = new Translator(table.toString());
 			this.hyphenator = hyphenator;
 		}
 		
-		public URI[] asLiblouisTable() {
-			return Arrays.copyOf(table, table.length);
+		public LiblouisTable asLiblouisTable() {
+			return table;
 		}
 		
 		public boolean isHyphenating() {
@@ -454,7 +436,7 @@ public class LiblouisJnaImpl implements LiblouisTranslator.Provider {
 	
 	private static class LiblouisTranslatorHyphenatorImpl extends LiblouisTranslatorImpl implements Hyphenator {
 		
-		private LiblouisTranslatorHyphenatorImpl(URI[] table) throws CompilationException {
+		private LiblouisTranslatorHyphenatorImpl(LiblouisTable table) throws CompilationException {
 			super(table);
 		}
 		

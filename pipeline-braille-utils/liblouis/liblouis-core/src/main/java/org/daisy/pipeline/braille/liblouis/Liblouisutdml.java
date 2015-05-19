@@ -20,7 +20,7 @@ public interface Liblouisutdml {
 	public void translateFile(
 			List<String> configFiles,
 			List<String> semanticFiles,
-			URI[] table,
+			LiblouisTable table,
 			Map<String,String> otherSettings,
 			File input,
 			File output,

@@ -19,7 +19,7 @@ import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.URLs.decode;
-import static org.daisy.pipeline.braille.liblouis.LiblouisTablePath.tokenizeTableList;
+import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 
 import com.xmlcalabash.core.XProcException;
@@ -203,9 +203,9 @@ public class TranslateFileProvider implements XProcStepProvider {
 										"All configuration files and semantic action files must be placed in " + configPath);
 							semanticFileNames.add(decode(path.relativize(uri).toString())); }}}
 				
-				URI[] table = null;
+				LiblouisTable table = null;
 				if (getOption(_table) != null)
-					table = tokenizeTableList(getOption(_table).getString());
+					table = new LiblouisTable(getOption(_table).getString());
 				
 				// Write XML document to file
 				XdmNode xml = source.read();

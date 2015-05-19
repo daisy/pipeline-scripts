@@ -49,7 +49,7 @@ public class LiblouisCoreTest {
 	LiblouisTableResolver resolver;
 	
 	@Inject
-	LiblouisTableProvider tableProvider;
+	LiblouisTableRegistry tableRegistry;
 	
 	@Configuration
 	public Option[] config() {
@@ -80,13 +80,13 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testResolveTableList() {
-		assertEquals("foobar.cti", (resolver.resolveTableList(new URI[]{asURI("foobar.cti")}, null)[0]).getName());
+		assertEquals("foobar.cti", (resolver.resolveLiblouisTable(new LiblouisTable("foobar.cti"), null)[0]).getName());
 	}
 	
 	@Test
 	public void testGetTableFromLocale() {
-		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableProvider.get(parseLocale("foo")).iterator().next());
-		assertNull(Iterables.<URI[]>getFirst(tableProvider.get(parseLocale("bar")), null));
+		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableRegistry.get(parseLocale("foo")).iterator().next().asURIs());
+		assertNull(Iterables.<LiblouisTable>getFirst(tableRegistry.get(parseLocale("bar")), null));
 	}
 	
 	@Test
