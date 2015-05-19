@@ -39,8 +39,8 @@ public class LibhyphenCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.dic')").iterator().next().hyphenate("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.dic')").iterator().next().hyphenate("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.dic')").iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.dic')").iterator().next().transform("foo-bar"));
 	}
 	
 	@Configuration

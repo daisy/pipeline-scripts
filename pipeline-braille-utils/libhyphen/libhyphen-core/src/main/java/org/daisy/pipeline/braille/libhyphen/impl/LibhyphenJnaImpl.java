@@ -166,7 +166,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	private final static Pattern SHY_ZWSP = Pattern.compile(String.format("$[%c%c]*^", SHY, ZWSP));
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 	
-	private class LibhyphenHyphenatorImpl extends LibhyphenHyphenator {
+	private class LibhyphenHyphenatorImpl implements LibhyphenHyphenator {
 		
 		private final URI table;
 		private final Hyphenator hyphenator;
@@ -184,11 +184,11 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 			return table;
 		}
 		
-		public String hyphenate(String text) {
-			return hyphenate(new String[]{text})[0];
+		public String transform(String text) {
+			return transform(new String[]{text})[0];
 		}
 		
-		public String[] hyphenate(String[] text) {
+		public String[] transform(String[] text) {
 			try {
 				// This byte array is used not only to track the hyphen
 				// positions but also the segment boundaries.

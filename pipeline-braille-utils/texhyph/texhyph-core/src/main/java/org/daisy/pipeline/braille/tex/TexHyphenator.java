@@ -32,15 +32,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class TexHyphenator implements Hyphenator {
-	
-	public String transform(String text) {
-		return hyphenate(text);
-	}
-	
-	public String[] transform(String[] text) {
-		return hyphenate(text);
-	}
+public interface TexHyphenator extends Hyphenator {
 	
 	public abstract URI asTexHyphenatorTable();
 	
@@ -136,7 +128,7 @@ public abstract class TexHyphenator implements Hyphenator {
 			return provider.get(query);
 		}
 		
-		private class TexHyphenatorImpl extends TexHyphenator {
+		private class TexHyphenatorImpl implements TexHyphenator {
 			
 			private final URI table;
 			private final net.davidashen.text.Hyphenator hyphenator;
@@ -157,13 +149,13 @@ public abstract class TexHyphenator implements Hyphenator {
 				return table;
 			}
 			
-			public String hyphenate(String text) {
+			public String transform(String text) {
 				try { return hyphenator.hyphenate(text); }
 				catch (Exception e) {
 					throw new RuntimeException("Error during TeX hyphenation", e); }
 			}
 			
-			public String[] hyphenate(String[] text) {
+			public String[] transform(String[] text) {
 				throw new UnsupportedOperationException();
 			}
 		}

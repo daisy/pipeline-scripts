@@ -83,7 +83,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(hyphenator.hyphenate(text)); }
+					return new StringValue(hyphenator.transform(text)); }
 				catch (Exception e) {
 					logger.error("hyphen:hyphenate failed", e);
 					throw new XPathException("hyphen:hyphenate failed"); }

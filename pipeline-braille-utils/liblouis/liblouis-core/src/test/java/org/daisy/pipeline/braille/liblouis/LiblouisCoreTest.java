@@ -5,7 +5,6 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Iterables;
 
-import org.daisy.pipeline.braille.common.Hyphenator;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -44,6 +43,9 @@ public class LiblouisCoreTest {
 	
 	@Inject
 	LiblouisTranslator.Provider provider;
+	
+	@Inject
+	LiblouisHyphenator.Provider hyphenatorProvider;
 	
 	@Inject
 	LiblouisTableResolver resolver;
@@ -132,12 +134,12 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", ((Hyphenator)provider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foobar"));
+		assertEquals("foo\u00ADbar", (hyphenatorProvider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foobar"));
 	}
 	
 	@Test
 	public void testHyphenateCompoundWord() {
-		assertEquals("foo-\u200Bbar", ((Hyphenator)provider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).hyphenate("foo-bar"));
+		assertEquals("foo-\u200Bbar", (hyphenatorProvider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foo-bar"));
 	}
 	
 	@Test

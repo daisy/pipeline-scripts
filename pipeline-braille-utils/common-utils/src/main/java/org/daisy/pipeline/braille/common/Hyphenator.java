@@ -10,9 +10,6 @@ package org.daisy.pipeline.braille.common;
  */
 public interface Hyphenator extends TextTransform {
 	
-	public String hyphenate(String text);
-	public String[] hyphenate(String[] text);
-	
 	public interface Provider<T extends Hyphenator> extends TextTransform.Provider<T> {}
 	
 }

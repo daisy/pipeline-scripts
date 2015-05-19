@@ -16,7 +16,7 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
+import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -36,20 +36,20 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "hyphenate");
 	
-	private LiblouisTranslator.Provider provider = null;
+	private LiblouisHyphenator.Provider provider = null;
 	
 	@Reference(
-		name = "LiblouisTranslatorProvider",
-		unbind = "unbindLiblouisTranslatorProvider",
-		service = LiblouisTranslator.Provider.class,
+		name = "LiblouisHyphenatorProvider",
+		unbind = "unbindLiblouisHyphenatorProvider",
+		service = LiblouisHyphenator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+	protected void bindLiblouisHyphenatorProvider(LiblouisHyphenator.Provider provider) {
 		this.provider = provider;
 	}
 	
-	protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+	protected void unbindLiblouisHyphenatorProvider(LiblouisHyphenator.Provider provider) {
 		this.provider = null;
 	}
 	
@@ -84,24 +84,17 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();
 					Hyphenator hyphenator;
 					try {
-						hyphenator = (Hyphenator)Iterables.<LiblouisTranslator>filter(
-							provider.get(query), isHyphenator).iterator().next(); }
+						hyphenator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(hyphenator.hyphenate(text)); }
+					return new StringValue(hyphenator.transform(text)); }
 				catch (Exception e) {
 					logger.error("louis:hyphenate failed", e);
 					throw new XPathException("louis:hyphenate failed"); }
 			}
 		};
 	}
-	
-	private final Predicate<LiblouisTranslator> isHyphenator = new Predicate<LiblouisTranslator>() {
-		public boolean apply(LiblouisTranslator translator) {
-			return translator instanceof Hyphenator;
-		}
-	};
 	
 	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);
 }

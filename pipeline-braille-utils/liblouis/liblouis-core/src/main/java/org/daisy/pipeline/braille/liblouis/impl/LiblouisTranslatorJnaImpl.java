@@ -81,12 +81,16 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
+		if (provider instanceof LiblouisHyphenatorJnaImpl)
+			return;
 		hyphenatorProviders.add(provider);
 		hyphenatorProvider.invalidateCache();
 		logger.debug("Adding Hyphenator provider: " + provider);
 	}
 	
 	protected void unbindHyphenatorProvider(Hyphenator.Provider<?> provider) {
+		if (provider instanceof LiblouisHyphenatorJnaImpl)
+			return;
 		hyphenatorProviders.remove(provider);
 		hyphenatorProvider.invalidateCache();
 		logger.debug("Removing Hyphenator provider: " + provider);
@@ -393,7 +397,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		protected byte[] doHyphenate(String text) {
 			if (hyphenator == null)
 				throw new RuntimeException("'hyphens:auto' is not supported");
-			return extractHyphens(hyphenator.hyphenate(text), SHY, ZWSP)._2;
+			return extractHyphens(hyphenator.transform(text), SHY, ZWSP)._2;
 		}
 		
 		public String display(String braille) {
@@ -404,7 +408,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		}
 	}
 	
-	private static class LiblouisTranslatorHyphenatorImpl extends LiblouisTranslatorImpl implements Hyphenator {
+	private static class LiblouisTranslatorHyphenatorImpl extends LiblouisTranslatorImpl {
 		
 		private LiblouisTranslatorHyphenatorImpl(Translator translator) {
 			super(translator);
@@ -413,40 +417,6 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		@Override
 		public boolean isHyphenating() {
 			return true;
-		}
-		
-		public String hyphenate(String text) {
-			return insertHyphens(text, doHyphenate(text), SHY, ZWSP);
-		}
-		
-		public String[] hyphenate(String text[]) {
-			// This byte array is used not only to track the hyphen
-			// positions but also the segment boundaries.
-			byte[] positions;
-			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-			String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
-			t = extractHyphens(t._2, t._1, null, null, US);
-			String _text = t._1;
-			if (t._2 != null)
-				positions = t._2;
-			else
-				positions = new byte[_text.length() - 1];
-			byte[] autoHyphens = doHyphenate(_text);
-			for (int i = 0; i < autoHyphens.length; i++)
-				positions[i] += autoHyphens[i];
-			_text = insertHyphens(_text, positions, SHY, ZWSP, US);
-			if (text.length == 1)
-				return new String[]{_text};
-			else {
-				String[] rv = new String[text.length];
-				int i = 0;
-				for (String s : SEGMENT_SPLITTER.split(_text)) {
-					while (unhyphenated[i].length() == 0)
-						rv[i++] = "";
-					rv[i++] = s; }
-				while(i < text.length)
-					rv[i++] = "";
-				return rv; }
 		}
 		
 		@Override
