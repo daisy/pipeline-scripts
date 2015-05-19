@@ -62,7 +62,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
 		public Iterable<LiblouisCSSStyledDocumentTransform> get(String query) {
-			return logSelect(query, Optional.<LiblouisCSSStyledDocumentTransform>fromNullable(transforms.get(query)).asSet(), logger);
+			return logSelect(query, Optional.<LiblouisCSSStyledDocumentTransform>fromNullable(transforms.get(query)).asSet()).apply(logger);
 		}
 		
 		private Cached<String,LiblouisCSSStyledDocumentTransform> transforms
@@ -87,9 +87,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 							public String toString() {
 								return toStringHelper(LiblouisCSSStyledDocumentTransform.class.getSimpleName()).add("blockTransform", transform).toString();
 							}
-						},
-						logger
-					);
+						}).apply(logger);
 				} catch (NoSuchElementException e) {}
 				return null;
 			}

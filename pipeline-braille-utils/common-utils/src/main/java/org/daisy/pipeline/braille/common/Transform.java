@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 
 import com.google.common.collect.Iterables;
 
+import org.daisy.pipeline.braille.common.WithSideEffect;
+import org.daisy.pipeline.braille.common.util.Function0;
+
 import org.slf4j.Logger;
 
 /**
@@ -34,38 +37,67 @@ public interface Transform {
 		
 		public static abstract class util {
 			
-			public static <T extends Transform> T logCreate(T t, Logger logger) {
-				logger.debug("Created " + t);
-				return t;
+			public static <T extends Transform> WithSideEffect<T,Logger> logCreate(final T t) {
+				return new WithSideEffect<T,Logger>() {
+					public T delegate(Logger logger) {
+						if (logger != null)
+							sideEffect(debug(logger, "Created " + t));
+						return t;
+					}
+				};
 			}
 			
-			public static <T extends Transform> Iterable<T> logSelect(final String query, final Iterable<T> iterable, final Logger logger) {
-				return new Iterable<T>() {
-					public Iterator<T> iterator() {
-						return new Iterator<T>() {
-							Iterator<T> i = null;
-							public boolean hasNext() {
-								if (i == null) i = iterable.iterator();
-								return i.hasNext();
-							}
-							public T next() {
-								T t;
-								if (i == null) {
-									i = iterable.iterator();
-									try { t = i.next(); }
-									catch (NoSuchElementException e) {
-										logger.debug("No match for query " + query);
-										throw e; }}
-								else
-									t = i.next();
-								logger.info("Selected " + t + " for query " + query);
-								return t;
-							}
-							public void remove() {
-								if (i == null) i = iterable.iterator();
-								i.remove();
+			public static <T extends Transform> WithSideEffect<Iterable<T>,Logger> logSelect(final String query, final Iterable<T> iterable) {
+				return new WithSideEffect<Iterable<T>,Logger>() {
+					public Iterable<T> delegate(final Logger logger) {
+						if (logger == null)
+							return iterable;
+						return new Iterable<T>() {
+							public Iterator<T> iterator() {
+								return new Iterator<T>() {
+									Iterator<T> i = null;
+									public boolean hasNext() {
+										if (i == null) i = iterable.iterator();
+										return i.hasNext();
+									}
+									public T next() {
+										T t;
+										if (i == null) {
+											i = iterable.iterator();
+											try { t = i.next(); }
+											catch (NoSuchElementException e) {
+												logger.debug("No match for query " + query);
+												throw e; }}
+										else
+											t = i.next();
+										logger.info("Selected " + t + " for query " + query);
+										return t;
+									}
+									public void remove() {
+										if (i == null) i = iterable.iterator();
+										i.remove();
+									}
+								};
 							}
 						};
+					}
+				};
+			}
+			
+			private static Function0<Void> debug(final Logger logger, final String message) {
+				return new Function0<Void>() {
+					public Void apply() {
+						logger.debug(message);
+						return null;
+					}
+				};
+			}
+			
+			private static Function0<Void> info(final Logger logger, final String message) {
+				return new Function0<Void>() {
+					public Void apply() {
+						logger.info(message);
+						return null;
 					}
 				};
 			}

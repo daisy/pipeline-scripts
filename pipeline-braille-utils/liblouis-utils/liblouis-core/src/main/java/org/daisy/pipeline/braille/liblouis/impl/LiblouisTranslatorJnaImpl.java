@@ -133,7 +133,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
 	public Iterable<LiblouisTranslator> get(String query) {
-		return logSelect(query, provider.get(query), logger);
+		return logSelect(query, provider.get(query)).apply(logger);
 	}
 	
 	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
@@ -185,7 +185,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 									for (URI t : tokenizeTable(table.getTable()))
 										if (t.toString().endsWith(".dic")) {
 											translators = Optional.<LiblouisTranslator>of(
-												logCreate(new LiblouisTranslatorHyphenatorImpl(table), logger)).asSet();
+												logCreate(new LiblouisTranslatorHyphenatorImpl(table)).apply(logger)).asSet();
 											break; }
 								if (!"liblouis".equals("hyphenator")) {
 									if (locale == null) {
@@ -206,12 +206,12 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 													hyphenators,
 													new Function<Hyphenator,LiblouisTranslator>() {
 														public LiblouisTranslator apply(Hyphenator hyphenator) {
-															return logCreate(new LiblouisTranslatorImpl(table, hyphenator), logger); }}),
+															return logCreate(new LiblouisTranslatorImpl(table, hyphenator)).apply(logger); }}),
 												Predicates.notNull())); }}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 								translators = Iterables.<LiblouisTranslator>concat(
 									translators,
-									Optional.<LiblouisTranslator>of(logCreate(new LiblouisTranslatorImpl(table), logger)).asSet());
+									Optional.<LiblouisTranslator>of(logCreate(new LiblouisTranslatorImpl(table)).apply(logger)).asSet());
 							return translators;
 						}
 					}

@@ -66,9 +66,7 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 						public String toString() {
 							return toStringHelper(LiblouisMathMLTransform.class.getSimpleName()).add("mathCode", code).toString();
 						}
-					},
-					logger
-				);
+					}).apply(logger);
 			}
 		};
 		
@@ -77,8 +75,8 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			if (q.containsKey("locale")) {
 				MathCode code = mathCodeFromLocale(parseLocale(q.get("locale").get()));
 				if (code != null)
-					return logSelect(query, Optional.<LiblouisMathMLTransform>of(get(code)).asSet(), logger); }
-			return logSelect(query, Optional.<LiblouisMathMLTransform>absent().asSet(), logger);
+					return logSelect(query, Optional.<LiblouisMathMLTransform>of(get(code)).asSet()).apply(logger); }
+			return logSelect(query, Optional.<LiblouisMathMLTransform>absent().asSet()).apply(logger);
 		}
 		
 		private static MathCode mathCodeFromLocale(Locale locale) {

@@ -61,7 +61,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 		 * Other features are used for finding sub-transformers of type LiblouisTranslator.
 		 */
 		public Iterable<LiblouisCSSBlockTransform> get(String query) {
-			return logSelect(query, Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.get(query)).asSet(), logger);
+			return logSelect(query, Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.get(query)).asSet()).apply(logger);
 		}
 		
 		private Cached<String,LiblouisCSSBlockTransform> transforms
@@ -86,9 +86,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 							public String toString() {
 								return toStringHelper(LiblouisCSSBlockTransform.class.getSimpleName()).add("translator", translator).toString();
 							}
-						},
-						logger
-					);
+						}).apply(logger);
 				} catch (NoSuchElementException e) {}
 				return null;
 			}
