@@ -61,7 +61,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 		 * Other features are used for finding sub-transformers of type LiblouisTranslator.
 		 */
 		public Iterable<LiblouisCSSBlockTransform> get(String query) {
-			return logSelect(query, Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.get(query)).asSet()).apply(logger);
+			return Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.get(query)).asSet();
 		}
 		
 		private Cached<String,LiblouisCSSBlockTransform> transforms
@@ -75,7 +75,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 						return null;
 				String newQuery = serializeQuery(q);
 				try {
-					final LiblouisTranslator translator = liblouisTranslatorProvider.get(newQuery).iterator().next();
+					final LiblouisTranslator translator = logSelect(newQuery, liblouisTranslatorProvider.get(newQuery)).apply(logger).iterator().next();
 					final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
 					return logCreate(
 						new LiblouisCSSBlockTransform() {

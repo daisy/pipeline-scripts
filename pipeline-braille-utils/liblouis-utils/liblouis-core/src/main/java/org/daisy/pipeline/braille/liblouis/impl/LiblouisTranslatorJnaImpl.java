@@ -133,7 +133,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
 	public Iterable<LiblouisTranslator> get(String query) {
-		return logSelect(query, provider.get(query)).apply(logger);
+		return provider.get(query);
 	}
 	
 	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
@@ -198,7 +198,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 										if (!"auto".equals(hyphenator))
 											hyphenatorQuery.put("hyphenator", Optional.<String>of(hyphenator));
 										hyphenatorQuery.put("locale", Optional.<String>of(locale));
-										Iterable<Hyphenator> hyphenators = hyphenatorProvider.get(serializeQuery(hyphenatorQuery.build()));
+										String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
+										Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString)).apply(logger);
 										translators = Iterables.<LiblouisTranslator>concat(
 											translators,
 											Iterables.<LiblouisTranslator>filter(

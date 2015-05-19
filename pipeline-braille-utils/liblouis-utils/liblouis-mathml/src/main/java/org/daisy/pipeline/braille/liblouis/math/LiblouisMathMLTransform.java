@@ -75,8 +75,8 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			if (q.containsKey("locale")) {
 				MathCode code = mathCodeFromLocale(parseLocale(q.get("locale").get()));
 				if (code != null)
-					return logSelect(query, Optional.<LiblouisMathMLTransform>of(get(code)).asSet()).apply(logger); }
-			return logSelect(query, Optional.<LiblouisMathMLTransform>absent().asSet()).apply(logger);
+					return Optional.<LiblouisMathMLTransform>of(get(code)).asSet(); }
+			return Optional.<LiblouisMathMLTransform>absent().asSet();
 		}
 		
 		private static MathCode mathCodeFromLocale(Locale locale) {
