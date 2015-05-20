@@ -30,6 +30,6 @@ public interface TextTransform extends Transform {
 		}
 	}
 	
-	public interface Provider<T extends TextTransform>
-		extends org.daisy.pipeline.braille.common.Provider<String,T> {}
+	public interface Provider<T extends TextTransform> extends Transform.Provider<T> {}
+	
 }
