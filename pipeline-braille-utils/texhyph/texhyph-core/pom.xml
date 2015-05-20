@@ -80,9 +80,6 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>
-              OSGI-INF/tex-hyphenator-table-registry.xml
-            </Service-Component>
             <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>

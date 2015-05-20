@@ -6,10 +6,26 @@ import java.util.Locale;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
 
-public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTablePath>
-	                                    implements TexHyphenatorTableProvider, TexHyphenatorTableResolver {
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+@Component(
+	name = "org.daisy.pipeline.braille.tex.TexHyphenatorTableRegistry",
+	service = {
+		TexHyphenatorTableRegistry.class
+	}
+)
+public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTablePath> implements Provider<Locale,URI> {
 	
-	@Override
+	@Reference(
+		name = "TexHyphenatorTablePath",
+		unbind = "unregister",
+		service = TexHyphenatorTablePath.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
 	protected void register(TexHyphenatorTablePath path) {
 		super.register(path);
 		provider.invalidateCache();

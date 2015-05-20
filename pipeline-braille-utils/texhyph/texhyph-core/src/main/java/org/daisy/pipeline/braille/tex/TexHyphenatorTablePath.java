@@ -12,7 +12,7 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import org.osgi.service.component.ComponentContext;
 
-public class TexHyphenatorTablePath extends BundledResourcePath implements TexHyphenatorTableProvider {
+public class TexHyphenatorTablePath extends BundledResourcePath implements Provider<Locale,URI> {
 	
 	private static final String MANIFEST = "manifest";
 	
