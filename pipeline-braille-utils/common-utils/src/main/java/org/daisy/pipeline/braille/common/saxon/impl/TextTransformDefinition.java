@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.google.common.collect.Iterables.filter;
+
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -14,6 +16,7 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
@@ -74,13 +77,14 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	@Override
 	public int getMaximumNumberOfArguments() {
-		return 2;
+		return 3;
 	}
 	
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] {
-				SequenceType.SINGLE_STRING,
-				SequenceType.SINGLE_STRING };
+			SequenceType.SINGLE_STRING,
+			SequenceType.SINGLE_STRING,
+			SequenceType.SINGLE_STRING };
 	}
 	
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
@@ -93,11 +97,17 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = arguments[0].head().getStringValue();
 					String text = arguments[1].head().getStringValue();
-					BrailleTranslator translator;
-					try { translator = translators.get(query).iterator().next(); }
+					try {
+						if (arguments.length > 2) {
+							String style = arguments[2].head().getStringValue();
+							CSSStyledTextTransform translator = filter(translators.get(query), CSSStyledTextTransform.class).iterator().next();
+							return new StringValue(translator.transform(text, style)); }
+						else {
+							BrailleTranslator translator = translators.get(query).iterator().next();
+							return new StringValue(translator.transform(text)); }}
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
-					return new StringValue(translator.transform(text)); }
+					 }
 				catch (Exception e) {
 					logger.error("pf:text-transform failed", e);
 					throw new XPathException("pf:text-transform failed"); }
