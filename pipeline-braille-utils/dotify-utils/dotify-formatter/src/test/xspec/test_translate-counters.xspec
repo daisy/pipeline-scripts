@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/translate-counters.xsl">
+  
+  <x:param name="braille-translator-query" select="'(number-translator)'"/>
+  
+  <x:scenario label="test_01">
+    <x:context>
+      <_>
+        <css:box class="counter">1</css:box> * 2 =
+        <css:box class="counter" css:text-transform="times-two">1</css:box>
+      </_>
+    </x:context>
+    <x:expect label="translated">
+      <_>⠼⠁ * 2 =
+        ⠼⠃</_>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

@@ -2,17 +2,11 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-                xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
     <xsl:import href="base.xsl"/>
-    
-    <!--
-        pf:translate
-    -->
-    <xsl:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xsl"/>
     
     <!-- ==================== -->
     <!-- Property Definitions -->
@@ -334,58 +328,26 @@
     <xsl:variable name="css:predefined-counter-styles" as="element()*">
         <css:counter-style name="decimal"
                            system="numeric"
-                           symbols="'⠚' '⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊'"
-                           negative="⠤"
-                           text-transform="prefix '⠼'"/>
+                           symbols="'0' '1' '2' '3' '4' '5' '6' '7' '8' '9'"
+                           negative="-"/>
         <css:counter-style name="lower-alpha"
                            system="alphabetic"
-                           symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"
-                           text-transform="none"/>
+                           symbols="'a' 'b' 'c' 'd' 'e' 'f' 'g' 'h' 'i' 'j' 'k' 'l' 'm' 'n' 'o' 'p' 'q' 'r' 's' 't' 'u' 'v' 'w' 'x' 'y' 'z'"/>
         <css:counter-style name="upper-alpha"
                            system="alphabetic"
-                           symbols="'⠁' '⠃' '⠉' '⠙' '⠑' '⠋' '⠛' '⠓' '⠊' '⠚' '⠅' '⠇' '⠍' '⠝' '⠕' '⠏' '⠟' '⠗' '⠎' '⠞' '⠥' '⠧' '⠺' '⠭' '⠽' '⠵'"
-                           text-transform="capsign '⠠'"/>
+                           symbols="'A' 'B' 'C' 'D' 'E' 'F' 'G' 'H' 'I' 'J' 'K' 'L' 'M' 'N' 'O' 'P' 'Q' 'R' 'S' 'T' 'U' 'V' 'W' 'X' 'Y' 'Z'"/>
         <css:counter-style name="lower-roman"
                            system="additive"
                            range="1 3999"
-                           additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
-                           text-transform="none"/>
+                           additive-symbols="1000 'm', 900 'cm', 500 'd', 400 'cd', 100 'c', 90 'xc', 50 'l', 40 'xl', 10 'x', 9 'ix', 5 'v', 4 'iv', 1 'i'"/>
         <css:counter-style name="upper-roman"
                            system="additive"
                            range="1 3999"
-                           additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
-                           text-transform="capsign '⠠'"/>
+                           additive-symbols="1000 'M', 900 'CM', 500 'D', 400 'CD', 100 'C', 90 'XC', 50 'L', 40 'XL', 10 'X', 9 'IX', 5 'V', 4 'IV', 1 'I'"/>
     </xsl:variable>
     
     <xsl:function name="css:custom-counter-style" as="element()?">
         <xsl:param name="name" as="xs:string"/>
     </xsl:function>
-    
-    <!-- ================= -->
-    <!-- Text Transforming -->
-    <!-- ================= -->
-    
-    <xsl:template match="text()" mode="css:text-transform">
-        <xsl:param name="text-transform" as="element()*" tunnel="yes"/>
-        <xsl:variable name="system" as="xs:string" select="$text-transform[1]/@value"/>
-        <xsl:choose>
-            <xsl:when test="$system='translator'">
-                <xsl:value-of select="pf:text-transform($text-transform[2]/@value, string(.))"/>
-            </xsl:when>
-            <xsl:when test="$system='prefix'">
-                <xsl:value-of select="$text-transform[2]/@value"/>
-                <xsl:sequence select="."/>
-            </xsl:when>
-            <xsl:when test="$system='capsign'">
-                <xsl:value-of select="if (string-length(string(.)) &gt; 1)
-                                      then concat($text-transform[2]/@value,$text-transform[2]/@value)
-                                      else $text-transform[2]/@value"/>
-                <xsl:sequence select="."/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:next-match/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
     
 </xsl:stylesheet>

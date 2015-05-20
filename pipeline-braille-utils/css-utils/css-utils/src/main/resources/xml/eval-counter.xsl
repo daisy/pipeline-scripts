@@ -24,25 +24,35 @@
                             then not(@name=$exclude-counter-names-list)
                             else @name=$counter-names-list">
                 <xsl:variable name="style" as="xs:string" select="(@style,'decimal')[1]"/>
-                <xsl:choose>
-                    <xsl:when test="@target">
-                        <xsl:variable name="target" as="xs:string" select="@target"/>
-                        <xsl:variable name="target" as="element()?" select="//*[@css:id=$target][1]"/>
-                        <xsl:if test="$target">
+                <xsl:variable name="text-with-text-transform" as="xs:string*">
+                    <xsl:choose>
+                        <xsl:when test="@target">
+                            <xsl:variable name="target" as="xs:string" select="@target"/>
+                            <xsl:variable name="target" as="element()?" select="//*[@css:id=$target][1]"/>
+                            <xsl:if test="$target">
+                                <xsl:call-template name="css:counter">
+                                    <xsl:with-param name="name" select="@name"/>
+                                    <xsl:with-param name="style" select="$style"/>
+                                    <xsl:with-param name="context" select="$target"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:when>
+                        <xsl:otherwise>
                             <xsl:call-template name="css:counter">
                                 <xsl:with-param name="name" select="@name"/>
                                 <xsl:with-param name="style" select="$style"/>
-                                <xsl:with-param name="context" select="$target"/>
                             </xsl:call-template>
-                        </xsl:if>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:call-template name="css:counter">
-                            <xsl:with-param name="name" select="@name"/>
-                            <xsl:with-param name="style" select="$style"/>
-                        </xsl:call-template>
-                    </xsl:otherwise>
-                </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="text" as="xs:string" select="$text-with-text-transform[1]"/>
+                <xsl:variable name="text-transform" as="xs:string" select="($text-with-text-transform[2],'auto')[1]"/>
+                <css:box type="inline" class="counter">
+                    <xsl:if test="$text-transform!='auto'">
+                        <xsl:attribute name="css:text-transform" select="$text-transform"/>
+                    </xsl:if>
+                    <xsl:value-of select="$text"/>
+                </css:box>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:next-match/>

@@ -1,10 +1,19 @@
 import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.inject.Inject;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
+
+import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
@@ -18,6 +27,7 @@ import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -34,6 +44,10 @@ import org.ops4j.pax.exam.util.PathUtils;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+
+import org.osgi.framework.BundleContext;
+
+import org.slf4j.Logger;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -88,6 +102,17 @@ public class DotifyFormatterTest {
 	}
 	
 	@Inject
+	private BundleContext context;
+	
+	@Before
+	public void NumberBrailleTranslatorProvider() {
+		NumberBrailleTranslator.Provider provider = new NumberBrailleTranslator.Provider();
+		Hashtable<String,Object> properties = new Hashtable<String,Object>();
+		context.registerService(BrailleTranslator.Provider.class.getName(), provider, properties);
+		context.registerService(CSSStyledTextTransform.Provider.class.getName(), provider, properties);
+	}
+	
+	@Inject
 	private XSpecRunner xspecRunner;
 	
 	@Test
@@ -112,5 +137,66 @@ public class DotifyFormatterTest {
 		                                      new File(baseDir, "target/xprocspec"),
 		                                      new XProcSpecRunner.Reporter.DefaultReporter());
 		assertTrue("XProcSpec tests should run with success", success);
+	}
+	
+	private static class NumberBrailleTranslator implements BrailleTranslator, CSSStyledTextTransform {
+		
+		private final static String NUMSIGN = "\u283c";
+		private final static String[] DIGIT_TABLE = new String[]{
+			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
+		private final static Splitter.MapSplitter CSS_PARSER
+			= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
+		
+		private static String translateInteger(int integer) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(NUMSIGN);
+			if (integer == 0)
+				sb.append(DIGIT_TABLE[0]);
+			while (integer > 0) {
+				sb.insert(1, DIGIT_TABLE[integer % 10]);
+				integer = integer / 10; }
+			return sb.toString();
+		}
+		
+		public String transform(String text) {
+			if (text.matches("[ivxlcdm]+"))
+				return text.replace('i', '⠊')
+				           .replace('v', '⠧')
+				           .replace('x', '⠭')
+				           .replace('l', '⠇')
+				           .replace('c', '⠉')
+				           .replace('d', '⠙')
+				           .replace('m', '⠍');
+			return translateInteger(Integer.parseInt(text));
+		}
+		
+		public String[] transform(String[] text) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public String transform(String text, String style) {
+			Map<String,String> parsedStyle = CSS_PARSER.split(style);
+			if (parsedStyle.containsKey("text-transform") && "times-two".equals(parsedStyle.get("text-transform")))
+				return translateInteger(2 * Integer.parseInt(text));
+			return transform(text);
+		}
+		
+		public String[] transform(String[] text, String[] style) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public boolean isHyphenating() { return false; }
+		
+		public static class Provider implements BrailleTranslator.Provider<NumberBrailleTranslator>,
+		                                        CSSStyledTextTransform.Provider<NumberBrailleTranslator> {
+			final static NumberBrailleTranslator instance = new NumberBrailleTranslator();
+			public Iterable<NumberBrailleTranslator> get(String query) {
+				return Optional.<NumberBrailleTranslator>fromNullable(
+					query.equals("(number-translator)") ? instance : null).asSet();
+			}
+			public Transform.Provider<NumberBrailleTranslator> withContext(Logger context) {
+				return this;
+			}
+		}
 	}
 }

@@ -214,22 +214,12 @@
 		<x:expect label="result" select="('x',' ⠚ ','')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_18">
-		<x:call function="css:parse-text-transform">
-			<x:param select="'translator (locale:en-US) (grade:2)'"/>
-		</x:call>
-		<x:expect label="result">
-			<css:ident value="translator"/>
-			<css:query value="(locale:en-US) (grade:2)"/>
-		</x:expect>
-	</x:scenario>
-	
 	<x:scenario label="test_19">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="100"/>
 			<x:param name="style" select="css:counter-style('decimal')"/>
 		</x:call>
-		<x:expect label="result" select="'⠼⠁⠚⠚'"/>
+		<x:expect label="result" select="('100','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_20">
@@ -237,7 +227,7 @@
 			<x:param name="value" select="-25"/>
 			<x:param name="style" select="css:counter-style('decimal')"/>
 		</x:call>
-		<x:expect label="result" select="'⠼⠤⠃⠑'"/>
+		<x:expect label="result" select="('-25','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_21">
@@ -245,7 +235,7 @@
 			<x:param name="value" select="100"/>
 			<x:param name="style" select="css:counter-style('lower-alpha')"/>
 		</x:call>
-		<x:expect label="result" select="'⠉⠧'"/>
+		<x:expect label="result" select="('cv','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_22">
@@ -253,7 +243,7 @@
 			<x:param name="value" select="1998"/>
 			<x:param name="style" select="css:counter-style('lower-roman')"/>
 		</x:call>
-		<x:expect label="result" select="'⠍⠉⠍⠭⠉⠧⠊⠊⠊'"/>
+		<x:expect label="result" select="('mcmxcviii','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_23">
@@ -261,7 +251,7 @@
 			<x:param name="value" select="1998"/>
 			<x:param name="style" select="css:counter-style('upper-roman')"/>
 		</x:call>
-		<x:expect label="result" select="'⠠⠠⠍⠉⠍⠭⠉⠧⠊⠊⠊'"/>
+		<x:expect label="result" select="('MCMXCVIII','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_24">
@@ -269,11 +259,11 @@
 			<x:param name="value" select="1998"/>
 			<x:param name="style">
 				<css:counter-style system="additive"
-				                   additive-symbols="1000 M, 900 CM, 500 D, 400 CD, 100 C, 90 XC, 50 L, 40 XL, 10 X, 9 IX, 5 V, 4 IV, 1 I"
+				                   additive-symbols="1000 '⠍', 900 '⠉⠍', 500 '⠙', 400 '⠉⠙', 100 '⠉', 90 '⠭⠉', 50 '⠇', 40 '⠭⠇', 10 '⠭', 9 '⠊⠭', 5 '⠧', 4 '⠊⠧', 1 '⠊'"
 				                   text-transform="none"/>
 			</x:param>
 		</x:call>
-		<x:expect label="result" select="'MCMXCVIII'"/>
+		<x:expect label="result" select="('⠍⠉⠍⠭⠉⠧⠊⠊⠊','none')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_25">
@@ -282,10 +272,10 @@
 			<x:param name="style">
 				<css:counter-style system="additive"
 				                   additive-symbols="1000 m, 900 cm, 500 d, 400 cd, 100 c, 90 xc, 50 l, 40 xl, 10 x, 9 ix, 5 v, 4 iv, 1 i"
-				                   text-transform="translator (uppercase)"/>
+				                   text-transform="uppercase"/>
 			</x:param>
 		</x:call>
-		<x:expect label="result" select="'MCMXCVIII'"/>
+		<x:expect label="result" select="('mcmxcviii','uppercase')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_26">
@@ -300,7 +290,7 @@
 				</ul>
 			</x:param>
 		</x:call>
-		<x:expect label="result" select="'⠼⠉'"/>
+		<x:expect label="result" select="('3','auto')"/>
 	</x:scenario>
 	
 	<x:scenario label="test_27">

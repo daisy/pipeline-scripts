@@ -17,7 +17,9 @@
     <p:import href="obfl-normalize-space.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
     
-    <pxi:css-to-obfl name="obfl"/>
+    <pxi:css-to-obfl name="obfl">
+        <p:with-option name="text-transform" select="$text-transform"/>
+    </pxi:css-to-obfl>
     
     <pxi:obfl-normalize-space/>
     

@@ -1475,6 +1475,7 @@
           </ul>
         </x:document>
       </x:input>
+      <x:option name="text-transform" select="'(number-translator)'"/>
     </x:call>
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
