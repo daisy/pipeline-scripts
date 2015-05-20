@@ -31,6 +31,11 @@
       <artifactId>css-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.hyphenator.impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
       <scope>provided</scope>

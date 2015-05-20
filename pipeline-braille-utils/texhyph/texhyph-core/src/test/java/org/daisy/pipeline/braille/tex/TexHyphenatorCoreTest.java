@@ -1,7 +1,18 @@
 package org.daisy.pipeline.braille.tex;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
+
+import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -29,17 +40,24 @@ import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class TexHyphenatorCoreTest {
 	
 	@Inject
-	TexHyphenator.Provider provider;
+	BundleContext context;
 	
 	@Test
 	public void testHyphenate() {
+		Provider<String,TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
 		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foobar"));
 		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foo-bar"));
 	}
 	
 	@Configuration
@@ -60,5 +78,15 @@ public class TexHyphenatorCoreTest {
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);
+	}
+	
+	private <T extends Transform> Provider<String,T> getProvider(Class<T> transformerClass, Class<? extends Transform.Provider<T>> providerClass) {
+		List<Provider<String,T>> providers = new ArrayList<Provider<String,T>>();
+		try {
+			for (ServiceReference<? extends Transform.Provider<T>> ref : context.getServiceReferences(providerClass, null))
+				providers.add(context.getService(ref)); }
+		catch (InvalidSyntaxException e) {
+			throw new RuntimeException(e); }
+		return DispatchingProvider.<String,T>newInstance(providers);
 	}
 }
