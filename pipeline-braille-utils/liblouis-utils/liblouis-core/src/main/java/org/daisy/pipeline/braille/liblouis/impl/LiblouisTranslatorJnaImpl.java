@@ -18,6 +18,7 @@ import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
@@ -55,6 +56,7 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTranslatorJnaImpl",
 	service = {
 		LiblouisTranslator.Provider.class,
+		BrailleTranslator.Provider.class,
 		TextTransform.Provider.class
 	}
 )

@@ -13,11 +13,12 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -39,27 +40,27 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	@Reference(
 		name = "TextTransformProvider",
 		unbind = "unbindTextTransformProvider",
-		service = TextTransform.Provider.class,
+		service = BrailleTranslator.Provider.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<TextTransform>
+		"unchecked" // safe cast to Transform.Provider<BrailleTranslator>
 	)
-	protected void bindTextTransformProvider(TextTransform.Provider<?> provider) {
-		providers.add((Transform.Provider<TextTransform>)provider);
-		logger.debug("Adding TextTransform provider: {}", provider);
+	protected void bindTextTransformProvider(BrailleTranslator.Provider<?> provider) {
+		providers.add((Transform.Provider<BrailleTranslator>)provider);
+		logger.debug("Adding BrailleTranslator provider: {}", provider);
 	}
 	
-	protected void unbindTextTransformProvider(TextTransform.Provider<?> provider) {
+	protected void unbindTextTransformProvider(BrailleTranslator.Provider<?> provider) {
 		providers.remove(provider);
 		translators.invalidateCache();
-		logger.debug("Removing TextTransform provider: {}", provider);
+		logger.debug("Removing BrailleTranslator provider: {}", provider);
 	}
 	
-	private List<Transform.Provider<TextTransform>> providers = new ArrayList<Transform.Provider<TextTransform>>();
+	private List<Transform.Provider<BrailleTranslator>> providers = new ArrayList<Transform.Provider<BrailleTranslator>>();
 	
-	private Provider.MemoizingProvider<String,TextTransform> translators
+	private Provider.MemoizingProvider<String,BrailleTranslator> translators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -92,7 +93,7 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = arguments[0].head().getStringValue();
 					String text = arguments[1].head().getStringValue();
-					TextTransform translator;
+					BrailleTranslator translator;
 					try { translator = translators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }

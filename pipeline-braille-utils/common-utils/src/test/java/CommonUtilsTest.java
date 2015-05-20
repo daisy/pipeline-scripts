@@ -12,9 +12,8 @@ import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.BrailleTranslator;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -74,13 +73,19 @@ public class CommonUtilsTest {
 	public void registerUppercaseTransformProvider() {
 		UppercaseTransform.Provider provider = new UppercaseTransform.Provider();
 		Hashtable<String,Object> properties = new Hashtable<String,Object>();
-		context.registerService(TextTransform.Provider.class.getName(), provider, properties);
+		context.registerService(BrailleTranslator.Provider.class.getName(), provider, properties);
 		context.registerService(XProcTransform.Provider.class.getName(), provider, properties);
 	}
 	
-	private static class UppercaseTransform extends ContextUnawareTextTransform implements XProcTransform {
+	private static class UppercaseTransform implements BrailleTranslator, XProcTransform {
 		public String transform(String text) {
 			return text.toUpperCase();
+		}
+		public String[] transform(String[] text) {
+			String[] ret = new String[text.length];
+			for (int i = 0; i < text.length; i++)
+				ret[i] = transform(text[i]);
+			return ret;
 		}
 		private final URI href = asURI(new File(new File(PathUtils.getBaseDir()), "target/test-classes/uppercase.xpl"));
 		public Tuple3<URI,QName,Map<String,String>> asXProc() {
@@ -88,7 +93,7 @@ public class CommonUtilsTest {
 		}
 		private static final Iterable<UppercaseTransform> instance = Optional.of(new UppercaseTransform()).asSet();
 		private static final Iterable<UppercaseTransform> empty = Optional.<UppercaseTransform>absent().asSet();
-		public static class Provider implements TextTransform.Provider<UppercaseTransform>, XProcTransform.Provider<UppercaseTransform> {
+		public static class Provider implements BrailleTranslator.Provider<UppercaseTransform>, XProcTransform.Provider<UppercaseTransform> {
 			private Logger logger;
 			public Provider() {}
 			private Provider(Logger context) {
