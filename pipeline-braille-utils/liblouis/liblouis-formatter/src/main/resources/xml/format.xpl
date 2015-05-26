@@ -27,7 +27,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     
-    <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+    <p:variable name="pef-table" select="'org.daisy.pipeline.braille.pef.impl.NabccEightDotTable'">
         <p:empty/>
     </p:variable>
     

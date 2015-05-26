@@ -1,2 +1,2 @@
-org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider
+org.daisy.pipeline.braille.pef.impl.NabccEightDotTableProvider
 

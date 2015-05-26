@@ -14,7 +14,6 @@ import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
-import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import org.junit.Test;
@@ -44,12 +43,11 @@ public class LiblouisDisplayTableBrailleConverterTest {
 			logbackConfigFile(),
 			logbackBundles(),
 			felixDeclarativeServices(),
-			spiflyBundles(),
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("brailleutils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),

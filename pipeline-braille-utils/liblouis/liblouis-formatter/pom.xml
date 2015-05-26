@@ -19,8 +19,8 @@
   
   <dependencies>
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-core</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -116,14 +116,6 @@
       <scope>runtime</scope>
     </dependency>
     <!--
-        for brailleutils-core
-    -->
-    <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>jing</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <!--
         test dependencies
     -->
     <dependency>
@@ -180,6 +172,11 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <SPI-Provider>javax.imageio.spi.ServiceRegistry</SPI-Provider>
+          </instructions>
+        </configuration>
         <executions>
           <execution>
             <id>manifest-before-test</id>
@@ -189,16 +186,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Export-Package>!org.daisy.pipeline.braille.liblouis.pef</Export-Package>
-            <SPI-Provider>javax.imageio.spi.ServiceRegistry</SPI-Provider>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>

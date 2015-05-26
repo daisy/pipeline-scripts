@@ -27,12 +27,17 @@
       <artifactId>com.xmlcalabash</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-core</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>calabash-adapter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <!--
         OSGi runtime dependencies
@@ -46,13 +51,8 @@
         for brailleutils-core
     -->
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>jing</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-catalog</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-catalog</artifactId>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
@@ -93,11 +93,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>
-              OSGI-INF/text2pef.xml,
-              OSGI-INF/pef2text.xml,
-              OSGI-INF/validate.xml
-            </Service-Component>
+            <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>
       </plugin>

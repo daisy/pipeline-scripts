@@ -23,8 +23,8 @@
       <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-core</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -42,13 +42,8 @@
         for brailleutils-core
     -->
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>jing</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>brailleutils-catalog</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-catalog</artifactId>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
