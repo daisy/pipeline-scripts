@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:pef="http://www.daisy.org/ns/2008/pef">
+  
+  <x:script>
+    <p:declare-step type="pxi:text2pef" version="1.0">
+      <p:output port="result"/>
+      <p:option name="source"/>
+      <p:option name="table"/>
+      <p:option name="temp-dir"/>
+      <p:import href="../../main/resources/xml/library.xpl"/>
+      <p:declare-step type="pxi:load-text">
+        <p:output port="result"/>
+        <p:option name="href"/>
+        <p:identity>
+          <p:input port="source">
+            <p:inline>
+              <c:request method="GET" override-content-type="text/plain; charset=utf-8"/>
+            </p:inline>
+          </p:input>
+        </p:identity>
+        <p:add-attribute match="c:request" attribute-name="href">
+          <p:with-option name="attribute-value" select="$href"/>
+        </p:add-attribute>
+        <p:http-request/>
+      </p:declare-step>
+      <pxi:load-text>
+        <p:with-option name="href" select="$source"/>
+      </pxi:load-text>
+      <pef:text2pef>
+        <p:with-option name="table" select="$table"/>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
+      </pef:text2pef>
+    </p:declare-step>
+  </x:script>
+  
+  <x:scenario label="test_01">
+    <x:call step="pxi:text2pef">
+      <x:option name="source" select="'../resources/text.brf'"/>
+      <x:option name="table" select="'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US'"/>
+      <x:option name="temp-dir" select="$temp-dir"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="file" href="../resources/pef.pef" select="//body"/>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:pef="http://www.daisy.org/ns/2008/pef"
+               script="../../main/resources/xml/library.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="pef:pef2text">
+      <x:input port="source">
+        <x:document type="file" href="../resources/pef.pef"/>
+      </x:input>
+      <x:option name="table" select="'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US'"/>
+      <x:option name="href" select="resolve-uri('text.brf',$temp-dir)"/>
+    </x:call>
+  </x:scenario>
+  
+</x:description>
