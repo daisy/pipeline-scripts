@@ -19,7 +19,7 @@ public class LiblouisDisplayTableBrailleConverter implements BrailleConverter {
 			for (; i < 256; i++)
 				brailleRange[i] = (char)(0x2800+i);
 			char[] tableDef = translator.display(String.valueOf(brailleRange)).toCharArray();
-			for (i = 0; i < 256; i++) {
+			for (i = 255; i >= 0; i--) {
 				t2b.put(tableDef[i], brailleRange[i]);
 				b2t.put(brailleRange[i], tableDef[i]); }}
 		catch (Throwable e) {

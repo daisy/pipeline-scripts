@@ -52,8 +52,8 @@ public class LiblouisDisplayTableTest {
 		Provider<String,Table> tableProvider = DispatchingProvider.<String,Table>newInstance(tableProviders);
 		Table table = tableProvider.get("(liblouis-table:'foobar.dis')").iterator().next();
 		BrailleConverter converter = table.newBrailleConverter();
-		assertEquals("⠋⠕⠕⠃⠁⠗", converter.toBraille("foobar"));
-		assertEquals("foobar", converter.toText("⠋⠕⠕⠃⠁⠗"));
+		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
+		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
 		String id = table.getIdentifier();
 		assertEquals(table, tableProvider.get("(id:'" + id + "')").iterator().next());
 		TableCatalog tableCatalog = TableCatalog.newInstance();
