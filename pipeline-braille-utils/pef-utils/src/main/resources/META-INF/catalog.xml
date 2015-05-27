@@ -9,4 +9,5 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-calabash"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-saxon"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-to-html"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
 </catalog>
