@@ -40,7 +40,7 @@
   <x:scenario label="test_01">
     <x:call step="pxi:text2pef">
       <x:option name="source" select="'../resources/text.brf'"/>
-      <x:option name="table" select="'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US'"/>
+      <x:option name="table" select="'(id:&quot;org.daisy.braille.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
       <x:option name="temp-dir" select="$temp-dir"/>
     </x:call>
     <x:context label="result">

@@ -1,30 +1,27 @@
-import java.io.File;
-
 import javax.inject.Inject;
 
-import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
+import org.daisy.braille.table.Table;
+import org.daisy.pipeline.braille.pef.TableProvider;
 
-import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
+import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
-import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
@@ -32,13 +29,21 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class PefCalabashTest {
+public class PefCoreTest {
+	
+	@Inject
+	private TableProvider provider;
+	
+	@Test
+	public void testBrailleUtilsTableCatalog() {
+		Table table = provider.get("(id:'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US')").iterator().next();
+		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
+	}
 	
 	@Configuration
 	public Option[] config() {
 		return options(
 			logbackConfigFile(),
-			calabashConfigFile(),
 			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
@@ -49,26 +54,11 @@ public class PefCalabashTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-catalog").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
+			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			brailleModule("pef-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "pef-calabash"),
-			xprocspecBundles(),
+			thisBundle("org.daisy.pipeline.modules.braille", "pef-core"),
 			junitBundles()
 		);
-	}
-	
-	@Inject
-	private XProcSpecRunner xprocspecRunner;
-	
-	@Test
-	public void runXProcSpec() throws Exception {
-		File baseDir = new File(PathUtils.getBaseDir());
-		boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
-		                                      new File(baseDir, "target/xprocspec-reports"),
-		                                      new File(baseDir, "target/surefire-reports"),
-		                                      new File(baseDir, "target/xprocspec"),
-		                                      new XProcSpecRunner.Reporter.DefaultReporter());
-		assertTrue("XProcSpec tests should run with success", success);
 	}
 }

@@ -32,6 +32,7 @@
     <module>pipeline-braille-utils/css/css-calabash</module>
     <module>pipeline-braille-utils/css-utils</module>
     <module>pipeline-braille-utils/pef/pef-calabash</module>
+    <module>pipeline-braille-utils/pef/pef-core</module>
     <module>pipeline-braille-utils/pef/pef-saxon</module>
     <!-- <module>pipeline-braille-utils/pef/pef-to-html</module> -->
     <module>pipeline-braille-utils/pef-utils</module>

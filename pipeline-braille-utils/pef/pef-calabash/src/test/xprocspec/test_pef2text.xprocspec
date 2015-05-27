@@ -8,7 +8,7 @@
       <x:input port="source">
         <x:document type="file" href="../resources/pef.pef"/>
       </x:input>
-      <x:option name="table" select="'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US'"/>
+      <x:option name="table" select="'(id:&quot;org.daisy.braille.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
       <x:option name="href" select="resolve-uri('text.brf',$temp-dir)"/>
     </x:call>
   </x:scenario>

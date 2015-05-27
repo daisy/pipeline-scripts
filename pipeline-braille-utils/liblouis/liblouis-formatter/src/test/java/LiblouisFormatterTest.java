@@ -61,6 +61,7 @@ public class LiblouisFormatterTest {
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
 			brailleModule("css-utils"),
+			brailleModule("pef-core"),
 			brailleModule("pef-calabash"),
 			brailleModule("pef-saxon"),
 			brailleModule("pef-to-html"),

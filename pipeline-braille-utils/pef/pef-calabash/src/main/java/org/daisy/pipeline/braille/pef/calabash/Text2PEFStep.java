@@ -5,15 +5,21 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
 
 import org.daisy.braille.pef.TextHandler;
+import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableCatalog;
-
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.pef.TableProvider;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -43,10 +49,15 @@ public class Text2PEFStep extends DefaultStep {
 	private static final QName _duplex = new QName("duplex");
 	
 	private final TableCatalog tableCatalog;
+	private final org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider;
 	
-	private Text2PEFStep(XProcRuntime runtime, XAtomicStep step, TableCatalog tableCatalog) {
+	private Text2PEFStep(XProcRuntime runtime,
+	                     XAtomicStep step,
+	                     TableCatalog tableCatalog,
+	                     org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider) {
 		super(runtime, step);
 		this.tableCatalog = tableCatalog;
+		this.tableProvider = tableProvider;
 	}
 	
 	@Override
@@ -70,6 +81,13 @@ public class Text2PEFStep extends DefaultStep {
 		super.run();
 		try {
 			
+			String tableQuery = getOption(_table).getString();
+			Table table = null;
+			try {
+				table = tableProvider.get(tableQuery).iterator().next(); }
+			catch (NoSuchElementException e) {
+				throw new RuntimeException("Could not find a table for query: " + tableQuery); }
+			
 			File tempDir = new File(new URI(getOption(_temp_dir).getString()));
 			XdmNode text = source.read();
 			
@@ -86,7 +104,7 @@ public class Text2PEFStep extends DefaultStep {
 			b.title(getOption(_title, ""));
 			b.author(getOption(_creator, ""));
 			b.duplex(getOption(_duplex, false));
-			b.converterId(getOption(_table).getString());
+			b.converterId(table.getIdentifier());
 			TextHandler handler = b.build();
 			handler.parse();
 			textFile.delete();
@@ -112,7 +130,7 @@ public class Text2PEFStep extends DefaultStep {
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
 			// depend on spifly for now
 			setTableCatalog(TableCatalog.newInstance());
-			return new Text2PEFStep(runtime, step, tableCatalog);
+			return new Text2PEFStep(runtime, step, tableCatalog, tableProvider);
 		}
 		
 		private TableCatalog tableCatalog;
@@ -127,6 +145,28 @@ public class Text2PEFStep extends DefaultStep {
 		public void setTableCatalog(TableCatalog catalog) {
 			tableCatalog = catalog;
 		}
+		
+		@Reference(
+			name = "TableProvider",
+			unbind = "unbindTableProvider",
+			service = TableProvider.class,
+			cardinality = ReferenceCardinality.MULTIPLE,
+			policy = ReferencePolicy.DYNAMIC
+		)
+		protected void bindTableProvider(TableProvider provider) {
+			tableProviders.add(provider);
+		}
+		
+		protected void unbindTableProvider(TableProvider provider) {
+			tableProviders.remove(provider);
+			this.tableProvider.invalidateCache();
+		}
+		
+		private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
+		private CachedProvider<String,Table> tableProvider
+		= CachedProvider.<String,Table>newInstance(
+			DispatchingProvider.<String,Table>newInstance(tableProviders));
+		
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(Text2PEFStep.class);

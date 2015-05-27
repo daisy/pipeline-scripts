@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="pef:encode">
-    <scr:implementation class="org.daisy.pipeline.braille.pef.saxon.EncodeDefinition"/>
-    <scr:service>
-        <scr:provide interface="net.sf.saxon.lib.ExtensionFunctionDefinition"/>
-    </scr:service>
-</scr:component>
-

@@ -406,7 +406,7 @@
             <p:with-option name="base" select="/*/@href"/>
         </pxi:select-by-base>
         <pef:text2pef duplex="false">
-            <p:with-option name="table" select="$pef-table"/>
+            <p:with-option name="table" select="concat('(id:&quot;',$pef-table,'&quot;)')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>
         <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="cols">

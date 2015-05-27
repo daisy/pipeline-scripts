@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -23,7 +26,11 @@ import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.embosser.UnsupportedWidthException;
 import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
+import org.daisy.braille.table.Table;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.pef.TableProvider;
 
 import org.xml.sax.SAXException;
 
@@ -50,12 +57,17 @@ public class PEF2TextStep extends DefaultStep {
 	private static final QName _pad = new QName("pad");
 	
 	private final Embosser embosser;
+	private final org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider;
 	
 	private ReadablePipe source = null;
 	
-	private PEF2TextStep(XProcRuntime runtime, XAtomicStep step, Embosser embosser) {
+	private PEF2TextStep(XProcRuntime runtime,
+	                     XAtomicStep step,
+	                     Embosser embosser,
+	                     org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider) {
 		super(runtime, step);
 		this.embosser = embosser;
+		this.tableProvider = tableProvider;
 	}
 	
 	@Override
@@ -73,6 +85,13 @@ public class PEF2TextStep extends DefaultStep {
 		super.run();
 		try {
 			
+			String tableQuery = getOption(_table).getString();
+			Table table = null;
+			try {
+				table = tableProvider.get(tableQuery).iterator().next(); }
+			catch (NoSuchElementException e) {
+				throw new RuntimeException("Could not find a table for query: " + tableQuery); }
+			
 			// Read PEF
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
 			Serializer serializer = new Serializer(s);
@@ -82,7 +101,7 @@ public class PEF2TextStep extends DefaultStep {
 			s.close();
 			
 			// Configure embosser
-			embosser.setFeature(EmbosserFeatures.TABLE, getOption(_table).getString());
+			embosser.setFeature(EmbosserFeatures.TABLE, table.getIdentifier());
 			embosser.setFeature("breaks", getOption(_breaks, "DEFAULT"));
 			embosser.setFeature("padNewline", getOption(_pad, "NONE"));
 			
@@ -109,7 +128,7 @@ public class PEF2TextStep extends DefaultStep {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PEF2TextStep(runtime, step, embosserCatalog.get("org_daisy.GenericEmbosserProvider.EmbosserType.NONE"));
+			return new PEF2TextStep(runtime, step, embosserCatalog.get("org_daisy.GenericEmbosserProvider.EmbosserType.NONE"), tableProvider);
 		}
 		
 		// depend on spifly for now
@@ -125,6 +144,28 @@ public class PEF2TextStep extends DefaultStep {
 		public void setEmbosserCatalog(EmbosserCatalog catalog) {
 			embosserCatalog = catalog;
 		}
+		
+		@Reference(
+			name = "TableProvider",
+			unbind = "unbindTableProvider",
+			service = TableProvider.class,
+			cardinality = ReferenceCardinality.MULTIPLE,
+			policy = ReferencePolicy.DYNAMIC
+		)
+		protected void bindTableProvider(TableProvider provider) {
+			tableProviders.add(provider);
+		}
+		
+		protected void unbindTableProvider(TableProvider provider) {
+			tableProviders.remove(provider);
+			this.tableProvider.invalidateCache();
+		}
+		
+		private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
+		private CachedProvider<String,Table> tableProvider
+		= CachedProvider.<String,Table>newInstance(
+			DispatchingProvider.<String,Table>newInstance(tableProviders));
+		
 	}
 	
 	// copied from org.daisy.braille.facade.PEFConverterFacade because it is no longer static
