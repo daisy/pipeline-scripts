@@ -7,6 +7,7 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/reset.css" uri="../css/reset.css"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/bana.css" uri="../css/bana.css"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/ueb.css" uri="../css/ueb.css"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" uri="../css/default.css"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:dtbook-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:common-utils"/>

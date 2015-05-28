@@ -34,7 +34,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class ZedaiToPefTest {
+public class DTBookToPefTest {
 	
 	@Configuration
 	public Option[] config() {
@@ -86,6 +86,7 @@ public class ZedaiToPefTest {
 			pipelineModule("fileset-utils"),
 			pipelineModule("metadata-utils"),
 			pipelineModule("validation-utils"),
+			pipelineModule("dtbook-utils"),
 			pipelineModule("dtbook-validator"),
 			thisBundle("org.daisy.pipeline.modules.braille", "dtbook-to-pef"),
 			xprocspecBundles(),
