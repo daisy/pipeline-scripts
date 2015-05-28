@@ -1,0 +1,50 @@
+hd, h1, h2, h3, h4, h5, h6 {
+	display: inline;
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+p {
+	display: inline;
+	text-indent: 0;
+}
+
+head {
+	display: inline;
+}
+
+level,
+level1,
+level2,
+level3,
+level4,
+level5,
+level6,
+frontmatter,
+bodymatter,
+rearmatter,
+p,
+list,
+dl,
+div,
+blockquote,
+img,
+imggroup,
+poem,
+linegroup,
+byline,
+dateline,
+epigraph,
+table,
+address,
+line,
+author,
+prodnote,
+sidebar,
+note,
+annotation {
+	display: inline;
+}
