@@ -54,6 +54,7 @@ public class DotifyFormatterTest {
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
 			brailleModule("common-utils"),
+			brailleModule("pef-core"),
 			brailleModule("pef-calabash"),
 			brailleModule("pef-saxon"),
 			brailleModule("pef-to-html"),
