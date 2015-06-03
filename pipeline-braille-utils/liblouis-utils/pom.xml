@@ -121,14 +121,6 @@
       <artifactId>pax-exam-helper</artifactId>
       <scope>test</scope>
     </dependency>
-    <!--
-        for liblouis-tables
-    -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>libhyphen-core</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
   
   <build>

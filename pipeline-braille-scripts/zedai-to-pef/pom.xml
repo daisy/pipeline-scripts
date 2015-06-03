@@ -60,12 +60,12 @@
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-utils</artifactId>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-utils</artifactId>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -96,14 +96,6 @@
     <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>pax-exam-helper</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!--
-        for liblouis-tables
-    -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>libhyphen-core</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

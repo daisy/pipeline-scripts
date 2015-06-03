@@ -51,6 +51,11 @@
       <artifactId>saxon-he</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-catalog</artifactId>
+      <scope>runtime</scope>
+    </dependency>
     <!--
         for com.xmlcalabash & calabash-adapter
     -->
@@ -82,11 +87,6 @@
     <!--
         test dependencies
     -->
-    <dependency>
-      <groupId>org.daisy.braille</groupId>
-      <artifactId>brailleUtils-catalog</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>
