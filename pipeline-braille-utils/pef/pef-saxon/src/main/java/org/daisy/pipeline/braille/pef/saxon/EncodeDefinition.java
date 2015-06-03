@@ -1,7 +1,8 @@
 package org.daisy.pipeline.braille.pef.saxon;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -13,16 +14,48 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.braille.table.TableCatalog;
-import org.daisy.braille.table.BrailleConverter;
+import org.daisy.braille.table.Table;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.pef.TableProvider;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Component(
+	name = "pef:encode",
+	service = { ExtensionFunctionDefinition.class }
+)
 public class EncodeDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("pef",
 			"http://www.daisy.org/ns/2008/pef", "encode");
+	
+	@Reference(
+		name = "TableProvider",
+		unbind = "unbindTableProvider",
+		service = TableProvider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void bindTableProvider(TableProvider provider) {
+		tableProviders.add(provider);
+	}
+	
+	protected void unbindTableProvider(TableProvider provider) {
+		tableProviders.remove(provider);
+		this.tableProvider.invalidateCache();
+	}
+	
+	private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
+	private CachedProvider<String,Table> tableProvider
+	= CachedProvider.<String,Table>newInstance(
+		DispatchingProvider.<String,Table>newInstance(tableProviders));
 	
 	@Override
 	public StructuredQName getFunctionQName() {
@@ -56,13 +89,16 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 		
 		return new ExtensionFunctionCall() {
 			
-			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String table = ((AtomicSequence)arguments[0]).getStringValue();
+					String tableQuery = ((AtomicSequence)arguments[0]).getStringValue();
 					String braille = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(getTable(table).toText(braille)); }
+					try {
+						Table table = tableProvider.get(tableQuery).iterator().next();
+						return new StringValue(table.newBrailleConverter().toText(braille)); }
+					catch (NoSuchElementException e) {
+						throw new RuntimeException("Could not find a table for query: " + tableQuery); }}
 				catch (Exception e) {
 					logger.error("pef:encode failed", e);
 					throw new XPathException("pef:encode failed"); }
@@ -71,22 +107,8 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 			private static final long serialVersionUID = 1L;
 		};
 	}
-
-	private TableCatalog catalog = null;
-	private final Map<String,BrailleConverter> tables = new HashMap<String,BrailleConverter>();
-	
-	private BrailleConverter getTable(String id) {
-		if (catalog == null)
-			catalog = TableCatalog.newInstance();
-		BrailleConverter table = tables.get(id);
-		if (table == null)
-			table = catalog.get(id).newBrailleConverter();
-		if (table == null)
-			throw new RuntimeException("No table could be found for ID: " + id);
-		tables.put(id, table);
-		return table;
-	}
 	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(EncodeDefinition.class);
+	
 }

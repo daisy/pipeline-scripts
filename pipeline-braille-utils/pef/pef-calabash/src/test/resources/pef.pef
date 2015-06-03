@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+	<head xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<meta>
+			<dc:date>2015-05-26 </dc:date>
+			<dc:format>application/x-pef+xml</dc:format>
+			<dc:identifier>AUTO_ID_091402446</dc:identifier>
+		</meta>
+	</head>
+	<body>
+		<volume cols="6" rows="1" rowgap="0" duplex="false">
+			<section>
+				<page>
+					<row>⠋⠕⠕⠃⠁⠗</row>
+				</page>
+			</section>
+		</volume>
+	</body>
+</pef>

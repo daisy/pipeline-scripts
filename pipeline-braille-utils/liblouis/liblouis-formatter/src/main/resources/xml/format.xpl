@@ -27,7 +27,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     
-    <p:variable name="pef-table" select="'org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT'">
+    <p:variable name="pef-table" select="'org.daisy.pipeline.braille.pef.impl.NabccEightDotTable'">
         <p:empty/>
     </p:variable>
     
@@ -406,7 +406,7 @@
             <p:with-option name="base" select="/*/@href"/>
         </pxi:select-by-base>
         <pef:text2pef duplex="false">
-            <p:with-option name="table" select="$pef-table"/>
+            <p:with-option name="table" select="concat('(id:&quot;',$pef-table,'&quot;)')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </pef:text2pef>
         <p:add-attribute match="/pef:pef/pef:body/pef:volume" attribute-name="cols">

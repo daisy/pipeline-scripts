@@ -11,20 +11,20 @@
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
-  <artifactId>pef-calabash</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <artifactId>pef-core</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: pef-calabash</name>
+  <name>DAISY Pipeline 2 Braille Module :: pef-core</name>
 
   <dependencies>
     <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>com.xmlcalabash</artifactId>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -32,74 +32,24 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>calabash-adapter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
+      <artifactId>css-core</artifactId>
     </dependency>
     <!--
         OSGi runtime dependencies
     -->
     <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>saxon-he</artifactId>
+      <groupId>org.daisy.braille</groupId>
+      <artifactId>brailleUtils-catalog</artifactId>
       <scope>runtime</scope>
-    </dependency>
-    <!--
-        for com.xmlcalabash & calabash-adapter
-    -->
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient-osgi</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore-osgi</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-        <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>woodstox-osgi-adapter</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>modules-registry</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>javax.persistence</artifactId>
-      <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
     <!--
         test dependencies
     -->
     <dependency>
-      <groupId>org.daisy.braille</groupId>
-      <artifactId>brailleUtils-catalog</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xproc-engine-daisy-pipeline</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.xprocspec</groupId>
-      <artifactId>xprocspec</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xprocspec-runner</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>1.7.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -108,7 +58,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
+  
   <build>
     <plugins>
       <plugin>
@@ -143,5 +93,5 @@
       </plugin>
     </plugins>
   </build>
-
+  
 </project>

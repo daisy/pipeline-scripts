@@ -1,37 +1,48 @@
-package org.daisy.pipeline.braille.liblouis.pef;
+package org.daisy.pipeline.braille.pef.impl;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.base.Optional;
 
 import org.daisy.braille.table.AbstractTable;
 import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableProvider;
+import org.daisy.factory.FactoryProperties;
 
-public class LiblouisTableProvider implements TableProvider {
+import org.osgi.service.component.annotations.Component;
+
+@Component(
+	name = "org.daisy.pipeline.braille.liblouis.pef.NabccEightDotTableProvider",
+	service = { TableProvider.class }
+)
+public class NabccEightDotTableProvider implements TableProvider {
 	
-	private final Collection<Table> tables;
+	public final static String IDENTIFIER = "org.daisy.pipeline.braille.pef.impl.NabccEightDotTable";
+	private final Table table;
 	
-	public Collection<Table> list() {
-		return tables;
+	public NabccEightDotTableProvider() {
+		table = new AbstractTable("NABCC 8-dot [louis:format]", "", IDENTIFIER) {
+			public BrailleConverter newBrailleConverter() {
+				return new NabccEightDotBrailleConverter(); }
+			public void setFeature(String key, Object value) {
+				throw new IllegalArgumentException("Unknown feature: " + key); }
+			public Object getFeature(String key) {
+				throw new IllegalArgumentException("Unknown feature: " + key); }
+			public Object getProperty(String key) {
+				return null; }
+		};
 	}
 	
-	public LiblouisTableProvider() {
-		tables = new ImmutableList.Builder<Table>()
-				.add(new AbstractTable("Pipeline", "", "org.daisy.pipeline.braille.liblouis.pef.LiblouisTableProvider.TableType.NABCC_8DOT") {
-						public BrailleConverter newBrailleConverter() {
-							return new NabccEightDotBrailleConverter(); }
-						public void setFeature(String key, Object value) {
-							throw new IllegalArgumentException("Unknown feature: " + key); }
-						public Object getFeature(String key) {
-							throw new IllegalArgumentException("Unknown feature: " + key); }
-						public Object getProperty(String key) {
-							return null; }})
-				.build();
+	public Collection<FactoryProperties> list() {
+		return Optional.<FactoryProperties>of(table).asSet();
+	}
+	
+	public Table newFactory(String identifier) {
+		return IDENTIFIER.equals(identifier) ? table : null;
 	}
 	
 	private static class NabccEightDotBrailleConverter implements BrailleConverter {
