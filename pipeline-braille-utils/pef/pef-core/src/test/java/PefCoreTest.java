@@ -9,7 +9,6 @@ import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
-import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import org.junit.Test;
@@ -47,7 +46,6 @@ public class PefCoreTest {
 			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
-			spiflyBundles(),
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),

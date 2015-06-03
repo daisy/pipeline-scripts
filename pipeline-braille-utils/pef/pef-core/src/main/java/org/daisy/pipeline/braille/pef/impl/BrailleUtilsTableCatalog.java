@@ -6,7 +6,7 @@ import java.util.Map;
 import com.google.common.base.Optional;
 
 import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalog;
+import org.daisy.braille.table.TableCatalogService;
 
 import static org.daisy.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.pef.TableProvider;
@@ -22,17 +22,16 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 )
 public class BrailleUtilsTableCatalog implements TableProvider {
 	
-	// depend on spifly for now
-	private TableCatalog catalog = TableCatalog.newInstance();
+	private TableCatalogService catalog;
 	
-	/*@Reference(
+	@Reference(
 		name = "TableCatalog",
 		unbind = "-",
-		service = TableCatalog.class,
+		service = TableCatalogService.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
-	)*/
-	public void setTableCatalog(TableCatalog catalog) {
+	)
+	public void setTableCatalog(TableCatalogService catalog) {
 		this.catalog = catalog;
 	}
 	
@@ -43,7 +42,7 @@ public class BrailleUtilsTableCatalog implements TableProvider {
 		Optional<String> o;
 		if ((o = q.remove("id")) != null)
 			if (q.size() == 0)
-				return Optional.<Table>fromNullable(catalog.get(o.get())).asSet();
+				return Optional.<Table>fromNullable(catalog.newTable(o.get())).asSet();
 		return empty;
 	}
 }

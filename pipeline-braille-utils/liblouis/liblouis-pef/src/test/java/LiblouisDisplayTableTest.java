@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalog;
+import org.daisy.braille.table.TableCatalogService;
 
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
@@ -18,7 +18,6 @@ import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
-import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import org.junit.Test;
@@ -46,6 +45,9 @@ import org.osgi.framework.ServiceReference;
 @ExamReactorStrategy(PerClass.class)
 public class LiblouisDisplayTableTest {
 	
+	@Inject
+	private TableCatalogService tableCatalog;
+	
 	@Test
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
@@ -56,12 +58,7 @@ public class LiblouisDisplayTableTest {
 		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
 		String id = table.getIdentifier();
 		assertEquals(table, tableProvider.get("(id:'" + id + "')").iterator().next());
-		TableCatalog tableCatalog = TableCatalog.newInstance();
-		
-		// FIXME: doesn't work yet because TableCatalog.newInstance()
-		// currently creates new instances of the TableProviders
-		
-		// assertEquals(table, tableCatalog.newTable(id));
+		assertEquals(table, tableCatalog.newTable(id));
 	}
 	
 	@Configuration
@@ -71,7 +68,6 @@ public class LiblouisDisplayTableTest {
 			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
-			spiflyBundles(),
 			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),

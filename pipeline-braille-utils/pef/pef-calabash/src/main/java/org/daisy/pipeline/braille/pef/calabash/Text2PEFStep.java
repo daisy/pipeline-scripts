@@ -15,7 +15,7 @@ import net.sf.saxon.s9api.XdmNode;
 
 import org.daisy.braille.pef.TextHandler;
 import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalog;
+import org.daisy.braille.table.TableCatalogService;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
@@ -48,12 +48,12 @@ public class Text2PEFStep extends DefaultStep {
 	private static final QName _creator = new QName("creator");
 	private static final QName _duplex = new QName("duplex");
 	
-	private final TableCatalog tableCatalog;
+	private final TableCatalogService tableCatalog;
 	private final org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider;
 	
 	private Text2PEFStep(XProcRuntime runtime,
 	                     XAtomicStep step,
-	                     TableCatalog tableCatalog,
+	                     TableCatalogService tableCatalog,
 	                     org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider) {
 		super(runtime, step);
 		this.tableCatalog = tableCatalog;
@@ -128,21 +128,19 @@ public class Text2PEFStep extends DefaultStep {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			// depend on spifly for now
-			setTableCatalog(TableCatalog.newInstance());
 			return new Text2PEFStep(runtime, step, tableCatalog, tableProvider);
 		}
 		
-		private TableCatalog tableCatalog;
+		private TableCatalogService tableCatalog;
 		
-		/*@Reference(
+		@Reference(
 			name = "TableCatalog",
 			unbind = "-",
-			service = TableCatalog.class,
+			service = TableCatalogService.class,
 			cardinality = ReferenceCardinality.MANDATORY,
 			policy = ReferencePolicy.STATIC
-		)*/
-		public void setTableCatalog(TableCatalog catalog) {
+		)
+		public void setTableCatalog(TableCatalogService catalog) {
 			tableCatalog = catalog;
 		}
 		

@@ -21,7 +21,7 @@ import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 
 import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserCatalog;
+import org.daisy.braille.embosser.EmbosserCatalogService;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.embosser.UnsupportedWidthException;
 import org.daisy.braille.pef.PEFHandler;
@@ -128,20 +128,19 @@ public class PEF2TextStep extends DefaultStep {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PEF2TextStep(runtime, step, embosserCatalog.get("org_daisy.GenericEmbosserProvider.EmbosserType.NONE"), tableProvider);
+			return new PEF2TextStep(runtime, step, embosserCatalog.newEmbosser("org_daisy.GenericEmbosserProvider.EmbosserType.NONE"), tableProvider);
 		}
 		
-		// depend on spifly for now
-		private EmbosserCatalog embosserCatalog = EmbosserCatalog.newInstance();
+		private EmbosserCatalogService embosserCatalog;
 		
-		/*@Reference(
+		@Reference(
 			name = "EmbosserCatalog",
 			unbind = "-",
-			service = EmbosserCatalog.class,
+			service = EmbosserCatalogService.class,
 			cardinality = ReferenceCardinality.MANDATORY,
 			policy = ReferencePolicy.STATIC
-		)*/
-		public void setEmbosserCatalog(EmbosserCatalog catalog) {
+		)
+		public void setEmbosserCatalog(EmbosserCatalogService catalog) {
 			embosserCatalog = catalog;
 		}
 		

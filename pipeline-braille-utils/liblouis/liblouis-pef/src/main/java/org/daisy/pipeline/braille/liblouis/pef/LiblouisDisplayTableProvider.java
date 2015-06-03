@@ -21,10 +21,6 @@ import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -32,15 +28,33 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 @Component(
 	name = "org.daisy.pipeline.braille.liblouis.pef.LiblouisDisplayTableProvider",
-	service = { TableProvider.class }
+	service = {
+		TableProvider.class,
+		org.daisy.braille.table.TableProvider.class
+	}
 )
 public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	
-	private final Provider<String,LiblouisTranslator> translatorProvider;
-	
-	public LiblouisDisplayTableProvider() {
-		translatorProvider = getProvider(LiblouisTranslator.Provider.class);
+	@Reference(
+		name = "LiblouisTranslatorProvider",
+		unbind = "unbindLiblouisTranslatorProvider",
+		service = LiblouisTranslator.Provider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		translatorProviders.add(provider);
 	}
+	
+	protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
+		translatorProviders.remove(provider);
+		translatorProvider.invalidateCache();
+	}
+	
+	private List<LiblouisTranslator.Provider> translatorProviders = new ArrayList<LiblouisTranslator.Provider>();
+	private CachedProvider<String,LiblouisTranslator> translatorProvider
+	= CachedProvider.<String,LiblouisTranslator>newInstance(
+		DispatchingProvider.<String,LiblouisTranslator>newInstance(translatorProviders));
 	
 	private static Set<String> supportedFeatures = ImmutableSet.<String>of("liblouis-table", "locale");
 	
@@ -88,18 +102,5 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		public Object getProperty(String key) {
 			return null;
 		}
-	}
-	
-	private static BundleContext context = FrameworkUtil.getBundle(LiblouisDisplayTableProvider.class).getBundleContext();
-	
-	private static <T> Provider<String,T> getProvider(Class<? extends Provider<String,T>> providerClass) {
-		List<Provider<String,T>> providers = new ArrayList<Provider<String,T>>();
-		try {
-			for (ServiceReference<? extends Provider<String,T>> ref : context.getServiceReferences(providerClass, null))
-				providers.add(context.getService(ref)); }
-		catch (InvalidSyntaxException e) {
-			throw new RuntimeException(e); }
-		return CachedProvider.<String,T>newInstance(
-			DispatchingProvider.<String,T>newInstance(providers));
 	}
 }
