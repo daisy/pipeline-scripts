@@ -24,7 +24,9 @@
 
     <px:dtbook-load name="load"/>
     <css:inline>
-        <!-- TODO: use stylesheet referenced from DTBook itself? -->
+        <p:input port="source">
+            <p:pipe step="load" port="in-memory.out"/>
+        </p:input>
         <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
     </css:inline>
 

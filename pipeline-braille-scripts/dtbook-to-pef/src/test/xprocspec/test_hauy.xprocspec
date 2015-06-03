@@ -23,7 +23,7 @@
       <x:document type="directory" base-uri="temp-dir" href="output-dir/"/>
     </x:context>
 
-    <x:expect label="Exactly PEF file should be present in the output directory" type="xpath"
+    <x:expect label="Exactly one PEF file should be present in the output directory" type="xpath"
       test="count(/*/*[ends-with(@name,'.pef')])" equals="1"/>
 
   </x:scenario>

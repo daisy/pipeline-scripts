@@ -12,7 +12,6 @@ import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
-import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 
@@ -34,7 +33,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class ZedaiToPefTest {
+public class HtmlToPefTest {
 	
 	@Configuration
 	public Option[] config() {
@@ -44,12 +43,15 @@ public class ZedaiToPefTest {
 			domTraversalPackage(),
 			logbackBundles(),
 			felixDeclarativeServices(),
-			spiflyBundles(),
 			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("brailleutils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.pef-tools").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
@@ -61,7 +63,6 @@ public class ZedaiToPefTest {
 			brailleModule("liblouis-saxon"),
 			brailleModule("liblouis-calabash"),
 			brailleModule("liblouis-formatter"),
-			brailleModule("liblouis-mathml"),
 			brailleModule("liblouis-utils"),
 			brailleModule("liblouis-tables"),
 			brailleModule("libhyphen-core"),
@@ -73,9 +74,9 @@ public class ZedaiToPefTest {
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
 			brailleModule("css-utils"),
+			brailleModule("pef-core"),
 			brailleModule("pef-calabash"),
 			brailleModule("pef-saxon"),
-			brailleModule("pef-to-html"),
 			brailleModule("pef-utils"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			pipelineModule("file-utils"),
@@ -84,10 +85,10 @@ public class ZedaiToPefTest {
 			pipelineModule("zip-utils"),
 			pipelineModule("mediatype-utils"),
 			pipelineModule("fileset-utils"),
-			pipelineModule("metadata-utils"),
-			pipelineModule("validation-utils"),
-			pipelineModule("dtbook-validator"),
-			thisBundle("org.daisy.pipeline.modules.braille", "zedai-to-pef"),
+			// pipelineModule("metadata-utils"),
+			// pipelineModule("validation-utils"),
+			// pipelineModule("dtbook-validator"),
+			thisBundle(),
 			xprocspecBundles(),
 			junitBundles()
 		);

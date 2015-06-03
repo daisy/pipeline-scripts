@@ -41,6 +41,7 @@
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:transform>
     
+    <!--
     <p:xslt name="metadata">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
@@ -61,5 +62,6 @@
             <p:pipe step="metadata" port="result"/>
         </p:input>
     </pef:add-metadata>
+    -->
     
 </p:declare-step>
