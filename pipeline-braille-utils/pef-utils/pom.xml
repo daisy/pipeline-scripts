@@ -42,6 +42,14 @@
       <artifactId>file-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        for file-utils
+    -->
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
   
 </project>

@@ -12,6 +12,7 @@ import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
@@ -59,6 +60,7 @@ public class DotifyFormatterTest {
 			brailleModule("pef-saxon"),
 			brailleModule("pef-to-html"),
 			brailleModule("pef-utils"),
+			pipelineModule("file-utils"),
 			brailleModule("obfl-utils"),
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
