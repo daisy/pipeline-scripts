@@ -67,24 +67,28 @@
                   <groupId>org.liblouis</groupId>
                   <artifactId>louis</artifactId>
                   <classifier>i386-Linux-gpp-shared</classifier>
+                  <version>2.6.3-SNAPSHOT</version>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.liblouis</groupId>
                   <artifactId>louis</artifactId>
                   <classifier>amd64-Linux-gpp-shared</classifier>
+                  <version>2.6.3-SNAPSHOT</version>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.liblouis</groupId>
                   <artifactId>louis</artifactId>
                   <classifier>i386-MacOSX-gpp-shared</classifier>
+                  <version>2.6.3-SNAPSHOT</version>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.liblouis</groupId>
                   <artifactId>louis</artifactId>
                   <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                  <version>2.6.3-SNAPSHOT</version>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>

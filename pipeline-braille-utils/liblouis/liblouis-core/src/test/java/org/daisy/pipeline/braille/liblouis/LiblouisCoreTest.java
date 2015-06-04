@@ -40,7 +40,6 @@ import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -79,9 +78,7 @@ public class LiblouisCoreTest {
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			// depends on https://github.com/liblouis/liblouis/pull/41
-			systemProperty("org.daisy.pipeline.liblouis.external").value("true"),
-			// forThisPlatform(brailleModule("liblouis-native")),
+			forThisPlatform(brailleModule("liblouis-native")),
 			brailleModule("pef-core"),
 			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-core"),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),

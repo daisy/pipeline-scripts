@@ -34,7 +34,6 @@ import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -87,9 +86,7 @@ public class LiblouisTablesTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("liblouis-core"),
-			// depends on https://github.com/liblouis/liblouis/pull/41
-			systemProperty("org.daisy.pipeline.liblouis.external").value("true"),
-			// forThisPlatform(brailleModule("liblouis-native")),
+			forThisPlatform(brailleModule("liblouis-native")),
 			brailleModule("libhyphen-core"),
 			brailleModule("pef-core"),
 			thisBundle(),
