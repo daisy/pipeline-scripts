@@ -1,8 +1,7 @@
+package org.daisy.pipeline.braille.css;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
-
-import static org.daisy.braille.css.Query.parseQuery;
-import static org.daisy.braille.css.Query.serializeQuery;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -14,14 +13,14 @@ public class QueryTest {
 		assertEquals(ImmutableMap.<String,Optional<String>>of("locale", Optional.<String>of("en-US"),
 		                                                      "grade", Optional.<String>of("2"),
 		                                                      "foo", Optional.<String>absent()),
-		             parseQuery(" (locale:en-US ) ( grade: 2)(foo) (locale:fr)"));
+		             Query.parseQuery(" (locale:en-US ) ( grade: 2)(foo) (locale:fr)"));
 	}
 	
 	@Test
 	public void testSerializeQuery() {
 		assertEquals("(locale:en-US)(grade:2)(foo)",
-		             serializeQuery(ImmutableMap.<String,Optional<String>>of("locale", Optional.<String>of("en-US"),
-		                                                                     "grade", Optional.<String>of("2"),
-		                                                                     "foo", Optional.<String>absent())));
+		             Query.serializeQuery(ImmutableMap.<String,Optional<String>>of("locale", Optional.<String>of("en-US"),
+		                                                                           "grade", Optional.<String>of("2"),
+		                                                                           "foo", Optional.<String>absent())));
 	}
 }

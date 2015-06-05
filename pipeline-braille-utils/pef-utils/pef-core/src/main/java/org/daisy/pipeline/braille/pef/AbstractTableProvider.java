@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
-import static org.daisy.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
 import org.daisy.braille.table.Table;
 import org.daisy.braille.api.factory.FactoryProperties;

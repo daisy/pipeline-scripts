@@ -15,8 +15,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-import static org.daisy.braille.css.Query.parseQuery;
-import static org.daisy.braille.css.Query.serializeQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;

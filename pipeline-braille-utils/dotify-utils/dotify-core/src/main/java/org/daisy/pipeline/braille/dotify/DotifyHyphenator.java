@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import static org.daisy.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.dotify.api.hyphenator.HyphenatorConfigurationException;
 import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;

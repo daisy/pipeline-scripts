@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableCatalogService;
 
-import static org.daisy.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import org.osgi.service.component.annotations.Component;

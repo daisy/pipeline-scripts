@@ -18,7 +18,7 @@ import com.google.common.collect.Iterables;
 
 import net.davidashen.text.Utf8TexParser.TexParserException;
 
-import static org.daisy.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;

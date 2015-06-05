@@ -1,4 +1,4 @@
-package org.daisy.braille.css.calabash;
+package org.daisy.pipeline.braille.css.calabash;
 
 import java.net.URL;
 import java.net.URI;
@@ -23,7 +23,6 @@ import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
-import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
@@ -36,12 +35,14 @@ import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
+import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
 import cz.vutbr.web.domassign.Analyzer;
+import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
@@ -60,15 +61,15 @@ import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.Strings.normalizeSpace;
+import static org.daisy.pipeline.braille.common.util.URLs.asURL;
+import org.daisy.pipeline.braille.css.SupportedPrintCSS;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
-import static org.daisy.pipeline.braille.common.util.Strings.join;
-import static org.daisy.pipeline.braille.common.util.Strings.normalizeSpace;
-import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -144,6 +145,18 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static final QName _style = new QName("style");
 	
+	private static final SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
+	private static final SupportedCSS printCSS = SupportedPrintCSS.getInstance();
+	private static DeclarationTransformer brailleDeclarationTransformer;
+	private static DeclarationTransformer printDeclarationTransformer;
+	
+	static {
+		CSSFactory.registerSupportedCSS(brailleCSS);
+		brailleDeclarationTransformer = new BrailleCSSDeclarationTransformer();
+		CSSFactory.registerSupportedCSS(printCSS);
+		printDeclarationTransformer = new DeclarationTransformer() {};
+	}
+	
 	private class InlineCSSWriter extends TreeWriter {
 		
 		private final StyleMap brailleStylemap;
@@ -157,15 +170,14 @@ public class CSSInlineStep extends DefaultStep {
 		                       URL defaultSheet) throws Exception {
 			super(xproc);
 			
-			SupportedBrailleCSS supportedCSS = new SupportedBrailleCSS();
-			CSSFactory.registerSupportedCSS(supportedCSS);
-			CSSFactory.registerDeclarationTransformer(new BrailleCSSDeclarationTransformer());
 			CSSFactory.registerCSSParserFactory(parserFactory);
 			
 			URI baseURI = new URI(document.getBaseURI());
 			
 			// media embossed
-			supportedCSS.setSupportedMedia("embossed");
+			
+			CSSFactory.registerSupportedCSS(brailleCSS);
+			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
 			StyleSheet brailleStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
 				brailleStyle = parserFactory.append(defaultSheet, null, SourceType.URL, brailleStyle, defaultSheet);
@@ -173,7 +185,8 @@ public class CSSInlineStep extends DefaultStep {
 			brailleStylemap = new Analyzer(brailleStyle).evaluateDOM(document, "embossed", false);
 			
 			// media print
-			supportedCSS.setSupportedMedia("print");
+			CSSFactory.registerSupportedCSS(printCSS);
+			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
 			StyleSheet printStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
 				printStyle = parserFactory.append(defaultSheet, null, SourceType.URL, printStyle, defaultSheet);

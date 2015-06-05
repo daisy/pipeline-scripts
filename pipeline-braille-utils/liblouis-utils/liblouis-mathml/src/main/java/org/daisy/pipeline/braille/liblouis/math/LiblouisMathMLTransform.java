@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import static org.daisy.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Cached;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
