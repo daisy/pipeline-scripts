@@ -7,7 +7,7 @@
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.10-SNAPSHOT</version>
-    <relativePath>../../parent/</relativePath>
+    <relativePath>../../../parent/</relativePath>
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
