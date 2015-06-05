@@ -11,7 +11,7 @@ import org.daisy.braille.table.AbstractTable;
 import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableProvider;
-import org.daisy.factory.FactoryProperties;
+import org.daisy.braille.api.factory.FactoryProperties;
 
 import org.osgi.service.component.annotations.Component;
 

@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import static org.daisy.braille.css.Query.parseQuery;
 
 import org.daisy.braille.table.Table;
-import org.daisy.factory.FactoryProperties;
+import org.daisy.braille.api.factory.FactoryProperties;
 
 public abstract class AbstractTableProvider implements TableProvider, org.daisy.braille.table.TableProvider {
 	
