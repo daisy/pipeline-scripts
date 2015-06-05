@@ -1,10 +1,15 @@
 import java.io.File;
+import java.util.Hashtable;
 
 import javax.inject.Inject;
+
+import com.google.common.base.Optional;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
+import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
@@ -14,6 +19,7 @@ import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
 import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +36,8 @@ import org.ops4j.pax.exam.util.PathUtils;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+
+import org.osgi.framework.BundleContext;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -51,6 +59,24 @@ public class CssUtilsTest {
 			xprocspecBundles(),
 			junitBundles()
 		);
+	}
+
+	@Inject
+	private BundleContext context;
+	
+	@Before
+	public void registerUppercaseTranslatorProvider() {
+		context.registerService(
+			TextTransform.Provider.class.getName(),
+			new TextTransform.Provider<TextTransform>() {
+				public Iterable<TextTransform> get(String query) {
+					return Optional.<TextTransform>fromNullable(
+						query.equals("(uppercase)")
+							? new ContextUnawareTextTransform() {
+								public String transform(String text) {
+									return text.toUpperCase(); }}
+							: null).asSet(); }},
+			new Hashtable<String,Object>());
 	}
 	
 	@Inject
