@@ -10,8 +10,8 @@ import javax.xml.namespace.QName;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import static org.daisy.braille.css.Query.parseQuery;
-import static org.daisy.braille.css.Query.serializeQuery;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;

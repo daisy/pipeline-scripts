@@ -10,7 +10,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-import static org.daisy.braille.css.Query.serializeQuery;
+import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.braille.table.AbstractTable;
 import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.table.Table;
