@@ -4,12 +4,12 @@ dotify-utils
 Building blocks related to the [Dotify][dotify] Braille translation
 system.
 
-[library.xsl](src/main/resources/xml/library.xsl)
+[library.xsl](dotify-utils/src/main/resources/xml/library.xsl)
 -------------------------------------------------
 
 - `dotify:translate`: Translate a text string to Braille with Dotify.
 
-[library.xpl](src/main/resources/xml/library.xpl)
+[library.xpl](dotify-utils/src/main/resources/xml/library.xpl)
 -------------------------------------------------
 
 - `dotify:format`
@@ -17,9 +17,10 @@ system.
 Submodules
 ----------
 
-- [`dotify-saxon`](../dotify/dotify-saxon): XPath bindings for Dotify.
-- [`dotify-calabash`](../dotify/dotify-calabash)
-- [`dotify-formatter`](../dotify/dotify-formatter)
+- [`dotify-saxon`](dotify-core)
+- [`dotify-saxon`](dotify-saxon): XPath bindings for Dotify.
+- [`dotify-calabash`](dotify-calabash)
+- [`dotify-formatter`](dotify-formatter)
 
 
 [dotify]: http://code.google.com/p/dotify/

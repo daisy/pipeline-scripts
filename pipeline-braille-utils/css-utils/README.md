@@ -3,12 +3,12 @@ css-utils
 
 Building blocks related to [Braille CSS][braillecss].
 
-[library.xsl](src/main/resources/xml/library.xsl)
+[library.xsl](css-utils/src/main/resources/xml/library.xsl)
 -------------------------------------------------
 
 - Utility functions for CSS-parsing.
 
-[library.xpl](src/main/resources/xml/library.xpl)
+[library.xpl](css-utils/src/main/resources/xml/library.xpl)
 -------------------------------------------------
 
 - `css:adjust-boxes`
@@ -36,8 +36,8 @@ Building blocks related to [Braille CSS][braillecss].
 Submodules
 ----------
 
-- [`css-core`](../css/css-core): CSS specification.
-- [`css-calabash`](../css/css-calabash): XProc bindings.
+- [`css-core`](css-core): CSS specification.
+- [`css-calabash`](css-calabash): XProc bindings.
 
 
 [braillecss]: http://snaekobbi.github.io/braille-css-spec

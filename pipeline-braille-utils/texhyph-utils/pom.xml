@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+  
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.daisy.pipeline.modules.braille</groupId>
-    <artifactId>braille-modules-parent</artifactId>
-    <version>1.10-SNAPSHOT</version>
-    <relativePath>../../parent/</relativePath>
+    <groupId>org.daisy</groupId>
+    <artifactId>daisy</artifactId>
+    <version>3</version>
+    <relativePath />
   </parent>
-
+  
   <groupId>org.daisy.pipeline.modules.braille</groupId>
-  <artifactId>texhyph-utils</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <artifactId>texhyph-utils-aggregator</artifactId>
+  <version>1.10-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <name>DAISY Pipeline 2 :: Aggregator POM for texhyph-utils</name>
 
-  <name>DAISY Pipeline 2 Braille Module :: texhyph-utils</name>
-
-  <dependencies>
-    <!--
-        OSGi runtime dependencies
-    -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>texhyph-saxon</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-  </dependencies>
-
+  <modules>
+    <module>texhyph-core</module>
+    <module>texhyph-saxon</module>
+    <!-- <module>texhyph-utils</module> -->
+  </modules>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>
