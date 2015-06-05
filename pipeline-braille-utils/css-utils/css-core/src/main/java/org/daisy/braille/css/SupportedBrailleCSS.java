@@ -8,15 +8,11 @@ import java.util.Set;
 
 import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.CSSProperty;
-import cz.vutbr.web.css.CSSProperty.Color;
 import cz.vutbr.web.css.CSSProperty.CounterReset;
-import cz.vutbr.web.css.CSSProperty.FontStyle;
-import cz.vutbr.web.css.CSSProperty.FontWeight;
 import cz.vutbr.web.css.CSSProperty.Orphans;
 import cz.vutbr.web.css.CSSProperty.PageBreak;
 import cz.vutbr.web.css.CSSProperty.PageBreakInside;
 import cz.vutbr.web.css.CSSProperty.TextAlign;
-import cz.vutbr.web.css.CSSProperty.TextDecoration;
 import cz.vutbr.web.css.CSSProperty.Widows;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
@@ -43,7 +39,7 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	
 	private static Logger log = LoggerFactory.getLogger(SupportedBrailleCSS.class);
 	
-	private static final int TOTAL_SUPPORTED_DECLARATIONS = 35;
+	private static final int TOTAL_SUPPORTED_DECLARATIONS = 31;
 	
 	private static final TermFactory tf = CSSFactory.getTermFactory();
 	
@@ -53,7 +49,6 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	private static final Term<?> DEFAULT_UA_PADDING = tf.createInteger(0);
 	private static final Term<?> DEFAULT_UA_ORPHANS = tf.createInteger(2);
 	private static final Term<?> DEFAULT_UA_WIDOWS = tf.createInteger(2);
-	private static final Term<?> DEFAULT_UA_COLOR = tf.createColor("#000000");
 	
 	private Map<String, CSSProperty> defaultCSSproperties;
 	private Map<String, Term<?>> defaultCSSvalues;
@@ -61,35 +56,31 @@ public class SupportedBrailleCSS implements SupportedCSS {
 	private Map<String, Integer> ordinals;
 	private Map<Integer, String> ordinalsRev;
 	
-	private String supportedMedia;
-	private Set<String> embossedProperties;
-	private Set<String> printProperties;
+	private Set<String> properties;
 	
-	public SupportedBrailleCSS() {
-		this.setSupportedCSS();
-		this.setOridinals();
+	private static SupportedBrailleCSS instance;
+	
+	public final static SupportedBrailleCSS getInstance() {
+		if (instance == null)
+			instance = new SupportedBrailleCSS();
+		return instance;
 	}
 	
-	public void setSupportedMedia(String media) {
-		media = media.toLowerCase();
-		if ("embossed".equals(media) || "print".equals(media))
-			supportedMedia = media;
+	private SupportedBrailleCSS() {
+		this.setSupportedCSS();
+		this.setOridinals();
 	}
 	
 	@Override
 	public boolean isSupportedMedia(String media) {
 		if (media == null)
 			return false;
-		return media.toLowerCase().equals(supportedMedia);
+		return media.toLowerCase().equals("embossed");
 	}
 	
 	@Override
 	public final boolean isSupportedCSSProperty(String property) {
-		if ("embossed".equals(supportedMedia))
-			return embossedProperties.contains(property);
-		else if ("print".equals(supportedMedia))
-			return printProperties.contains(property);
-		return false;
+		return properties.contains(property);
 	}
 	
 	@Override
@@ -137,115 +128,95 @@ public class SupportedBrailleCSS implements SupportedCSS {
 		Map<String, CSSProperty> props = new HashMap<String, CSSProperty>(TOTAL_SUPPORTED_DECLARATIONS, 1.0f);
 		Map<String, Term<?>> values = new HashMap<String, Term<?>>(TOTAL_SUPPORTED_DECLARATIONS, 1.0f);
 		
-		embossedProperties = new HashSet<String>();
-		printProperties = new HashSet<String>();
-		
-		/* -------------- */
-		/* media embossed */
-		/* -------------- */
+		properties = new HashSet<String>();
 		
 		// text spacing
 		props.put("text-align", DEFAULT_UA_TEXT_ALIGN);
-		embossedProperties.add("text-align");
+		properties.add("text-align");
 		props.put("text-indent", TextIndent.integer);
 		values.put("text-indent", DEFAULT_UA_TEXT_IDENT);
-		embossedProperties.add("text-indent");
+		properties.add("text-indent");
 		
 		// layout box
 		props.put("left", AbsoluteMargin.integer);
 		values.put("left", DEFAULT_UA_MARGIN);
-		embossedProperties.add("left");
+		properties.add("left");
 		props.put("right", AbsoluteMargin.integer);
 		values.put("right", DEFAULT_UA_MARGIN);
-		embossedProperties.add("right");
+		properties.add("right");
 		
 		props.put("margin", Margin.component_values);
-		embossedProperties.add("margin");
+		properties.add("margin");
 		props.put("margin-top", Margin.integer);
 		values.put("margin-top", DEFAULT_UA_MARGIN);
-		embossedProperties.add("margin-top");
+		properties.add("margin-top");
 		props.put("margin-right", Margin.integer);
 		values.put("margin-right", DEFAULT_UA_MARGIN);
-		embossedProperties.add("margin-right");
+		properties.add("margin-right");
 		props.put("margin-bottom", Margin.integer);
 		values.put("margin-bottom", DEFAULT_UA_MARGIN);
-		embossedProperties.add("margin-bottom");
+		properties.add("margin-bottom");
 		props.put("margin-left", Margin.integer);
 		values.put("margin-left", DEFAULT_UA_MARGIN);
-		embossedProperties.add("margin-left");
+		properties.add("margin-left");
 
 		props.put("padding", Padding.component_values);
-		embossedProperties.add("padding");
+		properties.add("padding");
 		props.put("padding-top", Padding.integer);
 		values.put("padding-top", DEFAULT_UA_PADDING);
-		embossedProperties.add("padding-top");
+		properties.add("padding-top");
 		props.put("padding-right", Padding.integer);
 		values.put("padding-right", DEFAULT_UA_PADDING);
-		embossedProperties.add("padding-right");
+		properties.add("padding-right");
 		props.put("padding-bottom", Padding.integer);
 		values.put("padding-bottom", DEFAULT_UA_PADDING);
-		embossedProperties.add("padding-bottom");
+		properties.add("padding-bottom");
 		props.put("padding-left", Padding.integer);
 		values.put("padding-left", DEFAULT_UA_PADDING);
-		embossedProperties.add("padding-left");
+		properties.add("padding-left");
 		
 		props.put("border", Border.component_values);
-		embossedProperties.add("border");
+		properties.add("border");
 		props.put("border-top", Border.NONE);
-		embossedProperties.add("border-top");
+		properties.add("border-top");
 		props.put("border-right", Border.NONE);
-		embossedProperties.add("border-right");
+		properties.add("border-right");
 		props.put("border-bottom", Border.NONE);
-		embossedProperties.add("border-bottom");
+		properties.add("border-bottom");
 		props.put("border-left", Border.NONE);
-		embossedProperties.add("border-left");
+		properties.add("border-left");
 		
 		// positioning
 		props.put("display", Display.INLINE);
-		embossedProperties.add("display");
+		properties.add("display");
 		
 		// elements
 		props.put("list-style-type", ListStyleType.NONE);
-		embossedProperties.add("list-style-type");
+		properties.add("list-style-type");
 		
 		// paged
 		props.put("page", Page.AUTO);
-		embossedProperties.add("page");
+		properties.add("page");
 		props.put("page-break-before", PageBreak.AUTO);
-		embossedProperties.add("page-break-before");
+		properties.add("page-break-before");
 		props.put("page-break-after", PageBreak.AUTO);
-		embossedProperties.add("page-break-after");
+		properties.add("page-break-after");
 		props.put("page-break-inside", PageBreakInside.AUTO);
-		embossedProperties.add("page-break-inside");
+		properties.add("page-break-inside");
 		props.put("orphans", Orphans.integer);
 		values.put("orphans", DEFAULT_UA_ORPHANS);
-		embossedProperties.add("orphans");
+		properties.add("orphans");
 		props.put("widows", Widows.integer);
 		values.put("widows", DEFAULT_UA_WIDOWS);
-		embossedProperties.add("widows");
+		properties.add("widows");
 		
 		// misc
 		props.put("counter-reset", CounterReset.NONE);
-		embossedProperties.add("counter-reset");
+		properties.add("counter-reset");
 		props.put("string-set", StringSet.NONE);
-		embossedProperties.add("string-set");
+		properties.add("string-set");
 		props.put("content", Content.NONE);
-		embossedProperties.add("content");
-		
-		/* ----------- */
-		/* media print */
-		/* ----------- */
-		
-		// text type
-		props.put("color", Color.color);
-		values.put("color", DEFAULT_UA_COLOR);
-		printProperties.add("color");
-		props.put("font-style", FontStyle.NORMAL);
-		printProperties.add("font-style");
-		props.put("font-weight", FontWeight.NORMAL);
-		printProperties.add("font-weight");
-		props.put("text-decoration", TextDecoration.NONE);
-		printProperties.add("text-decoration");
+		properties.add("content");
 		
 		this.defaultCSSproperties = props;
 		this.defaultCSSvalues = values;
