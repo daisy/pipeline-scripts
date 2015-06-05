@@ -1,18 +1,19 @@
-package org.daisy.pipeline.braille.liblouis.pef;
+package org.daisy.pipeline.braille.liblouis.pef.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.nio.charset.Charset;
 
 import org.daisy.braille.table.BrailleConverter;
-import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
+
+import org.liblouis.Translator;
 
 public class LiblouisDisplayTableBrailleConverter implements BrailleConverter {
 	
 	private static final Map<Character,Character> b2t = new HashMap<Character,Character>();
 	private static final Map<Character,Character> t2b = new HashMap<Character,Character>();
 	
-	public LiblouisDisplayTableBrailleConverter(LiblouisTranslator translator) {
+	public LiblouisDisplayTableBrailleConverter(Translator translator) {
 		try {
 			char[] brailleRange = new char[256];
 			int i = 0;

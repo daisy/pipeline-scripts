@@ -208,8 +208,11 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 				new ImmutableLazyValue<Translator>() {
 					public Translator delegate() {
 						String table = null;
+						boolean unicode = false;
 						Optional<String> o;
-						if ((o = q.get("table")) != null)
+						if ((o = q.remove("unicode")) != null)
+							unicode = true;
+						if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
 							table = o.get();
 						else if (q.size() > 0) {
 							StringBuilder b = new StringBuilder();
@@ -228,11 +231,13 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 								b.append(" "); }
 							lazyIndex();
 							table = Louis.getLibrary().lou_findTable(b.toString()); }
-						if (table != null)
+						if (table != null) {
+							if (unicode)
+								table = asURI(unicodeDisFile) + "," + table;
 							try {
-								return new Translator(asURI(unicodeDisFile) + "," + table); }
+								return new Translator(table); }
 							catch (CompilationException e) {
-								logger.warn("Could not compile translator", e); }
+								logger.warn("Could not compile translator", e); }}
 						return null; }},
 				Predicates.notNull());
 		}

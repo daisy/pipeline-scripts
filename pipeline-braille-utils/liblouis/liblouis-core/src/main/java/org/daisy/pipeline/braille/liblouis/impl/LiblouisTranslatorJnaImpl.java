@@ -168,6 +168,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				q.put("table", Optional.<String>of(table));
 			if (locale != null)
 				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
+			q.put("unicode", Optional.<String>absent());
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
 			return Iterables.<LiblouisTranslator>concat(
 				Iterables.<Translator,Iterable<LiblouisTranslator>>transform(
@@ -400,13 +401,6 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			if (hyphenator == null)
 				throw new RuntimeException("'hyphens:auto' is not supported");
 			return extractHyphens(hyphenator.transform(text), SHY, ZWSP)._2;
-		}
-		
-		public String display(String braille) {
-			try {
-				return translator.display(braille); }
-			catch (TranslationException e) {
-				throw new RuntimeException(e); }
 		}
 		
 		@Override

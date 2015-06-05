@@ -34,11 +34,6 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform, Brai
 		throw new IllegalArgumentException("style argument must be a 'typeform' byte[] or a 'inline CSS' String[]");
 	}
 	
-	/**
-	 * @param braille The braille string to be encoded
-	 */
-	public abstract String display(String braille);
-	
 	public abstract LiblouisTable asLiblouisTable();
 	
 	public interface Provider extends TextTransform.Provider<LiblouisTranslator> {}

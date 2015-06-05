@@ -81,6 +81,8 @@ public class LiblouisTablesTest {
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
@@ -89,6 +91,7 @@ public class LiblouisTablesTest {
 			systemProperty("org.daisy.pipeline.liblouis.external").value("true"),
 			// forThisPlatform(brailleModule("liblouis-native")),
 			brailleModule("libhyphen-core"),
+			brailleModule("pef-core"),
 			thisBundle(),
 			junitBundles()
 		);
