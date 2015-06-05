@@ -172,7 +172,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	private CachedProvider<String,Translator> provider
 	= new CachedProvider<String,Translator>() {
 		public Iterable<Translator> delegate(final String query) {
-			return provider_.get(new HashMap<String,Optional<String>>(parseQuery(query)));
+			return provider_.get(parseQuery(query));
 		}
 		@Override
 		public void invalidateCache() {
@@ -194,29 +194,31 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 				return null;
 		}
 		public Map<String,Optional<String>> assocLocale(Map<String,Optional<String>> query, Locale locale) {
-			query.put("locale", Optional.<String>of(Locales.toString(locale, '_')));
-			return query;
+			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
+			q.put("locale", Optional.<String>of(Locales.toString(locale, '_')));
+			return q;
 		}
 	};
 	
 	private CachedProvider<Map<String,Optional<String>>,Translator> provider__
 	= new CachedProvider<Map<String,Optional<String>>,Translator>() {
 		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
+			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
 			return Iterables.<Translator>filter(
 				new ImmutableLazyValue<Translator>() {
 					public Translator delegate() {
 						String table = null;
 						Optional<String> o;
-						if ((o = query.get("table")) != null)
+						if ((o = q.get("table")) != null)
 							table = o.get();
-						else if (query.size() > 0) {
+						else if (q.size() > 0) {
 							StringBuilder b = new StringBuilder();
-							for (String k : query.keySet()) {
+							for (String k : q.keySet()) {
 								if (!k.matches("[a-zA-Z0-9_-]+")) {
 									logger.warn("Invalid syntax for feature key: " + k);
 									return null; }
 								b.append(k);
-								o = query.get(k);
+								o = q.get(k);
 								if (o.isPresent()) {
 									String v = o.get();
 									if (!v.matches("[a-zA-Z0-9_-]+")) {

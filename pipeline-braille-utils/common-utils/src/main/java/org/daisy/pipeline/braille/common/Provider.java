@@ -20,7 +20,7 @@ public interface Provider<Q,X> {
 	
 	/**
 	 * Get a collection of objects based on a query.
-	 * @param query
+	 * @param query is assumed to be immutable
 	 * @return The objects for the query, in order of best match.
 	 */
 	public Iterable<X> get(Q query);
@@ -32,6 +32,10 @@ public interface Provider<Q,X> {
 	}
 	
 	public static abstract class CachedProvider<Q,X> extends Cached<Q,Iterable<X>> implements Provider<Q,X> {
+		
+		/**
+		 * delegate.get(query) must not mutate query
+		 */
 		public static <Q,X> CachedProvider<Q,X> newInstance(final Provider<Q,X> delegate) {
 			return new CachedProvider<Q,X>() {
 				public Iterable<X> delegate(Q query) {
@@ -109,6 +113,11 @@ public interface Provider<Q,X> {
 	public static abstract class LocaleBasedProvider<Q,X> implements Provider<Q,X> {
 		public abstract Iterable<? extends X> delegate(Q query);
 		public abstract Locale getLocale(Q query);
+		/**
+		 * @param query must not be mutated
+		 * @param locale
+		 * @return a new query with the locale feature "added"
+		 */
 		public abstract Q assocLocale(Q query, Locale locale);
 		public Locale getLocale(Locale query) {
 			return query;
