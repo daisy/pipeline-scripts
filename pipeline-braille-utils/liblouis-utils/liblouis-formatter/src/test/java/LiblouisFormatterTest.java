@@ -52,6 +52,7 @@ public class LiblouisFormatterTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
