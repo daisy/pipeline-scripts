@@ -7,6 +7,9 @@ public abstract class Cached<K,V> {
 	
 	private final Map<K,V> cache = new HashMap<K,V>();
 	
+	/**
+	 * @param key must not be mutated.
+	 */
 	public abstract V delegate(K key);
 	
 	public V get(K key) {

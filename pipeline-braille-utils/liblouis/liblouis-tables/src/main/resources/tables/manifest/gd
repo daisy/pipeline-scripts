@@ -1,0 +1,3 @@
+#+locale:gd
+include ../gd.ctb
+include ../braille-patterns.cti

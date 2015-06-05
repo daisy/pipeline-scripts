@@ -1,0 +1,3 @@
+#+locale:sk
+include ../sk-sk-g1.utb
+include ../braille-patterns.cti

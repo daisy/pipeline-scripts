@@ -1,9 +1,10 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.TextTransform;
 
-public abstract class LiblouisTranslator implements CSSStyledTextTransform { // BrailleTranslator
+public abstract class LiblouisTranslator implements CSSStyledTextTransform, BrailleTranslator {
 	
 	public static abstract class Typeform {
 		public static final byte PLAIN = 0;
@@ -32,11 +33,6 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform { // 
 	public String[] transform(String[] text, Object[] style) {
 		throw new IllegalArgumentException("style argument must be a 'typeform' byte[] or a 'inline CSS' String[]");
 	}
-	
-	/**
-	 * @param braille The braille string to be encoded
-	 */
-	public abstract String display(String braille);
 	
 	public abstract LiblouisTable asLiblouisTable();
 	

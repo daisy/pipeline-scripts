@@ -1,0 +1,3 @@
+#+locale:lt
+include ../lt.ctb
+include ../braille-patterns.cti

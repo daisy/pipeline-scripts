@@ -4,12 +4,13 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourcePath;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
@@ -23,6 +24,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component(
 	name = "org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry",
 	service = {
@@ -30,7 +34,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 		LiblouisTableResolver.class
 	}
 )
-public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements Provider<Locale,LiblouisTable>, LiblouisTableResolver {
+public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> implements LiblouisTableResolver {
 	
 	@Reference(
 		name = "LiblouisTablePath",
@@ -42,30 +46,14 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	@Override
 	protected void register(LiblouisTablePath path) {
 		super.register(path);
-		provider.invalidateCache();
+		applyPathChangeCallbacks();
 	}
 	
 	@Override
 	protected void unregister(LiblouisTablePath path) {
 		super.unregister(path);
-		provider.invalidateCache();
+		applyPathChangeCallbacks();
 	}
-	
-	/**
-	 * Try to find a table based on the given locale.
-	 * An automatic fallback mechanism is used: if nothing is found for
-	 * language-COUNTRY-variant, then language-COUNTRY is searched, then language.
-	 */
-	public Iterable<LiblouisTable> get(Locale query) {
-		return provider.get(query);
-	}
-	
-	private final CachedProvider<Locale,LiblouisTable> provider
-		= CachedProvider.<Locale,LiblouisTable>newInstance(
-			LocaleBasedProvider.<LiblouisTable>newInstance(
-				new DispatchingProvider<Locale,LiblouisTable>() {
-					public Iterable<? extends Provider<Locale,LiblouisTable>> dispatch() {
-						return paths.values(); }}));
 	
 	@Override
 	public URL resolve(URI resource) {
@@ -76,23 +64,23 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	}
 	
 	public File[] resolveLiblouisTable(LiblouisTable table, File base) {
-		URI[] tableList = table.asURIs();
-		File[] resolved = new File[tableList.length];
+		URI[] subTables = table.asURIs();
+		File[] tableFiles = new File[subTables.length];
 		List<ResourcePath> paths = new ArrayList<ResourcePath>(this.paths.values());
 		paths.add(fileSystem);
-		for (int i = 0; i < tableList.length; i++) {
-			URI subTable = tableList[i];
+		for (int i = 0; i < subTables.length; i++) {
+			URI subTable = subTables[i];
 			if (base != null)
 				subTable = asURI(base).resolve(subTable);
 			for (ResourcePath path : paths) {
-				resolved[i] = asFile(path.resolve(subTable));
-				if (resolved[i] != null) {
+				tableFiles[i] = asFile(path.resolve(subTable));
+				if (tableFiles[i] != null) {
 					paths.remove(path);
 					paths.add(0, path);
 					break; }}
-			if (resolved[i] == null)
+			if (tableFiles[i] == null)
 				return null; }
-		return resolved;
+		return tableFiles;
 	}
 	
 	private final ResourcePath fileSystem = new LiblouisFileSystem();
@@ -122,4 +110,35 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 			return asURI(resolve(resource));
 		}
 	}
+	
+	private Collection<Function<LiblouisTableRegistry,Void>> pathChangeCallbacks
+		= new ArrayList<Function<LiblouisTableRegistry,Void>>();
+	
+	public void onPathChange(Function<LiblouisTableRegistry,Void> callback) {
+		pathChangeCallbacks.add(callback);
+	}
+	
+	private void applyPathChangeCallbacks() {
+		for (Function<LiblouisTableRegistry,Void> f : pathChangeCallbacks)
+			try {
+				f.apply(this); }
+			catch (RuntimeException e) {
+				logger.error("Could not apply callback function " + f, e); }
+	}
+	
+	private static Function<LiblouisTablePath,Iterable<URI>> listTableFiles = new Function<LiblouisTablePath,Iterable<URI>>() {
+		public Iterable<URI> apply(LiblouisTablePath path) {
+			return path.listTableFiles();
+		}
+	};
+	
+	public Iterable<URI> listAllTableFiles() {
+		return Iterables.<URI>concat(
+			Iterables.<LiblouisTablePath,Iterable<URI>>transform(
+				paths.values(),
+				listTableFiles));
+	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisTableRegistry.class);
+	
 }

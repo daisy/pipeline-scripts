@@ -1,14 +1,19 @@
 package org.daisy.pipeline.braille.liblouis;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
-import com.google.common.collect.Iterables;
-
+import org.daisy.braille.table.BrailleConverter;
+import org.daisy.braille.table.Table;
+import org.daisy.braille.table.TableCatalogService;
+import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
-import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
+import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
@@ -23,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -36,6 +40,10 @@ import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -51,7 +59,7 @@ public class LiblouisCoreTest {
 	LiblouisTableResolver resolver;
 	
 	@Inject
-	LiblouisTableRegistry tableRegistry;
+	private TableCatalogService tableCatalog;
 	
 	@Configuration
 	public Option[] config() {
@@ -65,10 +73,13 @@ public class LiblouisCoreTest {
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
+			brailleModule("pef-core"),
 			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-core"),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
@@ -76,19 +87,13 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
-	public void testResolveTable() {
+	public void testResolveTableFile() {
 		assertEquals("foobar.cti", asFile(resolver.resolve(asURI("foobar.cti"))).getName());
 	}
 	
 	@Test
-	public void testResolveTableList() {
+	public void testResolveTable() {
 		assertEquals("foobar.cti", (resolver.resolveLiblouisTable(new LiblouisTable("foobar.cti"), null)[0]).getName());
-	}
-	
-	@Test
-	public void testGetTableFromLocale() {
-		assertEquals(new URI[]{asURI("http://test/table_path_1/foobar.cti")}, tableRegistry.get(parseLocale("foo")).iterator().next().asURIs());
-		assertNull(Iterables.<LiblouisTable>getFirst(tableRegistry.get(parseLocale("bar")), null));
 	}
 	
 	@Test
@@ -102,34 +107,38 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testGetTranslatorFromQuery3() {
+		provider.get("(locale:foo_BAR)").iterator().next();
+	}
+	
+	@Test
 	public void testTranslate() {
-		assertEquals("foobar", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
+		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testTranslateStyled() {
-		assertEquals("foobar", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
+		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
 	}
 	
 	@Test
 	public void testTranslateSegments() {
 		LiblouisTranslator translator = provider.get("(table:'foobar.cti')").iterator().next();
-		assertEquals(new String[]{"foo","bar"}, translator.transform(new String[]{"foo","bar"}));
-		assertEquals(new String[]{"foo","","bar"}, translator.transform(new String[]{"foo","","bar"}));
+		assertEquals(new String[]{"⠋⠕⠕","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
+		assertEquals(new String[]{"⠋⠕⠕","","⠃⠁⠗"}, translator.transform(new String[]{"foo","","bar"}));
 	}
 	
 	@Test
 	public void testTranslateSegmentsFuzzy() {
 		LiblouisTranslator translator = provider.get("(table:'foobar.ctb')").iterator().next();
-		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"foo","bar"}));
-		assertEquals(new String[]{"fu","bar"}, translator.transform(new String[]{"fo","obar"}));
-		assertEquals(new String[]{"fu","","bar"}, translator.transform(new String[]{"fo","","obar"}));
-		assertEquals(new String[]{"x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ",
-		                          "x ", "x ", "x ", "x ", "fu", "bar"},
+		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
+		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"fo","obar"}));
+		assertEquals(new String[]{"⠋⠥","","⠃⠁⠗"}, translator.transform(new String[]{"fo","","obar"}));
+		assertEquals(new String[]{"⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ",
+		                          "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠋⠥", "⠃⠁⠗"},
 		             translator.transform(new String[]{
 		                          "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ", "x ",
 		                          "x ", "x ", "x ", "x ", "fo", "obar"}));
-
 	}
 	
 	@Test
@@ -145,7 +154,33 @@ public class LiblouisCoreTest {
 	@Test
 	public void testTranslateAndHyphenateSomeSegments() {
 		LiblouisTranslator translator = provider.get("(table:'foobar.cti,foobar.dic')").iterator().next();
-		assertEquals(new String[]{"foo\u00ADbar ","foobar"},
+		assertEquals(new String[]{"⠋⠕⠕\u00AD⠃⠁⠗ ","⠋⠕⠕⠃⠁⠗"},
 		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
+	}
+	
+	@Test
+	public void testDisplayTableProvider() {
+		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
+		Provider<String,Table> tableProvider = DispatchingProvider.<String,Table>newInstance(tableProviders);
+		Table table = tableProvider.get("(liblouis-table:'foobar.dis')").iterator().next();
+		BrailleConverter converter = table.newBrailleConverter();
+		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
+		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
+		String id = table.getIdentifier();
+		assertEquals(table, tableProvider.get("(id:'" + id + "')").iterator().next());
+		assertEquals(table, tableCatalog.newTable(id));
+	}
+	
+	@Inject
+	private BundleContext context;
+	
+	private <S> Iterable<S> getServices(Class<S> serviceClass) {
+		List<S> services = new ArrayList<S>();
+		try {
+			for (ServiceReference<? extends S> ref : context.getServiceReferences(serviceClass, null))
+				services.add(context.getService(ref)); }
+		catch (InvalidSyntaxException e) {
+			throw new RuntimeException(e); }
+		return services;
 	}
 }

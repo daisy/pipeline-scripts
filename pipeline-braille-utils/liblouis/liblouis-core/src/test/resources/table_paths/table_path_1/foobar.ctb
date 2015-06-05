@@ -1,2 +1,3 @@
+#+locale: foo
 include foobar.cti
 always foo 124-136

@@ -19,6 +19,7 @@ import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,15 +44,20 @@ public class LiblouisTablesTest {
 	
 	@Test
 	public void testCompileAllTablesInManifest() throws IOException {
-		URL manifest = asURL(new File(new File(PathUtils.getBaseDir()), "target/classes/manifest.xml"));
-		manifest.openConnection();
-		InputStream reader = manifest.openStream();
-		Properties properties = new Properties();
-		properties.loadFromXML(reader);
-		for (String key : properties.stringPropertyNames()) {
-			String table = properties.getProperty(key);
+		File manifest = new File(new File(PathUtils.getBaseDir()), "target/classes/tables/manifest");
+		for (File f : manifest.listFiles()) {
+			String table = "manifest/" + f.getName();
 			assertNotEmpty("Table " + table + " does not compile", provider.get("(table:'" + table + "')")); }
-		reader.close();
+	}
+	
+	@Test
+	public void testQueryTranslator() {
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[1].toString().endsWith("manifest/nl_BE"));
+	}
+	
+	@Test
+	public void testUnicodeBraille() {
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().transform("foobar").matches("[\\s\\t\\n\u00a0\u00ad\u200b\u2800-\u28ff]*"));
 	}
 	
 	private void assertNotEmpty(String message, Iterable<?> iterable) {
@@ -74,12 +80,15 @@ public class LiblouisTablesTest {
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("liblouis-core"),
 			forThisPlatform(brailleModule("liblouis-native")),
 			brailleModule("libhyphen-core"),
+			brailleModule("pef-core"),
 			thisBundle(),
 			junitBundles()
 		);

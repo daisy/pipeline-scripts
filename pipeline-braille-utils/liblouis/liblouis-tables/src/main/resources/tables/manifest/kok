@@ -1,0 +1,4 @@
+#+locale:kok
+include ../spaces.ctb
+include ../kok.ctb
+include ../braille-patterns.cti

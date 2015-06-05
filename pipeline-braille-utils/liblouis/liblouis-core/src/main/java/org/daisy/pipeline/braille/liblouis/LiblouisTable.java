@@ -10,33 +10,33 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 public class LiblouisTable {
 	
-	private final URI[] tableList;
+	private final URI[] table;
 	
-	public LiblouisTable(URI[] tableList) {
-		this.tableList = tableList;
+	public LiblouisTable(URI[] table) {
+		this.table = table;
 	}
-	public LiblouisTable(String tableList) {
-		this(tokenizeTableList(tableList));
+	public LiblouisTable(String table) {
+		this(tokenizeTable(table));
 	}
 	
 	public URI[] asURIs() {
-		return tableList;
+		return table;
 	}
 	
 	@Override
 	public String toString() {
-		return serializeTableList(tableList);
+		return serializeTable(table);
 	}
 	
-	public static URI[] tokenizeTableList(String tableList) {
+	public static URI[] tokenizeTable(String table) {
 		return Iterables.toArray(
 			Iterables.<String,URI>transform(
-				Splitter.on(',').split(tableList),
+				Splitter.on(',').split(table),
 				asURI),
 			URI.class);
 	}
 	
-	public static String serializeTableList(URI[] tableList) {
-		return join(tableList, ",");
+	public static String serializeTable(URI[] table) {
+		return join(table, ",");
 	}
 }

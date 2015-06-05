@@ -12,15 +12,15 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-tables</artifactId>
-  <version>2.6.2-SNAPSHOT</version>
+  <version>2.6.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 Braille Module :: liblouis-tables</name>
 
   <properties>
-    <liblouis.version>2.6.2</liblouis.version>
+    <liblouis.version>2.6.3</liblouis.version>
     <liblouis.tarball.url>https://github.com/liblouis/liblouis/tarball/v${liblouis.version}</liblouis.tarball.url>
-    <liblouis.tarball.sha1>4ed13d7aeedbd5a59bbb63f592fcd3a8e559ccb6</liblouis.tarball.sha1>
+    <liblouis.tarball.sha1>c3dcdcae2082cc85efc2eacd4923d0b762d27084</liblouis.tarball.sha1>
   </properties>
   
   <dependencies>
@@ -87,7 +87,7 @@
                     <exclude name="*/tables/README" />
                   </patternset>
                   <mapper>
-                    <globmapper from="liblouis-liblouis-6e85a44/*" to="*" />
+                    <globmapper from="liblouis-liblouis-e043e8c/*" to="*" />
                   </mapper>
                 </untar>
               </target>

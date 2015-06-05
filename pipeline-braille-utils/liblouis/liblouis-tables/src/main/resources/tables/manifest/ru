@@ -1,0 +1,3 @@
+#+locale:ru
+include ../ru-ru-g1.utb
+include ../braille-patterns.cti

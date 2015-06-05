@@ -7,6 +7,5 @@
         </scr:service>
         <scr:property name="identifier" type="String" value="http://test/table_path_1/"/>
         <scr:property name="path" type="String" value="/table_path_1"/>
-        <scr:property name="manifest" type="String" value="/table_path_1/manifest.xml"/>
     </scr:component>
 </scr:components>
