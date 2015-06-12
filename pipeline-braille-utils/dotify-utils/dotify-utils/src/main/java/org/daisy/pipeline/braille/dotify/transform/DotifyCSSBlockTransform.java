@@ -16,6 +16,7 @@ import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
@@ -91,10 +92,10 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 			dotifyTranslatorProvider.invalidateCache();
 		}
 		
-		private List<DotifyTranslator.Provider> dotifyTranslatorProviders = new ArrayList<DotifyTranslator.Provider>();
+		private List<Transform.Provider<DotifyTranslator>> dotifyTranslatorProviders
+		= new ArrayList<Transform.Provider<DotifyTranslator>>();
 		private CachedProvider<String,DotifyTranslator> dotifyTranslatorProvider
-		= CachedProvider.<String,DotifyTranslator>newInstance(
-			DispatchingProvider.<String,DotifyTranslator>newInstance(dotifyTranslatorProviders));
+		= CachedProvider.newInstance(new DispatchingProvider<DotifyTranslator>(dotifyTranslatorProviders));
 	
 	}
 }

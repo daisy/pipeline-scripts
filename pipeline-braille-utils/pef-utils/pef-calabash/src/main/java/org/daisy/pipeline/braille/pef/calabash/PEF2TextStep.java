@@ -162,8 +162,7 @@ public class PEF2TextStep extends DefaultStep {
 		
 		private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
 		private CachedProvider<String,Table> tableProvider
-		= CachedProvider.<String,Table>newInstance(
-			DispatchingProvider.<String,Table>newInstance(tableProviders));
+		= CachedProvider.newInstance(DispatchingProvider.newInstance(tableProviders));
 		
 	}
 	

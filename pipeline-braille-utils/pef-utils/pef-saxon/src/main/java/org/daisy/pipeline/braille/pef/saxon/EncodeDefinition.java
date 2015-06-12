@@ -54,8 +54,7 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 	
 	private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
 	private CachedProvider<String,Table> tableProvider
-	= CachedProvider.<String,Table>newInstance(
-		DispatchingProvider.<String,Table>newInstance(tableProviders));
+	= CachedProvider.newInstance(DispatchingProvider.newInstance(tableProviders));
 	
 	@Override
 	public StructuredQName getFunctionQName() {

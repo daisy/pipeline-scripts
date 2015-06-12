@@ -9,7 +9,6 @@ import com.google.common.base.Predicate;
 
 import org.daisy.pipeline.braille.common.ResourcePath;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
-import org.daisy.pipeline.braille.common.Provider;
 
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.fileName;
@@ -44,9 +43,7 @@ public class LibhyphenTableRegistry extends ResourceRegistry<LibhyphenTablePath>
 	private final CachedProvider<Locale,URI> provider
 		= CachedProvider.<Locale,URI>newInstance(
 			LocaleBasedProvider.<URI>newInstance(
-				new DispatchingProvider<Locale,URI>() {
-					public Iterable<? extends Provider<Locale,URI>> dispatch() {
-						return paths.values(); }}));
+				DispatchingProvider.newInstance(paths.values())));
 	
 	@Override
 	public URL resolve(URI resource) {

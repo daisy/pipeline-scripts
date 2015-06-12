@@ -89,22 +89,22 @@ public interface Provider<Q,X> {
 	}
 	
 	public static abstract class DispatchingProvider<Q,X> implements Provider<Q,X> {
-		public abstract Iterable<? extends Provider<Q,? extends X>> dispatch();
-		@SuppressWarnings("unchecked")
+		public abstract Iterable<Provider<Q,X>> dispatch();
 		public Iterable<X> get(final Q query) {
-			return Iterables.<X>concat(Iterables.<Provider<Q,? extends X>,Iterable<X>>transform(
-				Iterables.<Provider<Q,? extends X>>concat(dispatch()),
-				new Function<Provider<Q,? extends X>,Iterable<X>>() {
-					public Iterable<X> apply(Provider<Q,? extends X> provider) {
-						return Iterables.<X>concat(provider.get(query));
+			return Iterables.concat(Iterables.transform(
+				dispatch(),
+				new Function<Provider<Q,X>,Iterable<X>>() {
+					public Iterable<X> apply(Provider<Q,X> provider) {
+						return provider.get(query);
 					}
 				}
 			));
 		}
-		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,? extends X>> dispatch) {
+		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,X>> dispatch) {
 			return new DispatchingProvider<Q,X>() {
-				public Iterable<? extends Provider<Q,? extends X>> dispatch() {
-					return dispatch;
+				@SuppressWarnings("unchecked")
+				public Iterable<Provider<Q,X>> dispatch() {
+					return (Iterable<Provider<Q,X>>)dispatch;
 				}
 			};
 		}

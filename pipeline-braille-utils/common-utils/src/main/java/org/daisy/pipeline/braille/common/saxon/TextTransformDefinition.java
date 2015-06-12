@@ -13,10 +13,10 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Provider.CachedProvider;
-import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -44,7 +44,7 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void bindTextTransformProvider(TextTransform.Provider<?> provider) {
-		providers.add(provider);
+		providers.add((Transform.Provider<TextTransform>)provider);
 		logger.debug("Adding TextTransform provider: {}", provider);
 	}
 	
@@ -54,11 +54,10 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		logger.debug("Removing TextTransform provider: {}", provider);
 	}
 	
-	private List<Provider<String,? extends TextTransform>> providers = new ArrayList<Provider<String,? extends TextTransform>>();
+	private List<Transform.Provider<TextTransform>> providers = new ArrayList<Transform.Provider<TextTransform>>();
 	
 	private CachedProvider<String,TextTransform> translators
-		= CachedProvider.<String,TextTransform>newInstance(
-			DispatchingProvider.<String,TextTransform>newInstance(providers));
+	= CachedProvider.newInstance(new DispatchingProvider<TextTransform>(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;

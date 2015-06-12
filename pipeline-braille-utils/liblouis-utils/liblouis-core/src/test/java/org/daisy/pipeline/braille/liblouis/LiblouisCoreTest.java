@@ -162,7 +162,7 @@ public class LiblouisCoreTest {
 	@Test
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
-		Provider<String,Table> tableProvider = DispatchingProvider.<String,Table>newInstance(tableProviders);
+		Provider<String,Table> tableProvider = DispatchingProvider.newInstance(tableProviders);
 		Table table = tableProvider.get("(liblouis-table:'foobar.dis')").iterator().next();
 		BrailleConverter converter = table.newBrailleConverter();
 		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));

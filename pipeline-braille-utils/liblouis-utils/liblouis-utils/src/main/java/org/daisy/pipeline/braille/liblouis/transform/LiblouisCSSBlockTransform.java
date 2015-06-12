@@ -16,6 +16,7 @@ import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
@@ -91,10 +92,10 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			liblouisTranslatorProvider.invalidateCache();
 		}
 	
-		private List<LiblouisTranslator.Provider> liblouisTranslatorProviders = new ArrayList<LiblouisTranslator.Provider>();
+		private List<Transform.Provider<LiblouisTranslator>> liblouisTranslatorProviders
+		= new ArrayList<Transform.Provider<LiblouisTranslator>>();
 		private CachedProvider<String,LiblouisTranslator> liblouisTranslatorProvider
-		= CachedProvider.<String,LiblouisTranslator>newInstance(
-			DispatchingProvider.<String,LiblouisTranslator>newInstance(liblouisTranslatorProviders));
+		= CachedProvider.newInstance(new DispatchingProvider<LiblouisTranslator>(liblouisTranslatorProviders));
 		
 	}
 }

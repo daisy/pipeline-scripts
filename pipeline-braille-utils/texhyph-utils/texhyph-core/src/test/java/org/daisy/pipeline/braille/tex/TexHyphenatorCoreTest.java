@@ -10,9 +10,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.Provider;
-import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -53,7 +52,7 @@ public class TexHyphenatorCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		Provider<String,TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
+		Transform.Provider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
 		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foobar"));
 		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foo-bar"));
 		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foobar"));
@@ -81,13 +80,13 @@ public class TexHyphenatorCoreTest {
 		);
 	}
 	
-	private <T extends Transform> Provider<String,T> getProvider(Class<T> transformerClass, Class<? extends Transform.Provider<T>> providerClass) {
-		List<Provider<String,T>> providers = new ArrayList<Provider<String,T>>();
+	private <T extends Transform> Transform.Provider<T> getProvider(Class<T> transformerClass, Class<? extends Transform.Provider<T>> providerClass) {
+		List<Transform.Provider<T>> providers = new ArrayList<Transform.Provider<T>>();
 		try {
 			for (ServiceReference<? extends Transform.Provider<T>> ref : context.getServiceReferences(providerClass, null))
 				providers.add(context.getService(ref)); }
 		catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e); }
-		return DispatchingProvider.<String,T>newInstance(providers);
+		return new DispatchingProvider<T>(providers);
 	}
 }

@@ -17,6 +17,7 @@ import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Activate;
@@ -84,7 +85,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 		)
 		public void bindCSSBlockTransformProvider(CSSBlockTransform.Provider<?> provider) {
 			if (provider instanceof XProcTransform.Provider)
-				cssBlockTransformProviders.add(provider);
+				cssBlockTransformProviders.add((Transform.Provider<CSSBlockTransform>)provider);
 		}
 		
 		public void unbindCSSBlockTransformProvider(CSSBlockTransform.Provider<?> provider) {
@@ -92,12 +93,11 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 			cssBlockTransformProvider.invalidateCache();
 		}
 	
-		private List<org.daisy.pipeline.braille.common.Provider<String,? extends CSSBlockTransform>> cssBlockTransformProviders
-		= new ArrayList<org.daisy.pipeline.braille.common.Provider<String,? extends CSSBlockTransform>>();
+		private List<Transform.Provider<CSSBlockTransform>> cssBlockTransformProviders
+		= new ArrayList<Transform.Provider<CSSBlockTransform>>();
 		
 		private CachedProvider<String,CSSBlockTransform> cssBlockTransformProvider
-		= CachedProvider.<String,CSSBlockTransform>newInstance(
-			DispatchingProvider.<String,CSSBlockTransform>newInstance(cssBlockTransformProviders));
+		= CachedProvider.newInstance(new DispatchingProvider<CSSBlockTransform>(cssBlockTransformProviders));
 		
 	}
 }

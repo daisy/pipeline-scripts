@@ -28,7 +28,8 @@ import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.MathMLTransform;
-import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
+import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 public class PxTransformStep extends Eval {
 	
-	private final Iterable<XProcTransform.Provider<?>> providers;
+	private final Iterable<Transform.Provider<XProcTransform>> providers;
 	private final ReadableDocument pipeline;
 	
 	private static final QName _query = new QName("query");
@@ -53,7 +54,7 @@ public class PxTransformStep extends Eval {
 	private static final QName _namespace = new QName("namespace");
 	private static final QName _value = new QName("value");
 	
-	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<XProcTransform.Provider<?>> providers) {
+	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<Transform.Provider<XProcTransform>> providers) {
 		super(runtime, step);
 		this.providers = providers;
 		pipeline = new ReadableDocument(runtime);
@@ -96,7 +97,7 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = (XProcTransform)DispatchingProvider.newInstance(Iterables.filter(providers, filter)).get(query).iterator().next(); }
+				transform = new DispatchingProvider<XProcTransform>(Iterables.filter(providers, filter)).get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);
@@ -165,7 +166,7 @@ public class PxTransformStep extends Eval {
 			policy = ReferencePolicy.DYNAMIC
 		)
 		public void bindXProcTransformProvider(XProcTransform.Provider<?> provider) {
-			providers.add(provider);
+			providers.add((Transform.Provider<XProcTransform>)provider);
 			logger.debug("Adding XProcTransform provider: {}", provider);
 		}
 		
@@ -174,7 +175,7 @@ public class PxTransformStep extends Eval {
 			logger.debug("Removing XProcTransform provider: {}", provider);
 		}
 		
-		private List<XProcTransform.Provider<?>> providers = new ArrayList<XProcTransform.Provider<?>>();
+		private List<Transform.Provider<XProcTransform>> providers = new ArrayList<Transform.Provider<XProcTransform>>();
 		
 	}
 	

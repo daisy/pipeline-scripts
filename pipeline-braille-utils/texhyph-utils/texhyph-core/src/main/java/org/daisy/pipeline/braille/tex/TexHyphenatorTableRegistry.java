@@ -49,8 +49,6 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 	private final CachedProvider<Locale,URI> provider
 		= CachedProvider.<Locale,URI>newInstance(
 			LocaleBasedProvider.<URI>newInstance(
-				new DispatchingProvider<Locale,URI>() {
-					public Iterable<? extends Provider<Locale,URI>> dispatch() {
-						return paths.values(); }}));
+				DispatchingProvider.newInstance(paths.values())));
 	
 }

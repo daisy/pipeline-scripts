@@ -19,6 +19,7 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -84,7 +85,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
 		if (provider instanceof LiblouisHyphenatorJnaImpl)
 			return;
-		hyphenatorProviders.add(provider);
+		hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
 		hyphenatorProvider.invalidateCache();
 		logger.debug("Adding Hyphenator provider: " + provider);
 	}
@@ -97,12 +98,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		logger.debug("Removing Hyphenator provider: " + provider);
 	}
 	
-	private List<Provider<String,? extends Hyphenator>> hyphenatorProviders
-		= new ArrayList<Provider<String,? extends Hyphenator>>();
+	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
+	= new ArrayList<Transform.Provider<Hyphenator>>();
 	
 	private CachedProvider<String,Hyphenator> hyphenatorProvider
-		= CachedProvider.<String,Hyphenator>newInstance(
-			DispatchingProvider.<String,Hyphenator>newInstance(hyphenatorProviders));
+	= CachedProvider.newInstance(new DispatchingProvider<Hyphenator>(hyphenatorProviders));
 	
 	/**
 	 * Recognized features:
