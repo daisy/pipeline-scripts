@@ -75,8 +75,6 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	public ExtensionFunctionCall makeCallExpression() {
 		return new ExtensionFunctionCall() {
-			
-			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();

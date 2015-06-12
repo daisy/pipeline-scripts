@@ -86,9 +86,8 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();
 	
+	@SuppressWarnings("serial")
 	private static class LiblouisDisplayTable extends AbstractTable {
-
-		private static final long serialVersionUID = 1L;
 		
 		final Translator table;
 		

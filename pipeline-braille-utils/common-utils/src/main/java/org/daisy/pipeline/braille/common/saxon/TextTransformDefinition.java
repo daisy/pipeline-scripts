@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 	name = "pf:text-transform",
 	service = { ExtensionFunctionDefinition.class }
 )
-@SuppressWarnings({"serial"})
+@SuppressWarnings("serial")
 public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("pf",
@@ -42,6 +42,9 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		service = TextTransform.Provider.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
+	)
+	@SuppressWarnings(
+		"unchecked" // safe cast to Transform.Provider<TextTransform>
 	)
 	protected void bindTextTransformProvider(TextTransform.Provider<?> provider) {
 		providers.add((Transform.Provider<TextTransform>)provider);

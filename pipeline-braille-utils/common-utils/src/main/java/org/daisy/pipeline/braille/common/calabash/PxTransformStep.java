@@ -165,6 +165,9 @@ public class PxTransformStep extends Eval {
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC
 		)
+		@SuppressWarnings(
+			"unchecked" // safe cast to Transform.Provider<XProcTransform>
+		)
 		public void bindXProcTransformProvider(XProcTransform.Provider<?> provider) {
 			providers.add((Transform.Provider<XProcTransform>)provider);
 			logger.debug("Adding XProcTransform provider: {}", provider);

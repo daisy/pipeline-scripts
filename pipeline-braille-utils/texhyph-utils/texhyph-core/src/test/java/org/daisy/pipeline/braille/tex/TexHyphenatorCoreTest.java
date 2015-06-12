@@ -1,18 +1,11 @@
 package org.daisy.pipeline.braille.tex;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
-
-import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
-import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;

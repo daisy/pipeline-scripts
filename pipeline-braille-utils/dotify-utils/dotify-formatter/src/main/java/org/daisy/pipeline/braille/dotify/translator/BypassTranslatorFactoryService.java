@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.dotify.translator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -185,7 +184,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			private final boolean hyphenating;
 			
 			private BrailleTranslatorResultImpl(String text, boolean hyphenating) {
-				this.input = Iterators.<Character>peekingIterator(Lists.<Character>charactersOf(text).iterator());
+				this.input = Iterators.<Character>peekingIterator(Lists.charactersOf(text).iterator());
 				this.hyphenating = hyphenating;
 			}
 			

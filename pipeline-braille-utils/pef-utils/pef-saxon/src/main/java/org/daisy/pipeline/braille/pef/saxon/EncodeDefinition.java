@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 	name = "pef:encode",
 	service = { ExtensionFunctionDefinition.class }
 )
+@SuppressWarnings("serial")
 public class EncodeDefinition extends ExtensionFunctionDefinition {
 	
 	private static final StructuredQName funcname = new StructuredQName("pef",
@@ -85,10 +86,7 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 	
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
-		
 		return new ExtensionFunctionCall() {
-			
-			@Override
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					String tableQuery = ((AtomicSequence)arguments[0]).getStringValue();
@@ -102,12 +100,9 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 					logger.error("pef:encode failed", e);
 					throw new XPathException("pef:encode failed"); }
 			}
-			
-			private static final long serialVersionUID = 1L;
 		};
 	}
 	
-	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(EncodeDefinition.class);
 	
 }

@@ -205,7 +205,9 @@ public abstract class util {
 	
 	public static abstract class Strings {
 		
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings(
+			"unchecked" // safe cast to Iterator<Object>
+		)
 		public static String join(Iterator<? extends Object> strings, final Object separator, final Function<Object,String> toStringFunction) {
 			if (!strings.hasNext()) return "";
 			String seed = toStringFunction.apply(strings.next());
@@ -257,7 +259,6 @@ public abstract class util {
 			StringBuilder unhyphenatedText = new StringBuilder();
 			List<Byte> hyphens = new ArrayList<Byte>();
 			byte hyphen = 0;
-			boolean seenHyphen = false;
 			int j = -1;
 			next_char: for (char c : text.toCharArray()) {
 				j++;
@@ -266,7 +267,6 @@ public abstract class util {
 				for (int i = 0; i < characters.length; i++)
 					if (characters[i] != null && characters[i] == c) {
 						hyphen |= (1 << i);
-						seenHyphen = true;
 						continue next_char; }
 				unhyphenatedText.append(c);
 				hyphens.add(hyphen);
@@ -367,9 +367,11 @@ public abstract class util {
 			return decode(URIs.asURI(base).relativize(URIs.asURI(url)).toString());
 		}
 		
-		// URIs treat the + symbol as is, but URLDecoder will decode both + and %20 into a space
-		@SuppressWarnings("deprecation")
+		@SuppressWarnings(
+			"deprecation" // URLDecode.decode is deprecated
+		)
 		public static String decode(String uri) {
+			// URIs treat the + symbol as is, but URLDecoder will decode both + and %20 into a space
 			return URLDecoder.decode(uri.replace("+", "%2B"));
 		}
 		

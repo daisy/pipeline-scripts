@@ -2,9 +2,6 @@ package org.daisy.pipeline.braille.liblouis.saxon;
 
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;

@@ -2,8 +2,6 @@ package org.daisy.pipeline.braille.libhyphen;
 
 import javax.inject.Inject;
 
-import static org.daisy.pipeline.braille.common.util.URIs.asURI;
-
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;

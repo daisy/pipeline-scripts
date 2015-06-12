@@ -233,7 +233,8 @@ public class TranslateFileProvider implements XProcStepProvider {
 						pageCount++; }
 					writeDocument(xml.getBaseURI(), section.toString(), pageCount);
 					if (!reader.nextSection())
-						break; }}
+						break; }
+				reader.close(); }
 			
 			catch (Exception e) {
 				throw new XProcException(step.getNode(), e); }

@@ -101,7 +101,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private static String[] sequenceToArray(Sequence seq) throws XPathException {
 		List<String> list = new ArrayList<String>();
-		for (SequenceIterator i = seq.iterate(); i.next() != null;)
+		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
 			list.add(i.current().getStringValue());
 		return list.toArray(new String[list.size()]);
 	}
@@ -110,7 +110,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		List<StringValue> list = new ArrayList<StringValue>();
 		for (String s : array)
 			list.add(new StringValue(s));
-		return new SequenceExtent(list);
+		return new SequenceExtent<StringValue>(list);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);

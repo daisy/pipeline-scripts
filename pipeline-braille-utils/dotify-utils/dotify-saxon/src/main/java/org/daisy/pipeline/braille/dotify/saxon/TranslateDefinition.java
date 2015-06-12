@@ -21,11 +21,12 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-	
+
 @Component(
 	name = "dotify:translate",
 	service = { ExtensionFunctionDefinition.class }
 )
+@SuppressWarnings("serial")
 public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private DotifyTranslator.Provider provider = null;
@@ -93,12 +94,9 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 					logger.error("dotify:translate failed", e);
 					throw new XPathException("dotify:translate failed"); }
 			}
-			
-			private static final long serialVersionUID = 1L;
 		};
 	}
 	
-	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);
 	
 }

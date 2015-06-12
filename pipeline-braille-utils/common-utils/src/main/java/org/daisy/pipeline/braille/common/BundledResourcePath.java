@@ -1,15 +1,5 @@
 package org.daisy.pipeline.braille.common;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-
-import static com.google.common.base.Functions.toStringFunction;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -17,6 +7,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import static com.google.common.base.Functions.toStringFunction;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import static com.google.common.base.Predicates.alwaysTrue;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
 
 import static org.daisy.pipeline.braille.common.util.Files;
 import static org.daisy.pipeline.braille.common.util.Iterators.partition;
@@ -99,7 +99,6 @@ public abstract class BundledResourcePath implements ResourcePath {
 		return identifier.resolve(URIs.relativize(unpackDir != null ? unpackDir : path, resolved));
 	}
 	
-	@SuppressWarnings({"unchecked","rawtypes"})
 	protected void activate(ComponentContext context, final Map<?, ?> properties) throws Exception {
 		if (properties.get(IDENTIFIER) == null || properties.get(IDENTIFIER).toString().isEmpty()) {
 			throw new IllegalArgumentException(IDENTIFIER + " property must not be empty"); }
@@ -118,12 +117,12 @@ public abstract class BundledResourcePath implements ResourcePath {
 		path = bundle.getEntry(pathAsRelativeFilePath);
 		if (path == null)
 			throw new IllegalArgumentException("Resource path at location " + pathAsRelativeFilePath + " could not be found");
-		final Predicate includes =
+		final Predicate<Object> includes =
 			(properties.get(INCLUDES) != null && !properties.get(INCLUDES).toString().isEmpty()) ?
 				Predicates.compose(
 					matchesGlobPattern(properties.get(INCLUDES).toString()),
 					Functions.compose(decode, toStringFunction())) :
-				Predicates.<URI>alwaysTrue();
+				alwaysTrue();
 		Function<String,Collection<String>> getFilePaths = new Function<String,Collection<String>>() {
 			public Collection<String> apply(String path) {
 				Tuple2<Collection<String>,Collection<String>> entries = partition(

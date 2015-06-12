@@ -24,6 +24,7 @@ public class BypassMarkerProcessorFactoryService implements MarkerProcessorFacto
 		return new BypassMarkerProcessorFactory();
 	}
 	
+	@SuppressWarnings("serial")
 	private class BypassMarkerProcessorFactory implements MarkerProcessorFactory {
 		public MarkerProcessor newMarkerProcessor(String locale, String mode) throws MarkerProcessorConfigurationException {
 			if (BypassTranslatorFactoryService.MODE.equals(mode))

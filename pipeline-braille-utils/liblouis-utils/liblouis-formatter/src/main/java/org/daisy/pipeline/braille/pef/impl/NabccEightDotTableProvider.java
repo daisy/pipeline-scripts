@@ -24,6 +24,7 @@ public class NabccEightDotTableProvider implements TableProvider {
 	public final static String IDENTIFIER = "org.daisy.pipeline.braille.pef.impl.NabccEightDotTable";
 	private final Table table;
 	
+	@SuppressWarnings("serial")
 	public NabccEightDotTableProvider() {
 		table = new AbstractTable("NABCC 8-dot [louis:format]", "", IDENTIFIER) {
 			public BrailleConverter newBrailleConverter() {

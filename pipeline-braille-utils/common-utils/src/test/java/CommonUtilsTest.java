@@ -12,7 +12,6 @@ import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;

@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
@@ -163,7 +162,6 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	}
 	
 	private final static char US = '\u001F';
-	private final static Pattern SHY_ZWSP = Pattern.compile(String.format("$[%c%c]*^", SHY, ZWSP));
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 	
 	private class LibhyphenHyphenatorImpl implements LibhyphenHyphenator {

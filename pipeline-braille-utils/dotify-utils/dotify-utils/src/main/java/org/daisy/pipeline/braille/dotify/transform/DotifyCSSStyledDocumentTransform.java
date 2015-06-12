@@ -83,6 +83,9 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC
 		)
+		@SuppressWarnings(
+			"unchecked" // safe cast to Transform.Provider<CSSBlockTransform>
+		)
 		public void bindCSSBlockTransformProvider(CSSBlockTransform.Provider<?> provider) {
 			if (provider instanceof XProcTransform.Provider)
 				cssBlockTransformProviders.add((Transform.Provider<CSSBlockTransform>)provider);

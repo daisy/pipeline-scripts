@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import com.google.common.base.Optional;
@@ -82,6 +83,9 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 			service = CSSBlockTransform.Provider.class,
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC
+		)
+		@SuppressWarnings(
+			"unchecked" // safe cast to Transform.Provider<CSSBlockTransform>
 		)
 		public void bindCSSBlockTransformProvider(CSSBlockTransform.Provider<?> provider) {
 			if (provider instanceof XProcTransform.Provider)

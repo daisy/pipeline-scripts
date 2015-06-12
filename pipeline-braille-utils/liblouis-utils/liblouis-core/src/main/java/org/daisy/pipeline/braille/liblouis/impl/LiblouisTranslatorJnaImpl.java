@@ -18,7 +18,6 @@ import com.google.common.collect.Iterables;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
@@ -81,6 +80,9 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		service = Hyphenator.Provider.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
+	)
+	@SuppressWarnings(
+		"unchecked" // safe cast to Transform.Provider<Hyphenator>
 	)
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
 		if (provider instanceof LiblouisHyphenatorJnaImpl)

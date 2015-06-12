@@ -1,12 +1,8 @@
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import javax.inject.Inject;
 
-import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -18,7 +14,6 @@ import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +25,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;

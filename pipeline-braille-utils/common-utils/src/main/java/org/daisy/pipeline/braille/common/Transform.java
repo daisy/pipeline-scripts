@@ -19,7 +19,9 @@ public interface Transform {
 			public DispatchingProvider(Iterable<Transform.Provider<T>> dispatch) {
 				this.dispatch = dispatch;
 			}
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(
+				"unchecked" // safe cast to Provider<String,T>
+			)
 			public Iterable<org.daisy.pipeline.braille.common.Provider<String,T>> dispatch() {
 				return Iterables.<org.daisy.pipeline.braille.common.Provider<String,T>>concat(dispatch);
 			}

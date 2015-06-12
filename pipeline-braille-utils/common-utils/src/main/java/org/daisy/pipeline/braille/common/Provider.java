@@ -102,7 +102,9 @@ public interface Provider<Q,X> {
 		}
 		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,X>> dispatch) {
 			return new DispatchingProvider<Q,X>() {
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings(
+					"unchecked" // safe cast to Iterable<Provider<Q,X>>
+				)
 				public Iterable<Provider<Q,X>> dispatch() {
 					return (Iterable<Provider<Q,X>>)dispatch;
 				}

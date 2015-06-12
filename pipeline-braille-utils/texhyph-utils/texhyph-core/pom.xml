@@ -10,7 +10,6 @@
     <relativePath>../../../parent/</relativePath>
   </parent>
 
-  <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>texhyph-core</artifactId>
   <version>2.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
