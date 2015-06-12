@@ -36,6 +36,7 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform, Brai
 	
 	public abstract LiblouisTable asLiblouisTable();
 	
-	public interface Provider extends TextTransform.Provider<LiblouisTranslator> {}
+	public interface Provider extends CSSStyledTextTransform.Provider<LiblouisTranslator>,
+	                                  BrailleTranslator.Provider<LiblouisTranslator> {}
 	
 }
