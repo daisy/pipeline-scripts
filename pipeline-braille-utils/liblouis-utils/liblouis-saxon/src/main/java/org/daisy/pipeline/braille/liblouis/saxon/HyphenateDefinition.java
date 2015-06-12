@@ -1,5 +1,7 @@
 package org.daisy.pipeline.braille.liblouis.saxon;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import net.sf.saxon.expr.XPathContext;
@@ -13,6 +15,9 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -33,22 +38,28 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "hyphenate");
 	
-	private LiblouisHyphenator.Provider provider = null;
-	
 	@Reference(
 		name = "LiblouisHyphenatorProvider",
 		unbind = "unbindLiblouisHyphenatorProvider",
 		service = LiblouisHyphenator.Provider.class,
-		cardinality = ReferenceCardinality.MANDATORY,
-		policy = ReferencePolicy.STATIC
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void bindLiblouisHyphenatorProvider(LiblouisHyphenator.Provider provider) {
-		this.provider = provider;
+		providers.add(provider);
+		logger.debug("Adding LiblouisHyphenator provider: {}", provider);
 	}
 	
 	protected void unbindLiblouisHyphenatorProvider(LiblouisHyphenator.Provider provider) {
-		this.provider = null;
+		providers.remove(provider);
+		hyphenators.invalidateCache();
+		logger.debug("Removing LiblouisHyphenator provider: {}", provider);
 	}
+	
+	private List<Transform.Provider<LiblouisHyphenator>> providers
+	= new ArrayList<Transform.Provider<LiblouisHyphenator>>();
+	private CachedProvider<String,LiblouisHyphenator> hyphenators
+	= CachedProvider.newInstance(new DispatchingProvider<LiblouisHyphenator>(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;
@@ -81,7 +92,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();
 					Hyphenator hyphenator;
 					try {
-						hyphenator = provider.get(query).iterator().next(); }
+						hyphenator = hyphenators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();

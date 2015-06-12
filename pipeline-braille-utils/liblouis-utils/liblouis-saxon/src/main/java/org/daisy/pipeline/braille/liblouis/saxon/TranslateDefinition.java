@@ -15,6 +15,9 @@ import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -35,22 +38,28 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	private static final StructuredQName funcname = new StructuredQName("louis",
 			"http://liblouis.org/liblouis", "translate");
 	
-	private LiblouisTranslator.Provider provider = null;
-	
 	@Reference(
 		name = "LiblouisTranslatorProvider",
 		unbind = "unbindLiblouisTranslatorProvider",
 		service = LiblouisTranslator.Provider.class,
-		cardinality = ReferenceCardinality.MANDATORY,
-		policy = ReferencePolicy.STATIC
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
-		this.provider = provider;
+		providers.add(provider);
+		logger.debug("Adding LiblouisTranslator provider: {}", provider);
 	}
 	
 	protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
-		this.provider = null;
+		providers.remove(provider);
+		translators.invalidateCache();
+		logger.debug("Removing LiblouisTranslator provider: {}", provider);
 	}
+	
+	private List<Transform.Provider<LiblouisTranslator>> providers
+	= new ArrayList<Transform.Provider<LiblouisTranslator>>();
+	private CachedProvider<String,LiblouisTranslator> translators
+	= CachedProvider.newInstance(new DispatchingProvider<LiblouisTranslator>(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;
@@ -83,7 +92,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 				try {
 					String query = arguments[0].head().getStringValue();
 					LiblouisTranslator translator;
-					try { translator = provider.get(query).iterator().next(); }
+					try { translator = translators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
 					String[] text = sequenceToArray(arguments[1]);
