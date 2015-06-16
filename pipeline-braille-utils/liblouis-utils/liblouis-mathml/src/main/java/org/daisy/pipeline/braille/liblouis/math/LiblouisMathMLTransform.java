@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableMap;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Cached;
 import org.daisy.pipeline.braille.common.MathMLTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -77,6 +78,10 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 				if (code != null)
 					return Optional.<LiblouisMathMLTransform>of(get(code)).asSet(); }
 			return Optional.<LiblouisMathMLTransform>absent().asSet();
+		}
+		
+		public Transform.Provider<LiblouisMathMLTransform> withContext(Logger context) {
+			return this;
 		}
 		
 		private static MathCode mathCodeFromLocale(Locale locale) {

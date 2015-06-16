@@ -108,6 +108,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	private CachedProvider<String,Hyphenator> hyphenatorProvider
 	= CachedProvider.newInstance(new DispatchingProvider<Hyphenator>(hyphenatorProviders));
 	
+	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
+		return this;
+	}
+	
 	/**
 	 * Recognized features:
 	 *

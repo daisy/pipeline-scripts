@@ -54,6 +54,10 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-transform.xpl"));
 		}
 		
+		public Transform.Provider<LiblouisCSSStyledDocumentTransform> withContext(Logger context) {
+			return this;
+		}
+		
 		/**
 		 * Recognized features:
 		 *

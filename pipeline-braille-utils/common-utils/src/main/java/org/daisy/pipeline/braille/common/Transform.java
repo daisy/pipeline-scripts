@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.common;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
 import org.daisy.pipeline.braille.common.WithSideEffect;
@@ -18,20 +19,30 @@ import org.slf4j.Logger;
  */
 public interface Transform {
 	
-	public interface Provider<T extends Transform> extends org.daisy.pipeline.braille.common.Provider<String,T> {
+	public interface Provider<T extends Transform> extends org.daisy.pipeline.braille.common.Provider<String,T>,
+	                                                       Contextual<Logger,Transform.Provider<T>> {
 		
 		public static class DispatchingProvider<T extends Transform>
 				extends org.daisy.pipeline.braille.common.Provider.DispatchingProvider<String,T>
 				implements Provider<T> {
 			private final Iterable<Transform.Provider<T>> dispatch;
+			private final Logger context;
 			public DispatchingProvider(Iterable<Transform.Provider<T>> dispatch) {
-				this.dispatch = dispatch;
+				this(dispatch, null);
 			}
-			@SuppressWarnings(
-				"unchecked" // safe cast to Provider<String,T>
-			)
+			private DispatchingProvider(Iterable<Transform.Provider<T>> dispatch, Logger context) {
+				this.dispatch = dispatch;
+				this.context = context;
+			}
 			public Iterable<org.daisy.pipeline.braille.common.Provider<String,T>> dispatch() {
-				return Iterables.<org.daisy.pipeline.braille.common.Provider<String,T>>concat(dispatch);
+				return Iterables.<Transform.Provider<T>,org.daisy.pipeline.braille.common.Provider<String,T>>transform(
+					dispatch,
+					new Function<Transform.Provider<T>,org.daisy.pipeline.braille.common.Provider<String,T>>() {
+						public org.daisy.pipeline.braille.common.Provider<String,T> apply(Transform.Provider<T> provider) {
+							return provider.withContext(context); }});
+			}
+			public Provider<T> withContext(Logger context) {
+				return new Provider.DispatchingProvider<T>(dispatch, context);
 			}
 		}
 		

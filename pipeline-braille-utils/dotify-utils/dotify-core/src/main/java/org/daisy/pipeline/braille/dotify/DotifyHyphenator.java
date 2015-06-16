@@ -14,6 +14,7 @@ import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
@@ -54,6 +55,10 @@ public class DotifyHyphenator implements Hyphenator {
 		}
 	)
 	public static class Provider implements Hyphenator.Provider<DotifyHyphenator> {
+		
+		public Transform.Provider<DotifyHyphenator> withContext(Logger context) {
+			return this;
+		}
 		
 		/**
 		 * Try to find a translator based on the given locale.

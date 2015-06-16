@@ -27,6 +27,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.ComponentContext;
 
+import org.slf4j.Logger;
+
 public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSStyledDocumentTransform {
 	
 	@Component(
@@ -44,6 +46,10 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		@Activate
 		private void activate(ComponentContext context, final Map<?,?> properties) {
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/dotify-transform.xpl"));
+		}
+		
+		public Transform.Provider<DotifyCSSStyledDocumentTransform> withContext(Logger context) {
+			return this;
 		}
 		
 		/**

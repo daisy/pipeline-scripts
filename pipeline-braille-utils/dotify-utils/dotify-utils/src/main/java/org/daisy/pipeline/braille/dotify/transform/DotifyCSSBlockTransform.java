@@ -27,6 +27,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.ComponentContext;
 
+import org.slf4j.Logger;
+
 public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransform {
 	
 	@Component(
@@ -43,6 +45,10 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		@Activate
 		private void activate(ComponentContext context, final Map<?,?> properties) {
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/dotify-block-translate.xpl"));
+		}
+		
+		public Transform.Provider<DotifyCSSBlockTransform> withContext(Logger context) {
+			return this;
 		}
 		
 		/**

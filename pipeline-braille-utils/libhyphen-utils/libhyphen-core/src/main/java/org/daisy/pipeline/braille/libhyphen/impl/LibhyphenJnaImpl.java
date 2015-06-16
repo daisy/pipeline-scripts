@@ -20,6 +20,7 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -159,6 +160,10 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	
 	public Iterable<LibhyphenHyphenator> get(String query) {
 		return provider.get(query);
+	}
+	
+	public Transform.Provider<LibhyphenHyphenator> withContext(Logger context) {
+		return this;
 	}
 	
 	private final static char US = '\u001F';

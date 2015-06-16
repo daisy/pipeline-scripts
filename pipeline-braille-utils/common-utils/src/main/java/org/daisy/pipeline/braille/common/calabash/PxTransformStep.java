@@ -27,6 +27,7 @@ import net.sf.saxon.s9api.QName;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import org.daisy.pipeline.braille.common.JobContext;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 public class PxTransformStep extends Eval {
 	
+	private final JobContext context;
 	private final Iterable<Transform.Provider<XProcTransform>> providers;
 	private final ReadableDocument pipeline;
 	
@@ -56,6 +58,7 @@ public class PxTransformStep extends Eval {
 	
 	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<Transform.Provider<XProcTransform>> providers) {
 		super(runtime, step);
+		this.context = new JobContextImpl(runtime.getMessageListener());
 		this.providers = providers;
 		pipeline = new ReadableDocument(runtime);
 		setInput("pipeline", pipeline);
@@ -97,7 +100,8 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = new DispatchingProvider<XProcTransform>(Iterables.filter(providers, filter)).get(query).iterator().next(); }
+				transform = new DispatchingProvider<XProcTransform>(Iterables.filter(providers, filter))
+					.withContext(context).get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);

@@ -14,6 +14,7 @@ import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
@@ -53,6 +54,10 @@ public class DotifyTranslator implements TextTransform {
 		}
 	)
 	public static class Provider implements TextTransform.Provider<DotifyTranslator> {
+		
+		public Transform.Provider<DotifyTranslator> withContext(Logger context) {
+			return this;
+		}
 		
 		/**
 		 * Try to find a translator based on the given locale.

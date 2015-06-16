@@ -52,6 +52,10 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-block-translate.xpl"));
 		}
 		
+		public Transform.Provider<LiblouisCSSBlockTransform> withContext(Logger context) {
+			return this;
+		}
+		
 		/**
 		 * Recognized features:
 		 *

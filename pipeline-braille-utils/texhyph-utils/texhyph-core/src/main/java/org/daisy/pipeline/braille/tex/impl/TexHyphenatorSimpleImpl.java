@@ -16,6 +16,7 @@ import com.google.common.collect.Iterables;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -69,6 +70,10 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 	
 	protected void unbindTableRegistry(TexHyphenatorTableRegistry registry) {
 		tableRegistry = null;
+	}
+	
+	public Transform.Provider<TexHyphenator> withContext(Logger context) {
+		return this;
 	}
 	
 	/**

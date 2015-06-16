@@ -12,6 +12,7 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -58,6 +59,10 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 	
 	protected void unbindLiblouisJnaImpl(LiblouisJnaImpl provider) {
 		tableProvider = null;
+	}
+	
+	public Transform.Provider<LiblouisHyphenator> withContext(Logger context) {
+		return this;
 	}
 	
 	/**
