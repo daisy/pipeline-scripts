@@ -290,8 +290,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(cssStyle[i]));
 				String val = style.remove("text-transform");
 				typeform[i] = Typeform.PLAIN;
-				if (val != null)
+				if (val != null) {
+					text[i] = textFromTextTransform(text[i], val);
 					typeform[i] |= typeformFromTextTransform(val);
+				}
 				val = style.remove("hyphens");
 				hyphenate[i] = false;
 				if (val != null)
@@ -501,7 +503,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	
 	private final static Splitter.MapSplitter CSS_PARSER
 		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
-	
+
 	/**
 	 * @parameter style An inline CSS style
 	 * @returns the corresponding typeform. Possible values are:
@@ -532,6 +534,23 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	}
 	
 	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
+
+	/**
+	 * @parameter text The text to be transformed.
+	 * @parameter textTransform A text-transform value as a space separated list of keywords.
+	 * @returns the transformed text, or the original text if no transformations were performed.
+	 */
+	protected static String textFromTextTransform(String text, String textTransform) {
+		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+			if (tt.equals("uppercase"))
+				text = text.toUpperCase();
+			else if (tt.equals("lowercase"))
+				text = text.toLowerCase();
+			else
+				logger.warn("text-transform: {} not supported", tt);
+		}
+		return text;
+	}
 	
 	/**
 	 * @parameter textTransform A text-transform value as a space separated list of keywords.
