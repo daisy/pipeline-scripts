@@ -6,7 +6,8 @@ import java.util.Map;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
@@ -116,7 +117,7 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 			if (locale != null)
 				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
-			return Iterables.<Translator,LiblouisHyphenator>transform(
+			return transform(
 				tables,
 				new Function<Translator,LiblouisHyphenator>() {
 						public LiblouisHyphenator apply(Translator table) {
@@ -152,7 +153,7 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 			// positions but also the segment boundaries.
 			byte[] positions;
 			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-			String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
+			String[] unhyphenated = toArray(SEGMENT_SPLITTER.split(t._1), String.class);
 			t = extractHyphens(t._2, t._1, null, null, US);
 			String _text = t._1;
 			if (t._2 != null)

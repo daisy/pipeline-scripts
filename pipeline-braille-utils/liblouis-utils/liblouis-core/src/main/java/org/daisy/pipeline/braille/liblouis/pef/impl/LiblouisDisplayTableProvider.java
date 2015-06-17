@@ -6,9 +6,10 @@ import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
+import static com.google.common.base.Predicates.notNull;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.braille.api.factory.AbstractFactory;
 import org.daisy.braille.api.table.BrailleConverter;
@@ -73,8 +74,8 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		for (String feature : query.keySet())
 			if (!supportedFeatures.contains(feature))
 				return empty;
-		return Iterables.<Table>filter(
-			Iterables.<Translator,Table>transform(
+		return filter(
+			transform(
 				tableProvider.get(serializeQuery(query)),
 				new Function<Translator,Table>() {
 					public Table apply(Translator table) {
@@ -83,7 +84,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 							if (subTables[0].toString().endsWith(".dis"))
 								return new LiblouisDisplayTable(table);
 						return null; }}),
-			Predicates.notNull());
+			notNull());
 	}
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();

@@ -9,7 +9,8 @@ import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.ResourcePath;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
@@ -133,8 +134,8 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	};
 	
 	public Iterable<URI> listAllTableFiles() {
-		return Iterables.<URI>concat(
-			Iterables.<LiblouisTablePath,Iterable<URI>>transform(
+		return concat(
+			transform(
 				paths.values(),
 				listTableFiles));
 	}

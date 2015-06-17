@@ -3,7 +3,8 @@ package org.daisy.pipeline.braille.liblouis;
 import java.net.URI;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -29,8 +30,8 @@ public class LiblouisTable {
 	}
 	
 	public static URI[] tokenizeTable(String table) {
-		return Iterables.toArray(
-			Iterables.<String,URI>transform(
+		return toArray(
+			transform(
 				Splitter.on(',').split(table),
 				asURI),
 			URI.class);

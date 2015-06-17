@@ -2,7 +2,6 @@ package org.daisy.pipeline.braille.liblouis;
 
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
-import org.daisy.pipeline.braille.common.TextTransform;
 
 public abstract class LiblouisTranslator implements CSSStyledTextTransform, BrailleTranslator {
 	

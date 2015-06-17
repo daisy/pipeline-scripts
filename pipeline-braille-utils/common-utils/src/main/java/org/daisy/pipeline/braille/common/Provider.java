@@ -12,7 +12,8 @@ import java.util.Properties;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.util.Function2;
 
@@ -91,7 +92,7 @@ public interface Provider<Q,X> {
 	public static abstract class DispatchingProvider<Q,X> implements Provider<Q,X> {
 		public abstract Iterable<Provider<Q,X>> dispatch();
 		public Iterable<X> get(final Q query) {
-			return Iterables.concat(Iterables.transform(
+			return concat(transform(
 				dispatch(),
 				new Function<Provider<Q,X>,Iterable<X>>() {
 					public Iterable<X> apply(Provider<Q,X> provider) {

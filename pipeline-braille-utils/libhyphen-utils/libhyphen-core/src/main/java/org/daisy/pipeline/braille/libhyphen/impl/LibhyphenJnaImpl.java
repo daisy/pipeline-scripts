@@ -12,9 +12,12 @@ import ch.sbs.jhyphen.Hyphenator;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
+import static com.google.common.base.Predicates.notNull;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
@@ -80,7 +83,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	)
 	protected void bindLibrary(BundledNativePath path) {
 		if (nativePath == null) {
-			URI libraryPath = Iterables.<URI>getFirst(path.get("libhyphen"), null);
+			URI libraryPath = getFirst(path.get("libhyphen"), null);
 			if (libraryPath != null) {
 				Hyphen.setLibraryPath(asFile(path.resolve(libraryPath)));
 				nativePath = path;
@@ -149,13 +152,13 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 				else
 					locale = parseLocale("und");
 				if (tableProvider != null) {
-					return Iterables.<LibhyphenHyphenator>filter(
-						Iterables.<URI,LibhyphenHyphenator>transform(
+					return filter(
+						transform(
 							tableProvider.get(locale),
 							new Function<URI,LibhyphenHyphenator>() {
 								public LibhyphenHyphenator apply(URI table) {
 									return LibhyphenJnaImpl.this.get(table); }}),
-						Predicates.notNull()); }
+						notNull()); }
 				return empty; }};
 	
 	public Iterable<LibhyphenHyphenator> get(String query) {
@@ -197,7 +200,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 				// positions but also the segment boundaries.
 				byte[] positions;
 				Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-				String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
+				String[] unhyphenated = toArray(SEGMENT_SPLITTER.split(t._1), String.class);
 				t = extractHyphens(t._2, t._1, null, null, US);
 				String _text = t._1;
 				if (t._2 != null)

@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.find;
 
 import org.osgi.service.component.ComponentContext;
 
@@ -67,7 +67,7 @@ public class BundledNativePath extends BundledResourcePath implements Provider<S
 			possiblePaths.add(asURI("x86/" + fileName));
 			possiblePaths.add(asURI(os + "/x86/" + fileName)); }
 		try {
-			return Iterables.find(
+			return find(
 				possiblePaths,
 				new Predicate<URI>() { public boolean apply(URI p) { return resources.contains(p); }}); }
 		catch (NoSuchElementException e) { return null; }
@@ -81,7 +81,7 @@ public class BundledNativePath extends BundledResourcePath implements Provider<S
 		possiblePaths.add(asURI(arch + "/" + fileName));
 		possiblePaths.add(asURI(os + "/" + arch + "/" + fileName));
 		try {
-			return Iterables.find(
+			return find(
 				possiblePaths,
 				new Predicate<URI>() { public boolean apply(URI p) { return resources.contains(p); }}); }
 		catch (NoSuchElementException e) { return null; }

@@ -8,7 +8,7 @@ import com.google.common.base.Functions;
 import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.filter;
 
 import org.daisy.pipeline.braille.common.BundledResourcePath;
 import org.daisy.pipeline.braille.common.Provider;
@@ -54,7 +54,7 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 		}
 		@Override
 		public Iterable<URI> fallback(Locale locale) {
-			return Iterables.<URI>filter(
+			return filter(
 				resources,
 				Predicates.compose(
 					matchesGlobPattern(String.format("hyph_%s_*.dic", locale.getLanguage().toLowerCase())),

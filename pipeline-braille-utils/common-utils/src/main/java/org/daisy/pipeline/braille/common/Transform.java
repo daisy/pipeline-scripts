@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.WithSideEffect;
 
@@ -34,7 +34,7 @@ public interface Transform {
 				this.context = context;
 			}
 			public Iterable<org.daisy.pipeline.braille.common.Provider<String,T>> dispatch() {
-				return Iterables.<Transform.Provider<T>,org.daisy.pipeline.braille.common.Provider<String,T>>transform(
+				return transform(
 					dispatch,
 					new Function<Transform.Provider<T>,org.daisy.pipeline.braille.common.Provider<String,T>>() {
 						public org.daisy.pipeline.braille.common.Provider<String,T> apply(Transform.Provider<T> provider) {

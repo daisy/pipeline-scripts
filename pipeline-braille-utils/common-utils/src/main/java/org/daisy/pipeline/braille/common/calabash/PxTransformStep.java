@@ -11,7 +11,7 @@ import com.google.common.base.Predicate;
 import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.base.Predicates.instanceOf;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.filter;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -100,7 +100,7 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = new DispatchingProvider<XProcTransform>(Iterables.filter(providers, filter))
+				transform = new DispatchingProvider<XProcTransform>(filter(providers, filter))
 					.withContext(context).get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }

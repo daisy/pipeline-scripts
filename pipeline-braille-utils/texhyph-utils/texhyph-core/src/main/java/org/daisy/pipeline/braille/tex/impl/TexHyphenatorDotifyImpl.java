@@ -13,8 +13,9 @@ import java.util.Properties;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 
 import net.davidashen.text.Utf8TexParser.TexParserException;
 
@@ -162,13 +163,13 @@ public class TexHyphenatorDotifyImpl implements TexHyphenator.Provider {
 				logger.warn("A query with '" + q.keySet().iterator().next() + "' never matches anything");
 				return empty; }
 			if (tableRegistry != null) {
-				return Iterables.<TexHyphenator>filter(
-					Iterables.<URI,TexHyphenator>transform(
+				return filter(
+					transform(
 						tableRegistry.get(locale),
 						new Function<URI,TexHyphenator>() {
 							public TexHyphenator apply(URI table) {
 								return TexHyphenatorDotifyImpl.this.get(table); }}),
-					Predicates.notNull()); }
+					notNull()); }
 			return empty; }};
 	
 	/*

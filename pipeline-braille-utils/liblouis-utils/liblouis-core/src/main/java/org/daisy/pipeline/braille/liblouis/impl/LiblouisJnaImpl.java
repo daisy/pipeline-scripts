@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
@@ -10,8 +9,11 @@ import java.util.Map;
 import com.google.common.base.Function;
 import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
@@ -132,8 +134,8 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			return;
 		logger.debug("Indexing tables");
 		Louis.getLibrary().lou_indexTables(
-			Iterables.toArray(
-				Iterables.<URI,String>transform(
+			toArray(
+				transform(
 					tableRegistry.listAllTableFiles(),
 					toStringFunction()),
 			String.class));
@@ -154,7 +156,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	)
 	protected void bindLibrary(BundledNativePath path) {
 		if (!LIBLOUIS_EXTERNAL && nativePath == null) {
-			URL libraryPath = path.resolve(Iterables.<URI>getFirst(path.get("liblouis"), null));
+			URL libraryPath = path.resolve(getFirst(path.get("liblouis"), null));
 			if (libraryPath != null) {
 				Louis.setLibraryPath(asFile(libraryPath));
 				nativePath = path;
@@ -221,7 +223,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	= new CachedProvider<Map<String,Optional<String>>,Translator>() {
 		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
-			return Iterables.<Translator>filter(
+			return filter(
 				new ImmutableLazyValue<Translator>() {
 					public Translator delegate() {
 						String table = null;
@@ -256,7 +258,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 							catch (CompilationException e) {
 								logger.warn("Could not compile translator", e); }}
 						return null; }},
-				Predicates.notNull());
+				notNull());
 		}
 	};
 	
