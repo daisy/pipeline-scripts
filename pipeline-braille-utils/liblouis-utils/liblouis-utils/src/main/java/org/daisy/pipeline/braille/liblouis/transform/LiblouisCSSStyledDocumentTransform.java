@@ -80,7 +80,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 						return null;
 				String newQuery = serializeQuery(q);
 				try {
-					final CSSBlockTransform transform = logSelect(newQuery, cssBlockTransformProvider.get(newQuery)).apply(logger).iterator().next();
+					final CSSBlockTransform transform = logSelect(newQuery, cssBlockTransformProvider.get(newQuery)).iterator().next().apply(logger);
 					final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
 					return logCreate(
 						new LiblouisCSSStyledDocumentTransform() {

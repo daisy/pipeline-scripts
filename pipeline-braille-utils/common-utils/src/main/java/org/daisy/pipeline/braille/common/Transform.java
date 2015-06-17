@@ -7,7 +7,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
 import org.daisy.pipeline.braille.common.WithSideEffect;
-import org.daisy.pipeline.braille.common.util.Function0;
 
 import org.slf4j.Logger;
 
@@ -50,64 +49,67 @@ public interface Transform {
 			
 			public static <T extends Transform> WithSideEffect<T,Logger> logCreate(final T t) {
 				return new WithSideEffect<T,Logger>() {
-					public T delegate(Logger logger) {
-						if (logger != null)
-							sideEffect(debug(logger, "Created " + t));
-						return t;
-					}
-				};
+					public T _apply() {
+						applyWithSideEffect(debug("Created " + t));
+						return t; }};
 			}
 			
-			public static <T extends Transform> WithSideEffect<Iterable<T>,Logger> logSelect(final String query, final Iterable<T> iterable) {
-				return new WithSideEffect<Iterable<T>,Logger>() {
-					public Iterable<T> delegate(final Logger logger) {
-						if (logger == null)
-							return iterable;
-						return new Iterable<T>() {
-							public Iterator<T> iterator() {
-								return new Iterator<T>() {
-									Iterator<T> i = null;
-									public boolean hasNext() {
-										if (i == null) i = iterable.iterator();
-										return i.hasNext();
+			public static <T extends Transform> Iterable<WithSideEffect<T,Logger>> logSelect(final String query,
+			                                                                                 final Iterable<T> iterable) {
+				return new Iterable<WithSideEffect<T,Logger>>() {
+					public Iterator<WithSideEffect<T,Logger>> iterator() {
+						return new Iterator<WithSideEffect<T,Logger>>() {
+							Iterator<T> i = null;
+							public boolean hasNext() {
+								if (i == null)
+									return true;
+								return i.hasNext();
+							}
+							public WithSideEffect<T,Logger> next() {
+								final T t;
+								if (i == null) {
+									i = iterable.iterator();
+									try { t = i.next(); }
+									catch (final NoSuchElementException e) {
+										return new WithSideEffect<T,Logger>() {
+											public T _apply() {
+												applyWithSideEffect(debug("No match for query " + query));
+												throw e;
+											}
+										};
 									}
-									public T next() {
-										T t;
-										if (i == null) {
-											i = iterable.iterator();
-											try { t = i.next(); }
-											catch (NoSuchElementException e) {
-												logger.debug("No match for query " + query);
-												throw e; }}
-										else
-											t = i.next();
-										logger.info("Selected " + t + " for query " + query);
+								} else
+									t = i.next();
+								return new WithSideEffect<T,Logger>() {
+									public T _apply() {
+										applyWithSideEffect(info("Selected " + t + " for query " + query));
 										return t;
 									}
-									public void remove() {
-										if (i == null) i = iterable.iterator();
-										i.remove();
-									}
 								};
+							}
+							public void remove() {
+								throw new UnsupportedOperationException();
 							}
 						};
 					}
 				};
 			}
 			
-			private static Function0<Void> debug(final Logger logger, final String message) {
-				return new Function0<Void>() {
-					public Void apply() {
-						logger.debug(message);
+			private static Function<Logger,Void> debug(final String message) {
+				return new Function<Logger,Void>() {
+					public Void apply(Logger logger) {
+						if (logger != null)
+							logger.debug(message);
 						return null;
 					}
 				};
 			}
 			
-			private static Function0<Void> info(final Logger logger, final String message) {
-				return new Function0<Void>() {
-					public Void apply() {
-						logger.info(message);
+			private static Function<Logger,Void> info(final String message) {
+				return new Function<Logger,Void>() {
+					public Void apply(Logger logger) {
+						if (logger != null)
+							logger.info(message);
 						return null;
 					}
 				};

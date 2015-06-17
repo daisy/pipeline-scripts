@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Objects.toStringHelper;
@@ -28,6 +29,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTable.tokenizeTable;
@@ -203,15 +205,19 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 											hyphenatorQuery.put("hyphenator", Optional.<String>of(hyphenator));
 										hyphenatorQuery.put("locale", Optional.<String>of(locale));
 										String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
-										Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString)).apply(logger);
+										Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
+											= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
 										translators = Iterables.<LiblouisTranslator>concat(
 											translators,
 											Iterables.<LiblouisTranslator>filter(
-												Iterables.<Hyphenator,LiblouisTranslator>transform(
+												Iterables.<WithSideEffect<Hyphenator,Logger>,LiblouisTranslator>transform(
 													hyphenators,
-													new Function<Hyphenator,LiblouisTranslator>() {
-														public LiblouisTranslator apply(Hyphenator hyphenator) {
-															return logCreate(new LiblouisTranslatorImpl(table, hyphenator)).apply(logger); }}),
+													new Function<WithSideEffect<Hyphenator,Logger>,LiblouisTranslator>() {
+														public LiblouisTranslator apply(WithSideEffect<Hyphenator,Logger> hyphenator) {
+															Hyphenator hyph;
+															try { hyph = hyphenator.apply(logger); }
+															catch (NoSuchElementException e) { return null; }
+															return logCreate(new LiblouisTranslatorImpl(table, hyph)).apply(logger); }}),
 												Predicates.notNull())); }}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 								translators = Iterables.<LiblouisTranslator>concat(

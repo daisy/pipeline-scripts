@@ -79,7 +79,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 						return null;
 				String newQuery = serializeQuery(q);
 				try {
-					final LiblouisTranslator translator = logSelect(newQuery, liblouisTranslatorProvider.get(newQuery)).apply(logger).iterator().next();
+					final LiblouisTranslator translator = logSelect(newQuery, liblouisTranslatorProvider.get(newQuery)).iterator().next().apply(logger);
 					final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
 					return logCreate(
 						new LiblouisCSSBlockTransform() {

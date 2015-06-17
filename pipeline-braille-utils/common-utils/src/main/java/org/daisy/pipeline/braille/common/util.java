@@ -124,7 +124,27 @@ public abstract class util {
 	public static abstract class Functions {
 		
 		public static Function0<Void> noOp = new Function0<Void> () {
-			public Void apply() { return null; }};
+			public Void apply() { return null; }
+		};
+		
+		public static <F> Function<F,Void> sideEffect(final Function<? super F,?> function) {
+			return new Function<F,Void>() {
+				public Void apply(F input) {
+					function.apply(input);
+					return null;
+				}
+			};
+		}
+		
+		public static <F> Function<F,Void> doAll(final Iterable<Function<? super F,Void>> functions) {
+			return new Function<F,Void>() {
+				public Void apply(F input) {
+					for (Function<? super F,Void> f : functions)
+						f.apply(input);
+					return null;
+				}
+			};
+		}
 	}
 	
 	public static abstract class Predicates {

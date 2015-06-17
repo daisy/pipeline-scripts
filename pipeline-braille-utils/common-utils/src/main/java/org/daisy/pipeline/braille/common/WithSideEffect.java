@@ -2,8 +2,6 @@ package org.daisy.pipeline.braille.common;
 
 import java.util.List;
 
-import org.daisy.pipeline.braille.common.util.Function0;
-
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
@@ -12,25 +10,28 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 	private T value = null;
 	private boolean computed = false;
 	
-	public T apply(W world) {
+	public final T apply(W world) {
 		if (!computed) {
-			sideEffectsBuilder = new ImmutableList.Builder<Function0<Void>>();
-			value = delegate(world);
+			sideEffectsBuilder = new ImmutableList.Builder<Function<? super W,?>>();
+			firstWorld = world;
+			value = _apply();
 			sideEffects = sideEffectsBuilder.build();
+			sideEffectsBuilder = null;
 			computed = true; }
 		else
-			for (Function0<Void> sideEffect : sideEffects)
-				sideEffect.apply();
+			for (Function<? super W,?> sideEffect : sideEffects)
+				try { sideEffect.apply(world); } catch(Throwable t) {}
 		return value;
 	}
 	
-	protected abstract T delegate(W world);
+	protected abstract T _apply();
 	
-	private List<Function0<Void>> sideEffects;
-	private ImmutableList.Builder<Function0<Void>> sideEffectsBuilder;
+	private List<Function<? super W,?>> sideEffects;
+	private ImmutableList.Builder<Function<? super W,?>> sideEffectsBuilder;
+	private W firstWorld;
 	
-	protected void sideEffect(Function0<Void> sideEffect) {
-		sideEffect.apply();
-		sideEffectsBuilder.add(sideEffect);
+	protected final <V> V applyWithSideEffect(final Function<? super W,? extends V> withSideEffect) {
+		sideEffectsBuilder.add(withSideEffect);
+		return withSideEffect.apply(firstWorld);
 	}
 }
