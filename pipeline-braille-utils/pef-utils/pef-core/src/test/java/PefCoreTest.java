@@ -1,6 +1,6 @@
 import javax.inject.Inject;
 
-import org.daisy.braille.table.Table;
+import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -35,7 +35,7 @@ public class PefCoreTest {
 	
 	@Test
 	public void testBrailleUtilsTableCatalog() {
-		Table table = provider.get("(id:'org.daisy.braille.table.DefaultTableProvider.TableType.EN_US')").iterator().next();
+		Table table = provider.get("(id:'org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US')").iterator().next();
 		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
 	
@@ -50,9 +50,8 @@ public class PefCoreTest {
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-catalog").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),

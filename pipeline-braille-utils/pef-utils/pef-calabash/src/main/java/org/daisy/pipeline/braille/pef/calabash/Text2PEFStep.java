@@ -13,9 +13,9 @@ import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
 
+import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.table.TableCatalogService;
 import org.daisy.braille.pef.TextHandler;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalogService;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;

@@ -20,13 +20,13 @@ import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserCatalogService;
-import org.daisy.braille.embosser.EmbosserFeatures;
-import org.daisy.braille.embosser.UnsupportedWidthException;
+import org.daisy.braille.api.embosser.Embosser;
+import org.daisy.braille.api.embosser.EmbosserCatalogService;
+import org.daisy.braille.api.embosser.EmbosserFeatures;
+import org.daisy.braille.api.table.Table;
 import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
-import org.daisy.braille.table.Table;
+import org.daisy.braille.pef.UnsupportedWidthException;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;

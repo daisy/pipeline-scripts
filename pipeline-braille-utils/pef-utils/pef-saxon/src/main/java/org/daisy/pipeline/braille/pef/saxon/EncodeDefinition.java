@@ -14,7 +14,7 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.braille.table.Table;
+import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.common.Provider.CachedProvider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;

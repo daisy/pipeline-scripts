@@ -19,7 +19,7 @@
   <dependencies>
     <dependency>
       <groupId>org.daisy.braille</groupId>
-      <artifactId>brailleUtils-core</artifactId>
+      <artifactId>braille-utils.api</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

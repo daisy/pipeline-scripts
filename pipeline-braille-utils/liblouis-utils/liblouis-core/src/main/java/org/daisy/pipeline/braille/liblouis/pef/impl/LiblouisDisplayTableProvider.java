@@ -10,14 +10,16 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
+import org.daisy.braille.api.factory.AbstractFactory;
+import org.daisy.braille.api.table.BrailleConverter;
+import org.daisy.braille.api.table.Table;
+
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.braille.table.AbstractTable;
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.table.Table;
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
+
 import org.liblouis.Translator;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +31,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 	name = "org.daisy.pipeline.braille.liblouis.pef.impl.LiblouisDisplayTableProvider",
 	service = {
 		TableProvider.class,
-		org.daisy.braille.table.TableProvider.class
+		org.daisy.braille.api.table.TableProvider.class
 	}
 )
 public class LiblouisDisplayTableProvider extends AbstractTableProvider {
@@ -87,7 +89,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();
 	
 	@SuppressWarnings("serial")
-	private static class LiblouisDisplayTable extends AbstractTable {
+	private static class LiblouisDisplayTable extends AbstractFactory implements Table {
 		
 		final Translator table;
 		

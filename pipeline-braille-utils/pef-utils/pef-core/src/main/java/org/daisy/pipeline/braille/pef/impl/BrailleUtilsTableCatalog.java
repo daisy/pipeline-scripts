@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalogService;
+import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.table.TableCatalogService;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.pef.TableProvider;

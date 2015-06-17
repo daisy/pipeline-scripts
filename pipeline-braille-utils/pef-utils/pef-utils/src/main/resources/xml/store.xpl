@@ -15,7 +15,7 @@
     
     <p:option name="include-preview" required="false" select="'false'"/>
     <p:option name="include-brf" required="false" select="'false'"/>
-    <p:option name="brf-table" required="false" select="'(id:&quot;org.daisy.braille.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
+    <p:option name="brf-table" required="false" select="'(id:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
     
     <p:import href="utils/normalize-uri.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-to-html/library.xpl"/>

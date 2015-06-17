@@ -7,11 +7,11 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import org.daisy.braille.table.AbstractTable;
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableProvider;
 import org.daisy.braille.api.factory.FactoryProperties;
+import org.daisy.braille.api.factory.AbstractFactory;
+import org.daisy.braille.api.table.BrailleConverter;
+import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.table.TableProvider;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -22,20 +22,30 @@ import org.osgi.service.component.annotations.Component;
 public class NabccEightDotTableProvider implements TableProvider {
 	
 	public final static String IDENTIFIER = "org.daisy.pipeline.braille.pef.impl.NabccEightDotTable";
-	private final Table table;
+	private final Table table = new NabccEightDotTable();
 	
 	@SuppressWarnings("serial")
-	public NabccEightDotTableProvider() {
-		table = new AbstractTable("NABCC 8-dot [louis:format]", "", IDENTIFIER) {
-			public BrailleConverter newBrailleConverter() {
-				return new NabccEightDotBrailleConverter(); }
-			public void setFeature(String key, Object value) {
-				throw new IllegalArgumentException("Unknown feature: " + key); }
-			public Object getFeature(String key) {
-				throw new IllegalArgumentException("Unknown feature: " + key); }
-			public Object getProperty(String key) {
-				return null; }
-		};
+	private static class NabccEightDotTable extends AbstractFactory implements Table {
+		
+		private NabccEightDotTable() {
+			super("NABCC 8-dot [louis:format]", "", IDENTIFIER);
+		}
+		
+		public BrailleConverter newBrailleConverter() {
+			return new NabccEightDotBrailleConverter();
+		}
+		
+		public void setFeature(String key, Object value) {
+			throw new IllegalArgumentException("Unknown feature: " + key);
+		}
+		
+		public Object getFeature(String key) {
+			throw new IllegalArgumentException("Unknown feature: " + key);
+		}
+		
+		public Object getProperty(String key) {
+			return null;
+		}
 	}
 	
 	public Collection<FactoryProperties> list() {

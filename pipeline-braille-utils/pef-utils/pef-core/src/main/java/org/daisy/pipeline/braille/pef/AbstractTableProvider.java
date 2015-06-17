@@ -11,10 +11,10 @@ import com.google.common.collect.ImmutableList;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
-import org.daisy.braille.table.Table;
 import org.daisy.braille.api.factory.FactoryProperties;
+import org.daisy.braille.api.table.Table;
 
-public abstract class AbstractTableProvider implements TableProvider, org.daisy.braille.table.TableProvider {
+public abstract class AbstractTableProvider implements TableProvider, org.daisy.braille.api.table.TableProvider {
 	
 	protected abstract Iterable<Table> get(Map<String,Optional<String>> query);
 	

@@ -1,6 +1,6 @@
 package org.daisy.pipeline.braille.pef;
 
-import org.daisy.braille.table.Table;
+import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.common.Provider;
 
 /**

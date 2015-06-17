@@ -5,9 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalogService;
+import org.daisy.braille.api.table.BrailleConverter;
+import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.table.TableCatalogService;
+
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Provider.DispatchingProvider;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
@@ -74,8 +75,7 @@ public class LiblouisCoreTest {
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-core").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),

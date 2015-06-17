@@ -35,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.braille</groupId>
-      <artifactId>brailleUtils-core</artifactId>
+      <artifactId>braille-utils.api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
