@@ -10,11 +10,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import org.daisy.pipeline.braille.common.Cached;
+import org.daisy.pipeline.braille.common.Memoizing;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -50,12 +49,12 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 		}
 		
 		public LiblouisMathMLTransform get(MathCode code) {
-			return translators.get(code);
+			return translators.apply(code);
 		}
 		
-		private Cached<MathCode,LiblouisMathMLTransform> translators
-		= new Cached<MathCode,LiblouisMathMLTransform>() {
-			public LiblouisMathMLTransform delegate(final MathCode code) {
+		private Memoizing<MathCode,LiblouisMathMLTransform> translators
+		= new Memoizing<MathCode,LiblouisMathMLTransform>() {
+			public LiblouisMathMLTransform _apply(final MathCode code) {
 				final URI href = Provider.this.href;
 				return logCreate(
 					new LiblouisMathMLTransform() {

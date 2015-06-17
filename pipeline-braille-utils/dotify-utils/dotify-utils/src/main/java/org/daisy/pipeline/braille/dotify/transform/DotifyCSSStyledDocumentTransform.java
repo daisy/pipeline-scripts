@@ -10,14 +10,16 @@ import javax.xml.namespace.QName;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
+import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Activate;
@@ -60,12 +62,12 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
 		public Iterable<DotifyCSSStyledDocumentTransform> get(String query) {
-			return Optional.<DotifyCSSStyledDocumentTransform>fromNullable(transforms.get(query)).asSet();
+			return Optional.<DotifyCSSStyledDocumentTransform>fromNullable(transforms.apply(query)).asSet();
 		}
 		
-		private Cached<String,DotifyCSSStyledDocumentTransform> transforms
-		= new Cached<String,DotifyCSSStyledDocumentTransform>() {
-			public DotifyCSSStyledDocumentTransform delegate(String query) {
+		private Memoizing<String,DotifyCSSStyledDocumentTransform> transforms
+		= new Memoizing<String,DotifyCSSStyledDocumentTransform>() {
+			public DotifyCSSStyledDocumentTransform _apply(String query) {
 				final URI href = Provider.this.href;
 				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 				Optional<String> o;
@@ -105,8 +107,8 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		private List<Transform.Provider<CSSBlockTransform>> cssBlockTransformProviders
 		= new ArrayList<Transform.Provider<CSSBlockTransform>>();
 		
-		private CachedProvider<String,CSSBlockTransform> cssBlockTransformProvider
-		= CachedProvider.newInstance(new DispatchingProvider<CSSBlockTransform>(cssBlockTransformProviders));
+		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,CSSBlockTransform> cssBlockTransformProvider
+		= memoize(dispatch(cssBlockTransformProviders));
 		
 	}
 }

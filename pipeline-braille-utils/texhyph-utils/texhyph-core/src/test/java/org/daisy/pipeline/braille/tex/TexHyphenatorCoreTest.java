@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
@@ -80,6 +80,6 @@ public class TexHyphenatorCoreTest {
 				providers.add(context.getService(ref)); }
 		catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e); }
-		return new DispatchingProvider<T>(providers);
+		return dispatch(providers);
 	}
 }

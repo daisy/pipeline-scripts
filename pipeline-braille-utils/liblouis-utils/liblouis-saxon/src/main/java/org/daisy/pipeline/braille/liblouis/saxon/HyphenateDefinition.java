@@ -15,9 +15,10 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Provider.CachedProvider;
-import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -58,8 +59,8 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private List<Transform.Provider<LiblouisHyphenator>> providers
 	= new ArrayList<Transform.Provider<LiblouisHyphenator>>();
-	private CachedProvider<String,LiblouisHyphenator> hyphenators
-	= CachedProvider.newInstance(new DispatchingProvider<LiblouisHyphenator>(providers));
+	private Provider.MemoizingProvider<String,LiblouisHyphenator> hyphenators
+	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;

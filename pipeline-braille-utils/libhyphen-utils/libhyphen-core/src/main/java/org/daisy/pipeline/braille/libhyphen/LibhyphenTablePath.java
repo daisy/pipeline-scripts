@@ -37,7 +37,7 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 	}
 	
 	private Provider<Locale,URI> provider = new LocaleBasedProvider<Locale,URI>() {
-		public Iterable<URI> delegate(Locale locale) {
+		public Iterable<URI> _get(Locale locale) {
 			String language = locale.getLanguage().toLowerCase();
 			String country = locale.getCountry().toUpperCase();
 			String variant = locale.getVariant().toLowerCase();

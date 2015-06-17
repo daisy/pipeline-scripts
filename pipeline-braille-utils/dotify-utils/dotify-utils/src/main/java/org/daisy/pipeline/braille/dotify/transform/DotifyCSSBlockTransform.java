@@ -10,13 +10,15 @@ import javax.xml.namespace.QName;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
+import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Cached;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
@@ -60,12 +62,12 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		 * Other features are used for finding sub-transformers of type DotifyTranslator.
 		 */
 		public Iterable<DotifyCSSBlockTransform> get(String query) {
-			return Optional.<DotifyCSSBlockTransform>fromNullable(transforms.get(query)).asSet();
+			return Optional.<DotifyCSSBlockTransform>fromNullable(transforms.apply(query)).asSet();
 		}
 		
-		private Cached<String,DotifyCSSBlockTransform> transforms
-		= new Cached<String,DotifyCSSBlockTransform>() {
-			public DotifyCSSBlockTransform delegate(String query) {
+		private Memoizing<String,DotifyCSSBlockTransform> transforms
+		= new Memoizing<String,DotifyCSSBlockTransform>() {
+			public DotifyCSSBlockTransform _apply(String query) {
 				final URI href = Provider.this.href;
 				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 				Optional<String> o;
@@ -100,8 +102,9 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		
 		private List<Transform.Provider<DotifyTranslator>> dotifyTranslatorProviders
 		= new ArrayList<Transform.Provider<DotifyTranslator>>();
-		private CachedProvider<String,DotifyTranslator> dotifyTranslatorProvider
-		= CachedProvider.newInstance(new DispatchingProvider<DotifyTranslator>(dotifyTranslatorProviders));
+		
+		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,DotifyTranslator> dotifyTranslatorProvider
+		= memoize(dispatch(dotifyTranslatorProviders));
 	
 	}
 }

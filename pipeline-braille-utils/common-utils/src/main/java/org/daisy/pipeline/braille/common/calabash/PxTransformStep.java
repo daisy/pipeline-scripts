@@ -30,7 +30,7 @@ import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.JobContext;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -100,8 +100,7 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = new DispatchingProvider<XProcTransform>(filter(providers, filter))
-					.withContext(context).get(query).iterator().next(); }
+				transform = dispatch(filter(providers, filter)).withContext(context).get(query).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);

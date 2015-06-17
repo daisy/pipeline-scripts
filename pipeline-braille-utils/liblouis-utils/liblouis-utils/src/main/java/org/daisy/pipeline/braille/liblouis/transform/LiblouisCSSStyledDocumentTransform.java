@@ -15,12 +15,14 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Cached;
+import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.XProcTransform;
@@ -66,12 +68,12 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
 		public Iterable<LiblouisCSSStyledDocumentTransform> get(String query) {
-			return Optional.<LiblouisCSSStyledDocumentTransform>fromNullable(transforms.get(query)).asSet();
+			return Optional.<LiblouisCSSStyledDocumentTransform>fromNullable(transforms.apply(query)).asSet();
 		}
 		
-		private Cached<String,LiblouisCSSStyledDocumentTransform> transforms
-		= new Cached<String,LiblouisCSSStyledDocumentTransform>() {
-			public LiblouisCSSStyledDocumentTransform delegate(final String query) {
+		private Memoizing<String,LiblouisCSSStyledDocumentTransform> transforms
+		= new Memoizing<String,LiblouisCSSStyledDocumentTransform>() {
+			public LiblouisCSSStyledDocumentTransform _apply(final String query) {
 				final URI href = Provider.this.href;
 				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 				Optional<String> o;
@@ -120,8 +122,8 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 		private List<Transform.Provider<CSSBlockTransform>> cssBlockTransformProviders
 		= new ArrayList<Transform.Provider<CSSBlockTransform>>();
 		
-		private CachedProvider<String,CSSBlockTransform> cssBlockTransformProvider
-		= CachedProvider.newInstance(new DispatchingProvider<CSSBlockTransform>(cssBlockTransformProviders));
+		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,CSSBlockTransform> cssBlockTransformProvider
+		= memoize(dispatch(cssBlockTransformProviders));
 		
 		private static final Logger logger = LoggerFactory.getLogger(Provider.class);
 		

@@ -14,11 +14,13 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Cached;
+import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.XProcTransform;
@@ -65,12 +67,12 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 		 * Other features are used for finding sub-transformers of type LiblouisTranslator.
 		 */
 		public Iterable<LiblouisCSSBlockTransform> get(String query) {
-			return Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.get(query)).asSet();
+			return Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.apply(query)).asSet();
 		}
 		
-		private Cached<String,LiblouisCSSBlockTransform> transforms
-		= new Cached<String,LiblouisCSSBlockTransform>() {
-			public LiblouisCSSBlockTransform delegate(String query) {
+		private Memoizing<String,LiblouisCSSBlockTransform> transforms
+		= new Memoizing<String,LiblouisCSSBlockTransform>() {
+			public LiblouisCSSBlockTransform _apply(String query) {
 				final URI href = Provider.this.href;
 				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 				Optional<String> o;
@@ -114,8 +116,8 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 	
 		private List<Transform.Provider<LiblouisTranslator>> liblouisTranslatorProviders
 		= new ArrayList<Transform.Provider<LiblouisTranslator>>();
-		private CachedProvider<String,LiblouisTranslator> liblouisTranslatorProvider
-		= CachedProvider.newInstance(new DispatchingProvider<LiblouisTranslator>(liblouisTranslatorProviders));
+		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,LiblouisTranslator> liblouisTranslatorProvider
+		= memoize(dispatch(liblouisTranslatorProviders));
 		
 		private static final Logger logger = LoggerFactory.getLogger(Provider.class);
 		

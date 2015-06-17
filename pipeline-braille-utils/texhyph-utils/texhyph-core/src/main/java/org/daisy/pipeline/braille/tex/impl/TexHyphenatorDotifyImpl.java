@@ -21,6 +21,7 @@ import net.davidashen.text.Utf8TexParser.TexParserException;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
@@ -140,9 +141,9 @@ public class TexHyphenatorDotifyImpl implements TexHyphenator.Provider {
 	
 	private final static Iterable<TexHyphenator> empty = Optional.<TexHyphenator>absent().asSet();
 	
-	private CachedProvider<String,TexHyphenator> provider
-	= new CachedProvider<String,TexHyphenator>() {
-		public Iterable<TexHyphenator> delegate(String query) {
+	private Provider.MemoizingProvider<String,TexHyphenator> provider
+	= new Provider.MemoizingProvider<String,TexHyphenator>() {
+		public Iterable<TexHyphenator> _get(String query) {
 			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("hyphenator")) != null)

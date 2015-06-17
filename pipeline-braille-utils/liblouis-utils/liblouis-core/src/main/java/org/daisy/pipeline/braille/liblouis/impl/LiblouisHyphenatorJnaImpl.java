@@ -12,6 +12,7 @@ import static com.google.common.collect.Iterables.transform;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
@@ -87,8 +88,9 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 	
 	private final static Iterable<LiblouisHyphenator> empty = Optional.<LiblouisHyphenator>absent().asSet();
 	
-	private CachedProvider<String,LiblouisHyphenator> provider = new CachedProvider<String,LiblouisHyphenator>() {
-		public Iterable<LiblouisHyphenator> delegate(String query) {
+	private Provider.MemoizingProvider<String,LiblouisHyphenator> provider
+	= new Provider.MemoizingProvider<String,LiblouisHyphenator>() {
+		public Iterable<LiblouisHyphenator> _get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("hyphenator")) != null)

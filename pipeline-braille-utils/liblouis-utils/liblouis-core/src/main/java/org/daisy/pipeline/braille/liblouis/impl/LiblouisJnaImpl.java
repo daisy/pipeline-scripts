@@ -188,22 +188,22 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		return provider.get(query);
 	}
 
-	private CachedProvider<String,Translator> provider
-	= new CachedProvider<String,Translator>() {
-		public Iterable<Translator> delegate(final String query) {
-			return provider_.get(parseQuery(query));
+	private Provider.MemoizingProvider<String,Translator> provider
+	= new Provider.MemoizingProvider<String,Translator>() {
+		public Iterable<Translator> _get(final String query) {
+			return _provider.get(parseQuery(query));
 		}
 		@Override
 		public void invalidateCache() {
 			super.invalidateCache();
-			provider__.invalidateCache();
+			__provider.invalidateCache();
 		}
 	};
 	
-	private Provider<Map<String,Optional<String>>,Translator> provider_
+	private Provider<Map<String,Optional<String>>,Translator> _provider
 	= new LocaleBasedProvider<Map<String,Optional<String>>,Translator>() {
-		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
-			return provider__.get(query);
+		public Iterable<Translator> _get(final Map<String,Optional<String>> query) {
+			return __provider.get(query);
 		}
 		public Locale getLocale(Map<String,Optional<String>> query) {
 			Optional<String> o;
@@ -219,13 +219,13 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		}
 	};
 	
-	private CachedProvider<Map<String,Optional<String>>,Translator> provider__
-	= new CachedProvider<Map<String,Optional<String>>,Translator>() {
-		public Iterable<Translator> delegate(final Map<String,Optional<String>> query) {
+	private Provider.MemoizingProvider<Map<String,Optional<String>>,Translator> __provider
+	= new Provider.MemoizingProvider<Map<String,Optional<String>>,Translator>() {
+		public Iterable<Translator> _get(final Map<String,Optional<String>> query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
 			return filter(
 				new ImmutableLazyValue<Translator>() {
-					public Translator delegate() {
+					public Translator _apply() {
 						String table = null;
 						boolean unicode = false;
 						Optional<String> o;

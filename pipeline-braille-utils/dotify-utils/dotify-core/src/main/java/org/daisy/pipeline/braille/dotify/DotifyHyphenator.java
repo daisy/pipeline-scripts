@@ -13,6 +13,7 @@ import org.daisy.dotify.api.hyphenator.HyphenatorConfigurationException;
 import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
@@ -119,10 +120,10 @@ public class DotifyHyphenator implements Hyphenator {
 			throw new RuntimeException("Cannot locate a factory for " + locale.toLowerCase());
 		}
 		
-		private final CachedProvider<Locale,DotifyHyphenator> hyphenators
-		= CachedProvider.<Locale,DotifyHyphenator>newInstance(
+		private final org.daisy.pipeline.braille.common.Provider.MemoizingProvider<Locale,DotifyHyphenator> hyphenators
+		= memoize(
 			new LocaleBasedProvider<Locale,DotifyHyphenator>() {
-				public Iterable<DotifyHyphenator> delegate(Locale locale) {
+				public Iterable<DotifyHyphenator> _get(Locale locale) {
 					try {
 						HyphenatorInterface hyphenator = newHyphenator(Locales.toString(locale, '-'));
 						return Optional.<DotifyHyphenator>of(new DotifyHyphenator(hyphenator)).asSet(); }

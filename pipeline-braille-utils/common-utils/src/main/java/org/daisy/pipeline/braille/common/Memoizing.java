@@ -3,19 +3,21 @@ package org.daisy.pipeline.braille.common;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Cached<K,V> {
+import com.google.common.base.Function;
+
+public abstract class Memoizing<K,V> implements Function<K,V> {
 	
 	private final Map<K,V> cache = new HashMap<K,V>();
 	
 	/**
 	 * @param key must not be mutated.
 	 */
-	public abstract V delegate(K key);
+	protected abstract V _apply(K key);
 	
-	public V get(K key) {
+	public final V apply(K key) {
 		if (cache.containsKey(key))
 			return cache.get(key);
-		V value = delegate(key);
+		V value = _apply(key);
 		if (value != null) {
 			cache.put(key, value);
 			return value; }

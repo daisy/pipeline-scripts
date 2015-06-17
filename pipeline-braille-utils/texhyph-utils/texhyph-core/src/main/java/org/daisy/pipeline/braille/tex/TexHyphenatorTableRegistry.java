@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.Locale;
 
 import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import static org.daisy.pipeline.braille.common.Provider.util.varyLocale;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,9 +49,9 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 		return provider.get(locale);
 	}
 	
-	private final CachedProvider<Locale,URI> provider
-		= CachedProvider.<Locale,URI>newInstance(
-			LocaleBasedProvider.<URI>newInstance(
-				DispatchingProvider.newInstance(paths.values())));
+	private final Provider.MemoizingProvider<Locale,URI> provider
+		= memoize(
+			varyLocale(
+				dispatch(paths.values())));
 	
 }

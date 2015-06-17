@@ -22,7 +22,10 @@ import static com.google.common.collect.Iterables.transform;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.TextTransform;
@@ -110,8 +113,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
 	= new ArrayList<Transform.Provider<Hyphenator>>();
 	
-	private CachedProvider<String,Hyphenator> hyphenatorProvider
-	= CachedProvider.newInstance(new DispatchingProvider<Hyphenator>(hyphenatorProviders));
+	private Provider.MemoizingProvider<String,Hyphenator> hyphenatorProvider
+	= memoize(dispatch(hyphenatorProviders));
 	
 	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
 		return this;
@@ -147,8 +150,9 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	
 	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
 	
-	private CachedProvider<String,LiblouisTranslator> provider = new CachedProvider<String,LiblouisTranslator>() {
-		public Iterable<LiblouisTranslator> delegate(String query) {
+	private Provider.MemoizingProvider<String,LiblouisTranslator> provider
+	= new Provider.MemoizingProvider<String,LiblouisTranslator>() {
+		public Iterable<LiblouisTranslator> _get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("translator")) != null)

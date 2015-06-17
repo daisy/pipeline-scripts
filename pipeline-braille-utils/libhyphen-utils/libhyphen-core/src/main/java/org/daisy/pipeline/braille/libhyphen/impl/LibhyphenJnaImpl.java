@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
@@ -136,9 +137,9 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	
 	private final static Iterable<LibhyphenHyphenator> empty = Optional.<LibhyphenHyphenator>absent().asSet();
 	
-	private CachedProvider<String,LibhyphenHyphenator> provider
-		= new CachedProvider<String,LibhyphenHyphenator>() {
-			public Iterable<LibhyphenHyphenator> delegate(String query) {
+	private Provider.MemoizingProvider<String,LibhyphenHyphenator> provider
+		= new Provider.MemoizingProvider<String,LibhyphenHyphenator>() {
+			public Iterable<LibhyphenHyphenator> _get(String query) {
 				Map<String,Optional<String>> q = parseQuery(query);
 				if (q.containsKey("hyphenator"))
 					if (!"hyphen".equals(q.get("hyphenator").get()))
