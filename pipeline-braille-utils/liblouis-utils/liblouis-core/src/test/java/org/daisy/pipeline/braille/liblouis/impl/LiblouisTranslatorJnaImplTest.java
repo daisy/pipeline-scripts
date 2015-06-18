@@ -13,6 +13,22 @@ public class LiblouisTranslatorJnaImplTest {
 		             LiblouisTranslatorJnaImpl.typeformFromInlineCSS(
 			             " text-decoration: underline ;font-weight: bold  ; hyphens:auto; color: #FF00FF "));
 	}
+
+	@Test
+	public void testTextFromTextTransform() {
+		assertEquals("IK BEN MOOS",
+			LiblouisTranslatorJnaImpl.textFromTextTransform("Ik ben Moos",
+				" uppercase "));
+		assertEquals("ik ben moos",
+			LiblouisTranslatorJnaImpl.textFromTextTransform("Ik ben Moos",
+				" lowercase "));
+		assertEquals("ik ben moos",
+			LiblouisTranslatorJnaImpl.textFromTextTransform("Ik ben Moos",
+				" uppercase lowercase "));
+		assertEquals("Ik ben Moos",
+			LiblouisTranslatorJnaImpl.textFromTextTransform("Ik ben Moos",
+				" foo bar "));
+	}
 	
 	@Test
 	public void testTypeformFromTextTransform() {
