@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
+import com.google.common.collect.AbstractIterator;
 import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.WithSideEffect;
@@ -90,6 +91,45 @@ public interface Transform {
 				}
 			}
 			
+		}
+		
+		public static abstract class AbstractProvider<T extends Transform> extends Transform.Provider.MemoizingProvider<T> {
+			private final Function<WithSideEffect<T,Logger>,T> applyContext;
+			protected AbstractProvider(Logger context) {
+				super(context);
+				applyContext = new Function<WithSideEffect<T,Logger>,T>() {
+					public T apply(WithSideEffect<T,Logger> value) {
+						return value.apply(AbstractProvider.this.context);
+					}
+				};
+			}
+			protected abstract Iterable<WithSideEffect<T,Logger>> __get(String query);
+			protected final Iterable<T> _get(String query) {
+				return filterOutThrowsWithSideEffectException(
+					transform(
+						__get(query),
+						applyContext));
+			}
+			private static <T> Iterable<T> filterOutThrowsWithSideEffectException(final Iterable<T> iterable) {
+				return new Iterable<T>() {
+					public Iterator<T>iterator() {
+						return new AbstractIterator<T>() {
+							private Iterator<T> i;
+							protected T computeNext() {
+								if (i == null)
+									i = iterable.iterator();
+								while (true) {
+									try {
+										return i.next(); }
+									catch (WithSideEffect.Exception e) {
+										continue; }
+									catch (NoSuchElementException e) {
+										return endOfData(); }}
+							}
+						};
+					}
+				};
+			}
 		}
 		
 		public static abstract class util {

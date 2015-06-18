@@ -14,15 +14,16 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
@@ -54,10 +55,6 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-block-translate.xpl"));
 		}
 		
-		public Transform.Provider<LiblouisCSSBlockTransform> withContext(Logger context) {
-			return this;
-		}
-		
 		/**
 		 * Recognized features:
 		 *
@@ -67,36 +64,75 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 		 * Other features are used for finding sub-transformers of type LiblouisTranslator.
 		 */
 		public Iterable<LiblouisCSSBlockTransform> get(String query) {
-			return Optional.<LiblouisCSSBlockTransform>fromNullable(transforms.apply(query)).asSet();
+			return impl.get(query);
 		}
 		
-		private Memoizing<String,LiblouisCSSBlockTransform> transforms
-		= new Memoizing<String,LiblouisCSSBlockTransform>() {
-			public LiblouisCSSBlockTransform _apply(String query) {
-				final URI href = Provider.this.href;
-				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				Optional<String> o;
-				if ((o = q.remove("translator")) != null)
-					if (!o.get().equals("liblouis"))
-						return null;
-				String newQuery = serializeQuery(q);
-				try {
-					final LiblouisTranslator translator = logSelect(newQuery, liblouisTranslatorProvider.get(newQuery)).iterator().next().apply(logger);
-					final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
-					return logCreate(
-						new LiblouisCSSBlockTransform() {
-							public Tuple3<URI,QName,Map<String,String>> asXProc() {
-								return new Tuple3<URI,QName,Map<String,String>>(href, null, options);
-							}
-							@Override
-							public String toString() {
-								return toStringHelper(LiblouisCSSBlockTransform.class.getSimpleName()).add("translator", translator).toString();
-							}
-						}).apply(logger);
-				} catch (NoSuchElementException e) {}
-				return null;
+		public Transform.Provider<LiblouisCSSBlockTransform> withContext(Logger context) {
+			return impl.withContext(context);
+		}
+		
+		private Transform.Provider<LiblouisCSSBlockTransform> impl = new ProviderImpl(null);
+		
+		private class ProviderImpl extends AbstractProvider<LiblouisCSSBlockTransform> {
+			
+			private ProviderImpl(Logger context) {
+				super(context);
 			}
-		};
+			
+			protected Transform.Provider.MemoizingProvider<LiblouisCSSBlockTransform> _withContext(Logger context) {
+				return new ProviderImpl(context);
+			}
+			
+			protected Iterable<WithSideEffect<LiblouisCSSBlockTransform,Logger>> __get(final String query) {
+				return new ImmutableLazyValue<WithSideEffect<LiblouisCSSBlockTransform,Logger>>() {
+					public WithSideEffect<LiblouisCSSBlockTransform,Logger> _apply() {
+						return new WithSideEffect<LiblouisCSSBlockTransform,Logger>() {
+							public LiblouisCSSBlockTransform _apply() {
+								Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+								Optional<String> o;
+								if ((o = q.remove("translator")) != null)
+									if (!o.get().equals("liblouis"))
+										return null;
+								String translatorQuery = serializeQuery(q);
+								Iterable<WithSideEffect<LiblouisTranslator,Logger>> translators
+									= logSelect(translatorQuery, liblouisTranslatorProvider.get(translatorQuery));
+								LiblouisTranslator translator;
+								try {
+									translator = applyWithSideEffect( translators.iterator().next() ); }
+								catch (NoSuchElementException e) {
+									throw new NoSuchElementException(); }
+								return applyWithSideEffect(
+									logCreate(new TransformImpl(translatorQuery, translator))
+								);
+							}
+						};
+					}
+				};
+			}
+		}
+		
+		private class TransformImpl implements LiblouisCSSBlockTransform {
+			
+			private final LiblouisTranslator translator;
+			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			
+			private TransformImpl(String translatorQuery, LiblouisTranslator translator) {
+				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
+				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+				this.translator = translator;
+			}
+			
+			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+				return xproc;
+			}
+			
+			@Override
+			public String toString() {
+				return toStringHelper(LiblouisCSSBlockTransform.class.getSimpleName())
+					.add("translator", translator)
+					.toString();
+			}
+		}
 		
 		@Reference(
 			name = "LiblouisTranslatorProvider",

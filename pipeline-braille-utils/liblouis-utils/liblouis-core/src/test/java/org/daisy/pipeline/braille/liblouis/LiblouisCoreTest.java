@@ -46,6 +46,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class LiblouisCoreTest {
@@ -61,6 +64,8 @@ public class LiblouisCoreTest {
 	
 	@Inject
 	private TableCatalogService tableCatalog;
+	
+	private static final Logger messageBus = LoggerFactory.getLogger("JOB_MESSAGES");
 	
 	@Configuration
 	public Option[] config() {
@@ -99,39 +104,39 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testGetTranslatorFromQuery1() {
-		provider.get("(locale:foo)").iterator().next();
+		provider.withContext(messageBus).get("(locale:foo)").iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery2() {
-		provider.get("(table:'foobar.cti')").iterator().next();
+		provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery3() {
-		provider.get("(locale:foo_BAR)").iterator().next();
+		provider.withContext(messageBus).get("(locale:foo_BAR)").iterator().next();
 	}
 	
 	@Test
 	public void testTranslate() {
-		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar"));
+		assertEquals("⠋⠕⠕⠃⠁⠗", provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testTranslateStyled() {
-		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
+		assertEquals("⠋⠕⠕⠃⠁⠗", provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
 	}
 	
 	@Test
 	public void testTranslateSegments() {
-		LiblouisTranslator translator = provider.get("(table:'foobar.cti')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
 		assertEquals(new String[]{"⠋⠕⠕","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"⠋⠕⠕","","⠃⠁⠗"}, translator.transform(new String[]{"foo","","bar"}));
 	}
 	
 	@Test
 	public void testTranslateSegmentsFuzzy() {
-		LiblouisTranslator translator = provider.get("(table:'foobar.ctb')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.ctb')").iterator().next();
 		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"fo","obar"}));
 		assertEquals(new String[]{"⠋⠥","","⠃⠁⠗"}, translator.transform(new String[]{"fo","","obar"}));
@@ -144,17 +149,17 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", (hyphenatorProvider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foobar"));
+		assertEquals("foo\u00ADbar", (hyphenatorProvider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foobar"));
 	}
 	
 	@Test
 	public void testHyphenateCompoundWord() {
-		assertEquals("foo-\u200Bbar", (hyphenatorProvider.get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foo-bar"));
+		assertEquals("foo-\u200Bbar", (hyphenatorProvider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foo-bar"));
 	}
 	
 	@Test
 	public void testTranslateAndHyphenateSomeSegments() {
-		LiblouisTranslator translator = provider.get("(table:'foobar.cti,foobar.dic')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next();
 		assertEquals(new String[]{"⠋⠕⠕\u00AD⠃⠁⠗ ","⠋⠕⠕⠃⠁⠗"},
 		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
 	}

@@ -6,16 +6,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Objects.toStringHelper;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
@@ -23,8 +20,8 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
-import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
@@ -116,10 +113,6 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	private Provider.MemoizingProvider<String,Hyphenator> hyphenatorProvider
 	= memoize(dispatch(hyphenatorProviders));
 	
-	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
-		return this;
-	}
-	
 	/**
 	 * Recognized features:
 	 *
@@ -145,14 +138,29 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
 	public Iterable<LiblouisTranslator> get(String query) {
-		return provider.get(query);
+		return impl.get(query);
 	}
 	
-	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
+	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
+		return impl.withContext(context);
+	}
 	
-	private Provider.MemoizingProvider<String,LiblouisTranslator> provider
-	= new Provider.MemoizingProvider<String,LiblouisTranslator>() {
-		public Iterable<LiblouisTranslator> _get(String query) {
+	private Transform.Provider.MemoizingProvider<LiblouisTranslator> impl = new ProviderImpl(null);
+	
+	private final static Iterable<WithSideEffect<LiblouisTranslator,Logger>> empty
+		= Optional.<WithSideEffect<LiblouisTranslator,Logger>>absent().asSet();
+	
+	private class ProviderImpl extends AbstractProvider<LiblouisTranslator> {
+		
+		private ProviderImpl(Logger context) {
+			super(context);
+		}
+		
+		protected Transform.Provider.MemoizingProvider<LiblouisTranslator> _withContext(Logger context) {
+			return new ProviderImpl(context);
+		}
+		
+		protected final Iterable<WithSideEffect<LiblouisTranslator,Logger>> __get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("translator")) != null)
@@ -190,15 +198,16 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			return concat(
 				transform(
 					tables,
-					new Function<Translator,Iterable<LiblouisTranslator>>() {
-						public Iterable<LiblouisTranslator> apply(final Translator table) {
-							Iterable<LiblouisTranslator> translators = empty;
+					new Function<Translator,Iterable<WithSideEffect<LiblouisTranslator,Logger>>>() {
+						public Iterable<WithSideEffect<LiblouisTranslator,Logger>> apply(final Translator table) {
+							Iterable<WithSideEffect<LiblouisTranslator,Logger>> translators = empty;
 							if (!"none".equals(hyphenator)) {
 								if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
 									for (URI t : tokenizeTable(table.getTable()))
 										if (t.toString().endsWith(".dic")) {
-											translators = Optional.<LiblouisTranslator>of(
-												logCreate(new LiblouisTranslatorHyphenatorImpl(table)).apply(logger)).asSet();
+											translators = Optional.of(
+												logCreate((LiblouisTranslator)new LiblouisTranslatorHyphenatorImpl(table))
+											).asSet();
 											break; }
 								if (!"liblouis".equals("hyphenator")) {
 									if (locale == null) {
@@ -216,27 +225,27 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 											= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
 										translators = concat(
 											translators,
-											filter(
-												transform(
-													hyphenators,
-													new Function<WithSideEffect<Hyphenator,Logger>,LiblouisTranslator>() {
-														public LiblouisTranslator apply(WithSideEffect<Hyphenator,Logger> hyphenator) {
-															Hyphenator hyph;
-															try { hyph = hyphenator.apply(logger); }
-															catch (NoSuchElementException e) { return null; }
-															return logCreate(new LiblouisTranslatorImpl(table, hyph)).apply(logger); }}),
-												Predicates.notNull())); }}}
+											transform(
+												hyphenators,
+												new WithSideEffect.Function<Hyphenator,LiblouisTranslator,Logger>() {
+													public LiblouisTranslator _apply(Hyphenator hyphenator) {
+														return applyWithSideEffect(
+															logCreate(
+																(LiblouisTranslator)new LiblouisTranslatorImpl(table, hyphenator))); }}));
+										}}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 								translators = concat(
 									translators,
-									Optional.<LiblouisTranslator>of(logCreate(new LiblouisTranslatorImpl(table)).apply(logger)).asSet());
+									Optional.of(
+										logCreate((LiblouisTranslator)new LiblouisTranslatorImpl(table))
+									).asSet());
 							return translators;
 						}
 					}
 				)
 			);
 		}
-	};
+	}
 	
 	private static class LiblouisTranslatorImpl extends LiblouisTranslator {
 		

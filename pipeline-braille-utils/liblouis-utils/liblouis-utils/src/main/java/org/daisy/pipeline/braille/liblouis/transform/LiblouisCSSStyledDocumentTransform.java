@@ -15,16 +15,17 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Activate;
@@ -56,10 +57,6 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-transform.xpl"));
 		}
 		
-		public Transform.Provider<LiblouisCSSStyledDocumentTransform> withContext(Logger context) {
-			return this;
-		}
-		
 		/**
 		 * Recognized features:
 		 *
@@ -68,36 +65,75 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
 		public Iterable<LiblouisCSSStyledDocumentTransform> get(String query) {
-			return Optional.<LiblouisCSSStyledDocumentTransform>fromNullable(transforms.apply(query)).asSet();
+			return impl.get(query);
 		}
 		
-		private Memoizing<String,LiblouisCSSStyledDocumentTransform> transforms
-		= new Memoizing<String,LiblouisCSSStyledDocumentTransform>() {
-			public LiblouisCSSStyledDocumentTransform _apply(final String query) {
-				final URI href = Provider.this.href;
-				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				Optional<String> o;
-				if ((o = q.remove("formatter")) != null)
-					if (!o.get().equals("liblouis"))
-						return null;
-				String newQuery = serializeQuery(q);
-				try {
-					final CSSBlockTransform transform = logSelect(newQuery, cssBlockTransformProvider.get(newQuery)).iterator().next().apply(logger);
-					final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
-					return logCreate(
-						new LiblouisCSSStyledDocumentTransform() {
-							public Tuple3<URI,QName,Map<String,String>> asXProc() {
-								return new Tuple3<URI,QName,Map<String,String>>(href, null, options);
-							}
-							@Override
-							public String toString() {
-								return toStringHelper(LiblouisCSSStyledDocumentTransform.class.getSimpleName()).add("blockTransform", transform).toString();
-							}
-						}).apply(logger);
-				} catch (NoSuchElementException e) {}
-				return null;
+		public Transform.Provider<LiblouisCSSStyledDocumentTransform> withContext(Logger context) {
+			return impl.withContext(context);
+		}
+		
+		private Transform.Provider<LiblouisCSSStyledDocumentTransform> impl = new ProviderImpl(null);
+		
+		private class ProviderImpl extends AbstractProvider<LiblouisCSSStyledDocumentTransform> {
+			
+			private ProviderImpl(Logger context) {
+				super(context);
 			}
-		};
+			
+			protected Transform.Provider.MemoizingProvider<LiblouisCSSStyledDocumentTransform> _withContext(Logger context) {
+				return new ProviderImpl(context);
+			}
+			
+			protected Iterable<WithSideEffect<LiblouisCSSStyledDocumentTransform,Logger>> __get(final String query) {
+				return new ImmutableLazyValue<WithSideEffect<LiblouisCSSStyledDocumentTransform,Logger>>() {
+					public WithSideEffect<LiblouisCSSStyledDocumentTransform,Logger> _apply() {
+						return new WithSideEffect<LiblouisCSSStyledDocumentTransform,Logger>() {
+							public LiblouisCSSStyledDocumentTransform _apply() {
+								Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+								Optional<String> o;
+								if ((o = q.remove("formatter")) != null)
+									if (!o.get().equals("liblouis"))
+										return null;
+								String cssBlockTransformQuery = serializeQuery(q);
+								Iterable<WithSideEffect<CSSBlockTransform,Logger>> cssBlockTransforms
+									= logSelect(cssBlockTransformQuery, cssBlockTransformProvider.get(cssBlockTransformQuery));
+								CSSBlockTransform cssBlockTransform;
+								try {
+									cssBlockTransform = applyWithSideEffect( cssBlockTransforms.iterator().next() ); }
+								catch (NoSuchElementException e) {
+									throw new NoSuchElementException(); }
+								return applyWithSideEffect(
+									logCreate(new TransformImpl(cssBlockTransformQuery, cssBlockTransform))
+								);
+							}
+						};
+					}
+				};
+			}
+		}
+		
+		private class TransformImpl implements LiblouisCSSStyledDocumentTransform {
+			
+			private final CSSBlockTransform cssBlockTransform;
+			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			
+			private TransformImpl(String cssBlockTransformQuery, CSSBlockTransform cssBlockTransform) {
+				Map<String,String> options = ImmutableMap.of("query", cssBlockTransformQuery);
+				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+				this.cssBlockTransform = cssBlockTransform;
+			}
+			
+			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+				return xproc;
+			}
+			
+			@Override
+			public String toString() {
+				return toStringHelper(LiblouisCSSStyledDocumentTransform.class.getSimpleName())
+					.add("blockTransform", cssBlockTransform)
+					.toString();
+			}
+		}
 		
 		@Reference(
 			name = "CSSBlockTransformProvider",
