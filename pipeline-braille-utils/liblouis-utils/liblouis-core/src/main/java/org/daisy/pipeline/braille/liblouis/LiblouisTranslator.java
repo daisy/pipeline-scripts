@@ -19,19 +19,11 @@ public abstract class LiblouisTranslator implements CSSStyledTextTransform, Brai
 	 */
 	public abstract String transform(String text, byte typeform);
 	
-	public String transform(String text, Object style) {
-		throw new IllegalArgumentException("style argument must be a 'typeform' byte or a 'inline CSS' String");
-	}
-	
 	/**
 	 * @param text The text segments to be translated.
 	 * @param typeform The typeform. Array must have the same length as <code>text</code>.
 	 */
 	public abstract String[] transform(String[] text, byte[] typeform);
-	
-	public String[] transform(String[] text, Object[] style) {
-		throw new IllegalArgumentException("style argument must be a 'typeform' byte[] or a 'inline CSS' String[]");
-	}
 	
 	public abstract LiblouisTable asLiblouisTable();
 	

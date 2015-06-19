@@ -1,10 +1,11 @@
 package org.daisy.pipeline.braille.common;
 
 /**
- * A {@link org.daisy.pipeline.braille.common.StyledTextTransform} that
- * assumes styles are represented by inline-level braille CSS.
+ * A {@link org.daisy.pipeline.braille.common.TextTransform} thatcan
+ * translate styled text or sequences of styled text nodes. Style is
+ * represented by inline-level braille CSS.
  */
-public interface CSSStyledTextTransform extends StyledTextTransform {
+public interface CSSStyledTextTransform extends TextTransform {
 	
 	public String transform(String text, String cssStyle);
 	
