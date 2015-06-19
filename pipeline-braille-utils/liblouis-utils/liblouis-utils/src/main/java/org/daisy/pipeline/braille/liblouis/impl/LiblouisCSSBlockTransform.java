@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.transform;
+package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTransform {
 	
 	@Component(
-		name = "org.daisy.pipeline.braille.liblouis.transform.LiblouisCSSBlockTransform.Provider",
+		name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform.Provider",
 		service = {
 			XProcTransform.Provider.class,
 			CSSBlockTransform.Provider.class

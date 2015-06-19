@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.tex.saxon;
+package org.daisy.pipeline.braille.libhyphen.saxon.impl;
 
 import java.util.NoSuchElementException;
 
@@ -12,7 +12,7 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.tex.TexHyphenator;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -23,29 +23,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "tex:hyphenate",
+	name = "hyphen:hyphenate",
 	service = { ExtensionFunctionDefinition.class }
 )
 @SuppressWarnings("serial")
 public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
-	private static final StructuredQName funcname = new StructuredQName("tex",
-			"http://code.google.com/p/texhyphj/", "hyphenate");
+	private static final StructuredQName funcname = new StructuredQName("hyphen",
+			"http://hunspell.sourceforge.net/Hyphen", "hyphenate");
 	
-	private TexHyphenator.Provider provider = null;
+	private LibhyphenHyphenator.Provider provider = null;
 	
 	@Reference(
-		name = "TexHyphenatorProvider",
-		unbind = "unbindHyphenatorProvider",
-		service = TexHyphenator.Provider.class,
+		name = "LibhyphenHyphenatorProvider",
+		unbind = "unbindLibhyphenHyphenatorProvider",
+		service = LibhyphenHyphenator.Provider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindHyphenatorProvider(TexHyphenator.Provider provider) {
+	protected void bindLibhyphenHyphenatorProvider(LibhyphenHyphenator.Provider provider) {
 		this.provider = provider;
 	}
 	
-	protected void unbindHyphenatorProvider(TexHyphenator.Provider provider) {
+	protected void unbindLibhyphenHyphenatorProvider(LibhyphenHyphenator.Provider provider) {
 		this.provider = null;
 	}
 	
@@ -78,15 +78,15 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					String query = ((AtomicSequence)arguments[0]).getStringValue();
-					TexHyphenator hyphenator;
+					LibhyphenHyphenator hyphenator;
 					try { hyphenator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
 					String text = ((AtomicSequence)arguments[1]).getStringValue();
 					return new StringValue(hyphenator.transform(text)); }
 				catch (Exception e) {
-					logger.error("tex:hyphenate failed", e);
-					throw new XPathException("tex:hyphenate failed"); }
+					logger.error("hyphen:hyphenate failed", e);
+					throw new XPathException("hyphen:hyphenate failed"); }
 			}
 		};
 	}

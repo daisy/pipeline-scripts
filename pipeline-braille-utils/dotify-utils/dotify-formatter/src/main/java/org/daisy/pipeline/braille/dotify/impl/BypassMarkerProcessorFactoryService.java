@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.translator;
+package org.daisy.pipeline.braille.dotify.impl;
 
 import org.daisy.dotify.api.translator.MarkerProcessor;
 import org.daisy.dotify.api.translator.MarkerProcessorConfigurationException;
@@ -11,7 +11,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-	name = "org.daisy.pipeline.braille.dotify.translator.BypassMarkerProcessorFactoryService",
+	name = "org.daisy.pipeline.braille.dotify.impl.BypassMarkerProcessorFactoryService",
 	service = { MarkerProcessorFactoryService.class }
 )
 public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {

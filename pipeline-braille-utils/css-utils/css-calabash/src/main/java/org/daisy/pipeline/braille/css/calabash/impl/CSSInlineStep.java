@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.css.calabash;
+package org.daisy.pipeline.braille.css.calabash.impl;
 
 import java.net.URL;
 import java.net.URI;

@@ -173,7 +173,12 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <_dsannotations>*</_dsannotations>
+            <!--
+                in order to avoid including services in the same package in other bundles
+            -->
+            <_dsannotations>
+              org.daisy.pipeline.braille.pef.impl.NabccEightDotTableProvider
+            </_dsannotations>
             <SPI-Provider>javax.imageio.spi.ServiceRegistry</SPI-Provider>
           </instructions>
         </configuration>

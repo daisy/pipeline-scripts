@@ -70,7 +70,13 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <_dsannotations>*</_dsannotations>
+            <!--
+                in order to avoid including services in the same package in other bundles
+            -->
+            <_dsannotations>
+              org.daisy.pipeline.braille.dotify.impl.DotifyCSSBlockTransform$Provider,
+              org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider
+            </_dsannotations>
           </instructions>
         </configuration>
       </plugin>

@@ -262,9 +262,14 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Import-Package>*, org.daisy.pipeline.braille.liblouis</Import-Package>
+            <Import-Package>*</Import-Package>
             <Service-Component>OSGI-INF/liblouis-mathml-config.xml</Service-Component>
-            <_dsannotations>*</_dsannotations>
+            <!--
+                in order to avoid including services in the same package in other bundles
+            -->
+            <_dsannotations>
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisMathMLTransform$Provider
+            </_dsannotations>
           </instructions>
         </configuration>
         <executions>

@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.saxon;
+package org.daisy.pipeline.braille.liblouis.saxon.impl;
 
 import java.util.ArrayList;
 import java.util.List;

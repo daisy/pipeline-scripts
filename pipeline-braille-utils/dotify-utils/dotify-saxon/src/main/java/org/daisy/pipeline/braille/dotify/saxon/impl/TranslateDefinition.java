@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.saxon;
+package org.daisy.pipeline.braille.dotify.saxon.impl;
 
 import java.util.NoSuchElementException;
 

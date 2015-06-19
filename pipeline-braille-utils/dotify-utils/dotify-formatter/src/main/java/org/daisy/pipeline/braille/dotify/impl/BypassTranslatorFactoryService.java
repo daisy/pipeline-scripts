@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.translator;
+package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import org.daisy.dotify.api.translator.TranslatorSpecification;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-	name = "org.daisy.pipeline.braille.dotify.translator.BypassTranslatorFactoryService",
+	name = "org.daisy.pipeline.braille.dotify.impl.BypassTranslatorFactoryService",
 	service = { BrailleTranslatorFactoryService.class }
 )
 public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryService {

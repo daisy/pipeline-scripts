@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.pef.saxon;
+package org.daisy.pipeline.braille.pef.saxon.impl;
 
 import java.util.ArrayList;
 import java.util.List;

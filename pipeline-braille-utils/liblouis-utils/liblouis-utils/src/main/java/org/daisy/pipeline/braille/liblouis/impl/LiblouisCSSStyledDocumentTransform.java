@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.transform;
+package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSStyledDocumentTransform {
 	
 	@Component(
-		name = "org.daisy.pipeline.braille.liblouis.transform.LiblouisCSSStyledDocumentTransform.Provider",
+		name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSStyledDocumentTransform.Provider",
 		service = {
 			XProcTransform.Provider.class,
 			CSSStyledDocumentTransform.Provider.class

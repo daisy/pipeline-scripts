@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.common.saxon;
+package org.daisy.pipeline.braille.common.saxon.impl;
 
 import java.util.ArrayList;
 import java.util.List;

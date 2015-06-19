@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.calabash;
+package org.daisy.pipeline.braille.dotify.calabash.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;

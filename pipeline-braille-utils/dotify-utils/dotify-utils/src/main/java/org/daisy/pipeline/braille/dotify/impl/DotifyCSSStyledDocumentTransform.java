@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.transform;
+package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSStyledDocumentTransform {
 	
 	@Component(
-		name = "org.daisy.pipeline.braille.dotify.transform.DotifyCSSStyledDocumentTransform.Provider",
+		name = "org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform.Provider",
 		service = {
 			XProcTransform.Provider.class,
 			CSSStyledDocumentTransform.Provider.class

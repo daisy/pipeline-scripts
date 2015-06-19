@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.dotify.transform;
+package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransform {
 	
 	@Component(
-		name = "org.daisy.pipeline.braille.dotify.transform.DotifyCSSBlockTransform.Provider",
+		name = "org.daisy.pipeline.braille.dotify.impl.DotifyCSSBlockTransform.Provider",
 		service = {
 			XProcTransform.Provider.class,
 			CSSBlockTransform.Provider.class

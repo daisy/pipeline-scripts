@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.calabash;
+package org.daisy.pipeline.braille.liblouis.calabash.impl;
 
 import java.io.BufferedReader;
 import java.io.File;

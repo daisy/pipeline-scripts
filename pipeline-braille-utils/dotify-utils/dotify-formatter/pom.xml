@@ -134,7 +134,13 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <_dsannotations>*</_dsannotations>
+            <!--
+                in order to avoid including services in the same package in other bundles
+            -->
+            <_dsannotations>
+              org.daisy.pipeline.braille.dotify.impl.BypassMarkerProcessorFactoryService,
+              org.daisy.pipeline.braille.dotify.impl.BypassTranslatorFactoryService
+            </_dsannotations>
           </instructions>
         </configuration>
         <executions>

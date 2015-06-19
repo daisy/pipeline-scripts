@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.math;
+package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.util.Locale;
 import java.util.Map;
@@ -33,7 +33,7 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 	}
 	
 	@Component(
-		name = "org.daisy.pipeline.braille.liblouis.math.LiblouisMathMLTransform.Provider",
+		name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisMathMLTransform.Provider",
 		service = {
 			XProcTransform.Provider.class,
 			MathMLTransform.Provider.class

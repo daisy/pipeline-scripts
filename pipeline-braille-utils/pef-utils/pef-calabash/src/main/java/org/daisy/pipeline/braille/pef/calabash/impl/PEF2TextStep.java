@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.pef.calabash;
+package org.daisy.pipeline.braille.pef.calabash.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

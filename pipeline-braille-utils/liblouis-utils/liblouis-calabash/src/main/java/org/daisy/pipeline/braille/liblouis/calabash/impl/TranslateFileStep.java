@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis.calabash;
+package org.daisy.pipeline.braille.liblouis.calabash.impl;
 
 import java.io.File;
 import java.net.URI;

@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.common.calabash;
+package org.daisy.pipeline.braille.common.calabash.impl;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.QName;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+import org.daisy.pipeline.braille.common.calabash.JobContextImpl;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.JobContext;
