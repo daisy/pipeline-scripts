@@ -49,7 +49,7 @@ public class NabccEightDotTableProvider implements TableProvider {
 	}
 	
 	public Collection<FactoryProperties> list() {
-		return Optional.<FactoryProperties>of(table).asSet();
+		return Optional.of((FactoryProperties)table).asSet();
 	}
 	
 	public Table newFactory(String identifier) {

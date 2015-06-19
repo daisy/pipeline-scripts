@@ -115,9 +115,9 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 				            + q.keySet().iterator().next() + "' never matches anything");
 				return empty; }
 			if (table != null)
-				q.put("table", Optional.<String>of(table));
+				q.put("table", Optional.of(table));
 			if (locale != null)
-				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
+				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
 			return transform(
 				tables,

@@ -118,7 +118,7 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 				if (q.size() > 0) {
 					logger.warn("A query with both 'table' and '" + q.keySet().iterator().next() + "' never matches anything");
 					return empty; }
-				return Optional.<TexHyphenator>fromNullable(
+				return Optional.fromNullable(
 					TexHyphenatorSimpleImpl.this.get(asURI(o.get()))).asSet(); }
 			Locale locale;
 			if ((o = q.remove("locale")) != null)

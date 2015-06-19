@@ -42,7 +42,7 @@ public class BrailleUtilsTableCatalog implements TableProvider {
 		Optional<String> o;
 		if ((o = q.remove("id")) != null)
 			if (q.size() == 0)
-				return Optional.<Table>fromNullable(catalog.newTable(o.get())).asSet();
+				return Optional.fromNullable(catalog.newTable(o.get())).asSet();
 		return empty;
 	}
 }

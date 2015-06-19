@@ -190,9 +190,9 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				            + q.keySet().iterator().next() + "' never matches anything");
 				return empty; }
 			if (table != null)
-				q.put("table", Optional.<String>of(table));
+				q.put("table", Optional.of(table));
 			if (locale != null)
-				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
+				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
 			q.put("unicode", Optional.<String>absent());
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
 			return concat(
@@ -218,8 +218,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 										ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
 											= new ImmutableMap.Builder<String,Optional<String>>();
 										if (!"auto".equals(hyphenator))
-											hyphenatorQuery.put("hyphenator", Optional.<String>of(hyphenator));
-										hyphenatorQuery.put("locale", Optional.<String>of(locale));
+											hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+										hyphenatorQuery.put("locale", Optional.of(locale));
 										String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
 										Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
 											= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));

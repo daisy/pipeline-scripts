@@ -145,7 +145,7 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 					if (!"hyphen".equals(q.get("hyphenator").get()))
 						return empty;
 				if (q.containsKey("table")) {
-					return Optional.<LibhyphenHyphenator>fromNullable(
+					return Optional.fromNullable(
 						LibhyphenJnaImpl.this.get(asURI(q.get("table").get()))).asSet(); }
 				Locale locale;
 				if (q.containsKey("locale"))

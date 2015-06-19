@@ -49,7 +49,7 @@ public class LibhyphenTablePath extends BundledResourcePath implements Libhyphen
 			else
 				resource = asURI(String.format("hyph_%s.dic", language));
 			if (resources.contains(resource))
-				return Optional.<URI>of(canonicalize(resource)).asSet();
+				return Optional.of(canonicalize(resource)).asSet();
 			return Optional.<URI>absent().asSet();
 		}
 		@Override

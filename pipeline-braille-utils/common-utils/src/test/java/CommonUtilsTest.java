@@ -86,7 +86,8 @@ public class CommonUtilsTest {
 		public Tuple3<URI,QName,Map<String,String>> asXProc() {
 			return new Tuple3<URI,QName,Map<String,String>>(href, null, null);
 		}
-		private static final UppercaseTransform instance = new UppercaseTransform();
+		private static final Iterable<UppercaseTransform> instance = Optional.of(new UppercaseTransform()).asSet();
+		private static final Iterable<UppercaseTransform> empty = Optional.<UppercaseTransform>absent().asSet();
 		public static class Provider implements TextTransform.Provider<UppercaseTransform>, XProcTransform.Provider<UppercaseTransform> {
 			private Logger logger;
 			public Provider() {}
@@ -97,9 +98,9 @@ public class CommonUtilsTest {
 				if (query.equals("(uppercase)")) {
 					if (logger != null)
 						logger.info("Selecting " + instance);
-					return Optional.<UppercaseTransform>fromNullable(instance).asSet(); }
+					return instance; }
 				else
-					return Optional.<UppercaseTransform>fromNullable(null).asSet();
+					return empty;
 			}
 			public Transform.Provider<UppercaseTransform> withContext(Logger context) {
 				return new Provider(context);

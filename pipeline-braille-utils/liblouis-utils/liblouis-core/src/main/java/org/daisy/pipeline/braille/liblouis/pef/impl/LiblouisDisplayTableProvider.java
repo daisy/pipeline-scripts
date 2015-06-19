@@ -54,7 +54,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		tableProvider = null;
 	}
 	
-	private static Set<String> supportedFeatures = ImmutableSet.<String>of("liblouis-table", "locale");
+	private static Set<String> supportedFeatures = ImmutableSet.of("liblouis-table", "locale");
 	
 	/**
 	 * Recognized features:

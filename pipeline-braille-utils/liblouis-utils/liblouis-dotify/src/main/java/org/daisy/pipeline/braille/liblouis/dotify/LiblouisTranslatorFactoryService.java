@@ -53,7 +53,7 @@ public class LiblouisTranslatorFactoryService implements BrailleTranslatorFactor
 	}
 	
 	public Collection<TranslatorSpecification> listSpecifications() {
-		return ImmutableList.<TranslatorSpecification>of();
+		return ImmutableList.of();
 	}
 	
 	public BrailleTranslatorFactory newFactory() {

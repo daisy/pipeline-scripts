@@ -214,7 +214,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		}
 		public Map<String,Optional<String>> assocLocale(Map<String,Optional<String>> query, Locale locale) {
 			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
-			q.put("locale", Optional.<String>of(Locales.toString(locale, '_')));
+			q.put("locale", Optional.of(Locales.toString(locale, '_')));
 			return q;
 		}
 	};

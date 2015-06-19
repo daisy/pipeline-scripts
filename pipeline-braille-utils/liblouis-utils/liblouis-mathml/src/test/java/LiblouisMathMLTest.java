@@ -76,8 +76,8 @@ public class LiblouisMathMLTest {
 	@Test
 	public void runXProcSpec() throws Exception {
 		File baseDir = new File(PathUtils.getBaseDir());
-		boolean success = xprocspecRunner.run(ImmutableMap.<String,File>of("test_transform_mathml",
-		                                                                   new File(baseDir, "src/test/xprocspec/test_transform_mathml.xprocspec")),
+		boolean success = xprocspecRunner.run(ImmutableMap.of("test_transform_mathml",
+		                                                      new File(baseDir, "src/test/xprocspec/test_transform_mathml.xprocspec")),
 		                                      new File(baseDir, "target/xprocspec-reports"),
 		                                      new File(baseDir, "target/surefire-reports"),
 		                                      new File(baseDir, "target/xprocspec"),

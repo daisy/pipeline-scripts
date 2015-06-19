@@ -47,7 +47,7 @@ public abstract class Query {
 						value = integer;
 					else
 						throw new RuntimeException("Coding error"); }
-				map.put(key, Optional.<String>fromNullable(value)); }
+				map.put(key, Optional.fromNullable(value)); }
 			return ImmutableMap.copyOf(map); }
 		throw new RuntimeException("Could not parse query: " + query);
 	}

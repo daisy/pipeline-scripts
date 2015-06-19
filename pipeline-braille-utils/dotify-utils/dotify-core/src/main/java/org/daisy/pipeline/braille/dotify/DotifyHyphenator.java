@@ -126,7 +126,7 @@ public class DotifyHyphenator implements Hyphenator {
 				public Iterable<DotifyHyphenator> _get(Locale locale) {
 					try {
 						HyphenatorInterface hyphenator = newHyphenator(Locales.toString(locale, '-'));
-						return Optional.<DotifyHyphenator>of(new DotifyHyphenator(hyphenator)).asSet(); }
+						return Optional.of(new DotifyHyphenator(hyphenator)).asSet(); }
 					catch (Exception e) {
 						logger.warn("Could not create hyphenator for locale " + locale, e); }
 					return Optional.<DotifyHyphenator>absent().asSet(); }});

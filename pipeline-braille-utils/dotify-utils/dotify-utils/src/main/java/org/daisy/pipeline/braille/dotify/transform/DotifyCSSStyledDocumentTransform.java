@@ -62,7 +62,7 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
 		public Iterable<DotifyCSSStyledDocumentTransform> get(String query) {
-			return Optional.<DotifyCSSStyledDocumentTransform>fromNullable(transforms.apply(query)).asSet();
+			return Optional.fromNullable(transforms.apply(query)).asSet();
 		}
 		
 		private Memoizing<String,DotifyCSSStyledDocumentTransform> transforms
@@ -77,7 +77,7 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 				String newQuery = serializeQuery(q);
 				if (!cssBlockTransformProvider.get(newQuery).iterator().hasNext())
 					return null;
-				final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
+				final Map<String,String> options = ImmutableMap.of("query", newQuery);
 				return new DotifyCSSStyledDocumentTransform() {
 					public Tuple3<URI,QName,Map<String,String>> asXProc() {
 						return new Tuple3<URI,QName,Map<String,String>>(href, null, options); }};

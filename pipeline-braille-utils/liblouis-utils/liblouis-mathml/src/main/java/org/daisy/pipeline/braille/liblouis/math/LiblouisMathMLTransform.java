@@ -58,7 +58,7 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 				final URI href = Provider.this.href;
 				return logCreate(
 					new LiblouisMathMLTransform() {
-						private final Map<String,String> options = ImmutableMap.<String,String>of("math-code", code.name());
+						private final Map<String,String> options = ImmutableMap.of("math-code", code.name());
 						public Tuple3<URI,QName,Map<String,String>> asXProc() {
 							return new Tuple3<URI,QName,Map<String,String>>(href, null, options);
 						}
@@ -75,7 +75,7 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			if (q.containsKey("locale")) {
 				MathCode code = mathCodeFromLocale(parseLocale(q.get("locale").get()));
 				if (code != null)
-					return Optional.<LiblouisMathMLTransform>of(get(code)).asSet(); }
+					return Optional.of(get(code)).asSet(); }
 			return Optional.<LiblouisMathMLTransform>absent().asSet();
 		}
 		

@@ -53,7 +53,7 @@ public class BundledNativePath extends BundledResourcePath implements Provider<S
 		if ((path = getExecutable(name)) != null) {}
 		else if ((path = getSharedLibrary(name)) != null) {}
 		else { return Optional.<URI>absent().asSet(); }
-		return Optional.<URI>of(canonicalize(path)).asSet();
+		return Optional.of(canonicalize(path)).asSet();
 	}
 	
 	private URI getExecutable(String name) {

@@ -52,7 +52,7 @@ public interface Provider<Q,X> {
 		public Iterable<X> get(Q query) {
 			String value = map.get(query);
 			if (value != null)
-				return Optional.<X>fromNullable(parseValue(value)).asSet();
+				return Optional.fromNullable(parseValue(value)).asSet();
 			return Optional.<X>absent().asSet();
 		}
 		private Map<Q,String> readProperties(URL url) {

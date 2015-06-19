@@ -36,7 +36,7 @@ public abstract class AbstractTableProvider implements TableProvider, org.daisy.
 		Optional<String> o;
 		if ((o = q.remove("id")) != null) {
 			if (q.size() == 0)
-				return Optional.<Table>fromNullable(tablesFromId.get(o.get())).asSet();
+				return Optional.fromNullable(tablesFromId.get(o.get())).asSet();
 			else
 				return empty; }
 		else

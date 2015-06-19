@@ -41,7 +41,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	}
 	
 	public Collection<TranslatorSpecification> listSpecifications() {
-		return ImmutableList.<TranslatorSpecification>of();
+		return ImmutableList.of();
 	}
 	
 	public BrailleTranslatorFactory newFactory() {
@@ -184,7 +184,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			private final boolean hyphenating;
 			
 			private BrailleTranslatorResultImpl(String text, boolean hyphenating) {
-				this.input = Iterators.<Character>peekingIterator(Lists.charactersOf(text).iterator());
+				this.input = Iterators.peekingIterator(Lists.charactersOf(text).iterator());
 				this.hyphenating = hyphenating;
 			}
 			

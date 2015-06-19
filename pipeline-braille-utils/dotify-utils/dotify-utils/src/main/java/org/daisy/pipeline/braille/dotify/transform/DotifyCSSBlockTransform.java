@@ -62,7 +62,7 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		 * Other features are used for finding sub-transformers of type DotifyTranslator.
 		 */
 		public Iterable<DotifyCSSBlockTransform> get(String query) {
-			return Optional.<DotifyCSSBlockTransform>fromNullable(transforms.apply(query)).asSet();
+			return Optional.fromNullable(transforms.apply(query)).asSet();
 		}
 		
 		private Memoizing<String,DotifyCSSBlockTransform> transforms
@@ -77,7 +77,7 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 				String newQuery = serializeQuery(q);
 				if (!dotifyTranslatorProvider.get(newQuery).iterator().hasNext())
 					return null;
-				final Map<String,String> options = ImmutableMap.<String,String>of("query", newQuery);
+				final Map<String,String> options = ImmutableMap.of("query", newQuery);
 				return new DotifyCSSBlockTransform() {
 					public Tuple3<URI,QName,Map<String,String>> asXProc() {
 						return new Tuple3<URI,QName,Map<String,String>>(href, null, options); }};

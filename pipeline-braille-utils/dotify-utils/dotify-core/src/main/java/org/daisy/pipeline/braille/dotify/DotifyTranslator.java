@@ -128,7 +128,7 @@ public class DotifyTranslator implements TextTransform {
 						BrailleTranslator translator = newTranslator(
 							Locales.toString(locale, '-'), BrailleTranslatorFactory.MODE_UNCONTRACTED);
 						translator.setHyphenating(false);
-						return Optional.<DotifyTranslator>of(new DotifyTranslator(translator)).asSet(); }
+						return Optional.of(new DotifyTranslator(translator)).asSet(); }
 					catch (Exception e) {
 						logger.warn("Could not create translator for locale " + locale, e); }
 					return Optional.<DotifyTranslator>absent().asSet(); }});
