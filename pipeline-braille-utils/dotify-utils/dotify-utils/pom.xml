@@ -60,6 +60,7 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-formatter</artifactId>
       <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
   </dependencies>
   
@@ -74,8 +75,7 @@
                 in order to avoid including services in the same package in other bundles
             -->
             <_dsannotations>
-              org.daisy.pipeline.braille.dotify.impl.DotifyCSSBlockTransform$Provider,
-              org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider
+              org.daisy.pipeline.braille.dotify.impl.DotifyCSSBlockTransform$Provider
             </_dsannotations>
           </instructions>
         </configuration>

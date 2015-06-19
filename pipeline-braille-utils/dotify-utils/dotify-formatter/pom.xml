@@ -20,6 +20,10 @@
   
   <dependencies>
     <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>css-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
@@ -139,7 +143,8 @@
             -->
             <_dsannotations>
               org.daisy.pipeline.braille.dotify.impl.BypassMarkerProcessorFactoryService,
-              org.daisy.pipeline.braille.dotify.impl.BypassTranslatorFactoryService
+              org.daisy.pipeline.braille.dotify.impl.BypassTranslatorFactoryService,
+              org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider
             </_dsannotations>
           </instructions>
         </configuration>

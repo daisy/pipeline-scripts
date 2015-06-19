@@ -7,6 +7,4 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-calabash"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-formatter"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-mathml"/>
 </catalog>

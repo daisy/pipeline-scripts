@@ -34,6 +34,11 @@
       <artifactId>guava</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
@@ -55,11 +60,13 @@
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-formatter</artifactId>
       <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-mathml</artifactId>
       <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -145,8 +152,7 @@
                 in order to avoid including services in the same package in other bundles
             -->
             <_dsannotations>
-              org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform$Provider,
-              org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSStyledDocumentTransform$Provider
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform$Provider
             </_dsannotations>
           </instructions>
         </configuration>

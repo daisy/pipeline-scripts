@@ -7,5 +7,4 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-saxon"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-calabash"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:dotify-formatter"/>
 </catalog>

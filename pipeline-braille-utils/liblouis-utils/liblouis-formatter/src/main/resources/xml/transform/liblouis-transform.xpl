@@ -12,7 +12,7 @@
 	<p:option name="temp-dir" required="true"/>
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
-	<p:import href="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/library.xpl"/>
+	<p:import href="../format.xpl"/>
 	
 	<p:xslt>
 		<p:input port="stylesheet">
