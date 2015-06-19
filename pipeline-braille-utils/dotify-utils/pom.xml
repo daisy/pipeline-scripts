@@ -15,7 +15,7 @@
   <version>1.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>DAISY Pipeline 2 :: Aggregator POM for dotify-utils</name>
+  <name>DP2 Braille Modules :: dotify-utils</name>
 
   <modules>
     <module>dotify-core</module>

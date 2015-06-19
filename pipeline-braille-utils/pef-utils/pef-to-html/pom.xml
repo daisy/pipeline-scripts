@@ -10,12 +10,11 @@
     <relativePath>../../../parent/</relativePath>
   </parent>
 
-  <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>pef-to-html</artifactId>
   <version>1.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: pef-to-html</name>
+  <name>DP2 Braille Modules :: pef-utils :: pef-to-html</name>
 
   <dependencies>
     <!--

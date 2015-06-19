@@ -15,7 +15,7 @@
   <version>1.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>DAISY Pipeline 2 :: Aggregator POM for css-utils</name>
+  <name>DP2 Braille Modules :: css-utils</name>
 
   <modules>
     <module>css-core</module>

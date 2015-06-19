@@ -14,7 +14,7 @@
   <version>1.1.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: pef-saxon</name>
+  <name>DP2 Braille Modules :: pef-utils :: pef-saxon</name>
 
   <dependencies>
     <dependency>

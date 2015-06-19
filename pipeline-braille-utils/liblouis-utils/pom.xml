@@ -15,7 +15,7 @@
   <version>1.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>DAISY Pipeline 2 :: Aggregator POM for liblouis-utils</name>
+  <name>DP2 Braille Modules :: liblouis-utils</name>
 
   <modules>
     <module>liblouis-core</module>

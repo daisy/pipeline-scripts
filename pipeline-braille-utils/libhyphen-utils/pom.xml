@@ -15,7 +15,7 @@
   <version>1.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>DAISY Pipeline 2 :: Aggregator POM for libhyphen-utils</name>
+  <name>DP2 Braille Modules :: libhyphen-utils</name>
 
   <modules>
     <module>libhyphen-core</module>

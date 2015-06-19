@@ -14,7 +14,7 @@
   <version>1.1.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: css-calabash</name>
+  <name>DP2 Braille Modules :: css-utils :: css-calabash</name>
   
   <dependencies>
     <dependency>

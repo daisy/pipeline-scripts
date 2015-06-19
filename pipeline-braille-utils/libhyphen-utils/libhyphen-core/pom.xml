@@ -14,7 +14,7 @@
   <version>2.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: libhyphen-core</name>
+  <name>DP2 Braille Modules :: libhyphen-utils :: libhyphen-core</name>
 
   <dependencies>
     <dependency>

@@ -14,7 +14,7 @@
   <version>2.6.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: liblouis-tables</name>
+  <name>DP2 Braille Modules :: liblouis-utils :: liblouis-tables</name>
 
   <properties>
     <liblouis.version>2.6.3</liblouis.version>

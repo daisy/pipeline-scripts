@@ -10,12 +10,11 @@
     <relativePath>../../../parent/</relativePath>
   </parent>
 
-  <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>texhyph-utils</artifactId>
   <version>1.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: texhyph-utils</name>
+  <name>DP2 Braille Modules :: texhyph-utils :: texhyph-utils</name>
 
   <dependencies>
     <!--

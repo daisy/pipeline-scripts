@@ -14,7 +14,7 @@
   <version>2.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: texhyph-core</name>
+  <name>DP2 Braille Modules :: texhyph-utils :: texhyph-core</name>
 
   <dependencies>
     <dependency>

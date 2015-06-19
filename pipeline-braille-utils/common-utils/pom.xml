@@ -15,7 +15,7 @@
   <version>1.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 Braille Module :: common-utils</name>
+  <name>DP2 Braille Modules :: common-utils</name>
 
   <dependencies>
     <dependency>
