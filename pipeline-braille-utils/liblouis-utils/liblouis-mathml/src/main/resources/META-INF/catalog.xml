@@ -4,5 +4,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <nextCatalog catalog="org:daisy:pipeline:modules:file-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:fileset-utils"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-calabash"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-utils"/>
 </catalog>

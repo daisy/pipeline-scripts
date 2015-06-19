@@ -47,6 +47,9 @@
         <configuration>
           <instructions>
             <_dsannotations>*</_dsannotations>
+            <Provide-Capability>
+              xpath.function;name="{http://www.daisy.org/ns/2008/pef}encode",
+            </Provide-Capability>
           </instructions>
         </configuration>
       </plugin>

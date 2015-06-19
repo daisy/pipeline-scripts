@@ -54,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>dotify-calabash</artifactId>
+      <artifactId>dotify-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>

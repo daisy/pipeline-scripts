@@ -25,10 +25,14 @@
       <artifactId>css-core</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        optional (but keep mandatory as long as there is only one implementation)
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>css-calabash</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
     <!--
         test dependencies
@@ -89,6 +93,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <_dsannotations>*</_dsannotations>
+            <Require-Capability>xproc.step;filter:="(name={http://www.daisy.org/ns/pipeline/braille-css}inline)"</Require-Capability>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>

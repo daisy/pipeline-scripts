@@ -93,6 +93,7 @@
         <configuration>
           <instructions>
             <_dsannotations>*</_dsannotations>
+            <Provide-Capability>xproc.step;name="{http://liblouis.org/liblouis}translate-file"</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:library xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
+<p:library xmlns:p="http://www.w3.org/ns/xproc"
+           xmlns:pef="http://www.daisy.org/ns/2008/pef"
+           xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+           version="1.0">
     
     <!--
         pef:merge
@@ -12,9 +15,19 @@
     <p:import href="store.xpl"/>
     
     <!--
-        pef:pef2text, pef:text2pef, pef:validate
+        pef:pef2text
     -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-calabash/library.xpl"/>
+    <p:import href="pef2text.xpl"/>
+    
+    <!--
+        pef:text2pef
+    -->
+    <p:import href="text2pef.xpl"/>
+    
+    <!--
+        pef:validate
+    -->
+    <p:import href="validate.xpl"/>
     
     <!--
         pef:compare
@@ -32,4 +45,3 @@
     <p:import href="x-compare.xpl"/>
     
 </p:library>
-

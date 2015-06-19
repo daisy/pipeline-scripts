@@ -5,6 +5,4 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/library.xsl" uri="../xml/library.xsl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/liblouis-utils/library.xpl" uri="../xml/library.xpl"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-calabash"/>
-  <nextCatalog catalog="org:daisy:pipeline:modules:braille:liblouis-saxon"/>
 </catalog>

@@ -21,22 +21,6 @@
         OSGi runtime dependencies
     -->
     <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-saxon</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-calabash</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-to-html</artifactId>
-      <version>1.1.1-SNAPSHOT</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>file-utils</artifactId>
       <scope>runtime</scope>
@@ -49,6 +33,40 @@
       <artifactId>saxon-he</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        optional (but keep mandatory as long as there is only one implementation)
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>pef-saxon</artifactId>
+      <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>pef-calabash</artifactId>
+      <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
+    </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Require-Capability>
+              xproc.step;filter:="(name={http://www.daisy.org/ns/2008/pef}pef2text)",
+              xproc.step;filter:="(name={http://www.daisy.org/ns/2008/pef}text2pef)",
+              xproc.step;filter:="(name={http://www.daisy.org/ns/2008/pef}validate)",
+              xpath.function;filter:="(name={http://www.daisy.org/ns/2008/pef}encode)"
+            </Require-Capability>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   
 </project>

@@ -48,7 +48,7 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-calabash</artifactId>
+      <artifactId>liblouis-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -130,6 +130,11 @@
     <!--
         test dependencies
     -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-tables</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>

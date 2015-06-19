@@ -4,20 +4,15 @@
     <nextCatalog catalog="./pipeline-braille-scripts/dtbook-to-pef/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-scripts/zedai-to-pef/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/common-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./pipeline-braille-utils/css-utils/css-calabash/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/css-utils/css-core/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/css-utils/css-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./pipeline-braille-utils/dotify-utils/dotify-calabash/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/dotify-utils/dotify-formatter/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/dotify-utils/dotify-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/libhyphen-utils/libhyphen-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./pipeline-braille-utils/liblouis-utils/liblouis-calabash/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/liblouis-utils/liblouis-formatter/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/liblouis-utils/liblouis-mathml/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/liblouis-utils/liblouis-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/obfl-utils/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./pipeline-braille-utils/pef-utils/pef-calabash/src/main/resources/META-INF/catalog.xml"/>
-    <nextCatalog catalog="./pipeline-braille-utils/pef-utils/pef-to-html/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/pef-utils/pef-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/texhyph-utils/texhyph-utils/src/main/resources/META-INF/catalog.xml"/>
 </catalog>

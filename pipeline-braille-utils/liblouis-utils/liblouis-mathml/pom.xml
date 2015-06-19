@@ -39,12 +39,7 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-core</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-calabash</artifactId>
+      <artifactId>liblouis-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>

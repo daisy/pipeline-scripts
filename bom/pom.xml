@@ -181,11 +181,6 @@
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
-                <artifactId>pef-to-html</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-utils</artifactId>
                 <version>1.1.2-SNAPSHOT</version>
             </dependency>

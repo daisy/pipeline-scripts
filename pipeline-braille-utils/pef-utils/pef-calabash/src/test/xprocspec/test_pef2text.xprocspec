@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:pef="http://www.daisy.org/ns/2008/pef"
-               script="../../main/resources/xml/library.xpl">
+               script="../resources/pef2text.xpl">
   
   <x:scenario label="test_01">
     <x:call step="pef:pef2text">

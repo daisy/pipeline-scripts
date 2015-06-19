@@ -9,7 +9,7 @@
       <p:input port="source"/>
       <p:output port="result"/>
       <p:import href="../../main/resources/xml/obfl-normalize-space.xpl"/>
-      <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-calabash/library.xpl"/>
+      <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
       <pxi:obfl-normalize-space/>
       <dotify:obfl-to-pef locale="und" mode="dotify:format"/>
     </p:declare-step>

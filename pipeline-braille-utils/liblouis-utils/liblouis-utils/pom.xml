@@ -48,14 +48,28 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>css-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        optional (but keep mandatory as long as there is only one implementation)
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-saxon</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-calabash</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
+    <!--
+        causes circular dependency issues
+    -->
+    <!--
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-formatter</artifactId>
@@ -68,22 +82,13 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>css-utils</artifactId>
-      <scope>runtime</scope>
-    </dependency>
+    -->
     <!--
         test dependencies
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-tables</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>pef-utils</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -154,6 +159,11 @@
             <_dsannotations>
               org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform$Provider
             </_dsannotations>
+            <Require-Capability>
+              xproc.step;filter:="(name={http://liblouis.org/liblouis}translate-file)",
+              xpath.function;filter:="(name={http://liblouis.org/liblouis}translate)",
+              xpath.function;filter:="(name={http://liblouis.org/liblouis}hyphenate)"
+            </Require-Capability>
           </instructions>
         </configuration>
         <executions>

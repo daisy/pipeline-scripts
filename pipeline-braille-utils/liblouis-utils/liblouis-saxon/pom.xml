@@ -98,6 +98,10 @@
         <configuration>
           <instructions>
             <_dsannotations>*</_dsannotations>
+            <Provide-Capability>
+              xpath.function;name="{http://liblouis.org/liblouis}translate",
+              xpath.function;name="{http://liblouis.org/liblouis}hyphenate"
+            </Provide-Capability>
           </instructions>
         </configuration>
         <executions>

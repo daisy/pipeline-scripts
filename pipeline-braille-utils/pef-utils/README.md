@@ -27,8 +27,6 @@ Submodules
 
 - [`pef-calabash`](pef-calabash): XProc bindings for [BrailleUtils][].
 - [`pef-saxon`](pef-saxon): XPath bindings for BrailleUtils.
-- [`pef-to-html`](pef-to-html): XProc step for converting a PEF
-  document into an HTML preview.
 
 [PEF]: http://pef-format.org
 [BrailleUtils]: http://code.google.com/p/brailleutils

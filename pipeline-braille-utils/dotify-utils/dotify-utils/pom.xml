@@ -46,22 +46,32 @@
       <artifactId>css-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        optional (but keep mandatory as long as there is only one implementation)
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-saxon</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-calabash</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
+    <!--
+        causes circular dependency issues
+    -->
+    <!--
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-formatter</artifactId>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+    -->
   </dependencies>
   
   <build>
@@ -77,6 +87,10 @@
             <_dsannotations>
               org.daisy.pipeline.braille.dotify.impl.DotifyCSSBlockTransform$Provider
             </_dsannotations>
+            <Require-Capability>
+              xproc.step;filter:="(name={http://code.google.com/p/dotify/}obfl-to-pef)",
+              xpath.function;filter:="(name={http://code.google.com/p/dotify/}translate)"
+            </Require-Capability>
           </instructions>
         </configuration>
       </plugin>

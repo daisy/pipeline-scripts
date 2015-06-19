@@ -65,12 +65,17 @@
       <classifier>linux</classifier>
       <scope>runtime</scope>
     </dependency>
-    <!-- <dependency> -->
-    <!--   <groupId>org.daisy.pipeline.modules.braille</groupId> -->
-    <!--   <artifactId>liblouis-tables</artifactId> -->
-    <!--   <scope>runtime</scope> -->
-    <!--   <optional>true</optional> -->
-    <!-- </dependency> -->
+    <!--
+        optional (causes circular dependency issues)
+    -->
+    <!--
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-tables</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+    -->
     <!--
         test dependencies
     -->
