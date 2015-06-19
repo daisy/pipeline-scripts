@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.BundledResourcePath;
 
@@ -25,7 +25,7 @@ public class LiblouisTablePath extends BundledResourcePath {
 	}
 	
 	public Iterable<URI> listTableFiles() {
-		return Iterables.<URI,URI>transform(
+		return transform(
 			resources,
 			new Function<URI,URI>() {
 				public URI apply(URI resource) {

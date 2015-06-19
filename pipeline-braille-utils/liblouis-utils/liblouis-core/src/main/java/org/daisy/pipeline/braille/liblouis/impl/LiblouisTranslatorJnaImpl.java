@@ -10,15 +10,21 @@ import java.util.Map;
 import com.google.common.base.Function;
 import static com.google.common.base.Objects.toStringHelper;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -26,6 +32,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import static org.daisy.pipeline.braille.liblouis.LiblouisTable.tokenizeTable;
@@ -103,8 +110,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
 	= new ArrayList<Transform.Provider<Hyphenator>>();
 	
-	private CachedProvider<String,Hyphenator> hyphenatorProvider
-	= CachedProvider.newInstance(new DispatchingProvider<Hyphenator>(hyphenatorProviders));
+	private Provider.MemoizingProvider<String,Hyphenator> hyphenatorProvider
+	= memoize(dispatch(hyphenatorProviders));
 	
 	/**
 	 * Recognized features:
@@ -131,13 +138,29 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
 	public Iterable<LiblouisTranslator> get(String query) {
-		return provider.get(query);
+		return impl.get(query);
 	}
 	
-	private final static Iterable<LiblouisTranslator> empty = Optional.<LiblouisTranslator>absent().asSet();
+	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
+		return impl.withContext(context);
+	}
 	
-	private CachedProvider<String,LiblouisTranslator> provider = new CachedProvider<String,LiblouisTranslator>() {
-		public Iterable<LiblouisTranslator> delegate(String query) {
+	private Transform.Provider.MemoizingProvider<LiblouisTranslator> impl = new ProviderImpl(null);
+	
+	private final static Iterable<WithSideEffect<LiblouisTranslator,Logger>> empty
+		= Optional.<WithSideEffect<LiblouisTranslator,Logger>>absent().asSet();
+	
+	private class ProviderImpl extends AbstractProvider<LiblouisTranslator> {
+		
+		private ProviderImpl(Logger context) {
+			super(context);
+		}
+		
+		protected Transform.Provider.MemoizingProvider<LiblouisTranslator> _withContext(Logger context) {
+			return new ProviderImpl(context);
+		}
+		
+		protected final Iterable<WithSideEffect<LiblouisTranslator,Logger>> __get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("translator")) != null)
@@ -172,18 +195,19 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
 			q.put("unicode", Optional.<String>absent());
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
-			return Iterables.<LiblouisTranslator>concat(
-				Iterables.<Translator,Iterable<LiblouisTranslator>>transform(
+			return concat(
+				transform(
 					tables,
-					new Function<Translator,Iterable<LiblouisTranslator>>() {
-						public Iterable<LiblouisTranslator> apply(final Translator table) {
-							Iterable<LiblouisTranslator> translators = empty;
+					new Function<Translator,Iterable<WithSideEffect<LiblouisTranslator,Logger>>>() {
+						public Iterable<WithSideEffect<LiblouisTranslator,Logger>> apply(final Translator table) {
+							Iterable<WithSideEffect<LiblouisTranslator,Logger>> translators = empty;
 							if (!"none".equals(hyphenator)) {
 								if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
 									for (URI t : tokenizeTable(table.getTable()))
 										if (t.toString().endsWith(".dic")) {
-											translators = Optional.<LiblouisTranslator>of(
-												new LiblouisTranslatorHyphenatorImpl(table)).asSet();
+											translators = Optional.of(
+												logCreate((LiblouisTranslator)new LiblouisTranslatorHyphenatorImpl(table))
+											).asSet();
 											break; }
 								if (!"liblouis".equals("hyphenator")) {
 									if (locale == null) {
@@ -196,27 +220,32 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 										if (!"auto".equals(hyphenator))
 											hyphenatorQuery.put("hyphenator", Optional.<String>of(hyphenator));
 										hyphenatorQuery.put("locale", Optional.<String>of(locale));
-										Iterable<Hyphenator> hyphenators = hyphenatorProvider.get(serializeQuery(hyphenatorQuery.build()));
-										translators = Iterables.<LiblouisTranslator>concat(
+										String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
+										Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
+											= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
+										translators = concat(
 											translators,
-											Iterables.<LiblouisTranslator>filter(
-												Iterables.<Hyphenator,LiblouisTranslator>transform(
-													hyphenators,
-													new Function<Hyphenator,LiblouisTranslator>() {
-														public LiblouisTranslator apply(Hyphenator hyphenator) {
-															return new LiblouisTranslatorImpl(table, hyphenator); }}),
-												Predicates.notNull())); }}}
+											transform(
+												hyphenators,
+												new WithSideEffect.Function<Hyphenator,LiblouisTranslator,Logger>() {
+													public LiblouisTranslator _apply(Hyphenator hyphenator) {
+														return applyWithSideEffect(
+															logCreate(
+																(LiblouisTranslator)new LiblouisTranslatorImpl(table, hyphenator))); }}));
+										}}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
-								translators = Iterables.<LiblouisTranslator>concat(
+								translators = concat(
 									translators,
-									Optional.<LiblouisTranslator>of(new LiblouisTranslatorImpl(table)).asSet());
+									Optional.of(
+										logCreate((LiblouisTranslator)new LiblouisTranslatorImpl(table))
+									).asSet());
 							return translators;
 						}
 					}
 				)
 			);
 		}
-	};
+	}
 	
 	private static class LiblouisTranslatorImpl extends LiblouisTranslator {
 		
@@ -288,7 +317,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			// array.
 			byte[] positions;
 			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-			String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
+			String[] unhyphenated = toArray(SEGMENT_SPLITTER.split(t._1), String.class);
 			t = extractHyphens(t._2, t._1, null, null, US);
 			String _text = t._1;
 			if (_text.length() == 0)
@@ -357,7 +386,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 						            + "Input segments: " + Arrays.toString(text) + "\n"
 						            + "Typeform: " + Arrays.toString(typeform) + "\n"
 						            + "Output segments: " + Arrays.toString(
-							            Iterables.<String>toArray(SEGMENT_SPLITTER.split(braille), String.class)));
+							            toArray(SEGMENT_SPLITTER.split(braille), String.class)));
 						
 						// If some segment breaks were discarded, fall
 						// back on a fuzzy split method. First number the
@@ -456,6 +485,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			try { return translator.hyphenate(text); }
 			catch (TranslationException e) {
 				throw new RuntimeException(e); }
+		}
+		
+		@Override
+		public String toString() {
+			return toStringHelper(this).add("translator", translator).add("hyphenator", "self").toString();
 		}
 	}
 	

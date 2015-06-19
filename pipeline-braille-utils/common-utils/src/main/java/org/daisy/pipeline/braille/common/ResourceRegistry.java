@@ -30,8 +30,8 @@ public abstract class ResourceRegistry<T extends ResourcePath> implements Resour
 	 * Iterate over all registered resource paths and return as soon as one
 	 * path can resolve the resource.
 	 */
-	protected final CachedResolver resolver = new CachedResolver() {
-		public URL delegate(URI resource) {
+	protected final MemoizingResolver resolver = new MemoizingResolver() {
+		public URL _apply(URI resource) {
 			for (T path : paths.values()) {
 				URL resolved = path.resolve(resource);
 				if (resolved != null)

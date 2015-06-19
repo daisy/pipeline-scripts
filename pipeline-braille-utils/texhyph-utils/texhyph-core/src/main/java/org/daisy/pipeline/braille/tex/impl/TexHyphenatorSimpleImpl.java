@@ -10,12 +10,15 @@ import java.util.Map;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -71,6 +74,10 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 		tableRegistry = null;
 	}
 	
+	public Transform.Provider<TexHyphenator> withContext(Logger context) {
+		return this;
+	}
+	
 	/**
 	 * Recognized features:
 	 *
@@ -99,9 +106,9 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 	
 	private final static Iterable<TexHyphenator> empty = Optional.<TexHyphenator>absent().asSet();
 	
-	private CachedProvider<String,TexHyphenator> provider
-	= new CachedProvider<String,TexHyphenator>() {
-		public Iterable<TexHyphenator> delegate(String query) {
+	private Provider.MemoizingProvider<String,TexHyphenator> provider
+	= new Provider.MemoizingProvider<String,TexHyphenator>() {
+		public Iterable<TexHyphenator> _get(String query) {
 			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("hyphenator")) != null)
@@ -122,13 +129,13 @@ public class TexHyphenatorSimpleImpl implements TexHyphenator.Provider {
 				logger.warn("A query with '" + q.keySet().iterator().next() + "' never matches anything");
 				return empty; }
 			if (tableRegistry != null) {
-				return Iterables.<TexHyphenator>filter(
-					Iterables.<URI,TexHyphenator>transform(
+				return filter(
+					transform(
 						tableRegistry.get(locale),
 						new Function<URI,TexHyphenator>() {
 							public TexHyphenator apply(URI table) {
 								return TexHyphenatorSimpleImpl.this.get(table); }}),
-					Predicates.notNull()); }
+					notNull()); }
 			return empty; }};
 	
 	private class TexHyphenatorImpl implements TexHyphenator {

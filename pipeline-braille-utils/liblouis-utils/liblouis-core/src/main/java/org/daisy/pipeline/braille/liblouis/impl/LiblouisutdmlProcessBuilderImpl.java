@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.getFirst;
 
 import org.daisy.pipeline.braille.common.BundledNativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
@@ -53,7 +53,7 @@ public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
 	protected void bindExecutable(BundledNativePath nativePath) {
 		if (!LIBLOUISUTDML_EXTERNAL && this.nativePath == null) {
-			URI executablePath = Iterables.<URI>getFirst(nativePath.get("file2brl"), null);
+			URI executablePath = getFirst(nativePath.get("file2brl"), null);
 			if (executablePath != null) {
 				file2brl = asFile(nativePath.resolve(executablePath));
 				this.nativePath = nativePath;

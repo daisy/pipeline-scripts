@@ -13,7 +13,9 @@ import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 
@@ -53,6 +55,10 @@ public class DotifyTranslator implements TextTransform {
 		}
 	)
 	public static class Provider implements TextTransform.Provider<DotifyTranslator> {
+		
+		public Transform.Provider<DotifyTranslator> withContext(Logger context) {
+			return this;
+		}
 		
 		/**
 		 * Try to find a translator based on the given locale.
@@ -114,10 +120,10 @@ public class DotifyTranslator implements TextTransform {
 			                           + locale.toLowerCase() + "(" + grade.toUpperCase() + ")");
 		}
 		
-		private final CachedProvider<Locale,DotifyTranslator> translators
-		= CachedProvider.<Locale,DotifyTranslator>newInstance(
+		private final org.daisy.pipeline.braille.common.Provider.MemoizingProvider<Locale,DotifyTranslator> translators
+		= memoize(
 			new LocaleBasedProvider<Locale,DotifyTranslator>() {
-				public Iterable<DotifyTranslator> delegate(Locale locale) {
+				public Iterable<DotifyTranslator> _get(Locale locale) {
 					try {
 						BrailleTranslator translator = newTranslator(
 							Locales.toString(locale, '-'), BrailleTranslatorFactory.MODE_UNCONTRACTED);

@@ -12,7 +12,8 @@ import java.util.Properties;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.util.Function2;
 
@@ -31,17 +32,13 @@ public interface Provider<Q,X> {
 		}
 	}
 	
-	public static abstract class CachedProvider<Q,X> extends Cached<Q,Iterable<X>> implements Provider<Q,X> {
-		
-		/**
-		 * delegate.get(query) must not mutate query
-		 */
-		public static <Q,X> CachedProvider<Q,X> newInstance(final Provider<Q,X> delegate) {
-			return new CachedProvider<Q,X>() {
-				public Iterable<X> delegate(Q query) {
-					return delegate.get(query);
-				}
-			};
+	public static abstract class MemoizingProvider<Q,X> extends Memoizing<Q,Iterable<X>> implements Provider<Q,X> {
+		protected abstract Iterable<X> _get(Q query);
+		public final Iterable<X> get(Q query) {
+			return _get(query);
+		}
+		protected final Iterable<X> _apply(Q query) {
+			return _get(query);
 		}
 	}
 	
@@ -74,46 +71,21 @@ public interface Provider<Q,X> {
 			catch (Exception e) {
 				throw new RuntimeException("Could not read properties file " + url, e); }
 		}
-		public static <Q,X> SimpleMappingProvider<Q,X> newInstance(URL properties,
-		                                                           final Function<String,Q> parseKey,
-		                                                           final Function<String,X> parseValue) {
-			return new SimpleMappingProvider<Q,X>(properties) {
-				public Q parseKey(String key) {
-					return parseKey.apply(key);
-				}
-				public X parseValue(String value) {
-					return parseValue.apply(value);
-				}
-			};
-		}
 	}
 	
 	public static abstract class DispatchingProvider<Q,X> implements Provider<Q,X> {
 		public abstract Iterable<Provider<Q,X>> dispatch();
 		public Iterable<X> get(final Q query) {
-			return Iterables.concat(Iterables.transform(
+			return concat(transform(
 				dispatch(),
 				new Function<Provider<Q,X>,Iterable<X>>() {
 					public Iterable<X> apply(Provider<Q,X> provider) {
-						return provider.get(query);
-					}
-				}
-			));
-		}
-		public static <Q,X> DispatchingProvider<Q,X> newInstance(final Iterable<? extends Provider<Q,X>> dispatch) {
-			return new DispatchingProvider<Q,X>() {
-				@SuppressWarnings(
-					"unchecked" // safe cast to Iterable<Provider<Q,X>>
-				)
-				public Iterable<Provider<Q,X>> dispatch() {
-					return (Iterable<Provider<Q,X>>)dispatch;
-				}
-			};
+						return provider.get(query); }}));
 		}
 	}
 	
 	public static abstract class LocaleBasedProvider<Q,X> implements Provider<Q,X> {
-		public abstract Iterable<? extends X> delegate(Q query);
+		public abstract Iterable<? extends X> _get(Q query);
 		public abstract Locale getLocale(Q query);
 		/**
 		 * @param query must not be mutated
@@ -127,7 +99,7 @@ public interface Provider<Q,X> {
 		public Locale assocLocale(Locale query, Locale locale) {
 			return locale;
 		}
-		public Iterable<X> get(final Q query) {
+		public final Iterable<X> get(final Q query) {
 			return new Iterable<X>() {
 				public Iterator<X> iterator() {
 					return new Iterator<X>() {
@@ -139,19 +111,19 @@ public interface Provider<Q,X> {
 								switch (tryNext) {
 								case 1:
 									tryNext++;
-									next = delegate(query).iterator();
+									next = _get(query).iterator();
 									if (locale == null || "".equals(locale.toString()))
 										tryNext = 4;
 									break;
 								case 2:
 									tryNext++;
 									if (!"".equals(locale.getVariant()))
-										next = delegate(assocLocale(query, new Locale(locale.getLanguage(), locale.getCountry()))).iterator();
+										next = _get(assocLocale(query, new Locale(locale.getLanguage(), locale.getCountry()))).iterator();
 									break;
 								case 3:
 									tryNext++;
 									if (!"".equals(locale.getCountry()))
-										next = delegate(assocLocale(query, new Locale(locale.getLanguage()))).iterator();
+										next = _get(assocLocale(query, new Locale(locale.getLanguage()))).iterator();
 									break;
 								case 4:
 									tryNext++;
@@ -175,11 +147,37 @@ public interface Provider<Q,X> {
 		public Iterable<X> fallback(Q query) {
 			return Optional.<X>absent().asSet();
 		}
-		public static <Q,X> LocaleBasedProvider<Q,X> newInstance(final Provider<Q,X> delegate,
-		                                                         final Function<Q,Locale> getLocale,
-		                                                         final Function2<Q,Locale,Q> assocLocale) {
+	}
+	
+	public static abstract class util {
+		
+		/**
+		 * provider.get(query) must not mutate query
+		 */
+		public static <Q,X> MemoizingProvider<Q,X> memoize(final Provider<Q,X> provider) {
+			return new MemoizingProvider<Q,X>() {
+				protected Iterable<X> _get(Q query) {
+					return provider.get(query);
+				}
+			};
+		}
+		
+		public static <Q,X> DispatchingProvider<Q,X> dispatch(final Iterable<? extends Provider<Q,X>> dispatch) {
+			return new DispatchingProvider<Q,X>() {
+				@SuppressWarnings(
+					"unchecked" // safe cast to Iterable<Provider<Q,X>>
+				)
+				public Iterable<Provider<Q,X>> dispatch() {
+					return (Iterable<Provider<Q,X>>)dispatch;
+				}
+			};
+		}
+		
+		public static <Q,X> LocaleBasedProvider<Q,X> varyLocale(final Provider<Q,X> delegate,
+		                                                        final Function<Q,Locale> getLocale,
+		                                                        final Function2<Q,Locale,Q> assocLocale) {
 			return new LocaleBasedProvider<Q,X>() {
-				public Iterable<? extends X> delegate(Q query) {
+				public Iterable<? extends X> _get(Q query) {
 					return delegate.get(query);
 				}
 				public Locale getLocale(Q query) {
@@ -190,9 +188,10 @@ public interface Provider<Q,X> {
 				}
 			};
 		}
-		public static <X> LocaleBasedProvider<Locale,X> newInstance(final Provider<Locale,X> delegate) {
+		
+		public static <X> LocaleBasedProvider<Locale,X> varyLocale(final Provider<Locale,X> delegate) {
 			return new LocaleBasedProvider<Locale,X>() {
-				public Iterable<? extends X> delegate(Locale locale) {
+				public Iterable<X> _get(Locale locale) {
 					return delegate.get(locale);
 				}
 			};

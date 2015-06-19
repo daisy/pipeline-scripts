@@ -7,12 +7,6 @@ import org.daisy.pipeline.braille.common.util.Function0;
 
 public abstract class LazyValue<V> implements Function0<V>, Iterable<V> {
 	
-	public abstract V get();
-	
-	public V apply() {
-		return get();
-	}
-	
 	public Iterator<V> iterator() {
 		return new Iterator<V>() {
 			boolean hasNext = true;
@@ -23,7 +17,7 @@ public abstract class LazyValue<V> implements Function0<V>, Iterable<V> {
 				if (!hasNext())
 					throw new NoSuchElementException();
 				hasNext = false;
-				return get();
+				return apply();
 			}
 			public void remove() {
 				throw new UnsupportedOperationException();
@@ -31,10 +25,10 @@ public abstract class LazyValue<V> implements Function0<V>, Iterable<V> {
 		};
 	}
 	
-	public static <V> LazyValue<V> from(final Function0<V> get) {
+	public static <V> LazyValue<V> from(final Function0<V> value) {
 		return new LazyValue<V>() {
-			public V get() {
-				return get.apply();
+			public V apply() {
+				return value.apply();
 			}
 		};
 	}
@@ -44,34 +38,19 @@ public abstract class LazyValue<V> implements Function0<V>, Iterable<V> {
 		private V value = null;
 		protected boolean computed = false;
 		
-		public V get() {
+		public final V apply() {
 			if (!computed) {
-				value = delegate();
+				value = _apply();
 				computed = true; }
 			return value;
 		}
 		
-		protected abstract V delegate();
+		protected abstract V _apply();
 		
-		public static <V> LazyValue<V> from(final Function0<V> get) {
+		public static <V> LazyValue<V> from(final Function0<V> value) {
 			return new ImmutableLazyValue<V>() {
-				public V delegate() {
-					return get.apply();
-				}
-			};
-		}
-	}
-	
-	public static abstract class CachedLazyValue<V> extends ImmutableLazyValue<V> {
-		
-		public void invalidateCache() {
-			computed = false;
-		}
-		
-		public static <V> CachedLazyValue<V> from(final Function0<V> get) {
-			return new CachedLazyValue<V>() {
-				public V delegate() {
-					return get.apply();
+				public V _apply() {
+					return value.apply();
 				}
 			};
 		}

@@ -6,12 +6,15 @@ import java.util.Map;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -60,6 +63,10 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 		tableProvider = null;
 	}
 	
+	public Transform.Provider<LiblouisHyphenator> withContext(Logger context) {
+		return this;
+	}
+	
 	/**
 	 * Recognized features:
 	 *
@@ -81,8 +88,9 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 	
 	private final static Iterable<LiblouisHyphenator> empty = Optional.<LiblouisHyphenator>absent().asSet();
 	
-	private CachedProvider<String,LiblouisHyphenator> provider = new CachedProvider<String,LiblouisHyphenator>() {
-		public Iterable<LiblouisHyphenator> delegate(String query) {
+	private Provider.MemoizingProvider<String,LiblouisHyphenator> provider
+	= new Provider.MemoizingProvider<String,LiblouisHyphenator>() {
+		public Iterable<LiblouisHyphenator> _get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;
 			if ((o = q.remove("hyphenator")) != null)
@@ -111,7 +119,7 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 			if (locale != null)
 				q.put("locale", Optional.<String>of(Locales.toString(parseLocale(locale), '_')));
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
-			return Iterables.<Translator,LiblouisHyphenator>transform(
+			return transform(
 				tables,
 				new Function<Translator,LiblouisHyphenator>() {
 						public LiblouisHyphenator apply(Translator table) {
@@ -147,7 +155,7 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 			// positions but also the segment boundaries.
 			byte[] positions;
 			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-			String[] unhyphenated = Iterables.<String>toArray(SEGMENT_SPLITTER.split(t._1), String.class);
+			String[] unhyphenated = toArray(SEGMENT_SPLITTER.split(t._1), String.class);
 			t = extractHyphens(t._2, t._1, null, null, US);
 			String _text = t._1;
 			if (t._2 != null)

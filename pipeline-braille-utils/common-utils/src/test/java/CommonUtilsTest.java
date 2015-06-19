@@ -14,6 +14,7 @@ import org.daisy.maven.xspec.XSpecRunner;
 
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -46,6 +47,8 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.osgi.framework.BundleContext;
 
+import org.slf4j.Logger;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class CommonUtilsTest {
@@ -69,12 +72,7 @@ public class CommonUtilsTest {
 	
 	@Before
 	public void registerUppercaseTransformProvider() {
-		final UppercaseTransform transform = new UppercaseTransform();
-		UppercaseTransform.Provider<UppercaseTransform> provider
-			= new UppercaseTransform.Provider<UppercaseTransform>() {
-				public Iterable<UppercaseTransform> get(String query) {
-					return Optional.<UppercaseTransform>fromNullable(
-						query.equals("(uppercase)") ? transform : null).asSet(); }};
+		UppercaseTransform.Provider provider = new UppercaseTransform.Provider();
 		Hashtable<String,Object> properties = new Hashtable<String,Object>();
 		context.registerService(TextTransform.Provider.class.getName(), provider, properties);
 		context.registerService(XProcTransform.Provider.class.getName(), provider, properties);
@@ -88,7 +86,25 @@ public class CommonUtilsTest {
 		public Tuple3<URI,QName,Map<String,String>> asXProc() {
 			return new Tuple3<URI,QName,Map<String,String>>(href, null, null);
 		}
-		public interface Provider<T extends UppercaseTransform> extends TextTransform.Provider<T>, XProcTransform.Provider<T> {}
+		private static final UppercaseTransform instance = new UppercaseTransform();
+		public static class Provider implements TextTransform.Provider<UppercaseTransform>, XProcTransform.Provider<UppercaseTransform> {
+			private Logger logger;
+			public Provider() {}
+			private Provider(Logger context) {
+				logger = context;
+			}
+			public Iterable<UppercaseTransform> get(String query) {
+				if (query.equals("(uppercase)")) {
+					if (logger != null)
+						logger.info("Selecting " + instance);
+					return Optional.<UppercaseTransform>fromNullable(instance).asSet(); }
+				else
+					return Optional.<UppercaseTransform>fromNullable(null).asSet();
+			}
+			public Transform.Provider<UppercaseTransform> withContext(Logger context) {
+				return new Provider(context);
+			}
+		}
 	}
 	
 	@Test

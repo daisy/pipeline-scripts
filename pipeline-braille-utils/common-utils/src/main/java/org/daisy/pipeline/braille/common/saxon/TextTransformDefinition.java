@@ -13,11 +13,11 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
-import org.daisy.pipeline.braille.common.Provider.CachedProvider;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
-
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -59,8 +59,8 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	private List<Transform.Provider<TextTransform>> providers = new ArrayList<Transform.Provider<TextTransform>>();
 	
-	private CachedProvider<String,TextTransform> translators
-	= CachedProvider.newInstance(new DispatchingProvider<TextTransform>(providers));
+	private Provider.MemoizingProvider<String,TextTransform> translators
+	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;

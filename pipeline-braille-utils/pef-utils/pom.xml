@@ -19,7 +19,6 @@
 
   <modules>
     <module>pef-calabash</module>
-    <module>pef-core</module>
     <module>pef-saxon</module>
     <!-- <module>pef-to-html</module> -->
     <module>pef-utils</module>

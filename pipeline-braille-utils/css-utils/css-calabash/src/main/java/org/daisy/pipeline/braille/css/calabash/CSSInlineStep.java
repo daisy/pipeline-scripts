@@ -14,8 +14,9 @@ import javax.xml.transform.URIResolver;
 import com.google.common.base.Function;
 import static com.google.common.base.Strings.emptyToNull;
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterators.addAll;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -194,7 +195,7 @@ public class CSSInlineStep extends DefaultStep {
 			printStylemap = new Analyzer(printStyle).evaluateDOM(document, "print", false);
 			
 			pages = new HashMap<String,RulePage>();
-			for (RulePage page : Iterables.<RulePage>filter(brailleStyle, RulePage.class))
+			for (RulePage page : filter(brailleStyle, RulePage.class))
 				pages.put(Objects.firstNonNull(page.getName(), "auto"), page);
 			
 			startDocument(baseURI);
@@ -267,8 +268,8 @@ public class CSSInlineStep extends DefaultStep {
 				inscopeNS = inode.getDeclaredNamespaces(null);
 			else {
 				List<NamespaceBinding> namespaces = new ArrayList<NamespaceBinding>();
-				Iterators.<NamespaceBinding>addAll(namespaces, NamespaceIterator.iterateNamespaces(inode));
-				inscopeNS = Iterables.<NamespaceBinding>toArray(namespaces, NamespaceBinding.class);
+				addAll(namespaces, NamespaceIterator.iterateNamespaces(inode));
+				inscopeNS = toArray(namespaces, NamespaceBinding.class);
 				seenRoot = true; }
 			receiver.setSystemId(element.getBaseURI());
 			addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
@@ -318,19 +319,19 @@ public class CSSInlineStep extends DefaultStep {
 			builder.append(":").append(pseudo).append(" ");
 		builder.append("{ ");
 		List<String> seen = new ArrayList<String>();
-		for (Declaration decl : Iterables.<Declaration>filter(rulePage, Declaration.class)) {
+		for (Declaration decl : filter(rulePage, Declaration.class)) {
 			seen.add(decl.getProperty());
 			insertDeclaration(builder, decl); }
 		if (inheritFrom != null)
-			for (Declaration decl : Iterables.<Declaration>filter(inheritFrom, Declaration.class))
+			for (Declaration decl : filter(inheritFrom, Declaration.class))
 				if (!seen.contains(decl.getProperty()))
 					insertDeclaration(builder, decl);
 		seen.clear();
-		for (RuleMargin margin : Iterables.<RuleMargin>filter(rulePage, RuleMargin.class)) {
+		for (RuleMargin margin : filter(rulePage, RuleMargin.class)) {
 			seen.add(margin.getMarginArea().value);
 			insertMarginStyle(builder, margin); }
 		if (inheritFrom != null)
-			for (RuleMargin margin : Iterables.<RuleMargin>filter(inheritFrom, RuleMargin.class))
+			for (RuleMargin margin : filter(inheritFrom, RuleMargin.class))
 				if (!seen.contains(margin.getMarginArea().value))
 					insertMarginStyle(builder, margin);
 		builder.append("} ");

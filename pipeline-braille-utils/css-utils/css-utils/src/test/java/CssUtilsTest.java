@@ -10,6 +10,7 @@ import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TextTransform.ContextUnawareTextTransform;
+import org.daisy.pipeline.braille.common.Transform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
@@ -38,6 +39,8 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.osgi.framework.BundleContext;
+
+import org.slf4j.Logger;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -76,7 +79,12 @@ public class CssUtilsTest {
 							? new ContextUnawareTextTransform() {
 								public String transform(String text) {
 									return text.toUpperCase(); }}
-							: null).asSet(); }},
+							: null).asSet();
+				}
+				public Transform.Provider<TextTransform> withContext(Logger context) {
+					return this;
+				}
+			},
 			new Hashtable<String,Object>());
 	}
 	

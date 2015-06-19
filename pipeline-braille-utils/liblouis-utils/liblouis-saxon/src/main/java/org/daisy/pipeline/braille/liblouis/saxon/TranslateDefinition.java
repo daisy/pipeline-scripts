@@ -15,9 +15,10 @@ import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Provider.CachedProvider;
-import org.daisy.pipeline.braille.common.Transform.Provider.DispatchingProvider;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -58,8 +59,8 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private List<Transform.Provider<LiblouisTranslator>> providers
 	= new ArrayList<Transform.Provider<LiblouisTranslator>>();
-	private CachedProvider<String,LiblouisTranslator> translators
-	= CachedProvider.newInstance(new DispatchingProvider<LiblouisTranslator>(providers));
+	private Provider.MemoizingProvider<String,LiblouisTranslator> translators
+	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
 		return funcname;

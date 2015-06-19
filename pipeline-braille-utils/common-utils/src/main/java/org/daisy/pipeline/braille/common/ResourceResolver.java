@@ -12,9 +12,9 @@ public interface ResourceResolver {
 	 */
 	public URL resolve(URI resource);
 	
-	public static abstract class CachedResolver extends Cached<URI,URL> implements ResourceResolver {
+	public static abstract class MemoizingResolver extends Memoizing<URI,URL> implements ResourceResolver {
 		public URL resolve(URI resource) {
-			return get(resource);
+			return apply(resource);
 		}
 	}
 }
