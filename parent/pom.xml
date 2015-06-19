@@ -176,7 +176,7 @@
         <groupId>org.daisy.pipeline</groupId>
         <artifactId>pax-exam-helper</artifactId>
         <!--
-            depends on https://github.com/daisy/pipeline-mod-braille/commit/97f3811c64070eecfdbd7782be6c92ac81ac0e17
+            depends on https://github.com/daisy/pipeline-build-utils/commit/dcc69a4ca188d3b24ff84e95e1c4ca7367b385db
         -->
         <version>1.10-SNAPSHOT</version>
         <scope>test</scope>
