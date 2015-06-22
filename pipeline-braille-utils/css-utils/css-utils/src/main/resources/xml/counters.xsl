@@ -7,8 +7,6 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
     
-    <xsl:import href="transform.xsl"/>
-    
     <!-- ======== -->
     <!-- Counters -->
     <!-- ======== -->
@@ -120,7 +118,7 @@
         </xsl:choose>
     </xsl:function>
     
-    <xsl:template name="css:counter-representation" as="xs:string">
+    <xsl:template name="css:counter-representation" as="xs:string*">
         <xsl:param name="value" as="xs:integer" required="yes"/>
         <xsl:param name="style" as="element()" required="yes"/>
         <xsl:param name="with-prefix-suffix" as="xs:boolean" select="false()"/>
@@ -174,23 +172,7 @@
                                       then concat($style/@prefix,$formatted-value,$style/@suffix)
                                       else $formatted-value"/>
                 <xsl:variable name="text-transform" as="xs:string" select="$style/@text-transform"/>
-                <xsl:choose>
-                    <xsl:when test="$text-transform='none'">
-                        <xsl:sequence select="$formatted-value"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:variable name="formatted-value" as="text()">
-                            <xsl:value-of select="$formatted-value"/>
-                        </xsl:variable>
-                        <xsl:variable name="formatted-value" as="node()*">
-                            <xsl:apply-templates mode="css:text-transform" select="$formatted-value">
-                                <xsl:with-param name="text-transform" tunnel="yes"
-                                                select="css:parse-text-transform($text-transform)"/>
-                            </xsl:apply-templates>
-                        </xsl:variable>
-                        <xsl:sequence select="string-join($formatted-value/string(.),'')"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:sequence select="($formatted-value,$text-transform)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="css:counter-representation">
@@ -201,7 +183,7 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template name="css:counter"> <!-- as="(xs:string|xs:integer)?" -->
+    <xsl:template name="css:counter"> <!-- as="(xs:string*|xs:integer)?" -->
         <xsl:param name="name" as="xs:string" required="yes"/>
         <xsl:param name="style" as="xs:string?" select="()"/>
         <xsl:param name="context" as="element()" select="."/>
@@ -209,7 +191,7 @@
         <xsl:if test="exists($value)">
             <xsl:choose>
                 <xsl:when test="$style and $style='none'">
-                    <xsl:sequence select="''"/>
+                    <xsl:sequence select="('','none')"/>
                 </xsl:when>
                 <xsl:when test="$style">
                     <xsl:call-template name="css:counter-representation">

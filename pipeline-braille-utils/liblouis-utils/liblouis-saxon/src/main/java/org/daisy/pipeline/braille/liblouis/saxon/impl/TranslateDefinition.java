@@ -73,7 +73,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	@Override
 	public int getMaximumNumberOfArguments() {
-		return 4;
+		return 3;
 	}
 	
 	public SequenceType[] getArgumentTypes() {

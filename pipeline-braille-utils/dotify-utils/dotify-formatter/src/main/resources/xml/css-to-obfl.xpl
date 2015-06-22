@@ -16,6 +16,8 @@
     <p:input port="source" sequence="true"/>
     <p:output port="result" sequence="false"/>
     
+    <p:option name="text-transform" required="true"/>
+    
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     
     <p:for-each>
@@ -102,6 +104,15 @@
     </css:eval-counter>
     
     <p:for-each>
+        <p:xslt>
+            <p:documentation>
+                Translate counters to braille. <!-- depends on eval-counter -->
+            </p:documentation>
+            <p:input port="stylesheet">
+                <p:document href="translate-counters.xsl"/>
+            </p:input>
+            <p:with-param name="braille-translator-query" select="if ($text-transform='auto') then '' else $text-transform"/>
+        </p:xslt>
         <css:parse-counter-set counters="page">
             <p:documentation>
                 Make css:counter-set-page attributes.

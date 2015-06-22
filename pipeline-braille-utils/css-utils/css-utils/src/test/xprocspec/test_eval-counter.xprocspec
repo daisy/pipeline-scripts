@@ -44,18 +44,26 @@
         <body>
           <ul>
             <li>
-              <css:marker> ⠼⠁ </css:marker>
+              <css:marker>
+                <css:box type="inline" class="counter"> 1 </css:box>
+              </css:marker>
             </li>
             <li>
-              <css:marker> ⠼⠃ </css:marker>
+              <css:marker>
+                <css:box type="inline" class="counter"> 2 </css:box>
+              </css:marker>
             </li>
           </ul>
           <ul>
             <li>
-              <css:marker> ⠼⠁ </css:marker>
+              <css:marker>
+                <css:box type="inline" class="counter"> 1 </css:box>
+              </css:marker>
             </li>
             <li>
-              <css:marker> ⠼⠃ </css:marker>
+              <css:marker>
+                <css:box type="inline" class="counter"> 2 </css:box>
+              </css:marker>
             </li>
           </ul>
         </body>

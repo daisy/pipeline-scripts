@@ -43,7 +43,10 @@
             For each css:counter element whose counter name is specified in the 'counters' option,
             or not specified in the 'exclude-counters' option if the 'counters' option is '#all',
             the counter value is computed and the counter representation for that value and the
-            specified counter style is inserted in place of the css:counter element.
+            specified counter style is wrapped in an inline css:box element with class 'counter' and
+            inserted in place of the css:counter element. If the counter style has a
+            'text-transform' property not equal to 'auto', the css:box element will have a
+            css:text-transform attribute.
         </p:documentation>
     </p:output>
     

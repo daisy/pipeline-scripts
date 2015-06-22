@@ -11,13 +11,20 @@
         <p:pipe step="obfl" port="result"/>
     </p:output>
     
+    <p:option name="text-transform" select="'auto'"/>
+    
     <p:import href="css-to-obfl.xpl"/>
     <p:import href="obfl-normalize-space.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
     
-    <pxi:css-to-obfl name="obfl"/>
+    <pxi:css-to-obfl name="obfl">
+        <p:with-option name="text-transform" select="$text-transform"/>
+    </pxi:css-to-obfl>
     
     <pxi:obfl-normalize-space/>
-    <dotify:obfl-to-pef locale="und" mode="dotify:format"/>
+    
+    <dotify:obfl-to-pef locale="und">
+        <p:with-option name="mode" select="concat('dotify:format ',$text-transform)"/>
+    </dotify:obfl-to-pef>
     
 </p:declare-step>

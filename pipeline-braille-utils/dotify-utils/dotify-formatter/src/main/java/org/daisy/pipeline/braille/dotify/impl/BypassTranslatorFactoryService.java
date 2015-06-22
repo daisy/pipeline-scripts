@@ -2,6 +2,8 @@ package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +12,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.PeekingIterator;
 
-import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.BrailleTranslatorResult;
@@ -19,7 +20,19 @@ import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.dotify.api.translator.TranslatorSpecification;
 
+import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.Provider.MemoizingProvider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Transform;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component(
 	name = "org.daisy.pipeline.braille.dotify.impl.BypassTranslatorFactoryService",
@@ -34,10 +47,54 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	 * - BrailleTextBorderFactoryService from dotify.impl.translator (which
 	 *   for some reason doesn't support mode "bypass") can be used
 	 */
-	protected final static String MODE = "dotify:format";
+	protected final static Pattern MODE = Pattern.compile("dotify:format(?: +(.*))?");
+	
+	@Reference(
+		name = "BrailleTranslatorProvider",
+		unbind = "unbindBrailleTranslatorProvider",
+		service = BrailleTranslator.Provider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	@SuppressWarnings(
+		"unchecked" // safe cast to Transform.Provider<BrailleTranslator>
+	)
+	protected void bindBrailleTranslatorProvider(BrailleTranslator.Provider<?> provider) {
+		brailleTranslatorProviders.add((Transform.Provider<BrailleTranslator>)provider);
+		logger.debug("Adding BrailleTranslator provider: {}", provider);
+	}
+	
+	protected void unbindBrailleTranslatorProvider(BrailleTranslator.Provider<?> provider) {
+		brailleTranslatorProviders.remove(provider);
+		brailleTranslatorProvider.invalidateCache();
+		logger.debug("Removing BrailleTranslator provider: {}", provider);
+	}
+	
+	private final List<Transform.Provider<BrailleTranslator>> brailleTranslatorProviders
+	= new ArrayList<Transform.Provider<BrailleTranslator>>();
+	
+	private final MemoizingProvider<String,BrailleTranslator> brailleTranslatorProvider
+	= memoize(dispatch(brailleTranslatorProviders));
+	
+	private final BrailleTranslator defaultNumberTranslator = new NumberBrailleTranslator();
+	
+	private BrailleTranslator getBrailleTranslator(String mode) throws NoSuchElementException {
+		Matcher m = MODE.matcher(mode);
+		if (!m.matches())
+			throw new NoSuchElementException();
+		String query = m.group(1);
+		if (query == null)
+			query = "";
+		else if (query.trim().equals("auto"))
+			return defaultNumberTranslator;
+		return brailleTranslatorProvider.get(query).iterator().next();
+	}
 	
 	public boolean supportsSpecification(String locale, String mode) {
-		return MODE.equals(mode);
+		try {
+			return getBrailleTranslator(mode) != null; }
+		catch (NoSuchElementException e) {
+			return false; }
 	}
 	
 	public Collection<TranslatorSpecification> listSpecifications() {
@@ -50,16 +107,46 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	
 	public <T> void setReference(Class<T> c, T reference) throws TranslatorConfigurationException {}
 	
-	private static class BypassTranslatorFactory implements BrailleTranslatorFactory {
-		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
-			if (MODE.equals(mode))
-				return new BypassTranslator();
+	private class BypassTranslatorFactory implements BrailleTranslatorFactory {
+		public BypassTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
+			BrailleTranslator translator = getBrailleTranslator(mode);
+			if (translator != null)
+				return new BypassTranslator(mode, translator);
 			throw new TranslatorConfigurationException("Factory does not support " + locale + "/" + mode);
 		}
 	}
 	
 	/**
-	 * BrailleTranslator for pre-translated, pre-hyphenated text
+	 * BrailleTranslator that can translate numbers.
+	 */
+	private static class NumberBrailleTranslator implements BrailleTranslator {
+		
+		private final static String NUMSIGN = "\u283c";
+		private final static String[] DIGIT_TABLE = new String[]{
+			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
+		
+		private static String translateInteger(int integer) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(NUMSIGN);
+			if (integer == 0)
+				sb.append(DIGIT_TABLE[0]);
+			while (integer > 0) {
+				sb.insert(1, DIGIT_TABLE[integer % 10]);
+				integer = integer / 10; }
+			return sb.toString();
+		}
+		
+		public String transform(String text) {
+			return translateInteger(Integer.parseInt(text));
+		}
+		
+		public String[] transform(String[] text) {
+			throw new UnsupportedOperationException();
+		}
+	}
+	
+	/**
+	 * o.d.d.a.t.BrailleTranslator for pre-translated, pre-hyphenated text
 	 *
 	 * Requires that input text is either a space (for calculating the margin
 	 * character), or a string consisting of only digits (for generating page
@@ -69,7 +156,15 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 	 * spaces must been collapsed in advance, and preserved line feeds must
 	 * been converted to &lt;obfl:br/&gt;.
 	 */
-	private static class BypassTranslator implements BrailleTranslator {
+	private static class BypassTranslator implements org.daisy.dotify.api.translator.BrailleTranslator {
+		
+		private final String mode;
+		private final BrailleTranslator translator;
+		
+		private BypassTranslator(String mode, BrailleTranslator translator) {
+			this.mode = mode;
+			this.translator = translator;
+		}
 		
 		private boolean hyphenating;
 		
@@ -81,37 +176,18 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			return hyphenating;
 		}
 		
-		private final static Pattern integers = Pattern.compile("[0-9]+");
+		private final static Pattern INTEGER = Pattern.compile("[0-9]+");
 		
-		// for translating page numbers
-		private static String translateIntegers(String text) {
-			Matcher m = integers.matcher(text);
+		private String translateIntegers(String text) {
+			Matcher m = INTEGER.matcher(text);
 			int idx = 0;
 			StringBuilder sb = new StringBuilder();
 			for (; m.find(); idx = m.end()) {
 				sb.append(text.substring(idx, m.start()));
-				try {
-					sb.append(translateInteger(Integer.parseInt(m.group()))); }
-				catch (Exception e) {
-					throw new RuntimeException("Coding error", e); }}
+				sb.append(translator.transform(m.group())); }
 			if (idx == 0)
 				return text;
 			sb.append(text.substring(idx));
-			return sb.toString();
-		}
-		
-		private final static String numsign = "\u283c";
-		private final static String[] digitTable = new String[]{
-			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
-		
-		private static String translateInteger(int integer) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(numsign);
-			if (integer == 0)
-				sb.append(digitTable[0]);
-			while (integer > 0) {
-				sb.insert(1, digitTable[integer % 10]);
-				integer = integer / 10; }
 			return sb.toString();
 		}
 		
@@ -123,7 +199,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		
 		private final static char HYPHENATE_CHARACTER = '\u2824';
 		
-		private final static Pattern validInput = Pattern.compile("[0-9\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
+		private final static Pattern VALID_INPUT = Pattern.compile("[0-9\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
 		
 		private final static byte SOFT_WRAP_WITH_HYPHEN = (byte)0x1;
 		private final static byte SOFT_WRAP_WITHOUT_HYPHEN = (byte)0x3;
@@ -153,7 +229,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			// everything. We shouldn't just assume that the input will always be digits, braille
 			// pattern characters, white space characters, hyphenation characters, or "??". This
 			// assumption might not be valid anymore with future versions of Dotify.
-			if (!validInput.matcher(text).matches())
+			if (!VALID_INPUT.matcher(text).matches())
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			
 			String translated = translateIntegers(text);
@@ -175,7 +251,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		}
 		
 		public String getTranslatorMode() {
-			return MODE;
+			return mode;
 		}
 		
 		private static class BrailleTranslatorResultImpl implements BrailleTranslatorResult {
@@ -315,4 +391,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			}
 		}
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(BypassTranslatorFactoryService.class);
+	
 }
