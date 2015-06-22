@@ -94,6 +94,7 @@
         <configuration>
           <instructions>
             <_dsannotations>*</_dsannotations>
+            <Provide-Capability>xpath.function;name="{http://code.google.com/p/texhyphj/}hyphenate"</Provide-Capability>
           </instructions>
         </configuration>
         <executions>

@@ -19,13 +19,29 @@
 
   <dependencies>
     <!--
-        OSGi runtime dependencies
+        optional OSGi runtime dependencies (but keep mandatory as long as there is only one implementation)
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>libhyphen-saxon</artifactId>
       <scope>runtime</scope>
+      <!-- <optional>true</optional> -->
     </dependency>
   </dependencies>
-
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <_dsannotations>*</_dsannotations>
+            <Require-Capability>xpath.function:="(name={http://hunspell.sourceforge.net/Hyphen}hyphenate)"</Require-Capability>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>
