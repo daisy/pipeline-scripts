@@ -15,8 +15,8 @@
 		<xsl:variable name="style" as="xs:string*">
 			<xsl:for-each select="$text">
 				<xsl:variable name="inline-style" as="element()*"
-				              select="css:specified-properties($inline-properties, true(), false(), true(), parent::*)"/>
-				<xsl:sequence select="css:serialize-declaration-list($inline-style[not(@value='initial')])"/>
+				              select="css:computed-properties($inline-properties, true(), parent::*)"/>
+				<xsl:sequence select="css:serialize-declaration-list($inline-style[not(@value=css:initial-value(@name))])"/>
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:apply-templates select="node()[1]" mode="treewalk">

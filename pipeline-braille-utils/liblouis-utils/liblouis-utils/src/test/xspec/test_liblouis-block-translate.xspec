@@ -23,4 +23,25 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_02" pending="liblouis typeform broken">
+    <x:context>
+      <doc xml:lang="en">
+        <p style="display: block">
+          <span style="text-transform: louis-ital">
+            foo <span style="text-transform: louis-bold">bar</span>
+          </span>
+        </p>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc xml:lang="en">
+        <p style="{{ display: block }}">
+          <span>
+            ⠋⠕⠕ <span>⠃⠜</span>
+          </span>
+        </p>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

@@ -409,6 +409,12 @@
         </xsl:choose>
     </xsl:template>
     
+    <xsl:template match="css:property" mode="css:compute">
+        <xsl:param name="validate" as="xs:boolean"/>
+        <xsl:param name="context" as="element()"/>
+        <xsl:sequence select="."/>
+    </xsl:template>
+    
     <xsl:function name="css:specified-properties" as="element()*">
         <xsl:param name="properties"/>
         <xsl:param name="concretize-inherit" as="xs:boolean"/>
@@ -453,6 +459,17 @@
         </xsl:variable>
         <xsl:apply-templates select="$declarations" mode="css:default">
             <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
+        </xsl:apply-templates>
+    </xsl:function>
+    
+    <xsl:function name="css:computed-properties" as="element()*">
+        <xsl:param name="properties"/>
+        <xsl:param name="validate" as="xs:boolean"/>
+        <xsl:param name="context" as="element()"/>
+        <xsl:apply-templates select="css:specified-properties($properties, true(), true(), $validate, $context)"
+                             mode="css:compute">
+            <xsl:with-param name="validate" select="$validate"/>
+            <xsl:with-param name="context" select="$context"/>
         </xsl:apply-templates>
     </xsl:function>
     

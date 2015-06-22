@@ -51,6 +51,7 @@
                  'white-space',
                  'hyphens',
                  'size',
+                 'text-transform',
                  'font-style',
                  'font-weight',
                  'text-decoration',
@@ -89,6 +90,7 @@
                  re:exact(re:or(('normal','pre-wrap','pre-line'))),
                  re:exact(re:or(('auto','manual','none'))),
                  re:exact(concat('(',$css:NON_NEGATIVE_INTEGER_RE,')\s+(',$css:NON_NEGATIVE_INTEGER_RE,')')),
+                 re:exact(re:or(($css:IDENT_LIST_RE,'auto'))),
                  re:exact(re:or(('normal','italic','oblique'))),
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
                  re:exact(re:or(('none','underline','overline','line-through','blink'))),
@@ -130,6 +132,7 @@
                  '.*',
                  '.*',
                  '.*',
+                 '.*',
                  '.*')"/>
     
     <xsl:variable name="css:initial-values" as="xs:string*"
@@ -165,6 +168,7 @@
                  'normal',
                  'manual',
                  '40 25',
+                 'auto',
                  'normal',
                  'normal',
                  'none',
@@ -172,6 +176,7 @@
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed',
@@ -254,6 +259,31 @@
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
         <xsl:sequence select="if ($index) then matches($display, $css:applies-to[$index]) else false()"/>
     </xsl:function>
+    
+    <!-- ================== -->
+    <!-- Special inheriting -->
+    <!-- ================== -->
+    
+    <xsl:template match="css:property[@name='text-transform']" mode="css:compute">
+        <xsl:param name="validate" as="xs:boolean"/>
+        <xsl:param name="context" as="element()"/>
+        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except self::css:box)][1]"/>
+        <xsl:choose>
+            <xsl:when test="not(exists($parent))">
+                <xsl:sequence select="."/>
+            </xsl:when>
+            <xsl:when test="@value=('auto','initial')">
+                <xsl:sequence select="css:computed-properties(@name, $validate, $parent)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-computed" as="element()"
+                              select="css:computed-properties(@name, $validate, $parent)"/>
+                <xsl:sequence select="if ($parent-computed/@value='auto')
+                                      then .
+                                      else css:property(@name, string-join((@value, $parent-computed/@value), ' '))"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
     <!-- ============== -->
     <!-- Counter Styles -->

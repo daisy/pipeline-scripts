@@ -287,11 +287,19 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			byte[] typeform = new byte[cssStyle.length];
 			boolean[] hyphenate = new boolean[cssStyle.length];
 			for (int i = 0; i < cssStyle.length; i++) {
-				Map<String,String> style = CSS_PARSER.split(cssStyle[i]);
-				typeform[i] = typeformFromInlineCSS(style);
+				Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(cssStyle[i]));
+				String val = style.remove("text-transform");
+				typeform[i] = Typeform.PLAIN;
+				if (val != null) {
+					text[i] = textFromTextTransform(text[i], val);
+					typeform[i] |= typeformFromTextTransform(val);
+				}
+				val = style.remove("hyphens");
 				hyphenate[i] = false;
-				if (style.containsKey("hyphens") && "auto".equals(style.get("hyphens")))
-					hyphenate[i] = true; }
+				if (val != null)
+					if ("auto".equals(val))
+						hyphenate[i] = true;
+				typeform[i] |= typeformFromInlineCSS(style);}
 			return transform(text, typeform, hyphenate);
 		}
 		
@@ -353,10 +361,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 					int i = 0;
 					while (unhyphenated[i].length() == 0) i++;
 					for (int j = 0; j < _typeform.length; j++) {
+						_typeform[j] = typeform[i];
 						if (positions != null && j < positions.length && (positions[j] & 4) == 4) {
 							i++;
-							while (unhyphenated[i].length() == 0) i++; }
-						_typeform[j] = typeform[i]; }
+							while (unhyphenated[i].length() == 0) i++; }}
 					break; }
 			try {
 				
@@ -495,9 +503,9 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	
 	private final static Splitter.MapSplitter CSS_PARSER
 		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
-	
+
 	/**
-	 * @parameter cssStyle An inline CSS style
+	 * @parameter style An inline CSS style
 	 * @returns the corresponding typeform. Possible values are:
 	 * - 0 = PLAIN
 	 * - 1 = ITALIC (font-style: italic|oblique)
@@ -515,13 +523,59 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		for (String prop : style.keySet()) {
 			String value = style.get(prop);
 			if (prop.equals("font-style") && (value.equals("italic") || value.equals("oblique")))
-				typeform += Typeform.ITALIC;
+				typeform |= Typeform.ITALIC;
 			else if (prop.equals("font-weight") && value.equals("bold"))
-				typeform += Typeform.BOLD;
+				typeform |= Typeform.BOLD;
 			else if (prop.equals("text-decoration") && value.equals("underline"))
-				typeform += Typeform.UNDERLINE;
+				typeform |= Typeform.UNDERLINE;
 			else
 				logger.warn("Inline CSS property {} not supported", prop); }
+		return typeform;
+	}
+	
+	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
+
+	/**
+	 * @parameter text The text to be transformed.
+	 * @parameter textTransform A text-transform value as a space separated list of keywords.
+	 * @returns the transformed text, or the original text if no transformations were performed.
+	 */
+	protected static String textFromTextTransform(String text, String textTransform) {
+		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+			if (tt.equals("uppercase"))
+				text = text.toUpperCase();
+			else if (tt.equals("lowercase"))
+				text = text.toLowerCase();
+			else
+				logger.warn("text-transform: {} not supported", tt);
+		}
+		return text;
+	}
+	
+	/**
+	 * @parameter textTransform A text-transform value as a space separated list of keywords.
+	 * @returns the corresponding typeform. Possible values are:
+	 * - 0 = PLAIN
+	 * - 1 = ITALIC (louis-ital)
+	 * - 2 = BOLD (louis-bold)
+	 * - 4 = UNDERLINE (louis-under)
+	 * - 8 = COMPUTER (louis-comp)
+	 * These values can be added for multiple emphasis.
+	 * @see http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString
+	 */
+	protected static byte typeformFromTextTransform(String textTransform) {
+		byte typeform = Typeform.PLAIN;
+		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+			if (tt.equals("louis-ital"))
+				typeform |= Typeform.ITALIC;
+			else if (tt.equals("louis-bold"))
+				typeform |= Typeform.BOLD;
+			else if (tt.equals("louis-under"))
+				typeform |= Typeform.UNDERLINE;
+			else if (tt.equals("louis-comp"))
+				typeform |= Typeform.COMPUTER;
+			else
+				logger.warn("text-transform: {} not supported", tt); }
 		return typeform;
 	}
 	

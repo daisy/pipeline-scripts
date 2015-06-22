@@ -322,4 +322,21 @@
 		</x:expect>
 	</x:scenario>
 	
+	<x:scenario label="test_28">
+		<x:call function="css:computed-properties">
+			<x:param select="'text-transform'"/>
+			<x:param select="true()"/>
+			<x:param select="//foo">
+				<_ css:text-transform="bold">
+					<_>
+						<foo css:text-transform="italic"/>
+					</_>
+				</_>
+			</x:param>
+		</x:call>
+		<x:expect label="result">
+			<css:property name="text-transform" value="italic bold"/>
+		</x:expect>
+	</x:scenario>
+	
 </x:description>
