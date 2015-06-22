@@ -26,14 +26,6 @@
       <artifactId>braille-css</artifactId>
     </dependency>
     <!--
-        OSGi runtime dependencies
-    -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>common-utils</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <!--
         test dependencies
     -->
     <dependency>
