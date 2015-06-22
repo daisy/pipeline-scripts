@@ -296,11 +296,6 @@
                 <artifactId>jna</artifactId>
                 <version>4.0.0</version>
             </dependency>
-            <dependency>
-                <groupId>org.daisy.maven</groupId>
-                <artifactId>xprocspec-runner</artifactId>
-                <version>1.0.0</version>
-            </dependency>
             <!--
                 Runtime dependency for jstyleparser
             -->
