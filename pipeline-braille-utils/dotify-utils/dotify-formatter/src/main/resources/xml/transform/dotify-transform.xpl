@@ -12,7 +12,7 @@
 	<p:option name="temp-dir" required="true"/>
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
-	<p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
+	<p:import href="../format.xpl"/>
 	
 	<px:transform type="css-block">
 		<p:with-option name="query" select="$query"/>
