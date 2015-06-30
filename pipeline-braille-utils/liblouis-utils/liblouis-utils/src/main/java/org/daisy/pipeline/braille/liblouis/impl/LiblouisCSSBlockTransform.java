@@ -92,7 +92,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 								Optional<String> o;
 								if ((o = q.remove("translator")) != null)
 									if (!o.get().equals("liblouis"))
-										return null;
+										throw new NoSuchElementException();
 								String translatorQuery = serializeQuery(q);
 								Iterable<WithSideEffect<LiblouisTranslator,Logger>> translators
 									= logSelect(translatorQuery, liblouisTranslatorProvider.get(translatorQuery));

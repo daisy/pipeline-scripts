@@ -93,7 +93,7 @@ public interface LiblouisCSSStyledDocumentTransform extends XProcTransform, CSSS
 								Optional<String> o;
 								if ((o = q.remove("formatter")) != null)
 									if (!o.get().equals("liblouis"))
-										return null;
+										throw new NoSuchElementException();
 								String cssBlockTransformQuery = serializeQuery(q);
 								Iterable<WithSideEffect<CSSBlockTransform,Logger>> cssBlockTransforms
 									= logSelect(cssBlockTransformQuery, cssBlockTransformProvider.get(cssBlockTransformQuery));
