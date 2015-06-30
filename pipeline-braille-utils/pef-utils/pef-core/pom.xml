@@ -38,7 +38,7 @@
     -->
     <dependency>
       <groupId>org.daisy.braille</groupId>
-      <artifactId>brailleUtils-catalog</artifactId>
+      <artifactId>braille-utils.impl</artifactId>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>

@@ -47,7 +47,7 @@ public class ZedaiToPefTest {
 			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.pef-tools").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-catalog").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),

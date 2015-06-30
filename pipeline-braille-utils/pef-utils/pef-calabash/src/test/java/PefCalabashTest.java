@@ -47,7 +47,7 @@ public class PefCalabashTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.pef-tools").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("brailleUtils-catalog").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
