@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -136,33 +137,18 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 		return null;
 	}
 	
-	private final static Iterable<LibhyphenHyphenator> empty = Optional.<LibhyphenHyphenator>absent().asSet();
-	
-	private Provider.MemoizingProvider<String,LibhyphenHyphenator> provider
-		= new Provider.MemoizingProvider<String,LibhyphenHyphenator>() {
-			public Iterable<LibhyphenHyphenator> _get(String query) {
-				Map<String,Optional<String>> q = parseQuery(query);
-				if (q.containsKey("hyphenator"))
-					if (!"hyphen".equals(q.get("hyphenator").get()))
-						return empty;
-				if (q.containsKey("table")) {
-					return Optional.fromNullable(
-						LibhyphenJnaImpl.this.get(asURI(q.get("table").get()))).asSet(); }
-				Locale locale;
-				if (q.containsKey("locale"))
-					locale = parseLocale(q.get("locale").get());
-				else
-					locale = parseLocale("und");
-				if (tableProvider != null) {
-					return filter(
-						transform(
-							tableProvider.get(locale),
-							new Function<URI,LibhyphenHyphenator>() {
-								public LibhyphenHyphenator apply(URI table) {
-									return LibhyphenJnaImpl.this.get(table); }}),
-						notNull()); }
-				return empty; }};
-	
+	/**
+	 * Recognized features:
+	 *
+	 * - hyphenator: Will only match if the value is `hyphen'.
+	 *
+	 * - table or libhyphen-table: A Hyphen table is a URI that can be either a file name, a file
+	 *   path relative to a registered table path, an absolute file URI, or a fully qualified table
+	 *   identifier. This feature is not compatible with other features except `hyphenator'.
+	 *
+	 * - locale: Matches only hyphenators with that locale.
+	 *
+	 */
 	public Iterable<LibhyphenHyphenator> get(String query) {
 		return provider.get(query);
 	}
@@ -170,6 +156,45 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	public Transform.Provider<LibhyphenHyphenator> withContext(Logger context) {
 		return this;
 	}
+		
+	private final static Iterable<LibhyphenHyphenator> empty = Optional.<LibhyphenHyphenator>absent().asSet();
+	
+	private Provider.MemoizingProvider<String,LibhyphenHyphenator> provider
+		= new Provider.MemoizingProvider<String,LibhyphenHyphenator>() {
+			public Iterable<LibhyphenHyphenator> _get(String query) {
+				final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+				Optional<String> o;
+				if ((o = q.remove("hyphenator")) != null)
+				if (!"hyphen".equals(o.get()))
+					return empty;
+				String table = null;
+				if ((o = q.remove("libhyphen-table")) != null)
+					table = o.get();
+				if ((o = q.remove("table")) != null)
+					if (table != null) {
+						logger.warn("A query with both 'table' and 'libhyphen-table' never matches anything");
+						return empty; }
+					else
+						table = o.get();
+				if (table != null) {
+					if (q.size() > 0) {
+						logger.warn("A query with both 'table' or 'libhyphen-table' and '"
+						            + q.keySet().iterator().next() + "' never matches anything");
+						return empty; }
+					return Optional.fromNullable(
+						LibhyphenJnaImpl.this.get(asURI(table))).asSet(); }
+				if (tableProvider != null) {
+					String locale = "und";
+					if ((o = q.remove("locale")) != null)
+						locale = o.get();
+					return filter(
+						transform(
+							tableProvider.get(parseLocale(locale)),
+							new Function<URI,LibhyphenHyphenator>() {
+								public LibhyphenHyphenator apply(URI table) {
+									return LibhyphenJnaImpl.this.get(table); }}),
+						notNull()); }
+				return empty; }};
 	
 	private final static char US = '\u001F';
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
@@ -179,10 +204,6 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 		private final URI table;
 		private final Hyphenator hyphenator;
 		
-		/**
-		 * A Hyphen table can be a file name or path relative to a registered
-		 * table path, an absolute file, or a fully qualified table URL.
-		 */
 		private LibhyphenHyphenatorImpl(URI table) throws FileNotFoundException {
 			this.table = table;
 			hyphenator = new Hyphenator(resolveTable(table));
