@@ -213,29 +213,25 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 											).asSet();
 											break; }
 								if (!"liblouis".equals("hyphenator")) {
-									if (locale == null) {
-										if (!"auto".equals(hyphenator))
-											logger.warn("A query with 'hyphenator:" + hyphenator
-											            + "' and without 'locale' never matches anything"); }
-									else {
-										ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-											= new ImmutableMap.Builder<String,Optional<String>>();
-										if (!"auto".equals(hyphenator))
-											hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+									ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
+										= new ImmutableMap.Builder<String,Optional<String>>();
+									if (!"auto".equals(hyphenator))
+										hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+									if (locale != null)
 										hyphenatorQuery.put("locale", Optional.of(locale));
-										String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
-										Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
-											= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
-										translators = concat(
-											translators,
-											transform(
-												hyphenators,
-												new WithSideEffect.Function<Hyphenator,LiblouisTranslator,Logger>() {
-													public LiblouisTranslator _apply(Hyphenator hyphenator) {
-														return applyWithSideEffect(
-															logCreate(
-																(LiblouisTranslator)new LiblouisTranslatorImpl(table, hyphenator))); }}));
-										}}}
+									String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
+									Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
+										= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
+									translators = concat(
+										translators,
+										transform(
+											hyphenators,
+											new WithSideEffect.Function<Hyphenator,LiblouisTranslator,Logger>() {
+												public LiblouisTranslator _apply(Hyphenator hyphenator) {
+													return applyWithSideEffect(
+														logCreate(
+															(LiblouisTranslator)new LiblouisTranslatorImpl(table, hyphenator))); }}));
+										}}
 							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 								translators = concat(
 									translators,

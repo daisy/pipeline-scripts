@@ -128,7 +128,7 @@ public interface Transform {
 				Matcher m = ID_FEATURE_RE.matcher(query);
 				if (m.matches()) {
 					String id = m.group("id");
-					return Optional.fromNullable(fromId.get(id)).asSet(); }
+					return Optional.fromNullable(fromId(id)).asSet(); }
 				else
 					return rememberId(
 						filterOutThrowsWithSideEffectException(
@@ -137,6 +137,9 @@ public interface Transform {
 								applyContext)));
 			}
 			private final Map<String,T> fromId = new HashMap<String,T>();
+			protected T fromId(String id) {
+				return fromId.get(id);
+			}
 			private Iterable<T> rememberId(final Iterable<T> iterable) {
 				return new Iterable<T>() {
 					public Iterator<T> iterator() {
@@ -244,7 +247,7 @@ public interface Transform {
 				};
 			}
 			
-			private static Function<Logger,Void> debug(final String message) {
+			public static Function<Logger,Void> debug(final String message) {
 				return new Function<Logger,Void>() {
 					public Void apply(Logger logger) {
 						if (logger != null)
@@ -254,7 +257,7 @@ public interface Transform {
 				};
 			}
 			
-			private static Function<Logger,Void> info(final String message) {
+			public static Function<Logger,Void> info(final String message) {
 				return new Function<Logger,Void>() {
 					public Void apply(Logger logger) {
 						if (logger != null)

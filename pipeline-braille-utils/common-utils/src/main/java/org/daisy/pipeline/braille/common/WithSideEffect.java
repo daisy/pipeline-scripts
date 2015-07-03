@@ -40,6 +40,24 @@ public abstract class WithSideEffect<T,W> implements com.google.common.base.Func
 		return withSideEffect.apply(firstWorld);
 	}
 	
+	public static <T,W> WithSideEffect<T,W> of(final T value) {
+		return new WithSideEffect<T,W>() {
+			public T _apply() {
+				return value;
+			}
+		};
+	}
+	
+	public static <T,W> WithSideEffect<T,W> fromNullable(final T value) {
+		return new WithSideEffect<T,W>() {
+			public T _apply() {
+				if (value == null)
+					throw new NoSuchElementException();
+				return value;
+			}
+		};
+	}
+	
 	@SuppressWarnings("serial")
 	public static class Exception extends NoSuchElementException {
 		private final Throwable cause;

@@ -12,6 +12,7 @@ import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
 
 import com.google.common.base.Function;
+import static com.google.common.base.Objects.toStringHelper;
 import com.google.common.base.Optional;
 import static com.google.common.base.Predicates.notNull;
 import com.google.common.base.Splitter;
@@ -27,6 +28,8 @@ import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.debug;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -36,6 +39,7 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.daisy.pipeline.braille.common.util.Tuple2;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
 import org.daisy.pipeline.braille.libhyphen.LibhyphenTableProvider;
 import org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver;
@@ -130,17 +134,25 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 		tableProvider = null;
 	}
 	
-	private LibhyphenHyphenator get(URI table) {
-		try { return new LibhyphenHyphenatorImpl(table); }
-		catch (Throwable e) {
-			logger.warn("Could not create hyphenator for table " + table, e); }
-		return null;
+	private WithSideEffect<LibhyphenHyphenator,Logger> get(final URI table) {
+		try {
+			return logCreate((LibhyphenHyphenator)new LibhyphenHyphenatorImpl(table)); }
+		catch (final Throwable e) {
+			return new WithSideEffect<LibhyphenHyphenator,Logger>() {
+				public LibhyphenHyphenator _apply() throws FileNotFoundException {
+					applyWithSideEffect(debug("Could not create hyphenator for table " + table));
+					throw e;
+				}
+			};
+		}
 	}
 	
 	/**
 	 * Recognized features:
 	 *
-	 * - hyphenator: Will only match if the value is `hyphen'.
+	 * - id: If present it must be the only feature. Matches a hyphenator with a unique ID.
+	 *
+	 * - hyphenator: Will only match if the value is `hyphen', or if it's a hyphenator's ID.
 	 *
 	 * - table or libhyphen-table: A Hyphen table is a URI that can be either a file name, a file
 	 *   path relative to a registered table path, an absolute file URI, or a fully qualified table
@@ -150,52 +162,66 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	 *
 	 */
 	public Iterable<LibhyphenHyphenator> get(String query) {
-		return provider.get(query);
+		return impl.get(query);
 	}
 	
 	public Transform.Provider<LibhyphenHyphenator> withContext(Logger context) {
-		return this;
+		return impl.withContext(context);
+	}
+	
+	private Transform.Provider.MemoizingProvider<LibhyphenHyphenator> impl = new ProviderImpl(null);
+	
+	private final static Iterable<WithSideEffect<LibhyphenHyphenator,Logger>> empty
+		= Optional.<WithSideEffect<LibhyphenHyphenator,Logger>>absent().asSet();
+	
+	private class ProviderImpl extends AbstractProvider<LibhyphenHyphenator> {
+		
+		private ProviderImpl(Logger context) {
+			super(context);
+		}
+		
+		protected Transform.Provider.MemoizingProvider<LibhyphenHyphenator> _withContext(Logger context) {
+			return new ProviderImpl(context);
+		}
+		
+		protected final Iterable<WithSideEffect<LibhyphenHyphenator,Logger>> __get(String query) {
+			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+			Optional<String> o;
+			if ((o = q.remove("hyphenator")) != null)
+				if (!"hyphen".equals(o.get()))
+					return Optional.of(
+						WithSideEffect.<LibhyphenHyphenator,Logger>fromNullable( fromId(o.get()) )
+					).asSet();
+			String table = null;
+			if ((o = q.remove("libhyphen-table")) != null)
+				table = o.get();
+			if ((o = q.remove("table")) != null)
+				if (table != null) {
+					logger.warn("A query with both 'table' and 'libhyphen-table' never matches anything");
+					return empty; }
+				else
+					table = o.get();
+			if (table != null) {
+				if (q.size() > 0) {
+					logger.warn("A query with both 'table' or 'libhyphen-table' and '"
+					            + q.keySet().iterator().next() + "' never matches anything");
+					return empty; }
+				return Optional.of(LibhyphenJnaImpl.this.get(asURI(table))).asSet(); }
+			if (tableProvider != null) {
+				String locale = "und";
+				if ((o = q.remove("locale")) != null)
+					locale = o.get();
+				return filter(
+					transform(
+						tableProvider.get(parseLocale(locale)),
+						new Function<URI,WithSideEffect<LibhyphenHyphenator,Logger>>() {
+							public WithSideEffect<LibhyphenHyphenator,Logger> apply(URI table) {
+								return LibhyphenJnaImpl.this.get(table); }}),
+					notNull()); }
+			return empty;
+		}
 	}
 		
-	private final static Iterable<LibhyphenHyphenator> empty = Optional.<LibhyphenHyphenator>absent().asSet();
-	
-	private Provider.MemoizingProvider<String,LibhyphenHyphenator> provider
-		= new Provider.MemoizingProvider<String,LibhyphenHyphenator>() {
-			public Iterable<LibhyphenHyphenator> _get(String query) {
-				final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				Optional<String> o;
-				if ((o = q.remove("hyphenator")) != null)
-				if (!"hyphen".equals(o.get()))
-					return empty;
-				String table = null;
-				if ((o = q.remove("libhyphen-table")) != null)
-					table = o.get();
-				if ((o = q.remove("table")) != null)
-					if (table != null) {
-						logger.warn("A query with both 'table' and 'libhyphen-table' never matches anything");
-						return empty; }
-					else
-						table = o.get();
-				if (table != null) {
-					if (q.size() > 0) {
-						logger.warn("A query with both 'table' or 'libhyphen-table' and '"
-						            + q.keySet().iterator().next() + "' never matches anything");
-						return empty; }
-					return Optional.fromNullable(
-						LibhyphenJnaImpl.this.get(asURI(table))).asSet(); }
-				if (tableProvider != null) {
-					String locale = "und";
-					if ((o = q.remove("locale")) != null)
-						locale = o.get();
-					return filter(
-						transform(
-							tableProvider.get(parseLocale(locale)),
-							new Function<URI,LibhyphenHyphenator>() {
-								public LibhyphenHyphenator apply(URI table) {
-									return LibhyphenJnaImpl.this.get(table); }}),
-						notNull()); }
-				return empty; }};
-	
 	private final static char US = '\u001F';
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 	
@@ -248,6 +274,11 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 					return rv; }}
 			catch (Exception e) {
 				throw new RuntimeException("Error during libhyphen hyphenation", e); }
+		}
+		
+		@Override
+		public String toString() {
+			return toStringHelper(this).add("table", table).toString();
 		}
 	}
 	

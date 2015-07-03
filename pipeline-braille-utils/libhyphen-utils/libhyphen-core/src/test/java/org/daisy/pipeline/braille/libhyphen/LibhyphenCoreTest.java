@@ -28,6 +28,9 @@ import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class LibhyphenCoreTest {
@@ -35,10 +38,12 @@ public class LibhyphenCoreTest {
 	@Inject
 	LibhyphenHyphenator.Provider provider;
 	
+	private static final Logger messageBus = LoggerFactory.getLogger("JOB_MESSAGES");
+	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.dic')").iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.dic')").iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.withContext(messageBus).get("(table:'foobar.dic')").iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.withContext(messageBus).get("(table:'foobar.dic')").iterator().next().transform("foo-bar"));
 	}
 	
 	@Configuration

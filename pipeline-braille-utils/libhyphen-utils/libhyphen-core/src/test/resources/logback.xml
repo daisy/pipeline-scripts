@@ -3,10 +3,10 @@
   
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>[ %-5level] %msg%n</pattern>
     </encoder>
   </appender>
-   
+  
   <appender name="TEST_LOG" class="ch.qos.logback.core.FileAppender">
     <file>target/test.log</file>
     <encoder>
@@ -19,5 +19,9 @@
   </root>
   
   <logger name="org.daisy" level="DEBUG"/>
-
+  
+  <logger name="JOB_MESSAGES" level="TRACE">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+  
 </configuration>
