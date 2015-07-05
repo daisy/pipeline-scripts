@@ -328,7 +328,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			}
 			
 			public String nextTranslatedRow(int limit, boolean force) {
-				fillBuffer(limit);
+				fillBuffer(limit + 1);
 				int bufSize = charBuffer.length();
 				
 				// no need to break if remaining text is shorter than line
