@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.AtomicSequence;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -83,12 +82,12 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			@Override
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = ((AtomicSequence)arguments[0]).getStringValue();
+					String query = arguments[0].head().getStringValue();
 					DotifyTranslator translator;
 					try { translator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a translator for query: " + query); }
-					String text = ((AtomicSequence)arguments[1]).getStringValue();
+					String text = arguments[1].head().getStringValue();
 					return new StringValue(translator.transform(text)); }
 				catch (Exception e) {
 					logger.error("dotify:translate failed", e);
