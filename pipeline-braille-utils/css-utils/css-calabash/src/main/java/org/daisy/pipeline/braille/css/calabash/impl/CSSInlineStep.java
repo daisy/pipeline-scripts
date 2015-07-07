@@ -1,5 +1,8 @@
 package org.daisy.pipeline.braille.css.calabash.impl;
 
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 
 import com.google.common.base.Function;
@@ -31,6 +37,7 @@ import cz.vutbr.web.css.CSSFactory;
 import cz.vutbr.web.css.CSSProperty;
 import cz.vutbr.web.css.Declaration;
 import cz.vutbr.web.css.MediaSpec;
+import cz.vutbr.web.css.NetworkProcessor;
 import cz.vutbr.web.css.NodeData;
 import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
@@ -42,6 +49,7 @@ import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.css.TermInteger;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
+import cz.vutbr.web.csskit.DefaultNetworkProcessor;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
@@ -84,11 +92,31 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private ReadablePipe sourcePipe = null;
 	private WritablePipe resultPipe = null;
+	private NetworkProcessor network = null;
 	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
 	
-	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step) {
+	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step, final URIResolver resolver) {
 		super(runtime, step);
+		network = new DefaultNetworkProcessor() {
+			@Override
+			public InputStream fetch(URL url) throws IOException {
+				try {
+					if (url != null) {
+						Source resolved = resolver.resolve(url.toString(), "");
+						if (resolved != null) {
+							if (resolved instanceof StreamSource)
+								return ((StreamSource)resolved).getInputStream();
+							else
+								url = new URL(resolved.getSystemId());
+						}
+					}
+				} catch (TransformerException e) {
+				} catch (MalformedURLException e) {
+				}
+				return super.fetch(url);
+			}
+		};
 	}
 	
 	@Override
@@ -127,9 +155,11 @@ public class CSSInlineStep extends DefaultStep {
 	)
 	public static class Provider implements XProcStepProvider {
 		
+		private URIResolver resolver;
+		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new CSSInlineStep(runtime, step);
+			return new CSSInlineStep(runtime, step, resolver);
 		}
 		
 		@Reference(
@@ -140,7 +170,7 @@ public class CSSInlineStep extends DefaultStep {
 			policy = ReferencePolicy.STATIC
 		)
 		public void setUriResolver(URIResolver resolver) {
-			CSSFactory.registerURIResolver(resolver);
+			this.resolver = resolver;
 		}
 	}
 	
@@ -181,8 +211,8 @@ public class CSSInlineStep extends DefaultStep {
 			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
 			StyleSheet brailleStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
-				brailleStyle = parserFactory.append(defaultSheet, null, SourceType.URL, brailleStyle, defaultSheet);
-			brailleStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("embossed"), brailleStyle);
+				brailleStyle = parserFactory.append(defaultSheet, network, null, SourceType.URL, brailleStyle, defaultSheet);
+			brailleStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("embossed"), network, brailleStyle);
 			brailleStylemap = new Analyzer(brailleStyle).evaluateDOM(document, "embossed", false);
 			
 			// media print
@@ -190,8 +220,8 @@ public class CSSInlineStep extends DefaultStep {
 			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
 			StyleSheet printStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
 			if (defaultSheet != null)
-				printStyle = parserFactory.append(defaultSheet, null, SourceType.URL, printStyle, defaultSheet);
-			printStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("print"), printStyle);
+				printStyle = parserFactory.append(defaultSheet, network, null, SourceType.URL, printStyle, defaultSheet);
+			printStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("print"), network, printStyle);
 			printStylemap = new Analyzer(printStyle).evaluateDOM(document, "print", false);
 			
 			pages = new HashMap<String,RulePage>();
