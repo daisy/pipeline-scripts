@@ -22,7 +22,7 @@
     <module>libhyphen-native</module>
     <module>libhyphen-saxon</module>
     <!-- <module>libhyphen-libreoffice-tables</module> -->
-    <!-- <module>libhyphen-utils</module> -->
+    <module>libhyphen-utils</module>
   </modules>
   
   <build>
