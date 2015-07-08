@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.1</version>
+    <version>1.9.2-SNAPSHOT</version>
     <relativePath>../../../parent/</relativePath>
   </parent>
   
   <artifactId>dotify-formatter</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   
   <name>DP2 Braille Modules :: dotify-utils :: dotify-formatter</name>
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>obfl-utils</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
