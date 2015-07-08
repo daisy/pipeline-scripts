@@ -88,7 +88,7 @@ public class ZedaiToPefTest {
 			pipelineModule("metadata-utils"),
 			pipelineModule("validation-utils"),
 			pipelineModule("dtbook-validator"),
-			thisBundle("org.daisy.pipeline.modules.braille", "zedai-to-pef"),
+			thisBundle(),
 			xprocspecBundles(),
 			junitBundles()
 		);

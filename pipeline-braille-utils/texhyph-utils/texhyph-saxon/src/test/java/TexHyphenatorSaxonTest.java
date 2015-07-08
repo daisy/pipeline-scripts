@@ -50,7 +50,7 @@ public class TexHyphenatorSaxonTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("texhyph-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "texhyph-saxon"),
+			thisBundle(),
 			xspecBundles(),
 			junitBundles()
 		);

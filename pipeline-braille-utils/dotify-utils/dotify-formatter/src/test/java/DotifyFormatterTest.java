@@ -98,7 +98,7 @@ public class DotifyFormatterTest {
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle("org.daisy.pipeline.modules.braille", "dotify-formatter"),
+			thisBundle(),
 			junitBundles()
 		);
 	}

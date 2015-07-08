@@ -48,7 +48,7 @@ public class LiblouisDotifyTest {
 			forThisPlatform(brailleModule("liblouis-native")),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
-			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-dotify"),
+			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

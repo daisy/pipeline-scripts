@@ -68,7 +68,7 @@ public class LiblouisUtilsTest {
 			forThisPlatform(brailleModule("liblouis-native")),
 			xspecBundles(),
 			xprocspecBundles(),
-			thisBundle("org.daisy.pipeline.modules.braille", "liblouis-utils"),
+			thisBundle(),
 			junitBundles()
 		);
 	}

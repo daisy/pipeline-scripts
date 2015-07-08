@@ -53,7 +53,7 @@ public class PefCalabashTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			brailleModule("pef-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "pef-calabash"),
+			thisBundle(),
 			xprocspecBundles(),
 			junitBundles()
 		);

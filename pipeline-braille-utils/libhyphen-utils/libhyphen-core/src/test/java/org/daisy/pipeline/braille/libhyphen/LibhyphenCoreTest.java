@@ -64,7 +64,7 @@ public class LibhyphenCoreTest {
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
 			forThisPlatform(brailleModule("libhyphen-native")),
-			thisBundle("org.daisy.pipeline.modules.braille", "libhyphen-core"),
+			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);

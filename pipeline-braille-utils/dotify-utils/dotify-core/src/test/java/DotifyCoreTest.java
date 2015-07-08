@@ -56,7 +56,7 @@ public class DotifyCoreTest {
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "dotify-core"),
+			thisBundle(),
 			junitBundles()
 		);
 	}

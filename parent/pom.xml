@@ -175,10 +175,7 @@
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
         <artifactId>pax-exam-helper</artifactId>
-        <!--
-            depends on https://github.com/daisy/pipeline-build-utils/commit/dcc69a4ca188d3b24ff84e95e1c4ca7367b385db
-        -->
-        <version>1.10-SNAPSHOT</version>
+        <version>1.9.1</version>
         <scope>test</scope>
       </dependency>
       <!--

@@ -56,7 +56,7 @@ public class PefCoreTest {
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "pef-core"),
+			thisBundle(),
 			junitBundles()
 		);
 	}

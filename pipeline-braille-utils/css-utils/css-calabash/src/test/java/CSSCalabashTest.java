@@ -47,7 +47,7 @@ public class CSSCalabashTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "css-calabash"),
+			thisBundle(),
 			xprocspecBundles(),
 			junitBundles()
 		);

@@ -68,7 +68,7 @@ public class TexHyphenatorCoreTest {
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
-			thisBundle("org.daisy.pipeline.modules.braille", "texhyph-core"),
+			thisBundle(),
 			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
 			junitBundles()
 		);
