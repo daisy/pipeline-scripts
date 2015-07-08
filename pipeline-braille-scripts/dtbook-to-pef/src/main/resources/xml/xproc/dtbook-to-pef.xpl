@@ -19,6 +19,14 @@
             <dt>E-mail:</dt>
             <dd><a px:role="contact" href="mailto:bertfrees@gmail.com">bertfrees@gmail.com</a></dd>
         </dl>
+        <dl px:role="author">
+            <dt>Name:</dt>
+            <dd px:role="name">Jostein Austvik Jacobsen</dd>
+            <dt>Organization:</dt>
+            <dd px:role="organization" href="http://www.nlb.no/">NLB</dd>
+            <dt>E-mail:</dt>
+            <dd><a px:role="contact" href="mailto:josteinaj@gmail.com">josteinaj@gmail.com</a></dd>
+        </dl>
     </p:documentation>
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/x-dtbook+xml">
@@ -95,7 +103,7 @@
         </p:input>
         <p:with-option name="default-stylesheet" select="resolve-uri(
             if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
-            'http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/')"/>
+            'http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/')"/>
         <p:with-option name="transform" select="if ($transform!='') then $transform
                                                 else '(translator:liblouis)(formatter:liblouis)'"/>
         <p:with-option name="temp-dir" select="string(/c:result)">

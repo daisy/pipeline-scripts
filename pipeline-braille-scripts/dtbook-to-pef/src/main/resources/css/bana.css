@@ -1,0 +1,226 @@
+/* -------------------------------------------------------------------------- */
+/*  http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/bana.css  */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                  general                                   */
+/* -------------------------------------------------------------------------- */
+
+@page {
+    size: 40 25;
+    @top-right {
+        content: string(print-page);
+    }
+    @bottom-right {
+        content: counter(braille-page);
+    }
+}
+
+pagenum {
+    display: page-break;
+    string-set: print-page attr(value);
+}
+
+head {
+    display: none;
+}
+
+prodnote {
+    display: none;
+}
+
+level,
+level1,
+level2,
+level3,
+level4,
+level5,
+level6,
+frontmatter,
+bodymatter,
+rearmatter {
+    display: block;
+    page-break-before: always;
+    page-break-after: always;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                                paragraphs                                 */
+/* ------------------------------------------------------------------------- */
+
+p {
+    display: block;
+    text-indent: 2;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                                 headings                                  */
+/* ------------------------------------------------------------------------- */
+
+hd, h1, h2, h3, h4, h5, h6 {
+    display: block;
+    page-break-after: avoid;
+}
+
+h1, book > * > level > hd {
+    page-break-before: always;
+    text-align: center;
+    margin-top: 1;
+    margin-bottom: 1;
+    margin-left: 3;
+    margin-right: 3;
+}
+
+h2, book > * > level > level > hd {
+    margin-bottom: 1;
+    margin-left: 3;
+    margin-right: 3;
+}
+
+h3, book > * > level > level > level > hd {
+    text-align: left;
+    margin-left: 4;
+    margin-top: 1;
+}
+
+h4, h5, h6,
+poem > hd,
+list > hd,
+linegroup > hd,
+sidebar > hd,
+book > * > level > level > level level > hd {
+    text-align: left;
+    margin-top: 1;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                                  lists                                    */
+/* ------------------------------------------------------------------------- */
+
+list {
+    display: block;
+}
+
+list[type="ul"] {
+    list-style-type: ⠶;
+}
+
+list[type="pl"] {
+    list-style-type: none;
+}
+
+list:not([type]):not([enum]),
+list[type="ol"]:not([enum]),
+list[enum="1"] {
+    list-style-type: decimal;
+}
+
+list[enum="a"] {
+    list-style-type: lower-alpha;
+}
+
+list[enum="A"] {
+    list-style-type: upper-alpha;
+}
+
+list[enum="i"] {
+    list-style-type: lower-roman;
+}
+
+list[enum="I"] {
+    list-style-type: upper-roman;
+}
+
+li {
+    display: list-item;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                                  tables                                   */
+/* ------------------------------------------------------------------------- */
+
+table {
+    display: block;
+    border-top: ⠶;
+    border-bottom: ⠛;
+}
+
+thead {
+    display: block;
+    border-bottom: ⠒;
+}
+
+tr, td, th {
+    display: block;
+}
+
+th:first-child,
+td:first-child { margin-left: 0; }
+th:nth-child(2),
+td:nth-child(2) { margin-left: 2; }
+th:nth-child(3),
+td:nth-child(3) { margin-left: 4; }
+th:nth-child(4),
+td:nth-child(4) { margin-left: 6; }
+th:nth-child(5),
+td:nth-child(5) { margin-left: 8; }
+th:nth-child(6),
+td:nth-child(6) { margin-left: 10; }
+
+/* ------------------------------------------------------------------------- */
+/*                            table of contents                              */
+/* ------------------------------------------------------------------------- */
+
+level[class~=toc],
+level1[class~=toc],
+level2[class~=toc],
+level3[class~=toc],
+level4[class~=toc],
+level5[class~=toc],
+level6[class~=toc] {
+    display: toc;
+}
+
+level[class~=toc] > hd,
+level1[class~=toc] > h1,
+level2[class~=toc] > h2,
+level3[class~=toc] > h3,
+level4[class~=toc] > h4,
+level5[class~=toc] > h5,
+level6[class~=toc] > h6 {
+    text-align: center;
+    margin-top: 1;
+    margin-bottom: 1;
+    margin-left: 3;
+    margin-right: 3;
+}
+
+toc list a {
+    display: toc-item;
+    margin-left: 2;
+    text-indent: -2;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                               other blocks                                */
+/* ------------------------------------------------------------------------- */
+
+dl,
+div,
+blockquote,
+img,
+imggroup,
+poem,
+linegroup,
+byline,
+dateline,
+epigraph,
+address,
+line,
+author,
+prodnote,
+sidebar,
+note,
+annotation {
+    display: block;
+}
