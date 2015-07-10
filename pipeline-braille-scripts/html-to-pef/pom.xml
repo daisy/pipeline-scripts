@@ -6,13 +6,13 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.9.2-SNAPSHOT</version>
     <relativePath>../../parent/</relativePath>
   </parent>
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>html-to-pef</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DAISY Pipeline 2 Braille Module :: html-to-pef</name>

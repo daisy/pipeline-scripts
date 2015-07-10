@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-parent</artifactId>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.9.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
@@ -33,7 +33,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>braille-modules-bom</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>1.9.2-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -233,6 +233,18 @@
           <artifactId>maven-paxexam-plugin</artifactId>
           <version>1.2.4</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.2</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-provider-gitexe</artifactId>
+              <version>1.9.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -281,7 +293,7 @@
                         </goals>
                     </pluginExecutionFilter>
                     <action>
-                        <ignore></ignore>
+                        <ignore />
                     </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -294,7 +306,7 @@
                         </goals>
                     </pluginExecutionFilter>
                     <action>
-                        <ignore></ignore>
+                        <ignore />
                     </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -304,29 +316,6 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <profiles>
-    <profile>
-      <id>sonatype-oss-release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/XmlToPefTest.java</exclude>
-                <exclude>**/CSSCalabashTest.java</exclude>
-                <exclude>**/LibhyphenCoreTest.java</exclude>
-                <exclude>**/LiblouisCoreTest.java</exclude>
-                <exclude>**/LiblouisFormatterTest.java</exclude>
-                <exclude>**/TexHyphenatorCoreTest.java</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   
   <!--
       for javax.persistence
