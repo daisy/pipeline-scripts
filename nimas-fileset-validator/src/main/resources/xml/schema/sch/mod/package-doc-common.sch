@@ -12,9 +12,10 @@
         
         <assert test="count(pkg:meta[@name='dtb:sourceTitle'])&lt;2">x-metadata element dtb:sourceTitle occured more than one time.</assert>
         
-        <assert test="count(pkg:meta[@name='dtb:multimediaType'])=1">dtb:multimediaType is missing or duplicated in x-metadata.</assert>
+    	<!-- DAISY requires this, not NIMAS. We follow NIMAS here. -->
+        <!--<assert test="count(pkg:meta[@name='dtb:multimediaType'])=1">dtb:multimediaType is missing or duplicated in x-metadata.</assert>-->
         
-        <assert test="count(pkg:meta[@name='dtb:multimediaContent'])=1">dtb:multimediaContent is missing or duplicated in x-metadata.</assert>
+        <!--<assert test="count(pkg:meta[@name='dtb:multimediaContent'])=1">dtb:multimediaContent is missing or duplicated in x-metadata.</assert>-->
         
         <assert test="count(pkg:meta[@name='dtb:producedDate'])&lt;2">x-metadata element dtb:producedDate occured more than one time.</assert>
         
@@ -23,8 +24,8 @@
         <assert test="count(pkg:meta[@name='dtb:revisionDate'])&lt;2">x-metadata element dtb:revisionDate occured more than one time.</assert>
         
         <assert test="count(pkg:meta[@name='dtb:revisionDescription'])&lt;2">x-metadata element dtb:revisionDescription occured more than one time.</assert>
-        
-        <assert test="count(pkg:meta[@name='dtb:totalTime'])=1">dtb:totalTime is missing or duplicated in x-metadata.</assert>
+    	<!-- DAISY requires this, not NIMAS. We follow NIMAS here. -->
+        <!--<assert test="count(pkg:meta[@name='dtb:totalTime'])=1">dtb:totalTime is missing or duplicated in x-metadata.</assert>-->
     </rule>
     
     <rule context="//pkg:package/pkg:manifest">

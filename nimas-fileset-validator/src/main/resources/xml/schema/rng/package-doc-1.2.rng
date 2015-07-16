@@ -300,12 +300,14 @@
           </element>
         </oneOrMore>
 
-        <zeroOrMore>
+        <!-- NIMAS requires this; in DAISY it's optional -->
+        <!-- http://aim.cast.org/experience/technologies/spec-v1_1#.VaVIu5NVhHw -->
+        <oneOrMore>
           <element name="dc:Source">
           <ref name="CommonAttributes"/>
             <text/>
           </element>
-        </zeroOrMore>
+        </oneOrMore>
 
         <oneOrMore>
           <element name="dc:Language">
@@ -330,12 +332,14 @@
           </element>
         </zeroOrMore>
 
-        <zeroOrMore>
+        <!-- NIMAS requires this; in DAISY it's optional -->
+        <!-- http://aim.cast.org/experience/technologies/spec-v1_1#.VaVIu5NVhHw -->
+        <oneOrMore>
           <element name="dc:Rights">
             <ref name="CommonAttributes"/>
             <text/>
           </element>
-        </zeroOrMore>
+        </oneOrMore>
 
       </interleave>
     </define>
@@ -422,7 +426,6 @@
           </attribute>
           <attribute name="content">
             <choice>
-              
               <value>audioOnly</value>
               <value>audioNCX</value>
               <value>audioPartText</value>
