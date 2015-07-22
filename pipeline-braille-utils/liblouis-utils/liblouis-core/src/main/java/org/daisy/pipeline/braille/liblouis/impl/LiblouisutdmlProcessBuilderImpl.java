@@ -14,9 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import static com.google.common.collect.Iterables.getFirst;
 
-import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
@@ -28,58 +27,72 @@ import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 import org.daisy.pipeline.braille.liblouis.Liblouisutdml;
 import org.daisy.pipeline.braille.liblouis.LiblouisutdmlConfigResolver;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Component(
+	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisutdmlProcessBuilderImpl",
+	service = {
+		Liblouisutdml.class
+	}
+)
 public class LiblouisutdmlProcessBuilderImpl implements Liblouisutdml {
 	
-	private final static boolean LIBLOUISUTDML_EXTERNAL =
-		Boolean.getBoolean("org.daisy.pipeline.liblouisutdml.external");
-	
 	private File file2brl;
-	private BundledNativePath nativePath;
 	private LiblouisTableResolver tableResolver;
 	private ResourceResolver configResolver;
 	
+	@Activate
 	protected void activate() {
 		logger.debug("Loading liblouisutdml service");
-		if (file2brl == null)
-			file2brl = new File("/usr/local/bin/file2brl");
 	}
 	
+	@Deactivate
 	protected void deactivate() {
 		logger.debug("Unloading liblouisutdml service");
 	}
-	
-	protected void bindExecutable(BundledNativePath nativePath) {
-		if (!LIBLOUISUTDML_EXTERNAL && this.nativePath == null) {
-			URI executablePath = getFirst(nativePath.get("file2brl"), null);
-			if (executablePath != null) {
-				file2brl = asFile(nativePath.resolve(executablePath));
-				this.nativePath = nativePath;
-				logger.debug("Registering file2brl executable: " + executablePath); }}
+
+	@Reference(
+		name = "File2brlExecutable",
+		unbind = "-",
+		service = NativePath.class,
+		target = "(identifier=http://www.liblouis.org/native/*)",
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
+	protected void bindExecutable(NativePath nativePath) {
+		URI executablePath = nativePath.get("file2brl").iterator().next();
+		file2brl = asFile(nativePath.resolve(executablePath));
+		logger.debug("Registering file2brl executable: " + executablePath);
 	}
 	
-	protected void unbindExecutable(BundledNativePath nativePath) {
-		if (nativePath.equals(this.nativePath)) {
-			this.nativePath = null;
-			file2brl = null; }
-	}
-	
+	@Reference(
+		name = "LiblouisTableResolver",
+		unbind = "-",
+		service = LiblouisTableResolver.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
 	protected void bindTableResolver(LiblouisTableResolver tableResolver) {
 		this.tableResolver = tableResolver;
 	}
 	
-	protected void unbindTableResolver(LiblouisTableResolver path) {
-		this.tableResolver = null;
-	}
-	
+	@Reference(
+		name = "LiblouisutdmlConfigResolver",
+		unbind = "-",
+		service = LiblouisutdmlConfigResolver.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
 	protected void bindConfigResolver(LiblouisutdmlConfigResolver configResolver) {
 		this.configResolver = configResolver;
-	}
-	
-	protected void unbindConfigResolver(LiblouisutdmlConfigResolver path) {
-		this.configResolver = null;
 	}
 	
 	/**

@@ -17,12 +17,11 @@ import com.google.common.base.Optional;
 import static com.google.common.base.Predicates.notNull;
 import com.google.common.base.Splitter;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import org.daisy.pipeline.braille.common.BundledNativePath;
+import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
@@ -67,7 +66,6 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
 	
-	private BundledNativePath nativePath;
 	private ResourceResolver tableResolver;
 	private LibhyphenTableProvider tableProvider;
 	
@@ -82,29 +80,22 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	}
 	
 	@Reference(
-		name = "LiblouisLibrary",
-		unbind = "unbindLibrary",
-		service = BundledNativePath.class,
-		cardinality = ReferenceCardinality.MULTIPLE,
+		name = "LibhyphenLibrary",
+		unbind = "-",
+		service = NativePath.class,
+		target = "(identifier=http://hunspell.sourceforge.net/Hyphen/native/*)",
+		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLibrary(BundledNativePath path) {
-		if (nativePath == null) {
-			URI libraryPath = getFirst(path.get("libhyphen"), null);
-			if (libraryPath != null) {
-				Hyphen.setLibraryPath(asFile(path.resolve(libraryPath)));
-				nativePath = path;
-				logger.debug("Registering libhyphen library: " + libraryPath); }}
-	}
-	
-	protected void unbindLibrary(BundledNativePath path) {
-		if (path.equals(nativePath))
-			nativePath = null;
+	protected void bindLibrary(NativePath path) {
+		URI libraryPath = path.get("libhyphen").iterator().next();
+		Hyphen.setLibraryPath(asFile(path.resolve(libraryPath)));
+		logger.debug("Registering libhyphen library: " + libraryPath);
 	}
 	
 	@Reference(
 		name = "LibhyphenTableResolver",
-		unbind = "unbindTableResolver",
+		unbind = "-",
 		service = LibhyphenTableResolver.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
@@ -114,13 +105,9 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 		logger.debug("Registering libhyphen table resolver: " + resolver);
 	}
 	
-	protected void unbindTableResolver(LibhyphenTableResolver resolver) {
-		tableResolver = null;
-	}
-	
 	@Reference(
 		name = "LibhyphenTableProvider",
-		unbind = "unbindTableProvider",
+		unbind = "-",
 		service = LibhyphenTableProvider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
@@ -128,10 +115,6 @@ public class LibhyphenJnaImpl implements LibhyphenHyphenator.Provider {
 	protected void bindTableProvider(LibhyphenTableProvider provider) {
 		tableProvider = provider;
 		logger.debug("Registering libhyphen table provider: " + provider);
-	}
-	
-	protected void unbindTableProvider(LibhyphenTableProvider provider) {
-		tableProvider = null;
 	}
 	
 	private WithSideEffect<LibhyphenHyphenator,Logger> get(final URI table) {

@@ -1,7 +1,7 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -11,13 +11,12 @@ import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Optional;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import org.daisy.pipeline.braille.common.BundledNativePath;
 import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
+import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.util.Files.unpack;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
@@ -62,7 +61,6 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	
 	private final static boolean LIBLOUIS_EXTERNAL = Boolean.getBoolean("org.daisy.pipeline.liblouis.external");
 	
-	private BundledNativePath nativePath;
 	private LiblouisTableRegistry tableRegistry;
 	
 	// Hold a reference to avoid garbage collection
@@ -74,14 +72,8 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	@Activate
 	protected void activate(ComponentContext context) {
 		logger.debug("Loading liblouis service");
+		logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
 		try {
-			if (LIBLOUIS_EXTERNAL)
-				logger.info("Using external liblouis");
-			else if (this.nativePath == null)
-				throw new RuntimeException("No liblouis library registered");
-			logger.debug("liblouis version: {}", Louis.getLibrary().lou_version());
-			if (tableRegistry == null)
-				throw new RuntimeException("No liblouis table registry bound");
 			tableRegistry.onPathChange(
 				new Function<LiblouisTableRegistry,Void>() {
 					public Void apply(LiblouisTableRegistry r) {
@@ -149,28 +141,24 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	
 	@Reference(
 		name = "LiblouisLibrary",
-		unbind = "unbindLibrary",
-		service = BundledNativePath.class,
-		cardinality = ReferenceCardinality.MULTIPLE,
+		unbind = "-",
+		service = NativePath.class,
+		target = "(identifier=http://www.liblouis.org/native/*)",
+		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLibrary(BundledNativePath path) {
-		if (!LIBLOUIS_EXTERNAL && nativePath == null) {
-			URL libraryPath = path.resolve(getFirst(path.get("liblouis"), null));
-			if (libraryPath != null) {
-				Louis.setLibraryPath(asFile(libraryPath));
-				nativePath = path;
-				logger.debug("Registering liblouis library: " + libraryPath); }}
-	}
-	
-	protected void unbindLibrary(BundledNativePath path) {
-		if (path.equals(nativePath))
-			nativePath = null;
+	protected void bindLibrary(NativePath path) {
+		if (LIBLOUIS_EXTERNAL)
+			logger.info("Using external liblouis");
+		else {
+			URI libraryPath = path.get("liblouis").iterator().next();
+			Louis.setLibraryPath(asFile(path.resolve(libraryPath)));
+			logger.debug("Registering liblouis library: " + libraryPath); }
 	}
 	
 	@Reference(
 		name = "LiblouisTableRegistry",
-		unbind = "unbindTableRegistry",
+		unbind = "-",
 		service = LiblouisTableRegistry.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
@@ -178,10 +166,6 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	protected void bindTableRegistry(LiblouisTableRegistry registry) {
 		tableRegistry = registry;
 		logger.debug("Registering Liblouis table registry: " + registry);
-	}
-	
-	protected void unbindTableRegistry(LiblouisTableRegistry registry) {
-		tableRegistry = null;
 	}
 	
 	public Iterable<Translator> get(String query) {

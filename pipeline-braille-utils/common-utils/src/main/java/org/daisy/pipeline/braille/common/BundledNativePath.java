@@ -18,7 +18,7 @@ import static org.daisy.pipeline.braille.common.util.Files.chmod775;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.OS;
 
-public class BundledNativePath extends BundledResourcePath implements Provider<String,URI> {
+public class BundledNativePath extends BundledResourcePath implements NativePath {
 	
 	private static final String OS_FAMILY = "os.family";
 	
