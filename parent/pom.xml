@@ -103,6 +103,12 @@
           test dependencies
       -->
       <dependency>
+        <groupId>org.daisy.pipeline.modules.braille</groupId>
+        <artifactId>obfl-utils</artifactId>
+        <version>1.0.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.daisy.xprocspec</groupId>
         <artifactId>xprocspec</artifactId>
         <version>1.1.0</version>
