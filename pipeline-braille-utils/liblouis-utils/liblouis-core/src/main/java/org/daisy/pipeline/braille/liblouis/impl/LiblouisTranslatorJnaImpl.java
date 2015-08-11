@@ -416,6 +416,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 						StringBuffer b = new StringBuffer();
 						for (int j = 0; j < outputPositions.length; j++) {
 							b.append(braille.charAt(j));
+							if ((outputPositions[j] & 1) == 1)
+								b.append(SHY);
+							if ((outputPositions[j] & 2) == 2)
+								b.append(ZWSP);
 							int n = ((outputPositions[j] >> 3) + 32) % 32;
 							if (n > 0)
 								if (((n - i - 1) % 31) > 0) {
