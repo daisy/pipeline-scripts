@@ -167,6 +167,24 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testWhiteSpaceProcessing() {
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
+		assertEquals("⠋⠕⠕    ⠃⠁⠗ ⠃⠁⠵",
+		             translator.transform("foo    bar\nbaz"));
+		assertEquals("⠋⠕⠕    ⠃⠁⠗\n⠃⠁⠵",
+		             translator.transform("foo    bar\nbaz", "white-space:pre-wrap"));
+		assertEquals(new String[]{"","⠋⠕⠕    ⠃⠁⠗\n\u00AD","","⠃⠁⠵"},
+		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
+	}
+	
+	@Test
+	public void testWhiteSpaceLost() {
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'delete-ws.utb')").iterator().next();
+		assertEquals(new String[]{"","⠋⠕⠕⠃⠁⠗\u00AD","","⠃⠁⠵"},
+		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
+	}
+	
+	@Test
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
 		Provider<String,Table> tableProvider = dispatch(tableProviders);

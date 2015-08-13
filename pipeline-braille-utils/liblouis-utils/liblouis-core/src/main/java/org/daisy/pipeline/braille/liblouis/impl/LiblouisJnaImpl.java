@@ -70,6 +70,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 	private org.liblouis.Logger _logger;
 	
 	private File unicodeDisFile;
+	private File spacesFile;
 	
 	@Activate
 	protected void activate(ComponentContext context) {
@@ -103,6 +104,10 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			unpack(
 				context.getBundleContext().getBundle().getEntry("/tables/unicode.dis"),
 				unicodeDisFile);
+			spacesFile = new File(makeUnpackDir(context), "spaces.cti");
+			unpack(
+				context.getBundleContext().getBundle().getEntry("/tables/spaces.cti"),
+				spacesFile);
 			_logger = new org.liblouis.Logger() {
 				public void invoke(int level, String message) {
 					switch (level) {
@@ -228,9 +233,12 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 					public Translator _apply() {
 						String table = null;
 						boolean unicode = false;
+						boolean whiteSpace = false;
 						Optional<String> o;
 						if ((o = q.remove("unicode")) != null)
 							unicode = true;
+						if ((o = q.remove("white-space")) != null)
+							whiteSpace = true;
 						if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
 							table = o.get();
 						else if (q.size() > 0) {
@@ -251,6 +259,8 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 							lazyIndex();
 							table = Louis.getLibrary().lou_findTable(b.toString()); }
 						if (table != null) {
+							if (whiteSpace)
+								table = asURI(spacesFile) + "," + table;
 							if (unicode)
 								table = asURI(unicodeDisFile) + "," + table;
 							try {

@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Objects.toStringHelper;
@@ -197,6 +199,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			if (locale != null)
 				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
 			q.put("unicode", Optional.<String>absent());
+			q.put("white-space", Optional.<String>absent());
 			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
 			return concat(
 				transform(
@@ -285,6 +288,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		public String[] transform(String[] text, String[] cssStyle) {
 			byte[] typeform = new byte[cssStyle.length];
 			boolean[] hyphenate = new boolean[cssStyle.length];
+			boolean[] preserveLines = new boolean[cssStyle.length];
+			boolean[] preserveSpace = new boolean[cssStyle.length];
 			for (int i = 0; i < cssStyle.length; i++) {
 				Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(cssStyle[i]));
 				String val = style.remove("text-transform");
@@ -298,8 +303,15 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				if (val != null)
 					if ("auto".equals(val))
 						hyphenate[i] = true;
-				typeform[i] |= typeformFromInlineCSS(style);}
-			return transform(text, typeform, hyphenate);
+				val = style.remove("white-space");
+				preserveLines[i] = preserveSpace[i] = false;
+				if (val != null)
+					if ("pre-wrap".equals(val))
+						preserveLines[i] = preserveSpace[i] = true;
+					else if ("pre-line".equals(val))
+						preserveLines[i] = true;
+				typeform[i] |= typeformFromInlineCSS(style); }
+			return transform(text, typeform, hyphenate, preserveLines, preserveSpace);
 		}
 		
 		public String transform(String text, byte typeform) {
@@ -308,23 +320,76 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		
 		public String[] transform(String[] text, byte[] typeform) {
 			boolean[] hyphenate = new boolean[text.length];
+			boolean[] preserveLines = new boolean[text.length];
+			boolean[] preserveSpace = new boolean[text.length];
 			for (int i = 0; i < hyphenate.length; i++)
-				hyphenate[i] = false;
-			return transform(text, typeform, hyphenate);
+				hyphenate[i] = preserveLines[i] = preserveSpace[i] = false;
+			return transform(text, typeform, hyphenate, preserveLines, preserveSpace);
 		}
 		
 		protected final static char US = '\u001F';
 		protected final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
+		private final static Pattern ON_NBSP_SPLITTER = Pattern.compile("[\\xAD\\u200B]*\\xA0[\\xAD\\u200B\\xA0]*");
+		private final static Pattern ON_SPACE_SPLITTER = Pattern.compile("[\\xAD\\u200B]*[\\x20\t\\n\\r\\u2800\\xA0][\\xAD\\u200B\\x20\t\\n\\r\\u2800\\xA0]*");
+		private final static Pattern LINE_SPLITTER = Pattern.compile("[\\xAD\\u200B]*[\\n\\r][\\xAD\\u200B\\n\\r]*");
 		
-		public String[] transform(String[] text, byte[] typeform, boolean[] hyphenate) {
+		private String[] transform(String[] text, byte[] typeform, boolean[] hyphenate,
+		                           boolean[] preserveLines, boolean[] preserveSpace) {
 			
-			// text segments joined together and without hyphens
+			// text with some segments split up into white space segments that need to be preserved
+			// in the output and other segments
+			String[] textWithWs;
+			// boolean array for tracking which (non-empty white space) segments in textWithWs need
+			// to be preserved
+			boolean[] pre;
+			// mapping from index in textWithWs to index in text
+			int[] textWithWsMapping; {
+				List<String> l1 = new ArrayList<String>();
+				List<Boolean> l2 = new ArrayList<Boolean>();
+				List<Integer> l3 = new ArrayList<Integer>();
+				for (int i = 0; i < text.length; i++) {
+					String t = text[i];
+					if (t.isEmpty()) {
+						l1.add(t);
+						l2.add(false);
+						l3.add(i); }
+					else {
+						Pattern ws;
+						if (preserveSpace[i])
+							ws = ON_SPACE_SPLITTER;
+						else if (preserveLines[i])
+							ws = LINE_SPLITTER;
+						else
+							ws = ON_NBSP_SPLITTER;
+						boolean p = false;
+						for (String s : splitInclDelimiter(t, ws)) {
+							if (!s.isEmpty()) {
+								l1.add(s);
+								l2.add(p);
+								l3.add(i); }
+							p = !p; }}}
+				int len = l1.size();
+				textWithWs = new String[len];
+				pre = new boolean[len];
+				textWithWsMapping = new int[len];
+				for (int i = 0; i < len; i++) {
+					textWithWs[i] = l1.get(i);
+					pre[i] = l2.get(i);
+					textWithWsMapping[i] = l3.get(i); }
+			}
+			
+			// textWithWs segments joined together with hyphens removed and sequences of preserved
+			// white space replaced with a nbsp
 			String joinedText;
-			// mapping from character index in joinedText to segment index in text
+			// mapping from character index in joinedText to segment index in textWithWs
 			int[] joinedTextMapping;
-			// byte array for tracking hyphenation positions and segment boundaries
+			// byte array for tracking hyphenation positions, segment boundaries and boundaries of
+			// sequences of preserved white
 			byte[] positions; {
-				Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
+				String[] textWithWsReplaced = new String[textWithWs.length];
+				for (int i = 0; i < textWithWs.length; i++)
+					textWithWsReplaced[i] = pre[i] ? "\u00A0" : textWithWs[i];
+				Tuple2<String,byte[]> t = extractHyphens(join(textWithWsReplaced, US), SHY, ZWSP);
 				joinedText = t._1;
 				positions = t._2;
 				String[] nohyph = toArray(SEGMENT_SPLITTER.split(joinedText), String.class);
@@ -339,8 +404,8 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				t = extractHyphens(positions, joinedText, null, null, US);
 				joinedText = t._1;
 				positions = t._2;
-				if (joinedText.length() == 0)
-					return nohyph;
+				if (joinedText.matches("\\xA0*"))
+					return text;
 				if (positions == null)
 					positions = new byte[joinedText.length() - 1];
 			}
@@ -358,11 +423,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 						int i = 0;
 						for (int j = 0; j < text.length; j++) {
 							if (hyphenate[j])
-								while (i < autoHyphens.length && joinedTextMapping[i] < j + 1) i++;
+								while (i < autoHyphens.length && textWithWsMapping[joinedTextMapping[i]] < j + 1) i++;
 							else {
 								if (i > 0)
 									autoHyphens[i - 1] = 0;
-								while (i < autoHyphens.length && joinedTextMapping[i] < j + 1)
+								while (i < autoHyphens.length && textWithWsMapping[joinedTextMapping[i]] < j + 1)
 									autoHyphens[i++] = 0; }}}
 					for (int i = 0; i < autoHyphens.length; i++)
 						positions[i] += autoHyphens[i]; }
@@ -374,11 +439,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				if (b != Typeform.PLAIN) {
 					_typeform = new byte[joinedText.length()];
 					for (int i = 0; i < _typeform.length; i++)
-						_typeform[i] = typeform[joinedTextMapping[i]];
+						_typeform[i] = typeform[textWithWsMapping[joinedTextMapping[i]]];
 					break; }
 			
-			// translate to braille
-			String[] braille;
+			// translate to braille with hyphens and restored white space
+			String[] brailleWithWs;
 			try {
 				
 				// translation result with hyphens and segment boundary marks
@@ -391,34 +456,47 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 				}
 				
 				// single segment
-				if (text.length == 1)
-					braille = new String[]{joinedBraille};
+				if (textWithWs.length == 1)
+					brailleWithWs = new String[]{joinedBraille};
 				else {
 					
 					// split into segments
 					{
-						braille = new String[text.length];
+						brailleWithWs = new String[textWithWs.length];
 						int i = 0;
 						int imax = joinedText.length();
-						int kmax = text.length;
+						int kmax = textWithWs.length;
 						int k = (i < imax) ? joinedTextMapping[i] : kmax;
 						int l = 0;
-						while (l < k) braille[l++] = "";
+						while (l < k) brailleWithWs[l++] = "";
 						for (String s : SEGMENT_SPLITTER.split(joinedBraille)) {
-							braille[l++] = s;
+							brailleWithWs[l++] = s;
 							while (k < l)
 								k = (++i < imax) ? joinedTextMapping[i] : kmax;
 							while (l < k)
-								braille[l++] = ""; }
-						if (l != kmax) {
+								brailleWithWs[l++] = ""; }
+						if (l == kmax) {
+							boolean wsLost = false;
+							for (k = 0; k < kmax; k++)
+								if (pre[k]) {
+									Matcher m = Pattern.compile("\\xA0([\\xAD\\u200B]*)").matcher(brailleWithWs[k]);
+									if (m.matches())
+										brailleWithWs[k] = textWithWs[k] + m.group(1);
+									else
+										wsLost = true; }
+							if (wsLost)
+								logger.warn("White space was lost in the output.\n"
+								            + "Input: " + Arrays.toString(textWithWs) + "\n"
+								            + "Output: " + Arrays.toString(brailleWithWs)); }
+						else {
 							logger.warn("Text segmentation was lost in the output. Falling back to fuzzy mode.\n"
-							            + "=> input segments: " + Arrays.toString(text) + "\n"
-							            + "=> output segments: " + Arrays.toString(Arrays.copyOf(braille, l)));
-							braille = null; }
+							            + "=> input segments: " + Arrays.toString(textWithWs) + "\n"
+							            + "=> output segments: " + Arrays.toString(Arrays.copyOf(brailleWithWs, l)));
+							brailleWithWs = null; }
 					}
 					
 					// if some segment breaks were discarded, fall back on a fuzzy split method
-					if (braille == null) {
+					if (brailleWithWs == null) {
 						
 						// number the segments
 						for (int i = 0; i < positions.length; i++) {
@@ -436,13 +514,15 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 							if (!s.equals(joinedBraille))
 								throw new RuntimeException("Coding error");
 						}
-						braille = new String[text.length];
+						brailleWithWs = new String[textWithWs.length];
+						boolean wsLost = false;
 						StringBuffer b = new StringBuffer();
 						int jmax = joinedBrailleWithoutHyphens.length();
-						int kmax = text.length;
+						int kmax = textWithWs.length;
 						int k = joinedTextMapping[0];
 						int l = 0;
-						while (l < k) braille[l++] = "";
+						while (l < k)
+							brailleWithWs[l++] = "";
 						for (int j = 0; j < jmax - 1; j++) {
 							b.append(joinedBrailleWithoutHyphens.charAt(j));
 							if ((pos[j] & 1) == 1)
@@ -452,24 +532,58 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 							int n = ((pos[j] >> 3) + 32) % 32;
 							if (n > 0)
 								if (((n - l - 1) % 31) > 0) {
-									braille[l++] = b.toString();
+									brailleWithWs[l] = b.toString();
 									b = new StringBuffer();
-									while (((n - l - 1) % 31) > 0)
-										braille[l++] = ""; }}
+									if ((pos[j] & 4) == 4) {
+										if (pre[l]) {
+											Matcher m = Pattern.compile("\\xA0([\\xAD\\u200B]*)").matcher(brailleWithWs[l]);
+											if (m.matches())
+												brailleWithWs[l] = textWithWs[l] + m.group(1);
+											else
+												wsLost = true; }}
+									else {
+										if (pre[l])
+											wsLost = true;
+										if (l <= kmax && pre[l + 1]) {
+											pre[l + 1] = false;
+											wsLost = true; }}
+									l++;
+									while (((n - l - 1) % 31) > 0) {
+										brailleWithWs[l] = "";
+										if (pre[l])
+											wsLost = true;
+										l++; }}}
 						b.append(joinedBrailleWithoutHyphens.charAt(jmax - 1));
-						braille[l++] = b.toString();
+						brailleWithWs[l] = b.toString();
+						if (pre[l])
+							if (brailleWithWs[l].equals("\u00A0"))
+								brailleWithWs[l] = textWithWs[l];
+							else
+								wsLost = true;
+						l++;
 						int i = 0;
 						int imax = joinedText.length();
 						while (k < l)
 							k = (++i < imax) ? joinedTextMapping[i] : kmax;
 						while (l < k)
-							braille[l++] = "";
+							brailleWithWs[l++] = "";
 						if (l != kmax)
 							throw new RuntimeException("Coding error");
+						if (wsLost)
+							logger.warn("White space was lost in the output.\n"
+							            + "Input: " + Arrays.toString(textWithWs) + "\n"
+							            + "Output: " + Arrays.toString(brailleWithWs));
 					}
 				}
 			} catch (TranslationException e) {
 				throw new RuntimeException(e); }
+			
+			// recombine white space segments with other segments
+			String braille[] = new String[text.length];
+			for (int i = 0; i < braille.length; i++)
+				braille[i] = "";
+			for (int j = 0; j < brailleWithWs.length; j++)
+				braille[textWithWsMapping[j]] += brailleWithWs[j];
 			return braille;
 		}
 		
@@ -477,6 +591,18 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 			if (hyphenator == null)
 				throw new RuntimeException("'hyphens:auto' is not supported");
 			return extractHyphens(hyphenator.transform(text), SHY, ZWSP)._2;
+		}
+		
+		private static String[] splitInclDelimiter(String text, Pattern delimiterPattern) {
+			List<String> split = new ArrayList<String>();
+			Matcher m = delimiterPattern.matcher(text);
+			int i = 0;
+			while (m.find()) {
+				split.add(text.substring(i, m.start()));
+				split.add(m.group());
+				i = m.end(); }
+			split.add(text.substring(i));
+			return split.toArray(new String[split.size()]);
 		}
 		
 		@Override
