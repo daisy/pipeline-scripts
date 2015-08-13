@@ -318,125 +318,159 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		
 		public String[] transform(String[] text, byte[] typeform, boolean[] hyphenate) {
 			
-			// Combine the input segments into a single string. The positions
-			// byte array is used to track the hyphen positions and the
-			// segment boundaries. Styling info is kept in the _typeform byte
-			// array.
-			byte[] positions;
-			Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
-			String[] unhyphenated = toArray(SEGMENT_SPLITTER.split(t._1), String.class);
-			t = extractHyphens(t._2, t._1, null, null, US);
-			String _text = t._1;
-			if (_text.length() == 0)
-				return unhyphenated;
-			positions = t._2;
-			if (positions == null)
-				positions = new byte[_text.length() - 1];
-			boolean someHyphenate = false;
-			boolean someNotHyphenate = false;
-			for (int i = 0; i < hyphenate.length; i++) {
-				if (hyphenate[i]) someHyphenate = true;
-				else someNotHyphenate = true; }
-			if (someHyphenate) {
-				byte[] autoHyphens = doHyphenate(_text);
-				if (someNotHyphenate) {
-					int i = 0;
-					for (int j = 0; j < text.length; j++) {
-						if (hyphenate[j])
-							i += unhyphenated[j].length();
-						else {
-							if (i > 0)
-								autoHyphens[i - 1] = 0;
-							for (int k = 0; k < unhyphenated[j].length() - 1; k++)
-								autoHyphens[i++] = 0;
-							if (i < autoHyphens.length)
-								autoHyphens[i++] = 0; }}}
-				for (int i = 0; i < autoHyphens.length; i++)
-					positions[i] += autoHyphens[i]; }
+			// text segments joined together and without hyphens
+			String joinedText;
+			// mapping from character index in joinedText to segment index in text
+			int[] joinedTextMapping;
+			// byte array for tracking hyphenation positions and segment boundaries
+			byte[] positions; {
+				Tuple2<String,byte[]> t = extractHyphens(join(text, US), SHY, ZWSP);
+				joinedText = t._1;
+				positions = t._2;
+				String[] nohyph = toArray(SEGMENT_SPLITTER.split(joinedText), String.class);
+				joinedTextMapping = new int[join(nohyph).length()];
+				int i = 0;
+				int j = 0;
+				for (String s : nohyph) {
+					int l = s.length();
+					for (int k = 0; k < l; k++)
+						joinedTextMapping[i++] = j;
+					j++; }
+				t = extractHyphens(positions, joinedText, null, null, US);
+				joinedText = t._1;
+				positions = t._2;
+				if (joinedText.length() == 0)
+					return nohyph;
+				if (positions == null)
+					positions = new byte[joinedText.length() - 1];
+			}
+			
+			// add automatic hyphenation points to positions array
+			{
+				boolean someHyphenate = false;
+				boolean someNotHyphenate = false;
+				for (int i = 0; i < hyphenate.length; i++)
+					if (hyphenate[i]) someHyphenate = true;
+					else someNotHyphenate = true;
+				if (someHyphenate) {
+					byte[] autoHyphens = doHyphenate(joinedText);
+					if (someNotHyphenate) {
+						int i = 0;
+						for (int j = 0; j < text.length; j++) {
+							if (hyphenate[j])
+								while (i < autoHyphens.length && joinedTextMapping[i] < j + 1) i++;
+							else {
+								if (i > 0)
+									autoHyphens[i - 1] = 0;
+								while (i < autoHyphens.length && joinedTextMapping[i] < j + 1)
+									autoHyphens[i++] = 0; }}}
+					for (int i = 0; i < autoHyphens.length; i++)
+						positions[i] += autoHyphens[i]; }
+			}
+			
+			// typeform var with the same length as joinedText
 			byte[] _typeform = null;
 			for (byte b : typeform)
 				if (b != Typeform.PLAIN) {
-					_typeform = new byte[_text.length()];
-					int i = 0;
-					while (unhyphenated[i].length() == 0) i++;
-					for (int j = 0; j < _typeform.length; j++) {
-						_typeform[j] = typeform[i];
-						if (positions != null && j < positions.length && (positions[j] & 4) == 4) {
-							i++;
-							while (unhyphenated[i].length() == 0) i++; }}
+					_typeform = new byte[joinedText.length()];
+					for (int i = 0; i < _typeform.length; i++)
+						_typeform[i] = typeform[joinedTextMapping[i]];
 					break; }
+			
+			// translate to braille
+			String[] braille;
 			try {
 				
-				// Translate
-				TranslationResult r = translator.translate(_text, positions, _typeform);
+				// translation result with hyphens and segment boundary marks
+				String joinedBraille; {
+					TranslationResult r = translator.translate(joinedText, positions, _typeform);
+					joinedBraille = r.getBraille();
+					byte[] pos = r.getHyphenPositions();
+					if (pos != null)
+						joinedBraille = insertHyphens(joinedBraille, pos, SHY, ZWSP, US);
+				}
 				
-				// Split output into segments
-				String braille = r.getBraille();
-				byte[] outputPositions = r.getHyphenPositions();
-				if (outputPositions != null)
-					braille = insertHyphens(braille, outputPositions, SHY, ZWSP, US);
+				// single segment
 				if (text.length == 1)
-					return new String[]{braille};
+					braille = new String[]{joinedBraille};
 				else {
-					String[] rv = new String[text.length];
-					int i = 0;
-					while (unhyphenated[i].length() == 0)
-						rv[i++] = "";
-					for (String s : SEGMENT_SPLITTER.split(braille)) {
-						rv[i++] = s;
-						while (i < text.length && unhyphenated[i].length() == 0)
-							rv[i++] = ""; }
-					if (i == text.length)
-						return rv;
-					else {
-						logger.warn("Text segmentation was lost in the output.\n"
-						            + "Input segments: " + Arrays.toString(text) + "\n"
-						            + "Typeform: " + Arrays.toString(typeform) + "\n"
-						            + "Output segments: " + Arrays.toString(
-							            toArray(SEGMENT_SPLITTER.split(braille), String.class)));
+					
+					// split into segments
+					{
+						braille = new String[text.length];
+						int i = 0;
+						int imax = joinedText.length();
+						int kmax = text.length;
+						int k = (i < imax) ? joinedTextMapping[i] : kmax;
+						int l = 0;
+						while (l < k) braille[l++] = "";
+						for (String s : SEGMENT_SPLITTER.split(joinedBraille)) {
+							braille[l++] = s;
+							while (k < l)
+								k = (++i < imax) ? joinedTextMapping[i] : kmax;
+							while (l < k)
+								braille[l++] = ""; }
+						if (l != kmax) {
+							logger.warn("Text segmentation was lost in the output. Falling back to fuzzy mode.\n"
+							            + "=> input segments: " + Arrays.toString(text) + "\n"
+							            + "=> output segments: " + Arrays.toString(Arrays.copyOf(braille, l)));
+							braille = null; }
+					}
+					
+					// if some segment breaks were discarded, fall back on a fuzzy split method
+					if (braille == null) {
 						
-						// If some segment breaks were discarded, fall
-						// back on a fuzzy split method. First number the
-						// segments, translate, and then split at
-						// all positions where the number is increased.
-						i = 0;
-						while (unhyphenated[i].length() == 0) i++;
-						for (int j = 0; j < positions.length; j++) {
-							if ((positions[j] & 4) == 4) {
-								i++;
-								while (i < text.length && unhyphenated[i].length() == 0) i++; }
-							int n = (i % 31) + 1;
-							positions[j] |= (byte)(n << 3); }
-						r = translator.translate(_text, positions, _typeform);
-						braille = r.getBraille();
-						outputPositions = r.getHyphenPositions();
-						i = 0;
-						while (unhyphenated[i].length() == 0)
-							rv[i++] = "";
+						// number the segments
+						for (int i = 0; i < positions.length; i++) {
+							int n = (joinedTextMapping[i + 1] % 31) + 1;
+							positions[i] |= (byte)(n << 3); }
+						
+						// split at all positions where the segment number is increased in the output
+						TranslationResult r = translator.translate(joinedText, positions, _typeform);
+						String joinedBrailleWithoutHyphens = r.getBraille();
+						byte[] pos = r.getHyphenPositions();
+						{
+							String s = joinedBrailleWithoutHyphens;
+							if (pos != null)
+								s = insertHyphens(joinedBrailleWithoutHyphens, pos, SHY, ZWSP, US);
+							if (!s.equals(joinedBraille))
+								throw new RuntimeException("Coding error");
+						}
+						braille = new String[text.length];
 						StringBuffer b = new StringBuffer();
-						for (int j = 0; j < outputPositions.length; j++) {
-							b.append(braille.charAt(j));
-							if ((outputPositions[j] & 1) == 1)
+						int jmax = joinedBrailleWithoutHyphens.length();
+						int kmax = text.length;
+						int k = joinedTextMapping[0];
+						int l = 0;
+						while (l < k) braille[l++] = "";
+						for (int j = 0; j < jmax - 1; j++) {
+							b.append(joinedBrailleWithoutHyphens.charAt(j));
+							if ((pos[j] & 1) == 1)
 								b.append(SHY);
-							if ((outputPositions[j] & 2) == 2)
+							if ((pos[j] & 2) == 2)
 								b.append(ZWSP);
-							int n = ((outputPositions[j] >> 3) + 32) % 32;
+							int n = ((pos[j] >> 3) + 32) % 32;
 							if (n > 0)
-								if (((n - i - 1) % 31) > 0) {
-									rv[i++] = b.toString();
+								if (((n - l - 1) % 31) > 0) {
+									braille[l++] = b.toString();
 									b = new StringBuffer();
-									while (((n - i - 1) % 31) > 0)
-										rv[i++] = ""; }}
-						b.append(braille.charAt(braille.length() - 1));
-						rv[i++] = b.toString();
-						while (i < text.length && unhyphenated[i].length() == 0)
-							rv[i++] = "";
-						if (i == text.length)
-							return rv;
-						else
-							throw new RuntimeException("Coding error"); }}}
-			catch (TranslationException e) {
+									while (((n - l - 1) % 31) > 0)
+										braille[l++] = ""; }}
+						b.append(joinedBrailleWithoutHyphens.charAt(jmax - 1));
+						braille[l++] = b.toString();
+						int i = 0;
+						int imax = joinedText.length();
+						while (k < l)
+							k = (++i < imax) ? joinedTextMapping[i] : kmax;
+						while (l < k)
+							braille[l++] = "";
+						if (l != kmax)
+							throw new RuntimeException("Coding error");
+					}
+				}
+			} catch (TranslationException e) {
 				throw new RuntimeException(e); }
+			return braille;
 		}
 		
 		protected byte[] doHyphenate(String text) {
