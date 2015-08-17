@@ -43,7 +43,7 @@
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:variable name="this" as="element()" select="."/>
+					<xsl:variable name="context" as="element()" select="."/>
 					<xsl:variable name="lang" as="xs:string?" select="pxi:lang(.)"/>
 					<xsl:variable name="space" as="xs:string?" select="pxi:space(.)"/>
 					<xsl:for-each-group select="*|text()" group-adjacent="$is-block and pxi:is-block(.)">
@@ -66,7 +66,7 @@
 											<xsl:attribute name="xml:space" select="$space"/>
 										</xsl:if>
 										<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-										                        css:computed-properties($inline-properties, false(), $this)
+										                        css:computed-properties($inline-properties, false(), $context)
 										                        [not(@value=css:initial-value(@name))]))"/>
 										<xsl:for-each select="current-group()">
 											<xsl:sequence select="."/>
@@ -74,7 +74,7 @@
 									</xsl:element>
 								</xsl:variable>
 								<xsl:apply-templates select="$block/css:block">
-									<xsl:with-param name="context" select="$this"/>
+									<xsl:with-param name="context" select="$context"/>
 								</xsl:apply-templates>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -165,7 +165,27 @@
 				<xsl:if test="$space">
 					<xsl:attribute name="xml:space" select="$space"/>
 				</xsl:if>
-				<xsl:value-of select="$evaluated-string"/>
+				<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
+				                        css:computed-properties($inline-properties, false(), $context)
+				                        [not(@value=css:initial-value(@name))]))"/>
+				<xsl:choose>
+					<xsl:when test="$mode=('before','after')">
+						<xsl:element name="css:block">
+							<xsl:sequence select="css:style-attribute(
+							                        css:serialize-declaration-list(
+							                          css:parse-declaration-list(
+							                            css:parse-stylesheet($context/@style)
+							                              /self::css:rule[@selector=concat('::',$mode)][last()]/@declaration-list)
+							                            [@name=$inline-properties
+							                             and not(@name='content')
+							                             and not(@value=css:initial-value(@name))]))"/>
+							<xsl:value-of select="$evaluated-string"/>
+						</xsl:element>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$evaluated-string"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:element>
 		</xsl:variable>
 		<xsl:variable name="translated-block" as="node()*">
@@ -174,10 +194,10 @@
 					<xsl:apply-templates select="$block/css:block" mode="string-set"/>
 				</xsl:when>
 				<xsl:when test="$mode='before'">
-					<xsl:apply-templates select="$block/css:block" mode="before"/>
+					<xsl:apply-templates select="$block/css:block/css:block" mode="before"/>
 				</xsl:when>
 				<xsl:when test="$mode='after'">
-					<xsl:apply-templates select="$block/css:block" mode="after"/>
+					<xsl:apply-templates select="$block/css:block/css:block" mode="after"/>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>

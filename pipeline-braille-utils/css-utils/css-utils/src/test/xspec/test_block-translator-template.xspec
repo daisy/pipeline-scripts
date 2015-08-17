@@ -27,8 +27,7 @@
     </x:context>
     <x:expect label="result">
       <doc xml:lang="en">
-        <br style="::before {{ content: &quot;
-&quot;; white-space: pre-line }}"/>
+        <br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>
       </doc>
     </x:expect>
   </x:scenario>

@@ -19,8 +19,9 @@
 				<xsl:sequence select="css:serialize-declaration-list($inline-style[not(@value=css:initial-value(@name))])"/>
 			</xsl:for-each>
 		</xsl:variable>
+		<xsl:variable name="lang" select="ancestor-or-self::*[@xml:lang][1]/string(@xml:lang)"/>
 		<xsl:apply-templates select="node()[1]" mode="treewalk">
-			<xsl:with-param name="new-text-nodes" select="louis:translate(concat($query,'(locale:',string(@xml:lang),')'), $text, $style)"/>
+			<xsl:with-param name="new-text-nodes" select="louis:translate(concat($query,'(locale:',$lang,')'), $text, $style)"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
