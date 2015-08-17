@@ -6,8 +6,10 @@
 	
 	<xsl:import href="../../main/resources/xml/transform/block-translator-template.xsl"/>
 	
-	<xsl:template match="css:block" mode="#default after before string-set">
-		<xsl:value-of select="upper-case(string(/*))"/>
+	<xsl:template match="css:block" mode="#all">
+		<xsl:apply-templates select="node()[1]" mode="treewalk">
+			<xsl:with-param name="new-text-nodes" select="for $t in //text() return upper-case($t)"/>
+		</xsl:apply-templates>
 	</xsl:template>
 	
 </xsl:stylesheet>

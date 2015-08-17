@@ -2,11 +2,11 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
                stylesheet="../../main/resources/xml/transform/liblouis-block-translate.xsl">
   
-  <x:scenario label="test_01" pending="white-space:pre not honored">
+  <x:scenario label="test_01">
     <x:context>
       <doc xml:lang="en">
         <p style="display: block">
-          <span style="hyphens: auto; white-space: pre">
+          <span style="hyphens: auto; white-space: pre-wrap">
             foo<span style="font-weight: bold">bar</span>
           </span>
         </p>
@@ -15,15 +15,26 @@
     <x:expect label="result">
       <doc xml:lang="en">
         <p style="{{ display: block }}">
-          <span style="{{ hyphens: manual; white-space: pre }}">
-            ⠋⠕⠕<span>⠃⠜</span>
+          <span style="{{ hyphens: manual; white-space: pre-wrap }}">
+            ⠋⠕⠕­<span>⠃⠜</span>
           </span>
         </p>
       </doc>
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_02" pending="liblouis typeform broken">
+  <x:scenario label="test_02">
+    <x:context>
+      <doc xml:lang="en">
+        foo<br style="::before {{ content: '&#xA;'; white-space: pre-line }}"/>bar
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc xml:lang="en">         ⠋⠕⠕<br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>⠃⠜       </doc>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_03" pending="liblouis typeform broken">
     <x:context>
       <doc xml:lang="en">
         <p style="display: block">

@@ -175,6 +175,8 @@ public class LiblouisCoreTest {
 		             translator.transform("foo    bar\nbaz", "white-space:pre-wrap"));
 		assertEquals(new String[]{"","⠋⠕⠕    ⠃⠁⠗\n\u00AD","","⠃⠁⠵"},
 		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
+		assertEquals("\n",
+		             translator.transform("\n", "white-space:pre-line"));
 	}
 	
 	@Test

@@ -66,6 +66,7 @@ public class LiblouisUtilsTest {
 			brailleModule("css-calabash"),
 			brailleModule("css-utils"),
 			forThisPlatform(brailleModule("liblouis-native")),
+			forThisPlatform(brailleModule("libhyphen-native")), // TODO: fix for windows!
 			xspecBundles(),
 			xprocspecBundles(),
 			thisBundle(),
