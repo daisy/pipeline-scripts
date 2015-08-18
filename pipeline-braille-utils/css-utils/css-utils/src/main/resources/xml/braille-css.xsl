@@ -231,7 +231,7 @@
         <xsl:variable name="index" select="index-of($css:properties, $css:property/@name)"/>
         <xsl:sequence select="if ($index)
                               then $css:property/@value=('inherit', 'initial') or matches($css:property/@value, $css:values[$index], 'x')
-                              else false()"/>
+                              else matches($css:property/@name, '^-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*$')"/> <!-- might be valid -->
     </xsl:function>
     
     <xsl:function name="css:initial-value" as="xs:string?">
@@ -251,7 +251,9 @@
         <xsl:param name="property" as="xs:string"/>
         <xsl:param name="display" as="xs:string"/>
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
-        <xsl:sequence select="if ($index) then matches($display, $css:applies-to[$index]) else false()"/>
+        <xsl:sequence select="if ($index)
+                              then matches($display, $css:applies-to[$index])
+                              else matches($property, '^-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*$')"/> <!-- might apply -->
     </xsl:function>
     
     <!-- ================== -->

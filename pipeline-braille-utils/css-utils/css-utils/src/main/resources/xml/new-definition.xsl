@@ -37,7 +37,7 @@
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:copy>
-            <xsl:sequence select="@* except (@style|@css:*[local-name()=$new:properties])"/>
+            <xsl:sequence select="@* except (@style|@css:*[replace(local-name(),'^_','-')=$new:properties])"/>
             <xsl:choose>
                 <xsl:when test="$properties-as-attributes">
                     <xsl:apply-templates select="$properties[self::keep]/*" mode="css:property-as-attribute"/>

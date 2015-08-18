@@ -216,11 +216,11 @@
     </xsl:function>
     
     <xsl:template match="@css:*" mode="css:attribute-as-property" as="element()">
-        <css:property name="{local-name()}" value="{string()}"/>
+        <css:property name="{replace(local-name(),'^_','-')}" value="{string()}"/>
     </xsl:template>
     
     <xsl:template match="css:property" mode="css:property-as-attribute" as="attribute()">
-        <xsl:attribute name="css:{@name}" select="@value"/>
+        <xsl:attribute name="css:{replace(@name,'^-','_')}" select="@value"/>
     </xsl:template>
     
     <xsl:function name="css:parse-stylesheet" as="element()*">

@@ -31,7 +31,7 @@
 			<x:param select="true()"/>
 			<x:param select="//bar">
 				<foo css:display="block" css:page="size: 10 10">
-					<bar style="display: inherit; left: invalid; page-break-before: initial; string-set: print-page attr(num)"/>
+					<bar style="display: inherit; left: invalid; page-break-before: initial; string-set: print-page attr(num); someprop: someval; -foo-someprop: someval"/>
 				</foo>
 			</x:param>
 		</x:call>
@@ -39,6 +39,7 @@
 			<css:property name="display" value="block"/>
 			<css:property name="page-break-before" value="auto"/>
 			<css:property name="string-set" value="print-page attr(num)"/>
+			<css:property name="-foo-someprop" value="someval"/>
 		</x:expect>
 	</x:scenario>
 	
