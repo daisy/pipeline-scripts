@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               xmlns:brl="http://www.daisy.org/z3986/2009/braille/"
+               xmlns:html="http://www.w3.org/1999/xhtml"
+               script="../resources/inline.xpl">
+  
+    <x:scenario label="test_01">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <html xmlns="http://www.w3.org/1999/xhtml" xmlns:foo="http://example.com/ns/">
+            <head>
+              <style media="embossed" type="text/css">
+                @namespace foo url(http://example.com/ns/);
+                p {
+                  display: block;
+                }
+                |p {
+                  margin-top: 1;
+                }
+                foo|p {
+                  text-align: center;
+                }
+              </style>
+            </head>
+            <body>
+              <p/>
+              <foo:p/>
+              <fu:p xmlns:fu="http://example.com/ns/"/>
+              <p xmlns="http://example.com/ns/"/>
+              <p xmlns=""/>
+            </body>
+          </html>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//html:body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body xmlns="http://www.w3.org/1999/xhtml">
+          <p style="display: block;"/>
+          <p xmlns="http://example.com/ns/" style="display: block; text-align: center;"/>
+          <p xmlns="http://example.com/ns/" style="display: block; text-align: center;"/>
+          <p xmlns="http://example.com/ns/" style="display: block; text-align: center;"/>
+          <p xmlns="" style="display: block; margin-top: 1;"/>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
