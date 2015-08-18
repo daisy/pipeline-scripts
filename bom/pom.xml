@@ -230,16 +230,12 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
-                <!--
-                    depends on https://github.com/snaekobbi/jStyleParser/pull/1 and
-                    https://github.com/snaekobbi/jStyleParser/pull/2
-                -->
-                <version>1.20-p1</version>
+                <version>1.20-p2-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xerces</groupId>
