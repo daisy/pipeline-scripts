@@ -687,20 +687,20 @@
 			<x:input port="source">
 				<x:document type="inline">
 					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
-						<layout-master name="a" duplex="false" page-width="40" page-height="25" row-spacing="2.0">
+						<layout-master name="a" duplex="false" page-width="40" page-height="25">
 							<default-template>
 								<header/>
 								<footer/>
 							</default-template>
 						</layout-master>
 						<sequence master="a">
-							<block margin-top="1" margin-bottom="1">
+							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠂⠂⠂⠂⠂<br/>
 								<br/>
 								⠯⠗⠼⠜⠌⠄
 							</block>
-							<block margin-top="1" margin-bottom="1">
+							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
 								⠤⠤⠤⠤<br/>
 								⠤⠤⠤⠤<br/>
 								⠤⠤⠤⠤<br/>
@@ -729,20 +729,20 @@
 						</meta>
 					</head>
 					<body>
-						<volume cols="40" rows="25" rowgap="4" duplex="false">
+						<volume cols="40" rows="25" rowgap="0" duplex="false">
 							<section>
 								<page>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠂⠂⠂⠂⠂</row>
-									<row/>
-									<row>⠯⠗⠼⠜⠌⠄</row>
-									<row/>
-									<row/>
-									<row>⠤⠤⠤⠤</row>
-									<row>⠤⠤⠤⠤</row>
-									<row>⠤⠤⠤⠤</row>
-									<row>⠤⠤⠤⠤</row>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠂⠂⠂⠂⠂</row>
+									<row rowgap="4"/>
+									<row rowgap="4">⠯⠗⠼⠜⠌⠄</row>
+									<row rowgap="4"/>
+									<row rowgap="4"/>
+									<row rowgap="4">⠤⠤⠤⠤</row>
+									<row rowgap="4">⠤⠤⠤⠤</row>
+									<row rowgap="4">⠤⠤⠤⠤</row>
+									<row rowgap="4">⠤⠤⠤⠤</row>
 									<row rowgap="0"/>
 								</page>
 							</section>
@@ -758,63 +758,63 @@
 			<x:input port="source">
 				<x:document type="inline">
 					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
-						<layout-master name="a" duplex="true" page-width="40" page-height="25" row-spacing="2.0">
+						<layout-master name="a" duplex="true" page-width="40" page-height="25">
 							<default-template>
 								<header/>
 								<footer/>
 							</default-template>
 						</layout-master>
 						<sequence master="a">
-							<block margin-top="1" margin-bottom="1">
+							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="1" margin-bottom="1">
+							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="0" margin-bottom="1">
+							<block margin-top="0" margin-bottom="1" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="0" margin-bottom="1">
+							<block margin-top="0" margin-bottom="1" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="0" margin-bottom="0">
+							<block margin-top="0" margin-bottom="0" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="0" margin-bottom="0">
+							<block margin-top="0" margin-bottom="0" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="1" margin-bottom="0">
+							<block margin-top="1" margin-bottom="0" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁<br/>
 								⠁
 							</block>
-							<block margin-top="2">
+							<block margin-top="2" row-spacing="2.0">
 								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
 								⠁<br/>
 								⠁<br/>
@@ -844,63 +844,63 @@
 						</meta>
 					</head>
 					<body>
-						<volume cols="40" rows="25" rowgap="4" duplex="true">
+						<volume cols="40" rows="25" rowgap="0" duplex="true">
 							<section>
 								<page>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4"/>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
 									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row/>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row rowgap="0">⠁</row>
 								</page>
 								<page>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4"/>
 									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row/>
-									<row rowgap="0">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
 								</page>
 								<page>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
 									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row rowgap="0">⠁</row>
 								</page>
 								<page>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4"/>
+									<row rowgap="4"/>
+									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
+									<row rowgap="4">⠁</row>
 									<row>⠁</row>
-									<row>⠁</row>
-									<row/>
-									<row/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row>⠁</row>
-									<row rowgap="0">⠁</row>
 								</page>
 							</section>
 						</volume>
