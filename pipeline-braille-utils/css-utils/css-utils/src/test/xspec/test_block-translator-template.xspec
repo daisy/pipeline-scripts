@@ -19,4 +19,17 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_02">
+    <x:context>
+      <doc xml:lang="en">
+        <br style="::before {{ content: '&#xA;'; white-space: pre-line }}"/>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc xml:lang="en">
+        <br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

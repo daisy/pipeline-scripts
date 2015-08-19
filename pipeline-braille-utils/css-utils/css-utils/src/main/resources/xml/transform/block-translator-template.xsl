@@ -22,15 +22,10 @@
 	<xsl:variable name="inline-properties" as="xs:string*"
 	              select="$css:properties[not(.='display') and css:applies-to(., 'inline')]"/>
 	
-	<!--
-	    TODO: eliminate has-string-set?
-	-->
 	<xsl:template match="*" mode="identify-blocks">
 		<xsl:param name="is-block" as="xs:boolean" select="true()" tunnel="yes"/>
-		<xsl:param name="has-string-set" as="xs:boolean" select="true()" tunnel="yes"/>
 		<xsl:param name="display" as="xs:string" select="'block'" tunnel="yes"/>
 		<xsl:variable name="is-block" as="xs:boolean" select="$is-block and pxi:is-block(.)"/>
-		<xsl:variable name="has-string-set" as="xs:boolean" select="$has-string-set and pxi:has-string-set(.)"/>
 		<xsl:variable name="display" as="xs:string" select="if ($display='none') then 'none' else pxi:display(.)"/>
 		<xsl:variable name="translated-rules" as="element()*">
 			<xsl:apply-templates select="css:parse-stylesheet(@style)" mode="translate-rule-list">
@@ -42,31 +37,25 @@
 			<xsl:sequence select="css:style-attribute(css:serialize-stylesheet($translated-rules))"/>
 			<xsl:choose>
 				<xsl:when test="$display='none'">
-					<xsl:if test="$has-string-set">
-						<xsl:apply-templates select="*" mode="#current">
-							<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
-							<xsl:with-param name="has-string-set" select="$has-string-set" tunnel="yes"/>
-							<xsl:with-param name="display" select="$display" tunnel="yes"/>
-						</xsl:apply-templates>
-					</xsl:if>
+					<xsl:apply-templates select="*" mode="#current">
+						<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
+						<xsl:with-param name="display" select="$display" tunnel="yes"/>
+					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:variable name="this" as="element()" select="."/>
+					<xsl:variable name="context" as="element()" select="."/>
 					<xsl:variable name="lang" as="xs:string?" select="pxi:lang(.)"/>
 					<xsl:variable name="space" as="xs:string?" select="pxi:space(.)"/>
-					<xsl:for-each-group select="*|text()" group-adjacent="($is-block and pxi:is-block(.))
-					                                                      or ($has-string-set and pxi:has-string-set(.))">
+					<xsl:for-each-group select="*|text()" group-adjacent="$is-block and pxi:is-block(.)">
 						<xsl:choose>
 							<xsl:when test="current-grouping-key()">
 								<xsl:for-each select="current-group()">
 									<xsl:apply-templates select="." mode="#current">
 										<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
-										<xsl:with-param name="has-string-set" select="$has-string-set" tunnel="yes"/>
 										<xsl:with-param name="display" select="$display" tunnel="yes"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
 							</xsl:when>
-							<xsl:when test="normalize-space(string-join(current-group()/string(.), ''))=''"/>
 							<xsl:otherwise>
 								<xsl:variable name="block">
 									<xsl:element name="css:block">
@@ -77,7 +66,7 @@
 											<xsl:attribute name="xml:space" select="$space"/>
 										</xsl:if>
 										<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-										                        css:computed-properties($inline-properties, false(), $this)
+										                        css:computed-properties($inline-properties, false(), $context)
 										                        [not(@value=css:initial-value(@name))]))"/>
 										<xsl:for-each select="current-group()">
 											<xsl:sequence select="."/>
@@ -85,7 +74,7 @@
 									</xsl:element>
 								</xsl:variable>
 								<xsl:apply-templates select="$block/css:block">
-									<xsl:with-param name="context" select="$this"/>
+									<xsl:with-param name="context" select="$context"/>
 								</xsl:apply-templates>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -176,10 +165,27 @@
 				<xsl:if test="$space">
 					<xsl:attribute name="xml:space" select="$space"/>
 				</xsl:if>
-				<!--
-				    FIXME: what about style?
-				-->
-				<xsl:value-of select="$evaluated-string"/>
+				<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
+				                        css:computed-properties($inline-properties, false(), $context)
+				                        [not(@value=css:initial-value(@name))]))"/>
+				<xsl:choose>
+					<xsl:when test="$mode=('before','after')">
+						<xsl:element name="css:block">
+							<xsl:sequence select="css:style-attribute(
+							                        css:serialize-declaration-list(
+							                          css:parse-declaration-list(
+							                            css:parse-stylesheet($context/@style)
+							                              /self::css:rule[@selector=concat('::',$mode)][last()]/@declaration-list)
+							                            [@name=$inline-properties
+							                             and not(@name='content')
+							                             and not(@value=css:initial-value(@name))]))"/>
+							<xsl:value-of select="$evaluated-string"/>
+						</xsl:element>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$evaluated-string"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:element>
 		</xsl:variable>
 		<xsl:variable name="translated-block" as="node()*">
@@ -188,10 +194,10 @@
 					<xsl:apply-templates select="$block/css:block" mode="string-set"/>
 				</xsl:when>
 				<xsl:when test="$mode='before'">
-					<xsl:apply-templates select="$block/css:block" mode="before"/>
+					<xsl:apply-templates select="$block/css:block/css:block" mode="before"/>
 				</xsl:when>
 				<xsl:when test="$mode='after'">
-					<xsl:apply-templates select="$block/css:block" mode="after"/>
+					<xsl:apply-templates select="$block/css:block/css:block" mode="after"/>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
@@ -251,11 +257,6 @@
 	<xsl:function name="pxi:is-block" as="xs:boolean">
 		<xsl:param name="node" as="node()"/>
 		<xsl:sequence select="boolean($node/descendant-or-self::*[pxi:display(.) != 'inline'])"/>
-	</xsl:function>
-	
-	<xsl:function name="pxi:has-string-set" as="xs:boolean">
-		<xsl:param name="node" as="node()"/>
-		<xsl:sequence select="boolean($node/descendant-or-self::*[pxi:string-set(.) != 'none'])"/>
 	</xsl:function>
 	
 </xsl:stylesheet>

@@ -140,6 +140,7 @@ public class LiblouisCoreTest {
 		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.ctb')").iterator().next();
 		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
 		assertEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"fo","obar"}));
+		assertEquals(new String[]{"⠋⠥\u00AD","⠃⠁⠗"}, translator.transform(new String[]{"fo","o\u00ADbar"}));
 		assertEquals(new String[]{"⠋⠥","","⠃⠁⠗"}, translator.transform(new String[]{"fo","","obar"}));
 		assertEquals(new String[]{"⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ",
 		                          "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠋⠥", "⠃⠁⠗"},
@@ -163,6 +164,26 @@ public class LiblouisCoreTest {
 		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next();
 		assertEquals(new String[]{"⠋⠕⠕\u00AD⠃⠁⠗ ","⠋⠕⠕⠃⠁⠗"},
 		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
+	}
+	
+	@Test
+	public void testWhiteSpaceProcessing() {
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
+		assertEquals("⠋⠕⠕    ⠃⠁⠗ ⠃⠁⠵",
+		             translator.transform("foo    bar\nbaz"));
+		assertEquals("⠋⠕⠕    ⠃⠁⠗\n⠃⠁⠵",
+		             translator.transform("foo    bar\nbaz", "white-space:pre-wrap"));
+		assertEquals(new String[]{"","⠋⠕⠕    ⠃⠁⠗\n\u00AD","","⠃⠁⠵"},
+		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
+		assertEquals("\n",
+		             translator.transform("\n", "white-space:pre-line"));
+	}
+	
+	@Test
+	public void testWhiteSpaceLost() {
+		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'delete-ws.utb')").iterator().next();
+		assertEquals(new String[]{"","⠋⠕⠕⠃⠁⠗\u00AD","","⠃⠁⠵"},
+		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
 	}
 	
 	@Test
