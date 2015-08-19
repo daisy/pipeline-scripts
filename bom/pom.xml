@@ -230,12 +230,12 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
-                <version>1.20-p2-SNAPSHOT</version>
+                <version>1.20-p2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xerces</groupId>
