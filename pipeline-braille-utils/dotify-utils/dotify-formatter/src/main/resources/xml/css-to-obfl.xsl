@@ -96,6 +96,14 @@
         <xsl:attribute name="align" select="."/>
     </xsl:template>
     
+    <xsl:template match="@css:_obfl-vertical-position">
+        <xsl:attribute name="vertical-position" select="."/>
+    </xsl:template>
+    
+    <xsl:template match="@css:_obfl-vertical-align">
+        <xsl:attribute name="vertical-align" select="."/>
+    </xsl:template>
+    
     <xsl:template match="@css:page-break-before">
         <xsl:if test=".='always'">
             <xsl:attribute name="break-before" select="'page'"/>

@@ -182,21 +182,34 @@
                 <p:inline>
                     <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
                         <xsl:variable name="new:properties" as="xs:string*"
-                                      select="('margin-left',     'border-left',     'page-break-before',   'text-indent',
-                                               'margin-right',    'border-right',    'page-break-after',    'text-align',
+                                      select="('margin-left',     'border-left',     'page-break-before',   'text-indent',   '-obfl-vertical-align',
+                                               'margin-right',    'border-right',    'page-break-after',    'text-align',    '-obfl-vertical-position',
                                                'margin-top',      'border-top',      'page-break-inside',
-                                               'margin-bottom',   'border-bottom',   'orphans', 'widows')"/>
+                                               'margin-bottom',   'border-bottom',   'orphans',
+                                                                                     'widows')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
                             <xsl:param name="css:property" as="element()"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="css:is-valid($css:property)
-                                                  and not($css:property/@value=('inherit','initial'))
-                                                  and new:applies-to($css:property/@name, $context)"/>
+                            <xsl:sequence select="new:applies-to($css:property/@name, $context)
+                                                  and (
+                                                    if ($css:property/@name='-obfl-vertical-align')
+                                                    then $css:property/@value=('before','center','after')
+                                                    else if ($css:property/@name='-obfl-vertical-position')
+                                                    then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
+                                                    else (
+                                                      css:is-valid($css:property)
+                                                      and not($css:property/@value=('inherit','initial'))
+                                                    )
+                                                  )"/>
                         </xsl:function>
                         <xsl:function name="new:initial-value" as="xs:string">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="css:initial-value($property)"/>
+                            <xsl:sequence select="if ($property='-obfl-vertical-align')
+                                                  then 'after'
+                                                  else if ($property='-obfl-vertical-position')
+                                                  then 'auto'
+                                                  else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
