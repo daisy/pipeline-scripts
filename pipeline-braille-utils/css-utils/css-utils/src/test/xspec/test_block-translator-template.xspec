@@ -32,4 +32,17 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_03">
+    <x:context>
+      <div style="hyphens: auto">
+        <p>foobar</p>
+      </div>
+    </x:context>
+    <x:expect label="result">
+      <div style="{{ hyphens: manual }}">
+        <p>FOO=BAR</p>
+      </div>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
