@@ -531,7 +531,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 								b.append(ZWSP);
 							int n = ((pos[j] >> 3) + 32) % 32;
 							if (n > 0)
-								if (((n - l - 1) % 31) > 0) {
+								if (((n - l - 1 + 31) % 31) > 0) {
 									brailleWithWs[l] = b.toString();
 									b = new StringBuffer();
 									if ((pos[j] & 4) == 4) {
@@ -561,14 +561,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 							else
 								wsLost = true;
 						l++;
-						int i = 0;
-						int imax = joinedText.length();
-						while (k < l)
-							k = (++i < imax) ? joinedTextMapping[i] : kmax;
-						while (l < k)
-							brailleWithWs[l++] = "";
-						if (l != kmax)
-							throw new RuntimeException("Coding error");
+						while (l < kmax) {
+							if (pre[l])
+								wsLost = true;
+							brailleWithWs[l++] = ""; }
 						if (wsLost)
 							logger.warn("White space was lost in the output.\n"
 							            + "Input: " + Arrays.toString(textWithWs) + "\n"
