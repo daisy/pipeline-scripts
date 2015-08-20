@@ -169,6 +169,9 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		
 		private boolean hyphenating;
 		
+		/* Whether or not translator should auto-hyphenate
+		 * TODO: implement
+		 */
 		public void setHyphenating(boolean value){
 			hyphenating = value;
 		}
@@ -222,7 +225,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			// Because normally this will never end up in the resulting PEF, it is okay to return it
 			// untranslated.
 			if ("??".equals(text))
-				return new BrailleTranslatorResultImpl(text, false);
+				return new BrailleTranslatorResultImpl(text);
 			
 			// Otherwise the input text must consist of only digits, braille pattern characters and
 			// pre-hyphenation characters.
@@ -234,9 +237,8 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			
 			String translated = translateIntegers(text);
-			boolean hyphenating = isHyphenating();
 			
-			return new BrailleTranslatorResultImpl(translated, hyphenating);
+			return new BrailleTranslatorResultImpl(translated);
 		}
 		
 		public BrailleTranslatorResult translate(String text, String locale) {
@@ -258,11 +260,9 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 		private static class BrailleTranslatorResultImpl implements BrailleTranslatorResult {
 			
 			private final PeekingIterator<Character> input;
-			private final boolean hyphenating;
 			
-			private BrailleTranslatorResultImpl(String text, boolean hyphenating) {
+			private BrailleTranslatorResultImpl(String text) {
 				this.input = Iterators.peekingIterator(Lists.charactersOf(text).iterator());
-				this.hyphenating = hyphenating;
 			}
 			
 			private StringBuilder charBuffer = new StringBuilder();
@@ -272,7 +272,6 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 			 * - SPACE and ZWSP create normal soft wrap opportunities
 			 * - SHY create soft wrap opportunities that insert a hyphen glyph
 			 * - normal soft wrap opportunities override soft wrap opportunities that insert a hyphen glyph
-			 * - soft wrap opportunities that insert a hyphen glyph are ignored when hyphenation is disabled
 			 *
 			 * @see <a href="http://snaekobbi.github.io/braille-css-spec/#h3_line-breaking">Braille CSS – § 9.4 Line Breaking</a>
 			 */
@@ -290,7 +289,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 					char next = input.peek();
 					switch (next) {
 					case SHY:
-						if (hyphenating && bufSize > 0)
+						if (bufSize > 0)
 							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITH_HYPHEN));
 						break;
 					case ZWSP:

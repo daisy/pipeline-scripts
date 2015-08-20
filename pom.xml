@@ -25,14 +25,14 @@
   </scm>
 
   <modules>
-    <!-- <module>bom</module> -->
-    <!-- <module>parent</module> -->
+    <module>bom</module>
+    <module>parent</module>
     <!-- <module>pipeline-braille-utils/common-utils</module> -->
     <!-- <module>pipeline-braille-utils/css-utils</module> -->
     <!-- <module>pipeline-braille-utils/pef-utils</module> -->
     <!-- <module>pipeline-braille-utils/obfl-utils</module> -->
     <!-- <module>pipeline-braille-utils/liblouis-utils</module> -->
-    <!-- <module>pipeline-braille-utils/dotify-utils</module> -->
+    <module>pipeline-braille-utils/dotify-utils</module>
     <!-- <module>pipeline-braille-utils/libhyphen-utils</module> -->
     <!-- <module>pipeline-braille-utils/texhyph-utils</module> -->
     <!-- <module>pipeline-braille-scripts/zedai-to-pef</module> -->
