@@ -21,16 +21,6 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.daisy.libs</groupId>
-        <artifactId>hyphen</artifactId>
-        <version>2.6.0</version>
-        <type>nar</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <build>
     <plugins>
       <plugin>

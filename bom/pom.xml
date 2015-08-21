@@ -12,7 +12,7 @@
 
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-bom</artifactId>
-    <version>1.9.3-SNAPSHOT</version>
+    <version>1.9.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>DAISY Pipeline 2 :: Braille Modules Bill Of Materials</name>
@@ -47,7 +47,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-utils</artifactId>
-                <version>2.1.1-SNAPSHOT</version>
+                <version>2.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-formatter</artifactId>
-                <version>1.1.1-SNAPSHOT</version>
+                <version>1.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -124,7 +124,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-core</artifactId>
-                <version>3.1.1-SNAPSHOT</version>
+                <version>3.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -230,7 +230,7 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <version>1.1.1-SNAPSHOT</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
@@ -303,6 +303,36 @@
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.antlr-runtime</artifactId>
                 <version>3.5.2_1</version>
+            </dependency>
+            <!--
+                for liblouis-native (build time only)
+            -->
+            <dependency>
+                <groupId>org.liblouis</groupId>
+                <artifactId>louis</artifactId>
+                <version>2.6.3</version>
+                <type>nar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.liblouis</groupId>
+                <artifactId>louisutdml</artifactId>
+                <version>2.5.0</version>
+                <type>nar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.libs</groupId>
+                <artifactId>xml2</artifactId>
+                <version>2.7.3</version>
+                <type>nar</type>
+            </dependency>
+            <!--
+                for libhyphen-native (build time only)
+            -->
+            <dependency>
+                <groupId>org.daisy.libs</groupId>
+                <artifactId>hyphen</artifactId>
+                <version>2.6.0</version>
+                <type>nar</type>
             </dependency>
         </dependencies>
     </dependencyManagement>

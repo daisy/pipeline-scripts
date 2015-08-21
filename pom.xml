@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-aggregator</artifactId>
-  <version>1.9.3-SNAPSHOT</version>
+  <version>1.9.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DAISY Pipeline 2 :: Aggregator POM for the Braille Modules</name>
@@ -55,6 +55,13 @@
         <version>2.4</version>
         <configuration>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
     </plugins>
