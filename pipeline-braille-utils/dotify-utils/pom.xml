@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>dotify-utils-aggregator</artifactId>
-  <version>1.9.3-SNAPSHOT</version>
+  <version>1.9.3</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Modules :: dotify-utils</name>
@@ -43,4 +43,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.9.3</tag>
+  </scm>
 </project>
