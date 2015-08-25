@@ -529,9 +529,9 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 								b.append(SHY);
 							if ((pos[j] & 2) == 2)
 								b.append(ZWSP);
-							int n = ((pos[j] >> 3) + 32) % 32;
+							int n = mod(pos[j] >> 3, 32);
 							if (n > 0)
-								if (((n - l - 1 + 31) % 31) > 0) {
+								if (mod(n - l - 1, 31) > 0) {
 									brailleWithWs[l] = b.toString();
 									b = new StringBuffer();
 									if ((pos[j] & 4) == 4) {
@@ -548,7 +548,7 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 											pre[l + 1] = false;
 											wsLost = true; }}
 									l++;
-									while (((n - l - 1) % 31) > 0) {
+									while (mod(n - l - 1, 31) > 0) {
 										brailleWithWs[l] = "";
 										if (pre[l])
 											wsLost = true;
@@ -740,4 +740,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisTranslatorJnaImpl.class);
 	
+	private static int mod(int a, int n) {
+		int result = a % n;
+		if (result < 0)
+			result += n;
+		return result;
+	}
 }
