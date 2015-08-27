@@ -49,7 +49,8 @@
                  'font-style',
                  'font-weight',
                  'text-decoration',
-                 'color')"/>
+                 'color',
+                 'line-height')"/>
     
     <xsl:variable name="css:values" as="xs:string*"
         select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
@@ -88,7 +89,8 @@
                  re:exact(re:or(('normal','italic','oblique'))),
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
                  re:exact(re:or(('none','underline','overline','line-through','blink'))),
-                 re:exact($css:COLOR_RE))"/>
+                 re:exact($css:COLOR_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE))"/>
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
@@ -123,6 +125,7 @@
                  '.*',
                  '.*',
                  '^@page$',
+                 '.*',
                  '.*',
                  '.*',
                  '.*',
@@ -166,7 +169,8 @@
                  'normal',
                  'normal',
                  'none',
-                 '#000000')"/>
+                 '#000000',
+                 '1')"/>
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
@@ -205,7 +209,8 @@
                  'print',
                  'print',
                  'print',
-                 'print')"/>
+                 'print',
+                 'embossed')"/>
     
     <xsl:variable name="css:inherited-properties" as="xs:string*"
         select="('text-indent',

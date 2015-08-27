@@ -81,6 +81,11 @@
         <xsl:attribute name="first-line-indent" select="format-number(xs:integer(number(.)), '0')"/>
     </xsl:template>
     
+    <xsl:template match="@css:line-height">
+        <xsl:attribute name="row-spacing" select=
+        "format-number(xs:integer(number(.)), '0')"/>
+    </xsl:template>
+    
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
     
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block'])]/@css:text-indent">
