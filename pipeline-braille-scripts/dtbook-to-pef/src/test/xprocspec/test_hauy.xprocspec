@@ -13,7 +13,6 @@
       <x:option name="include-brf" select="'true'"/>
       <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
-      <x:option name="default-stylesheet" select="''"/>
       <x:option name="transform" select="''"/>
     </x:call>
     <x:context label="the output directory contents">

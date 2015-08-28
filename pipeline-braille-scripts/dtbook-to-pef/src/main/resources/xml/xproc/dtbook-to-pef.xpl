@@ -64,14 +64,6 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="default-stylesheet" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">default-stylesheet</h2>
-            <p px:role="desc">The default CSS stylesheet to apply.</p>
-            <pre><code class="example">bana.css</code></pre>
-        </p:documentation>
-    </p:option>
-    
     <p:option name="transform" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">transform</h2>
@@ -97,13 +89,10 @@
     <!-- DTBOOK TO PEF -->
     <!-- ============= -->
     
-    <px:dtbook-to-pef.convert>
+    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="resolve-uri(
-            if ($default-stylesheet!='') then $default-stylesheet else 'default.css',
-            'http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/')"/>
         <p:with-option name="transform" select="if ($transform!='') then $transform
                                                 else '(translator:liblouis)(formatter:liblouis)'"/>
         <p:with-option name="temp-dir" select="string(/c:result)">
