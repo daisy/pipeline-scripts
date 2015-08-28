@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -72,6 +73,7 @@ import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Strings.normalizeSpace;
+import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 import org.daisy.pipeline.braille.css.SupportedPrintCSS;
 
@@ -141,8 +143,15 @@ public class CSSInlineStep extends DefaultStep {
 		try {
 			XdmNode source = sourcePipe.read();
 			Document doc = (Document)DocumentOverNodeInfo.wrap(source.getUnderlyingNode());
-			URL defaultSheet = asURL(emptyToNull(getOption(_default_stylesheet, "")));
-			resultPipe.write((new InlineCSSWriter(doc, runtime, defaultSheet)).getResult()); }
+			URI base = asURI(doc.getBaseURI());
+			URL[] defaultSheets; {
+				StringTokenizer t = new StringTokenizer(getOption(_default_stylesheet, ""));
+				ArrayList<URL> l = new ArrayList<URL>();
+				while (t.hasMoreTokens())
+					l.add(asURL(base.resolve(asURI(t.nextToken()))));
+				defaultSheets = toArray(l, URL.class);
+			}
+			resultPipe.write((new InlineCSSWriter(doc, runtime, defaultSheets)).getResult()); }
 		catch (Exception e) {
 			logger.error("css:inline failed", e);
 			throw new XProcException(step.getNode(), e); }
@@ -198,7 +207,7 @@ public class CSSInlineStep extends DefaultStep {
 		
 		public InlineCSSWriter(Document document,
 		                       XProcRuntime xproc,
-		                       URL defaultSheet) throws Exception {
+		                       URL[] defaultSheets) throws Exception {
 			super(xproc);
 			
 			CSSFactory.registerCSSParserFactory(parserFactory);
@@ -210,8 +219,9 @@ public class CSSInlineStep extends DefaultStep {
 			CSSFactory.registerSupportedCSS(brailleCSS);
 			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
 			StyleSheet brailleStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
-			if (defaultSheet != null)
-				brailleStyle = parserFactory.append(defaultSheet, network, null, SourceType.URL, brailleStyle, defaultSheet);
+			if (defaultSheets != null)
+				for (URL sheet : defaultSheets)
+					brailleStyle = parserFactory.append(sheet, network, null, SourceType.URL, brailleStyle, sheet);
 			brailleStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("embossed"), network, brailleStyle);
 			brailleStylemap = new Analyzer(brailleStyle).evaluateDOM(document, "embossed", false);
 			
@@ -219,8 +229,9 @@ public class CSSInlineStep extends DefaultStep {
 			CSSFactory.registerSupportedCSS(printCSS);
 			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
 			StyleSheet printStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
-			if (defaultSheet != null)
-				printStyle = parserFactory.append(defaultSheet, network, null, SourceType.URL, printStyle, defaultSheet);
+			if (defaultSheets != null)
+				for (URL sheet : defaultSheets)
+					printStyle = parserFactory.append(sheet, network, null, SourceType.URL, printStyle, sheet);
 			printStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("print"), network, printStyle);
 			printStylemap = new Analyzer(printStyle).evaluateDOM(document, "print", false);
 			

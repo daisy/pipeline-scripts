@@ -6,7 +6,11 @@
     <p:declare-step type="css:inline">
         <p:input port="source" sequence="false" primary="true"/>
         <p:output port="result" sequence="false" primary="true"/>
-        <p:option name="default-stylesheet" required="false"/>
+        <p:option name="default-stylesheet" required="false">
+            <p:documentation>
+                Space separated list of URIs, absolute or relative to source.
+            </p:documentation>
+        </p:option>
     </p:declare-step>
     
     <p:import href="adjust-boxes.xpl"/>
