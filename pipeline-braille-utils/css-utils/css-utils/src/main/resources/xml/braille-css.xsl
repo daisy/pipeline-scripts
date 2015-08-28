@@ -130,7 +130,7 @@
                  '.*',
                  '.*',
                  '.*',
-                 '.*')"/>
+                 '^(block|list-item)$')"/>
     
     <xsl:variable name="css:initial-values" as="xs:string*"
         select="('inline',
@@ -222,7 +222,8 @@
                  'font-style',
                  'font-weight',
                  'text-decoration',
-                 'color')"/>
+                 'color',
+                 'line-height')"/>
     
     <xsl:variable name="css:paged-media-properties" as="xs:string*"
         select="('page-break-before',
