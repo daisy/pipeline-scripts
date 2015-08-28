@@ -2234,9 +2234,11 @@
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
-          <doc>
-            <body style="display: block; line-height: 2">
-              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
+          <doc style="@page { size: 40 25 }">
+            <body>
+              <p style="display: block; line-height: 2">
+                ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
+              </p>
             </body>
           </doc>
         </x:document>
@@ -2248,14 +2250,14 @@
     <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
-          <layout-master name="a" page-width="40" page-height="25" duplex="false" row-spacing="2.0">
+          <layout-master name="a" page-width="40" page-height="25" duplex="false">
             <default-template>
               <header/>
               <footer/>
             </default-template>
           </layout-master>
           <sequence master="a">
-            <block>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
+            <block row-spacing="2.0">⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
           </sequence>
         </obfl>
       </x:document>
@@ -2272,10 +2274,10 @@
             </meta>
           </head>
           <body>
-            <volume rows="25" cols="40" rowgap="4" duplex="false">
+            <volume rows="25" cols="40" duplex="false">
               <section>
-                <page>
-                  <row>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                <page rowgap="4">
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</row>
                 </page>
               </section>
             </volume>
