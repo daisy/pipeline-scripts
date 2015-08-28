@@ -30,52 +30,54 @@
     </p:documentation>
 
     <p:input port="source" primary="true" px:name="source" px:media-type="application/x-dtbook+xml">
-        <p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">source</h2>
             <p px:role="desc">Input DTBook.</p>
         </p:documentation>
     </p:input>
     
+    <p:option name="stylesheet" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">stylesheet</h2>
+            <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs. Applied prior to any style sheets linked from or embedded in the source document.</p>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="transform" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">transform</h2>
+            <p px:role="desc">A transformer query.</p>
+            <pre><code class="default">(translator:liblouis)(formatter:liblouis)</code></pre>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="include-preview" required="false" px:type="boolean" select="''">
-        <p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">include-preview</h2>
-            <p px:role="desc">Whether or not to include a preview of the PEF in HTML (true or false).</p>
+            <p px:role="desc">Whether or not to include a preview of the PEF in HTML.</p>
+            <pre><code class="default">false</code></pre>
         </p:documentation>
     </p:option>
     
     <p:option name="include-brf" required="false" px:type="boolean" select="''">
-        <p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">include-brf</h2>
-            <p px:role="desc">Whether or not to include an ASCII version of the PEF (true or false).</p>
+            <p px:role="desc">Whether or not to include an ASCII version of the PEF.</p>
+            <pre><code class="default">false</code></pre>
         </p:documentation>
     </p:option>
     
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
-        <p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">output-dir</h2>
             <p px:role="desc">Directory for storing result files.</p>
         </p:documentation>
     </p:option>
     
     <p:option name="temp-dir" required="false" px:output="temp" px:type="anyDirURI" select="''">
-        <p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">temp-dir</h2>
             <p px:role="desc">Directory for storing temporary files.</p>
-        </p:documentation>
-    </p:option>
-    
-    <p:option name="stylesheet" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">stylesheet</h2>
-            <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs.</p>
-        </p:documentation>
-    </p:option>
-    
-    <p:option name="transform" required="false" px:type="string" select="''">
-        <p:documentation>
-            <h2 px:role="name">transform</h2>
-            <p px:role="desc">A transformer query.</p>
-            <pre><code class="default">(translator:liblouis)(formatter:liblouis)</code></pre>
         </p:documentation>
     </p:option>
     
