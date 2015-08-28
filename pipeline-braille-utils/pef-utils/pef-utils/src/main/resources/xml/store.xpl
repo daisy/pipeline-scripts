@@ -20,6 +20,7 @@
     <p:import href="utils/normalize-uri.xpl"/>
     <p:import href="pef-to-html.convert.xpl"/>
     <p:import href="pef2text.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
     <pxi:normalize-uri>
         <p:with-option name="href" select="$output-dir"/>
@@ -78,6 +79,15 @@
                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
                     <p:with-option name="href" select="concat($output-dir-uri, $name, '.pef.html')"/>
                 </p:store>
+                <px:copy-resource fail-on-error="true">
+                    <p:with-option name="href" select="resolve-uri('../odt2braille8.ttf')">
+                        <p:inline>
+                            <irrelevant/>
+                        </p:inline>
+                    </p:with-option>
+                    <p:with-option name="target" select="concat($output-dir-uri, 'odt2braille8.ttf')"/>
+                </px:copy-resource>
+                <p:sink/>
             </p:when>
             <p:otherwise>
                 <p:sink>

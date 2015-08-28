@@ -75,6 +75,11 @@
         for file-utils
     -->
     <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>common-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.daisy.libs</groupId>
       <artifactId>saxon-he</artifactId>
       <scope>runtime</scope>
@@ -107,11 +112,6 @@
     <!--
         for fileset-utils
     -->
-    <dependency>
-      <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>common-utils</artifactId>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>html-utils</artifactId>

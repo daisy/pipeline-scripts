@@ -1,3 +1,7 @@
+@font-face {
+    font-family: odt2braille;
+    src: url(odt2braille8.ttf);
+}
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -87,9 +91,12 @@ div.text-page {
     display: none;
 }
 div.row {
-    font-family: "odt2braille 6 dot";
+    font-family: "odt2braille 8 dot", odt2braille;;
     letter-spacing: 0px;
     white-space: pre;
+    letter-spacing: 0px;
+    font-size: 125%;
+    height: 1em;
 }
 span.label {
     background-color: #999;

@@ -20,7 +20,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../../main/resources/xml/x-compare.xpl" step="x:pef-compare">
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="file" href="../resources/merged_volumes.pef"/>
     </x:expect>
   </x:scenario>
@@ -42,7 +42,7 @@
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="result" type="custom" href="../../main/resources/xml/x-compare.xpl" step="x:pef-compare">
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="file" href="../resources/merged_sections.pef"/>
     </x:expect>
   </x:scenario>

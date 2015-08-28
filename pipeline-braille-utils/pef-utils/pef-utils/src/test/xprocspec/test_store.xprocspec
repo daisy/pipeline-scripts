@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:pef="http://www.daisy.org/ns/2008/pef"
+               script="../../main/resources/xml/store.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="pef:store">
+      <x:input port="source">
+        <x:document type="file" href="../resources/pef_1.pef"/>
+      </x:input>
+      <x:option name="output-dir" select="resolve-uri('test_01/',$temp-dir)"/>
+      <x:option name="name" select="'pef_1'"/>
+      <x:option name="include-preview" select="'true'"/>
+    </x:call>
+    <x:context label="result fileset">
+      <x:document type="directory" base-uri="temp-dir" href="test_01/" recursive="true"/>
+    </x:context>
+    <x:expect type="count" label="The output directory should exist" min="1" max="1"/>
+    <x:expect type="xpath" label="The number of files stored should be 3" test="count(//c:file)=3"/>
+    <x:expect type="xpath" label="The file pef_1.pef should be stored" test="/*/c:file[@name='pef_1.pef']"/>
+    <x:expect type="xpath" label="The file pef_1.pef.html should be stored" test="/*/c:file[@name='pef_1.pef.html']"/>
+    <x:expect type="xpath" label="The file odt2braille8.ttf should be stored" test="/*/c:file[@name='odt2braille8.ttf']"/>
+  </x:scenario>
+  
+</x:description>

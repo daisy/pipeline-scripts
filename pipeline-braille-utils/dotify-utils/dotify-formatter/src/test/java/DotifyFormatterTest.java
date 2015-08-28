@@ -82,6 +82,7 @@ public class DotifyFormatterTest {
 			brailleModule("pef-saxon"),
 			brailleModule("pef-utils"),
 			pipelineModule("file-utils"),
+			pipelineModule("common-utils"),
 			brailleModule("obfl-utils"),
 			brailleModule("css-core"),
 			brailleModule("css-calabash"),
