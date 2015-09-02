@@ -22,6 +22,10 @@
       <artifactId>dotify.api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.task-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-utils</artifactId>
     </dependency>
@@ -55,6 +59,11 @@
     <dependency>
       <groupId>org.daisy.dotify</groupId>
       <artifactId>dotify.formatter.impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.task.impl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
@@ -101,6 +110,7 @@
           <instructions>
             <_dsannotations>*</_dsannotations>
             <Provide-Capability>xproc.step;name="{http://code.google.com/p/dotify/}obfl-to-pef"</Provide-Capability>
+            <Provide-Capability>xproc.step;name="{http://code.google.com/p/dotify/}xml-to-obfl"</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
