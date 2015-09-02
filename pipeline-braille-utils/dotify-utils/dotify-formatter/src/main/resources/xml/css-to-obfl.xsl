@@ -83,7 +83,7 @@
     
     <xsl:template match="@css:line-height">
         <xsl:attribute name="row-spacing" select=
-        "format-number(xs:integer(number(.)), '0')"/>
+        "format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
