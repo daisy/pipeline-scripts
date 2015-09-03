@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:dotify="http://code.google.com/p/dotify/"
+               script="../resources/xml-to-obfl.xpl">
+  
+  <x:scenario label="test_01">
+    <x:call step="dotify:xml-to-obfl">
+      <x:input port="source">
+        <x:document type="inline">
+          <dtbook/>
+        </x:document>
+      </x:input>
+      <x:option name="locale" select="und"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <layout-master name="a" page-width="40" page-height="25" duplex="false">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="a"/>
+        </obfl>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>
