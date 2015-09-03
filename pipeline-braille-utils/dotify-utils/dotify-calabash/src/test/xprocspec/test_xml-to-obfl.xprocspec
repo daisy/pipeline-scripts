@@ -7,17 +7,19 @@
     <x:call step="dotify:xml-to-obfl">
       <x:input port="source">
         <x:document type="inline">
-          <dtbook/>
+			<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="sv">
+			<!-- This is not really a dtbook, but it will work for the existing test -->
+			</dtbook>
         </x:document>
       </x:input>
-      <x:option name="locale" select="und"/>
+      <x:option name="locale" select="'sv'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="sv">
           <layout-master name="a" page-width="40" page-height="25" duplex="false">
             <default-template>
               <header/>

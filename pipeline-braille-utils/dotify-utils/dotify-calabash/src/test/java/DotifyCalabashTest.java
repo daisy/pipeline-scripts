@@ -55,12 +55,21 @@ public class DotifyCalabashTest {
 			domTraversalPackage(),
 			logbackBundles(),
 			felixDeclarativeServices(),
+			//tasks
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.libs").artifactId("saxon-he").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task-api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task.impl").versionAsInProject(),
+			//formatter
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.text.impl").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.hyphenator.impl").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
+			mavenBundle().groupId("com.googlecode.texhyphj").artifactId("texhyphj").versionAsInProject(),
+			//mavenBundle().groupId("woodstox").artifactId("wstx-lgpl").versionAsInProject(),
+			
 			brailleModule("common-utils"),
 			brailleModule("obfl-utils"),
 			xprocspecBundles(),

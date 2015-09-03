@@ -67,7 +67,27 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.text.impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.hyphenator.impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.translator.impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.dotify</groupId>
       <artifactId>dotify.task.impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>woodstox</groupId>
+      <artifactId>wstx-lgpl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
