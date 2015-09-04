@@ -12,7 +12,7 @@
 			</dtbook>
         </x:document>
       </x:input>
-      <x:option name="locale" select="'sv'"/>
+      <x:option name="locale" select="'sv-SE'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
