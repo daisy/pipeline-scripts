@@ -1940,6 +1940,9 @@
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
             <meta>
               <dc:format>application/x-pef+xml</dc:format>
+              <!-- TODO check where do these come from -->
+              <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">identifier?</identifier>
+              <dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2015-09-08</date>
             </meta>
           </head>
           <body>
@@ -2310,7 +2313,8 @@
       <x:input port="source">
         <x:document type="inline">
           <doc style="@page { size: 40 25; line-height: 2 }">
-            <body>
+            <body style="line-height:2; display:block; p{display:block}">
+            <!-- TODO: inheritance not working! -->
               <p>
                 ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
               </p>
@@ -2322,7 +2326,8 @@
               </p>
               <p>
                 ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
-              </p>            </body>
+              </p>
+              </body>
           </doc>
         </x:document>
       </x:input>
@@ -2333,19 +2338,19 @@
     <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
-          <layout-master name="a" page-width="40" page-height="25" duplex="false">
+          <layout-master name="a" page-width="40" page-height="25" duplex="false" row-spacing="2.0">
             <default-template>
               <header/>
               <footer/>
             </default-template>
           </layout-master>
-          <sequence master="a" row-spacing="2.0">
+          <sequence master="a">
             <block>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
             <block>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
             <block>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
             <block>⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿</block>
           </sequence>
-        </obfl>
+        </obfl> 
       </x:document>
     </x:expect>
     <x:context label="pef">
