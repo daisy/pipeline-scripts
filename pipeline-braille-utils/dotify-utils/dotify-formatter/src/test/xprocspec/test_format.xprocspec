@@ -1941,7 +1941,7 @@
             <meta>
               <dc:format>application/x-pef+xml</dc:format>
               <!-- TODO check where do these come from -->
-              <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">identifier?</identifier>
+              <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">identifier?</dc:identifier>
               <dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2015-09-08</date>
             </meta>
           </head>
