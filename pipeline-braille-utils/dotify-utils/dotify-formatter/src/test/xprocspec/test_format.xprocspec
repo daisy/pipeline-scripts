@@ -1940,9 +1940,6 @@
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
             <meta>
               <dc:format>application/x-pef+xml</dc:format>
-              <!-- TODO check where do these come from -->
-              <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">identifier?</dc:identifier>
-              <dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2015-09-08</date>
             </meta>
           </head>
           <body>
@@ -2313,8 +2310,7 @@
       <x:input port="source">
         <x:document type="inline">
           <doc style="@page { size: 40 25; line-height: 2 }">
-            <body style="line-height:2; display:block; p{display:block}">
-            <!-- TODO: inheritance not working! -->
+            <body>
               <p>
                 ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
               </p>

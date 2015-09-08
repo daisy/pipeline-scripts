@@ -22,6 +22,8 @@
                       select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="size" as="xs:string"
                       select="($properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
+        <xsl:variable name="line-height" as="xs:string"
+                      select="($properties[@name='line-height'][css:is-valid(.)]/@value, css:initial-value('line-height'))[1]"/>
         <xsl:variable name="top-left" as="element()*">
             <xsl:apply-templates select="pxi:margin-content($rules, '@top-left')" mode="eval-content-list"/>
         </xsl:variable>
@@ -45,6 +47,11 @@
         </xsl:variable>
         <layout-master name="{$name}" duplex="false"
                             page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
+            <xsl:if test="$line-height != css:initial-value('line-height')">
+              <xsl:attribute name="row-spacing">
+                <xsl:value-of select="format-number(xs:integer($line-height), '0.0')"/>
+              </xsl:attribute>
+            </xsl:if>
             <default-template>
                 <header>
                     <xsl:if test="exists(($top-left, $top-center, $top-right))">
