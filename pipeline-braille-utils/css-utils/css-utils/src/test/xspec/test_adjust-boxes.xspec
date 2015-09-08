@@ -46,4 +46,33 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_04" focus="true">
+    <x:context>
+      <css:box type="block"
+               css:border-left="⠇"
+               css:border-right="⠸"
+               css:border-top="⠤"
+               css:border-bottom="⠉"
+               css:margin-left="1"
+               css:margin-right="1">
+        <css:box type="block"
+                 css:margin-left="1"
+                 css:margin-right="1"/>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:box type="block"
+               css:border-left="⠇"
+               css:border-right="⠸"
+               css:border-top="⠤"
+               css:border-bottom="⠉"
+               css:margin-left="1"
+               css:margin-right="1">
+        <css:box type="block"
+                 css:margin-left="1"
+                 css:margin-right="1"/>
+      </css:box>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

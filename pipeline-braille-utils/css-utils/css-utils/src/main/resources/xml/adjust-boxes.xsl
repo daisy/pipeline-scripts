@@ -49,7 +49,7 @@
         <xsl:variable name="actual-right-border-edge" as="xs:integer" select="if (descendant::css:box[@type='block']
                                                                                   and not((@css:border-right|css:border-top|@css:border-bottom)[not(.='none')]))
                                                                               then $actual-right-margin-edge
-                                                                              else min(($actual-right-margin-edge,$used-right-border-edge))"/>
+                                                                              else max(($actual-right-margin-edge,$used-right-border-edge))"/>
         <xsl:variable name="actual-right-content-edge" as="xs:integer" select="$actual-right-border-edge + $computed-border-right-width"/>
         <xsl:variable name="actual-margin-right" as="xs:integer" select="$actual-right-border-edge - $actual-right-margin-edge"/>
         <xsl:copy>
