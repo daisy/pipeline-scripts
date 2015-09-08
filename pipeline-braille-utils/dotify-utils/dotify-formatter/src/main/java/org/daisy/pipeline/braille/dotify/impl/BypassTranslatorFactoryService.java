@@ -300,6 +300,7 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
 						break;
 					case SPACE:
+					case BRAILLE_PATTERN_BLANK:
 						if (bufSize > 0)
 							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
 						charBuffer.append(BRAILLE_PATTERN_BLANK);
@@ -307,7 +308,6 @@ public class BypassTranslatorFactoryService implements BrailleTranslatorFactoryS
 						swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
 						break;
 					case NBSP:
-					case BRAILLE_PATTERN_BLANK:
 						charBuffer.append(BRAILLE_PATTERN_BLANK);
 						bufSize ++;
 						swoBuffer.add((byte)0x0);
