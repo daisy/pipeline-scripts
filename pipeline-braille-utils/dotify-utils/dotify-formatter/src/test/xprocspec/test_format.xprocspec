@@ -2309,7 +2309,7 @@
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
-          <doc style="@page { size: 40 25; line-height: 2 }">
+          <doc style="* { line-height: 2; }">
             <body>
               <p>
                 ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
