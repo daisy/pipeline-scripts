@@ -9,25 +9,23 @@
         <x:document type="inline">
 			<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="sv">
 			<!-- This is not really a dtbook, but it will work for the existing test -->
+			<book>
+				<bodymatter>
+					<p>Testar modulen</p>
+				</bodymatter>
+			</book>
 			</dtbook>
         </x:document>
       </x:input>
       <x:option name="locale" select="'sv-SE'"/>
+      <x:option name="dotify-options" select="'(rows:29)(cols:28)(rowgap:4)'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="sv">
-          <layout-master name="a" page-width="40" page-height="25" duplex="false">
-            <default-template>
-              <header/>
-              <footer/>
-            </default-template>
-          </layout-master>
-          <sequence master="a"/>
-        </obfl>
+<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" hyphenate="true" xml:lang="sv"><meta xmlns:dc="http://purl.org/dc/elements/1.1/"/><layout-master name="front" page-width="32" page-height="29" inner-margin="2" outer-margin="2" row-spacing="2" duplex="true"><template use-when="(= (% $page 2) 0)"><header><field><string value="  "/><current-page style="roman"/></field></header><footer/></template><default-template><header row-spacing="1"><field><string value=""/></field><field><current-page style="roman"/></field></header><footer/></default-template></layout-master><layout-master name="main" page-width="32" page-height="29" inner-margin="2" outer-margin="2" row-spacing="2" duplex="true"><template use-when="(= (% $page 2) 0)"><header><field><string value="  "/><current-page style="default"/></field><field><marker-reference marker="pagenum-turn" direction="forward" scope="page-content"/><marker-reference marker="pagenum" direction="backward" scope="sequence"/></field></header><footer/></template><default-template><header row-spacing="1"><field><string value="  "/><marker-reference marker="pagenum-turn" direction="forward" scope="page-content"/><marker-reference marker="pagenum" direction="backward" scope="sequence"/></field><field><current-page style="default"/></field></header><footer/></default-template></layout-master><layout-master name="plain" page-width="32" page-height="29" inner-margin="2" outer-margin="2" row-spacing="2" duplex="true"><template use-when="(= (% $page 2) 0)"><header><field><string value=""/></field></header><footer/></template><default-template><header row-spacing="1"><field><string value=""/></field></header><footer/></default-template></layout-master><layout-master name="notes" page-width="32" page-height="29" inner-margin="2" outer-margin="2" row-spacing="2" duplex="true"><template use-when="(= (% $page 2) 0)"><header><field><string value="  "/><string value="Noter "/><current-page style="default"/></field></header><footer/></template><default-template><header row-spacing="1"><field><string value=""/></field><field><string value="Noter "/><current-page style="default"/></field></header><footer/></default-template></layout-master><layout-master name="cover" page-width="32" page-height="29" inner-margin="2" outer-margin="2" row-spacing="1" duplex="true" border-style="solid" border-width="1" border-align="outer"><default-template><header/><footer/></default-template></layout-master><volume-template sheets-in-volume-max="50"><pre-content><sequence master="cover"><block align="center" padding-top="3" margin-left="2" margin-right="2"> </block><block align="center" margin-left="2" margin-right="2" vertical-align="before" vertical-position="100%" hyphenate="false"><evaluate expression="    (if (&gt; $volumes 1)      (format &#34;Volym {0} av {1}&#34; (int2text (round $volume) sv) (int2text (round $volumes) sv))     &#34;En volym&#34;)"/></block></sequence></pre-content><post-content/></volume-template><sequence master="main" initial-page-number="1"><block>Testar modulen</block></sequence></obfl>
       </x:document>
     </x:expect>
   </x:scenario>

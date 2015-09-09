@@ -68,8 +68,15 @@ public class DotifyCalabashTest {
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.hyphenator.impl").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
 			mavenBundle().groupId("com.googlecode.texhyphj").artifactId("texhyphj").versionAsInProject(),
-			//mavenBundle().groupId("woodstox").artifactId("wstx-lgpl").versionAsInProject(),
 			
+			//for the query syntax
+			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
+			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
+			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
+			brailleModule("css-core"),
+
+			//other			
 			brailleModule("common-utils"),
 			brailleModule("obfl-utils"),
 			xprocspecBundles(),

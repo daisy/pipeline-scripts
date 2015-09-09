@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamSource;
@@ -25,6 +26,7 @@ import org.daisy.dotify.api.tasks.TaskSystemFactoryException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryMakerService;
 import org.daisy.dotify.common.io.FileIO;
 import org.daisy.dotify.common.io.TempFileHandler;
+import org.daisy.pipeline.braille.css.Query;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -32,20 +34,31 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
-
 public class XMLToOBFL extends DefaultStep {
 	private static final QName _locale = new QName("locale");
+	private static final QName _format = new QName("format");
+	private static final QName _dotifyOptions = new QName("dotify-options");
+	
+	private static final QName _template = new QName("template");
+    private static final QName _rows = new QName("rows");
+    private static final QName _cols = new QName("cols");
+    private static final QName _innerMargin = new QName("inner-margin");
+    private static final QName _outerMargin = new QName("outer-margin");
+    private static final QName _rowgap = new QName("rowgap");
+    private static final QName _splitterMax = new QName("splitterMax");
 	
 	private ReadablePipe source = null;
 	private WritablePipe result = null;
@@ -89,9 +102,28 @@ public class XMLToOBFL extends DefaultStep {
 			outputStream.close();
 			
 			// Convert
-			// TODO: Get options from XPROC / query / whatever
 			Map<String, Object> params = new HashMap<String, Object>();
-			InputStream resultStream = convert(inputStream, outputStream, params);
+			addOption(_template, params);
+			addOption(_rows, params);
+			addOption(_cols, params);
+			addOption(_innerMargin, params);
+			addOption(_outerMargin, params);
+			addOption(_rowgap, params);
+			addOption(_splitterMax, params);
+			
+			RuntimeValue rv = getOption(_dotifyOptions);
+			if (rv!=null) {
+				Map<String, Optional<String>> opts = Query.parseQuery(rv.getString());
+				for (String key : opts.keySet()) {
+					Optional<String> val = opts.get(key);
+					//if there isn't a value, just repeat the key
+					params.put(key, val.or(key));
+				}
+			}
+			
+			InputStream resultStream = convert(
+					newTaskSystem(getOption(_locale, Locale.getDefault().toString()), getOption(_format, "obfl")), 
+					inputStream, outputStream, params);
 			
 			// Write result
 			result.write(runtime.getProcessor().newDocumentBuilder().build(new StreamSource(resultStream)));
@@ -101,15 +133,20 @@ public class XMLToOBFL extends DefaultStep {
 			throw new XProcException(step.getNode(), e);
 		}
 	}
+	
+	private void addOption(QName opt, Map<String, Object> params) {
+		RuntimeValue o = getOption(opt);
+		if (o!=null) {
+			params.put(opt.getLocalName(), o.getString());
+		}
+	}
 		
-	private InputStream convert(InputStream is, OutputStream os, Map<String, Object> params) throws TaskSystemFactoryException, TaskSystemException, IOException {
+	private InputStream convert(TaskSystem system, InputStream is, OutputStream os, Map<String, Object> params) throws TaskSystemFactoryException, TaskSystemException, IOException {
 		// Copy source to file
 		File src = File.createTempFile("xml2obfl", ".tmp");
 		src.deleteOnExit();
 		FileIO.copy(is, new FileOutputStream(src));
-
-		// Get tasks
-		TaskSystem system = newTaskSystem(getOption(_locale).getString());
+		
 		// These parameters are unfortunately required at the moment
 		params.put("inputFormat", "xml");
 		params.put("input", src.getAbsolutePath());
@@ -138,8 +175,8 @@ public class XMLToOBFL extends DefaultStep {
 		return new FileInputStream(dest);
 	}
 
-	private TaskSystem newTaskSystem(String locale) throws TaskSystemFactoryException {
-		return taskSystemFactoryService.iterator().next().newTaskSystem(locale, "obfl");
+	private TaskSystem newTaskSystem(String locale, String format) throws TaskSystemFactoryException {
+		return taskSystemFactoryService.iterator().next().newTaskSystem(locale, format);
 	}
 	
 	@Component(

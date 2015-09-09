@@ -57,6 +57,10 @@
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>css-core</artifactId>
+    </dependency>
     <!--
         OSGi runtime dependencies
     -->
@@ -83,11 +87,6 @@
     <dependency>
       <groupId>org.daisy.dotify</groupId>
       <artifactId>dotify.task.impl</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>woodstox</groupId>
-      <artifactId>wstx-lgpl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
