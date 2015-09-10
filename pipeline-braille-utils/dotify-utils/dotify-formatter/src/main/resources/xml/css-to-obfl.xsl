@@ -88,21 +88,60 @@
 
     <!-- Blocks with both line-height and margins -->
     <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-bottom and not(@css:margin-top)]">
-      <obfl:block>
+      <block>
         <xsl:variable name="calculated-margin-bottom">
            <xsl:value-of select="@css:margin-bottom"/>
         </xsl:variable>
-        <xsl:attribute name="margin">
+        <xsl:attribute name="margin-bottom">
           <xsl:value-of select="$calculated-margin-bottom"/>
         </xsl:attribute>
-        <xsl:call-template name="block"/>
-      </obfl:block>
+        <block>
+            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-bottom)"/>
+            <xsl:apply-templates select="@css:string-entry"/>
+            <xsl:apply-templates select="@css:string-set"/>
+            <xsl:apply-templates/>
+        </block>
+      </block>
     </xsl:template>
     
     <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-top and not(@css:margin-bottom)]">
-      <foobar>
-        <xsl:apply-templates/>
-      </foobar>
+      <block>
+        <xsl:variable name="calculated-margin-top">
+           <xsl:value-of select="@css:margin-top"/>
+        </xsl:variable>
+        <xsl:attribute name="margin-top">
+          <xsl:value-of select="$calculated-margin-top"/>
+        </xsl:attribute>
+        <block>
+            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-top)"/>
+            <xsl:apply-templates select="@css:string-entry"/>
+            <xsl:apply-templates select="@css:string-set"/>
+            <xsl:apply-templates/>
+        </block>
+      </block>
+    </xsl:template>
+    
+    <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-top and @css:margin-bottom]">
+      <block>
+        <xsl:variable name="calculated-margin-top">
+           <xsl:value-of select="@css:margin-top"/>
+        </xsl:variable>
+        <xsl:attribute name="margin-top">
+          <xsl:value-of select="$calculated-margin-top"/>
+        </xsl:attribute>
+        <xsl:variable name="calculated-margin-bottom">
+           <xsl:value-of select="@css:margin-bottom"/>
+        </xsl:variable>
+        <xsl:attribute name="margin-bottom">
+          <xsl:value-of select="$calculated-margin-bottom"/>
+        </xsl:attribute>
+        <block>
+            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-top|@css:margin-bottom)"/>
+            <xsl:apply-templates select="@css:string-entry"/>
+            <xsl:apply-templates select="@css:string-set"/>
+            <xsl:apply-templates/>
+        </block>
+      </block>
     </xsl:template>
         
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
