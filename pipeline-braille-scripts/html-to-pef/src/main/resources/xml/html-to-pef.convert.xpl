@@ -12,6 +12,7 @@
     <p:output port="result" px:media-type="application/x-pef+xml"/>
     
     <p:option name="default-stylesheet" required="false" select="''"/>
+    <p:option name="stylesheet" required="false" select="''"/>
     <p:option name="transform" required="false" select="''"/>
     
     <!--
@@ -26,7 +27,7 @@
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
     
     <css:inline>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+        <p:with-option name="default-stylesheet" select="concat($default-stylesheet, ' ', $stylesheet)"/>
     </css:inline>
     
     <p:viewport match="math:math">

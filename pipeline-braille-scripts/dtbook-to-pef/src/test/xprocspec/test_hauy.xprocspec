@@ -9,11 +9,8 @@
       <x:input port="source">
         <x:document type="file" href="../resources/hauy_valid.xml"/>
       </x:input>
-      <x:option name="include-preview" select="'true'"/>
-      <x:option name="include-brf" select="'true'"/>
       <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
-      <x:option name="transform" select="''"/>
     </x:call>
     <x:context label="the output directory contents">
       <x:document type="directory" base-uri="temp-dir" href="1/output-dir/"/>
@@ -22,14 +19,13 @@
               test="count(/*/*[ends-with(@name,'.pef')])" equals="1"/>
   </x:scenario>
   
-  <x:scenario label="test reset.css">
+  <x:scenario label="test default.css + reset.css + style.css">
     <x:call step="px:dtbook-to-pef">
       <x:input port="source">
         <x:document type="inline">
           <dtbook version="2005-2" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
             <head>
               <meta>foobar</meta>
-              <link rel="stylesheet" media="embossed" type="text/css" href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/reset.css"/>
             </head>
             <book>
               <level1>
@@ -42,6 +38,7 @@
       </x:input>
       <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
+      <x:option name="stylesheet" select="'../resources/reset.css ../resources/style.css'"/>
     </x:call>
     <x:context label="pef">
       <x:document type="file" base-uri="temp-dir" href="2/output-dir/test_hauy.pef"/>
@@ -58,7 +55,7 @@
             <volume rows="25" cols="40" rowgap="0" duplex="false">
               <section>
                 <page>
-                  <row>⠋⠕⠕⠃⠜⠀⠋⠕⠕⠀⠃⠜</row>
+                  <row>⠋⠕⠕⠀⠃⠜</row>
                 </page>
               </section>
             </volume>

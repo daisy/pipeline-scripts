@@ -9,6 +9,7 @@
     <p:output port="result" px:media-type="application/x-pef+xml"/>
 
     <p:option name="default-stylesheet" required="false" select="''"/>
+    <p:option name="stylesheet" required="false" select="''"/>
     <p:option name="transform" required="false" select="''"/>
 
     <!-- Empty temporary directory dedicated to this conversion -->
@@ -27,7 +28,7 @@
         <p:input port="source">
             <p:pipe step="load" port="in-memory.out"/>
         </p:input>
-        <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+        <p:with-option name="default-stylesheet" select="concat($default-stylesheet, ' ', $stylesheet)"/>
     </css:inline>
 
     <p:viewport match="math:math">

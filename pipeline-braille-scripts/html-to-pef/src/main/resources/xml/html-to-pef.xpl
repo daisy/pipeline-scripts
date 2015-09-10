@@ -56,6 +56,13 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="stylesheet" required="false" px:type="string" select="''">
+        <p:documentation>
+            <h2 px:role="name">stylesheet</h2>
+            <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="transform" required="false" px:type="string" select="''">
         <p:documentation>
             <h2 px:role="name">transform</h2>
@@ -85,6 +92,7 @@
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
+        <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="if ($transform!='') then $transform
                                                 else '(translator:liblouis)(formatter:liblouis)'"/>
         <p:with-option name="temp-dir" select="string(/c:result)">
