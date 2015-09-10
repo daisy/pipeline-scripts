@@ -86,6 +86,15 @@
         "format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
+    <!-- match boxes with both line-height and bottom margin TODO: write better description -->
+    <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-bottom]">
+      <!-- selector works as intended! TODO: correct wrapping -->
+      <foobar>
+        <xsl:apply-templates/>
+      </foobar>
+    </xsl:template>
+    <!-- TODO: select also 1) top and 2) top-and-bottom -->
+    
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
     
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block'])]/@css:text-indent">
