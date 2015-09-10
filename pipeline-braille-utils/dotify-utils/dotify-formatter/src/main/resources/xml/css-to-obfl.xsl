@@ -156,7 +156,7 @@
             <xsl:when test=".='none'">
                 <xsl:attribute name="{local-name()}-style" select="'none'"/>
             </xsl:when>
-            <xsl:when test=".=('⠉','⠛','⠿','⠶','⠤')">
+            <xsl:when test=".=('⠉','⠛','⠒','⠿','⠶','⠤')">
                 <xsl:attribute name="{local-name()}-style" select="'solid'"/>
                 <xsl:choose>
                     <xsl:when test=".=('⠛','⠶')">
@@ -175,6 +175,11 @@
                         <xsl:attribute name="{local-name()}-align"
                                        select="if (local-name()='border-top') then 'inner' else 'outer'"/>
                     </xsl:when>
+                    <xsl:when test=".='⠒'">
+                        <xsl:attribute name="{local-name()}-align"
+                                       select="'center'"/>
+                    </xsl:when>
+                    
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
