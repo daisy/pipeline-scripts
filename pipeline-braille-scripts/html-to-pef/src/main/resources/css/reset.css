@@ -1,28 +1,35 @@
-h {
-	display: inline;
-	text-align: left;
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: 0;
-	margin-right: 0;
+/* ------------------------------------------------------------------------- */
+/*  http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/reset.css  */
+/* ------------------------------------------------------------------------- */
+
+/*
+ * Reset sheet for http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css
+ */
+
+html, address,
+blockquote,
+body, dd, div,
+dl, dt, fieldset, form,
+frame, frameset,
+h1, h2, h3, h4,
+h5, h6, noframes,
+ol, p, ul, center,
+dir, hr, menu, pre,
+li,
+table,
+tr,
+thead,
+tbody,
+tfoot,
+td, th,
+caption,
+button, textarea,
+input, select,
+head
+{
+  display: inline
 }
 
-p {
-	display: inline;
-	text-indent: 0;
-}
-
-head {
-	display: inline;
-}
-
-section,
-frontmatter,
-bodymatter,
-block,
-lngroup,
-ln,
-object,
-verse {
-	display: inline;
+br::before {
+  content: none
 }

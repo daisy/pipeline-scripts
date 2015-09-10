@@ -1,21 +1,38 @@
-hd, h1, h2, h3, h4, h5, h6 {
-    display: block;
-    text-align: center;
-    margin-top: 1;
-    margin-bottom: 1;
-    margin-left: 3;
-    margin-right: 3;
-}
+/* ----------------------------------------------------------------------------- */
+/*  http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css  */
+/* ----------------------------------------------------------------------------- */
 
-p {
-    display: block;
-    text-indent: 2;
-}
+/*
+ * See also
+ * - http://www.cucat.org/projects/dtbook2005-3/dtbook-2005-3.dtd.html
+ * - http://www.daisy.org/z3986/2005/dtbook.2005.basic.css
+ */
 
-head {
-    display: none;
-}
-
+address,
+annotation,
+author,
+blockquote,
+bodymatter,
+book,
+bridgehead,
+byline,
+covertitle,
+dateline,
+div,
+dl,
+docauthor,
+doctitle,
+epigraph,
+frontmatter,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hd,
+img,
+imggroup,
 level,
 level1,
 level2,
@@ -23,28 +40,24 @@ level3,
 level4,
 level5,
 level6,
-frontmatter,
-bodymatter,
-rearmatter,
-p,
-list,
-dl,
-div,
-blockquote,
-img,
-imggroup,
-poem,
-linegroup,
-byline,
-dateline,
-epigraph,
-table,
-address,
 line,
-author,
-prodnote,
-sidebar,
+linegroup,
+list,
 note,
-annotation {
-    display: block;
+p,
+poem,
+prodnote,
+rearmatter,
+sidebar,
+table {
+  display: block;
+}
+
+head {
+  display: none;
+}
+
+br::before {
+  content: "\A";
+  white-space: pre-line;
 }
