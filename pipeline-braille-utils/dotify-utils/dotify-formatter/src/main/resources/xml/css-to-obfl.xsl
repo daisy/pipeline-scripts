@@ -48,7 +48,7 @@
         <xsl:apply-templates select="@*|node()"/>
     </xsl:template>
     
-    <xsl:template match="css:box[@type='block']">
+    <xsl:template match="css:box[@type='block']" name="block">
         <block>
             <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
             <xsl:apply-templates select="@css:string-entry"/>
@@ -85,16 +85,26 @@
         <xsl:attribute name="row-spacing" select=
         "format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
+
+    <!-- Blocks with both line-height and margins -->
+    <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-bottom and not(@css:margin-top)]">
+      <obfl:block>
+        <xsl:variable name="calculated-margin-bottom">
+           <xsl:value-of select="@css:margin-bottom"/>
+        </xsl:variable>
+        <xsl:attribute name="margin">
+          <xsl:value-of select="$calculated-margin-bottom"/>
+        </xsl:attribute>
+        <xsl:call-template name="block"/>
+      </obfl:block>
+    </xsl:template>
     
-    <!-- match boxes with both line-height and bottom margin TODO: write better description -->
-    <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-bottom]">
-      <!-- selector works as intended! TODO: correct wrapping -->
+    <xsl:template match="css:box[@type='block' and @css:line-height and @css:margin-top and not(@css:margin-bottom)]">
       <foobar>
         <xsl:apply-templates/>
       </foobar>
     </xsl:template>
-    <!-- TODO: select also 1) top and 2) top-and-bottom -->
-    
+        
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
     
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block'])]/@css:text-indent">

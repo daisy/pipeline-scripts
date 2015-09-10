@@ -2305,7 +2305,7 @@
   <!--
     Double line spacing per doc
   -->
-  <x:scenario label="test_19">
+  <x:scenario label="test_19" pending="this should be tested elsewhere">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
