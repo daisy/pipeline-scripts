@@ -99,10 +99,9 @@
             <xsl:value-of select="@css:margin-bottom"/>
           </xsl:attribute>
         </xsl:if>
+          <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-top|@css:margin-bottom|@css:line-height)"/>
         <block>
-            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-top|@css:margin-bottom)"/>
-            <xsl:apply-templates select="@css:string-entry"/>
-            <xsl:apply-templates select="@css:string-set"/>
+            <xsl:apply-templates select="@css:line-height|@css:string-entry|@css:string-set"/>
             <xsl:apply-templates/>
         </block>
       </block>
