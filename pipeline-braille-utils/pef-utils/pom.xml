@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>pef-utils-aggregator</artifactId>
-  <version>1.9.2</version>
+  <version>1.9.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Modules :: pef-utils</name>
@@ -42,8 +42,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>v1.9.4</tag>
-  </scm>
 </project>
