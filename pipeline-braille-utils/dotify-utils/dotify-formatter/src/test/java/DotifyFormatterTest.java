@@ -173,7 +173,10 @@ public class DotifyFormatterTest {
 		}
 		
 		public String[] transform(String[] text) {
-			throw new UnsupportedOperationException();
+			String[] result = new String[text.length];
+			for (int i = 0; i < text.length; i++)
+				result[i] = transform(text[i]);
+			return result;
 		}
 		
 		public String transform(String text, String style) {
@@ -184,7 +187,10 @@ public class DotifyFormatterTest {
 		}
 		
 		public String[] transform(String[] text, String[] style) {
-			throw new UnsupportedOperationException();
+			String[] result = new String[text.length];
+			for (int i = 0; i < text.length; i++)
+				result[i] = transform(text[i], style[i]);
+			return result;
 		}
 		
 		public boolean isHyphenating() { return false; }

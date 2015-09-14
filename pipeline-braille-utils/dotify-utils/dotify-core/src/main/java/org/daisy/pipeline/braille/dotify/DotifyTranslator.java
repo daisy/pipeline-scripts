@@ -41,7 +41,10 @@ public class DotifyTranslator extends AbstractTransform implements TextTransform
 	}
 	
 	public String[] transform(String[] text) {
-		throw new UnsupportedOperationException();
+		String[] result = new String[text.length];
+		for (int i = 0; i < text.length; i++)
+			result[i] = transform(text[i]);
+		return result;
 	}
 	
 	public BrailleTranslator asBrailleTranslator() {
