@@ -2637,7 +2637,7 @@
             <volume rows="25" cols="40" rowgap="0" duplex="false">
               <section>
                 <page>
-                  <row rowgap="4">⠆</row>
+                  <row rowgap="0">⠆</row>
                   <row>⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿</row>
                 </page>
               </section>
@@ -2706,7 +2706,7 @@
             <volume rows="25" cols="40" rowgap="0" duplex="false">
               <section>
                 <page>
-                  <row rowgap="8">⠆</row>
+                  <row rowgap="4">⠆</row>
                   <row>⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿</row>
                 </page>
               </section>
