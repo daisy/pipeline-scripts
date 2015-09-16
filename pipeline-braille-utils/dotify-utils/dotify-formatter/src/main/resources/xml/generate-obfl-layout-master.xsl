@@ -50,23 +50,42 @@
                             page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
             <default-template>
                 <header>
-                    <xsl:if test="$margin-top != '0'">
-                        <xsl:attribute name="row-spacing">
-                            <xsl:value-of select="format-number(xs:integer($margin-top), '0.0')"/>
-                        </xsl:attribute>
-                        <field/><!-- Empty field required for header to pass through obfl-to-pef -->
-                    </xsl:if>
-                    <xsl:if test="exists(($top-left, $top-center, $top-right))">
-                        <field>
-                            <xsl:sequence select="if (exists($top-left)) then $top-left else $empty-string"/>
-                        </field>
-                        <field>
-                            <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
-                        </field>
-                        <field>
-                            <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
-                        </field>
-                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="$margin-top != '0'">
+                            <xsl:attribute name="row-spacing">
+                                <xsl:value-of select="format-number(xs:integer($margin-top), '0.0')"/>
+                            </xsl:attribute>
+                            <xsl:choose>
+                                <xsl:when test="exists(($top-left, $top-center, $top-right))">
+                                    <field>
+                                        <xsl:sequence select="if  (exists($top-left)) then $top-left else $empty-string"/>
+                                    </field>
+                                    <field>
+                                        <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
+                                    </field>
+                                    <field>
+                                        <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
+                                    </field>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <field/><!-- Empty field required for header to pass through obfl-to-pef -->
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="exists(($top-left, $top-center, $top-right))">
+                                <field>
+                                    <xsl:sequence select="if (exists($top-left)) then $top-left else $empty-string"/>
+                                </field>
+                                <field>
+                                    <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
+                                </field>
+                                <field>
+                                    <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
+                                </field>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </header>
                 <footer>
                     <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
