@@ -2,6 +2,8 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    px:input-filesets="html"
+    px:output-filesets="epub3"
     type="px:html-to-epub3" name="main" version="1.0">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
