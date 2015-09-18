@@ -21,6 +21,74 @@ into subdirectories in a logical and consistent way.
   from. The building blocks are divided into logical *groups* such as
   `css-utils`, `pef-utils`, `liblouis-utils`, etc.
 
+Release procedure
+-----------------
+- Version number should match next version of pipeline-assembly.
+
+  ```sh
+  VERSION=1.9.4
+  ```
+
+- Create a release branch.
+
+  ```sh
+  git checkout -b release/${VERSION}
+  ```
+  
+- Resolve snapshot dependencies and commit.
+- View changes since previous release, update module versions according to semantic versioning and
+  commit (in case of a major increment all depending modules must be enabled in `pom.xml`).
+
+  ```sh
+  git diff v1.9.3...HEAD
+  ```
+
+- Generate release notes template, edit and commit. (Look for relevant Github issues on [https://github.com/search](https://github.com/search?o=desc&q=involves%3Abertfrees+repo%3Adaisy%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fissues+repo%3Asnaekobbi%2Fliblouis+repo%3Aliblouis%2Fliblouis+repo%3Asnaekobbi%2Fbraille-css+repo%3Asnaekobbi%2FjStyleParser&s=updated&type=Issues))
+
+  ```sh
+  make release-notes
+  ```
+
+- Perform the release with Maven. (Tests will fail during the first `release:prepare`.)
+
+  ```sh
+  mvn clean release:clean release:prepare -DpushChanges=false
+  mvn clean install
+  git checkout .
+  mvn clean release:clean release:prepare -DpushChanges=false
+  mvn release:perform -DlocalCheckout=true
+  ```
+  
+- Revert snapshot increments of modules in bom/pom.xml, comment out all modules in pom.xml and amend
+  to the last commit.
+- Push and make a pull request (for turning an existing issue into a PR use the `-i <issueno>` switch).
+
+  ```sh
+  git push origin release/${VERSION}:release/${VERSION}
+  hub pull-request -b daisy:master -h daisy:release/${VERSION} -m "Release version ${VERSION}"
+  ```
+  
+- Stage the artifact on https://oss.sonatype.org and comment on pull request.
+
+  ```sh
+  ghi comment -m staged ${ISSUE_NO}
+  ```
+  
+- Test and stage all projects that depend on this release before continuing.
+- Release the artifact on https://oss.sonatype.org and close pull request.
+
+  ```sh
+  ghi comment --close -m released ${ISSUE_NO}
+  ```
+  
+- Push the tag.
+
+  ```sh
+  git push origin v${VERSION}
+  ```
+
+- Add the release notes to http://github.com/daisy/pipeline-mod-braille/releases/v${VERSION}.
+
 See also
 --------
  - [ZedAI to PEF script user guide](http://code.google.com/p/daisy-pipeline/wiki/ZedAIToPEFDoc)

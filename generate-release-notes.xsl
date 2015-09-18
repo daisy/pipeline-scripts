@@ -71,7 +71,7 @@
 		<xsl:text>)), liblouisutdml&#10;</xsl:text>
 		<xsl:text>  ([</xsl:text>
 		<xsl:value-of select="$liblouisutdml-version"/>
-		<xsl:text>])https://github.com/liblouis/liblouisutdml/releases/tag/v</xsl:text>
+		<xsl:text>](https://github.com/liblouis/liblouisutdml/releases/tag/v</xsl:text>
 		<xsl:value-of select="$liblouisutdml-version"/>
 		<xsl:text>)), liblouis-java&#10;</xsl:text>
 		<xsl:text>  ([</xsl:text>
