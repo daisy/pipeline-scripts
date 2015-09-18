@@ -89,6 +89,7 @@
             </_dsannotations>
             <Require-Capability>
               xproc.step;filter:="(name={http://code.google.com/p/dotify/}obfl-to-pef)",
+              xproc.step;filter:="(name={http://code.google.com/p/dotify/}xml-to-obfl)",
               xpath.function;filter:="(name={http://code.google.com/p/dotify/}translate)"
             </Require-Capability>
           </instructions>

@@ -178,8 +178,10 @@
         <configuration>
           <instructions>
             <_dsannotations>*</_dsannotations>
-            <Provide-Capability>xproc.step;name="{http://code.google.com/p/dotify/}obfl-to-pef"</Provide-Capability>
-            <Provide-Capability>xproc.step;name="{http://code.google.com/p/dotify/}xml-to-obfl"</Provide-Capability>
+            <Provide-Capability>
+              xproc.step;name="{http://code.google.com/p/dotify/}obfl-to-pef",
+              xproc.step;name="{http://code.google.com/p/dotify/}xml-to-obfl"
+            </Provide-Capability>
           </instructions>
         </configuration>
         <executions>
