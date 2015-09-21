@@ -184,7 +184,7 @@
                         <xsl:variable name="new:properties" as="xs:string*"
                                       select="('margin-left',     'border-left',     'page-break-before',   'text-indent',   '-obfl-vertical-align',
                                                'margin-right',    'border-right',    'page-break-after',    'text-align',    '-obfl-vertical-position',
-                                               'margin-top',      'border-top',      'page-break-inside',
+                                               'margin-top',      'border-top',      'page-break-inside',   'line-height',
                                                'margin-bottom',   'border-bottom',   'orphans',
                                                                                      'widows')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
