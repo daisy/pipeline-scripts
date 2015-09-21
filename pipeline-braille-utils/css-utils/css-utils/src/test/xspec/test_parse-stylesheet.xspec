@@ -42,4 +42,13 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_03">
+    <x:context>
+      <doc style="@page {{ margin-top: 1 }} @page:left {{ margin-top: 2 }}"/>
+    </x:context>
+    <x:expect label="result">
+      <doc css:page="margin-top: 1" css:page_left="margin-top: 2"/>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

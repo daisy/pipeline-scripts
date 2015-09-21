@@ -188,9 +188,9 @@
     <!--
         # groups: 8
         $2: selector
-        $6: declaration list
+        $9: declaration list
     -->
-    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,')\s+)?\{(
+    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,'(:',$css:IDENT_RE,')?)\s+)?\{(
                                                        (
                                                          ',$css:DECLARATION_LIST_RE,'
                                                          |
@@ -237,7 +237,7 @@
                         <xsl:if test="regex-group(1)!=''">
                             <xsl:attribute name="selector" select="regex-group(2)"/>
                         </xsl:if>
-                        <xsl:attribute name="declaration-list" select="replace(regex-group(6), '(^\s+|\s+$)', '')"/>
+                        <xsl:attribute name="declaration-list" select="replace(regex-group(9), '(^\s+|\s+$)', '')"/>
                     </xsl:element>
                 </xsl:matching-substring>
             </xsl:analyze-string>
