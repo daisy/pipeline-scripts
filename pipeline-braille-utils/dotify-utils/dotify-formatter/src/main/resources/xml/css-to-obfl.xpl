@@ -45,7 +45,7 @@
     <p:for-each>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:after and css:before attributes.
+                Make css:page, css:page_right, css:page_left, css:after and css:before attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <css:make-pseudo-elements>
@@ -118,9 +118,10 @@
                 Make css:counter-set-page attributes.
             </p:documentation>
         </css:parse-counter-set>
-        <css:split split-before="*[@css:page or @css:counter-set-page]" split-after="*[@css:page]">
+        <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]"
+                   split-after="*[@css:page or @css:page_left or @css:page_right]">
             <p:documentation>
-                Split before and after css:page attributes and before css:counter-set-page
+                Split before and after css:page* attributes and before css:counter-set-page
                 attributes. <!-- depends on make-boxes -->
             </p:documentation>
         </css:split>
@@ -129,14 +130,20 @@
     <p:for-each>
         <p:group>
             <p:documentation>
-                Move css:page and css:counter-set-page attributes to css:_ root element.
+                Move css:page* and css:counter-set-page attributes to css:_ root element.
             </p:documentation>
             <p:wrap wrapper="css:_" match="/*"/>
             <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
                               label="(descendant::*/@css:page)[last()]"/>
+            <p:label-elements match="/*[descendant::*/@css:page_right]" attribute="css:page_right"
+                              label="(descendant::*/@css:page_right)[last()]"/>
+            <p:label-elements match="/*[descendant::*/@css:page_left]" attribute="css:page_left"
+                              label="(descendant::*/@css:page_left)[last()]"/>
             <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
                               label="(descendant::*/@css:counter-set-page)[last()]"/>
             <p:delete match="/*//*/@css:page"/>
+            <p:delete match="/*//*/@css:page_right"/>
+            <p:delete match="/*//*/@css:page_left"/>
             <p:delete match="/*//*/@css:counter-set-page"/>
         </p:group>
         <p:rename match="css:box[@type='inline']

@@ -8,24 +8,36 @@
                 exclude-result-prefixes="#all"
                 version="2.0" >
     
-    <!--
-        css-utils [2.0.0,3.0.0)
-    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl" />
     
     <xsl:include href="generate-obfl-layout-master.xsl"/>
     
-    <xsl:key name="page-style" match="/*" use="string(@css:page)"/>
+    <xsl:key name="page-stylesheet" match="/*" use="pxi:page-stylesheet(.)"/>
     
-    <xsl:function name="pxi:generate-layout-master-name" as="xs:string">
-        <xsl:param name="stylesheet" as="xs:string"/>
-        <xsl:value-of select="generate-id((collection()/key('page-style', $stylesheet))[1])"/>
+    <xsl:function name="pxi:page-stylesheet" as="xs:string">
+        <xsl:param name="elem" as="element()"/>
+        <xsl:value-of select="string-join(
+                                for $attr in ($elem/@css:page,$elem/@css:page_right,$elem/@css:page_left) return
+                                  concat('@',replace(local-name($attr),'_',':'),' { ',string($attr),' }'),
+                                ' ')"/>
     </xsl:function>
     
+    <xsl:function name="pxi:generate-layout-master-name" as="xs:string">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:variable name="elem" as="element()" select="(collection()/key('page-stylesheet', $page-stylesheet))[1]"/>
+        <xsl:sequence select="generate-id($elem)"/>
+    </xsl:function>
+    
+    <xsl:function name="pxi:generate-layout-master" as="element()">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:variable name="elem" as="element()" select="(collection()/key('page-stylesheet', $page-stylesheet))[1]"/>
+        <xsl:sequence select="obfl:generate-layout-master($elem/string(@css:page), pxi:generate-layout-master-name($page-stylesheet))"/>
+    </xsl:function>
+
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und">
-            <xsl:for-each select="distinct-values(collection()/*/string(@css:page))">
-                <xsl:sequence select="obfl:generate-layout-master(., pxi:generate-layout-master-name(.))"/>
+            <xsl:for-each select="distinct-values(collection()/*/pxi:page-stylesheet(.))">
+                <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
             <xsl:apply-templates select="collection()/*[not(@css:flow)]"/>
         </obfl>
@@ -33,7 +45,7 @@
     
     <xsl:template match="/*" priority="0.6">
         <xsl:element name="sequence">
-            <xsl:attribute name="master" select="pxi:generate-layout-master-name(string(@css:page))"/>
+            <xsl:attribute name="master" select="pxi:generate-layout-master-name(pxi:page-stylesheet(.))"/>
             <xsl:if test="@css:counter-set-page">
                 <xsl:attribute name="initial-page-number" select="@css:counter-set-page"/>
             </xsl:if>
@@ -42,7 +54,9 @@
     </xsl:template>
     
     <xsl:template match="/*/@css:counter-set-page|
-                         /*/@css:page"/>
+                         /*/@css:page|
+                         /*/@css:page_left|
+                         /*/@css:page_right"/>
     
     <xsl:template match="/css:_">
         <xsl:apply-templates select="@*|node()"/>
