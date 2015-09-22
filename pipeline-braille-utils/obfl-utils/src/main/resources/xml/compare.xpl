@@ -25,16 +25,18 @@
                 <p:inline>
                     <xsl:stylesheet version="2.0">
                         <xsl:variable name="layout_names" as="xs:string*" select="/obfl:obfl/obfl:layout-master/@name/string()"/>
+                        <xsl:variable name="ids" as="xs:string*" select="//@id/string()"/>
                         <xsl:template match="@*|node()">
                             <xsl:copy>
                                 <xsl:apply-templates select="@*|node()"/>
                             </xsl:copy>
                         </xsl:template>
-                        <xsl:template match="obfl:layout-master/@name">
-                            <xsl:attribute name="name" select="concat('layout',index-of($layout_names,string(.)))"/>
+                        <xsl:template match="obfl:layout-master/@name|
+                                             obfl:sequence/@master">
+                            <xsl:attribute name="{name(.)}" select="concat('layout',index-of($layout_names,string(.)))"/>
                         </xsl:template>
-                        <xsl:template match="obfl:sequence/@master">
-                            <xsl:attribute name="master" select="concat('layout',index-of($layout_names,string(.)))"/>
+                        <xsl:template match="@id|@ref-id">
+                            <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.)))"/>
                         </xsl:template>
                     </xsl:stylesheet>
                 </p:inline>
