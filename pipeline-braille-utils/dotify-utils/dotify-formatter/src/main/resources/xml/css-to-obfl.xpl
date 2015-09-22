@@ -233,6 +233,18 @@
             </p:input>
         </css:new-definition>
         <css:adjust-boxes/>
+        <p:delete match="css:box[@type='block']
+                                [matches(string(.), '^[\s&#x2800;]*$') and
+                                 not(descendant::css:white-space or
+                                     descendant::css:string or
+                                     descendant::css:counter or
+                                     descendant::css:text or
+                                     descendant::css:leader)]
+                                //text()">
+            <p:documentation>
+                Remove text nodes from block boxes with no line boxes.
+            </p:documentation>
+        </p:delete>
     </p:for-each>
     
     <p:xslt template-name="main">
