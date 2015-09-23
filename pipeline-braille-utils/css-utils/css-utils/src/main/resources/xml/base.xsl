@@ -190,7 +190,7 @@
         $2: selector
         $9: declaration list
     -->
-    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,'(:',$css:IDENT_RE,')?)\s+)?\{(
+    <xsl:variable name="css:RULE_RE" select="concat('(((@|::)',$css:IDENT_RE,'(:',$css:IDENT_RE,')?)\s*)?\{(
                                                        (
                                                          ',$css:DECLARATION_LIST_RE,'
                                                          |
