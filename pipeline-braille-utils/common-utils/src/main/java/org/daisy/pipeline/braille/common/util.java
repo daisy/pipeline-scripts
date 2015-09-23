@@ -1,11 +1,5 @@
 package org.daisy.pipeline.braille.common;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.primitives.Bytes;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -21,8 +15,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+
+import com.google.common.base.Function;
+import static com.google.common.base.Functions.forPredicate;
+import static com.google.common.base.Functions.toStringFunction;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.google.common.primitives.Bytes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,11 +181,61 @@ public abstract class util {
 		}
 		
 		public static <T> Tuple2<Collection<T>,Collection<T>> partition(Iterator<T> iterator, Predicate<? super T> predicate) {
-			Multimap<Boolean,T> map = Multimaps.index(iterator, com.google.common.base.Functions.forPredicate(predicate));
+			Multimap<Boolean,T> map = Multimaps.index(iterator, forPredicate(predicate));
 			return new Tuple2<Collection<T>,Collection<T>>(map.get(true), map.get(false));
 		}
 	}
-
+	
+	public static abstract class Iterables {
+		
+		protected static abstract class memoize<T> implements Iterable<T> {
+			private final ArrayList<T> cache = new ArrayList<T>();
+			protected abstract Iterator<T> _iterator();
+			private Iterator<T> _iterator;
+			public final Iterator<T> iterator() {
+				return new Iterator<T>() {
+					private int index = 0;
+					public boolean hasNext() {
+						synchronized(cache) {
+							if (index < cache.size())
+								return true;
+							if (_iterator == null)
+								_iterator = _iterator();
+							return _iterator.hasNext();
+						}
+					}
+					public T next() throws NoSuchElementException {
+						synchronized(cache) {
+							if (index < cache.size())
+								return cache.get(index++);
+							if (_iterator == null)
+								_iterator = _iterator();
+							T next = _iterator.next();
+							cache.add(next);
+							index++;
+							return next;
+						}
+					}
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		}
+		
+		public static <T> Iterable<T> memoize(final Iterable<T> iterable) {
+			return new memoize<T>() {
+				protected Iterator<T> _iterator() {
+					return iterable.iterator();
+				}
+				@Override
+				public String toString() {
+					return "memoize( " + iterable + " )";
+				}
+			};
+		}
+	}
+	
 	public static abstract class OS {
 		
 		public static enum Family {
@@ -240,7 +293,7 @@ public abstract class util {
 		}
 		
 		public static String join(Iterator<? extends Object> strings, final Object separator) {
-			return join(strings, separator, com.google.common.base.Functions.toStringFunction());
+			return join(strings, separator, toStringFunction());
 		}
 		
 		public static String join(Iterable<?> strings, final Object separator, final Function<Object,String> toStringFunction) {

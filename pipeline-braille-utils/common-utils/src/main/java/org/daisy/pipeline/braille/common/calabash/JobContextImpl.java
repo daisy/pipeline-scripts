@@ -1,5 +1,7 @@
 package org.daisy.pipeline.braille.common.calabash;
 
+import static com.google.common.base.Objects.toStringHelper;
+
 import com.xmlcalabash.core.XProcMessageListener;
 import com.xmlcalabash.core.XProcRunnable;
 
@@ -23,6 +25,11 @@ public class JobContextImpl extends AbstractJobContext {
 		this.listener = listener;
 		this.step = step;
 		this.node = node;
+	}
+	
+	@Override
+	public String toString() {
+		return toStringHelper("o.d.p.b.c.calabash.JobContextImpl").add("listener", listener).toString();
 	}
 	
 	public boolean isTraceEnabled() {

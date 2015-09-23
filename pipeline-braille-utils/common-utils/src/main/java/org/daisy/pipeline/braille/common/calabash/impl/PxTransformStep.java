@@ -25,6 +25,7 @@ import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.QName;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
+
 import org.daisy.pipeline.braille.common.calabash.JobContextImpl;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
@@ -32,6 +33,7 @@ import org.daisy.pipeline.braille.common.JobContext;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -101,7 +103,7 @@ public class PxTransformStep extends Eval {
 				filter = alwaysFalse();
 			XProcTransform transform = null;
 			try {
-				transform = dispatch(filter(providers, filter)).withContext(context).get(query).iterator().next(); }
+				transform = logSelect(query, dispatch(filter(providers, filter)), context).iterator().next(); }
 			catch (NoSuchElementException e) {
 				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
 			RuntimeValue tempDir = getOption(_temp_dir);
