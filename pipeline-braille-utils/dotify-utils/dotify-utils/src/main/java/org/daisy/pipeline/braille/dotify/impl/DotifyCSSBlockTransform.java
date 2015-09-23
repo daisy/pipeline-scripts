@@ -4,24 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
-import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
@@ -32,8 +35,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.ComponentContext;
 
-import org.slf4j.Logger;
-
 public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransform {
 	
 	@Component(
@@ -43,7 +44,8 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 			CSSBlockTransform.Provider.class
 		}
 	)
-	public class Provider implements XProcTransform.Provider<DotifyCSSBlockTransform>, CSSBlockTransform.Provider<DotifyCSSBlockTransform> {
+	public class Provider extends AbstractTransform.Provider<DotifyCSSBlockTransform>
+		                  implements XProcTransform.Provider<DotifyCSSBlockTransform>, CSSBlockTransform.Provider<DotifyCSSBlockTransform> {
 		
 		private URI href;
 		
@@ -52,9 +54,8 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/dotify-block-translate.xpl"));
 		}
 		
-		public Transform.Provider<DotifyCSSBlockTransform> withContext(Logger context) {
-			return this;
-		}
+		private final static Iterable<DotifyCSSBlockTransform> empty
+		= Iterables.<DotifyCSSBlockTransform>empty();
 		
 		/**
 		 * Recognized features:
@@ -64,26 +65,25 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		 *
 		 * Other features are used for finding sub-transformers of type DotifyTranslator.
 		 */
-		public Iterable<DotifyCSSBlockTransform> get(String query) {
-			return Optional.fromNullable(transforms.apply(query)).asSet();
+		protected Iterable<DotifyCSSBlockTransform> _get(final String query) {
+			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+			Optional<String> o;
+			if ((o = q.remove("translator")) != null)
+				if (!o.get().equals("dotify"))
+					return empty;
+			final String translatorQuery = serializeQuery(q);
+			Iterable<DotifyTranslator> translators = logSelect(translatorQuery, dotifyTranslatorProvider);
+			return transform(
+				translators,
+				new Function<DotifyTranslator,DotifyCSSBlockTransform>() {
+					public DotifyCSSBlockTransform _apply(DotifyTranslator translator) {
+						return __apply(
+							logCreate(new TransformImpl(translatorQuery, translator))
+						);
+					}
+				}
+			);
 		}
-		
-		private Memoizing<String,DotifyCSSBlockTransform> transforms
-		= new Memoizing<String,DotifyCSSBlockTransform>() {
-			public DotifyCSSBlockTransform _apply(String query) {
-				final URI href = Provider.this.href;
-				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				Optional<String> o;
-				if ((o = q.remove("translator")) != null)
-					if (!o.get().equals("dotify"))
-						return null;
-				String newQuery = serializeQuery(q);
-				try {
-					return new TransformImpl(newQuery, dotifyTranslatorProvider.get(newQuery).iterator().next()); }
-				catch (NoSuchElementException e) {
-					return null; }
-			}
-		};
 		
 		private class TransformImpl extends AbstractTransform implements DotifyCSSBlockTransform {
 			
@@ -124,7 +124,7 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		private List<Transform.Provider<DotifyTranslator>> dotifyTranslatorProviders
 		= new ArrayList<Transform.Provider<DotifyTranslator>>();
 		
-		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,DotifyTranslator> dotifyTranslatorProvider
+		private Transform.Provider.MemoizingProvider<DotifyTranslator> dotifyTranslatorProvider
 		= memoize(dispatch(dotifyTranslatorProviders));
 	
 	}

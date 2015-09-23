@@ -16,7 +16,6 @@ import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
@@ -77,12 +76,12 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		return filter(
 			transform(
 				tableProvider.get(serializeQuery(query)),
-				new Function<Translator,Table>() {
-					public Table apply(Translator table) {
-						URI[] subTables = new LiblouisTable(table.getTable()).asURIs();
+				new Function<LiblouisJnaImpl.Table,Table>() {
+					public Table apply(LiblouisJnaImpl.Table table) {
+						URI[] subTables = table.asURIs();
 						if (subTables.length == 1)
 							if (subTables[0].toString().endsWith(".dis"))
-								return new LiblouisDisplayTable(table);
+								return new LiblouisDisplayTable(table.getTranslator());
 						return null; }}),
 			notNull());
 	}

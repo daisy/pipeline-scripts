@@ -2,6 +2,7 @@ package org.daisy.pipeline.braille.liblouis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
 
@@ -116,6 +117,11 @@ public class LiblouisCoreTest {
 	@Test
 	public void testGetTranslatorFromQuery3() {
 		provider.withContext(messageBus).get("(locale:foo_BAR)").iterator().next();
+	}
+	
+	@Test(expected=NoSuchElementException.class)
+	public void testGetTranslatorFromQuery4() {
+		provider.withContext(messageBus).get("(locale:bar)").iterator().next();
 	}
 	
 	@Test

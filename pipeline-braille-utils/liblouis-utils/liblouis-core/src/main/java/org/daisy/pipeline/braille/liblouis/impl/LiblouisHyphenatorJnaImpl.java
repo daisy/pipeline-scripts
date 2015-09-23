@@ -11,17 +11,19 @@ import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+
+import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
+
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 
@@ -119,12 +121,12 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 				q.put("table", Optional.of(table));
 			if (locale != null)
 				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
+			Iterable<LiblouisJnaImpl.Table> tables = tableProvider.get(serializeQuery(q));
 			return transform(
 				tables,
-				new Function<Translator,LiblouisHyphenator>() {
-					public LiblouisHyphenator apply(Translator table) {
-						return new LiblouisHyphenatorImpl(table); }});
+				new Function<LiblouisJnaImpl.Table,LiblouisHyphenator>() {
+					public LiblouisHyphenator apply(LiblouisJnaImpl.Table table) {
+						return new LiblouisHyphenatorImpl(table.getTranslator()); }});
 		}
 	};
 	

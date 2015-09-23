@@ -9,26 +9,28 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Function;
-import static com.google.common.base.Objects.toStringHelper;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
-import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
-import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+
+import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.concat;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -36,10 +38,8 @@ import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
-import org.daisy.pipeline.braille.common.WithSideEffect;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
-import static org.daisy.pipeline.braille.liblouis.LiblouisTable.tokenizeTable;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 
@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 		TextTransform.Provider.class
 	}
 )
-public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
+public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<LiblouisTranslator> implements LiblouisTranslator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
@@ -115,8 +115,11 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
 	= new ArrayList<Transform.Provider<Hyphenator>>();
 	
-	private Provider.MemoizingProvider<String,Hyphenator> hyphenatorProvider
+	private Transform.Provider.MemoizingProvider<Hyphenator> hyphenatorProvider
 	= memoize(dispatch(hyphenatorProviders));
+	
+	private final static Iterable<LiblouisTranslator> empty
+	= Iterables.<LiblouisTranslator>empty();
 	
 	/**
 	 * Recognized features:
@@ -142,111 +145,90 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 	 *
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
-	public Iterable<LiblouisTranslator> get(String query) {
-		return impl.get(query);
-	}
-	
-	public Transform.Provider<LiblouisTranslator> withContext(Logger context) {
-		return impl.withContext(context);
-	}
-	
-	private Transform.Provider.MemoizingProvider<LiblouisTranslator> impl = new ProviderImpl(null);
-	
-	private final static Iterable<WithSideEffect<LiblouisTranslator,Logger>> empty
-		= Optional.<WithSideEffect<LiblouisTranslator,Logger>>absent().asSet();
-	
-	private class ProviderImpl extends AbstractProvider<LiblouisTranslator> {
-		
-		private ProviderImpl(Logger context) {
-			super(context);
-		}
-		
-		protected Transform.Provider.MemoizingProvider<LiblouisTranslator> _withContext(Logger context) {
-			return new ProviderImpl(context);
-		}
-		
-		protected final Iterable<WithSideEffect<LiblouisTranslator,Logger>> __get(String query) {
-			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("translator")) != null)
-				if (!"liblouis".equals(o.get()))
-					return empty;
-			String table = null;
-			if ((o = q.remove("liblouis-table")) != null)
-				table = o.get();
-			if ((o = q.remove("table")) != null)
-				if (table != null) {
-					logger.warn("A query with both 'table' and 'liblouis-table' never matches anything");
-					return empty; }
-				else
-					table = o.get();
-			String v = null;
-			if ((o = q.remove("hyphenator")) != null)
-				v = o.get();
-			else
-				v = "auto";
-			final String hyphenator = v;
-			v = null;
-			if ((o = q.remove("locale")) != null)
-				v = o.get();
-			final String locale = v;
-			if (table != null && q.size() > 0) {
-				logger.warn("A query with both 'table' or 'liblouis-table' and '"
-				            + q.keySet().iterator().next() + "' never matches anything");
+	protected final Iterable<LiblouisTranslator> _get(String query) {
+		final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+		Optional<String> o;
+		if ((o = q.remove("translator")) != null)
+			if (!"liblouis".equals(o.get()))
+				return empty;
+		String table = null;
+		if ((o = q.remove("liblouis-table")) != null)
+			table = o.get();
+		if ((o = q.remove("table")) != null)
+			if (table != null) {
+				logger.warn("A query with both 'table' and 'liblouis-table' never matches anything");
 				return empty; }
-			if (table != null)
-				q.put("table", Optional.of(table));
-			if (locale != null)
-				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-			q.put("unicode", Optional.<String>absent());
-			q.put("white-space", Optional.<String>absent());
-			Iterable<Translator> tables = tableProvider.get(serializeQuery(q));
-			return concat(
-				transform(
-					tables,
-					new Function<Translator,Iterable<WithSideEffect<LiblouisTranslator,Logger>>>() {
-						public Iterable<WithSideEffect<LiblouisTranslator,Logger>> apply(final Translator table) {
-							Iterable<WithSideEffect<LiblouisTranslator,Logger>> translators = empty;
-							if (!"none".equals(hyphenator)) {
-								if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
-									for (URI t : tokenizeTable(table.getTable()))
-										if (t.toString().endsWith(".dic")) {
-											translators = Optional.of(
-												logCreate((LiblouisTranslator)new LiblouisTranslatorHyphenatorImpl(table))
-											).asSet();
-											break; }
-								if (!"liblouis".equals("hyphenator")) {
-									ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-										= new ImmutableMap.Builder<String,Optional<String>>();
-									if (!"auto".equals(hyphenator))
-										hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
-									if (locale != null)
-										hyphenatorQuery.put("locale", Optional.of(locale));
-									String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
-									Iterable<WithSideEffect<Hyphenator,Logger>> hyphenators
-										= logSelect(hyphenatorQueryString, hyphenatorProvider.get(hyphenatorQueryString));
-									translators = concat(
-										translators,
-										transform(
-											hyphenators,
-											new WithSideEffect.Function<Hyphenator,LiblouisTranslator,Logger>() {
-												public LiblouisTranslator _apply(Hyphenator hyphenator) {
-													return applyWithSideEffect(
-														logCreate(
-															(LiblouisTranslator)new LiblouisTranslatorImpl(table, hyphenator))); }}));
-										}}
-							if ("none".equals(hyphenator) || "auto".equals(hyphenator))
+			else
+				table = o.get();
+		String v = null;
+		if ((o = q.remove("hyphenator")) != null)
+			v = o.get();
+		else
+			v = "auto";
+		final String hyphenator = v;
+		v = null;
+		if ((o = q.remove("locale")) != null)
+			v = o.get();
+		final String locale = v;
+		if (table != null && q.size() > 0) {
+			logger.warn("A query with both 'table' or 'liblouis-table' and '"
+			            + q.keySet().iterator().next() + "' never matches anything");
+			return empty; }
+		if (table != null)
+			q.put("table", Optional.of(table));
+		if (locale != null)
+			q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
+		q.put("unicode", Optional.<String>absent());
+		q.put("white-space", Optional.<String>absent());
+		Iterable<LiblouisJnaImpl.Table> tables = logSelect(serializeQuery(q), tableProvider);
+		return concat(
+			transform(
+				tables,
+				new Function<LiblouisJnaImpl.Table,Iterable<LiblouisTranslator>>() {
+					public Iterable<LiblouisTranslator> _apply(final LiblouisJnaImpl.Table table) {
+						Iterable<LiblouisTranslator> translators = empty;
+						if (!"none".equals(hyphenator)) {
+							if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
+								for (URI t : table.asURIs())
+									if (t.toString().endsWith(".dic")) {
+										translators = Iterables.of(
+											logCreate((LiblouisTranslator)new LiblouisTranslatorHyphenatorImpl(table.getTranslator()))
+										);
+										break; }
+							if (!"liblouis".equals("hyphenator")) {
+								ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
+									= new ImmutableMap.Builder<String,Optional<String>>();
+								if (!"auto".equals(hyphenator))
+									hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+								if (locale != null)
+									hyphenatorQuery.put("locale", Optional.of(locale));
+								String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
+								Iterable<Hyphenator> hyphenators
+									= logSelect(hyphenatorQueryString, hyphenatorProvider);
 								translators = concat(
 									translators,
-									Optional.of(
-										logCreate((LiblouisTranslator)new LiblouisTranslatorImpl(table))
-									).asSet());
-							return translators;
-						}
+									transform(
+										hyphenators,
+										new Function<Hyphenator,LiblouisTranslator>() {
+											public LiblouisTranslator _apply(Hyphenator hyphenator) {
+												return __apply(
+													logCreate(
+														(LiblouisTranslator)new LiblouisTranslatorImpl(table.getTranslator(), hyphenator))); }}));
+								}}
+						if ("none".equals(hyphenator) || "auto".equals(hyphenator))
+							translators = concat(
+								translators,
+								logCreate((LiblouisTranslator)new LiblouisTranslatorImpl(table.getTranslator())));
+						return translators;
 					}
-				)
-			);
-		}
+				}
+			)
+		);
+	}
+	
+	@Override
+	public ToStringHelper toStringHelper() {
+		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$Provider");
 	}
 	
 	private static class LiblouisTranslatorImpl extends AbstractTransform implements LiblouisTranslator {
@@ -602,8 +584,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		}
 		
 		@Override
-		public String toString() {
-			return toStringHelper(this).add("translator", translator).add("hyphenator", hyphenator).toString();
+		public ToStringHelper toStringHelper() {
+			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$LiblouisTranslatorImpl")
+				.add("translator", translator)
+				.add("hyphenator", hyphenator);
 		}
 	
 		@Override
@@ -655,8 +639,10 @@ public class LiblouisTranslatorJnaImpl implements LiblouisTranslator.Provider {
 		}
 		
 		@Override
-		public String toString() {
-			return toStringHelper(this).add("translator", translator).add("hyphenator", "self").toString();
+		public ToStringHelper toStringHelper() {
+			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$LiblouisTranslatorImpl")
+				.add("translator", translator)
+				.add("hyphenator", "self");
 		}
 	}
 	

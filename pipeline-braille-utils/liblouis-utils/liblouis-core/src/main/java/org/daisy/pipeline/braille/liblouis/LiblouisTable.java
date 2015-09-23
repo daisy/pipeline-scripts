@@ -16,6 +16,7 @@ public class LiblouisTable {
 	public LiblouisTable(URI[] table) {
 		this.table = table;
 	}
+	
 	public LiblouisTable(String table) {
 		this(tokenizeTable(table));
 	}

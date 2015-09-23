@@ -12,11 +12,11 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.dotify.api.hyphenator.HyphenatorConfigurationException;
 import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;
+import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 

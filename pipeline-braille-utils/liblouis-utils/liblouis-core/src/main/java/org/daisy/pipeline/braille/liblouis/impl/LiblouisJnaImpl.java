@@ -5,25 +5,32 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Functions.toStringFunction;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
+
+import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.warn;
 import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Transform;
 import static org.daisy.pipeline.braille.common.util.Files.unpack;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.common.WithSideEffect;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry;
@@ -57,7 +64,21 @@ import org.slf4j.LoggerFactory;
 		LiblouisJnaImpl.class
 	}
 )
-public class LiblouisJnaImpl implements Provider<String,Translator> {
+public class LiblouisJnaImpl extends AbstractTransform.Provider<LiblouisJnaImpl.Table> {
+	
+	public class Table extends LiblouisTable implements Transform {
+		private final Translator translator;
+		private Table(String table) throws CompilationException {
+			super(table);
+			translator = new Translator(table);
+		}
+		public Translator getTranslator() {
+			return translator;
+		}
+		public String getIdentifier() {
+			return toString();
+		}
+	}
 	
 	private final static boolean LIBLOUIS_EXTERNAL = Boolean.getBoolean("org.daisy.pipeline.liblouis.external");
 	
@@ -79,7 +100,7 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 				new Function<LiblouisTableRegistry,Void>() {
 					public Void apply(LiblouisTableRegistry r) {
 						indexed = false;
-						provider.invalidateCache();
+						invalidateCache();
 						return null; }});
 			final LiblouisTableResolver tableResolver = tableRegistry;
 			_tableResolver = new TableResolver() {
@@ -173,27 +194,19 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 		logger.debug("Registering Liblouis table registry: " + registry);
 	}
 	
-	public Iterable<Translator> get(String query) {
-		return provider.get(query);
+	protected Iterable<Table> _get(final String query) {
+		return Iterables.of(
+			_provider.get(parseQuery(query))
+		);
 	}
-
-	private Provider.MemoizingProvider<String,Translator> provider
-	= new Provider.MemoizingProvider<String,Translator>() {
-		public Iterable<Translator> _get(final String query) {
-			return _provider.get(parseQuery(query));
-		}
-		@Override
-		public void invalidateCache() {
-			super.invalidateCache();
-			__provider.invalidateCache();
-		}
-	};
 	
-	private Provider<Map<String,Optional<String>>,Translator> _provider
-	= new LocaleBasedProvider<Map<String,Optional<String>>,Translator>() {
-		public Iterable<Translator> _get(final Map<String,Optional<String>> query) {
-			return __provider.get(query);
-		}
+	@Override
+	public ToStringHelper toStringHelper() {
+		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisJnaImpl$ProviderImpl");
+	}
+	
+	private Provider<Map<String,Optional<String>>,WithSideEffect<Table,Logger>> _provider
+	= new LocaleBasedProvider<Map<String,Optional<String>>,WithSideEffect<Table,Logger>>() {
 		public Locale getLocale(Map<String,Optional<String>> query) {
 			Optional<String> o;
 			if ((o = query.get("locale")) != null)
@@ -206,53 +219,57 @@ public class LiblouisJnaImpl implements Provider<String,Translator> {
 			q.put("locale", Optional.of(Locales.toString(locale, '_')));
 			return q;
 		}
-	};
-	
-	private Provider.MemoizingProvider<Map<String,Optional<String>>,Translator> __provider
-	= new Provider.MemoizingProvider<Map<String,Optional<String>>,Translator>() {
-		public Iterable<Translator> _get(final Map<String,Optional<String>> query) {
-			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
-			return filter(
-				new ImmutableLazyValue<Translator>() {
-					public Translator _apply() {
-						String table = null;
-						boolean unicode = false;
-						boolean whiteSpace = false;
-						Optional<String> o;
-						if ((o = q.remove("unicode")) != null)
-							unicode = true;
-						if ((o = q.remove("white-space")) != null)
-							whiteSpace = true;
-						if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
-							table = o.get();
-						else if (q.size() > 0) {
-							StringBuilder b = new StringBuilder();
-							for (String k : q.keySet()) {
-								if (!k.matches("[a-zA-Z0-9_-]+")) {
-									logger.warn("Invalid syntax for feature key: " + k);
-									return null; }
-								b.append(k);
-								o = q.get(k);
-								if (o.isPresent()) {
-									String v = o.get();
-									if (!v.matches("[a-zA-Z0-9_-]+")) {
-										logger.warn("Invalid syntax for feature value: " + v);
-										return null; }
-									b.append(":" + v); }
-								b.append(" "); }
-							lazyIndex();
-							table = Louis.getLibrary().lou_findTable(b.toString()); }
-						if (table != null) {
-							if (whiteSpace)
-								table = asURI(spacesFile) + "," + table;
-							if (unicode)
-								table = asURI(unicodeDisFile) + "," + table;
-							try {
-								return new Translator(table); }
-							catch (CompilationException e) {
-								logger.warn("Could not compile translator", e); }}
-						return null; }},
-				notNull());
+		public java.lang.Iterable<WithSideEffect<Table,Logger>> _get(final Map<String,Optional<String>> query) {
+			return new ImmutableLazyValue<WithSideEffect<Table,Logger>>() {
+				public WithSideEffect<Table,Logger> _apply() {
+					return new WithSideEffect<Table,Logger>() {
+						public Table _apply() {
+							final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
+							String table = null;
+							boolean unicode = false;
+							boolean whiteSpace = false;
+							Optional<String> o;
+							if ((o = q.remove("unicode")) != null)
+								unicode = true;
+							if ((o = q.remove("white-space")) != null)
+								whiteSpace = true;
+							if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
+								table = o.get();
+							else if (q.size() > 0) {
+								StringBuilder b = new StringBuilder();
+								for (String k : q.keySet()) {
+									if (!k.matches("[a-zA-Z0-9_-]+")) {
+										__apply(
+											warn("Invalid syntax for feature key: " + k));
+										throw new NoSuchElementException(); }
+									b.append(k);
+									o = q.get(k);
+									if (o.isPresent()) {
+										String v = o.get();
+										if (!v.matches("[a-zA-Z0-9_-]+")) {
+											__apply(
+												warn("Invalid syntax for feature value: " + v));
+											throw new NoSuchElementException(); }
+										b.append(":" + v); }
+									b.append(" "); }
+								lazyIndex();
+								table = Louis.getLibrary().lou_findTable(b.toString()); }
+							if (table != null) {
+								if (whiteSpace)
+									table = asURI(spacesFile) + "," + table;
+								if (unicode)
+									table = asURI(unicodeDisFile) + "," + table;
+								try {
+									return new Table(table); }
+								catch (CompilationException e) {
+									__apply(
+										warn("Could not compile table " + table));
+									logger.warn("Could not compile table", e); }}
+							throw new NoSuchElementException();
+						}
+					};
+				}
+			};
 		}
 	};
 	

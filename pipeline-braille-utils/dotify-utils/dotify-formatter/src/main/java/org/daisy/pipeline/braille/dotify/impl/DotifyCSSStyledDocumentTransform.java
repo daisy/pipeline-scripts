@@ -4,24 +4,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import org.daisy.pipeline.braille.common.Memoizing;
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
-import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Activate;
@@ -30,8 +35,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.ComponentContext;
-
-import org.slf4j.Logger;
 
 public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSStyledDocumentTransform {
 	
@@ -42,7 +45,8 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 			CSSStyledDocumentTransform.Provider.class
 		}
 	)
-	public class Provider implements XProcTransform.Provider<DotifyCSSStyledDocumentTransform>,
+	public class Provider extends AbstractTransform.Provider<DotifyCSSStyledDocumentTransform>
+		                  implements XProcTransform.Provider<DotifyCSSStyledDocumentTransform>,
 	                                 CSSStyledDocumentTransform.Provider<DotifyCSSStyledDocumentTransform> {
 		
 		private URI href;
@@ -52,9 +56,8 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/dotify-transform.xpl"));
 		}
 		
-		public Transform.Provider<DotifyCSSStyledDocumentTransform> withContext(Logger context) {
-			return this;
-		}
+		private final static Iterable<DotifyCSSStyledDocumentTransform> empty
+		= Iterables.<DotifyCSSStyledDocumentTransform>empty();
 		
 		/**
 		 * Recognized features:
@@ -63,29 +66,29 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		 *
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
-		public Iterable<DotifyCSSStyledDocumentTransform> get(String query) {
-			return Optional.fromNullable(transforms.apply(query)).asSet();
+		protected Iterable<DotifyCSSStyledDocumentTransform> _get(final String query) {
+			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+			Optional<String> o;
+			if ((o = q.remove("formatter")) != null)
+				if (!o.get().equals("dotify"))
+					return empty;
+			final String cssBlockTransformQuery = serializeQuery(q);
+			Iterable<CSSBlockTransform> cssBlockTransforms = logSelect(cssBlockTransformQuery, cssBlockTransformProvider);
+			return transform(
+				cssBlockTransforms,
+				new Function<CSSBlockTransform,DotifyCSSStyledDocumentTransform>() {
+					public DotifyCSSStyledDocumentTransform _apply(CSSBlockTransform cssBlockTransform) {
+						return __apply(
+							logCreate(new TransformImpl(cssBlockTransformQuery, cssBlockTransform))
+						);
+					}
+				}
+			);
 		}
-		
-		private Memoizing<String,DotifyCSSStyledDocumentTransform> transforms
-		= new Memoizing<String,DotifyCSSStyledDocumentTransform>() {
-			public DotifyCSSStyledDocumentTransform _apply(String query) {
-				final URI href = Provider.this.href;
-				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				Optional<String> o;
-				if ((o = q.remove("formatter")) != null)
-					if (!o.get().equals("dotify"))
-						return null;
-				String newQuery = serializeQuery(q);
-				try {
-					return new TransformImpl(newQuery, cssBlockTransformProvider.get(newQuery).iterator().next()); }
-				catch (NoSuchElementException e) {
-					return null; }
-			}
-		};
 		
 		private class TransformImpl extends AbstractTransform implements DotifyCSSStyledDocumentTransform {
 			
+			private final CSSBlockTransform cssBlockTransform;
 			private final Tuple3<URI,QName,Map<String,String>> xproc;
 			
 			private TransformImpl(String cssBlockTransformQuery, CSSBlockTransform cssBlockTransform) {
@@ -93,10 +96,17 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 					"css-block-transform", cssBlockTransformQuery,
 					"text-transform", "(id:" + cssBlockTransform.asTextTransform().getIdentifier() + ")");
 				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+				this.cssBlockTransform = cssBlockTransform;
 			}
 			
 			public Tuple3<URI,QName,Map<String,String>> asXProc() {
 				return xproc;
+			}
+			
+			@Override
+			public ToStringHelper toStringHelper() {
+				return Objects.toStringHelper("o.d.p.b.dotify.impl.DotifyCSSStyledDocumentTransform$Provider$TransformImpl")
+					.add("blockTransform", cssBlockTransform);
 			}
 		}
 		
@@ -123,7 +133,7 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		private List<Transform.Provider<CSSBlockTransform>> cssBlockTransformProviders
 		= new ArrayList<Transform.Provider<CSSBlockTransform>>();
 		
-		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,CSSBlockTransform> cssBlockTransformProvider
+		private Transform.Provider.MemoizingProvider<CSSBlockTransform> cssBlockTransformProvider
 		= memoize(dispatch(cssBlockTransformProviders));
 		
 	}

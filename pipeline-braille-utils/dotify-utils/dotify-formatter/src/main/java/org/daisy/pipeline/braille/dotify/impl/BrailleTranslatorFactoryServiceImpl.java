@@ -20,13 +20,13 @@ import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.dotify.api.translator.TranslatorSpecification;
 
+import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Provider.MemoizingProvider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

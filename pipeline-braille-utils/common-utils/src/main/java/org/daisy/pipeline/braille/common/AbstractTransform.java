@@ -241,6 +241,10 @@ public abstract class AbstractTransform implements Transform {
 					return of(Optional.<WithSideEffect<T,Logger>>absent().asSet());
 				}
 				
+				public static <T> Provider.Iterable<T> fromNullable(T element) {
+					return of(WithSideEffect.<T,Logger>fromNullable(element));
+				}
+				
 				public static <T> Provider.Iterable<T> of(T element) {
 					return of(WithSideEffect.<T,Logger>of(element));
 				}

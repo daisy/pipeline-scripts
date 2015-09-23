@@ -1,20 +1,22 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import static com.google.common.base.Objects.toStringHelper;
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import org.daisy.pipeline.braille.common.Memoizing;
+import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.of;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
 import org.daisy.pipeline.braille.common.MathMLTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.logCreate;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -40,7 +42,8 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			MathMLTransform.Provider.class
 		}
 	)
-	public class Provider implements XProcTransform.Provider<LiblouisMathMLTransform>, MathMLTransform.Provider<LiblouisMathMLTransform> {
+	public class Provider extends AbstractTransform.Provider<LiblouisMathMLTransform>
+		                  implements XProcTransform.Provider<LiblouisMathMLTransform>, MathMLTransform.Provider<LiblouisMathMLTransform> {
 		
 		private URI href;
 		
@@ -49,28 +52,17 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/translate-mathml.xpl"));
 		}
 		
-		public LiblouisMathMLTransform get(MathCode code) {
-			return translators.apply(code);
-		}
+		private final static Iterable<LiblouisMathMLTransform> empty
+		= Iterables.<LiblouisMathMLTransform>empty();
 		
-		private Memoizing<MathCode,LiblouisMathMLTransform> translators
-		= new Memoizing<MathCode,LiblouisMathMLTransform>() {
-			public LiblouisMathMLTransform _apply(MathCode code) {
-				return logCreate( new TransformImpl(code) ).apply(logger);
-			}
-		};
-		
-		public Iterable<LiblouisMathMLTransform> get(String query) {
-			Map<String,Optional<String>> q = parseQuery(query);
-			if (q.containsKey("locale")) {
-				MathCode code = mathCodeFromLocale(parseLocale(q.get("locale").get()));
+		protected Iterable<LiblouisMathMLTransform> _get(final String query) {
+			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+			Optional<String> o;
+			if ((o = q.get("locale")) != null) {
+				MathCode code = mathCodeFromLocale(parseLocale(o.get()));
 				if (code != null)
-					return Optional.of(get(code)).asSet(); }
-			return Optional.<LiblouisMathMLTransform>absent().asSet();
-		}
-		
-		public Transform.Provider<LiblouisMathMLTransform> withContext(Logger context) {
-			return this;
+					return of(logCreate((LiblouisMathMLTransform)new TransformImpl(code))); }
+			return empty;
 		}
 		
 		private class TransformImpl extends AbstractTransform implements LiblouisMathMLTransform {
@@ -89,8 +81,9 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			}
 			
 			@Override
-			public String toString() {
-				return toStringHelper(LiblouisMathMLTransform.class.getSimpleName()).add("mathCode", code).toString();
+			public ToStringHelper toStringHelper() {
+				return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisMathMLTransform$Provider$TransformImpl")
+					.add("mathCode", code);
 			}
 		}
 		
