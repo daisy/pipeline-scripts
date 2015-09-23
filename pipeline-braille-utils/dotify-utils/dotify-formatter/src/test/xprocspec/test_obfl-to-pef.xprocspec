@@ -624,7 +624,10 @@
       </x:document>
     </x:expect>
   </x:scenario>
-  
+
+  <!--
+    row spacing
+  -->
   <x:scenario label="test_07">
 		<x:call step="pxi:test">
 			<x:input port="source">
@@ -1001,5 +1004,79 @@
 			</x:document>
 		</x:expect>
 	</x:scenario>
+	
+  <!--
+    row-spacing offset
+  -->
+  <x:scenario label="test_11">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+            <layout-master name="a" page-width="40" page-height="25" duplex="false" page-number-variable="page">
+              <template use-when="(= (% $page 2) 1)">
+                <header>
+                  <field/>
+                </header>
+                <footer/>
+              </template>
+              <template use-when="(= (% $page 2) 0)">
+                <header row-spacing="2.0">
+                  <field/>
+                </header>
+                <footer/>
+              </template>
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block>
+                ⠿
+              </block>
+              <block break-before="page">
+                ⠿
+              </block>
+          </sequence>
+        </obfl>
+      </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
+    </x:expect>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="25" cols="40" rowgap="0" duplex="false">
+              <section>
+                <page>
+                  <row/>
+                  <row>⠿</row>
+                </page>
+                <page>
+                  <row rowgap="4"/>
+                  <row>⠿</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
   
 </x:description>

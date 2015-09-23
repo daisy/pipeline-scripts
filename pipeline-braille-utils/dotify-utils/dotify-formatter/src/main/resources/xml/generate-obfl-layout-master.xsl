@@ -9,86 +9,108 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
     
-    <!--
-        css-utils [2.0.0,3.0.0)
-    -->
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="xs:string?"/>
+        <xsl:param name="page-right-stylesheet" as="xs:string?"/>
+        <xsl:param name="page-left-stylesheet" as="xs:string?"/>
         <xsl:param name="name" as="xs:string"/>
         <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet($page-stylesheet)"/>
         <xsl:variable name="properties" as="element()*"
                       select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="size" as="xs:string"
                       select="($properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
+        <layout-master name="{$name}" duplex="false" page-number-variable="page"
+                       page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
+            <xsl:if test="exists($page-right-stylesheet)">
+                <template use-when="(= (% $page 2) 1)">
+                    <xsl:call-template name="template">
+                        <xsl:with-param name="rules" select="css:parse-stylesheet($page-right-stylesheet)"/>
+                    </xsl:call-template>
+                </template>
+            </xsl:if>
+            <xsl:if test="exists($page-left-stylesheet)">
+                <template use-when="(= (% $page 2) 0)">
+                    <xsl:call-template name="template">
+                        <xsl:with-param name="rules" select="css:parse-stylesheet($page-left-stylesheet)"/>
+                    </xsl:call-template>
+                </template>
+            </xsl:if>
+            <default-template>
+                <xsl:call-template name="template">
+                    <xsl:with-param name="rules" select="$rules"/>
+                </xsl:call-template>
+            </default-template>
+        </layout-master>
+    </xsl:function>
+    
+    <xsl:template name="template">
+        <xsl:param name="rules" as="element()*" required="yes"/>
         <xsl:variable name="top-left" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@top-left')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@top-left')" mode="eval-content-list"/>
         </xsl:variable>
         <xsl:variable name="top-center" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@top-center')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@top-center')" mode="eval-content-list"/>
         </xsl:variable>
         <xsl:variable name="top-right" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@top-right')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@top-right')" mode="eval-content-list"/>
         </xsl:variable>
         <xsl:variable name="bottom-left" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@bottom-left')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@bottom-left')" mode="eval-content-list"/>
         </xsl:variable>
         <xsl:variable name="bottom-center" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@bottom-center')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@bottom-center')" mode="eval-content-list"/>
         </xsl:variable>
         <xsl:variable name="bottom-right" as="element()*">
-            <xsl:apply-templates select="pxi:margin-content($rules, '@bottom-right')" mode="eval-content-list"/>
+            <xsl:apply-templates select="pxi:margin-content($rules,'@bottom-right')" mode="eval-content-list"/>
         </xsl:variable>
+        <xsl:variable name="properties" as="element()*"
+                      select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="margin-top" as="xs:string"
                       select="($properties[@name='margin-top'][css:is-valid(.)]/@value, 'auto')[1]"/>
         <xsl:variable name="empty-string" as="element()">
             <string value=""/>
         </xsl:variable>
-        <layout-master name="{$name}" duplex="false"
-                            page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
-            <default-template>
-                <header>
-                    <xsl:if test="exists(($top-left, $top-center, $top-right)) or $margin-top!='auto'">
-                        <xsl:if test="$margin-top!='auto' and xs:integer($margin-top) &gt; 1">
-                            <xsl:attribute name="row-spacing">
-                                <xsl:value-of select="format-number(xs:integer($margin-top), '0.0')"/>
-                            </xsl:attribute>
-                        </xsl:if>
-                        <xsl:choose>
-                            <xsl:when test="exists(($top-left, $top-center, $top-right))">
-                                <field>
-                                    <xsl:sequence select="if (exists($top-left)) then $top-left else $empty-string"/>
-                                </field>
-                                <field>
-                                    <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
-                                </field>
-                                <field>
-                                    <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
-                                </field>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <field/><!-- Empty field required for header to pass through obfl-to-pef -->
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:if>
-                </header>
-                <footer>
-                    <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
+        <header>
+            <xsl:if test="exists(($top-left, $top-center, $top-right)) or $margin-top!='auto'">
+                <xsl:if test="$margin-top!='auto' and xs:integer($margin-top) &gt; 1">
+                    <xsl:attribute name="row-spacing">
+                        <xsl:value-of select="format-number(xs:integer($margin-top), '0.0')"/>
+                    </xsl:attribute>
+                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="exists(($top-left, $top-center, $top-right))">
                         <field>
-                            <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
+                            <xsl:sequence select="if (exists($top-left)) then $top-left else $empty-string"/>
                         </field>
                         <field>
-                            <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                            <xsl:sequence select="if (exists($top-center)) then $top-center else $empty-string"/>
                         </field>
                         <field>
-                            <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                            <xsl:sequence select="if (exists($top-right)) then $top-right else $empty-string"/>
                         </field>
-                    </xsl:if>
-                </footer>
-            </default-template>
-        </layout-master>
-    </xsl:function>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <field/><!-- Empty field required for header to pass through obfl-to-pef -->
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+        </header>
+        <footer>
+            <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
+                <field>
+                    <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
+                </field>
+                <field>
+                    <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                </field>
+                <field>
+                    <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                </field>
+            </xsl:if>
+        </footer>
+    </xsl:template>
     
     <xsl:template match="css:string[@value]" mode="eval-content-list">
         <string value="{string(@value)}"/>

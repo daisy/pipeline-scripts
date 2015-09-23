@@ -31,7 +31,11 @@
     <xsl:function name="pxi:generate-layout-master" as="element()">
         <xsl:param name="page-stylesheet" as="xs:string"/>
         <xsl:variable name="elem" as="element()" select="(collection()/key('page-stylesheet', $page-stylesheet))[1]"/>
-        <xsl:sequence select="obfl:generate-layout-master($elem/string(@css:page), pxi:generate-layout-master-name($page-stylesheet))"/>
+        <xsl:sequence select="obfl:generate-layout-master(
+                                $elem/@css:page/string(),
+                                $elem/@css:page_right/string(),
+                                $elem/@css:page_left/string(),
+                                pxi:generate-layout-master-name($page-stylesheet))"/>
     </xsl:function>
 
     <xsl:template name="main">

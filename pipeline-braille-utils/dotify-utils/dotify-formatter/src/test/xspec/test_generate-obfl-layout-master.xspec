@@ -6,11 +6,13 @@
   
   <x:scenario label="test_01">
     <x:call function="obfl:generate-layout-master">
-      <x:param select="''"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
       <x:param select="'x'"/>
     </x:call>
     <x:expect label="layout-master">
-      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="40" page-height="25" duplex="false">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="40" page-height="25" duplex="false" page-number-variable="page">
         <default-template>
           <header/>
           <footer/>
@@ -24,10 +26,12 @@
       <x:param select="'size: 15 15;
                         @top-right { content: counter(page, lower-roman) }
                         @bottom-center { content: &quot;footer&quot; }'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
       <x:param select="'x'"/>
     </x:call>
     <x:expect label="layout-master">
-      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="false">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="false" page-number-variable="page">
         <default-template>
           <header>
             <field>
@@ -51,6 +55,51 @@
               <string value=""/>
             </field>
           </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_03">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'size: 15 15'"/>
+      <x:param select="'margin-top: 1; @top-right { content: counter(page) }'"/>
+      <x:param select="'margin-top: 2; @top-left { content: counter(page) }'"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="false" page-number-variable="page">
+        <template use-when="(= (% $page 2) 1)">
+          <header>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <current-page style="default"/>
+            </field>
+          </header>
+          <footer/>
+        </template>
+        <template use-when="(= (% $page 2) 0)">
+          <header row-spacing="2.0">
+            <field>
+              <current-page style="default"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </header>
+          <footer/>
+        </template>
+        <default-template>
+          <header/>
+          <footer/>
         </default-template>
       </layout-master>
     </x:expect>
