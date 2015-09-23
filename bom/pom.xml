@@ -52,7 +52,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-calabash</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -72,7 +72,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-utils</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -265,8 +265,13 @@
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
-                <artifactId>dotify.common</artifactId>
+                <artifactId>dotify.task-api</artifactId>
                 <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.dotify</groupId>
+                <artifactId>dotify.common</artifactId>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
@@ -282,6 +287,16 @@
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.formatter.impl</artifactId>
                 <version>1.1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.dotify</groupId>
+                <artifactId>dotify.task.impl</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.dotify</groupId>
+                <artifactId>dotify.text.impl</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.googlecode.texhyphj</groupId>
