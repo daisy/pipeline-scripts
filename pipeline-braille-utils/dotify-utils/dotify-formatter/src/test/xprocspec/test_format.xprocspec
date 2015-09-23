@@ -2380,7 +2380,7 @@
   <!--
     Double line spacing with margins
   -->
-  <x:scenario label="test_25" pending="buggy dotify implementation?">
+  <x:scenario label="test_25">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
