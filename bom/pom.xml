@@ -12,7 +12,7 @@
 
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-bom</artifactId>
-    <version>1.9.5-SNAPSHOT</version>
+    <version>1.9.5</version>
     <packaging>pom</packaging>
 
     <name>DAISY Pipeline 2 :: Braille Modules Bill Of Materials</name>
@@ -21,7 +21,7 @@
         <connection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</connection>
         <url>scm:git:git@github.com:daisy/pipeline-mod-braille.git</url>
         <developerConnection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.9.5</tag>
     </scm>
 
     <dependencyManagement>
@@ -37,7 +37,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-calabash</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -47,12 +47,12 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-utils</artifactId>
-                <version>2.3.0-SNAPSHOT</version>
+                <version>2.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-calabash</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-formatter</artifactId>
-                <version>1.3.0-SNAPSHOT</version>
+                <version>1.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -72,7 +72,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-utils</artifactId>
-                <version>1.3.0-SNAPSHOT</version>
+                <version>1.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
