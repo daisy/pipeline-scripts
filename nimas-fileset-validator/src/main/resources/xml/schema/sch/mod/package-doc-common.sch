@@ -26,6 +26,8 @@
         <assert test="count(pkg:meta[@name='dtb:revisionDescription'])&lt;2">x-metadata element dtb:revisionDescription occured more than one time.</assert>
     	<!-- DAISY requires this, not NIMAS. We follow NIMAS here. -->
         <!--<assert test="count(pkg:meta[@name='dtb:totalTime'])=1">dtb:totalTime is missing or duplicated in x-metadata.</assert>-->
+
+
     </rule>
     
     <rule context="//pkg:package/pkg:manifest">
@@ -100,11 +102,36 @@
 		<assert test="count(dc:Format) >= 1">dc:Format metadata is required by NIMAS.</assert>
 		<assert test="count(dc:Rights) >= 1">dc:Rights metadata is required by NIMAS.</assert>
 		<assert test="count(dc:Source) >= 1">dc:Source metadata is required by NIMAS.</assert>
+		<assert test="count(dc:Creator) >=1">dc:Creator metadata is required by NIMAS.</assert>
+		<assert test="dc:Format[text() = 'NIMAS 1.1']">dc:Format must be NIMAS 1.1</assert>
+		<assert test="count(dc:Subject) >=1">dc:Subject is required by NIMAS.</assert>		
 	</rule>
 	
 	<rule context="//pkg:package/pkg:metadata/pkg:x-metadata">
 		<assert test="count(pkg:meta[@name = 'nimas-SourceEdition']) >= 1">nimas-SourceEdition metadata is required by NIMAS.</assert>
 		<assert test="count(pkg:meta[@name = 'nimas-SourceDate']) >= 1">nimas-SourceDate metadata is required by NIMAS.</assert>
+
+        <!-- these NIMAS metadata requirements came from a NIMAC PDF sent by APH -->
+        <assert test="count(pkg:meta[@name='DCTERMS.description.note'])&gt;0">DCTERMS.description.note is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.date.dateCopyrighted'])&gt;0">DCTERMS.date.dateCopyrighted is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.description.version'])&gt;0">DCTERMS.description.version is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.audience.educationLevel'])&gt;0">DCTERMS.audience.educationLevel is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.created'])&gt;0">DCTERMS.created is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.publisher.place'])&gt;0">DCTERMS.publisher.place is required by NIMAS.</assert>
+		<assert test="count(pkg:meta[@name='DCTERMS.date.issued'])&gt;0">DCTERMS.date.issued is required by NIMAS.</assert>
+<!--
+
+    FUTURE ENHANCEMENTS (NIMAS; from aforementioned PDF):
+
+        DCTERMS.date.dateCopyrighted // restrict @content to 4 digit year
+        DCTERMS.audience.educationLevel // see controlled vocabulary
+        DCTERMS.created // YYYY-MM-DD
+        DCTERMS.date.issued  // 4 digit year
+        dc:Subject // see controlled vocabulary
+
+
+-->
+
 	</rule>
 	
 	<rule context="//pkg:package/pkg:manifest">
