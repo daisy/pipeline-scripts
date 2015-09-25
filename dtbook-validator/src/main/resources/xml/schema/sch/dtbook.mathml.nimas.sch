@@ -24,6 +24,8 @@
     <!-- ****************************************************** -->
     <!-- Patterns in this section were imported from Pipeline 1 -->
     <!-- ****************************************************** -->
+
+
     <!-- removing these rules for NIMAS compliance (requested by APH) -->
     <!--
     <pattern id="dtbook_MetaUid">
@@ -48,6 +50,14 @@
         </rule>
     </pattern>
 -->
+    
+    <!-- added for NIMAS -->
+    <pattern id="dtbook_NimasHeadMeta">
+        <rule context="dtb:meta">
+            <assert test="count(*) &gt; 0">The meta element must be empty.</assert>
+        </rule>
+    </pattern>
+    
     <pattern id="dtbook_idrefNote">
         <rule context="dtb:noteref">
             <assert test="contains(@idref, '#')"> noteref URI value does not contain a fragment

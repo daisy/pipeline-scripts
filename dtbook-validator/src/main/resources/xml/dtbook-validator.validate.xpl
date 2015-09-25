@@ -157,14 +157,16 @@
     
     <p:choose name="choose-schematron">
         <p:when test="$nimas = 'true'">
-            <p:identity>
+            <p:output port="result"/>
+            <p:identity name="use-nimas-schematron">
                 <p:input port="source">
                     <p:document href="./schema/sch/dtbook.mathml.nimas.sch"/>
                 </p:input>
             </p:identity>
         </p:when>
         <p:otherwise>
-            <p:identity>
+            <p:output port="result"/>
+            <p:identity name="use-default-schematron">
                 <p:input port="source">
                     <p:document href="./schema/sch/dtbook.mathml.sch"/>
                 </p:input>
@@ -174,7 +176,7 @@
     <!-- validate with schematron --> 
     <p:validate-with-schematron assert-valid="false" name="validate-against-schematron">
         <p:input port="schema">
-            <p:pipe step="choose-schematron" port="result"/>
+            <p:pipe port="result" step="choose-schematron"/>
         </p:input>
         <p:input port="source">
             <p:pipe port="source" step="dtbook-validator.validate"/>
