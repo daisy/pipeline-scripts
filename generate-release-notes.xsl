@@ -31,6 +31,15 @@
 		<xsl:variable name="dotify.formatter.impl-version" select="/pom:project/pom:dependencyManagement
 		                                                           /pom:dependencies/pom:dependency[pom:artifactId='dotify.formatter.impl']
 		                                                           /pom:version"/>
+		<xsl:variable name="dotify.text.impl-version" select="/pom:project/pom:dependencyManagement
+		                                                      /pom:dependencies/pom:dependency[pom:artifactId='dotify.text.impl']
+		                                                      /pom:version"/>
+		<xsl:variable name="dotify.task-api-version" select="/pom:project/pom:dependencyManagement
+		                                                     /pom:dependencies/pom:dependency[pom:artifactId='dotify.task-api']
+		                                                     /pom:version"/>
+		<xsl:variable name="dotify.task.impl-version" select="/pom:project/pom:dependencyManagement
+		                                                      /pom:dependencies/pom:dependency[pom:artifactId='dotify.task.impl']
+		                                                      /pom:version"/>
 		<xsl:variable name="braille-utils.api-version" select="/pom:project/pom:dependencyManagement
 		                                                      /pom:dependencies/pom:dependency[pom:artifactId='braille-utils.api']
 		                                                      /pom:version"/>
@@ -103,6 +112,21 @@
 		<xsl:value-of select="$dotify.formatter.impl-version"/>
 		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv</xsl:text>
 		<xsl:value-of select="$dotify.formatter.impl-version"/>
+		<xsl:text>), text.impl&#10;</xsl:text>
+		<xsl:text>  [</xsl:text>
+		<xsl:value-of select="$dotify.text.impl-version"/>
+		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv</xsl:text>
+		<xsl:value-of select="$dotify.text.impl-version"/>
+		<xsl:text>), task-api&#10;</xsl:text>
+		<xsl:text>  [</xsl:text>
+		<xsl:value-of select="$dotify.task-api-version"/>
+		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv</xsl:text>
+		<xsl:value-of select="$dotify.task-api-version"/>
+		<xsl:text>), task.impl&#10;</xsl:text>
+		<xsl:text>  [</xsl:text>
+		<xsl:value-of select="$dotify.task.impl-version"/>
+		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv</xsl:text>
+		<xsl:value-of select="$dotify.task.impl-version"/>
 		<xsl:text>))&#10;</xsl:text>
 		<xsl:text>- brailleutils (api&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
