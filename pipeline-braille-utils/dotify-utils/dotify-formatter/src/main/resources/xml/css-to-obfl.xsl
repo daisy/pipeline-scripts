@@ -100,28 +100,23 @@
     </xsl:template>
     
     <xsl:template match="@css:line-height">
-        <xsl:attribute name="row-spacing" select=
-        "format-number(xs:integer(number(.)), '0.0')"/>
+        <xsl:attribute name="row-spacing" select="format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
-    <!-- Blocks with both line-height and margins -->
+    <!--
+        blocks with both line-height and margins
+    -->
     <xsl:template match="css:box[@type='block' and @css:line-height and (@css:margin-top or @css:margin-bottom)]">
       <block>
-        <xsl:if test="@css:margin-top">
-          <xsl:attribute name="margin-top">
-            <xsl:value-of select="@css:margin-top"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@css:margin-bottom">
-          <xsl:attribute name="margin-bottom">
-            <xsl:value-of select="@css:margin-bottom"/>
-          </xsl:attribute>
-        </xsl:if>
-          <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:margin-top|@css:margin-bottom|@css:line-height)"/>
-        <block>
-            <xsl:apply-templates select="@css:line-height|@css:string-entry|@css:string-set"/>
-            <xsl:apply-templates/>
-        </block>
+          <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|
+                                                  @css:line-height|
+                                                  @css:text-align|@css:text-indent|@page-break-inside)"/>
+          <xsl:apply-templates select="@css:string-entry|@css:string-set"/>
+          <block>
+              <xsl:apply-templates select="@css:line-height|
+                                           @css:text-align|@css:text-indent|@page-break-inside|@css:orphans|@css:widows"/>
+              <xsl:apply-templates/>
+          </block>
       </block>
     </xsl:template>
     
