@@ -72,6 +72,8 @@
                       select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="margin-top" as="xs:string"
                       select="($properties[@name='margin-top'][css:is-valid(.)]/@value, 'auto')[1]"/>
+        <xsl:variable name="margin-bottom" as="xs:string"
+                      select="($properties[@name='margin-bottom'][css:is-valid(.)]/@value, 'auto')[1]"/>
         <xsl:variable name="empty-string" as="element()">
             <string value=""/>
         </xsl:variable>
@@ -101,16 +103,28 @@
             </xsl:if>
         </header>
         <footer>
-            <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
-                <field>
-                    <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
-                </field>
-                <field>
-                    <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
-                </field>
-                <field>
-                    <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
-                </field>
+            <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
+                <xsl:if test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 1">
+                    <xsl:attribute name="row-spacing">
+                        <xsl:value-of select="format-number(xs:integer($margin-bottom), '0.0')"/>
+                    </xsl:attribute>
+                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="exists(($bottom-left, $bottom-center, $bottom-right))">
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
+                        </field>
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                        </field>
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                        </field>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <field/><!-- Empty field required for footer to pass through obfl-to-pef -->
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
         </footer>
     </xsl:template>
