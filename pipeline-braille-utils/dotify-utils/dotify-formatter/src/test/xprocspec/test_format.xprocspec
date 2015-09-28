@@ -2546,7 +2546,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
           </sequence>
         </obfl>
@@ -2607,7 +2607,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
           </sequence>
         </obfl>
@@ -2676,7 +2676,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
           </sequence>
         </obfl>
@@ -2745,7 +2745,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
           </sequence>
         </obfl>
@@ -2817,10 +2817,10 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
             <block break-before="page">
-              ⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠿
             </block>
           </sequence>
         </obfl>

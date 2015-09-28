@@ -276,7 +276,7 @@
     </xsl:template>
     
     <xsl:template match="text()">
-        <xsl:sequence select="."/>
+        <xsl:value-of select="translate(.,'&#x2800;',' ')"/>
     </xsl:template>
     
     <xsl:template match="css:white-space">
