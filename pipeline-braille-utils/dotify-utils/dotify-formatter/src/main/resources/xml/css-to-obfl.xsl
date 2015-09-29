@@ -104,9 +104,9 @@
     </xsl:template>
     
     <!--
-        blocks with both line-height and margins
+        blocks with both line-height and margins or borders
     -->
-    <xsl:template match="css:box[@type='block' and @css:line-height and (@css:margin-top or @css:margin-bottom)]">
+    <xsl:template match="css:box[@type='block' and @css:line-height and (@css:margin-top or @css:margin-bottom or @css:border-top or @css:border-bottom)]">
       <block>
           <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|
                                                   @css:line-height|

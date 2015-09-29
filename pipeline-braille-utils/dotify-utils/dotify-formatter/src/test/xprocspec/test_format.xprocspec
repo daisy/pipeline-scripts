@@ -2518,9 +2518,73 @@
   </x:scenario>
   
   <!--
-      line-height and margin|padding|border-top|bottom and text-align
+      line-height and border-top|bottom
   -->
   <x:scenario label="test_27">
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc>
+            <p style="display:block; line-height:2; border-bottom:⠒">
+              ⠿⠿⠿⠿⠿⠿⠿⠿
+            </p>
+            ⠿⠿⠿⠿⠿⠿⠿⠿
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <layout-master name="a" page-width="40" page-height="25" duplex="false" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="a">
+            <block border-bottom-style="solid" border-bottom-align="center">
+              <block row-spacing="2.0"> ⠿⠿⠿⠿⠿⠿⠿⠿ </block>
+            </block>
+            <block> ⠿⠿⠿⠿⠿⠿⠿⠿ </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="25" rowgap="0" duplex="false">
+              <section>
+                <page>
+                  <row rowgap="4">⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      line-height and margin|padding|border-top|bottom and text-align
+  -->
+  <x:scenario label="test_28">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2582,7 +2646,7 @@
   </x:scenario>
   
   <!-- Page top margin, no header, 1 row -->
-  <x:scenario label="test_28">
+  <x:scenario label="test_29">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2643,7 +2707,7 @@
   </x:scenario>
   
   <!-- Page top margin, no header, 2 rows -->
-  <x:scenario label="test_29">
+  <x:scenario label="test_30">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2704,7 +2768,7 @@
   </x:scenario>
   
   <!-- Page top margin, header, 1 row -->
-  <x:scenario label="test_30">
+  <x:scenario label="test_31">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2773,7 +2837,7 @@
   </x:scenario>
   
   <!-- Page top margin, header, 2 rows -->
-  <x:scenario label="test_31">
+  <x:scenario label="test_32">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2842,7 +2906,7 @@
   </x:scenario>
 
   <!-- :left and :right pseudoselectors -->
-  <x:scenario label="test_32">
+  <x:scenario label="test_33">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2923,7 +2987,7 @@
   <!--
       empty blocks
   -->
-  <x:scenario label="test_33">
+  <x:scenario label="test_34">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3005,7 +3069,7 @@
   <!--
       empty block and border
   -->
-  <x:scenario label="test_34">
+  <x:scenario label="test_35">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3068,7 +3132,7 @@
   <!--
       empty target box
   -->
-  <x:scenario label="test_35">
+  <x:scenario label="test_36">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
