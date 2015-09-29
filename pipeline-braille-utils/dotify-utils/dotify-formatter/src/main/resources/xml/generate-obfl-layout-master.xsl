@@ -106,7 +106,7 @@
             <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
                 <xsl:if test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 1">
                     <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
-                        <xsl:message terminate="yes">WARNING: Bottom margin > 1 with footer content not implemented yet</xsl:message>
+                        <xsl:message>WARNING: Bottom margin > 1 with footer content not implemented yet</xsl:message>
                     </xsl:if>
                     <xsl:attribute name="row-spacing">
                         <xsl:value-of select="format-number(xs:integer($margin-bottom), '0.0')"/>
