@@ -8,6 +8,7 @@
         <p:output port="result" sequence="false"/>
         <p:option name="locale" required="true"/>
         <p:option name="mode" required="true"/>
+        <p:option name="identifier" required="false" select="''"/>
     </p:declare-step>
     
     <p:declare-step type="dotify:xml-to-obfl">

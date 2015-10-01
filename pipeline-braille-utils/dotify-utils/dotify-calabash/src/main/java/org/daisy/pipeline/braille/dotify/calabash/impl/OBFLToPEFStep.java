@@ -1,13 +1,27 @@
 package org.daisy.pipeline.braille.dotify.calabash.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.transform.stream.StreamSource;
+
+import org.daisy.common.xproc.calabash.XProcStepProvider;
+import org.daisy.dotify.api.engine.FormatterEngine;
+import org.daisy.dotify.api.engine.FormatterEngineFactoryService;
+import org.daisy.dotify.api.writer.MediaTypes;
+import org.daisy.dotify.api.writer.MetaDataItem;
+import org.daisy.dotify.api.writer.PagedMediaWriter;
+import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
+import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
@@ -21,27 +35,11 @@ import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 
-import org.daisy.common.xproc.calabash.XProcStepProvider;
-
-import org.daisy.dotify.api.engine.FormatterEngine;
-import org.daisy.dotify.api.engine.FormatterEngineFactoryService;
-import org.daisy.dotify.api.writer.MediaTypes;
-import org.daisy.dotify.api.writer.PagedMediaWriter;
-import org.daisy.dotify.api.writer.PagedMediaWriterConfigurationException;
-import org.daisy.dotify.api.writer.PagedMediaWriterFactoryService;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class OBFLToPEFStep extends DefaultStep {
 	
 	private static final QName _locale = new QName("locale");
 	private static final QName _mode = new QName("mode");
+	private static final QName _identifier = new QName("identifier");
 	
 	private ReadablePipe source = null;
 	private WritablePipe result = null;
@@ -89,7 +87,8 @@ public class OBFLToPEFStep extends DefaultStep {
 			
 			// Convert
 			FormatterEngine engine = newFormatterEngine(getOption(_locale).getString(),
-			                                            getOption(_mode).getString());
+			                                            getOption(_mode).getString(),
+			                                            getOption(_identifier, ""));
 			s = new ByteArrayOutputStream();
 			engine.convert(obflStream, s);
 			obflStream.close();
@@ -113,16 +112,23 @@ public class OBFLToPEFStep extends DefaultStep {
 		throw new RuntimeException("Cannot find a PagedMediaWriter factory for " + target);
 	}
 	
-	private PagedMediaWriter newPEFWriter() throws PagedMediaWriterConfigurationException {
-		return newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
+	private PagedMediaWriter newPEFWriter(String ident) throws PagedMediaWriterConfigurationException {
+		PagedMediaWriter ret = newPagedMediaWriter(MediaTypes.PEF_MEDIA_TYPE);
+		if (!"".equals(ident)) {
+			List<MetaDataItem> meta = new ArrayList<MetaDataItem>();
+			javax.xml.namespace.QName name = new javax.xml.namespace.QName("http://purl.org/dc/elements/1.1/", "identifier", "dc");
+			meta.add(new MetaDataItem(name, ident));
+			ret.prepare(meta);
+		}
+		return ret;
 	}
 	
 	private FormatterEngine newFormatterEngine(String locale, String mode, PagedMediaWriter writer) {
 		return engineFactoryServices.iterator().next().newFormatterEngine(locale, mode, writer);
 	}
 	
-	private FormatterEngine newFormatterEngine(String locale, String mode) throws PagedMediaWriterConfigurationException {
-		return newFormatterEngine(locale, mode, newPEFWriter());
+	private FormatterEngine newFormatterEngine(String locale, String mode, String ident) throws PagedMediaWriterConfigurationException {
+		return newFormatterEngine(locale, mode, newPEFWriter(ident));
 	}
 	
 	@Component(
