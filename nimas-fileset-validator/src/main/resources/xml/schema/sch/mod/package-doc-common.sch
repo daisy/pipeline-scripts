@@ -8,7 +8,8 @@
     	<assert test="count(dc:Format) >= 1">dc:Format metadata is required by NIMAS.</assert>
     	<assert test="count(dc:Rights) >= 1">dc:Rights metadata is required by NIMAS.</assert>
     	<assert test="count(dc:Source) >= 1">dc:Source metadata is required by NIMAS.</assert>
-    	<assert test="count(dc:Creator) >=1">dc:Creator metadata is required by NIMAS.</assert>
+    	<!-- not actually required -->
+    	<!--<assert test="count(dc:Creator) >=1">dc:Creator metadata is required by NIMAS.</assert>-->
     	<assert test="dc:Format[text() = 'NIMAS 1.1']">dc:Format metadata must equal NIMAS 1.1</assert>
     	<assert test="count(dc:Subject) >=1">dc:Subject is required by NIMAS.</assert>	
     </rule>
@@ -37,7 +38,8 @@
 
 
 		<!-- NIMAS requirements -->
-    	<assert test="count(pkg:meta[@name = 'nimas-SourceEdition']) >= 1">nimas-SourceEdition metadata is required by NIMAS.</assert>
+    	<!-- not actually required -->
+    	<!--<assert test="count(pkg:meta[@name = 'nimas-SourceEdition']) >= 1">nimas-SourceEdition metadata is required by NIMAS.</assert>-->
     	<assert test="count(pkg:meta[@name = 'nimas-SourceDate']) >= 1">nimas-SourceDate metadata is required by NIMAS.</assert>
     	
     	<!-- these NIMAS metadata requirements came from a NIMAC PDF sent by APH -->
