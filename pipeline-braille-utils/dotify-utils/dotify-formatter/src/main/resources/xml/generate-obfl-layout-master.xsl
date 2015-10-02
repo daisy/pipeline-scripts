@@ -102,8 +102,21 @@
                 </xsl:choose>
             </xsl:if>
         </header>
-        <footer>
-            <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
+
+
+       
+	    <xsl:choose>
+		  <xsl:when test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 1">
+    		<xsl:call-template name="createNFooters">
+    		  <xsl:with-param name="times" select="xs:integer($margin-bottom)"/>
+			  <xsl:with-param name="bottom-left" select="$bottom-left"/>
+			  <xsl:with-param name="bottom-center" select="$bottom-center"/>
+			  <xsl:with-param name="bottom-right" select="$bottom-right"/>
+    		</xsl:call-template>
+          </xsl:when>
+		  <xsl:otherwise>
+            <footer>
+              <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
                 <xsl:if test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 1">
                     <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right))">
                         <xsl:message>WARNING: Bottom margin > 1 with footer content not implemented yet</xsl:message>
@@ -128,9 +141,46 @@
                         <field/><!-- Empty field required for footer to pass through obfl-to-pef -->
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:if>
-        </footer>
+              </xsl:if>
+            </footer>
+		  </xsl:otherwise>
+		</xsl:choose>
+
     </xsl:template>
+    
+	<xsl:template name="createNFooters">
+	  <xsl:param name="times" select="1"/>
+	  <xsl:param name="bottom-left"/>
+	  <xsl:param name="bottom-center"/>
+	  <xsl:param name="bottom-right"/>
+      <xsl:variable name="empty-string" as="element()">
+          <string value=""/>
+      </xsl:variable>
+	 
+	 <xsl:if test="$times &gt; 0">
+	    <xsl:call-template name="createNFooters">
+		  <xsl:with-param name="times" select="$times - 1"/>
+		</xsl:call-template>
+      </xsl:if>
+	  <footer>
+	    <xsl:choose>
+	      <xsl:when test="exists(($bottom-left, $bottom-center, $bottom-right))">
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
+                        </field>
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                        </field>
+                        <field>
+                            <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                        </field>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <field/>
+		  </xsl:otherwise>
+	    </xsl:choose>
+	  </footer>
+	</xsl:template>
     
     <xsl:function name="pxi:margin-content" as="element()*">
         <xsl:param name="margin-rules" as="element()*"/>

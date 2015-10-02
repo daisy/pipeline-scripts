@@ -3575,7 +3575,10 @@
           <layout-master name="a" page-width="15" page-height="5" duplex="false" page-number-variable="page">
             <default-template>
               <header/>
-              <footer row-spacing="2.0">
+              <footer>
+                <field/>
+              </footer>
+              <footer>
                 <field/>
               </footer>
             </default-template>
