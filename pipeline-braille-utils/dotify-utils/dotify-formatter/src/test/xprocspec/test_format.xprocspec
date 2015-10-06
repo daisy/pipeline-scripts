@@ -3476,7 +3476,15 @@
             <default-template>
               <header/>
               <footer>
-                <field/>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
               </footer>
             </default-template>
           </layout-master>
@@ -3576,10 +3584,26 @@
             <default-template>
               <header/>
               <footer>
-                <field/>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
               </footer>
               <footer>
-                <field/>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
               </footer>
             </default-template>
           </layout-master>

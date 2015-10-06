@@ -153,14 +153,12 @@
       <xsl:if test="$times &gt; 1">
 	    <xsl:call-template name="createNFooters">
 		  <xsl:with-param name="times" select="$times - 1"/>
-                  <xsl:with-param name="bottom-left" select="$bottom-left"/>
-                  <xsl:with-param name="bottom-center" select="$bottom-center"/>
-                  <xsl:with-param name="bottom-right" select="$bottom-right"/>
+                  <xsl:with-param name="bottom-left" select="if (exists($bottom-left)) then $bottom-left else $empty-string" as="element()"/>
+                  <xsl:with-param name="bottom-center" select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                  <xsl:with-param name="bottom-right" select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
 	    </xsl:call-template>
       </xsl:if>
       <footer>
-        <xsl:choose>
-          <xsl:when test="exists(($bottom-left, $bottom-center, $bottom-right))">
              <field>
                <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
              </field>
@@ -170,11 +168,6 @@
              <field>
                <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
              </field>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <field/>
-	  </xsl:otherwise>
-        </xsl:choose>
       </footer>
     </xsl:template>
     
