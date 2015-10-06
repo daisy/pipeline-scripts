@@ -104,39 +104,39 @@
         </header>
 
         <xsl:choose>
-          <xsl:when test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 0">
-            <xsl:call-template name="createNFooters">
-    		  <xsl:with-param name="times" select="xs:integer($margin-bottom)"/>
-		  <xsl:with-param name="bottom-left" select="$bottom-left"/>
-		  <xsl:with-param name="bottom-center" select="$bottom-center"/>
-		  <xsl:with-param name="bottom-right" select="$bottom-right"/>
-    	    </xsl:call-template>
-          </xsl:when>
-
-	  <xsl:otherwise>
-            <!-- Margin auto or margin = 0 -->
-            <footer>
-              <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
-                <xsl:choose>
-                    <xsl:when test="exists(($bottom-left, $bottom-center, $bottom-right))">
-                        <field>
-                            <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
-                        </field>
-                        <field>
-                            <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
-                        </field>
-                        <field>
-                            <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
-                        </field>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <field/><!-- Empty field required for footer to pass through obfl-to-pef -->
-                    </xsl:otherwise>
-                </xsl:choose>
-              </xsl:if>
-            </footer>
-	  </xsl:otherwise>
-	</xsl:choose>
+            <xsl:when test="$margin-bottom!='auto' and xs:integer($margin-bottom) &gt; 0">
+                <xsl:call-template name="createNFooters">
+                    <xsl:with-param name="times" select="xs:integer($margin-bottom)"/>
+	            <xsl:with-param name="bottom-left" select="$bottom-left"/>
+                    <xsl:with-param name="bottom-center" select="$bottom-center"/>
+	            <xsl:with-param name="bottom-right" select="$bottom-right"/>
+                </xsl:call-template>
+            </xsl:when>
+            <!-- TODO: move otherwise logic to createNFooters -->
+            <xsl:otherwise>
+                <!-- Margin auto or margin = 0 -->
+                <footer>
+                    <xsl:if test="exists(($bottom-left, $bottom-center, $bottom-right)) or $margin-bottom!='auto'">
+                        <xsl:choose>
+                            <xsl:when test="exists(($bottom-left, $bottom-center, $bottom-right))">
+                                <field>
+                                    <xsl:sequence select="if (exists($bottom-left)) then $bottom-left else $empty-string"/>
+                                </field>
+                                <field>
+                                    <xsl:sequence select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
+                                </field>
+                                <field>
+                                    <xsl:sequence select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                                </field>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <field/><!-- Empty field required for footer to pass through obfl-to-pef -->
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                </footer>
+            </xsl:otherwise>
+        </xsl:choose>
 
     </xsl:template>
 
