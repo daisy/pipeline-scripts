@@ -59,6 +59,7 @@ public class XMLToOBFL extends DefaultStep {
     private static final QName _outerMargin = new QName("outer-margin");
     private static final QName _rowgap = new QName("rowgap");
     private static final QName _splitterMax = new QName("splitterMax");
+    private static final QName _identifier = new QName("identifier");
 	
 	private ReadablePipe source = null;
 	private WritablePipe result = null;
@@ -110,6 +111,7 @@ public class XMLToOBFL extends DefaultStep {
 			addOption(_outerMargin, params);
 			addOption(_rowgap, params);
 			addOption(_splitterMax, params);
+			addOption(_identifier, params);
 			
 			RuntimeValue rv = getOption(_dotifyOptions);
 			if (rv!=null) {
