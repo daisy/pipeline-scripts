@@ -154,8 +154,8 @@
 	    <xsl:call-template name="createNFooters">
 		  <xsl:with-param name="times" select="$times - 1"/>
                   <xsl:with-param name="bottom-left" select="if (exists($bottom-left)) then $bottom-left else $empty-string" as="element()"/>
-                  <xsl:with-param name="bottom-center" select="if (exists($bottom-center)) then $bottom-center else $empty-string"/>
-                  <xsl:with-param name="bottom-right" select="if (exists($bottom-right)) then $bottom-right else $empty-string"/>
+                  <xsl:with-param name="bottom-center" select="if (exists($bottom-center)) then $bottom-center else $empty-string" as="element()"/>
+                  <xsl:with-param name="bottom-right" select="if (exists($bottom-right)) then $bottom-right else $empty-string" as="element()"/>
 	    </xsl:call-template>
       </xsl:if>
       <footer>
