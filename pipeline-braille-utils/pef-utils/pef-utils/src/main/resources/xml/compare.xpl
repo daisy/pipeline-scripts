@@ -34,6 +34,14 @@
                                 <xsl:apply-templates select="*"/>
                             </xsl:copy>
                         </xsl:template>
+                        <xsl:template match="pef:meta">
+                            <xsl:copy>
+                                <xsl:sequence select="@*|text()"/>
+                                <xsl:apply-templates select="*">
+                                    <xsl:sort select="name()"/>
+                                </xsl:apply-templates>
+                            </xsl:copy>
+                        </xsl:template>
                         <xsl:template match="pef:volume">
                             <xsl:copy>
                                 <xsl:apply-templates select="node()"/>
