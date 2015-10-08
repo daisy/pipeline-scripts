@@ -3704,7 +3704,15 @@
             <default-template>
               <header/>
               <footer>
-                <field/>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
               </footer>
               <footer>
                 <field>
@@ -3786,7 +3794,7 @@
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
-          <doc style="@page { @bottom-left { content: '⠆' } size: 15 5; margin-bottom: 2; }">
+          <doc style="@page { @bottom-left { content: '⠆'; white-space: pre-wrap;} size: 15 5; margin-bottom: 2;}">
             <p style="display: block">
               ⠿
             </p>
@@ -3898,8 +3906,7 @@
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
-          <doc style="@page { @bottom-left { content: '⠆
-⠆⠆' } size: 15 5; margin-bottom: 2; }">
+          <doc style="@page { @bottom-left { content: '⠆&#xa;⠆⠆'; white-space: pre-wrap; } size: 15 5; margin-bottom: 2; }">
             <p style="display: block">
               ⠿
             </p>
