@@ -74,6 +74,8 @@
                       select="($properties[@name='margin-top'][css:is-valid(.)]/@value, 'auto')[1]"/>
         <xsl:variable name="margin-bottom" as="xs:string"
                       select="($properties[@name='margin-bottom'][css:is-valid(.)]/@value, 'auto')[1]"/>
+        <xsl:variable name="white-space" as="xs:string"
+                      select="($properties[@name='white-space'][css:is-valid(.)]/@value, 'auto')[1]"/>
         <xsl:variable name="empty-string" as="element()">
             <string value=""/>
         </xsl:variable>
@@ -110,6 +112,7 @@
 	            <xsl:with-param name="bottom-left" select="$bottom-left"/>
                     <xsl:with-param name="bottom-center" select="$bottom-center"/>
 	            <xsl:with-param name="bottom-right" select="$bottom-right"/>
+                    <xsl:with-param name="white-space" select="$white-space"/>
                 </xsl:call-template>
             </xsl:when>
             <!-- TODO: move otherwise logic to createNFooters -->
@@ -145,6 +148,7 @@
 	  <xsl:param name="bottom-left"/>
 	  <xsl:param name="bottom-center"/>
 	  <xsl:param name="bottom-right"/>
+          <xsl:param name="white-space"/>
       <xsl:variable name="empty-string" as="element()">
           <string value=""/>
       </xsl:variable>
@@ -156,6 +160,7 @@
                   <xsl:with-param name="bottom-left" select="if (exists($bottom-left)) then $bottom-left else $empty-string" as="element()"/>
                   <xsl:with-param name="bottom-center" select="if (exists($bottom-center)) then $bottom-center else $empty-string" as="element()"/>
                   <xsl:with-param name="bottom-right" select="if (exists($bottom-right)) then $bottom-right else $empty-string" as="element()"/>
+                  <xsl:with-param name="white-space" select="if (exists($white-space)) then $white-space else $empty-string"/>
 	    </xsl:call-template>
       </xsl:if>
       <footer>
