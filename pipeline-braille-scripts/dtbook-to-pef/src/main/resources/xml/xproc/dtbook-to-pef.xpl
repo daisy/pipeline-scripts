@@ -92,10 +92,6 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
-    <p:variable name="lang" select="(/*/@xml:lang,'und')[1]">
-        <p:pipe step="main" port="source"/>
-    </p:variable>
-    
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
@@ -131,7 +127,9 @@
             <p:pipe step="main" port="source"/>
         </p:with-option>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                else if ($lang!='' and $lang!='und') then $lang else ''"/>
+                                                else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
+            <p:pipe step="main" port="source"/>
+        </p:with-option>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-brf" select="$include-brf"/>
     </pef:store>
