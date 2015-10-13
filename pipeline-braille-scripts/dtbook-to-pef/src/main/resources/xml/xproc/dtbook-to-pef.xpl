@@ -50,6 +50,13 @@
             <pre><code class="default">(translator:liblouis)(formatter:dotify)</code></pre>
         </p:documentation>
     </p:option>
+
+    <p:option name="ascii-table" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">ascii-table</h2>
+            <p px:role="desc">The ASCII braille table, used for example to render BRF files.</p>
+        </p:documentation>
+    </p:option>
     
     <p:option name="include-preview" required="false" px:type="boolean" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
