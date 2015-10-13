@@ -77,7 +77,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dtbook-to-pef</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>

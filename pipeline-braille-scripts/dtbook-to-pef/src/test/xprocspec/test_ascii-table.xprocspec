@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+               script="../../main/resources/xml/xproc/dtbook-to-pef.xpl">
+  
+  <x:scenario label="Test ascii-table">
+    <x:call step="px:dtbook-to-pef">
+      <x:input port="source">
+        <x:document type="inline">
+          <dtbook version="2005-2" xml:lang="nl" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+            <head>
+              <meta>foobar</meta>
+            </head>
+            <book>
+              <level1>
+                <h1>foo</h1>
+                <p>bar</p>
+                <p>123</p>
+              </level1>
+            </book>
+          </dtbook>
+        </x:document>
+      </x:input>
+      <x:option name="output-dir" select="concat($temp-dir,'output-dir/')"/>
+      <x:option name="temp-dir" select="concat($temp-dir,'temp-dir/')"/>
+      <x:option name="include-brf" select="'true'"/>
+      <x:option name="ascii-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)'"/>
+    </x:call>
+    <x:context label="brf">
+      <x:document type="file" method="text" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
+    </x:context>
+    <x:expect label="brf" type="compare">
+      <x:document type="file" method="text" href="../resources/test_ascii-table.brf">
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+</x:description>

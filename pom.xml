@@ -36,7 +36,7 @@
     <!-- <module>pipeline-braille-utils/libhyphen-utils</module> -->
     <!-- <module>pipeline-braille-utils/texhyph-utils</module> -->
     <!-- <module>pipeline-braille-scripts/zedai-to-pef</module> -->
-    <!-- <module>pipeline-braille-scripts/dtbook-to-pef</module> -->
+    <module>pipeline-braille-scripts/dtbook-to-pef</module>
     <!-- <module>pipeline-braille-scripts/html-to-pef</module> -->
     <!--<module>pipeline-braille-scripts/epub-to-pef</module>-->
   </modules>
