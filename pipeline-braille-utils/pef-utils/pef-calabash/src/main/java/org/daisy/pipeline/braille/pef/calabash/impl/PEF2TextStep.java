@@ -90,7 +90,7 @@ public class PEF2TextStep extends DefaultStep {
 			try {
 				table = tableProvider.get(tableQuery).iterator().next(); }
 			catch (NoSuchElementException e) {
-				throw new RuntimeException("Could not find a table for query: " + tableQuery); }
+				table = tableProvider.get("(id:'org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US')").iterator().next(); }
 			
 			// Read PEF
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
