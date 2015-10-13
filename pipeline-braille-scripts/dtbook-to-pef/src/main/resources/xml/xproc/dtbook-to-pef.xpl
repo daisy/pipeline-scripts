@@ -126,6 +126,7 @@
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="main" port="source"/>
         </p:with-option>
+        <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table else ''"/>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-brf" select="$include-brf"/>
     </pef:store>
