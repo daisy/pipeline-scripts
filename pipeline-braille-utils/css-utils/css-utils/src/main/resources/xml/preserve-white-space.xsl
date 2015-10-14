@@ -21,6 +21,18 @@
         </xsl:copy>
     </xsl:template>
     
+    <xsl:template match="css:string|css:text|css:counter" priority="0.6">
+        <xsl:param name="white-space" as="xs:string" select="'normal'" tunnel="yes"/>
+        <xsl:variable name="white-space" as="xs:string" select="(@css:white-space/string(),$white-space)[1]"/>
+        <xsl:copy>
+            <xsl:sequence select="@* except @css:white-space"/>
+            <xsl:if test="$white-space!='normal'">
+                <xsl:attribute name="css:white-space" select="$white-space"/>
+            </xsl:if>
+            <xsl:sequence select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
     <xsl:template name="apply-templates">
         <xsl:param name="white-space" as="xs:string" select="'normal'" tunnel="yes"/>
         <xsl:choose>

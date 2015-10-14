@@ -15,6 +15,8 @@ package org.daisy.pipeline.braille.common;
  */
 public interface CSSBlockTransform extends Transform {
 	
+	public TextTransform asTextTransform();
+	
 	public interface Provider<T extends CSSBlockTransform> extends Transform.Provider<T> {}
 	
 }

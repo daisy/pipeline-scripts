@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
@@ -17,6 +18,7 @@ import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
@@ -76,19 +78,26 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 					if (!o.get().equals("dotify"))
 						return null;
 				String newQuery = serializeQuery(q);
-				if (!dotifyTranslatorProvider.get(newQuery).iterator().hasNext())
-					return null;
-				return new TransformImpl(newQuery);
+				try {
+					return new TransformImpl(newQuery, dotifyTranslatorProvider.get(newQuery).iterator().next()); }
+				catch (NoSuchElementException e) {
+					return null; }
 			}
 		};
 		
 		private class TransformImpl extends AbstractTransform implements DotifyCSSBlockTransform {
 			
+			private final DotifyTranslator translator;
 			private final Tuple3<URI,QName,Map<String,String>> xproc;
 			
-			private TransformImpl(String translatorQuery) {
+			private TransformImpl(String translatorQuery, DotifyTranslator translator) {
 				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
 				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+				this.translator = translator;
+			}
+			
+			public TextTransform asTextTransform() {
+				return translator;
 			}
 			
 			public Tuple3<URI,QName,Map<String,String>> asXProc() {

@@ -8,17 +8,20 @@
 	<p:input port="source"/>
 	<p:output port="result"/>
 	
-	<p:option name="query" select="''"/>
+	<p:option name="css-block-transform" select="''"/>
+	<p:option name="text-transform" select="''"/>
 	<p:option name="temp-dir" required="true"/>
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
 	<p:import href="../format.xpl"/>
 	
 	<px:transform type="css-block">
-		<p:with-option name="query" select="$query"/>
+		<p:with-option name="query" select="$css-block-transform"/>
 		<p:with-option name="temp-dir" select="$temp-dir"/>
 	</px:transform>
 	
-	<dotify:format/>
+	<dotify:format>
+		<p:with-option name="text-transform" select="$text-transform"/>
+	</dotify:format>
 	
 </p:declare-step>

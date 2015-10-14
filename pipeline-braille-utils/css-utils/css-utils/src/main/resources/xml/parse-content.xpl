@@ -23,8 +23,8 @@
             attribute is parsed, partly evaluated, and inserted in the output in place of the
             element's original content. String values and attr() values are evaluated to
             text. target-text(), target-string(), target-counter() and leader() values are inserted
-            as css:target-string, css:target-text, css:target-counter and css:leader
-            elements. string() and counter() values are invalid.
+            as css:text, css:string, css:counter and css:leader elements. string() and counter()
+            values are invalid.
         </p:documentation>
     </p:output>
     

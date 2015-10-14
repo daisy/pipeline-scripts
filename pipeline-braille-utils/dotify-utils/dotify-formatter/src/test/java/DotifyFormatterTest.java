@@ -1,6 +1,8 @@
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -146,33 +148,27 @@ public class DotifyFormatterTest {
 	
 	private static class NumberBrailleTranslator extends AbstractTransform implements BrailleTranslator, CSSStyledTextTransform {
 		
+		private final static char SHY = '\u00ad';
+		private final static char ZWSP = '\u200b';
+		private final static char SPACE = ' ';
+		private final static char CR = '\r';
+		private final static char LF = '\n';
+		private final static char TAB = '\t';
+		private final static char NBSP = '\u00a0';
+		private final static Pattern VALID_INPUT = Pattern.compile("[ivxlcdm0-9\u2800-\u28ff" + SHY + ZWSP + SPACE + LF + CR + TAB + NBSP + "]*");
+		private final static Pattern NUMBER = Pattern.compile("(?<natural>[0-9]+)|(?<roman>[ivxlcdm]+)");
 		private final static String NUMSIGN = "\u283c";
 		private final static String[] DIGIT_TABLE = new String[]{
 			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
+		private final static String[] DOWNSHIFTED_DIGIT_TABLE = new String[]{
+			"\u2834","\u2802","\u2806","\u2812","\u2832","\u2822","\u2816","\u2836","\u2826","\u2814"};
 		private final static Splitter.MapSplitter CSS_PARSER
 			= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 		
-		private static String translateInteger(int integer) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(NUMSIGN);
-			if (integer == 0)
-				sb.append(DIGIT_TABLE[0]);
-			while (integer > 0) {
-				sb.insert(1, DIGIT_TABLE[integer % 10]);
-				integer = integer / 10; }
-			return sb.toString();
-		}
-		
 		public String transform(String text) {
-			if (text.matches("[ivxlcdm]+"))
-				return text.replace('i', '⠊')
-				           .replace('v', '⠧')
-				           .replace('x', '⠭')
-				           .replace('l', '⠇')
-				           .replace('c', '⠉')
-				           .replace('d', '⠙')
-				           .replace('m', '⠍');
-			return translateInteger(Integer.parseInt(text));
+			if (!VALID_INPUT.matcher(text).matches())
+				throw new RuntimeException("Invalid input: \"" + text + "\"");
+			return translateNumbers(text, false);
 		}
 		
 		public String[] transform(String[] text) {
@@ -183,10 +179,12 @@ public class DotifyFormatterTest {
 		}
 		
 		public String transform(String text, String style) {
+			if (!VALID_INPUT.matcher(text).matches())
+				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			Map<String,String> parsedStyle = CSS_PARSER.split(style);
-			if (parsedStyle.containsKey("text-transform") && "times-two".equals(parsedStyle.get("text-transform")))
-				return translateInteger(2 * Integer.parseInt(text));
-			return transform(text);
+			if (parsedStyle.containsKey("text-transform") && "downshift".equals(parsedStyle.get("text-transform")))
+				return translateNumbers(text, true);
+			return translateNumbers(text, false);
 		}
 		
 		public String[] transform(String[] text, String[] style) {
@@ -194,6 +192,46 @@ public class DotifyFormatterTest {
 			for (int i = 0; i < text.length; i++)
 				result[i] = transform(text[i], style[i]);
 			return result;
+		}
+		
+		private static String translateNumbers(String text, boolean downshift) {
+			Matcher m = NUMBER.matcher(text);
+			int idx = 0;
+			StringBuilder sb = new StringBuilder();
+			for (; m.find(); idx = m.end()) {
+				sb.append(text.substring(idx, m.start()));
+				String number = m.group();
+				if (m.group("roman") != null)
+					sb.append(translateRomanNumber(number));
+				else
+					sb.append(translateNaturalNumber(Integer.parseInt(number), downshift)); }
+			if (idx == 0)
+				return text;
+			sb.append(text.substring(idx));
+			return sb.toString();
+		}
+		
+		private static String translateNaturalNumber(int number, boolean downshift) {
+			StringBuilder sb = new StringBuilder();
+			String[] table = downshift ? DOWNSHIFTED_DIGIT_TABLE : DIGIT_TABLE;
+			if (number == 0)
+				sb.append(table[0]);
+			while (number > 0) {
+				sb.insert(0, table[number % 10]);
+				number = number / 10; }
+			if (!downshift)
+				sb.insert(0, NUMSIGN);
+			return sb.toString();
+		}
+		
+		private static String translateRomanNumber(String number) {
+			return number.replace('i', '⠊')
+			             .replace('v', '⠧')
+			             .replace('x', '⠭')
+			             .replace('l', '⠇')
+			             .replace('c', '⠉')
+			             .replace('d', '⠙')
+			             .replace('m', '⠍');
 		}
 		
 		public boolean isHyphenating() { return false; }

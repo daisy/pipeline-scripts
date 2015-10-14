@@ -11,29 +11,29 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-	name = "org.daisy.pipeline.braille.dotify.impl.BypassMarkerProcessorFactoryService",
+	name = "org.daisy.pipeline.braille.dotify.impl.MarkerProcessorFactoryServiceImpl",
 	service = { MarkerProcessorFactoryService.class }
 )
-public class BypassMarkerProcessorFactoryService implements MarkerProcessorFactoryService {
+public class MarkerProcessorFactoryServiceImpl implements MarkerProcessorFactoryService {
 	
 	public boolean supportsSpecification(String locale, String mode) {
-		return BypassTranslatorFactoryService.MODE.matcher(mode).matches();
+		return BrailleTranslatorFactoryServiceImpl.MODE.matcher(mode).matches();
 	}
 	
 	public MarkerProcessorFactory newFactory() {
-		return new BypassMarkerProcessorFactory();
+		return new MarkerProcessorFactoryImpl();
 	}
 	
 	@SuppressWarnings("serial")
-	private class BypassMarkerProcessorFactory implements MarkerProcessorFactory {
+	private class MarkerProcessorFactoryImpl implements MarkerProcessorFactory {
 		public MarkerProcessor newMarkerProcessor(String locale, String mode) throws MarkerProcessorConfigurationException {
-			if (BypassTranslatorFactoryService.MODE.matcher(mode).matches())
-				return new BypassMarkerProcessor();
+			if (BrailleTranslatorFactoryServiceImpl.MODE.matcher(mode).matches())
+				return new MarkerProcessorImpl();
 			throw new MarkerProcessorConfigurationException("Factory does not support " + locale + "/" + mode) {};
 		}
 	}
 	
-	private static class BypassMarkerProcessor implements MarkerProcessor {
+	private static class MarkerProcessorImpl implements MarkerProcessor {
 		public String processAttributes(TextAttribute atts, String... text){
 			return join(processAttributesRetain(atts, text), "");
 		}

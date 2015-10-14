@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
@@ -76,9 +77,10 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 					if (!o.get().equals("dotify"))
 						return null;
 				String newQuery = serializeQuery(q);
-				if (!cssBlockTransformProvider.get(newQuery).iterator().hasNext())
-					return null;
-				return new TransformImpl(newQuery);
+				try {
+					return new TransformImpl(newQuery, cssBlockTransformProvider.get(newQuery).iterator().next()); }
+				catch (NoSuchElementException e) {
+					return null; }
 			}
 		};
 		
@@ -86,8 +88,10 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 			
 			private final Tuple3<URI,QName,Map<String,String>> xproc;
 			
-			private TransformImpl(String cssBlockTransformQuery) {
-				Map<String,String> options = ImmutableMap.of("query", cssBlockTransformQuery);
+			private TransformImpl(String cssBlockTransformQuery, CSSBlockTransform cssBlockTransform) {
+				Map<String,String> options = ImmutableMap.of(
+					"css-block-transform", cssBlockTransformQuery,
+					"text-transform", "(id:" + cssBlockTransform.asTextTransform().getIdentifier() + ")");
 				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
 			}
 			

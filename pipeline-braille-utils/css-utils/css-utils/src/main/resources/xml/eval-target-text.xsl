@@ -12,6 +12,9 @@
     </xsl:template>
     
     <xsl:template match="css:text[@target]">
+        <xsl:if test="@css:white-space">
+            <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to target-text()')"/>
+        </xsl:if>
         <xsl:variable name="target" select="@target"/>
         <xsl:value-of select="string(//*[@css:id=$target][1])"/>
     </xsl:template>

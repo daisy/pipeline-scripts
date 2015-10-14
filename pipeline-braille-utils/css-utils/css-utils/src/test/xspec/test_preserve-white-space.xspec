@@ -45,4 +45,19 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_02">
+    <x:context>
+      <div css:white-space="pre-wrap">
+        <css:counter name="page"/>
+        xxx
+      </div>
+    </x:context>
+    <x:expect label="result">
+      <div><css:white-space>
+        </css:white-space><css:counter name="page" css:white-space="pre-wrap"/><css:white-space>
+        xxx
+      </css:white-space></div>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

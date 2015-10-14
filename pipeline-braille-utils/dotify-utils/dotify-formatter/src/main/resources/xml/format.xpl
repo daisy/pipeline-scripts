@@ -23,6 +23,9 @@
     
     <pxi:obfl-normalize-space/>
     
+    <!-- for debug info -->
+    <p:for-each><p:identity/></p:for-each>
+    
     <dotify:obfl-to-pef locale="und">
         <p:with-option name="mode" select="concat('dotify:format ',$text-transform)"/>
     </dotify:obfl-to-pef>

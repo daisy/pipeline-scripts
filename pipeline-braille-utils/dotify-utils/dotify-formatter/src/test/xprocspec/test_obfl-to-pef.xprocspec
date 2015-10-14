@@ -22,7 +22,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="5" duplex="false">
             <default-template>
               <header/>
@@ -91,7 +91,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="a" duplex="false" page-width="40" page-height="25">
               <default-template>
                 <header/>
@@ -148,7 +148,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="a" duplex="false" page-width="40" page-height="25">
               <default-template>
                 <header/>
@@ -210,7 +210,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="a" duplex="false" page-width="10" page-height="25">
               <default-template>
                 <header/>
@@ -260,7 +260,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="body" page-width="20" page-height="10" duplex="false">
               <default-template>
                 <header/>
@@ -341,7 +341,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="body" page-width="20" page-height="10" duplex="false">
               <default-template>
                 <header/>
@@ -399,7 +399,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="a" duplex="false" page-width="40" page-height="25">
               <default-template>
                 <header/>
@@ -460,7 +460,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="10" duplex="false">
             <default-template>
               <header/>
@@ -516,7 +516,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="10" duplex="false">
             <default-template>
               <header/>
@@ -575,7 +575,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="10" duplex="false">
             <default-template>
               <header/>
@@ -632,7 +632,7 @@
 		<x:call step="pxi:test">
 			<x:input port="source">
 				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
 						<layout-master name="a" duplex="false" page-width="40" page-height="25" row-spacing="2.0">
 							<default-template>
 								<header/>
@@ -689,7 +689,7 @@
 		<x:call step="pxi:test">
 			<x:input port="source">
 				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
 						<layout-master name="a" duplex="false" page-width="40" page-height="25">
 							<default-template>
 								<header/>
@@ -760,7 +760,7 @@
 		<x:call step="pxi:test">
 			<x:input port="source">
 				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
 						<layout-master name="a" duplex="true" page-width="40" page-height="25">
 							<default-template>
 								<header/>
@@ -933,7 +933,7 @@
 		<x:call step="pxi:test">
 			<x:input port="source">
 				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
 						<layout-master name="a" duplex="true" page-width="40" page-height="25">
 							<default-template>
 								<header/>
@@ -1012,7 +1012,7 @@
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
             <layout-master name="a" page-width="40" page-height="25" duplex="false" page-number-variable="page">
               <template use-when="(= (% $page 2) 1)">
                 <header>

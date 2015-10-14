@@ -19,6 +19,7 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
+import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.Transform.AbstractTransform;
 import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
@@ -121,6 +122,10 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
 				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
 				this.translator = translator;
+			}
+			
+			public TextTransform asTextTransform() {
+				return translator;
 			}
 			
 			public Tuple3<URI,QName,Map<String,String>> asXProc() {

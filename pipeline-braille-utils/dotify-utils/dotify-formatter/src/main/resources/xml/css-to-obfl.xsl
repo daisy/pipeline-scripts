@@ -3,6 +3,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 exclude-result-prefixes="#all"
@@ -11,6 +12,8 @@
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl" />
     
     <xsl:include href="generate-obfl-layout-master.xsl"/>
+    
+    <xsl:param name="braille-translator-query" as="xs:string" select="''"/>
     
     <xsl:key name="page-stylesheet" match="/*" use="pxi:page-stylesheet(.)"/>
     
@@ -39,11 +42,14 @@
     </xsl:function>
 
     <xsl:template name="main">
-        <obfl version="2011-1" xml:lang="und">
+        <obfl version="2011-1" xml:lang="und" hyphenate="false">
             <xsl:for-each select="distinct-values(collection()/*/pxi:page-stylesheet(.))">
                 <xsl:sequence select="pxi:generate-layout-master(.)"/>
             </xsl:for-each>
-            <xsl:apply-templates select="collection()/*[not(@css:flow)]"/>
+            <xsl:apply-templates select="collection()/*[not(@css:flow)]">
+                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+            </xsl:apply-templates>
         </obfl>
     </xsl:template>
     
@@ -76,15 +82,66 @@
     </xsl:template>
     
     <xsl:template match="css:box[@type='inline']">
-        <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
-        <xsl:apply-templates select="@css:string-entry"/>
-        <xsl:apply-templates select="@css:string-set"/>
-        <xsl:apply-templates/>
+        <xsl:variable name="attrs" as="attribute()*">
+            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="exists($attrs)">
+                <!--
+                    FIXME:
+                    - nested spans are a problem
+                    - id on a span is a problem
+                -->
+                <span>
+                    <xsl:sequence select="$attrs"/>
+                    <xsl:apply-templates select="@css:string-entry"/>
+                    <xsl:apply-templates select="@css:string-set"/>
+                    <xsl:apply-templates/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="@css:string-entry"/>
+                <xsl:apply-templates select="@css:string-set"/>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="css:box[@css:hyphens]" priority="0.6">
+        <xsl:next-match>
+            <xsl:with-param name="hyphens" tunnel="yes" select="@css:hyphens"/>
+        </xsl:next-match>
+    </xsl:template>
+    
+    <xsl:template match="css:box[@css:text-transform]" priority="0.7">
+        <xsl:next-match>
+            <xsl:with-param name="text-transform" tunnel="yes" select="@css:text-transform"/>
+        </xsl:next-match>
     </xsl:template>
     
     <xsl:template match="css:box/@type|
                          css:box/@name|
                          css:box/@part"/>
+    
+    <xsl:template match="@css:hyphens">
+        <!--
+            'hyphens:auto' corresponds with 'hyphenate="true"'. 'hyphens:manual' corresponds with
+            'hyphenate="false"'. For 'hyphens:none' all SHY and ZWSP characters are removed from the
+            text.
+        -->
+        <xsl:attribute name="hyphenate" select="if (.='auto') then 'true' else 'false'"/>
+    </xsl:template>
+    
+    <xsl:template match="@css:text-transform">
+        <!--
+            'text-transform:auto' corresponds with 'translate=""'. 'text-transform:none' would
+            normally correspond with 'translate="pre-translated"', but because "pre-translated"
+            currently delegates to a non-configurable bypass translator, 'translate=""' is used here
+            too. Other values of text-transform are currently handled by translating prior to
+            formatting when possible and otherwise (i.e. for content generated while formatting)
+            ignored. FIXME: make use of style elements.
+        -->
+    </xsl:template>
     
     <xsl:template match="@css:collapsing-margins"/>
     
@@ -184,7 +241,7 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message>border value not supported</xsl:message>
+                <xsl:message select="concat(local-name(),':',.,' not supported yet')"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -222,17 +279,21 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message>border value not supported</xsl:message>
+                <xsl:message select="concat(local-name(),':',.,' not supported yet')"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
     <xsl:template match="@css:orphans|
                          @css:widows">
-        <xsl:message>NOT IMPLEMENTED</xsl:message>
+        <xsl:message select="concat(local-name(),':',.,' not supported yet')"/>
     </xsl:template>
     
     <xsl:template match="css:string[@name]">
+        <xsl:if test="@css:white-space">
+            <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to ',
+                                        (if (@target) then 'target-string' else 'string'),'(',@name,')')"/>
+        </xsl:if>
         <xsl:variable name="target" as="xs:string?" select="@target"/>
         <xsl:variable name="target" as="element()?"
                       select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
@@ -242,6 +303,23 @@
     </xsl:template>
     
     <xsl:template match="css:counter[@target][@name='page']">
+        <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
+        <xsl:if test="@css:white-space">
+            <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to target-counter(page)')"/>
+        </xsl:if>
+        <xsl:if test="not($text-transform=('auto','none'))">
+            <!--
+                FIXME: make use of style element
+            -->
+            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-counter(page)')"/>
+        </xsl:if>
+        <xsl:if test="$hyphens='none'">
+            <!--
+                FIXME: make use of style element
+            -->
+            <xsl:message select="'hyphens:none could not be applied to target-counter(page)'"/>
+        </xsl:if>
         <page-number ref-id="{@target}" style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                                then @style else 'default'}"/>
     </xsl:template>
@@ -267,11 +345,50 @@
     </xsl:template>
     
     <xsl:template match="css:string[@value]" mode="eval-string-set" as="xs:string">
-        <xsl:value-of select="string(@value)"/>
+        <xsl:sequence select="string(@value)"/>
     </xsl:template>
     
     <xsl:template match="text()">
-        <xsl:value-of select="translate(.,'&#x2800;',' ')"/>
+        <xsl:call-template name="text">
+            <xsl:with-param name="text" select="."/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template name="text">
+        <xsl:param name="text" as="xs:string" required="yes"/>
+        <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
+        <xsl:variable name="text" as="xs:string">
+            <xsl:choose>
+                <!--
+                    text-transform values 'none' and 'auto' are handled during formatting. A
+                    translation is performed only when there are non-braille characters in the text.
+                -->
+                <xsl:when test="$text-transform=('none','auto')">
+                    <xsl:value-of select="$text"/>
+                </xsl:when>
+                <!--
+                    Other values are handled by translating prior to formatting.
+                -->
+                <xsl:otherwise>
+                    <xsl:value-of select="pf:text-transform($braille-translator-query,
+                                                            $text,
+                                                            concat('text-transform:',$text-transform))"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="text" as="xs:string" select="translate($text,'&#x2800;',' ')"/>
+        <xsl:choose>
+            <!--
+                For 'hyphens:none' all SHY and ZWSP characters are removed from the text in advance.
+            -->
+            <xsl:when test="$hyphens='none'">
+                <xsl:value-of select="replace($text,'[&#x00AD;&#x200B;]','')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$text"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="css:white-space">

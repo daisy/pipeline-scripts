@@ -19,6 +19,10 @@
     </xsl:template>
     
     <xsl:template match="css:counter">
+        <xsl:if test="@css:white-space">
+            <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to ',
+                                        (if (@target) then 'target-counter' else 'counter'),'(',@name,')')"/>
+        </xsl:if>
         <xsl:choose>
             <xsl:when test="if ($counter-names='#all')
                             then not(@name=$exclude-counter-names-list)
@@ -47,10 +51,7 @@
                 </xsl:variable>
                 <xsl:variable name="text" as="xs:string" select="$text-with-text-transform[1]"/>
                 <xsl:variable name="text-transform" as="xs:string" select="($text-with-text-transform[2],'auto')[1]"/>
-                <css:box type="inline" class="counter">
-                    <xsl:if test="$text-transform!='auto'">
-                        <xsl:attribute name="css:text-transform" select="$text-transform"/>
-                    </xsl:if>
+                <css:box type="inline" css:text-transform="{$text-transform}">
                     <xsl:value-of select="$text"/>
                 </css:box>
             </xsl:when>

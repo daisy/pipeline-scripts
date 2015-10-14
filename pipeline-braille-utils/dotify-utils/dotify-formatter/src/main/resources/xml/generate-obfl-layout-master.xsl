@@ -112,6 +112,22 @@
         </footer>
     </xsl:template>
     
+    <xsl:function name="pxi:margin-content" as="element()*">
+        <xsl:param name="margin-rules" as="element()*"/>
+        <xsl:param name="selector" as="xs:string"/>
+        <xsl:variable name="properties" as="element()*"
+                      select="css:parse-declaration-list($margin-rules[@selector=$selector][1]/@declaration-list)"/>
+        <xsl:variable name="white-space" as="xs:string" select="($properties[@name='white-space']/@value,'normal')[1]"/>
+        <xsl:variable name="text-transform" as="xs:string" select="($properties[@name='text-transform']/@value,'auto')[1]"/>
+        <xsl:if test="$white-space!='normal'">
+            <xsl:message select="concat('white-space:',$white-space,' could not be applied to ',$selector)"/>
+        </xsl:if>
+        <xsl:if test="not($text-transform=('none','auto'))">
+            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to ',$selector)"/>
+        </xsl:if>
+        <xsl:sequence select="css:parse-content-list($properties[@name='content'][1]/@value, ())"/>
+    </xsl:function>
+    
     <xsl:template match="css:string[@value]" mode="eval-content-list">
         <string value="{string(@value)}"/>
     </xsl:template>
@@ -156,13 +172,5 @@
     <xsl:template match="*" mode="eval-content-list">
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>
-    
-    <xsl:function name="pxi:margin-content" as="element()*">
-        <xsl:param name="margin-rules" as="element()*"/>
-        <xsl:param name="selector" as="xs:string"/>
-        <xsl:sequence select="css:parse-content-list(
-                                css:parse-declaration-list($margin-rules[@selector=$selector][1]/@declaration-list)
-                                [@name='content'][1]/@value, ())"/>
-    </xsl:function>
     
 </xsl:stylesheet>

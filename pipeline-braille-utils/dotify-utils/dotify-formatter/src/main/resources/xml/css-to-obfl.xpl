@@ -104,15 +104,6 @@
     </css:eval-counter>
     
     <p:for-each>
-        <p:xslt>
-            <p:documentation>
-                Translate counters to braille. <!-- depends on eval-counter -->
-            </p:documentation>
-            <p:input port="stylesheet">
-                <p:document href="translate-counters.xsl"/>
-            </p:input>
-            <p:with-param name="braille-translator-query" select="if ($text-transform='auto') then '' else $text-transform"/>
-        </p:xslt>
         <css:parse-counter-set counters="page">
             <p:documentation>
                 Make css:counter-set-page attributes.
@@ -189,11 +180,14 @@
                 <p:inline>
                     <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
                         <xsl:variable name="new:properties" as="xs:string*"
-                                      select="('margin-left',     'border-left',     'page-break-before',   'text-indent',   '-obfl-vertical-align',
-                                               'margin-right',    'border-right',    'page-break-after',    'text-align',    '-obfl-vertical-position',
-                                               'margin-top',      'border-top',      'page-break-inside',   'line-height',
-                                               'margin-bottom',   'border-bottom',   'orphans',
-                                                                                     'widows')"/>
+                                      select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
+                                               'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
+                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',
+                                               'margin-bottom', 'orphans',
+                                               'border-left',   'widows',
+                                               'border-right',
+                                               'border-top',
+                                               'border-bottom')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
                             <xsl:param name="css:property" as="element()"/>
                             <xsl:param name="context" as="element()"/>
@@ -221,12 +215,12 @@
                         <xsl:function name="new:is-inherited" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="false()"/>
+                            <xsl:sequence select="$property=('text-transform','hyphens')"/>
                         </xsl:function>
                         <xsl:function name="new:applies-to" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="$context/@type='block'"/>
+                            <xsl:sequence select="$context/@type='block' or $property=('text-transform','hyphens')"/>
                         </xsl:function>
                     </xsl:stylesheet>
                 </p:inline>
@@ -247,13 +241,16 @@
         </p:delete>
     </p:for-each>
     
+    <!-- for debug info -->
+    <p:for-each><p:identity/></p:for-each>
+    
     <p:xslt template-name="main">
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
         </p:input>
-        <p:input port="parameters">
+        <p:with-param name="braille-translator-query" select="if ($text-transform='auto') then '' else $text-transform">
             <p:empty/>
-        </p:input>
+        </p:with-param>
     </p:xslt>
     
 </p:declare-step>
