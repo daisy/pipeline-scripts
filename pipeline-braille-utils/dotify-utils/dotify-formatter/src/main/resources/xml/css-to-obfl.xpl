@@ -181,6 +181,13 @@
     <p:split-sequence test="//css:box"/>
     
     <p:for-each>
+        <css:parse-properties properties="margin-left margin-right margin-top margin-bottom text-indent">
+            <p:documentation>
+                Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom and
+                css:text-indent attributes.
+            </p:documentation>
+        </css:parse-properties>
+        <css:adjust-boxes/>
         <css:new-definition>
             <p:input port="definition">
                 <p:inline>
@@ -232,7 +239,6 @@
                 </p:inline>
             </p:input>
         </css:new-definition>
-        <css:adjust-boxes/>
         <p:delete match="css:box[@type='block']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
                                  not(descendant::css:white-space or

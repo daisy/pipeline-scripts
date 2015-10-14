@@ -152,10 +152,6 @@
         <xsl:attribute name="{local-name()}" select="format-number(xs:integer(number(.)), '0')"/>
     </xsl:template>
     
-    <xsl:template match="@css:text-indent">
-        <xsl:attribute name="first-line-indent" select="format-number(xs:integer(number(.)), '0')"/>
-    </xsl:template>
-    
     <xsl:template match="@css:line-height">
         <xsl:attribute name="row-spacing" select="format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
@@ -182,11 +178,15 @@
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block'])]/@css:text-indent">
         <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(.))"/>
         <xsl:variable name="margin-left" as="xs:integer" select="(parent::*/@css:margin-left/xs:integer(number(.)),0)[1]"/>
-        <xsl:attribute name="first-line-indent" select="format-number($margin-left + $text-indent, '0')"/>
+        <xsl:if test="parent::*[@name or not(preceding-sibling::css:box)]">
+            <xsl:attribute name="first-line-indent" select="format-number($margin-left + $text-indent, '0')"/>
+        </xsl:if>
         <xsl:if test="$margin-left &gt; 0">
             <xsl:attribute name="text-indent" select="format-number($margin-left, '0')"/>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template match="@css:text-indent"/>
     
     <xsl:template match="@css:text-align">
         <xsl:attribute name="align" select="."/>
