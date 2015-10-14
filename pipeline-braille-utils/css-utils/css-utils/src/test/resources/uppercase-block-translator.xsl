@@ -31,8 +31,6 @@
 		<xsl:value-of select="$hyphenated"/>
 	</xsl:template>
 	
-	<xsl:template match="css:property[@name=('text-transform')]" mode="translate-declaration-list"/>
-	
 	<xsl:template match="css:property[@name='hyphens' and @value='auto']" mode="translate-declaration-list">
 		<xsl:sequence select="css:property('hyphens','manual')"/>
 	</xsl:template>

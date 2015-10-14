@@ -27,8 +27,12 @@
 		<xsl:param name="display" as="xs:string" select="'block'" tunnel="yes"/>
 		<xsl:variable name="is-block" as="xs:boolean" select="$is-block and pxi:is-block(.)"/>
 		<xsl:variable name="display" as="xs:string" select="if ($display='none') then 'none' else pxi:display(.)"/>
+		<xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
+		<xsl:variable name="rules" as="element()*"
+		              select="if (parent::* or $rules[not(@selector)]) then $rules
+		                      else ($rules,css:parse-stylesheet('text-transform:auto'))"/>
 		<xsl:variable name="translated-rules" as="element()*">
-			<xsl:apply-templates select="css:parse-stylesheet(@style)" mode="translate-rule-list">
+			<xsl:apply-templates select="$rules" mode="translate-rule-list">
 				<xsl:with-param name="context" select="." tunnel="yes"/>
 			</xsl:apply-templates>
 		</xsl:variable>
@@ -94,7 +98,11 @@
 	</xsl:template>
 	
 	<xsl:template match="css:rule[not(@selector) or @selector=('::before', '::after')]" mode="translate-rule-list">
+		<xsl:param name="context" as="element()" tunnel="yes"/>
 		<xsl:variable name="properties" as="element()*" select="css:parse-declaration-list(@declaration-list)"/>
+		<xsl:variable name="properties" as="element()*" select="if (@selector or $context/parent::* or $properties[@name='text-transform'])
+		                                                        then $properties
+		                                                        else ($properties,css:property('text-transform','auto'))"/>
 		<xsl:variable name="translated-properties" as="element()*">
 			<xsl:apply-templates select="$properties" mode="translate-declaration-list">
 				<xsl:with-param name="mode" tunnel="yes"
@@ -109,6 +117,10 @@
 				<xsl:attribute name="declaration-list" select="css:serialize-declaration-list($translated-properties)"/>
 			</xsl:copy>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="css:property[@name='text-transform']" mode="translate-declaration-list">
+		<css:property name="text-transform" value="none"/>
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='string-set']" mode="translate-declaration-list">
