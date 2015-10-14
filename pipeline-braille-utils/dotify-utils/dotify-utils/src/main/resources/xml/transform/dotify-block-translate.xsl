@@ -10,7 +10,7 @@
 	
 	<xsl:param name="query"/>
 	
-	<xsl:template match="css:block" mode="#all">
+	<xsl:template match="css:block" mode="#default before after">
 		<xsl:value-of select="dotify:translate(concat($query,'(locale:',@xml:lang,')'), string(/*))"/>
 	</xsl:template>
 	

@@ -83,16 +83,22 @@
     </xsl:template>
     
     <!--
-        because some elements are unwrapped, inherit must be concretized
+        because some elements are unwrapped, property values must be computed and inherit must be concretized
     -->
     <xsl:template name="inherit-properties">
         <xsl:param name="pending-properties" as="element()*" select="()" tunnel="yes"/>
-        <xsl:variable name="specified-properties" as="element()*" select="css:parse-declaration-list(@style)"/>
-        <xsl:sequence select="for $p in distinct-values(($pending-properties/@name,$specified-properties/@name))
-                              return if ((not($specified-properties[@name=$p]) and css:is-inherited($p))
-                                          or $specified-properties[@name=$p][@value='inherit'])
+        <xsl:variable name="properties" as="element()*">
+            <xsl:apply-templates select="." mode="css:computed-properties">
+                <xsl:with-param name="concretize-inherit" select="false()"/>
+                <xsl:with-param name="concretize-initial" select="false()"/>
+                <xsl:with-param name="validate" select="false()"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:sequence select="for $p in distinct-values(($pending-properties/@name,$properties/@name))
+                              return if ((not($properties[@name=$p]) and css:is-inherited($p))
+                                          or $properties[@name=$p][@value='inherit'])
                                      then $pending-properties[@name=$p][last()]
-                                     else $specified-properties[@name=$p][last()]"/>
+                                     else $properties[@name=$p][last()]"/>
     </xsl:template>
     
     <xsl:template match="text()">

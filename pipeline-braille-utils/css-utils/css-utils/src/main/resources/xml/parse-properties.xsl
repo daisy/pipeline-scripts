@@ -34,17 +34,13 @@
             validate
         -->
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="$properties[@name=$css:properties]" mode="css:validate">
-                <xsl:with-param name="validate" select="true()"/>
-            </xsl:apply-templates>
+            <xsl:apply-templates select="$properties[@name=$css:properties]" mode="css:validate"/>
         </xsl:variable>
         <!--
             inherit
         -->
         <xsl:variable name="properties" as="element()*">
             <xsl:apply-templates select="$properties" mode="css:inherit">
-                <xsl:with-param name="concretize-inherit" select="true()"/>
-                <xsl:with-param name="concretize-initial" select="true()"/>
                 <xsl:with-param name="validate" select="true()"/>
                 <xsl:with-param name="context" select="parent::*"/>
             </xsl:apply-templates>
@@ -53,8 +49,17 @@
             default
         -->
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="$properties" mode="css:default">
+            <xsl:apply-templates select="$properties" mode="css:default"/>
+        </xsl:variable>
+        <!--
+            computed value
+        -->
+        <xsl:variable name="properties" as="element()*">
+            <xsl:apply-templates select="$properties" mode="css:compute">
+                <xsl:with-param name="concretize-inherit" select="true()"/>
                 <xsl:with-param name="concretize-initial" select="true()"/>
+                <xsl:with-param name="validate" select="true()"/>
+                <xsl:with-param name="context" select="parent::*"/>
             </xsl:apply-templates>
         </xsl:variable>
         <!--

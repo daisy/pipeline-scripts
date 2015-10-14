@@ -85,7 +85,7 @@
                  re:exact(re:or(('normal','pre-wrap','pre-line'))),
                  re:exact(re:or(('auto','manual','none'))),
                  re:exact(concat('(',$css:NON_NEGATIVE_INTEGER_RE,')\s+(',$css:NON_NEGATIVE_INTEGER_RE,')')),
-                 re:exact(re:or(($css:IDENT_LIST_RE,'auto'))),
+                 re:exact(re:or(($css:IDENT_LIST_RE,'auto','none'))),
                  re:exact(re:or(('normal','italic','oblique'))),
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
                  re:exact(re:or(('none','underline','overline','line-through','blink'))),
@@ -219,6 +219,7 @@
                  'page',
                  'white-space',
                  'hyphens',
+                 'text-transform',
                  'font-style',
                  'font-weight',
                  'text-decoration',
@@ -267,22 +268,42 @@
     <!-- ================== -->
     
     <xsl:template match="css:property[@name='text-transform']" mode="css:compute">
+        <xsl:param name="concretize-inherit" as="xs:boolean"/>
+        <xsl:param name="concretize-initial" as="xs:boolean"/>
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
         <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except self::css:box)][1]"/>
         <xsl:choose>
+            <xsl:when test="@value='inherit'">
+                <xsl:sequence select="."/>
+            </xsl:when>
+            <xsl:when test="@value='none'">
+                <xsl:sequence select="."/>
+            </xsl:when>
             <xsl:when test="not(exists($parent))">
                 <xsl:sequence select="."/>
             </xsl:when>
-            <xsl:when test="@value=('auto','initial')">
-                <xsl:sequence select="css:computed-properties(@name, $validate, $parent)"/>
-            </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="parent-computed" as="element()"
-                              select="css:computed-properties(@name, $validate, $parent)"/>
-                <xsl:sequence select="if ($parent-computed/@value='auto')
-                                      then .
-                                      else css:property(@name, string-join((@value, $parent-computed/@value), ' '))"/>
+                              select="css:computed-properties(@name, true(), true(), $validate, $parent)"/>
+                <xsl:choose>
+                    <xsl:when test="@value=('initial','auto') and $parent-computed/@value='none'">
+                        <xsl:sequence select="."/>
+                    </xsl:when>
+                    <xsl:when test="@value=('initial','auto')">
+                        <xsl:sequence select="$parent-computed"/>
+                    </xsl:when>
+                    <xsl:when test="$parent-computed/@value=('auto','none')">
+                        <xsl:sequence select="."/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="css:property(@name, string-join(
+                                                distinct-values((
+                                                  tokenize(normalize-space(@value), ' '),
+                                                  tokenize(normalize-space($parent-computed/@value), ' '))),
+                                                ' '))"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

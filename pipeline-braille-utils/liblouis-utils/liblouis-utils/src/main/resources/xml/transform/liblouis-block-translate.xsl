@@ -10,7 +10,7 @@
 	
 	<xsl:param name="query"/>
 	
-	<xsl:template match="css:block" mode="#all">
+	<xsl:template match="css:block" mode="#default before after">
 		<xsl:variable name="text" as="text()*" select="//text()"/>
 		<xsl:variable name="style" as="xs:string*">
 			<xsl:for-each select="$text">

@@ -51,7 +51,7 @@
     
     <xsl:template match="*">
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="css:specified-properties($liblouis-properties, false(), true(), true(), .)[@name=$liblouis-properties]">
+            <xsl:apply-templates select="css:specified-properties($liblouis-properties, false(), false(), true(), .)[@name=$liblouis-properties]">
                 <xsl:with-param name="display" select="(@css:display,'inline')[1]" tunnel="yes"/>
                 <xsl:with-param name="context" select="." tunnel="yes"/>
             </xsl:apply-templates>
@@ -69,12 +69,20 @@
         <xsl:variable name="name" select="string(@name)"/>
         <xsl:if test="css:applies-to($name, $display)">
             <xsl:variable name="property" as="element()">
-                <xsl:apply-templates select="." mode="css:inherit">
-                    <xsl:with-param name="concretize-inherit" select="not($name=$liblouis-inherited-properties)"/>
-                    <xsl:with-param name="concretize-initial" select="true()"/>
-                    <xsl:with-param name="validate" select="true()"/>
-                    <xsl:with-param name="context" select="$context"/>
-                </xsl:apply-templates>
+                <xsl:choose>
+                    <xsl:when test="not($name=$liblouis-inherited-properties)">
+                        <xsl:apply-templates select="." mode="css:inherit">
+                            <xsl:with-param name="validate" select="true()"/>
+                            <xsl:with-param name="context" select="$context"/>
+                        </xsl:apply-templates>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:variable name="property" as="element()">
+                <xsl:apply-templates select="$property" mode="css:default"/>
             </xsl:variable>
             <xsl:if test="not($property/@value='inherit')">
                 <xsl:if test="$name=$liblouis-inherited-properties
@@ -93,11 +101,12 @@
                 <xsl:if test="css:applies-to($name, 'block')">
                     <xsl:variable name="property" as="element()">
                         <xsl:apply-templates select="." mode="css:inherit">
-                            <xsl:with-param name="concretize-inherit" select="true()"/>
-                            <xsl:with-param name="concretize-initial" select="true()"/>
                             <xsl:with-param name="validate" select="true()"/>
                             <xsl:with-param name="context" select="$context"/>
                         </xsl:apply-templates>
+                    </xsl:variable>
+                    <xsl:variable name="property" as="element()">
+                        <xsl:apply-templates select="$property" mode="css:default"/>
                     </xsl:variable>
                     <xsl:if test="not($property/@value=$liblouis-initial-values[index-of($liblouis-properties, $name)])">
                         <xsl:sequence select="$property"/>

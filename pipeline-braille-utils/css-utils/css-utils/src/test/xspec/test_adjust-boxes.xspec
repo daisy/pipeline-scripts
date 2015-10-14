@@ -46,7 +46,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_04" focus="true">
+  <x:scenario label="test_04">
     <x:context>
       <css:box type="block"
                css:border-left="⠇"

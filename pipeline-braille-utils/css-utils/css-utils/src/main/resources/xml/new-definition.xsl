@@ -31,8 +31,17 @@
             - pending: properties that for some reason can't be put on this box but can't be ignored either
         -->
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="css:specified-properties($new:properties, true(), true(), true(), .)"
-                                 mode="property">
+            <!-- properties must already have been computed! -->
+            <xsl:apply-templates select="." mode="css:specified-properties">
+                <xsl:with-param name="properties" select="$new:properties"/>
+                <!-- concretize inherit on top-level boxes only -->
+                <xsl:with-param name="concretize-inherit" select="not(exists(ancestor::css:box))"/>
+                <xsl:with-param name="concretize-initial" select="true()"/>
+                <xsl:with-param name="validate" select="true()"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:variable name="properties" as="element()*">
+            <xsl:apply-templates select="$properties" mode="property">
                 <xsl:with-param name="context" select="." tunnel="yes"/>
             </xsl:apply-templates>
         </xsl:variable>
@@ -57,15 +66,6 @@
                                            return $parent-properties[@name=$p])"/>
             </xsl:apply-templates>
         </xsl:copy>
-    </xsl:template>
-    
-    <!--
-        concretize inherit on top-level boxes only
-    -->
-    <xsl:template match="css:property" mode="css:inherit">
-        <xsl:param name="context" as="element()"/>
-        <xsl:sequence select="if (@value='inherit' and not($context/ancestor::css:box))
-                              then css:property(@name, 'initial') else ."/>
     </xsl:template>
     
     <!--

@@ -79,4 +79,27 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_03">
+    <x:context>
+      <css:box type="inline" style="text-transform: foo">
+        <css:box type="inline">
+          <css:box type="inline" style="text-transform: bar">
+            <css:box type="block">
+              ⠤⠤⠤
+            </css:box>
+          </css:box>
+        </css:box>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:_>
+        <css:box type="block" style="text-transform: bar foo">
+          <css:box type="inline">
+              ⠤⠤⠤
+            </css:box>
+        </css:box>
+      </css:_>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
