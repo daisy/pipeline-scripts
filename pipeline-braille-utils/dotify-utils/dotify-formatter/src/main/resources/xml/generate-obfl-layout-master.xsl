@@ -21,9 +21,12 @@
                       select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="size" as="xs:string"
                       select="($properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
-        <layout-master name="{$name}" duplex="false" page-number-variable="page"
+        <layout-master name="{$name}" duplex="true" page-number-variable="page"
                        page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
             <xsl:if test="exists($page-right-stylesheet)">
+                <!--
+                    FIXME: is this influenced by initial-page-number?
+                -->
                 <template use-when="(= (% $page 2) 1)">
                     <xsl:call-template name="template">
                         <xsl:with-param name="rules" select="css:parse-stylesheet($page-right-stylesheet)"/>
