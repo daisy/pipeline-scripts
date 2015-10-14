@@ -54,7 +54,8 @@
             </p:documentation>
         </css:make-pseudo-elements>
         <css:parse-properties properties="content white-space display list-style-type
-                                          string-set counter-reset counter-set counter-increment">
+                                          string-set counter-reset counter-set counter-increment
+                                          page-break-before page-break-after">
             <p:documentation>
                 Make css:content, css:white-space, css:display, css:list-style-type, css:string-set,
                 css:counter-reset, css:counter-set and css:counter-increment attributes.
@@ -109,11 +110,14 @@
                 Make css:counter-set-page attributes.
             </p:documentation>
         </css:parse-counter-set>
-        <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]"
-                   split-after="*[@css:page or @css:page_left or @css:page_right]">
+        <css:split split-before="*[@css:page or @css:page_left or @css:page_right or @css:counter-set-page]|
+                                 css:box[@type='block' and @css:page-break-before='right']"
+                   split-after="*[@css:page or @css:page_left or @css:page_right]|
+                                css:box[@type='block' and @css:page-break-after='right']">
             <p:documentation>
-                Split before and after css:page* attributes and before css:counter-set-page
-                attributes. <!-- depends on make-boxes -->
+                Split before and after css:page* attributes, before css:counter-set-page attributes,
+                and before css:page-break-before attributes with value 'right' and after
+                css:page-break-after attributes with value 'right'. <!-- depends on make-boxes -->
             </p:documentation>
         </css:split>
     </p:for-each>
@@ -136,6 +140,8 @@
             <p:delete match="/*//*/@css:page_right"/>
             <p:delete match="/*//*/@css:page_left"/>
             <p:delete match="/*//*/@css:counter-set-page"/>
+            <p:delete match="@css:page-break-before[.='right']|
+                             @css:page-break-after[.='right']"/>
         </p:group>
         <p:rename match="css:box[@type='inline']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
@@ -240,6 +246,22 @@
             </p:documentation>
         </p:delete>
     </p:for-each>
+    
+    <p:split-sequence test="//css:box[@type='block']
+                                     [@css:border-top|
+                                      @css:border-bottom|
+                                      @css:margin-top|
+                                      @css:margin-bottom|
+                                      descendant::text()|
+                                      descendant::css:white-space|
+                                      descendant::css:string|
+                                      descendant::css:counter|
+                                      descendant::css:text|
+                                      descendant::css:leader]">
+        <p:documentation>
+            Remove empty sections.
+        </p:documentation>
+    </p:split-sequence>
     
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>

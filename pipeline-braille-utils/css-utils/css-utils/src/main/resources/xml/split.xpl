@@ -19,13 +19,13 @@
     
     <p:option name="split-before" required="true">
         <p:documentation>
-            The 'split-before' option must be an XSLTMatchPattern of the form `*[...]'.
+            The 'split-before' option must be an XSLTMatchPattern that matches only elements.
         </p:documentation>
     </p:option>
     
     <p:option name="split-after" required="true">
         <p:documentation>
-            The 'split-before' option must be an XSLTMatchPattern of the form `*[...]'.
+            The 'split-after' option must be an XSLTMatchPattern that matches only elements.
         </p:documentation>
     </p:option>
     
