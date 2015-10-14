@@ -76,4 +76,40 @@
     </x:expect>
   </x:scenario>
   
+  <!-- ======= -->
+  <!-- test_03 -->
+  <!-- ======= -->
+  <!--
+      string-set, counter-set
+  -->
+  <x:scenario label="test_03">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                body { counter-set: page 99 }
+                pagenum { string-set: print-page content(), first-print-page content() }
+              </style>
+            </head>
+            <body>
+              <pagenum>1</pagenum>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body style="counter-set: page 1 page 99;">
+          <pagenum style="string-set: print-page  content() , first-print-page  content();">1</pagenum>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

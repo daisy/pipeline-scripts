@@ -23,7 +23,7 @@ import javax.xml.transform.URIResolver;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Strings.emptyToNull;
-import com.google.common.base.Objects;
+import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterators.addAll;
@@ -50,8 +50,11 @@ import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
+import cz.vutbr.web.css.TermFunction;
 import cz.vutbr.web.css.TermIdent;
 import cz.vutbr.web.css.TermInteger;
+import cz.vutbr.web.css.TermList;
+import cz.vutbr.web.css.TermPair;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
 import cz.vutbr.web.csskit.DefaultNetworkProcessor;
@@ -242,8 +245,8 @@ public class CSSInlineStep extends DefaultStep {
 			
 			pageRules = new HashMap<String,Map<String,RulePage>>();
 			for (RulePage r : filter(brailleStyle, RulePage.class)) {
-				String name = Objects.firstNonNull(r.getName(), "auto");
-				String pseudo = Objects.firstNonNull(r.getPseudo(), "");
+				String name = firstNonNull(r.getName(), "auto");
+				String pseudo = firstNonNull(r.getPseudo(), "");
 				Map<String,RulePage> pageRule = pageRules.get(name);
 				if (pageRule == null) {
 					pageRule = new HashMap<String,RulePage>();
@@ -332,10 +335,20 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static Function<Object,String> termToString = new Function<Object,String>() {
 		public String apply(Object term) {
-			if (term instanceof TermInteger)
-				return String.valueOf(((TermInteger)term).getIntValue());
+			if (term instanceof TermInteger) {
+				TermInteger integer = (TermInteger)term;
+				return "" + integer.getIntValue(); }
+			else if (term instanceof TermPair) {
+				TermPair pair = (TermPair)term;
+				Term.Operator op = pair.getOperator();
+				return (op != null ? op.value() : "") + pair.getKey() + " " + pair.getValue(); }
+			else if (term instanceof TermFunction)
+				return "" + term;
+			else if (term instanceof TermList) {
+				TermList list = (TermList)term;
+				return join(list, " ", termToString); }
 			else
-				return String.valueOf(term);
+				return "" + term;
 		}
 	};
 	
