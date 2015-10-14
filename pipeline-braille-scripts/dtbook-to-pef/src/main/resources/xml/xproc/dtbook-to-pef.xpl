@@ -47,7 +47,7 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">transform</h2>
             <p px:role="desc">A transformer query.</p>
-            <pre><code class="default">(translator:liblouis)(formatter:liblouis)</code></pre>
+            <pre><code class="default">(translator:liblouis)(formatter:dotify)</code></pre>
         </p:documentation>
     </p:option>
     
@@ -104,7 +104,7 @@
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="if ($transform!='') then $transform
-                                                else '(translator:liblouis)(formatter:liblouis)'"/>
+                                                else '(translator:liblouis)(formatter:dotify)'"/>
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>

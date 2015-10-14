@@ -53,7 +53,7 @@
             </meta>
           </head>
           <body>
-            <volume rows="25" cols="40" rowgap="0" duplex="false">
+            <volume rows="25" cols="40" rowgap="0" duplex="true">
               <section>
                 <page>
                   <row>⠋⠕⠕⠃⠜⠀⠋⠕⠕⠀⠃⠜</row>
