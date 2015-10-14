@@ -7,14 +7,14 @@
       <doc>
         <h style="display: block; string-set: running-footer content()">foobar</h>
         <p style="{{ display: block }} ::after {{ content: 'bar' }}">foo</p>
-        <pagenum value="1" style="display: none; string-set: print-page attr(value)"/>
+        <pagenum style="display: none; string-set: print-page content()">ii</pagenum>
       </doc>
     </x:context>
     <x:expect label="result">
       <doc style="{{ text-transform: none }}">
-        <h style="{{ display: block; string-set: running-footer content() }}">FOOBAR</h>
+        <h style="{{ display: block; string-set: running-footer &quot;foobar&quot; }}">FOOBAR</h>
         <p style="{{ display: block }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
-        <pagenum value="1" style="{{ display: none; string-set: print-page &quot;1&quot; }}"/>
+        <pagenum style="{{ display: none; string-set: print-page &quot;ii&quot; }}" />
       </doc>
     </x:expect>
   </x:scenario>

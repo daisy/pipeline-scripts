@@ -11,7 +11,7 @@
 	<!--
 	    API: implement xsl:template match="css:block"
 	-->
-	<xsl:template match="css:block" mode="#default after before string-set">
+	<xsl:template match="css:block" mode="#default after before">
 		<xsl:message terminate="yes">Coding error</xsl:message>
 	</xsl:template>
 	
@@ -125,30 +125,62 @@
 	
 	<xsl:template match="css:property[@name='string-set']" mode="translate-declaration-list">
 		<xsl:if test="@value!='none'">
-			<xsl:variable name="translated-string-set-pairs" as="element()*">
-				<xsl:apply-templates select="css:parse-string-set(@value)" mode="translate-string-set-pair"/>
+			<xsl:variable name="evaluated-string-set-pairs" as="element()*">
+				<xsl:apply-templates select="css:parse-string-set(@value)" mode="eval-string-set-pair"/>
 			</xsl:variable>
 			<xsl:copy>
 				<xsl:sequence select="@name"/>
-				<xsl:attribute name="value" select="css:serialize-string-set($translated-string-set-pairs)"/>
+				<xsl:attribute name="value" select="css:serialize-string-set($evaluated-string-set-pairs)"/>
 			</xsl:copy>
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template match="css:string-set" mode="translate-string-set-pair" as="element()">
+	<xsl:template match="css:string-set" mode="eval-string-set-pair" as="element()">
 		<xsl:param name="context" as="element()" tunnel="yes"/>
 		<xsl:copy>
 			<xsl:sequence select="@name"/>
-			<xsl:variable name="translated-content-list" as="element()*">
-				<xsl:apply-templates select="css:parse-content-list(@value, $context)" mode="translate-content-list">
+			<xsl:variable name="evaluated-content-list" as="element()*">
+				<xsl:apply-templates select="css:parse-content-list(@value, $context)" mode="eval-string-set-content-list">
 					<xsl:with-param name="string-name" select="@name" tunnel="yes"/>
-					<xsl:with-param name="mode" select="'string-set'" tunnel="yes"/>
 				</xsl:apply-templates>
 			</xsl:variable>
-			<xsl:attribute name="value" select="if (exists($translated-content-list))
-			                                    then css:serialize-content-list($translated-content-list)
+			<xsl:attribute name="value" select="if (exists($evaluated-content-list))
+			                                    then css:serialize-content-list($evaluated-content-list)
 			                                    else '&quot;&quot;'"/>
 		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="css:string[@value]|css:attr|css:content" mode="eval-string-set-content-list" as="element()?">
+		<xsl:variable name="evaluated-string" as="xs:string?">
+			<xsl:apply-templates select="." mode="css:eval"/>
+		</xsl:variable>
+		<xsl:if test="exists($evaluated-string)">
+			<css:string value="{$evaluated-string}"/>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="css:string[@name][not(@target)]" mode="eval-string-set-content-list">
+		<xsl:message>string() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:counter[not(@target)]" mode="eval-string-set-content-list">
+		<xsl:message>counter() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:text[@target]" mode="eval-string-set-content-list">
+		<xsl:message>target-text() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:string[@name][@target]" mode="eval-string-set-content-list">
+		<xsl:message>target-string() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:counter[@target]" mode="eval-string-set-content-list">
+		<xsl:message>target-counter() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:leader" mode="eval-string-set-content-list">
+		<xsl:message>leader() function not supported in string-set property</xsl:message>
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='content']" mode="translate-declaration-list">
@@ -178,33 +210,23 @@
 					<xsl:attribute name="xml:space" select="$space"/>
 				</xsl:if>
 				<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-				                        css:computed-properties($inline-properties, false(), $context)
+				                        css:computed-properties($inline-properties, true(), true(), false(), $context)
 				                        [not(@value=css:initial-value(@name))]))"/>
-				<xsl:choose>
-					<xsl:when test="$mode=('before','after')">
-						<xsl:element name="css:block">
-							<xsl:sequence select="css:style-attribute(
-							                        css:serialize-declaration-list(
-							                          css:parse-declaration-list(
-							                            css:parse-stylesheet($context/@style)
-							                              /self::css:rule[@selector=concat('::',$mode)][last()]/@declaration-list)
-							                            [@name=$inline-properties
-							                             and not(@name='content')
-							                             and not(@value=css:initial-value(@name))]))"/>
-							<xsl:value-of select="$evaluated-string"/>
-						</xsl:element>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="$evaluated-string"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:element name="css:block">
+					<xsl:sequence select="css:style-attribute(
+					                        css:serialize-declaration-list(
+					                          css:parse-declaration-list(
+					                            css:parse-stylesheet($context/@style)
+					                              /self::css:rule[@selector=concat('::',$mode)][last()]/@declaration-list)
+					                            [@name=$inline-properties
+					                             and not(@name='content')
+					                             and not(@value=css:initial-value(@name))]))"/>
+					<xsl:value-of select="$evaluated-string"/>
+				</xsl:element>
 			</xsl:element>
 		</xsl:variable>
 		<xsl:variable name="translated-block" as="node()*">
 			<xsl:choose>
-				<xsl:when test="$mode='string-set'">
-					<xsl:apply-templates select="$block/css:block" mode="string-set"/>
-				</xsl:when>
 				<xsl:when test="$mode='before'">
 					<xsl:apply-templates select="$block/css:block/css:block" mode="before"/>
 				</xsl:when>
@@ -259,11 +281,6 @@
 	<xsl:function name="pxi:display" as="xs:string">
 		<xsl:param name="element" as="element()"/>
 		<xsl:sequence select="css:specified-properties('display', true(), true(), false(), $element)/@value"/>
-	</xsl:function>
-	
-	<xsl:function name="pxi:string-set" as="xs:string">
-		<xsl:param name="element" as="element()"/>
-		<xsl:sequence select="css:specified-properties('string-set', true(), true(), false(), $element)/@value"/>
 	</xsl:function>
 	
 	<xsl:function name="pxi:is-block" as="xs:boolean">

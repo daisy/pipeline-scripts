@@ -7,7 +7,7 @@
 	
 	<xsl:import href="../../main/resources/xml/transform/block-translator-template.xsl"/>
 	
-	<xsl:template match="css:block" mode="#default after before string-set">
+	<xsl:template match="css:block" mode="#default after before">
 		<xsl:variable name="uppercase-text" as="text()*">
 			<xsl:apply-templates select=".//text()" mode="translate"/>
 		</xsl:variable>

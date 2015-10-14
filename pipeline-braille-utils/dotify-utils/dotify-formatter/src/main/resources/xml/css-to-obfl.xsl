@@ -298,8 +298,14 @@
         <xsl:variable name="target" as="element()?"
                       select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
         <xsl:if test="$target">
-            <xsl:apply-templates select="css:string(@name, $target)" mode="eval-string-set"/>
+            <xsl:apply-templates select="css:string(@name, $target)" mode="eval-string"/>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="css:string[@value]" mode="eval-string">
+        <xsl:call-template name="text">
+            <xsl:with-param name="text" select="string(@value)"/>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:template match="css:counter[@target][@name='page']">
