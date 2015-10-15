@@ -84,9 +84,20 @@
           <footer/>
         </template>
         <template use-when="(= (% $page 2) 0)">
-          <header row-spacing="2.0">
+          <header>
             <field>
               <current-page style="default"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </header>
+          <header>
+            <field>
+              <string value=""/>
             </field>
             <field>
               <string value=""/>
@@ -100,6 +111,212 @@
         <default-template>
           <header/>
           <footer/>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_04">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'size: 15 5; margin-bottom: 1;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_05">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'size: 15 5; margin-bottom: 2;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+          <footer>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_06">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'@bottom-left { content: &quot;⠆&quot; } size: 15 5; margin-bottom: 1;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value="⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_07">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'@bottom-left { content: &quot;⠆&quot; } size: 15 5; margin-bottom: 2;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+          <footer>
+            <field>
+              <string value="⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_08">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'@bottom-left { content: &quot;⠆&#x0a;⠆⠆&quot;; white-space: pre-wrap; } size: 15 5; margin-bottom: 2;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value="⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+          <footer>
+            <field>
+              <string value="⠆⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_09">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'@bottom-left { content: &quot;⠆&#x0a;⠆⠆&quot;; white-space: pre-wrap; } size: 15 5; margin-bottom: 1;'"/>
+      <x:param select="()"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+        <default-template>
+          <header/>
+          <footer>
+            <field>
+              <string value="⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
+          <footer>
+            <field>
+              <string value="⠆⠆"/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+            <field>
+              <string value=""/>
+            </field>
+          </footer>
         </default-template>
       </layout-master>
     </x:expect>
