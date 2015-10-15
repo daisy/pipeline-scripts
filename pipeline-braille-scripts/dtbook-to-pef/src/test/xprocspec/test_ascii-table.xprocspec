@@ -28,10 +28,10 @@
       <x:option name="ascii-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)'"/>
     </x:call>
     <x:context label="brf">
-      <x:document type="file" method="binary" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
     </x:context>
     <x:expect label="brf" type="compare">
-      <x:document type="file" method="binary" href="../resources/test_ascii-table.brf">
+      <x:document type="file" method="text" href="../resources/test_ascii-table.brf">
       </x:document>
     </x:expect>
   </x:scenario>
