@@ -4,17 +4,17 @@
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                script="../../main/resources/xml/xproc/dtbook-to-pef.xpl">
   
-  <x:scenario label="Test ascii-table">
+  <x:scenario label="ascii-table has priority over xml:lang">
     <x:call step="px:dtbook-to-pef">
       <x:input port="source">
         <x:document type="inline">
-          <dtbook version="2005-2" xml:lang="nl" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+          <dtbook version="2005-2" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
             <head>
               <meta>foobar</meta>
             </head>
             <book>
               <level1>
-                <h1>foo</h1>
+                <h1>Foo</h1>
                 <p>bar</p>
                 <p>123</p>
               </level1>
@@ -31,7 +31,69 @@
       <x:document type="file" method="text" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
     </x:context>
     <x:expect label="brf" type="compare">
-      <x:document type="file" method="text" href="../resources/test_ascii-table.brf">
+      <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf">
+      </x:document>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="missing ascii-table is derived from xml:lang">
+    <x:call step="px:dtbook-to-pef">
+      <x:input port="source">
+        <x:document type="inline">
+          <dtbook version="2005-2" xml:lang="nl" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+            <head>
+              <meta>foobar</meta>
+            </head>
+            <book>
+              <level1>
+                <h1>Foo</h1>
+                <p>bar</p>
+                <p>123</p>
+              </level1>
+            </book>
+          </dtbook>
+        </x:document>
+      </x:input>
+      <x:option name="output-dir" select="concat($temp-dir,'output-dir/')"/>
+      <x:option name="temp-dir" select="concat($temp-dir,'temp-dir/')"/>
+      <x:option name="include-brf" select="'true'"/>
+    </x:call>
+    <x:context label="brf">
+      <x:document type="file" method="text" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
+    </x:context>
+    <x:expect label="brf" type="compare">
+      <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf">
+      </x:document>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="missing ascii-table and xml:lang use final fallback (en-US)">
+    <x:call step="px:dtbook-to-pef">
+      <x:input port="source">
+        <x:document type="inline">
+          <dtbook version="2005-2" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+            <head>
+              <meta>foobar</meta>
+            </head>
+            <book>
+              <level1>
+                <h1>Foo</h1>
+                <p>bar</p>
+                <p>123</p>
+              </level1>
+            </book>
+          </dtbook>
+        </x:document>
+      </x:input>
+      <x:option name="output-dir" select="concat($temp-dir,'output-dir/')"/>
+      <x:option name="temp-dir" select="concat($temp-dir,'temp-dir/')"/>
+      <x:option name="include-brf" select="'true'"/>
+    </x:call>
+    <x:context label="brf">
+      <x:document type="file" method="text" base-uri="temp-dir" href="output-dir/test_ascii-table.brf"/>
+    </x:context>
+    <x:expect label="brf" type="compare">
+      <x:document type="file" method="text" href="../resources/test_ascii-table_2.brf">
       </x:document>
     </x:expect>
   </x:scenario>
