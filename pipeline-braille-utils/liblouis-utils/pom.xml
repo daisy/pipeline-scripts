@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-utils-aggregator</artifactId>
-  <version>1.9.6-SNAPSHOT</version>
+  <version>1.9.6</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Modules :: liblouis-utils</name>
@@ -46,4 +46,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.9.6</tag>
+  </scm>
 </project>
