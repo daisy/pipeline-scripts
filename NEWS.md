@@ -1,3 +1,44 @@
+DAISY Pipeline 2 Braille Modules v1.9.6
+=======================================
+
+Changes
+-------
+- Support for multi-line headers and footers
+- Support for `page-break-before:right`, `page-break-after:right`, `page-break-before:avoid` and
+  `page-break-after:always`
+- Support for `string-set` and `counter-set`
+- Support for translation while formatting
+- Support for qualified names in CSS attribute selectors
+- Use of `(formatter:dotify)` by default
+- Bug fixes in `text-indent` and `text-align`
+  (https://github.com/daisy/pipeline-mod-braille/issues/54,
+  https://github.com/daisy/pipeline-mod-braille/issues/55)
+- Fixes in white space handling
+
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), liblouis-java
+  ([1.4.0](https://github.com/liblouis/liblouis-java/releases/tag/1.4.0))
+- **dotify** (**api** [**1.4.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.api%2Fv1.4.0), common
+  [1.2.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv1.2.0), hyphenator.impl
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv1.0.0), **translator.impl**
+  [**1.2.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv1.2.0), **formatter.impl**
+  [**1.2.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv1.2.0), text.impl
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv1.0.0), task-api
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv1.0.0), **task.impl**
+  [**1.0.1**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv1.0.1))
+- brailleutils (api
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+- **braille-css** ([**1.4.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.4.0))
+- **jstyleparser** ([**1.20-p3**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p3))
+- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+  ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
 DAISY Pipeline 2 Braille Modules v1.9.5
 =======================================
 
