@@ -64,6 +64,8 @@ public class DotifyFormatterTest {
 			domTraversalPackage(),
 			logbackBundles(),
 			felixDeclarativeServices(),
+			mavenBundle().groupId("org.slf4j").artifactId("jul-to-slf4j").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.pipeline").artifactId("logging-activator").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.pef-tools").versionAsInProject(),
