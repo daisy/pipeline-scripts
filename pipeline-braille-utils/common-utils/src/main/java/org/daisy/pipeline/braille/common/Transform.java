@@ -2,13 +2,19 @@ package org.daisy.pipeline.braille.common;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
-
 import static com.google.common.collect.Iterables.transform;
+
+import org.daisy.pipeline.braille.common.util.Locales;
+import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
+import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.slf4j.Logger;
 
@@ -155,6 +161,43 @@ public interface Transform {
 				@Override
 				public String toString() {
 					return "dispatch( " + join(_dispatch(), ", ") + " )";
+				}
+			}
+			
+			public static <T extends Transform> Transform.Provider<T> varyLocale(Transform.Provider<T> delegate) {
+				return new varyLocale<T>(delegate, null);
+			}
+			
+			private static class varyLocale<T extends Transform> extends LocaleBasedProvider<String,T>
+			                                                     implements Transform.Provider<T> {
+				private final Transform.Provider<T> delegate;
+				private final Logger context;
+				private varyLocale(Transform.Provider<T> delegate, Logger context) {
+					this.delegate = delegate;
+					this.context = context;
+				}
+				public Iterable<T> _get(String query) {
+					return delegate.withContext(context).get(query);
+				}
+				public Locale getLocale(String query) {
+					Map<String,Optional<String>> q = parseQuery(query);
+					Optional<String> o;
+					if ((o = q.get("locale")) != null)
+						return parseLocale(o.get());
+					else
+						return null;
+				}
+				public String assocLocale(String query, Locale locale) {
+					Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+					q.put("locale", Optional.of(Locales.toString(locale, '_')));
+					return serializeQuery(q);
+				}
+				public Transform.Provider<T> withContext(Logger context) {
+					return new varyLocale<T>(delegate, context);
+				}
+				@Override
+				public String toString() {
+					return "varyLocale( " + delegate + " )";
 				}
 			}
 		}

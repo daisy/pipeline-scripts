@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
@@ -43,10 +43,6 @@ public abstract class AbstractTransform implements Transform {
 		protected interface Iterable<T> extends WithSideEffect.util.Iterable<T,Logger>,
 		                                        java.lang.Iterable<WithSideEffect<T,Logger>>{}
 		
-		private final static Pattern ID_FEATURE_RE = Pattern.compile(
-			"\\s*\\(\\s*id\\s*\\:\\s*(?<id>[_a-zA-Z][_a-zA-Z0-9-]*)\\s*\\)\\s*"
-		);
-		
 		private Map<String,Iterable<T>> transformCache = new HashMap<String,Iterable<T>>();
 		
 		private Map<Logger,Transform.Provider<T>> providerCache = new HashMap<Logger,Transform.Provider<T>>();
@@ -54,10 +50,10 @@ public abstract class AbstractTransform implements Transform {
 		protected abstract Iterable<T> _get(String query);
 		
 		private final java.lang.Iterable<T> get(String query, Logger context) {
-			Matcher m = ID_FEATURE_RE.matcher(query);
-			if (m.matches()) {
-				String id = m.group("id");
-				return Optional.fromNullable(fromId(id)).asSet(); }
+			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+			Optional<String> o;
+			if ((o = q.remove("id")) != null && q.isEmpty())
+				return Optional.fromNullable(fromId(o.get())).asSet();
 			else {
 				Iterable<T> i;
 				if (transformCache.containsKey(query))

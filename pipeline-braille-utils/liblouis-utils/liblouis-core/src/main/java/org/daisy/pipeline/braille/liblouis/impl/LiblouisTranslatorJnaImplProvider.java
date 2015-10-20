@@ -42,6 +42,7 @@ import static org.daisy.pipeline.braille.common.util.Tuple2;
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
+import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider.LiblouisTableJnaImpl;
 
 import org.liblouis.TranslationException;
 import org.liblouis.TranslationResult;
@@ -56,33 +57,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTranslatorJnaImpl",
+	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTranslatorJnaImplProvider",
 	service = {
 		LiblouisTranslator.Provider.class,
 		BrailleTranslator.Provider.class,
 		TextTransform.Provider.class
 	}
 )
-public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<LiblouisTranslator> implements LiblouisTranslator.Provider {
+public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provider<LiblouisTranslator> implements LiblouisTranslator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
 	
-	private LiblouisJnaImpl tableProvider;
+	private LiblouisTableJnaImplProvider tableProvider;
 	
 	@Reference(
-		name = "LiblouisJnaImpl",
-		unbind = "unbindLiblouisJnaImpl",
-		service = LiblouisJnaImpl.class,
+		name = "LiblouisTableJnaImplProvider",
+		unbind = "unbindLiblouisTableJnaImplProvider",
+		service = LiblouisTableJnaImplProvider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void bindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = provider;
 		logger.debug("Registering Liblouis JNA translator provider: " + provider);
 	}
 	
-	protected void unbindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void unbindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = null;
 	}
 	
@@ -97,7 +98,7 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 		"unchecked" // safe cast to Transform.Provider<Hyphenator>
 	)
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
-		if (provider instanceof LiblouisHyphenatorJnaImpl)
+		if (provider instanceof LiblouisHyphenatorJnaImplProvider)
 			return;
 		hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
 		hyphenatorProvider.invalidateCache();
@@ -105,7 +106,7 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 	}
 	
 	protected void unbindHyphenatorProvider(Hyphenator.Provider<?> provider) {
-		if (provider instanceof LiblouisHyphenatorJnaImpl)
+		if (provider instanceof LiblouisHyphenatorJnaImplProvider)
 			return;
 		hyphenatorProviders.remove(provider);
 		hyphenatorProvider.invalidateCache();
@@ -180,12 +181,12 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 			q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
 		q.put("unicode", Optional.<String>absent());
 		q.put("white-space", Optional.<String>absent());
-		Iterable<LiblouisJnaImpl.Table> tables = logSelect(serializeQuery(q), tableProvider);
+		Iterable<LiblouisTableJnaImpl> tables = logSelect(serializeQuery(q), tableProvider);
 		return concat(
 			transform(
 				tables,
-				new Function<LiblouisJnaImpl.Table,Iterable<LiblouisTranslator>>() {
-					public Iterable<LiblouisTranslator> _apply(final LiblouisJnaImpl.Table table) {
+				new Function<LiblouisTableJnaImpl,Iterable<LiblouisTranslator>>() {
+					public Iterable<LiblouisTranslator> _apply(final LiblouisTableJnaImpl table) {
 						Iterable<LiblouisTranslator> translators = empty;
 						if (!"none".equals(hyphenator)) {
 							if ("liblouis".equals(hyphenator) || "auto".equals(hyphenator))
@@ -228,7 +229,7 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 	
 	@Override
 	public ToStringHelper toStringHelper() {
-		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$Provider");
+		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImplProvider");
 	}
 	
 	private static class LiblouisTranslatorImpl extends AbstractTransform implements LiblouisTranslator {
@@ -585,7 +586,7 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 		
 		@Override
 		public ToStringHelper toStringHelper() {
-			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$LiblouisTranslatorImpl")
+			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImplProvider$LiblouisTranslatorImpl")
 				.add("translator", translator)
 				.add("hyphenator", hyphenator);
 		}
@@ -640,7 +641,7 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 		
 		@Override
 		public ToStringHelper toStringHelper() {
-			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImpl$LiblouisTranslatorImpl")
+			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImplProvider$LiblouisTranslatorImpl")
 				.add("translator", translator)
 				.add("hyphenator", "self");
 		}
@@ -724,12 +725,13 @@ public class LiblouisTranslatorJnaImpl extends AbstractTransform.Provider<Liblou
 		return typeform;
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(LiblouisTranslatorJnaImpl.class);
-	
 	private static int mod(int a, int n) {
 		int result = a % n;
 		if (result < 0)
 			result += n;
 		return result;
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisTranslatorJnaImplProvider.class);
+	
 }

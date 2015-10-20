@@ -26,6 +26,7 @@ import static org.daisy.pipeline.braille.common.util.Tuple2;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
+import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider.LiblouisTableJnaImpl;
 
 import org.liblouis.TranslationException;
 import org.liblouis.Translator;
@@ -39,30 +40,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImpl",
+	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImplProvider",
 	service = {
 		LiblouisHyphenator.Provider.class,
 		TextTransform.Provider.class,
 		Hyphenator.Provider.class
 	}
 )
-public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
+public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Provider {
 	
-	private LiblouisJnaImpl tableProvider;
+	private LiblouisTableJnaImplProvider tableProvider;
 	
 	@Reference(
-		name = "LiblouisJnaImpl",
-		unbind = "unbindLiblouisJnaImpl",
-		service = LiblouisJnaImpl.class,
+		name = "LiblouisTableJnaImplProvider",
+		unbind = "unbindLiblouisTableJnaImplProvider",
+		service = LiblouisTableJnaImplProvider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void bindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = provider;
 		logger.debug("Registering Liblouis JNA translator provider: " + provider);
 	}
 	
-	protected void unbindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void unbindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = null;
 	}
 	
@@ -121,11 +122,11 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 				q.put("table", Optional.of(table));
 			if (locale != null)
 				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-			Iterable<LiblouisJnaImpl.Table> tables = tableProvider.get(serializeQuery(q));
+			Iterable<LiblouisTableJnaImpl> tables = tableProvider.get(serializeQuery(q));
 			return transform(
 				tables,
-				new Function<LiblouisJnaImpl.Table,LiblouisHyphenator>() {
-					public LiblouisHyphenator apply(LiblouisJnaImpl.Table table) {
+				new Function<LiblouisTableJnaImpl,LiblouisHyphenator>() {
+					public LiblouisHyphenator apply(LiblouisTableJnaImpl table) {
 						return new LiblouisHyphenatorImpl(table.getTranslator()); }});
 		}
 	};
@@ -190,6 +191,6 @@ public class LiblouisHyphenatorJnaImpl implements LiblouisHyphenator.Provider {
 		}
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(LiblouisHyphenatorJnaImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisHyphenatorJnaImplProvider.class);
 	
 }

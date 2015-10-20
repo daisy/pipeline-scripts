@@ -3,7 +3,6 @@ package org.daisy.pipeline.braille.liblouis.impl;
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -19,15 +18,13 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
 import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.warn;
-import org.daisy.pipeline.braille.common.LazyValue.ImmutableLazyValue;
 import org.daisy.pipeline.braille.common.NativePath;
-import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Transform;
+import static org.daisy.pipeline.braille.common.Transform.Provider.util.varyLocale;
 import static org.daisy.pipeline.braille.common.util.Files.unpack;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
-import org.daisy.pipeline.braille.common.util.Locales;
-import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.WithSideEffect;
@@ -58,22 +55,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl",
+	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider",
 	service = {
-		LiblouisJnaImpl.class
+		LiblouisTableJnaImplProvider.class
 	}
 )
-public class LiblouisJnaImpl extends AbstractTransform.Provider<LiblouisJnaImpl.Table> {
+public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<LiblouisTableJnaImplProvider.LiblouisTableJnaImpl> {
 	
-	public class Table extends LiblouisTable implements Transform {
+	public class LiblouisTableJnaImpl extends LiblouisTable implements Transform {
+		
 		private final Translator translator;
-		private Table(String table) throws CompilationException {
+		
+		private LiblouisTableJnaImpl(String table) throws CompilationException {
 			super(table);
 			translator = new Translator(table);
 		}
+		
 		public Translator getTranslator() {
 			return translator;
 		}
+		
 		public String getIdentifier() {
 			return toString();
 		}
@@ -193,37 +194,23 @@ public class LiblouisJnaImpl extends AbstractTransform.Provider<LiblouisJnaImpl.
 		logger.debug("Registering Liblouis table registry: " + registry);
 	}
 	
-	protected Iterable<Table> _get(final String query) {
-		return Iterables.of(
-			_provider.get(parseQuery(query))
-		);
+	public Iterable<LiblouisTableJnaImpl> _get(final String query) {
+		return logSelect(query, _provider);
 	}
 	
 	@Override
 	public ToStringHelper toStringHelper() {
-		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisJnaImpl$ProviderImpl");
+		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTableJnaImplProvider");
 	}
 	
-	private Provider<Map<String,Optional<String>>,WithSideEffect<Table,Logger>> _provider
-	= new LocaleBasedProvider<Map<String,Optional<String>>,WithSideEffect<Table,Logger>>() {
-		public Locale getLocale(Map<String,Optional<String>> query) {
-			Optional<String> o;
-			if ((o = query.get("locale")) != null)
-				return parseLocale(o.get());
-			else
-				return null;
-		}
-		public Map<String,Optional<String>> assocLocale(Map<String,Optional<String>> query, Locale locale) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
-			q.put("locale", Optional.of(Locales.toString(locale, '_')));
-			return q;
-		}
-		public java.lang.Iterable<WithSideEffect<Table,Logger>> _get(final Map<String,Optional<String>> query) {
-			return new ImmutableLazyValue<WithSideEffect<Table,Logger>>() {
-				public WithSideEffect<Table,Logger> _apply() {
-					return new WithSideEffect<Table,Logger>() {
-						public Table _apply() {
-							final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(query);
+	private Transform.Provider<LiblouisTableJnaImpl> _provider
+	= varyLocale(
+		new AbstractTransform.Provider<LiblouisTableJnaImpl>() {
+			public Iterable<LiblouisTableJnaImpl> _get(final String query) {
+				return Iterables.of(
+					new WithSideEffect<LiblouisTableJnaImpl,Logger>() {
+						public LiblouisTableJnaImpl _apply() {
+							final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 							String table = null;
 							boolean unicode = false;
 							boolean whiteSpace = false;
@@ -259,19 +246,19 @@ public class LiblouisJnaImpl extends AbstractTransform.Provider<LiblouisJnaImpl.
 								if (unicode)
 									table = asURI(unicodeDisFile) + "," + table;
 								try {
-									return new Table(table); }
+									return new LiblouisTableJnaImpl(table); }
 								catch (CompilationException e) {
 									__apply(
 										warn("Could not compile table " + table));
 									logger.warn("Could not compile table", e); }}
 							throw new NoSuchElementException();
 						}
-					};
-				}
-			};
+					}
+				);
+			}
 		}
-	};
+	);
 	
-	private static final Logger logger = LoggerFactory.getLogger(LiblouisJnaImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisTableJnaImplProvider.class);
 	
 }

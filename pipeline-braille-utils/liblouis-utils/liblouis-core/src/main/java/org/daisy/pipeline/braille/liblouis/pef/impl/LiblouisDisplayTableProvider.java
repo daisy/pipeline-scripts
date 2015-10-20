@@ -16,7 +16,8 @@ import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-import org.daisy.pipeline.braille.liblouis.impl.LiblouisJnaImpl;
+import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider;
+import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider.LiblouisTableJnaImpl;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
@@ -36,20 +37,20 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 )
 public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	
-	private LiblouisJnaImpl tableProvider;
+	private LiblouisTableJnaImplProvider tableProvider;
 	
 	@Reference(
-		name = "LiblouisJnaImpl",
-		unbind = "unbindLiblouisJnaImpl",
-		service = LiblouisJnaImpl.class,
+		name = "LiblouisTableJnaImplProvider",
+		unbind = "unbindLiblouisTableJnaImplProvider",
+		service = LiblouisTableJnaImplProvider.class,
 		cardinality = ReferenceCardinality.MANDATORY,
 		policy = ReferencePolicy.STATIC
 	)
-	protected void bindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void bindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = provider;
 	}
 	
-	protected void unbindLiblouisJnaImpl(LiblouisJnaImpl provider) {
+	protected void unbindLiblouisTableJnaImplProvider(LiblouisTableJnaImplProvider provider) {
 		tableProvider = null;
 	}
 	
@@ -76,8 +77,8 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		return filter(
 			transform(
 				tableProvider.get(serializeQuery(query)),
-				new Function<LiblouisJnaImpl.Table,Table>() {
-					public Table apply(LiblouisJnaImpl.Table table) {
+				new Function<LiblouisTableJnaImpl,Table>() {
+					public Table apply(LiblouisTableJnaImpl table) {
 						URI[] subTables = table.asURIs();
 						if (subTables.length == 1)
 							if (subTables[0].toString().endsWith(".dis"))
