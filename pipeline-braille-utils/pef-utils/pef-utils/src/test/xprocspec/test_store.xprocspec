@@ -21,5 +21,59 @@
     <x:expect type="xpath" label="The file pef_1.pef.html should be stored" test="/*/c:file[@name='pef_1.pef.html']"/>
     <x:expect type="xpath" label="The file odt2braille8.ttf should be stored" test="/*/c:file[@name='odt2braille8.ttf']"/>
   </x:scenario>
+
+  <x:scenario label="test_02">
+    <x:call step="pef:store">
+      <x:input port="source">
+        <x:document type="file" href="../resources/pef_3.pef"/>
+      </x:input>
+      <x:option name="output-dir" select="resolve-uri('test_02/',$temp-dir)"/>
+      <x:option name="name" select="'pef_3'"/>
+      <x:option name="include-brf" select="'true'"/>
+    </x:call>
+    <x:context label="result fileset">
+      <x:document type="directory" base-uri="temp-dir" href="test_02/" recursive="true"/>
+    </x:context>
+    <x:expect type="count" label="The output directory should exist" min="1" max="1"/>
+    <x:expect type="xpath" label="The number of files stored should be 2" test="count(//c:file)=2"/>
+    <x:expect type="xpath" label="The file pef_3.pef should be stored" test="/*/c:file[@name='pef_3.pef']"/>
+    <x:expect type="xpath" label="The file pef_3.brf should be stored" test="/*/c:file[@name='pef_3.brf']"/>
+  </x:scenario>
+
+  <x:scenario label="test_03">
+    <x:call step="pef:store">
+      <x:input port="source">
+        <x:document type="file" href="../resources/pef_3.pef"/>
+      </x:input>
+      <x:option name="output-dir" select="resolve-uri('test_03/',$temp-dir)"/>
+      <x:option name="name" select="'pef_3'"/>
+      <x:option name="include-brf" select="'true'"/>
+      <x:option name="brf-table" select="''"/>
+    </x:call>
+    <x:context label="result file">
+      <x:document type="file" method="binary" base-uri="temp-dir" href="test_03/pef_3.brf"/>
+    </x:context>
+    <x:expect label="The BRF should use the default table" type="compare">
+      <x:document type="file" method="binary" href="../resources/pef_3_1.brf"/>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="test_04">
+    <x:call step="pef:store">
+      <x:input port="source">
+        <x:document type="file" href="../resources/pef_3.pef"/>
+      </x:input>
+      <x:option name="output-dir" select="resolve-uri('test_04/',$temp-dir)"/>
+      <x:option name="name" select="'pef_3'"/>
+      <x:option name="include-brf" select="'true'"/>
+      <x:option name="brf-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)'"/>
+    </x:call>
+    <x:context label="result file">
+      <x:document type="file" method="binary" base-uri="temp-dir" href="test_04/pef_3.brf"/>
+    </x:context>
+    <x:expect label="The BRF should use the NL Braillo table" type="compare">
+      <x:document type="file" method="binary" href="../resources/pef_3_2.brf"/>
+    </x:expect>
+  </x:scenario>
   
 </x:description>
