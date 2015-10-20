@@ -25,14 +25,16 @@
       <x:option name="output-dir" select="resolve-uri('1/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('1/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
-      <x:option name="transform" select="'(locale:nl)'"/>
-      <x:option name="ascii-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)'"/>
+      <x:option name="transform" select="'(locale:nl)(formatter:dotify)'"/>
+      <x:option name="ascii-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)
+                                            (line-breaks:DOS)
+                                            (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="brf">
-      <x:document type="file" method="binary" base-uri="temp-dir" href="1/output-dir/test_ascii-table.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="1/output-dir/test_ascii-table.brf"/>
     </x:context>
-    <x:expect label="brf" type="compare">
-      <x:document type="file" method="binary" href="../resources/test_ascii-table_1.brf"/>
+    <x:expect label="brf" type="compare" normalize-space="false">
+      <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf"/>
     </x:expect>
   </x:scenario>
 
@@ -59,10 +61,10 @@
       <x:option name="include-brf" select="'true'"/>
     </x:call>
     <x:context label="brf">
-      <x:document type="file" method="binary" base-uri="temp-dir" href="2/output-dir/test_ascii-table.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="2/output-dir/test_ascii-table.brf"/>
     </x:context>
-    <x:expect label="brf" type="compare">
-      <x:document type="file" method="binary" href="../resources/test_ascii-table_1.brf"/>
+    <x:expect label="brf" type="compare" normalize-space="false">
+      <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf"/>
     </x:expect>
   </x:scenario>
   

@@ -48,13 +48,14 @@
       <x:option name="output-dir" select="resolve-uri('test_03/',$temp-dir)"/>
       <x:option name="name" select="'pef_3'"/>
       <x:option name="include-brf" select="'true'"/>
-      <x:option name="brf-table" select="''"/>
+      <x:option name="brf-table" select="'(line-breaks:DOS)
+                                          (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="result file">
-      <x:document type="file" method="binary" base-uri="temp-dir" href="test_03/pef_3.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="test_03/pef_3.brf"/>
     </x:context>
-    <x:expect label="The BRF should use the default table" type="compare">
-      <x:document type="file" method="binary" href="../resources/pef_3_1.brf"/>
+    <x:expect label="The BRF should use the default table" type="compare" normalize-space="false">
+      <x:document type="file" method="text" href="../resources/pef_3_1.brf"/>
     </x:expect>
   </x:scenario>
 
@@ -66,13 +67,15 @@
       <x:option name="output-dir" select="resolve-uri('test_04/',$temp-dir)"/>
       <x:option name="name" select="'pef_3'"/>
       <x:option name="include-brf" select="'true'"/>
-      <x:option name="brf-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)'"/>
+      <x:option name="brf-table" select="'(id:&quot;com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01&quot;)
+                                          (line-breaks:DOS)
+                                          (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="result file">
-      <x:document type="file" method="binary" base-uri="temp-dir" href="test_04/pef_3.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="test_04/pef_3.brf"/>
     </x:context>
-    <x:expect label="The BRF should use the NL Braillo table" type="compare">
-      <x:document type="file" method="binary" href="../resources/pef_3_2.brf"/>
+    <x:expect label="The BRF should use the NL Braillo table" type="compare" normalize-space="false">
+      <x:document type="file" method="text" href="../resources/pef_3_2.brf"/>
     </x:expect>
   </x:scenario>
   
