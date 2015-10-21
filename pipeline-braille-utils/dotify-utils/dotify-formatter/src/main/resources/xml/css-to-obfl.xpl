@@ -182,9 +182,11 @@
     <p:split-sequence test="//css:box"/>
     
     <p:for-each>
-        <css:parse-properties properties="margin-left margin-right margin-top margin-bottom text-indent">
+        <css:parse-properties properties="margin-left margin-right margin-top margin-bottom
+                                          border-left border-right border-top border-bottom text-indent">
             <p:documentation>
-                Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom and
+                Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
+                css:border-left, css:border-right, css:border-top, css:border-bottom and
                 css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
