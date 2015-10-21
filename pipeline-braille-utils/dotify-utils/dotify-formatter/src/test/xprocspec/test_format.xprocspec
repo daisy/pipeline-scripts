@@ -1040,7 +1040,7 @@
   <!--
       forced page break before a first-child box is moved to its container
   -->
-  <x:scenario label="test_09" pending="not working">
+  <x:scenario label="test_09">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">

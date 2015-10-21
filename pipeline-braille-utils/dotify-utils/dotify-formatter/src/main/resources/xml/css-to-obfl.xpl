@@ -19,7 +19,7 @@
     <p:option name="text-transform" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
-    <p:import href="fix-page-break.xpl"/>
+    <p:import href="propagate-page-break.xpl"/>
     
     <p:for-each>
         <p:add-xml-base/>
@@ -254,12 +254,12 @@
                 Remove text nodes from block boxes with no line boxes.
             </p:documentation>
         </p:delete>
-        <pxi:fix-page-break>
+        <pxi:propagate-page-break>
             <p:documentation>
                 Resolve css:page-break-before="avoid" and css:page-break-after="always".
                 <!-- depends on make-anonymous-block-boxes -->
             </p:documentation>
-        </pxi:fix-page-break>
+        </pxi:propagate-page-break>
     </p:for-each>
     
     <p:split-sequence test="//css:box[@type='block']
