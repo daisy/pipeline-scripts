@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 
 import org.daisy.braille.api.table.Table;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -26,21 +30,24 @@ import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class PefCoreTest {
 	
-	@Inject
-	private TableProvider provider;
-	
 	@Test
 	public void testBrailleUtilsTableCatalog() {
+		Provider<String,Table> provider = getProvider();
 		Table table = provider.get("(id:'org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US')").iterator().next();
 		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
 	
 	@Test
 	public void testLocaleTableProvider() {
+		Provider<String,Table> provider = getProvider();
 		Table table = provider.get("(locale:nl)").iterator().next();
 		assertEquals("foobar", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
@@ -65,5 +72,18 @@ public class PefCoreTest {
 			thisBundle(),
 			junitBundles()
 		);
+	}
+	
+	@Inject
+	BundleContext context;
+	
+	private Provider<String,Table> getProvider() {
+		List<TableProvider> providers = new ArrayList<TableProvider>();
+		try {
+			for (ServiceReference<? extends TableProvider> ref : context.getServiceReferences(TableProvider.class, null))
+				providers.add(context.getService(ref)); }
+		catch (InvalidSyntaxException e) {
+			throw new RuntimeException(e); }
+		return dispatch(providers);
 	}
 }
