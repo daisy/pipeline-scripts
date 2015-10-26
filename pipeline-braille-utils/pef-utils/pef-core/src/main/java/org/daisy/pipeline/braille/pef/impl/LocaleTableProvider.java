@@ -1,7 +1,9 @@
 package org.daisy.pipeline.braille.pef.impl;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,6 +18,9 @@ import org.daisy.braille.api.factory.AbstractFactory;
 import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
@@ -51,13 +56,36 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	protected Iterable<Table> get(Map<String,Optional<String>> query) {
 		Iterable<Table> tables = empty;
 		Optional<String> o;
-		if ((o = query.get("locale")) != null) {
+		if ((o = query.remove("locale")) != null) {
 			String identifier = tablesFromLocale.get(o.get());
 			if (identifier != null) {
 				query.put("id", Optional.of(identifier));
-				tables = super.get(serializeQuery(query)); }}
+				tables = backingProvider.get(serializeQuery(query)); }}
 		return tables;
 	}
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();
+	
+	@Reference(
+		name = "TableProvider",
+		unbind = "unbindTableProvider",
+		service = TableProvider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	protected void bindTableProvider(TableProvider provider) {
+		if (provider != this)
+			otherProviders.add(provider);
+	}
+		
+	protected void unbindTableProvider(TableProvider provider) {
+		if (provider != this) {
+			otherProviders.remove(provider);
+			backingProvider.invalidateCache(); }
+	}
+		
+	private List<TableProvider> otherProviders = new ArrayList<TableProvider>();
+	private Provider.MemoizingProvider<String,Table> backingProvider
+	= memoize(dispatch(otherProviders));
+	
 }
