@@ -39,6 +39,12 @@ public class PefCoreTest {
 		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
 	
+/*	@Test
+	public void testLocaleTableProvider() {
+		Table table = provider.get("(locale:nl)").iterator().next();
+		assertEquals("foobar", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
+	} */
+	
 	@Configuration
 	public Option[] config() {
 		return options(

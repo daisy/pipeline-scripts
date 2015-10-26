@@ -54,7 +54,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 		tableProvider = null;
 	}
 	
-	private static Set<String> supportedFeatures = ImmutableSet.of("liblouis-table", "locale");
+	private static Set<String> supportedFeatures = ImmutableSet.of("liblouis-table");
 	
 	/**
 	 * Recognized features:
@@ -66,9 +66,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	 *     relative to a registered tablepath, an absolute file URI, or a fully qualified table
 	 *     identifier.
 	 *
-	 * - locale: Matches only liblouis display tables with that locale.
-	 *
-	 * All matches tables must consist of a single file that ends with ".dis".
+	 * All matched tables must consist of a single file that ends with ".dis".
 	 */
 	protected Iterable<Table> get(Map<String,Optional<String>> query) {
 		for (String feature : query.keySet())
@@ -80,9 +78,8 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 				new Function<LiblouisTableJnaImpl,Table>() {
 					public Table apply(LiblouisTableJnaImpl table) {
 						URI[] subTables = table.asURIs();
-						if (subTables.length == 1)
-							if (subTables[0].toString().endsWith(".dis"))
-								return new LiblouisDisplayTable(table.getTranslator());
+						if (subTables.length == 1 && subTables[0].toString().endsWith(".dis"))
+							return new LiblouisDisplayTable(table.getTranslator());
 						return null; }}),
 			notNull());
 	}

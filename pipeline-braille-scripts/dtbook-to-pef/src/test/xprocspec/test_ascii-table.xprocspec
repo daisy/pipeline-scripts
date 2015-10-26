@@ -38,7 +38,7 @@
     </x:expect>
   </x:scenario>
 
-  <x:scenario label="Missing ascii-table is derived from xml:lang" pending="No table provider for (locale:foo) yet">
+  <x:scenario label="Table can be found by locale">
     <x:call step="px:dtbook-to-pef">
       <x:input port="source">
         <x:document type="inline">
@@ -59,6 +59,15 @@
       <x:option name="output-dir" select="resolve-uri('2/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('2/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
+      <!--
+        The locale will be extracted from xml:lang.
+        This cannot be tested because ascii-table has to be empty,
+        but then line-breaks is missing and the test fails on some platforms.
+        Instead, just provide locale as a parameter.
+      -->
+      <x:option name="ascii-table" select="'(locale:nl)
+                                            (line-breaks:DOS)
+                                            (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="brf">
       <x:document type="file" method="text" base-uri="temp-dir" href="2/output-dir/test_ascii-table.brf"/>
