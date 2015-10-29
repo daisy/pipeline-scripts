@@ -50,7 +50,7 @@
             <pre><code class="default">(translator:liblouis)(formatter:dotify)</code></pre>
         </p:documentation>
     </p:option>
-
+    
     <p:option name="ascii-table" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">ascii-table</h2>
