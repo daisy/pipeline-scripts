@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.tex;
+package org.daisy.pipeline.braille.tex.impl;
 
 import java.net.URI;
 import java.util.Locale;
@@ -9,13 +9,15 @@ import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.varyLocale;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
 
+import org.daisy.pipeline.braille.tex.TexHyphenatorTablePath;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 @Component(
-	name = "org.daisy.pipeline.braille.tex.TexHyphenatorTableRegistry",
+	name = "org.daisy.pipeline.braille.tex.impl.TexHyphenatorTableRegistry",
 	service = {
 		TexHyphenatorTableRegistry.class
 	}

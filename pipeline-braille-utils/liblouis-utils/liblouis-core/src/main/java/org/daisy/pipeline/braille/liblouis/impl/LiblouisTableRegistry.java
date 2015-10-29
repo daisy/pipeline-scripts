@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.liblouis;
+package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
 import java.net.URI;
@@ -20,6 +20,10 @@ import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPatte
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 
+import org.daisy.pipeline.braille.liblouis.LiblouisTable;
+import org.daisy.pipeline.braille.liblouis.LiblouisTablePath;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -29,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-	name = "org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry",
+	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTableRegistry",
 	service = {
 		LiblouisTableRegistry.class,
 		LiblouisTableResolver.class

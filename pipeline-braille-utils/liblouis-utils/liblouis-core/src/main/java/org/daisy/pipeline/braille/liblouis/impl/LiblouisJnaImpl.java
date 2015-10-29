@@ -33,7 +33,6 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.WithSideEffect;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
-import org.daisy.pipeline.braille.liblouis.LiblouisTableRegistry;
 import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
 
 import org.liblouis.Louis;

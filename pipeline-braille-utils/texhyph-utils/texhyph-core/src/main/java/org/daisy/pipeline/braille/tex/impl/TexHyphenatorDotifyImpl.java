@@ -29,7 +29,6 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URIs.resolve;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 import org.daisy.pipeline.braille.tex.TexHyphenator;
-import org.daisy.pipeline.braille.tex.TexHyphenatorTableRegistry;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
