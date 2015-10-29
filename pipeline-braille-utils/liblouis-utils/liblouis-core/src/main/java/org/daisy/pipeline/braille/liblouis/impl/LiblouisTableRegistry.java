@@ -43,20 +43,18 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 	
 	@Reference(
 		name = "LiblouisTablePath",
-		unbind = "unregister",
+		unbind = "_unregister",
 		service = LiblouisTablePath.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
 	)
-	@Override
-	protected void register(LiblouisTablePath path) {
-		super.register(path);
+	private void _register(LiblouisTablePath path) {
+		register(path);
 		applyPathChangeCallbacks();
 	}
 	
-	@Override
-	protected void unregister(LiblouisTablePath path) {
-		super.unregister(path);
+	private void _unregister(LiblouisTablePath path) {
+		unregister(path);
 		applyPathChangeCallbacks();
 	}
 	

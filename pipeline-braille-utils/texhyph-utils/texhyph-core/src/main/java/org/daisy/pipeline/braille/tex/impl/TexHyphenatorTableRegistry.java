@@ -26,19 +26,18 @@ public class TexHyphenatorTableRegistry extends ResourceRegistry<TexHyphenatorTa
 	
 	@Reference(
 		name = "TexHyphenatorTablePath",
-		unbind = "unregister",
+		unbind = "_unregister",
 		service = TexHyphenatorTablePath.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
 	)
-	protected void register(TexHyphenatorTablePath path) {
-		super.register(path);
+	private void _register(TexHyphenatorTablePath path) {
+		register(path);
 		provider.invalidateCache();
 	}
 	
-	@Override
-	protected void unregister (TexHyphenatorTablePath path) {
-		super.unregister(path);
+	private void _unregister (TexHyphenatorTablePath path) {
+		unregister(path);
 		provider.invalidateCache();
 	}
 	
