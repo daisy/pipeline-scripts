@@ -18,7 +18,7 @@
   <name>DP2 Braille Modules :: liblouis-utils</name>
 
   <modules>
-    <module>liblouis-core</module>
+    <!-- <module>liblouis-core</module> -->
     <!-- <module>liblouis-saxon</module> -->
     <!-- <module>liblouis-tables</module> -->
     <!-- <module>liblouis-calabash</module> -->
