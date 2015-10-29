@@ -98,9 +98,6 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Service-Component>
-              OSGI-INF/libhyphen-table-registry.xml
-            </Service-Component>
             <Export-Package>org.daisy.pipeline.braille.libhyphen</Export-Package>
             <Private-Package>org.daisy.pipeline.braille.libhyphen.impl</Private-Package>
             <_dsannotations>*</_dsannotations>

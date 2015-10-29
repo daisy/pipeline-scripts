@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.libhyphen;
+package org.daisy.pipeline.braille.libhyphen.impl;
 
 import java.io.File;
 import java.net.URI;
@@ -13,6 +13,9 @@ import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.varyLocale;
 import org.daisy.pipeline.braille.common.ResourcePath;
 import org.daisy.pipeline.braille.common.ResourceRegistry;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTablePath;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTableProvider;
+import org.daisy.pipeline.braille.libhyphen.LibhyphenTableResolver;
 
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.fileName;
@@ -20,18 +23,35 @@ import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import static org.daisy.pipeline.braille.common.util.URLs.asURL;
 import static org.daisy.pipeline.braille.common.util.Predicates.matchesGlobPattern;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+
+@Component(
+	name = "org.daisy.pipeline.braille.libhyphen.impl.LibhyphenTableRegistry",
+	service = {
+		LibhyphenTableProvider.class,
+		LibhyphenTableResolver.class
+	}
+)
 public class LibhyphenTableRegistry extends ResourceRegistry<LibhyphenTablePath>
 	                                implements LibhyphenTableProvider, LibhyphenTableResolver {
 	
-	@Override
-	protected void register(LibhyphenTablePath path) {
-		super.register(path);
+	@Reference(
+		name = "LibhyphenTablePath",
+		unbind = "_unregister",
+		service = LibhyphenTablePath.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	private void _register(LibhyphenTablePath path) {
+		register(path);
 		provider.invalidateCache();
 	}
 	
-	@Override
-	protected void unregister (LibhyphenTablePath path) {
-		super.unregister(path);
+	private void _unregister (LibhyphenTablePath path) {
+		unregister(path);
 		provider.invalidateCache();
 	}
 	
