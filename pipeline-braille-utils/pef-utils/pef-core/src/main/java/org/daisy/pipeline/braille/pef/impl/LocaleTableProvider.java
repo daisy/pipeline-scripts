@@ -46,6 +46,9 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	 *     that is a sane default for that locale.
 	 */
 	protected Iterable<Table> get(Map<String,Optional<String>> query) {
+		for (String feature : query.keySet())
+			if (!supportedFeatures.contains(feature))
+				return empty;
 		Iterable<Table> tables = empty;
 		Optional<String> o;
 		if ((o = query.remove("locale")) != null) {
