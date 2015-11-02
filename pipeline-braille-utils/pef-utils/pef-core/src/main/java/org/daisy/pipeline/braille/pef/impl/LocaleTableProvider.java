@@ -1,21 +1,13 @@
 package org.daisy.pipeline.braille.pef.impl;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import static com.google.common.base.Predicates.notNull;
 import com.google.common.collect.ImmutableSet;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-
-import org.daisy.braille.api.factory.AbstractFactory;
-import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 
 import org.daisy.pipeline.braille.common.Provider;

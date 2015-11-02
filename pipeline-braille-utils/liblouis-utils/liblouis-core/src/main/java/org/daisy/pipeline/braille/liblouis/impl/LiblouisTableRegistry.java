@@ -53,7 +53,7 @@ public class LiblouisTableRegistry extends ResourceRegistry<LiblouisTablePath> i
 		applyPathChangeCallbacks();
 	}
 	
-	private void _unregister(LiblouisTablePath path) {
+	protected void _unregister(LiblouisTablePath path) {
 		unregister(path);
 		applyPathChangeCallbacks();
 	}
