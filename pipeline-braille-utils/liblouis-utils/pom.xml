@@ -20,7 +20,7 @@
   <modules>
     <module>liblouis-core</module>
     <!-- <module>liblouis-saxon</module> -->
-    <!-- <module>liblouis-tables</module> -->
+    <module>liblouis-tables</module>
     <!-- <module>liblouis-calabash</module> -->
     <!-- <module>liblouis-native</module> -->
     <module>liblouis-formatter</module>

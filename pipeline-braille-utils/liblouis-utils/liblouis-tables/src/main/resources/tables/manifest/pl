@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:pl
 include ../Pl-Pl-g1.utb
 include ../hyph_pl_PL.dic

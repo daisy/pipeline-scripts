@@ -46,7 +46,7 @@ public class LiblouisTablesTest {
 	
 	@Test
 	public void testQueryTranslator() {
-		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[1].toString().endsWith("manifest/nl_BE"));
+		assertTrue(provider.get("(locale:nl_BE)").iterator().next().asLiblouisTable().asURIs()[2].toString().endsWith("manifest/nl_BE"));
 	}
 	
 	@Test

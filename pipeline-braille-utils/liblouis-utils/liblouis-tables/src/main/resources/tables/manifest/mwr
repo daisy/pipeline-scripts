@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:mwr
 include ../spaces.ctb
 include ../mwr.ctb

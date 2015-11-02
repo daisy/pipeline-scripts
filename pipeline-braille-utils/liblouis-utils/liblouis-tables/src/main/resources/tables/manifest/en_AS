@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:en_AS
 include ../UEBC-g2.ctb
 include ../hyph_en_US.dic

@@ -1,3 +1,5 @@
+#+type:display
+#+locale: foo
 display \X0020 0
 display \X0061 1
 display \X0062 12

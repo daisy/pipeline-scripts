@@ -197,10 +197,20 @@ public class LiblouisCoreTest {
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
 		Provider<String,Table> tableProvider = dispatch(tableProviders);
+		
+		// (liblouis-table: ...)
 		Table table = tableProvider.get("(liblouis-table:'foobar.dis')").iterator().next();
 		BrailleConverter converter = table.newBrailleConverter();
 		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
 		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
+		
+		//  (locale: ...)
+		table = tableProvider.get("(locale:foo)").iterator().next();
+		converter = table.newBrailleConverter();
+		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
+		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
+		
+		// (id: ...)
 		String id = table.getIdentifier();
 		assertEquals(table, tableProvider.get("(id:'" + id + "')").iterator().next());
 		assertEquals(table, tableCatalog.newTable(id));

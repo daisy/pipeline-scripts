@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:de_CH
 include ../de-ch-g2.ctb
 include ../hyph_de_DE.dic

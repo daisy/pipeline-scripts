@@ -212,6 +212,7 @@ public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<Lib
 						public LiblouisTableJnaImpl _apply() {
 							final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 							String table = null;
+							String type = "translation";
 							boolean unicode = false;
 							boolean whiteSpace = false;
 							Optional<String> o;
@@ -219,10 +220,18 @@ public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<Lib
 								unicode = true;
 							if ((o = q.remove("white-space")) != null)
 								whiteSpace = true;
+							if ((o = q.remove("display")) != null) {
+								if (unicode) {
+									logger.warn("A query with '(unicode)(display)' never matches anything");
+									throw new NoSuchElementException(); }
+								type = "display"; }
 							if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
 								table = o.get();
 							else if (q.size() > 0) {
 								StringBuilder b = new StringBuilder();
+								b.append("type:");
+								b.append(type);
+								b.append(" ");
 								for (String k : q.keySet()) {
 									if (!k.matches("[a-zA-Z0-9_-]+")) {
 										__apply(
