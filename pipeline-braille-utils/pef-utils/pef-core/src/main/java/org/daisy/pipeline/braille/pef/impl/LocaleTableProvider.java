@@ -21,6 +21,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component(
 	name = "org.daisy.pipeline.braille.pef.impl.LocaleTableProvider",
@@ -47,8 +49,9 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	 */
 	protected Iterable<Table> get(Map<String,Optional<String>> query) {
 		for (String feature : query.keySet())
-			if (!supportedFeatures.contains(feature))
-				return empty;
+			if (!supportedFeatures.contains(feature)) {
+				logger.debug("Unsupported feature: " + feature);
+				return empty; }
 		Iterable<Table> tables = empty;
 		Optional<String> o;
 		if ((o = query.remove("locale")) != null) {
@@ -82,5 +85,7 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	private List<TableProvider> otherProviders = new ArrayList<TableProvider>();
 	private Provider.MemoizingProvider<String,Table> backingProvider
 	= memoize(dispatch(otherProviders));
+	
+	private static final Logger logger = LoggerFactory.getLogger(LocaleTableProvider.class);
 	
 }

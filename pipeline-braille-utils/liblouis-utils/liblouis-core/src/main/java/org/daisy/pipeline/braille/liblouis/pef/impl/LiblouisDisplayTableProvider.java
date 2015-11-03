@@ -26,6 +26,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component(
 	name = "org.daisy.pipeline.braille.liblouis.pef.impl.LiblouisDisplayTableProvider",
@@ -71,8 +73,9 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	 */
 	protected Iterable<Table> get(Map<String,Optional<String>> query) {
 		for (String feature : query.keySet())
-			if (!supportedFeatures.contains(feature))
-				return empty;
+			if (!supportedFeatures.contains(feature)) {
+				logger.debug("Unsupported feature: " + feature);
+				return empty; }
 		query.put("display", Optional.<String>absent());
 		return filter(
 			transform(
@@ -111,4 +114,7 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 			return null;
 		}
 	}
+		
+	private static final Logger logger = LoggerFactory.getLogger(LiblouisDisplayTableProvider.class);
+	
 }
