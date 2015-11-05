@@ -1381,7 +1381,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_17">
+  <x:scenario label="test_21">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
@@ -1496,7 +1496,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_18">
+  <x:scenario label="test_22">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">

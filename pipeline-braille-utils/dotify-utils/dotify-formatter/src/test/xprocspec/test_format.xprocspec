@@ -4669,7 +4669,7 @@
    <!--
       Volume size
   -->
-  <x:scenario label="test_48">
+  <x:scenario label="test_49">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4861,7 +4861,7 @@
   <!--
       Volume pseudo-classes
   -->
-  <x:scenario label="test_49" pending="implementation does not support different target volume size">
+  <x:scenario label="test_50" pending="implementation does not support different target volume size">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
