@@ -26,9 +26,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.ComponentContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform {
 	
 	public enum MathCode {
@@ -102,8 +99,6 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			else
 				return null;
 		}
-		
-		private static final Logger logger = LoggerFactory.getLogger(Provider.class);
 		
 	}
 }
