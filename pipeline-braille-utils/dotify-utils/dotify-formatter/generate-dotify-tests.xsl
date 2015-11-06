@@ -98,4 +98,12 @@
         </xsl:choose>
     </xsl:template>
     
+    <!--
+        copied from src/main/resources/xml/obfl-normalize-space.xsl
+    -->
+    <xsl:template match="obfl:block/text()[not(preceding-sibling::node()[not(self::obfl:marker or self::text()[normalize-space(.)=''])])]"
+                  priority="1">
+        <xsl:sequence select="replace(., '^\s+', '')"/>
+    </xsl:template>
+    
 </xsl:stylesheet>
