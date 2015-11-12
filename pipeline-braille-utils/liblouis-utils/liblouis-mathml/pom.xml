@@ -177,7 +177,7 @@
 
   <profiles>
     <profile>
-      <id>process-math-files</id>
+      <id>generate-liblouis-files</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -226,17 +226,17 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
             <version>1.4.0</version>
-            <configuration>
-              <executable>src/main/resources/sh/filter_math_files.sh</executable>
-              <workingDirectory>target</workingDirectory>
-            </configuration>
             <executions>
               <execution>
-                <id>filter-math-files</id>
+                <id>filter-liblouis-files</id>
                 <phase>process-sources</phase>
                 <goals>
                   <goal>exec</goal>
                 </goals>
+                <configuration>
+                  <executable>filter_liblouis_files.sh</executable>
+                  <workingDirectory>target</workingDirectory>
+                </configuration>
               </execution>
             </executions>
           </plugin>
