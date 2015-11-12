@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.9.7-SNAPSHOT</version>
     <relativePath>../../../parent/</relativePath>
   </parent>
-  
+
   <artifactId>liblouis-mathml</artifactId>
   <version>2.0.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  
+
   <name>DP2 Braille Modules :: liblouis-utils :: liblouis-mathml</name>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -34,9 +35,7 @@
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!--
-        OSGi runtime dependencies
-    -->
+    <!-- OSGi runtime dependencies -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-utils</artifactId>
@@ -52,9 +51,7 @@
       <artifactId>fileset-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!--
-        for file-utils
-    -->
+    <!-- for file-utils -->
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>common-utils</artifactId>
@@ -90,9 +87,7 @@
       <artifactId>javax.persistence</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!--
-        for fileset-utils
-    -->
+    <!-- for fileset-utils -->
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>html-utils</artifactId>
@@ -108,9 +103,7 @@
       <artifactId>mediatype-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!--
-        test dependencies
-    -->
+    <!-- test dependencies -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>
@@ -132,7 +125,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <resources>
       <resource>
@@ -143,103 +136,6 @@
       </resource>
     </resources>
     <plugins>
-      <plugin>
-        <artifactId>maven-scm-plugin</artifactId>
-        <version>1.8.1</version>
-        <executions>
-          <execution>
-            <id>checkout-tables</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>checkout</goal>
-            </goals>
-            <configuration>
-              <connectionUrl>scm:svn:http://liblouis.googlecode.com/svn/trunk/tables</connectionUrl>
-              <scmVersion>895</scmVersion>
-              <scmVersionType>revision</scmVersionType>
-              <checkoutDirectory>target/checkout/liblouis/tables/</checkoutDirectory>
-              <skipCheckoutIfExists>true</skipCheckoutIfExists>
-            </configuration>
-          </execution>
-          <execution>
-            <id>checkout-lbu_files</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>checkout</goal>
-            </goals>
-            <configuration>
-              <connectionUrl>scm:hg:https://code.google.com/p/liblouisutdml/</connectionUrl>
-              <scmVersion>c94917dab530</scmVersion>
-              <scmVersionType>tag</scmVersionType>
-              <checkoutDirectory>target/checkout/liblouisutdml/</checkoutDirectory>
-              <skipCheckoutIfExists>true</skipCheckoutIfExists>
-              <includes>
-                lbu_files/marburg.sem,
-                lbu_files/nemeth.sem,
-                lbu_files/ukmaths.sem
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- WARNING: *nix only-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>shell-maven-plugin</artifactId>
-        <version>1.0-beta-1</version>
-        <configuration>
-          <chmod>true</chmod>
-        </configuration>
-        <executions>
-          <execution>
-            <id>filter-math-files</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>shell</goal>
-            </goals>
-            <configuration>
-              <workDir>target</workDir>
-              <script>
-                #!/bin/bash
-                TABLES=(
-                    unicode.dis
-                    braille-patterns.cti
-                    marburg.ctb
-                    marburg_edit.ctb
-                    nemeth.ctb
-                    nemeth_edit.ctb
-                    ukmaths.ctb
-                    ukmaths_edit.ctb
-                    wiskunde.ctb)
-                SEM_FILES=(
-                    marburg.sem
-                    nemeth.sem
-                    ukmaths.sem)
-                table_dependencies() {
-                    DEPENDENCIES=$(grep -E "^include.*" checkout/liblouis/tables/$1 | sed 's/^include  *\([^ ][^ ]*\).*$/\1/')
-                    TRANSITIVE_DEPENDENCIES=""
-                    for TABLE in $DEPENDENCIES; do
-                        TRANSITIVE_DEPENDENCIES="$TRANSITIVE_DEPENDENCIES $(table_dependencies $TABLE)"
-                    done
-                    echo "$DEPENDENCIES $TRANSITIVE_DEPENDENCIES"
-                }
-                mkdir -p generated-resources/lbu_files
-                for FILE in ${SEM_FILES[@]}; do
-                    cp checkout/liblouisutdml/lbu_files/$FILE generated-resources/lbu_files/
-                done
-                ALL_TABLES=""
-                for TABLE in ${TABLES[@]}; do
-                    ALL_TABLES="$TABLE $ALL_TABLES $(table_dependencies $TABLE)"
-                done
-                ALL_TABLES="$(echo $ALL_TABLES | tr ' ' '\n' | sort | uniq)"
-                for TABLE in ${ALL_TABLES[@]}; do
-                    cp checkout/liblouis/tables/$TABLE generated-resources/lbu_files/
-                done
-              </script>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.ops4j.pax.exam</groupId>
         <artifactId>maven-paxexam-plugin</artifactId>
@@ -259,9 +155,8 @@
           <instructions>
             <Import-Package>*</Import-Package>
             <Service-Component>OSGI-INF/liblouis-mathml-config.xml</Service-Component>
-            <!--
-                in order to avoid including services in the same package in other bundles
-            -->
+            <!-- in order to avoid including services in the same package in other 
+              bundles -->
             <_dsannotations>
               org.daisy.pipeline.braille.liblouis.impl.LiblouisMathMLTransform$Provider
             </_dsannotations>
@@ -279,5 +174,75 @@
       </plugin>
     </plugins>
   </build>
-  
+
+  <profiles>
+    <profile>
+      <id>generate-liblouis-files</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-scm-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>checkout-tables</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>checkout</goal>
+                </goals>
+                <configuration>
+                  <connectionUrl>scm:svn:http://liblouis.googlecode.com/svn/trunk/tables</connectionUrl>
+                  <scmVersion>895</scmVersion>
+                  <scmVersionType>revision</scmVersionType>
+                  <checkoutDirectory>target/checkout/liblouis/tables/</checkoutDirectory>
+                  <skipCheckoutIfExists>true</skipCheckoutIfExists>
+                </configuration>
+              </execution>
+              <execution>
+                <id>checkout-lbu_files</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>checkout</goal>
+                </goals>
+                <configuration>
+                  <connectionUrl>scm:hg:https://code.google.com/p/liblouisutdml/</connectionUrl>
+                  <scmVersion>c94917dab530</scmVersion>
+                  <scmVersionType>tag</scmVersionType>
+                  <checkoutDirectory>target/checkout/liblouisutdml/</checkoutDirectory>
+                  <skipCheckoutIfExists>true</skipCheckoutIfExists>
+                  <includes>
+                    lbu_files/marburg.sem,
+                    lbu_files/nemeth.sem,
+                    lbu_files/ukmaths.sem
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- WARNING: *nix only -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>filter-liblouis-files</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>filter_liblouis_files.sh</executable>
+                  <workingDirectory>target</workingDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
