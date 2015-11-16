@@ -776,65 +776,105 @@
   <!--
       Page break control, including keeping multiple blocks together
   -->
-  <x:scenario label="test_07" pending="dotify bugs? orphans/widows not implemented yet">
+  <x:scenario label="test_07">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
           <doc style="text-transform:none">
             <body style="@page { size: 10 6; }">
-              <section style="display: block;
-                              page-break-before: always">
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
+              <section style="display: block; page-break-before: right">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                <section style="display: block">
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                </section>
+              </section>
+              <section style="display: block; page-break-before: right">
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
                 <section>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
                 </section>
               </section>
-              <section style="display: block;
-                              page-break-before: always">
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <section style="display: block;
-                                page-break-inside: avoid;">
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
+              <section style="display: block; page-break-before: right">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                <section style="display: block; page-break-inside: avoid">
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 </section>
               </section>
-              <section style="display: block;
-                              page-break-before: always">
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <section style="display: block;
-                                orphans: 3;">
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
+              <section style="display: block; page-break-before: right">
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <section style="display: block; page-break-inside: avoid">
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
                 </section>
               </section>
-              <section style="display: block;
-                              page-break-before: always">
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <p style="display: block;">⠤⠤⠤</p>
-                <section style="display: block;
-                                page-break-after: avoid;">
-                  <p style="display: block;">⠤⠤⠤</p>
-                  <p style="display: block;">⠤⠤⠤</p>
+              <section style="display: block; page-break-before: right">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                <section style="display: block; page-break-after: avoid">
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 </section>
-                <p style="display: block;">⠤⠤⠤</p>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </section>
+              <section style="display: block; page-break-before: right">
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <p style="display: block">⠤⠤⠤</p>
+                <section style="display: block; page-break-after: avoid">
+                  <p style="display: block">⠤⠤⠤</p>
+                  <p style="display: block">⠤⠤⠤</p>
+                </section>
+                <p style="display: block">⠤⠤⠤</p>
+              </section>
+              <section style="display: block; page-break-before: right">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                <section style="display: block; orphans: 3">
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                </section>
+              </section>
+              <section style="display: block; page-break-before: right">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                <section style="display: block; widows: 3">
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                  ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                </section>
               </section>
             </body>
           </doc>
@@ -854,7 +894,23 @@
             </default-template>
           </layout-master>
           <sequence master="body">
-            <block break-before="page">
+            <block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+            </block>
+          </sequence>
+          <sequence master="body">
+            <block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
@@ -864,7 +920,25 @@
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
             </block>
-            <block break-before="page">
+          </sequence>
+          <sequence master="body">
+            <block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block keep="all">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+            </block>
+          </sequence>
+          <sequence master="body">
+            <block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
@@ -876,19 +950,26 @@
                 <block keep="all">⠤⠤⠤</block>
               </block>
             </block>
-            <block break-before="page">
-              <block>⠤⠤⠤</block>
-              <block>⠤⠤⠤</block>
-              <block>⠤⠤⠤</block>
-              <block>⠤⠤⠤</block>
+          </sequence>
+          <sequence master="body">
+            <block>
               <block>
-                <block>⠤⠤⠤</block>
-                <block>⠤⠤⠤</block>
-                <block>⠤⠤⠤</block>
-                <block>⠤⠤⠤</block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block keep-with-next="1" keep="all">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
               </block>
             </block>
-            <block break-before="page">
+          </sequence>
+          <sequence master="body">
+            <block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
@@ -898,6 +979,38 @@
                 <block keep-with-next="1" keep="all">⠤⠤⠤</block>
               </block>
               <block>⠤⠤⠤</block>
+            </block>
+          </sequence>
+          <sequence master="body">
+            <block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block orphans="3">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+            </block>
+          </sequence>
+          <sequence master="body">
+            <block>
+              <block>
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
+              <block widows="3">
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤⠤⠤⠤
+              </block>
             </block>
           </sequence>
         </obfl>
@@ -918,6 +1031,20 @@
             <volume rows="6" cols="10" rowgap="0" duplex="true">
               <section>
                 <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
+                <page>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
@@ -929,6 +1056,22 @@
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
                 </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
                 <page>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
@@ -941,7 +1084,23 @@
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
                 </page>
+              </section>
+              <section>
                 <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
@@ -950,19 +1109,34 @@
                 <page>
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤</row>
-                  <row>⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
                 </page>
               </section>
             </volume>

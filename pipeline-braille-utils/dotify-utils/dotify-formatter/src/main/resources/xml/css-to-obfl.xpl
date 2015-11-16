@@ -260,6 +260,18 @@
                 <!-- depends on make-anonymous-block-boxes -->
             </p:documentation>
         </pxi:propagate-page-break>
+        <!--
+            Move css:page-break-after="avoid" to last descendant block (TODO: move to
+            pxi:propagate-page-break?)
+        -->
+        <p:add-attribute match="css:box[@type='block'
+                                        and not(child::css:box[@type='block'])
+                                        and (some $self in . satisfies
+                                          some $ancestor in $self/ancestor::*[@css:page-break-after='avoid'] satisfies
+                                            not($self/following::css:box intersect $ancestor//*))]"
+                         attribute-name="css:page-break-after"
+                         attribute-value="avoid"/>
+        <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
     </p:for-each>
     
     <p:split-sequence test="//css:box[@type='block']

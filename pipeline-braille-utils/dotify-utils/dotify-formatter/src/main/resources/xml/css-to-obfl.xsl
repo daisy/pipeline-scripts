@@ -285,9 +285,8 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="@css:orphans|
-                         @css:widows">
-        <xsl:message select="concat(local-name(),':',.,' not supported yet')"/>
+    <xsl:template match="@css:orphans|@css:widows">
+        <xsl:attribute name="{local-name()}" select="."/>
     </xsl:template>
     
     <xsl:template match="css:string[@name]">
