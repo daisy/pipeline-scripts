@@ -571,7 +571,7 @@
   <!--
       line breaking
   -->
-  <x:scenario label="test_09">
+  <x:scenario label="test_10">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
@@ -626,389 +626,371 @@
   </x:scenario>
 
   <!--
-    row spacing
-  -->
-  <x:scenario label="test_07">
-		<x:call step="pxi:test">
-			<x:input port="source">
-				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-						<layout-master name="a" duplex="false" page-width="40" page-height="25" row-spacing="2.0">
-							<default-template>
-								<header/>
-								<footer/>
-							</default-template>
-						</layout-master>
-						<sequence master="a">
-							<block>
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤
-							</block>
-						</sequence>
-					</obfl>
-				</x:document>
-			</x:input>
-		</x:call>
-		<x:context label="result">
-			<x:document type="port" port="result"/>
-		</x:context>
-		<x:expect label="valid" type="validate" grammar="relax-ng">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
-		</x:expect>
-		<x:expect label="valid" type="validate" grammar="schematron">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
-		</x:expect>
-		<x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-			<x:document type="inline">
-				<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-					<head xmlns:dc="http://purl.org/dc/elements/1.1/">
-						<meta>
-							<dc:format>application/x-pef+xml</dc:format>
-						</meta>
-					</head>
-					<body>
-							<volume cols="40" rows="25" rowgap="4" duplex="false">
-								<section>
-									<page>
-										<row>⠤⠤⠤⠤</row>
-										<row>⠤⠤⠤⠤</row>
-										<row>⠤⠤⠤⠤</row>
-										<row rowgap="0">⠤⠤⠤⠤</row>
-									</page>
-								</section>
-							</volume>
-					</body>
-				</pef>
-			</x:document>
-		</x:expect>
-	</x:scenario>
-	
-	<x:scenario label="test_08">
-		<x:call step="pxi:test">
-			<x:input port="source">
-				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-						<layout-master name="a" duplex="false" page-width="40" page-height="25">
-							<default-template>
-								<header/>
-								<footer/>
-							</default-template>
-						</layout-master>
-						<sequence master="a">
-							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠂⠂⠂⠂⠂<br/>
-								<br/>
-								⠯⠗⠼⠜⠌⠄
-							</block>
-							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤<br/>
-								⠤⠤⠤⠤
-							</block>
-						</sequence>
-					</obfl>
-				</x:document>
-			</x:input>
-		</x:call>
-		<x:context label="result">
-			<x:document type="port" port="result"/>
-		</x:context>
-		<x:expect label="valid" type="validate" grammar="relax-ng">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
-		</x:expect>
-		<x:expect label="valid" type="validate" grammar="schematron">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
-		</x:expect>
-		<x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-			<x:document type="inline">
-				<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-					<head xmlns:dc="http://purl.org/dc/elements/1.1/">
-						<meta>
-							<dc:format>application/x-pef+xml</dc:format>
-						</meta>
-					</head>
-					<body>
-						<volume cols="40" rows="25" rowgap="0" duplex="false">
-							<section>
-								<page>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠂⠂⠂⠂⠂</row>
-									<row rowgap="4"/>
-									<row rowgap="4">⠯⠗⠼⠜⠌⠄</row>
-									<row rowgap="4"/>
-									<row rowgap="4"/>
-									<row rowgap="4">⠤⠤⠤⠤</row>
-									<row rowgap="4">⠤⠤⠤⠤</row>
-									<row rowgap="4">⠤⠤⠤⠤</row>
-									<row rowgap="4">⠤⠤⠤⠤</row>
-									<row rowgap="0"/>
-								</page>
-							</section>
-						</volume>
-					</body>
-				</pef>
-			</x:document>
-		</x:expect>
-	</x:scenario>
-	
-	<x:scenario label="test_09">
-		<x:call step="pxi:test">
-			<x:input port="source">
-				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-						<layout-master name="a" duplex="true" page-width="40" page-height="25">
-							<default-template>
-								<header/>
-								<footer/>
-							</default-template>
-						</layout-master>
-						<sequence master="a">
-							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="0" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="0" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="0" margin-bottom="0" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="0" margin-bottom="0" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="1" margin-bottom="0" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="1" row-spacing="1.0">
-								<block margin-top="0" row-spacing="2.0">
-									⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁
-								</block>
-								<block margin-top="1" row-spacing="2.0">
-									⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁
-								</block>
-							</block>
-						</sequence>
-					</obfl>
-				</x:document>
-			</x:input>
-		</x:call>
-		<x:context label="result">
-			<x:document type="port" port="result"/>
-		</x:context>
-		<x:expect label="valid" type="validate" grammar="relax-ng">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
-		</x:expect>
-		<x:expect label="valid" type="validate" grammar="schematron">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
-		</x:expect>
-		<x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-			<x:document type="inline">
-				<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-					<head xmlns:dc="http://purl.org/dc/elements/1.1/">
-						<meta>
-							<dc:format>application/x-pef+xml</dc:format>
-						</meta>
-					</head>
-					<body>
-						<volume cols="40" rows="25" rowgap="0" duplex="true">
-							<section>
-								<page>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row>⠁</row>
-								</page>
-								<page>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row>⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-								</page>
-								<page>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row>⠁</row>
-								</page>
-								<page>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="0"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row>⠁</row>
-								</page>
-								<page>
-									<row>⠁</row>
-								</page>
-							</section>
-						</volume>
-					</body>
-				</pef>
-			</x:document>
-		</x:expect>
-	</x:scenario>
-	
-	<x:scenario label="test_10">
-		<x:call step="pxi:test">
-			<x:input port="source">
-				<x:document type="inline">
-					<obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-						<layout-master name="a" duplex="true" page-width="40" page-height="25">
-							<default-template>
-								<header/>
-								<footer/>
-							</default-template>
-						</layout-master>
-						<sequence master="a">
-							<block margin-top="1" margin-bottom="1" row-spacing="2.0">
-								⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁<br/>
-								⠁
-							</block>
-							<block margin-top="1" row-spacing="1.0">
-								<block margin-top="0" row-spacing="2.0">
-									⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁<br/>
-									⠁
-								</block>
-							</block>
-						</sequence>
-					</obfl>
-				</x:document>
-			</x:input>
-		</x:call>
-		<x:context label="result">
-			<x:document type="port" port="result"/>
-		</x:context>
-		<x:expect label="valid" type="validate" grammar="relax-ng">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
-		</x:expect>
-		<x:expect label="valid" type="validate" grammar="schematron">
-			<x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
-		</x:expect>
-		<x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-			<x:document type="inline">
-				<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-					<head xmlns:dc="http://purl.org/dc/elements/1.1/">
-						<meta>
-							<dc:format>application/x-pef+xml</dc:format>
-						</meta>
-					</head>
-					<body>
-						<volume cols="40" rows="25" rowgap="0" duplex="true">
-							<section>
-								<page>
-									<row rowgap="4"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4"/>
-									<row rowgap="0"/>
-									<row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row rowgap="4">⠁</row>
-									<row>⠁</row>
-								</page>
-							</section>
-						</volume>
-					</body>
-				</pef>
-			</x:document>
-		</x:expect>
-	</x:scenario>
-	
-  <!--
-    row-spacing offset
+      row-spacing on layout-master
   -->
   <x:scenario label="test_11">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" duplex="false" page-width="40" page-height="25" row-spacing="2.0">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block>
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
+    </x:expect>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="25" rowgap="4" duplex="false">
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤</row>
+                  <row rowgap="0">⠤⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      row-spacing on blocks
+  -->
+  <x:scenario label="test_12">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" duplex="false" page-width="40" page-height="25">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠂⠂⠂⠂⠂<br/>
+                <br/>
+                ⠯⠗⠼⠜⠌⠄
+              </block>
+              <block>⠒⠒⠒</block>
+              <block row-spacing="2.0">
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤<br/>
+                ⠤⠤⠤⠤
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
+    </x:expect>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="25" rowgap="0" duplex="false">
+              <section>
+                <page>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠂⠂⠂⠂⠂</row>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠯⠗⠼⠜⠌⠄</row>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="4">⠤⠤⠤⠤</row>
+                  <row rowgap="4">⠤⠤⠤⠤</row>
+                  <row rowgap="4">⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      row-spacing and margins
+  -->
+  <x:scenario label="test_13">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" duplex="true" page-width="40" page-height="75">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block margin-top="1" margin-bottom="1" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block>⠒⠒⠒</block>
+              <block margin-top="0" margin-bottom="1" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block>⠒⠒⠒</block>
+              <block margin-top="0" margin-bottom="0" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block>⠒⠒⠒</block>
+              <block margin-top="1" margin-bottom="0" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block>⠒⠒⠒</block>
+              <block margin-top="1" row-spacing="1.0">
+                <block margin-top="0" row-spacing="2.0">
+                  ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁
+                </block>
+                <block>⠒⠒⠒</block>
+                <block margin-top="1" row-spacing="2.0">
+                  ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁
+                </block>
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
+    </x:expect>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="75" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4"/>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4"/>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="0"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row>⠒⠒⠒</row>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row>⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      row-spacing and collapsing margins
+  -->
+  <x:scenario label="test_14">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" duplex="true" page-width="40" page-height="35">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block margin-bottom="1" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block margin-top="1" margin-bottom="1" row-spacing="2.0">
+                ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁<br/>
+                ⠁
+              </block>
+              <block margin-top="1" row-spacing="1.0">
+                <block margin-top="0" row-spacing="2.0">
+                  ⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁<br/>
+                  ⠁
+                </block>
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="valid" type="validate" grammar="relax-ng">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.rng"/>
+    </x:expect>
+    <x:expect label="valid" type="validate" grammar="schematron">
+      <x:document type="file" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/schema/pef-2008-1.sch"/>
+    </x:expect>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="35" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4"/>
+                  <row rowgap="4">⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row rowgap="4">⠁</row>
+                  <row>⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      row-spacing offset
+  -->
+  <x:scenario label="test_15">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
@@ -1038,9 +1020,9 @@
               <block break-before="page">
                 ⠿
               </block>
-          </sequence>
-        </obfl>
-      </x:document>
+            </sequence>
+          </obfl>
+        </x:document>
       </x:input>
     </x:call>
     <x:context label="result">
@@ -1082,27 +1064,27 @@
   <!--
       keep block
   -->
-  <x:scenario label="test_12">
+  <x:scenario label="test_16">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="body" page-width="10" page-height="6" duplex="false">
-            <default-template>
-              <header/>
-              <footer/>
-            </default-template>
-          </layout-master>
-          <sequence master="body">
-            <block>
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-            <block keep="all">
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-          </sequence>
-        </obfl>
-      </x:document>
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="body" page-width="10" page-height="6" duplex="false">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="body">
+              <block>
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block keep="all">
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
       </x:input>
     </x:call>
     <x:context label="result">
@@ -1142,30 +1124,30 @@
   <!--
       keep block with next
   -->
-  <x:scenario label="test_13">
+  <x:scenario label="test_17">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="body" page-width="10" page-height="6" duplex="false">
-            <default-template>
-              <header/>
-              <footer/>
-            </default-template>
-          </layout-master>
-          <sequence master="body">
-            <block>
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-            <block keep="all" keep-with-next="1">
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-            <block>
-              ⠤⠤⠤⠤⠤
-            </block>
-          </sequence>
-        </obfl>
-      </x:document>
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="body" page-width="10" page-height="6" duplex="false">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="body">
+              <block>
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block keep="all" keep-with-next="1">
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block>
+                ⠤⠤⠤⠤⠤
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
       </x:input>
     </x:call>
     <x:context label="result">
@@ -1204,30 +1186,30 @@
   <!--
       keep multiple blocks
   -->
-  <x:scenario label="test_14" pending="does not work">
+  <x:scenario label="test_18">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="body" page-width="10" page-height="6" duplex="false">
-            <default-template>
-              <header/>
-              <footer/>
-            </default-template>
-          </layout-master>
-          <sequence master="body">
-            <block>
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-            <block>
-              <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-              <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-              <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-              <block keep="all">⠤⠤⠤</block>
-            </block>
-          </sequence>
-        </obfl>
-      </x:document>
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="body" page-width="10" page-height="6" duplex="false">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="body">
+              <block>
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block>
+                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="all">⠤⠤⠤</block>
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
       </x:input>
     </x:call>
     <x:context label="result">
@@ -1267,29 +1249,29 @@
   <!--
       keep multiple blocks with next
   -->
-  <x:scenario label="test_15">
+  <x:scenario label="test_19">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="body" page-width="10" page-height="6" duplex="false">
-            <default-template>
-              <header/>
-              <footer/>
-            </default-template>
-          </layout-master>
-          <sequence master="body">
-            <block>
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            </block>
-            <block>
-              <block>⠤⠤⠤</block>
-              <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-            </block>
-            <block>⠤⠤⠤⠤⠤</block>
-          </sequence>
-        </obfl>
-      </x:document>
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="body" page-width="10" page-height="6" duplex="false">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="body">
+              <block>
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block>
+                <block>⠤⠤⠤</block>
+                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
+              </block>
+              <block>⠤⠤⠤⠤⠤</block>
+            </sequence>
+          </obfl>
+        </x:document>
       </x:input>
     </x:call>
     <x:context label="result">

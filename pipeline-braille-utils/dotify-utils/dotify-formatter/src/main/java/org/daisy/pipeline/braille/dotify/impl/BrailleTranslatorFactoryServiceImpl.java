@@ -15,7 +15,7 @@ import com.google.common.collect.PeekingIterator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactoryService;
 import org.daisy.dotify.api.translator.BrailleTranslatorResult;
-import org.daisy.dotify.api.translator.TextAttribute;
+import org.daisy.dotify.api.translator.Translatable;
 import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.dotify.api.translator.TranslatorSpecification;
@@ -224,7 +224,7 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		
 		private final static Pattern BRAILLE = Pattern.compile("[\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
 		
-		public BrailleTranslatorResult translate(String text) {
+		private BrailleTranslatorResult translate(String text) {
 			
 			// If input text is a space, it will be user for calculating the
 			// margin character (see org.daisy.dotify.formatter.impl.FormatterContext)
@@ -256,16 +256,8 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 			return new BrailleTranslatorResultImpl(braille);
 		}
 		
-		public BrailleTranslatorResult translate(String text, String locale) {
-			return translate(text);
-		}
-		
-		public BrailleTranslatorResult translate(String text, TextAttribute atts) {
-			return translate(text);
-		}
-		
-		public BrailleTranslatorResult translate(String text, String locale, TextAttribute attributes) throws TranslationException {
-			return translate(text);
+		public BrailleTranslatorResult translate(Translatable input) {
+			return translate(input.getText());
 		}
 		
 		public String getTranslatorMode() {

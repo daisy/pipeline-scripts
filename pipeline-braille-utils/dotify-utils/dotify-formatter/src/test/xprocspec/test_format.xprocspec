@@ -2407,7 +2407,7 @@
   <!--
       collapsing margins
   -->
-  <x:scenario label="test_25" pending="collapsing margins still not fixed in dotify.formatter.impl 1.1.3">
+  <x:scenario label="test_25">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2477,7 +2477,7 @@
   <!--
       empty block and collapsing margins
   -->
-  <x:scenario label="test_26" pending="collapsing margins still not fixed in dotify.formatter.impl 1.1.3">
+  <x:scenario label="test_26">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
