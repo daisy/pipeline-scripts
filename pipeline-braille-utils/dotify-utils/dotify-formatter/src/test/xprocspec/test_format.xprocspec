@@ -418,7 +418,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -439,7 +439,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </header>
               <footer/>
@@ -593,7 +593,7 @@
                 </field>
                 <field>
                   <string value="⠏"/>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -609,7 +609,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -625,7 +625,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="lower-roman"/>
+                  <current-page number-format="lower-roman"/>
                 </field>
               </footer>
             </default-template>
@@ -730,7 +730,7 @@
                 <field>
                   <marker-reference marker="print-page" direction="backward" scope="sequence"/>
                   <string value=" "/>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -2035,7 +2035,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -2045,19 +2045,19 @@
               ⠿
               <leader pattern="⠄" position="100%" align="right"/>
               ⠤
-              <page-number ref-id="chapter_1" style="default"/>
+              <page-number ref-id="chapter_1" number-format="default"/>
             </block>
             <block>
               ⠿⠿
               <leader pattern="⠄" position="100%" align="right"/>
               ⠤
-              <page-number ref-id="chapter_2" style="default"/>
+              <page-number ref-id="chapter_2" number-format="default"/>
             </block>
             <block>
               ⠿⠿⠿
               <leader pattern="⠄" position="100%" align="right"/>
               ⠤⠤
-              <page-number ref-id="chapter_3" style="default"/>
+              <page-number ref-id="chapter_3" number-format="default"/>
             </block>
             <block align="center" break-before="page" id="chapter_1">
               <marker class="print-page" value="⠤"/>
@@ -2218,7 +2218,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </footer>
             </default-template>
@@ -2227,12 +2227,12 @@
             <block>
               ⠿
               <leader pattern="⠄" position="100%" align="right"/>
-              <page-number ref-id="chapter_1" style="default"/>
+              <page-number ref-id="chapter_1" number-format="default"/>
             </block>
             <block>
               ⠿⠿
               <leader pattern="⠄" position="100%" align="right"/>
-              <page-number ref-id="chapter_2" style="default"/>
+              <page-number ref-id="chapter_2" number-format="default"/>
             </block>
             <block break-before="page">
               <block id="chapter_1">
@@ -2255,17 +2255,17 @@
               <block>
                 ⠤⠤⠤
                 <leader pattern="⠄" position="100%" align="right"/>
-                <page-number ref-id="x" style="default"/>
+                <page-number ref-id="x" number-format="default"/>
               </block>
               <block>
                 ⠤⠤⠤
                 <leader pattern="⠄" position="100%" align="right"/>
-                <page-number ref-id="y" style="default"/>
+                <page-number ref-id="y" number-format="default"/>
               </block>
               <block>
                 ⠤⠤⠤
                 <leader pattern="⠄" position="100%" align="right"/>
-                <page-number ref-id="z" style="default"/>
+                <page-number ref-id="z" number-format="default"/>
               </block>
             </block>
           </sequence>
@@ -2360,7 +2360,7 @@
           </layout-master>
           <sequence master="body">
             <block>
-              <page-number ref-id="foo" style="default"/>
+              <page-number ref-id="foo" number-format="default"/>
             </block>
             <block>
               ⠤⠤⠤⠤
@@ -3653,7 +3653,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              <page-number ref-id="foo" style="default"/>
+              <page-number ref-id="foo" number-format="default"/>
             </block>
             <block/>
             <block id="foo">

@@ -198,8 +198,8 @@
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-counter(',@name,')')"/>
         </xsl:if>
-        <current-page style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
-                                   then @style else 'default'}"/>
+        <current-page number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
+                                      then @style else 'default'}"/>
     </xsl:template>
     
     <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">

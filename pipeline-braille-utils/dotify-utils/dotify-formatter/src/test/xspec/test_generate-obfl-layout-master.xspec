@@ -41,7 +41,7 @@
               <string value=""/>
             </field>
             <field>
-              <current-page style="lower-roman"/>
+              <current-page number-format="lower-roman"/>
             </field>
           </header>
           <footer>
@@ -78,7 +78,7 @@
               <string value=""/>
             </field>
             <field>
-              <current-page style="default"/>
+              <current-page number-format="default"/>
             </field>
           </header>
           <footer/>
@@ -86,7 +86,7 @@
         <template use-when="(= (% $page 2) 0)">
           <header>
             <field>
-              <current-page style="default"/>
+              <current-page number-format="default"/>
             </field>
             <field>
               <string value=""/>

@@ -326,8 +326,8 @@
             -->
             <xsl:message select="'hyphens:none could not be applied to target-counter(page)'"/>
         </xsl:if>
-        <page-number ref-id="{@target}" style="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
-                                               then @style else 'default'}"/>
+        <page-number ref-id="{@target}" number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
+                                                        then @style else 'default'}"/>
     </xsl:template>
     
     <xsl:template match="css:leader">
