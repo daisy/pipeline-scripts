@@ -93,7 +93,7 @@
 	
 	<x:scenario label="test_08">
 		<x:call function="css:parse-content-list">
-			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman)'"/>
+			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) string(print-page, start)'"/>
 			<x:param select="//a">
 				<doc>
 					<a ref="#foo">foo</a>
@@ -103,6 +103,7 @@
 		<x:expect label="result">
 			<css:string target="#foo" name="print-page"/>
 			<css:counter name="braille-page" style="lower-roman"/>
+			<css:string name="print-page" scope="start"/>
 		</x:expect>
 	</x:scenario>
 	
