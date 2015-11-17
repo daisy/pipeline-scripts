@@ -157,7 +157,8 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-header" direction="backward" scope="sequence"/>
+                  <marker-reference marker="running-header" direction="forward" scope="page" text-style="def:tmp"/>
+                  <marker-reference marker="running-header" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -168,10 +169,12 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
                 </field>
               </footer>
             </default-template>
@@ -185,17 +188,21 @@
               ⠤⠤⠤
             </block>
             <block break-before="page">
+              <marker class="print-page/prev" value="⠤"/>
               <marker class="print-page" value="⠤⠤"/>
               <marker class="running-footer" value="⠤⠤"/>
               ⠤⠤⠤
             </block>
             <block break-before="page">
+              <marker class="print-page/prev" value="⠤⠤"/>
               <marker class="print-page" value=""/>
               <marker class="running-header" value="⠤⠤"/>
               ⠤⠤⠤
             </block>
             <block break-before="page">
+              <marker class="print-page/prev" value=""/>
               <marker class="print-page" value="⠤⠤⠤"/>
+              <marker class="running-footer/prev" value="⠤⠤"/>
               <marker class="running-footer" value=""/>
               ⠤⠤⠤
             </block>
@@ -301,10 +308,12 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp_d8070e3"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="ifndef:tmp_d8070e3"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d8072e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d8072e3"/>
                 </field>
               </footer>
             </default-template>
@@ -318,7 +327,9 @@
           </sequence>
           <sequence master="b">
             <block>
+              <marker class="print-page/prev" value="⠤"/>
               <marker class="print-page" value="⠤"/>
+              <marker class="running-footer/prev" value="⠤⠤"/>
               <marker class="running-footer" value="⠤⠤"/>
               ⠤⠤⠤
             </block>
@@ -728,7 +739,8 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d8684e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d8684e3"/>
                   <string value=" "/>
                   <current-page number-format="default"/>
                 </field>
@@ -2073,6 +2085,7 @@
               ⠤⠤⠤
             </block>
             <block align="center" break-before="page" id="chapter_3">
+              <marker class="print-page/prev" value="⠤"/>
               <marker class="print-page" value="⠤⠤"/>
               ⠿⠿⠿
             </block>
@@ -4322,6 +4335,246 @@
                   <row>⠿</row>
                   <row>⠆</row>
                   <row>⠆⠆</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      Left corner: range of print pages covered on current page
+      Right corner of right page: range of print pages covered on current page spread
+  -->
+  <x:scenario label="test_47" pending="using spread scope on first page leads to wrong results">
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc style="@page { size: 20 6; }
+                      @page:left {
+                        @bottom-left {
+                          content: string(print-page, page-start)
+                                   string(dash-print-page, page-last-except-start); }}
+                      @page:right {
+                        @bottom-left {
+                          content: string(print-page, page-start)
+                                   string(dash-print-page, page-last-except-start); }
+                        @bottom-right {
+                          content: string(print-page, spread-start)
+                                   string(dash-print-page, spread-last-except-start); }}">
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">1</pagenum>
+            <!-- begin right page -->
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <!-- begin left page -->
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">2</pagenum>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <!-- begin right page -->
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">3</pagenum>
+            <p style="display: block">⠁⠁⠁</p>
+            <!-- begin left page -->
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">4</pagenum>
+            <p style="display: block">⠁⠁⠁</p>
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">5</pagenum>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <!-- begin right page -->
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <p style="display: block">⠁⠁⠁</p>
+            <pagenum style="display: none; string-set: print-page content(), dash-print-page '⠒' content()">6</pagenum>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="a" page-width="20" page-height="6" duplex="true" page-number-variable="page">
+            <template use-when="(= (% $page 2) 1)">
+              <header/>
+              <footer>
+                <field>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24958e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24958e3"/>
+                  <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24960e3" start-offset="-1"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24960e3" start-offset="-1"/>
+                  <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
+                </field>
+              </footer>
+            </template>
+            <template use-when="(= (% $page 2) 0)">
+              <header/>
+              <footer>
+                <field>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24964e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24964e3"/>
+                  <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+              </footer>
+            </template>
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="a">
+            <!-- begin right page -->
+            <block>
+              <marker class="print-page" value="1"/>
+              <marker class="dash-print-page" value="⠒1"/>
+              ⠁⠁⠁
+            </block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <!-- begin left page -->
+            <block>
+              <marker class="print-page/prev" value="1"/>
+              <marker class="print-page" value="2"/>
+              <marker class="dash-print-page/prev" value="⠒1"/>
+              <marker class="dash-print-page" value="⠒2"/>
+              ⠁⠁⠁
+            </block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <!-- begin right page -->
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>
+              <marker class="print-page/prev" value="2"/>
+              <marker class="print-page" value="3"/>
+              <marker class="dash-print-page/prev" value="⠒2"/>
+              <marker class="dash-print-page" value="⠒3"/>
+              ⠁⠁⠁
+            </block>
+            <!-- begin left page -->
+            <block>
+              <marker class="print-page/prev" value="3"/>
+              <marker class="print-page" value="4"/>
+              <marker class="dash-print-page/prev" value="⠒3"/>
+              <marker class="dash-print-page" value="⠒4"/>
+              ⠁⠁⠁
+            </block>
+            <block>
+              <marker class="print-page/prev" value="4"/>
+              <marker class="print-page" value="5"/>
+              <marker class="dash-print-page/prev" value="⠒4"/>
+              <marker class="dash-print-page" value="⠒5"/>
+              ⠁⠁⠁
+            </block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <!-- begin right page -->
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+            <block>⠁⠁⠁</block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="20" rows="6" rowgap="0" duplex="true">
+              <section>
+                <!-- right -->
+                <page>
+                  <!-- print page 1 -->
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 1     ...     1 -->
+                </page>
+                <!-- left -->
+                <page>
+                  <!-- print page 2 -->
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2  -->
+                </page>
+                <!-- right -->
+                <page>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <!-- print page 3 -->
+                  <row>⠁⠁⠁</row>
+                  <!-- print page 4 -->
+                  <row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃⠒⠼⠉</row> <!-- 2-3   ...   2-3 -->
+                </page>
+                <!-- left -->
+                <page>
+                  <row>⠁⠁⠁</row>
+                  <!-- print page 5 -->
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠼⠙⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4-5 -->
+                </page>
+                <!-- right -->
+                <page>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <row>⠁⠁⠁</row>
+                  <!-- print page 6 -->
+                  <row/>
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5     ...   4-5 -->
                 </page>
               </section>
             </volume>

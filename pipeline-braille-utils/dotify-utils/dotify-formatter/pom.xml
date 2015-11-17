@@ -149,6 +149,7 @@
                 in order to avoid including services in the same package in other bundles
             -->
             <_dsannotations>
+              org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl,
               org.daisy.pipeline.braille.dotify.impl.MarkerProcessorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider

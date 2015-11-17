@@ -290,6 +290,9 @@
     </xsl:template>
     
     <xsl:template match="css:string[@name]">
+        <xsl:if test="@scope">
+            <xsl:message select="concat('string(',@name,', ',@scope,'): second argument not supported')"/>
+        </xsl:if>
         <xsl:if test="@css:white-space">
             <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to ',
                                         (if (@target) then 'target-string' else 'string'),'(',@name,')')"/>

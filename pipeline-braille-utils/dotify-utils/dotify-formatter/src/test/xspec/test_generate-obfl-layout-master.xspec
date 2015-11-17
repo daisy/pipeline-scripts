@@ -322,4 +322,43 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_10">
+    <x:call function="obfl:generate-layout-master">
+      <x:param select="'size: 28 28'"/>
+      <x:param select="'margin-bottom: 1;
+                        @bottom-left {
+                          content: string(print-page, spread-start)  string(slash-print-page, spread-last-except-start);
+                          text-transform: print-page; }
+                        @bottom-center { content: string(running-footer, spread-start); }
+                        @bottom-right { content: counter(page); }'"/>
+      <x:param select="()"/>
+      <x:param select="'x'"/>
+    </x:call>
+    <x:expect label="layout-master">
+      <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="28" page-height="28" duplex="true" page-number-variable="page">
+        <template use-when="(= (% $page 2) 1)">
+          <header/>
+          <footer>
+            <field>
+              <marker-reference marker="print-page/prev" direction="forward" scope="page-content" start-offset="-1" text-style="def:tmp_d76e6"/>
+              <marker-reference marker="print-page" direction="backward" scope="sequence" start-offset="-1" text-style="ifndef:tmp_d76e6"/>
+              <marker-reference marker="slash-print-page" direction="backward" scope="spread"/>
+            </field>
+            <field>
+              <marker-reference marker="running-footer/prev" direction="forward" scope="page-content" start-offset="-1" text-style="def:tmp_d79e3"/>
+              <marker-reference marker="running-footer" direction="backward" scope="sequence" start-offset="-1" text-style="ifndef:tmp_d79e3"/>
+            </field>
+            <field>
+              <current-page number-format="default"/>
+            </field>
+          </footer>
+        </template>
+        <default-template>
+          <header/>
+          <footer/>
+        </default-template>
+      </layout-master>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

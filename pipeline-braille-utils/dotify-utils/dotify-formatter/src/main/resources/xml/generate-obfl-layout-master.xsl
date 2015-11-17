@@ -4,8 +4,6 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
-                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-                xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
@@ -40,6 +38,7 @@
                 <template use-when="(= (% $page 2) 1)">
                     <xsl:call-template name="template">
                         <xsl:with-param name="rules" select="css:parse-stylesheet($page-right-stylesheet)"/>
+                        <xsl:with-param name="page-side" tunnel="yes" select="'right'"/>
                     </xsl:call-template>
                 </template>
             </xsl:if>
@@ -47,6 +46,7 @@
                 <template use-when="(= (% $page 2) 0)">
                     <xsl:call-template name="template">
                         <xsl:with-param name="rules" select="css:parse-stylesheet($page-left-stylesheet)"/>
+                        <xsl:with-param name="page-side" tunnel="yes" select="'left'"/>
                     </xsl:call-template>
                 </template>
             </xsl:if>
@@ -60,12 +60,36 @@
     
     <xsl:template name="template">
         <xsl:param name="rules" as="element()*" required="yes"/>
-        <xsl:variable name="top-left" as="element()*" select="pxi:fields($rules,'@top-left')"/>
-        <xsl:variable name="top-center" as="element()*" select="pxi:fields($rules,'@top-center')"/>
-        <xsl:variable name="top-right" as="element()*" select="pxi:fields($rules,'@top-right')"/>
-        <xsl:variable name="bottom-left" as="element()*" select="pxi:fields($rules,'@bottom-left')"/>
-        <xsl:variable name="bottom-center" as="element()*" select="pxi:fields($rules,'@bottom-center')"/>
-        <xsl:variable name="bottom-right" as="element()*" select="pxi:fields($rules,'@bottom-right')"/>
+        <xsl:variable name="top-left" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@top-left'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="top-center" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@top-center'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="top-right" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@top-right'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="bottom-left" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@bottom-left'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="bottom-center" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@bottom-center'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="bottom-right" as="element()*">
+            <xsl:call-template name="fields">
+                <xsl:with-param name="margin-rule" select="$rules[@selector='@bottom-right'][1]"/>
+            </xsl:call-template>
+        </xsl:variable>
         <xsl:variable name="properties" as="element()*"
                       select="css:parse-declaration-list($rules[not(@selector)]/@declaration-list)"/>
         <xsl:variable name="margin-top" as="xs:integer"
@@ -140,19 +164,15 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:function name="pxi:fields" as="element()*"> <!-- obfl:field* -->
-        <xsl:param name="margin-rules" as="element()*"/>
-        <xsl:param name="selector" as="xs:string"/>
-        <xsl:variable name="properties" as="element()*"
-                      select="css:parse-declaration-list($margin-rules[@selector=$selector][1]/@declaration-list)"/>
+    <xsl:template name="fields" as="element()*"> <!-- obfl:field* -->
+        <xsl:param name="margin-rule" as="element()?"/>
+        <xsl:variable name="properties" as="element()*" select="css:parse-declaration-list($margin-rule/@declaration-list)"/>
         <xsl:variable name="white-space" as="xs:string" select="($properties[@name='white-space']/@value,'normal')[1]"/>
         <xsl:variable name="text-transform" as="xs:string" select="($properties[@name='text-transform']/@value,'auto')[1]"/>
-        <xsl:if test="not($text-transform=('none','auto'))">
-            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to ',$selector)"/>
-        </xsl:if>
         <xsl:variable name="content" as="element()*">
             <xsl:apply-templates select="css:parse-content-list($properties[@name='content'][1]/@value,())" mode="eval-content-list">
                 <xsl:with-param name="white-space" select="$white-space"/>
+                <xsl:with-param name="text-transform" select="$text-transform"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:for-each-group select="$content" group-ending-with="obfl:br">
@@ -162,10 +182,14 @@
                                       else $empty-string"/>
             </field>
         </xsl:for-each-group>
-    </xsl:function>
+    </xsl:template>
     
     <xsl:template match="css:string[@value]" mode="eval-content-list">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
+        <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
+        <xsl:if test="not($text-transform=('none','auto'))">
+            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to &quot;',@value,'&quot;')"/>
+        </xsl:if>
         <xsl:choose>
             <xsl:when test="$white-space=('pre-wrap','pre-line')">
                 <!--
@@ -195,8 +219,12 @@
     
     <xsl:template match="css:counter[not(@target)][@name='page']" mode="eval-content-list">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
+        <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-counter(',@name,')')"/>
+        </xsl:if>
+        <xsl:if test="not($text-transform=('none','auto'))">
+            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-counter(',@name,')')"/>
         </xsl:if>
         <current-page number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                       then @style else 'default'}"/>
@@ -204,10 +232,91 @@
     
     <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
         <xsl:param name="white-space" as="xs:string" tunnel="yes" select="'normal'"/>
+        <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
+        <xsl:param name="page-side" as="xs:string" tunnel="yes" select="'both'"/>
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-string(',@name,')')"/>
         </xsl:if>
-        <marker-reference marker="{@name}" direction="backward" scope="sequence"/>
+        <xsl:if test="not($text-transform=('none','auto'))">
+            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-string(',@name,')')"/>
+        </xsl:if>
+        <xsl:variable name="scope" select="(@scope,'first')[1]"/>
+        <xsl:if test="$page-side='both' and $scope=('spread-first','spread-start','spread-last','spread-last-except-start')">
+            <!--
+                FIXME: force creation of templates for left and right pages when margin
+                content contains "string(foo, spread-last)"
+            -->
+            <xsl:message terminate="yes"
+                         select="concat('string(',@name,', ',$scope,') on both left and right side currently not supported')"/>
+        </xsl:if>
+        <xsl:variable name="var-name" as="xs:string" select="concat('tmp_',generate-id(.))"/>
+        <xsl:choose>
+            <xsl:when test="$scope=('first','page-first')">
+                <marker-reference marker="{@name}" direction="forward" scope="page" text-style="def:{$var-name}"/>
+                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}"/>
+            </xsl:when>
+            <xsl:when test="$scope=('start','page-start')">
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content" text-style="def:{$var-name}"/>
+                <!--
+                    TODO: check that this does not match too much at the end of the page!
+                -->
+                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}"/>
+            </xsl:when>
+            <xsl:when test="$scope=('last','page-last')">
+                <marker-reference marker="{@name}" direction="backward" scope="sequence"/>
+            </xsl:when>
+            <xsl:when test="$scope=('last-except-start','page-last-except-start')">
+                <marker-reference marker="{@name}" direction="backward" scope="page-content"/>
+            </xsl:when>
+            <xsl:when test="$scope='spread-first'">
+                <marker-reference marker="{@name}" direction="forward" scope="spread" text-style="def:{$var-name}">
+                    <xsl:if test="$page-side='right'">
+                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    </xsl:if>
+                </marker-reference>
+                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}">
+                    <xsl:if test="$page-side='right'">
+                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    </xsl:if>
+                </marker-reference>
+            </xsl:when>
+            <xsl:when test="$scope='spread-start'">
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content" text-style="def:{$var-name}">
+                    <xsl:if test="$page-side='right'">
+                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    </xsl:if>
+                </marker-reference>
+                <!--
+                    TODO: check that this does not match too much at the end of the page!
+                -->
+                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}">
+                    <xsl:if test="$page-side='right'">
+                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    </xsl:if>
+                </marker-reference>
+            </xsl:when>
+            <xsl:when test="$scope='spread-last'">
+                <marker-reference marker="{@name}" direction="backward" scope="sequence">
+                    <xsl:if test="$page-side='left'">
+                        <xsl:attribute name="start-offset" select="'1'"/>
+                    </xsl:if>
+                </marker-reference>
+            </xsl:when>
+            <xsl:when test="$scope='spread-last-except-start'">
+                <!--
+                    FIXME: scope="spread-content"
+                -->
+                <marker-reference marker="{@name}" direction="backward" scope="spread">
+                    <xsl:if test="$page-side='left'">
+                        <xsl:attribute name="start-offset" select="'1'"/>
+                    </xsl:if>
+                </marker-reference>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message terminate="yes"
+                             select="concat('in function string(',@name,', ',$scope,'): unknown keyword &quot;',$scope,'&quot;')"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="css:attr" mode="eval-content-list">
