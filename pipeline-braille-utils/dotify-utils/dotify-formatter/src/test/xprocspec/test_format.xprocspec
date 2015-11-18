@@ -308,12 +308,12 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp_d8070e3"/>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="ifndef:tmp_d8070e3"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp_d1729e3"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="ifndef:tmp_d1729e3"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d8072e3"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d8072e3"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d1731e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d1731e3"/>
                 </field>
               </footer>
             </default-template>
@@ -739,8 +739,8 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d8684e3"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d8684e3"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp_d2201e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d2201e3"/>
                   <string value=" "/>
                   <current-page number-format="default"/>
                 </field>
@@ -4348,7 +4348,7 @@
       Left corner: range of print pages covered on current page
       Right corner of right page: range of print pages covered on current page spread
   -->
-  <x:scenario label="test_47" pending="using spread scope on first page leads to wrong results">
+  <x:scenario label="test_47" pending="using spread scope on first page leads to wrong results. fix with @page:first">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4414,16 +4414,16 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24958e3"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24958e3"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d2746e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d2746e3"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24960e3" start-offset="-1"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24960e3" start-offset="-1"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d2748e3" start-offset="-1"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d2748e3" start-offset="-1"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
                 </field>
               </footer>
@@ -4432,8 +4432,8 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d24964e3"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d24964e3"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp_d2752e3"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="ifndef:tmp_d2752e3"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>

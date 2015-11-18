@@ -340,9 +340,9 @@
           <header/>
           <footer>
             <field>
-              <marker-reference marker="print-page/prev" direction="forward" scope="page-content" start-offset="-1" text-style="def:tmp_d76e6"/>
-              <marker-reference marker="print-page" direction="backward" scope="sequence" start-offset="-1" text-style="ifndef:tmp_d76e6"/>
-              <marker-reference marker="slash-print-page" direction="backward" scope="spread"/>
+              <marker-reference marker="print-page/prev" direction="forward" scope="page-content" start-offset="-1" text-style="def:tmp_d76e6 text-transform:print-page"/>
+              <marker-reference marker="print-page" direction="backward" scope="sequence" start-offset="-1" text-style="ifndef:tmp_d76e6 text-transform:print-page"/>
+              <marker-reference marker="slash-print-page" direction="backward" scope="spread" text-style="text-transform:print-page"/>
             </field>
             <field>
               <marker-reference marker="running-footer/prev" direction="forward" scope="page-content" start-offset="-1" text-style="def:tmp_d79e3"/>

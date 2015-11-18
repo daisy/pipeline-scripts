@@ -187,9 +187,6 @@
     <xsl:template match="css:string[@value]" mode="eval-content-list">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
         <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
-        <xsl:if test="not($text-transform=('none','auto'))">
-            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to &quot;',@value,'&quot;')"/>
-        </xsl:if>
         <xsl:choose>
             <xsl:when test="$white-space=('pre-wrap','pre-line')">
                 <!--
@@ -202,17 +199,29 @@
                     <xsl:non-matching-substring>
                         <xsl:choose>
                             <xsl:when test="$white-space='pre-wrap'">
-                                <string value="{replace(.,'\s','&#x00A0;')}"/>
+                                <string value="{replace(.,'\s','&#x00A0;')}">
+                                    <xsl:if test="not($text-transform=('none','auto'))">
+                                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                                    </xsl:if>
+                                </string>
                             </xsl:when>
                             <xsl:otherwise>
-                                <string value="{.}"/>
+                                <string value="{.}">
+                                    <xsl:if test="not($text-transform=('none','auto'))">
+                                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                                    </xsl:if>
+                                </string>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
             <xsl:otherwise>
-                <string value="{string(@value)}"/>
+                <string value="{string(@value)}">
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
+                </string>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -223,11 +232,12 @@
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-counter(',@name,')')"/>
         </xsl:if>
-        <xsl:if test="not($text-transform=('none','auto'))">
-            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-counter(',@name,')')"/>
-        </xsl:if>
         <current-page number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
-                                      then @style else 'default'}"/>
+                                      then @style else 'default'}">
+            <xsl:if test="not($text-transform=('none','auto'))">
+                <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+            </xsl:if>
+        </current-page>
     </xsl:template>
     
     <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
@@ -236,9 +246,6 @@
         <xsl:param name="page-side" as="xs:string" tunnel="yes" select="'both'"/>
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-string(',@name,')')"/>
-        </xsl:if>
-        <xsl:if test="not($text-transform=('none','auto'))">
-            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-string(',@name,')')"/>
         </xsl:if>
         <xsl:variable name="scope" select="(@scope,'first')[1]"/>
         <xsl:if test="$page-side='both' and $scope=('spread-first','spread-start','spread-last','spread-last-except-start')">
@@ -252,36 +259,51 @@
         <xsl:variable name="var-name" as="xs:string" select="concat('tmp_',generate-id(.))"/>
         <xsl:choose>
             <xsl:when test="$scope=('first','page-first')">
-                <marker-reference marker="{@name}" direction="forward" scope="page" text-style="def:{$var-name}"/>
-                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}"/>
+                <marker-reference marker="{@name}" direction="forward" scope="page"
+                                  text-style="def:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}"/>
+                <marker-reference marker="{@name}" direction="backward" scope="sequence"
+                                  text-style="ifndef:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}"/>
             </xsl:when>
             <xsl:when test="$scope=('start','page-start')">
-                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content" text-style="def:{$var-name}"/>
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
+                                  text-style="def:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}"/>
                 <!--
                     TODO: check that this does not match too much at the end of the page!
                 -->
-                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}"/>
+                <marker-reference marker="{@name}" direction="backward" scope="sequence"
+                                  text-style="ifndef:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}"/>
             </xsl:when>
             <xsl:when test="$scope=('last','page-last')">
-                <marker-reference marker="{@name}" direction="backward" scope="sequence"/>
+                <marker-reference marker="{@name}" direction="backward" scope="sequence">
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
+                </marker-reference>
             </xsl:when>
             <xsl:when test="$scope=('last-except-start','page-last-except-start')">
-                <marker-reference marker="{@name}" direction="backward" scope="page-content"/>
+                <marker-reference marker="{@name}" direction="backward" scope="page-content">
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
+                </marker-reference>
             </xsl:when>
             <xsl:when test="$scope='spread-first'">
-                <marker-reference marker="{@name}" direction="forward" scope="spread" text-style="def:{$var-name}">
+                <marker-reference marker="{@name}" direction="forward" scope="spread"
+                                  text-style="def:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
                 </marker-reference>
-                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}">
+                <marker-reference marker="{@name}" direction="backward" scope="sequence"
+                                  text-style="ifndef:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
                 </marker-reference>
             </xsl:when>
             <xsl:when test="$scope='spread-start'">
-                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content" text-style="def:{$var-name}">
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
+                                  text-style="def:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
@@ -289,7 +311,8 @@
                 <!--
                     TODO: check that this does not match too much at the end of the page!
                 -->
-                <marker-reference marker="{@name}" direction="backward" scope="sequence" text-style="ifndef:{$var-name}">
+                <marker-reference marker="{@name}" direction="backward" scope="sequence"
+                                  text-style="ifndef:{$var-name}{if (not($text-transform=('none','auto'))) then concat(' text-transform:',$text-transform) else ''}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
@@ -300,6 +323,9 @@
                     <xsl:if test="$page-side='left'">
                         <xsl:attribute name="start-offset" select="'1'"/>
                     </xsl:if>
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
                 </marker-reference>
             </xsl:when>
             <xsl:when test="$scope='spread-last-except-start'">
@@ -309,6 +335,9 @@
                 <marker-reference marker="{@name}" direction="backward" scope="spread">
                     <xsl:if test="$page-side='left'">
                         <xsl:attribute name="start-offset" select="'1'"/>
+                    </xsl:if>
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
                     </xsl:if>
                 </marker-reference>
             </xsl:when>

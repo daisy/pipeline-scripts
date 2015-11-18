@@ -222,12 +222,15 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 					return translator.transform(text); }
 			else {
 				List<String> segments = new ArrayList<String>();
-				List<String> style = new ArrayList<String>();
+				List<String> styles = new ArrayList<String>();
 				Set<String> env = null;
 				int i = 0;
 				Iterator<TextAttribute> attrs = flattenAttributes(attributes);
+				String segment = "";
+				String style = "";
 				while (attrs.hasNext()) {
 					TextAttribute attr = attrs.next();
+					String s = text.substring(i, i + attr.getWidth());
 					String id = attr.getDictionaryIdentifier();
 					if (id == null)
 						id = "";
@@ -241,18 +244,26 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 							env = new HashSet<String>();
 						if (key.equals("def"))
 							env.add(var);
-						else if (key.equals("ifdef") && !env.contains(var) || key.equals("ifndef") && env.contains(var)) {
-							i += attr.getWidth();
-							continue; }}
+						else if (key.equals("ifdef") && !env.contains(var) || key.equals("ifndef") && env.contains(var))
+							s = ""; }
 					if (hyphenating)
 						id = "hyphens:auto; " + id;
-					segments.add(text.substring(i, i + attr.getWidth()));
-					style.add(id);
+					if (id.equals(style))
+						segment += s;
+					else {
+						if (!segment.isEmpty()) {
+							segments.add(segment);
+							styles.add(style); }
+						segment = s;
+						style = id; }
 					i += attr.getWidth(); }
 				if (i != text.length())
 					throw new RuntimeException("Coding error");
+				if (!segment.isEmpty()) {
+					segments.add(segment);
+					styles.add(style); }
 				return join(translator.transform(segments.toArray(new String[segments.size()]),
-				                                 style.toArray(new String[style.size()]))); }
+				                                 styles.toArray(new String[styles.size()]))); }
 		}
 		
 		private static Iterator<TextAttribute> flattenAttributes(TextAttribute attributes) {
