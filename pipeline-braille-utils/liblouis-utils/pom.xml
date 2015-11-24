@@ -23,7 +23,7 @@
     <!-- <module>liblouis-tables</module> -->
     <!-- <module>liblouis-calabash</module> -->
     <!-- <module>liblouis-native</module> -->
-    <!-- <module>liblouis-formatter</module> -->
+    <module>liblouis-formatter</module>
     <!-- <module>liblouis-mathml</module> -->
     <!-- <module>liblouis-utils</module> -->
   </modules>

@@ -14,6 +14,7 @@
     
     <xsl:variable name="css:properties" as="xs:string*"
         select="('display',
+                 'flow',
                  'left',
                  'right',
                  'margin-left',
@@ -45,6 +46,8 @@
                  'white-space',
                  'hyphens',
                  'size',
+                 'min-length',
+                 'max-length',
                  'text-transform',
                  'font-style',
                  'font-weight',
@@ -54,6 +57,7 @@
     
     <xsl:variable name="css:values" as="xs:string*"
         select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
+                 re:exact($css:IDENT_RE),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
                  re:exact($css:INTEGER_RE),
@@ -85,6 +89,8 @@
                  re:exact(re:or(('normal','pre-wrap','pre-line'))),
                  re:exact(re:or(('auto','manual','none'))),
                  re:exact(concat('(',$css:NON_NEGATIVE_INTEGER_RE,')\s+(',$css:NON_NEGATIVE_INTEGER_RE,')')),
+                 re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
+                 re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
                  re:exact(re:or(($css:IDENT_LIST_RE,'auto','none'))),
                  re:exact(re:or(('normal','italic','oblique'))),
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
@@ -94,6 +100,7 @@
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
+                 '.*',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
                  '^(block|list-item)$',
@@ -125,6 +132,8 @@
                  '.*',
                  '.*',
                  '^@page$',
+                 '^@volume$',
+                 '^@volume$',
                  '.*',
                  '.*',
                  '.*',
@@ -134,6 +143,7 @@
     
     <xsl:variable name="css:initial-values" as="xs:string*"
         select="('inline',
+                 'normal',
                  'auto',
                  'auto',
                  '0',
@@ -166,6 +176,8 @@
                  'manual',
                  '40 25',
                  'auto',
+                 'auto',
+                 'auto',
                  'normal',
                  'normal',
                  'none',
@@ -174,6 +186,8 @@
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
+                 'embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed',

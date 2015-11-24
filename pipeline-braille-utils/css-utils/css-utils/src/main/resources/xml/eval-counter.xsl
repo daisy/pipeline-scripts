@@ -12,6 +12,8 @@
     <xsl:variable name="counter-names-list" as="xs:string*" select="tokenize(normalize-space($counter-names), ' ')"/>
     <xsl:variable name="exclude-counter-names-list" as="xs:string*" select="tokenize(normalize-space($exclude-counter-names), ' ')"/>
     
+    <xsl:variable name="context" select="collection()[2]"/>
+    
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
@@ -29,25 +31,29 @@
                             else @name=$counter-names-list">
                 <xsl:variable name="style" as="xs:string" select="(@style,'decimal')[1]"/>
                 <xsl:variable name="text-with-text-transform" as="xs:string*">
-                    <xsl:choose>
-                        <xsl:when test="@target">
-                            <xsl:variable name="target" as="xs:string" select="@target"/>
-                            <xsl:variable name="target" as="element()?" select="//*[@css:id=$target][1]"/>
-                            <xsl:if test="$target">
-                                <xsl:call-template name="css:counter">
-                                    <xsl:with-param name="name" select="@name"/>
-                                    <xsl:with-param name="style" select="$style"/>
-                                    <xsl:with-param name="context" select="$target"/>
-                                </xsl:call-template>
-                            </xsl:if>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:call-template name="css:counter">
-                                <xsl:with-param name="name" select="@name"/>
-                                <xsl:with-param name="style" select="$style"/>
-                            </xsl:call-template>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:variable name="target" as="element()?">
+                        <xsl:choose>
+                            <xsl:when test="@target">
+                                <xsl:variable name="id" as="xs:string" select="@target"/>
+                                <xsl:sequence select="$context//*[@css:id=$id]"/>
+                            </xsl:when>
+                            <xsl:when test="/*/@css:flow[not(.='normal')]">
+                                <xsl:variable name="id" as="xs:string" select="ancestor::*/@css:anchor"/>
+                                <xsl:sequence select="$context//*[@css:id=$id]"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:variable name="id" as="xs:string" select="@xml:id"/>
+                                <xsl:sequence select="$context//*[@xml:id=$id]"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:if test="$target">
+                        <xsl:call-template name="css:counter">
+                            <xsl:with-param name="name" select="@name"/>
+                            <xsl:with-param name="style" select="$style"/>
+                            <xsl:with-param name="context" select="$target"/>
+                        </xsl:call-template>
+                    </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="text" as="xs:string" select="$text-with-text-transform[1]"/>
                 <xsl:variable name="text-transform" as="xs:string" select="($text-with-text-transform[2],'auto')[1]"/>
@@ -70,5 +76,7 @@
             <xsl:next-match/>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template match="@xml:id[starts-with(.,'__temp__')]"/>
     
 </xsl:stylesheet>

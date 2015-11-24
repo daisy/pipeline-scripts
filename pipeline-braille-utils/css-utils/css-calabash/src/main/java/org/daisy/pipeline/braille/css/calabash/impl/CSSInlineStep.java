@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -77,6 +79,8 @@ import net.sf.saxon.tree.util.NamespaceIterator;
 import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
 import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSProperty;
+import org.daisy.braille.css.RuleVolume;
+import org.daisy.braille.css.RuleVolumeArea;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
@@ -210,6 +214,7 @@ public class CSSInlineStep extends DefaultStep {
 		private final StyleMap brailleStylemap;
 		private final StyleMap printStylemap;
 		private final Map<String,Map<String,RulePage>> pageRules;
+		private final Map<String,Map<String,RuleVolume>> volumeRules;
 		
 		private final CSSParserFactory parserFactory = new BrailleCSSParserFactory();
 		
@@ -252,6 +257,17 @@ public class CSSInlineStep extends DefaultStep {
 					pageRule = new HashMap<String,RulePage>();
 					pageRules.put(name, pageRule); }
 				pageRule.put(pseudo, r);
+			}
+			
+			volumeRules = new HashMap<String,Map<String,RuleVolume>>();
+			for (RuleVolume r : filter(brailleStyle, RuleVolume.class)) {
+				String name = "auto";
+				String pseudo = firstNonNull(r.getPseudo(), "");
+				Map<String,RuleVolume> volumeRule = volumeRules.get(name);
+				if (volumeRule == null) {
+					volumeRule = new HashMap<String,RuleVolume>();
+					volumeRules.put(name, volumeRule); }
+				volumeRule.put(pseudo, r);
 			}
 			
 			startDocument(baseURI);
@@ -302,6 +318,10 @@ public class CSSInlineStep extends DefaultStep {
 					Map<String,RulePage> pageRule = getPageRule("auto", pageRules);
 					if (pageRule != null)
 						insertPageStyle(style, pageRule); }
+				if (isRoot) {
+					Map<String,RuleVolume> volumeRule = getVolumeRule("auto", volumeRules);
+					if (volumeRule != null)
+						insertVolumeStyle(style, volumeRule); }
 				if (normalizeSpace(style).length() > 0) {
 					addAttribute(_style, style.toString().trim()); }
 				receiver.startContent();
@@ -410,43 +430,39 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static Map<String,RulePage> getPageRule(String name, Map<String,Map<String,RulePage>> pageRules) {
 		Map<String,RulePage> auto = pageRules.get("auto");
-		if (name.equals("auto"))
-			return auto;
-		Map<String,RulePage> named = pageRules.get(name);
-		if (named == null)
-			return auto;
+		Map<String,RulePage> named = null;
+		if (!name.equals("auto"))
+			named = pageRules.get(name);
 		Map<String,RulePage> result = new HashMap<String,RulePage>();
 		List<RulePage> from;
 		RulePage r;
-		from = new ArrayList<RulePage>();
-		r = named.get("");
-		if (r != null) from.add(r);
-		if (auto != null) {
-			r = auto.get("");
-			if (r != null) from.add(r); }
-		if (from.size() > 0)
-			result.put("", makePageRule(name, null, from));
-		for (String pseudo : new String[]{"left", "right"}) {
-			if (named.containsKey(pseudo) || auto != null && auto.containsKey(pseudo)) {
-				from = new ArrayList<RulePage>();
+		Set<String> pseudos = new HashSet<String>();
+		if (named != null)
+			pseudos.addAll(named.keySet());
+		if (auto != null)
+			pseudos.addAll(auto.keySet());
+		for (String pseudo : pseudos) {
+			boolean noPseudo = "".equals(pseudo);
+			from = new ArrayList<RulePage>();
+			if (named != null) {
 				r = named.get(pseudo);
 				if (r != null) from.add(r);
-				r = named.get("");
+				if (!noPseudo) {
+					r = named.get("");
+					if (r != null) from.add(r); }}
+			if (auto != null) {
+				r = auto.get(pseudo);
 				if (r != null) from.add(r);
-				if (auto != null) {
-					r = auto.get(pseudo);
-					if (r != null) from.add(r);
+				if (!noPseudo) {
 					r = auto.get("");
-					if (r != null) from.add(r); }
-				if (from.size() > 0)
-					result.put(pseudo, makePageRule(name, pseudo, from)); }}
+					if (r != null) from.add(r); }}
+			result.put(pseudo, makePageRule(name, noPseudo ? null : pseudo, from)); }
 		return result;
 	}
 	
 	private static RulePage makePageRule(String name, String pseudo, List<RulePage> from) {
 		RulePage pageRule = CSSFactory.getRuleFactory().createPage().setName(name).setPseudo(pseudo);
 		Set<String> properties = new HashSet<String>();
-		Map<String,RuleMargin> marginRules = new HashMap<String,RuleMargin>();
 		for (RulePage f : from)
 			for (Rule<?> r : f)
 				if (r instanceof Declaration) {
@@ -479,6 +495,107 @@ public class CSSInlineStep extends DefaultStep {
 	private static RuleMargin getRuleMargin(Collection<? extends Rule<?>> rule, String marginArea) {
 		for (RuleMargin m : filter(rule, RuleMargin.class))
 			if (m.getMarginArea().value.equals(marginArea))
+				return m;
+		return null;
+	}
+	
+	private static void insertVolumeStyle(StringBuilder builder, Map<String,RuleVolume> volumeRule) {
+		for (RuleVolume r : volumeRule.values())
+			insertVolumeStyle(builder, r);
+	}
+	
+	private static void insertVolumeStyle(StringBuilder builder, RuleVolume volumeRule) {
+		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
+			builder.insert(0, "{ ");
+			builder.append("} "); }
+		builder.append("@volume");
+		String pseudo = volumeRule.getPseudo();
+		if (pseudo != null && !"".equals(pseudo))
+			builder.append(":").append(pseudo);
+		builder.append(" { ");
+		for (Declaration decl : filter(volumeRule, Declaration.class))
+			insertDeclaration(builder, decl);
+		for (RuleVolumeArea volumeArea : filter(volumeRule, RuleVolumeArea.class))
+			insertVolumeAreaStyle(builder, volumeArea);
+		builder.append("} ");
+	}
+	
+	private static void insertVolumeAreaStyle(StringBuilder builder, RuleVolumeArea ruleVolumeArea) {
+		builder.append("@").append(ruleVolumeArea.getVolumeArea().value).append(" { ");
+		for (Declaration decl : ruleVolumeArea)
+			insertDeclaration(builder, decl);
+		builder.append("} ");
+	}
+	
+	// TODO: what about volumes that match both :first and :last?
+	private static Map<String,RuleVolume> getVolumeRule(String name, Map<String,Map<String,RuleVolume>> volumeRules) {
+		Map<String,RuleVolume> auto = volumeRules.get("auto");
+		Map<String,RuleVolume> named = null;
+		if (!name.equals("auto"))
+			named = volumeRules.get(name);
+		Map<String,RuleVolume> result = new HashMap<String,RuleVolume>();
+		List<RuleVolume> from;
+		RuleVolume r;
+		Set<String> pseudos = new HashSet<String>();
+		if (named != null)
+			pseudos.addAll(named.keySet());
+		if (auto != null)
+			pseudos.addAll(auto.keySet());
+		for (String pseudo : pseudos) {
+			boolean noPseudo = "".equals(pseudo);
+			from = new ArrayList<RuleVolume>();
+			if (named != null) {
+				r = named.get(pseudo);
+				if (r != null) from.add(r);
+				if (!noPseudo) {
+					r = named.get("");
+					if (r != null) from.add(r); }}
+			if (auto != null) {
+				r = auto.get(pseudo);
+				if (r != null) from.add(r);
+				if (!noPseudo) {
+					r = auto.get("");
+					if (r != null) from.add(r); }}
+			result.put(pseudo, makeVolumeRule(name, noPseudo ? null : pseudo, from)); }
+		return result;
+	}
+	
+	private static final Pattern FUNCTION = Pattern.compile("(nth|nth-last)\\(([1-9][0-9]*)\\)");
+	
+	private static RuleVolume makeVolumeRule(String name, String pseudo, List<RuleVolume> from) {
+		String arg = null;
+		if (pseudo != null) {
+			Matcher m = FUNCTION.matcher(pseudo);
+			if (m.matches()) {
+				pseudo = m.group(1);
+				arg = m.group(2); }}
+		RuleVolume volumeRule = new RuleVolume(pseudo, arg);
+		Set<String> properties = new HashSet<String>();
+		for (RuleVolume f : from)
+			for (Rule<?> r : f)
+				if (r instanceof Declaration) {
+					Declaration d = (Declaration)r;
+					String property = d.getProperty();
+					if (getDeclaration(volumeRule, property) == null)
+						volumeRule.add(r); }
+				else if (r instanceof RuleVolumeArea) {
+					RuleVolumeArea a = (RuleVolumeArea)r;
+					String volumeArea = a.getVolumeArea().value;
+					RuleVolumeArea volumeAreaRule = getRuleVolumeArea(volumeRule, volumeArea);
+					if (volumeAreaRule == null) {
+						volumeAreaRule = new RuleVolumeArea(volumeArea);
+						volumeRule.add(volumeAreaRule);
+						volumeAreaRule.replaceAll(a); }
+					else
+						for (Declaration d : a)
+							if (getDeclaration(volumeAreaRule, d.getProperty()) == null)
+								volumeAreaRule.add(d); }
+		return volumeRule;
+	}
+	
+	private static RuleVolumeArea getRuleVolumeArea(Collection<? extends Rule<?>> rule, String volumeArea) {
+		for (RuleVolumeArea m : filter(rule, RuleVolumeArea.class))
+			if (m.getVolumeArea().value.equals(volumeArea))
 				return m;
 		return null;
 	}

@@ -7,7 +7,7 @@
     <x:context>
       <doc>
         <body>
-          <p style="{{ display: block }}
+          <p style="display: block
                     ::before {{ display: block;
                                 margin-left: 2;
                                 content: 'bar' }}">
@@ -19,7 +19,7 @@
     <x:expect label="result">
       <doc>
         <body>
-          <p style="{{ display: block }}">
+          <p style="display: block">
             <css:before style="display: block;
                                 margin-left: 2;
                                 content: 'bar'"/>

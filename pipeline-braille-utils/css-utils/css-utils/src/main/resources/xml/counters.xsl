@@ -13,11 +13,11 @@
     
     <!--
         <symbol> = <ident> | <string>
-        # groups: 4
-        $1: <ident>
-        $4: <string>
     -->
     <xsl:variable name="css:SYMBOL_RE" select="re:or(($css:IDENT_RE,$css:STRING_RE))"/>
+    <xsl:variable name="css:SYMBOL_RE_ident" select="1"/>
+    <xsl:variable name="css:SYMBOL_RE_string" select="$css:SYMBOL_RE_ident + $css:IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:SYMBOL_RE_groups" select="$css:SYMBOL_RE_string + $css:STRING_RE_groups"/>
     
     <xsl:function name="css:parse-symbols" as="xs:string*">
         <xsl:param name="symbols" as="xs:string"/>
@@ -27,14 +27,14 @@
                     <!--
                         <ident>
                     -->
-                    <xsl:when test="regex-group(1)!=''">
-                        <xsl:sequence select="regex-group(1)"/>
+                    <xsl:when test="regex-group($css:SYMBOL_RE_ident)!=''">
+                        <xsl:sequence select="regex-group($css:SYMBOL_RE_ident)"/>
                     </xsl:when>
                     <!--
                         <string>
                     -->
                     <xsl:otherwise>
-                        <xsl:sequence select="substring(regex-group(4), 2, string-length(regex-group(4))-2)"/>
+                        <xsl:sequence select="substring(regex-group($css:SYMBOL_RE_string), 2, string-length(regex-group($css:SYMBOL_RE_string))-2)"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:matching-substring>

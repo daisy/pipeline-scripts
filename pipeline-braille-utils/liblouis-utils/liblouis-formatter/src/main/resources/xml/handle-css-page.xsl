@@ -19,7 +19,7 @@
     <xsl:template match="*[contains(string(@style), '@page')]">
         <xsl:param name="current-page-style" as="xs:string?" tunnel="yes"/>
         <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
-        <xsl:variable name="page-style" as="xs:string?" select="$rules[@selector='@page'][1]/@declaration-list"/>
+        <xsl:variable name="page-style" as="xs:string?" select="$rules[@selector='@page']/@style"/>
         <xsl:choose>
             <xsl:when test="$page-style">
                 <xsl:copy>

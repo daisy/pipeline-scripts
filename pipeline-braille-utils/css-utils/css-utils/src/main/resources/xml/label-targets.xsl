@@ -11,7 +11,8 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@xml:id or @id]">
+    <xsl:template match="*[@xml:id or @id]
+                          [not(ancestor-or-self::*[@css:flow[not(.='normal')]])]">
         <xsl:variable name="name" as="xs:string*" select="(@xml:id|@id)"/>
         <xsl:choose>
             <xsl:when test="//*[self::css:text[@target] or
@@ -36,7 +37,8 @@
                          css:string[@name][@target]|
                          css:counter[@target]">
         <xsl:variable name="name" as="xs:string" select="replace(@target,'^#','')"/>
-        <xsl:variable name="target" as="element()?" select="//*[@xml:id=$name or @id=$name][1]"/>
+        <xsl:variable name="target" as="element()?" select="//*[not(ancestor-or-self::*[@css:flow[not(.='normal')]])]
+                                                               [@xml:id=$name or @id=$name][1]"/>
         <xsl:if test="$target">
             <xsl:copy>
                 <xsl:sequence select="@* except @target"/>

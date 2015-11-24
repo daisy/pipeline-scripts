@@ -19,7 +19,9 @@
             css:counter-increment attributes and must conform to
             http://snaekobbi.github.io/braille-css-spec/#h4_manipulating-counters-the-counter-increment-counter-set-and-counter-reset-properties.
             Elements that are referenced by a target-counter() value must be indicated with a css:id
-            attribute that matches the css:counter element's target attribute.
+            attribute that matches the css:counter element's target attribute. If a document in the
+            input sequence represents a named flow this must be indicated with a css:flow attribute
+            on the document element.
         </p:documentation>
     </p:input>
     
@@ -56,18 +58,28 @@
             <p:with-option name="counters" select="$counters"/>
             <p:with-option name="exclude-counters" select="$exclude-counters"/>
         </css:parse-counter-set>
+        <p:label-elements attribute="xml:id" replace="false" label="concat('__temp__',$p:index)" match="css:counter"/>
     </p:for-each>
+    <p:identity name="input"/>
     
-    <p:wrap-sequence wrapper="_"/>
+    <p:split-sequence test="/*[not(@css:flow[not(.='normal')])]"/>
+    <p:wrap-sequence wrapper="_" name="context"/>
     
-    <p:xslt>
-        <p:input port="stylesheet">
-            <p:document href="eval-counter.xsl"/>
-        </p:input>
-        <p:with-param name="counter-names" select="$counters"/>
-        <p:with-param name="exclude-counter-names" select="$exclude-counters"/>
-    </p:xslt>
-    
-    <p:filter select="/_/*"/>
+    <p:for-each name="result">
+        <p:iteration-source>
+            <p:pipe step="input" port="result"/>
+        </p:iteration-source>
+        <p:xslt>
+            <p:input port="source">
+                <p:pipe step="result" port="current"/>
+                <p:pipe step="context" port="result"/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="eval-counter.xsl"/>
+            </p:input>
+            <p:with-param name="counter-names" select="$counters"/>
+            <p:with-param name="exclude-counter-names" select="$exclude-counters"/>
+        </p:xslt>
+    </p:for-each>
     
 </p:declare-step>

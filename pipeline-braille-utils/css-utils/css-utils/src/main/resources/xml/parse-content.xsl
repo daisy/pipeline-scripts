@@ -49,6 +49,10 @@
         <xsl:message>content() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
+    <xsl:template match="css:flow[@from]" mode="eval-content-list">
+        <xsl:message>flow() function not supported in content property of (pseudo-)elements</xsl:message>
+    </xsl:template>
+    
     <xsl:template match="*" mode="eval-content-list">
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>
