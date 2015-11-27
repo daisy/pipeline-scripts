@@ -512,7 +512,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_09" pending="verify that this is expected behavior?">
+  <x:scenario label="test_09">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
