@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:kok
 include ../spaces.ctb
 include ../kok.ctb

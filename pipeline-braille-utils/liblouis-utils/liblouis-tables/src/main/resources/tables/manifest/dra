@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:dra
 include ../spaces.ctb
 include ../dra.ctb

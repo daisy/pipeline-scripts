@@ -142,7 +142,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 	 *
 	 * - locale: Matches only liblouis translators with that locale.
 	 *
-	 * Other features are passed on to lou_findTable.
+	 * Other features are passed on to lou_findTable. All matched tables must be of type "translation table".
 	 *
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */

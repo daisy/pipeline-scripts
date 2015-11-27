@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:pi
 include ../spaces.ctb
 include ../pi.ctb

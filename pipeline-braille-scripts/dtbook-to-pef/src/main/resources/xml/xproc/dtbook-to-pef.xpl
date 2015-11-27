@@ -51,6 +51,13 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="ascii-table" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">ascii-table</h2>
+            <p px:role="desc">The ASCII braille table, used for example to render BRF files.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="include-preview" required="false" px:type="boolean" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">include-preview</h2>
@@ -117,6 +124,10 @@
     <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+            <p:pipe step="main" port="source"/>
+        </p:with-option>
+        <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
+                                                else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
             <p:pipe step="main" port="source"/>
         </p:with-option>
         <p:with-option name="include-preview" select="$include-preview"/>

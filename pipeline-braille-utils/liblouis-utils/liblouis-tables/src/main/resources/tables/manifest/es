@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:es
 include ../es-g1.ctb
 include ../hyph_es_ES.dic

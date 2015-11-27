@@ -1,3 +1,4 @@
+#+type:translation
 #+locale:no
 include ../no-no-g3.ctb
 include ../hyph_nb_NO.dic
