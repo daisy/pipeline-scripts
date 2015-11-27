@@ -1135,9 +1135,148 @@
   </x:scenario>
   
   <!--
-      page-break-after: always
+      Widow/orphan control on blocks with borders
   -->
   <x:scenario label="test_08">
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc style="text-transform:none">
+            <body style="@page { size: 10 6; }">
+              <section style="display: block; page-break-before: right">
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                <section style="display: block; border-top: ⠒; border-bottom: ⠒; orphans: 3">
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                </section>
+              </section>
+              <section style="display: block; page-break-before: right">
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                <section style="display: block; border-top: ⠒; border-bottom: ⠒; widows: 3">
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                  ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                </section>
+              </section>
+            </body>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="body" page-width="10" page-height="6" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="body">
+            <block>
+              <block>
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              </block>
+              <block orphans="3"
+                     border-top-style="solid"
+                     border-top-align="center"
+                     border-bottom-style="solid"
+                     border-bottom-align="center">
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              </block>
+            </block>
+          </sequence>
+          <sequence master="body">
+            <block>
+              <block>
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              </block>
+              <block widows="3"
+                     border-top-style="solid"
+                     border-top-align="center"
+                     border-bottom-style="solid"
+                     border-bottom-align="center">
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿⠿⠿⠿⠿
+              </block>
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume rows="6" cols="10" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                </page>
+                <page>
+                  <row>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                </page>
+                <page>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿⠿⠿⠿⠿</row>
+                  <row>⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      page-break-after: always
+  -->
+  <x:scenario label="test_09">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1202,7 +1341,7 @@
   <!--
       forced page break before a first-child box is moved to its container
   -->
-  <x:scenario label="test_09">
+  <x:scenario label="test_10">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1292,7 +1431,7 @@
   <!--
       borders
   -->
-  <x:scenario label="test_10">
+  <x:scenario label="test_11">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1420,7 +1559,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_11">
+  <x:scenario label="test_12">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1494,7 +1633,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_12">
+  <x:scenario label="test_13">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1564,7 +1703,7 @@
   <!--
       Left/right margins
   -->
-  <x:scenario label="test_13">
+  <x:scenario label="test_14">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1626,7 +1765,7 @@
   <!--
       Negative left/right margin
   -->
-  <x:scenario label="test_14">
+  <x:scenario label="test_15">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1688,7 +1827,7 @@
   <!--
       Indentation
   -->
-  <x:scenario label="test_15">
+  <x:scenario label="test_16">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1749,7 +1888,7 @@
   <!--
       Hanging indentation
   -->
-  <x:scenario label="test_16">
+  <x:scenario label="test_17">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1809,7 +1948,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_17">
+  <x:scenario label="test_18">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1884,7 +2023,7 @@
   <!--
       Lists
   -->
-  <x:scenario label="test_18">
+  <x:scenario label="test_19">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1957,7 +2096,7 @@
   <!--
       Cross-references: table of content
   -->
-  <x:scenario label="test_19" pending="leader issue">
+  <x:scenario label="test_20" pending="leader issue">
       <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2134,7 +2273,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_20" pending="leader issue">
+  <x:scenario label="test_21" pending="leader issue">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2314,7 +2453,7 @@
   <!--
       reference to inline element
   -->
-  <x:scenario label="test_21" pending="bug in dotify?">
+  <x:scenario label="test_22" pending="bug in dotify?">
       <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2391,7 +2530,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_22">
+  <x:scenario label="test_23">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2447,7 +2586,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_23">
+  <x:scenario label="test_24">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2511,7 +2650,7 @@
   <!--
       hyphenation
   -->
-  <x:scenario label="test_24">
+  <x:scenario label="test_25">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2570,7 +2709,7 @@
   <!--
       collapsing margins
   -->
-  <x:scenario label="test_25">
+  <x:scenario label="test_26">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2640,7 +2779,7 @@
   <!--
       empty block and collapsing margins
   -->
-  <x:scenario label="test_26">
+  <x:scenario label="test_27">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2702,7 +2841,7 @@
   <!--
     Double line spacing per paragraph
   -->
-  <x:scenario label="test_27">
+  <x:scenario label="test_28">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2777,7 +2916,7 @@
   <!--
     Double line spacing per doc
   -->
-  <x:scenario label="test_28">
+  <x:scenario label="test_29">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2852,7 +2991,7 @@
   <!--
       line-height and margin|padding-top|bottom
   -->
-  <x:scenario label="test_29">
+  <x:scenario label="test_30">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2930,7 +3069,7 @@
   <!--
       line-height and border-top|bottom
   -->
-  <x:scenario label="test_30">
+  <x:scenario label="test_31">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2994,7 +3133,7 @@
   <!--
       line-height and margin|padding|border-top|bottom and text-align
   -->
-  <x:scenario label="test_31">
+  <x:scenario label="test_32">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3056,7 +3195,7 @@
   </x:scenario>
   
   <!-- Page top margin, no header, 1 row -->
-  <x:scenario label="test_32">
+  <x:scenario label="test_33">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3125,7 +3264,7 @@
   </x:scenario>
   
   <!-- Page top margin, no header, 2 rows -->
-  <x:scenario label="test_33">
+  <x:scenario label="test_34">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3206,7 +3345,7 @@
   </x:scenario>
   
   <!-- Page top margin, header, 1 row -->
-  <x:scenario label="test_34">
+  <x:scenario label="test_35">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3275,7 +3414,7 @@
   </x:scenario>
   
   <!-- Page top margin, header, 2 rows -->
-  <x:scenario label="test_35">
+  <x:scenario label="test_36">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3356,7 +3495,7 @@
   </x:scenario>
 
   <!-- :left and :right pseudoselectors -->
-  <x:scenario label="test_36">
+  <x:scenario label="test_37">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3465,7 +3604,7 @@
   <!--
       empty blocks
   -->
-  <x:scenario label="test_37">
+  <x:scenario label="test_38">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3547,7 +3686,7 @@
   <!--
       empty block and border
   -->
-  <x:scenario label="test_38">
+  <x:scenario label="test_39">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3610,7 +3749,7 @@
   <!--
       empty target box
   -->
-  <x:scenario label="test_39">
+  <x:scenario label="test_40">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3681,7 +3820,7 @@
   <!--
       text-transform, hyphens
   -->
-  <x:scenario label="test_40">
+  <x:scenario label="test_41">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3765,7 +3904,7 @@
   <!--
       Page bottom margin
   -->
-  <x:scenario label="test_41">
+  <x:scenario label="test_42">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3852,7 +3991,7 @@
   <!--
       Page bottom margin, height 2
   -->
-  <x:scenario label="test_42">
+  <x:scenario label="test_43">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3950,7 +4089,7 @@
   <!--
       Page bottom margin, content in footer, height 1
   -->
-  <x:scenario label="test_43">
+  <x:scenario label="test_44">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4037,7 +4176,7 @@
   <!--
       Page bottom margin, single line content in footer, height 2
   -->
-  <x:scenario label="test_44">
+  <x:scenario label="test_45">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4135,7 +4274,7 @@
   <!--
       Page bottom margin, multiple line content in footer, height 2
   -->
-  <x:scenario label="test_45">
+  <x:scenario label="test_46">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4233,7 +4372,7 @@
   <!--
       Page bottom margin, multiple line content in footer, height 1
   -->
-  <x:scenario label="test_46">
+  <x:scenario label="test_47">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4332,7 +4471,7 @@
       Left corner: range of print pages covered on current page
       Right corner of right page: range of print pages covered on current page spread
   -->
-  <x:scenario label="test_47" pending="using spread scope on first page leads to wrong results. fix with @page:first">
+  <x:scenario label="test_48" pending="using spread scope on first page leads to wrong results. fix with @page:first">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4572,7 +4711,7 @@
    <!--
       Volume areas
   -->
-  <x:scenario label="test_48">
+  <x:scenario label="test_49">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4651,7 +4790,7 @@
    <!--
       Volume size
   -->
-  <x:scenario label="test_49">
+  <x:scenario label="test_50">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4843,7 +4982,7 @@
   <!--
       Volume pseudo-classes
   -->
-  <x:scenario label="test_50" pending="implementation does not support different target volume size">
+  <x:scenario label="test_51" pending="implementation does not support different target volume size">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
