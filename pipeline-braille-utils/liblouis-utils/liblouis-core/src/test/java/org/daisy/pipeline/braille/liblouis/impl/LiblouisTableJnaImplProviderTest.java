@@ -16,6 +16,7 @@ public class LiblouisTableJnaImplProviderTest {
 			     LiblouisTableJnaImplProvider.letterSpacingFromInlineCSS("letter-spacing: 2;"));
 	}
 
+	//TODO: Handle numbers according to Finnish braille specification
 	@Test
 	public void testTextFromLetterSpacing() {
 		assertEquals("f o o   b a r",

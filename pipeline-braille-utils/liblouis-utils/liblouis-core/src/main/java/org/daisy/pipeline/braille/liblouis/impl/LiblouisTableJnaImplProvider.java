@@ -288,6 +288,7 @@ public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<Lib
 		return letterSpacing;
 	}
 	
+	//TODO: Handle numbers according to Finnish braille specification
 	protected static String textFromLetterSpacing(String text, int letterSpacing) {
 		if (letterSpacing >= 1) {
 			String spaces = "";
