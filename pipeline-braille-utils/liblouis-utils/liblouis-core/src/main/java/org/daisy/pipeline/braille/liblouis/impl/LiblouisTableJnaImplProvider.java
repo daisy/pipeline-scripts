@@ -13,7 +13,6 @@ import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
-import com.google.common.base.Splitter;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
@@ -268,39 +267,6 @@ public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<Lib
 			}
 		}
 	);
-
-	private final static Splitter.MapSplitter CSS_PARSER 
-		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
-
-	protected static int letterSpacingFromInlineCSS(String style) {
-		return letterSpacingFromInlineCSS(CSS_PARSER.split(style));
-	}
-
-	protected static int letterSpacingFromInlineCSS(Map<String,String> style) {
-		int letterSpacing = 0;
-		for (String prop : style.keySet()) {
-			String value = style.get(prop);
-			if (prop.equals("letter-spacing") && (!value.equals("0")))
-				letterSpacing = Integer.parseInt(value);
-			else
-				logger.warn("Inline CSS property {} not supported", prop);
-		}
-		return letterSpacing;
-	}
-	
-	//TODO: Handle numbers according to Finnish braille specification
-	protected static String textFromLetterSpacing(String text, int letterSpacing) {
-		if (letterSpacing >= 1) {
-			String spaces = "";
-			for (int i = 0; i < letterSpacing; i++) {
-				spaces += " ";
-			}
-			text = text.replaceAll(".(?=.)", String.format("$0%s", spaces));
-		}
-		if (letterSpacing < 0)
-			logger.warn("letter-spacing: {} not supported, must be non-negative", letterSpacing);
-		return text;
-	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(LiblouisTableJnaImplProvider.class);
 	
