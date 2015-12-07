@@ -176,6 +176,10 @@
         <xsl:apply-templates select="@*|node()"/>
     </xsl:template>
     
+    <xsl:template match="css:box/css:_">
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:template>
+    
     <xsl:template match="css:box[@type='block']" name="block">
         <block>
             <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
@@ -462,7 +466,9 @@
     <xsl:template match="css:box/@css:anchor"/>
     
     <xsl:template match="css:box/@css:string-entry|
-                         css:box/@css:string-set">
+                         css:box/@css:string-set|
+                         css:box/css:_/@css:string-entry|
+                         css:box/css:_/@css:string-set">
         <xsl:apply-templates select="css:parse-string-set(.)" mode="parse-string-set"/>
     </xsl:template>
     

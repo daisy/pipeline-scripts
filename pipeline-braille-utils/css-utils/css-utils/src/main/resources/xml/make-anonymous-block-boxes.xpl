@@ -13,10 +13,10 @@
     <p:input port="source">
         <p:documentation>
             The input is assumed to be a tree-of-boxes representation of a document that consists of
-            only css:box elements and text nodes. There should be no block boxes inside inline
-            boxes, and there should be no css:_ elements except if it's the document element. If the
-            input represents a named flow this must be indicated with a css:flow attribute on the
-            document element.
+            only a css:box or css:_ document element, css:box elements, text nodes, and text-only
+            css:{string|counter|leader|text|_} elements. There should be no block boxes inside
+            inline boxes. If the input represents a named flow this must be indicated with a
+            css:flow attribute on the document element.
         </p:documentation>
     </p:input>
     

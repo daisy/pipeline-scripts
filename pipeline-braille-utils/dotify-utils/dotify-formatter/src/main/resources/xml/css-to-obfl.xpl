@@ -83,7 +83,8 @@
         <p:wrap wrapper="_" match="/*"/>
         <css:flow-into name="_1">
             <p:documentation>
-                Extract named flows based on css:flow attributes.
+                Extract named flows based on css:flow attributes. Extracted elements are replaced
+                with empty css:_ elements with a css:id attribute.
             </p:documentation>
         </css:flow-into>
         <p:filter select="/_/*" name="_2"/>
@@ -128,7 +129,11 @@
                 depends on flow-into and label-targets -->
             </p:documentation>
         </css:make-boxes>
-        <css:make-anonymous-inline-boxes/>
+        <css:make-anonymous-inline-boxes>
+            <p:documentation>
+                Wrap/unwrap with inline css:box elements.
+            </p:documentation>
+        </css:make-anonymous-inline-boxes>
     </p:for-each>
     
     <css:eval-counter exclude-counters="page">
@@ -199,8 +204,17 @@
                 </p:documentation>
             </p:rename>
         </p:for-each>
-        <css:repeat-string-set/>
-        <css:shift-string-set/>
+        <css:repeat-string-set>
+            <p:documentation>
+                Repeat css:string-set and css:string-entry attributes at the beginning of sections.
+            </p:documentation>
+        </css:repeat-string-set>
+        <css:shift-string-set>
+            <p:documentation>
+                Move css:string-set and css:string-entry attributes. <!-- depends on
+                make-anonymous-inline-boxes -->
+            </p:documentation>
+        </css:shift-string-set>
         <p:identity name="_2"/>
         <p:identity>
             <p:documentation>
@@ -211,7 +225,11 @@
                 <p:pipe step="_1" port="not-matched"/>
             </p:input>
         </p:identity>
-        <css:shift-id/>
+        <css:shift-id>
+            <p:documentation>
+                Move css:id attributes to css:box elements.
+            </p:documentation>
+        </css:shift-id>
     </p:group>
     
     <p:for-each>
@@ -227,11 +245,17 @@
     <p:for-each>
         <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
             <p:documentation>
-                All css:_ elements (except for root elements) should be gone now. <!-- depends on
-                shift-id and shift-string-set -->
+                All css:_ elements except for root elements and empty elements with a css:string-set
+                or css:string-entry attribute within a css:box element should be gone now. <!--
+                depends on shift-id and shift-string-set -->
             </p:documentation>
         </p:unwrap>
-        <css:make-anonymous-block-boxes/> <!-- depends on unwrap css:_ -->
+        <css:make-anonymous-block-boxes>
+            <p:documentation>
+                Wrap inline css:box elements in block css:box elements where necessary. <!-- depends
+                on unwrap css:_ -->
+            </p:documentation>
+        </css:make-anonymous-block-boxes>
     </p:for-each>
     
     <p:split-sequence test="//css:box"/>
@@ -371,8 +395,8 @@
                       label="string-join(for $class in @class return (preceding::obfl:marker[concat(@class,'/prev')=$class])[last()]/@value,'')"/>
     
     <!--
-        because empty marker values have no effect in Dotify
+        because empty marker values would be regarded as absent in BrailleFilterImpl
     -->
-    <p:add-attribute match="obfl:marker[@value='']" attribute-name="value" attribute-value=" "/>
+    <p:add-attribute match="obfl:marker[@value='']" attribute-name="value" attribute-value="&#x200B;"/>
     
 </p:declare-step>

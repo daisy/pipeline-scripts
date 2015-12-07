@@ -12,12 +12,12 @@
     <p:input port="source">
         <p:documentation>
             The input is assumed to be a tree-of-boxes representation of a document that consists of
-            only css:box elements and text nodes (and css:_ elements if they are document
-            elements). Text and inline boxes must not have sibling block boxes.  Computed values of
-            'margin-left', 'margin-right', 'border-left', 'border-top', 'border-right',
-            'border-bottom' and 'text-indent' properties must be declared in css:margin-left,
-            css:margin-right, css:border-left, css:border-top, css:border-right, css:border-bottom
-            and css:text-indent attributes. Boxes must have no padding.
+            only a css:box or css:_ document element, css:box elements, text nodes, and text-only
+            css:{string|counter|leader|text|_} elements. Inline boxes must not have sibling block
+            boxes. Computed values of 'margin-left', 'margin-right', 'border-left', 'border-top',
+            'border-right', 'border-bottom' and 'text-indent' properties must be declared in
+            css:margin-left, css:margin-right, css:border-left, css:border-top, css:border-right,
+            css:border-bottom and css:text-indent attributes. Boxes must have no padding.
         </p:documentation>
     </p:input>
     

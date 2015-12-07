@@ -6,24 +6,49 @@
   <x:scenario label="test_01">
     <x:context>
       <css:_>
-        <css:box>
+        <css:box type="block">
           <css:_ css:string-set="foo 'x'"/>
         </css:box>
-        <css:box css:string-entry="bar 'y'">
-          <css:box/>
+        <css:box type="block" css:string-entry="bar 'y'">
+          <css:box type="block"/>
         </css:box>
-        <css:box/>
+        <css:box type="block"/>
       </css:_>
     </x:context>
     <x:expect label="result">
       <css:_>
-        <css:box>
+        <css:box type="block">
           <css:_/>
         </css:box>
-        <css:box css:string-entry="foo 'x', bar 'y'">
-          <css:box/>
+        <css:box type="block" css:string-entry="foo 'x', bar 'y'">
+          <css:box type="block"/>
         </css:box>
-        <css:box/>
+        <css:box type="block"/>
+      </css:_>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:context>
+      <css:_>
+        <css:_ css:string-set="foo '1'"/>
+        <css:box type="block">
+          <css:box>
+            <css:_ css:string-set="foo '2'"/>
+          </css:box>
+        </css:box>
+        <css:box type="block" css:string-set="foo '3'"/>
+      </css:_>
+    </x:context>
+    <x:expect label="result">
+      <css:_>
+        <css:_/>
+        <css:box type="block" css:string-entry="foo '1'">
+          <css:box>
+            <css:_ css:string-set="foo '2'"/>
+          </css:box>
+        </css:box>
+        <css:box type="block" css:string-set="foo '3'"/>
       </css:_>
     </x:expect>
   </x:scenario>
