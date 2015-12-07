@@ -70,7 +70,7 @@ public class LetterSpacingHandler {
 			boundaries = result.getHyphenPositions();
 
 			for(int i = 0; i < braille.length() - 1; i++) {
-				if(!Character.isSpaceChar(text.charAt(i)))
+				if(!Character.isSpaceChar(braille.charAt(i)))
 					out += braille.charAt(i);
 				if((4 & boundaries[i]) == 4) {
 					for (int j = 0; j < letterSpacing; j++) {
