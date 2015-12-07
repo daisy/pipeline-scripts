@@ -71,7 +71,6 @@ public class LetterSpacingHandler {
 	public static String detectAndTranslateWithSpacing(String text, int letterSpacing) {
 		byte[] boundaries = detectWordsAndLetters(text);
 
-		// StringBuilder would be faster
 		String result = "";
 		for(int i = 0; i < text.length() - 1; i++) {
 			result += text.charAt(i);
@@ -91,11 +90,9 @@ public class LetterSpacingHandler {
 		byte[] boundaries = new byte[text.length() - 1];
 
 		for(int i = 0; i < boundaries.length; i++){
-			if(Character.isLetter(text.charAt(i)))
+			if(Character.isLetter(text.charAt(i)) && Character.isLetter(text.charAt(i+1)))
 				boundaries[i] |= 4;
-			//TODO: figure out whether we want to have this after the end of
-			//      word 1 or before start of word 2 or both
-			if(Character.isSpaceChar(text.charAt(i)))
+			if(Character.isSpaceChar(text.charAt(i)) || Character.isSpaceChar(text.charAt(i+1)))
 				boundaries[i] |= 8;
 		}
 
