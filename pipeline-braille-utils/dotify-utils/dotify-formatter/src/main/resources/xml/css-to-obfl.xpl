@@ -361,7 +361,7 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <p:insert match="obfl:marker[some $class in @class satisfies preceding::obfl:marker[@class=$class]]" position="before">
+    <p:insert match="obfl:marker" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
         </p:input>
@@ -369,5 +369,10 @@
     <p:label-elements match="obfl:marker[not(@class)]" attribute="class" label="concat(following-sibling::obfl:marker[1]/@class,'/prev')"/>
     <p:label-elements match="obfl:marker[not(@value)]" attribute="value"
                       label="string-join(for $class in @class return (preceding::obfl:marker[concat(@class,'/prev')=$class])[last()]/@value,'')"/>
+    
+    <!--
+        because empty marker values have no effect in Dotify
+    -->
+    <p:add-attribute match="obfl:marker[@value='']" attribute-name="value" attribute-value=" "/>
     
 </p:declare-step>
