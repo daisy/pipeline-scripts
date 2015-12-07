@@ -67,6 +67,40 @@ public class LetterSpacingHandler {
 			}
 		return letterSpacing;
 	}
+
+	public static String detectAndTranslateWithSpacing(String text, int letterSpacing) {
+		byte[] boundaries = detectWordsAndLetters(text);
+
+		// StringBuilder would be faster
+		String result = "";
+		for(int i = 0; i < text.length() - 1; i++) {
+			result += text.charAt(i);
+
+			if((4 & boundaries[i]) == 4)
+				result += " ";
+			if((8 & boundaries[i]) == 8)
+				result += " ";
+		}
+		result += text.charAt(text.length() - 1);
+
+		return result;
+	}
+
+	// 4 is a letter boundary, 8 a word boundary
+	public static byte[] detectWordsAndLetters(String text) {
+		byte[] boundaries = new byte[text.length() - 1];
+
+		for(int i = 0; i < boundaries.length; i++){
+			if(Character.isLetter(text.charAt(i)))
+				boundaries[i] |= 4;
+			//TODO: figure out whether we want to have this after the end of
+			//      word 1 or before start of word 2 or both
+			if(Character.isSpaceChar(text.charAt(i)))
+				boundaries[i] |= 8;
+		}
+
+		return boundaries;
+	}
 	
 	//TODO: Handle numbers according to Finnish braille specification
 	public static String textFromLetterSpacing(String text, int letterSpacing) {

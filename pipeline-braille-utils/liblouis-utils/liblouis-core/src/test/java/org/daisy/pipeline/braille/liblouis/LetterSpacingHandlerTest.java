@@ -119,6 +119,14 @@ public class LetterSpacingHandlerTest {
 			"f  o  o     b  a  r",
 			handler.translateWithSpacing("foo bar", 2, 5));
 	}
+
+	@Test
+	public void testDetectAndTranslateWithLetterSpacing() {
+		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
+		assertEquals(
+			"f o o b a r   x y z z y   q u u x   123456",
+			handler.detectAndTranslateWithSpacing("foobar xyzzy quux 123456", 1));
+	}
 	
 	@Configuration
 	public Option[] config() {
