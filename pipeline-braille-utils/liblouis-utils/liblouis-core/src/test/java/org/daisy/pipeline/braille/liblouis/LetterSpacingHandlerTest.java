@@ -42,13 +42,12 @@ public class LetterSpacingHandlerTest {
 	@Inject
 	private BundleContext context;
 	
-	@Ignore @Test
+	@Test
 	public void testLetterSpacingFromCSS() {
 		assertEquals(1, letterSpacingFromInlineCSS("letter-spacing: 1;"));
 		assertEquals(2, letterSpacingFromInlineCSS("letter-spacing: 2;"));
 	}
 	
-	//TODO: Handle numbers according to Finnish braille specification
 	@Test
 	public void testTextFromLetterSpacing() {
 		assertEquals(
@@ -60,17 +59,6 @@ public class LetterSpacingHandlerTest {
 	}
 	
 	@Test
-	public void testTranslateWithLetterSpacing() {
-		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
-		assertEquals(
-			"f o o b a r",
-			handler.translateWithSpacing("foobar", 1));
-		assertEquals(
-			"f  o  o  b  a  r",
-			handler.translateWithSpacing("foobar", 2));
-	}
-	
-	@Ignore @Test
 	public void testTranslateWithLetterSpacingAndPunctuations() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
@@ -81,7 +69,7 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar.", 2));
 	}
 	
-	@Ignore @Test
+	@Test
 	public void testTranslateWithLetterSpacingAndContractions() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.ctb')", context);
 		assertEquals(
@@ -92,7 +80,7 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar", 2));
 	}
 	
-	@Ignore @Test
+	@Test
 	public void testTranslateWithWordSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
@@ -102,30 +90,33 @@ public class LetterSpacingHandlerTest {
 			"foo   bar",
 			handler.translateWithSpacing("foo bar", 0, 3));
 	}
-	
-	@Ignore @Test
-	public void testTranslateWithLetterSpacingAndWordSpacing() {
+
+	@Test
+	public void testTranslateWithLetterSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
-			"f o o  b a r",
-			handler.translateWithSpacing("foo bar", 1, 2));
+			"f o o b a r   q u u x   #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 1));
 		assertEquals(
-			"f o o   b a r",
-			handler.translateWithSpacing("foo bar", 1, 3));
-		assertEquals(
-			"f  o  o    b  a  r",
-			handler.translateWithSpacing("foo bar", 2, 4));
-		assertEquals(
-			"f  o  o     b  a  r",
-			handler.translateWithSpacing("foo bar", 2, 5));
+			"f  o  o  b  a  r     q  u  u  x     #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 2));
 	}
 
 	@Test
-	public void testDetectAndTranslateWithLetterSpacing() {
+	public void testTranslateWithLetterSpacingAndWordSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
-			"f o o b a r   x y z z y   q u u x   123456",
-			handler.detectAndTranslateWithSpacing("foobar xyzzy quux 123456", 1));
+			"f o o b a r  q u u x  #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 1, 2));
+		assertEquals(
+			"f o o b a r   q u u x   #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 1, 3));
+		assertEquals(
+			"f  o  o  b  a  r    q  u  u  x    #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 2, 4));
+		assertEquals(
+			"f  o  o  b  a  r     q  u  u  x     #abcdef",
+			handler.translateWithSpacing("foobar quux 123456", 2, 5));
 	}
 	
 	@Configuration

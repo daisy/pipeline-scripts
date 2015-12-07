@@ -8,6 +8,7 @@ import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider;
 
 import org.liblouis.TranslationException;
 import org.liblouis.Translator;
+import org.liblouis.TranslationResult;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -35,20 +36,6 @@ public class LetterSpacingHandler {
 			throw new RuntimeException(e); }
 	}
 	
-	// @jukkae FIXME
-	public String translateWithSpacing(String text, int letterSpacing) {
-		// return translateWithSpacing(text, letterSpacing, 2 * letterSpacing + 1)
-		try {
-			return table.translate(textFromLetterSpacing(text, letterSpacing), null, null).getBraille(); }
-		catch (TranslationException e) {
-			throw new RuntimeException(e); }
-	}
-	
-	// @jukkae FIXME
-	public String translateWithSpacing(String text, int letterSpacing, int wordSpacing) {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-	
 	private final static Splitter.MapSplitter CSS_PARSER
 	= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 	
@@ -68,25 +55,42 @@ public class LetterSpacingHandler {
 		return letterSpacing;
 	}
 
-	public static String detectAndTranslateWithSpacing(String text, int letterSpacing) {
-		byte[] boundaries = detectWordsAndLetters(text);
-
-		String result = "";
-		for(int i = 0; i < text.length() - 1; i++) {
-			result += text.charAt(i);
-
-			if((4 & boundaries[i]) == 4)
-				result += " ";
-			if((8 & boundaries[i]) == 8)
-				result += " ";
-		}
-		result += text.charAt(text.length() - 1);
-
-		return result;
+	public String translateWithSpacing(String text, int letterSpacing) {
+		return translateWithSpacing(text, letterSpacing, 2 * letterSpacing + 1);
 	}
 
-	// 4 is a letter boundary, 8 a word boundary
-	public static byte[] detectWordsAndLetters(String text) {
+	public String translateWithSpacing(String text, int letterSpacing, int wordSpacing) {
+		byte[] boundaries = detectBoundaries(text);
+
+		String out = "";
+		String braille = "";
+		try {
+			TranslationResult result = table.translate(text, boundaries, null);
+			braille = result.getBraille();
+			boundaries = result.getHyphenPositions();
+
+			for(int i = 0; i < braille.length() - 1; i++) {
+				if(!Character.isSpaceChar(text.charAt(i)))
+					out += braille.charAt(i);
+				if((4 & boundaries[i]) == 4) {
+					for (int j = 0; j < letterSpacing; j++) {
+						out += " ";
+					}
+				}
+				if(((8 & boundaries[i]) == 8) && !Character.isSpaceChar(braille.charAt(i))) {
+					for (int j = 0; j < wordSpacing; j++) {
+						out += " ";
+					}
+				}
+			}
+			out += braille.charAt(braille.length() - 1);
+		}
+		catch (TranslationException e) {
+			throw new RuntimeException(e); }
+		return out;
+	}
+
+	public static byte[] detectBoundaries(String text) {
 		byte[] boundaries = new byte[text.length() - 1];
 
 		for(int i = 0; i < boundaries.length; i++){
