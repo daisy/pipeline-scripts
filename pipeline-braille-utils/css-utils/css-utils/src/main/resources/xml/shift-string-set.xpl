@@ -12,8 +12,8 @@
     <p:input port="source" sequence="true">
         <p:documentation>
             Boxes must be represented by css:box elements. Inline boxes have a 'type' attribute not
-            equal to 'block'. 'string-set' properties must be declared in css:string-set or
-            css:string-entry attributes, and must conform to
+            equal to 'block'. 'string-set' properties must be declared in css:string-set attributes,
+            and must conform to
             http://snaekobbi.github.io/braille-css-spec/#the-string-set-property.
         </p:documentation>
     </p:input>
@@ -21,10 +21,9 @@
     <p:output port="result" sequence="true">
         <p:documentation>
             For each non-css:box element in the input that is not a descendant of an inline css:box,
-            any css:string-set or css:string-entry attributes are moved to the first following
-            inline css:box element and renamed to css:string-entry. If this css:box element already
-            has a css:string-entry attribute in the input, the 'string-set' declarations are
-            prepended to it.
+            if it has a css:string-set attribute it is moved to the first following inline
+            css:box. If this css:box element already has a css:string-set attribute in the input,
+            the 'string-set' declarations are prepended to it.
         </p:documentation>
     </p:output>
     

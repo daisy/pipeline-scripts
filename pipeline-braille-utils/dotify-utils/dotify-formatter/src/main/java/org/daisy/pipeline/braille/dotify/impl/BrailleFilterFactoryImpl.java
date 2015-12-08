@@ -178,7 +178,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		
 		private final static Pattern BRAILLE = Pattern.compile("[\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
 		private final static Pattern TEXTATTR = Pattern.compile(
-			"\\s*(?<special>(?<key>(?:ifn?)?def)\\s*:\\s*(?<var>[^\\s]+)(?:\\s+|$))?(?<css>.*)"
+			"\\s*(?<special>(?<key>def|ifdef|ifndef|defifndef)\\s*:\\s*(?<var>[^\\s]+)(?:\\s+|$))?(?<css>.*)"
 		);
 		
 		public String filter(Translatable specification) throws TranslationException {
@@ -242,10 +242,11 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 						String var = m.group("var");
 						if (env == null)
 							env = new HashSet<String>();
-						if (key.equals("def"))
-							env.add(var);
-						else if (key.equals("ifdef") && !env.contains(var) || key.equals("ifndef") && env.contains(var))
-							s = ""; }
+						if (key.equals("ifdef") && !env.contains(var)
+						    || (key.equals("ifndef") || key.equals("defifndef")) && env.contains(var))
+							s = "";
+						if (key.equals("def") || key.equals("defifndef"))
+							env.add(var); }
 					if (hyphenating)
 						id = "hyphens:auto; " + id;
 					if (id.equals(style))

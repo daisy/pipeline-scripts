@@ -206,13 +206,12 @@
         </p:for-each>
         <css:repeat-string-set>
             <p:documentation>
-                Repeat css:string-set and css:string-entry attributes at the beginning of sections.
+                Repeat css:string-set attributes at the beginning of sections as css:string-entry.
             </p:documentation>
         </css:repeat-string-set>
         <css:shift-string-set>
             <p:documentation>
-                Move css:string-set and css:string-entry attributes. <!-- depends on
-                make-anonymous-inline-boxes -->
+                Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </css:shift-string-set>
         <p:identity name="_2"/>

@@ -10,21 +10,20 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]/@css:string-set|
-                         *[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]/@css:string-entry"/>
+    <xsl:template match="*[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]/@css:string-set"/>
     
     <xsl:template match="css:box">
         <xsl:variable name="pending" as="attribute()*"
                       select="for $e in (preceding::*|ancestor::*)[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]
-                                                                  [@css:string-set|@css:string-entry]
+                                                                  [@css:string-set]
                                         except (preceding::css:box|ancestor::css:box)
                                                [last()]/(preceding::*|ancestor::*)
-                              return ($e/@css:string-entry,$e/@css:string-set)"/>
+                              return $e/@css:string-set"/>
         <xsl:choose>
             <xsl:when test="exists($pending)">
                 <xsl:copy>
-                    <xsl:apply-templates select="@* except @css:string-entry"/>
-                    <xsl:attribute name="css:string-entry" select="string-join(($pending, @css:string-entry), ', ')"/>
+                    <xsl:apply-templates select="@* except @css:string-set"/>
+                    <xsl:attribute name="css:string-set" select="string-join(($pending, @css:string-set), ', ')"/>
                     <xsl:apply-templates/>
                 </xsl:copy>
             </xsl:when>

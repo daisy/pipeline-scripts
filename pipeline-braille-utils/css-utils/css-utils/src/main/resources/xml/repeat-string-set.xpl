@@ -13,8 +13,8 @@
     <p:input port="source" sequence="true">
         <p:documentation>
             The input is a sequence of one or more documents. 'string-set' properties must be
-            declared in css:string-set or css:string-entry attributes. Root elements of documents
-            should have no css:string-set or css:string-entry attributes.
+            declared in css:string-set attributes. Root elements of documents must not have
+            css:string-set or css:string-entry attributes yet.
         </p:documentation>
     </p:input>
     
@@ -35,12 +35,11 @@
                         <xsl:template match="@*|node()">
                             <xsl:copy>
                                 <xsl:sequence select="@*"/>
-                                <xsl:apply-templates select="@css:string-entry"/>
                                 <xsl:apply-templates select="@css:string-set"/>
                                 <xsl:apply-templates/>
                             </xsl:copy>
                         </xsl:template>
-                        <xsl:template match="@css:string-set|@css:string-entry">
+                        <xsl:template match="@css:string-set">
                             <xsl:sequence select="css:parse-string-set(.)"/>
                         </xsl:template>
                     </xsl:stylesheet>

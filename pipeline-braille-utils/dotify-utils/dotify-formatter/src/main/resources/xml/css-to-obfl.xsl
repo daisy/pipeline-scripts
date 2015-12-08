@@ -157,13 +157,13 @@
     </xsl:template>
     
     <xsl:template match="/*" priority="0.6">
-        <xsl:element name="sequence">
+        <sequence>
             <xsl:attribute name="master" select="pxi:generate-layout-master-name(string(@css:page))"/>
             <xsl:if test="@css:counter-set-page">
                 <xsl:attribute name="initial-page-number" select="@css:counter-set-page"/>
             </xsl:if>
             <xsl:next-match/>
-        </xsl:element>
+        </sequence>
     </xsl:template>
     
     <xsl:template match="/*/@css:counter-set-page|
@@ -173,7 +173,13 @@
                          /*/@css:volume"/>
     
     <xsl:template match="/css:_">
-        <xsl:apply-templates select="@*|node()"/>
+        <xsl:apply-templates select="@* except @css:string-entry"/>
+        <xsl:if test="@css:string-entry">
+            <block>
+                <xsl:apply-templates select="@css:string-entry"/>
+            </block>
+        </xsl:if>
+        <xsl:apply-templates/>
     </xsl:template>
     
     <xsl:template match="css:box/css:_">
@@ -192,7 +198,7 @@
     
     <xsl:template match="css:box[@type='inline']">
         <xsl:variable name="attrs" as="attribute()*">
-            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
+            <xsl:apply-templates select="@* except @css:string-set"/>
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="exists($attrs)">
@@ -201,14 +207,12 @@
                 -->
                 <span>
                     <xsl:sequence select="$attrs"/>
-                    <xsl:apply-templates select="@css:string-entry"/>
                     <xsl:apply-templates select="@css:string-set"/>
                     <xsl:apply-templates/>
                     <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates select="@css:string-entry"/>
                 <xsl:apply-templates select="@css:string-set"/>
                 <xsl:apply-templates/>
                 <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
@@ -465,9 +469,7 @@
     
     <xsl:template match="css:box/@css:anchor"/>
     
-    <xsl:template match="css:box/@css:string-entry|
-                         css:box/@css:string-set|
-                         css:box/css:_/@css:string-entry|
+    <xsl:template match="css:box/@css:string-set|
                          css:box/css:_/@css:string-set">
         <xsl:apply-templates select="css:parse-string-set(.)" mode="parse-string-set"/>
     </xsl:template>
@@ -477,6 +479,17 @@
             <xsl:apply-templates select="css:parse-content-list(@value, ())" mode="eval-string-set"/>
         </xsl:variable>
         <marker class="{@name}" value="{string-join($value,'')}"/>
+    </xsl:template>
+    
+    <xsl:template match="/*/@css:string-entry">
+        <xsl:apply-templates select="css:parse-string-set(.)" mode="parse-string-entry"/>
+    </xsl:template>
+    
+    <xsl:template match="css:string-set" mode="parse-string-entry">
+        <xsl:variable name="value" as="xs:string*">
+            <xsl:apply-templates select="css:parse-content-list(@value, ())" mode="eval-string-set"/>
+        </xsl:variable>
+        <marker class="{@name}/entry" value="{string-join($value,'')}"/>
     </xsl:template>
     
     <xsl:template match="css:string[@value]" mode="eval-string-set" as="xs:string">

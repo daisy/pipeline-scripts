@@ -9,7 +9,8 @@
         <css:box type="block">
           <css:_ css:string-set="foo 'x'"/>
         </css:box>
-        <css:box type="block" css:string-entry="bar 'y'">
+        <css:_ css:string-set="bar 'y'"/>
+        <css:box type="block" css:string-set="bar 'z'">
           <css:box type="block"/>
         </css:box>
         <css:box type="block"/>
@@ -20,7 +21,8 @@
         <css:box type="block">
           <css:_/>
         </css:box>
-        <css:box type="block" css:string-entry="foo 'x', bar 'y'">
+        <css:_/>
+        <css:box type="block" css:string-set="foo 'x', bar 'y', bar 'z'">
           <css:box type="block"/>
         </css:box>
         <css:box type="block"/>
@@ -43,7 +45,7 @@
     <x:expect label="result">
       <css:_>
         <css:_/>
-        <css:box type="block" css:string-entry="foo '1'">
+        <css:box type="block" css:string-set="foo '1'">
           <css:box>
             <css:_ css:string-set="foo '2'"/>
           </css:box>
