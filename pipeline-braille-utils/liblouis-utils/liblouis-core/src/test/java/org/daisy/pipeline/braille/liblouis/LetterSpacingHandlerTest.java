@@ -90,7 +90,37 @@ public class LetterSpacingHandlerTest {
 			"foo   bar",
 			handler.translateWithSpacing("foo bar", 0, 3));
 	}
-
+	
+	@Ignore // pending
+	@Test
+	public void testTranslateWithWhiteSpaceProcessingAndWordSpacing() {
+		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
+		// space in input, two spaces in output
+		assertEquals(
+			"foo  bar",
+			handler.translateWithSpacing("foo bar", 0, 2));
+		// two spaces in input, two spaces in output
+		assertEquals(
+			"foo  bar",
+			handler.translateWithSpacing("foo  bar", 0, 2));
+		// newline + tab in input, two spaces in output
+		assertEquals(
+			"foo  bar",
+			handler.translateWithSpacing("foo\n	bar", 0, 2));
+		// no-break space in input, space in output
+		assertEquals(
+			"foo bar",
+			handler.translateWithSpacing("foo bar", 0, 2));
+		// no-break space + space in input, three spaces in output
+		assertEquals(
+			"foo   bar",
+			handler.translateWithSpacing("foo  bar", 0, 2));
+		// zero-width space in input, no space in output
+		assertEquals(
+			"foobar",
+			handler.translateWithSpacing("foo​bar", 0, 2));
+	}
+	
 	@Test
 	public void testTranslateWithLetterSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
