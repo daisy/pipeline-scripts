@@ -1,8 +1,12 @@
 package org.daisy.pipeline.braille.liblouis;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.collect.PeekingIterator;
 
 import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider;
 
@@ -60,27 +64,145 @@ public class LetterSpacingHandler {
 		public String nextLine(int width);
 	}
 	
-	private static class DumbLineIterator implements LineIterator {
-		private String remainingText;
-		private int remainingLength;
-		private DumbLineIterator(String text) {
-			remainingText = text;
-			remainingLength = remainingText.length();
+	// initially adapted from
+	// org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl$BrailleTranslatorImpl$BrailleTranslatorResultImpl
+	// which is an implementation of Dotify's
+	// org.daisy.dotify.api.translator.BrailleTranslatorResult
+	private static class LineBreaker implements LineIterator {
+		
+		private LineBreaker(String text) {
+			input = Iterators.peekingIterator(Lists.charactersOf(text).iterator());
 		}
+		
 		public boolean hasNext() {
-			return remainingLength > 0;
+			fillBuffer(1);
+			return charBuffer.length() > 0;
 		}
+		
 		public String nextLine(int width) {
 			if (!hasNext())
 				throw new RuntimeException();
-			if (width >= remainingLength) {
-				remainingLength = 0;
-				return remainingText; }
-			else {
-				String line = remainingText.substring(0, width);
-				remainingText = remainingText.substring(width);
-				remainingLength -= width;
-				return line; }
+			return nextTranslatedRow(width, true);
+		}
+		
+		private final PeekingIterator<Character> input;
+		private StringBuilder charBuffer = new StringBuilder();
+		private boolean lastCharIsSpace = false;
+		
+		// soft wrap opportunities
+		private ArrayList<Byte> swoBuffer = new ArrayList<Byte>();
+		private final static byte NO_SOFT_WRAP = (byte)0x0;
+		private final static byte SOFT_WRAP_WITH_HYPHEN = (byte)0x1;
+		private final static byte SOFT_WRAP_WITHOUT_HYPHEN = (byte)0x3;
+		private final static byte SOFT_WRAP_AFTER_SPACE = (byte)0x7;
+		
+		private final static char SHY = '\u00ad';
+		private final static char ZWSP = '\u200b';
+		private final static char SPACE = ' ';
+		private final static char CR = '\r';
+		private final static char LF = '\n';
+		private final static char TAB = '\t';
+		private final static char NBSP = '\u00a0';
+		private final static char BRAILLE_PATTERN_BLANK = '\u2800';
+		
+		private final static char HYPHENATE_CHARACTER = '\u2824';
+		
+		private void fillBuffer(int size) {
+			int bufSize = charBuffer.length();
+		  loop: while (input.hasNext()) {
+				char next = input.peek();
+				switch (next) {
+				case SHY:
+					if (bufSize > 0)
+						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITH_HYPHEN));
+					lastCharIsSpace = false;
+					break;
+				case ZWSP:
+					if (bufSize > 0)
+						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
+					lastCharIsSpace = false;
+					break;
+				case SPACE:
+				case LF:
+				case CR:
+				case TAB:
+				case BRAILLE_PATTERN_BLANK:
+					if (lastCharIsSpace)
+						break;
+					if (bufSize > 0)
+						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
+					charBuffer.append(BRAILLE_PATTERN_BLANK);
+					bufSize ++;
+					swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
+					lastCharIsSpace = true;
+					break;
+				case NBSP:
+					charBuffer.append(BRAILLE_PATTERN_BLANK);
+					bufSize ++;
+					swoBuffer.add(NO_SOFT_WRAP);
+					lastCharIsSpace = false;
+					break;
+				default:
+					if (bufSize >= size) break loop;
+					charBuffer.append(next);
+					bufSize ++;
+					swoBuffer.add(NO_SOFT_WRAP);
+					lastCharIsSpace = false; }
+				input.next(); }
+		}
+		
+		private void flushBuffer(int size) {
+			charBuffer = new StringBuilder(charBuffer.substring(size));
+			swoBuffer = new ArrayList<Byte>(swoBuffer.subList(size, swoBuffer.size()));
+		}
+		
+		private String nextTranslatedRow(int limit, boolean force) {
+			fillBuffer(limit + 1);
+			int bufSize = charBuffer.length();
+				
+			// no need to break if remaining text is shorter than line
+			if (bufSize <= limit) {
+				String rv = charBuffer.toString();
+				charBuffer.setLength(0);
+				swoBuffer.clear();
+				return rv; }
+				
+			// break at SPACE or ZWSP
+			if ((swoBuffer.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
+				String rv = charBuffer.substring(0, limit);
+					
+				// strip leading SPACE in remaining text
+				while (limit < bufSize && swoBuffer.get(limit) == SOFT_WRAP_AFTER_SPACE) limit++;
+				flushBuffer(limit);
+				return rv; }
+				
+			// try to break later if the overflowing characters are blank
+			for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == BRAILLE_PATTERN_BLANK; i++)
+				if ((swoBuffer.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
+					String rv = charBuffer.substring(0, limit);
+					flushBuffer(i);
+					return rv; }
+				
+			// try to break sooner
+			for (int i = limit - 1; i > 0; i--) {
+					
+				// break at SPACE, ZWSP or SHY
+				if (swoBuffer.get(i - 1) > 0) {
+					String rv = charBuffer.substring(0, i);
+						
+					// insert hyphen glyph at SHY
+					if (swoBuffer.get(i - 1) == 0x1)
+						rv += HYPHENATE_CHARACTER;
+					flushBuffer(i);
+					return rv; }}
+				
+			// force hard break
+			if (force) {
+				String rv = charBuffer.substring(0, limit);
+				flushBuffer(limit);
+				return rv; }
+				
+			return "";
 		}
 	}
 
@@ -115,7 +237,7 @@ public class LetterSpacingHandler {
 		}
 		catch (TranslationException e) {
 			throw new RuntimeException(e); }
-		return new DumbLineIterator(out);
+		return new LineBreaker(out);
 	}
 
 	// 8 signifies a word beginning after a space 
