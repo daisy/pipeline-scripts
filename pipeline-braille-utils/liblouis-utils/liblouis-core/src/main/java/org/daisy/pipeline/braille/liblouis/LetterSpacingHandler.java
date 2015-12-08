@@ -54,12 +54,41 @@ public class LetterSpacingHandler {
 			}
 		return letterSpacing;
 	}
+	
+	public interface LineIterator {
+		public boolean hasNext();
+		public String nextLine(int width);
+	}
+	
+	private static class DumbLineIterator implements LineIterator {
+		private String remainingText;
+		private int remainingLength;
+		private DumbLineIterator(String text) {
+			remainingText = text;
+			remainingLength = remainingText.length();
+		}
+		public boolean hasNext() {
+			return remainingLength > 0;
+		}
+		public String nextLine(int width) {
+			if (!hasNext())
+				throw new RuntimeException();
+			if (width >= remainingLength) {
+				remainingLength = 0;
+				return remainingText; }
+			else {
+				String line = remainingText.substring(0, width);
+				remainingText = remainingText.substring(width);
+				remainingLength -= width;
+				return line; }
+		}
+	}
 
-	public String translateWithSpacing(String text, int letterSpacing) {
+	public LineIterator translateWithSpacing(String text, int letterSpacing) {
 		return translateWithSpacing(text, letterSpacing, 2 * letterSpacing + 1);
 	}
 
-	public String translateWithSpacing(String text, int letterSpacing, int wordSpacing) {
+	public LineIterator translateWithSpacing(String text, int letterSpacing, int wordSpacing) {
 		byte[] boundaries = detectBoundaries(text);
 
 		String out = "";
@@ -86,7 +115,7 @@ public class LetterSpacingHandler {
 		}
 		catch (TranslationException e) {
 			throw new RuntimeException(e); }
-		return out;
+		return new DumbLineIterator(out);
 	}
 
 	// 8 signifies a word beginning after a space 

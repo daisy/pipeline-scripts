@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.liblouis;
 import javax.inject.Inject;
 
 import static org.daisy.pipeline.braille.liblouis.LetterSpacingHandler.letterSpacingFromInlineCSS;
+import org.daisy.pipeline.braille.liblouis.LetterSpacingHandler.LineIterator;
 import static org.daisy.pipeline.braille.liblouis.LetterSpacingHandler.textFromLetterSpacing;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -63,10 +64,10 @@ public class LetterSpacingHandlerTest {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
 			"f o o b a r.",
-			handler.translateWithSpacing("foobar.", 1));
+			handler.translateWithSpacing("foobar.", 1).nextLine(100));
 		assertEquals(
 			"f  o  o  b  a  r.",
-			handler.translateWithSpacing("foobar.", 2));
+			handler.translateWithSpacing("foobar.", 2).nextLine(100));
 	}
 	
 	@Test
@@ -74,10 +75,10 @@ public class LetterSpacingHandlerTest {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.ctb')", context);
 		assertEquals(
 			"fu b a r",
-			handler.translateWithSpacing("foobar", 1));
+			handler.translateWithSpacing("foobar", 1).nextLine(100));
 		assertEquals(
 			"fu  b  a  r",
-			handler.translateWithSpacing("foobar", 2));
+			handler.translateWithSpacing("foobar", 2).nextLine(100));
 	}
 	
 	@Test
@@ -85,10 +86,10 @@ public class LetterSpacingHandlerTest {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
 			"foo  bar",
-			handler.translateWithSpacing("foo bar", 0, 2));
+			handler.translateWithSpacing("foo bar", 0, 2).nextLine(100));
 		assertEquals(
 			"foo   bar",
-			handler.translateWithSpacing("foo bar", 0, 3));
+			handler.translateWithSpacing("foo bar", 0, 3).nextLine(100));
 	}
 	
 	@Ignore // pending
@@ -98,27 +99,27 @@ public class LetterSpacingHandlerTest {
 		// space in input, two spaces in output
 		assertEquals(
 			"foo  bar",
-			handler.translateWithSpacing("foo bar", 0, 2));
+			handler.translateWithSpacing("foo bar", 0, 2).nextLine(100));
 		// two spaces in input, two spaces in output
 		assertEquals(
 			"foo  bar",
-			handler.translateWithSpacing("foo  bar", 0, 2));
+			handler.translateWithSpacing("foo  bar", 0, 2).nextLine(100));
 		// newline + tab in input, two spaces in output
 		assertEquals(
 			"foo  bar",
-			handler.translateWithSpacing("foo\n	bar", 0, 2));
+			handler.translateWithSpacing("foo\n	bar", 0, 2).nextLine(100));
 		// no-break space in input, space in output
 		assertEquals(
 			"foo bar",
-			handler.translateWithSpacing("foo bar", 0, 2));
+			handler.translateWithSpacing("foo bar", 0, 2).nextLine(100));
 		// no-break space + space in input, three spaces in output
 		assertEquals(
 			"foo   bar",
-			handler.translateWithSpacing("foo  bar", 0, 2));
+			handler.translateWithSpacing("foo  bar", 0, 2).nextLine(100));
 		// zero-width space in input, no space in output
 		assertEquals(
 			"foobar",
-			handler.translateWithSpacing("foo​bar", 0, 2));
+			handler.translateWithSpacing("foo​bar", 0, 2).nextLine(100));
 	}
 	
 	@Test
@@ -126,10 +127,10 @@ public class LetterSpacingHandlerTest {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
 			"f o o b a r   q u u x   #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 1));
+			handler.translateWithSpacing("foobar quux 123456", 1).nextLine(100));
 		assertEquals(
 			"f  o  o  b  a  r     q  u  u  x     #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 2));
+			handler.translateWithSpacing("foobar quux 123456", 2).nextLine(100));
 	}
 
 	@Test
@@ -137,16 +138,52 @@ public class LetterSpacingHandlerTest {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
 		assertEquals(
 			"f o o b a r  q u u x  #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 1, 2));
+			handler.translateWithSpacing("foobar quux 123456", 1, 2).nextLine(100));
 		assertEquals(
 			"f o o b a r   q u u x   #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 1, 3));
+			handler.translateWithSpacing("foobar quux 123456", 1, 3).nextLine(100));
 		assertEquals(
 			"f  o  o  b  a  r    q  u  u  x    #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 2, 4));
+			handler.translateWithSpacing("foobar quux 123456", 2, 4).nextLine(100));
 		assertEquals(
 			"f  o  o  b  a  r     q  u  u  x     #abcdef",
-			handler.translateWithSpacing("foobar quux 123456", 2, 5));
+			handler.translateWithSpacing("foobar quux 123456", 2, 5).nextLine(100));
+	}
+	
+	@Ignore
+	@Test
+	public void testTranslateWithWordSpacingAndLineBreaking() {
+		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
+		assertEquals(
+			//                   |<- 20
+			"foobar  foobar\n" +
+			"foobar",
+			fillLines(handler.translateWithSpacing("foobar foobar foobar", 0, 2), 20));
+		assertEquals(
+			//                   |<- 20
+			"f o o b a r\n" +
+			"f o o b a r\n" +
+			"f o o b a r",
+			fillLines(handler.translateWithSpacing("foobar foobar foobar", 1, 3), 20));
+		assertEquals(
+			//                        |<- 25
+			"f o o - b a r   f o o -\n" +
+			"b a r   f o o - b a r",
+			fillLines(handler.translateWithSpacing("foo-​bar foo-​bar foo-​bar", 1, 3), 25)); // words are split up using hyphen + zwsp
+		assertEquals(
+			//                   |<- 20
+			"f o o b a r   f o o-\n" +
+			"b a r   f o o b a r",
+			fillLines(handler.translateWithSpacing("foo­bar foo­bar foo­bar", 1, 3), 20)); // words are split up using shy
+	}
+	
+	private static String fillLines(LineIterator lines, int width) {
+		StringBuilder sb = new StringBuilder();
+		while (lines.hasNext()) {
+			sb.append(lines.nextLine(width));
+			if (lines.hasNext())
+				sb.append('\n'); }
+		return sb.toString();
 	}
 	
 	@Configuration
