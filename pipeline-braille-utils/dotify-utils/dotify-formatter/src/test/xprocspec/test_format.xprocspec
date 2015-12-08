@@ -5497,7 +5497,7 @@
   </x:scenario>
   
   <!--
-      correct resolving of "first" string assignment with multiple sequences
+      correct resolving of "first" and "start" string assignments with multiple sequences
   -->
   <x:scenario label="test_54">
     <x:call step="dotify:format">
@@ -5505,8 +5505,9 @@
         <x:document type="inline">
           <doc style="{ text-transform: none }
                       @page {
-                        size: 20 5;
-                        @bottom-left { content: string(foo, first) }}">
+                        size: 10 5;
+                        @bottom-left { content: string(foo, first) }
+                        @bottom-right { content: string(foo, start) }}">
             <section style="display: block;
                             string-set: foo '⠿'">
               ⠤⠤⠤
@@ -5515,6 +5516,11 @@
                             page-break-before: right">
               ⠤⠤⠤
               <_ style="display: none; string-set: foo '⠿⠿'"/>
+              ⠤⠤⠤
+            </section>
+            <section style="display: block;
+                            page-break-before: right">
+              <_ style="display: none; string-set: foo '⠿⠿⠿'"/>
               ⠤⠤⠤
             </section>
           </doc>
@@ -5528,7 +5534,7 @@
               pending="generated variable name in marker-references makes test very brittle">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="a" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+          <layout-master name="a" page-width="10" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header/>
               <footer>
@@ -5564,6 +5570,17 @@
               <marker class="foo" value="⠿⠿"/>
               ⠤⠤⠤
             </block>
+          <sequence master="a">
+            <block>
+              <marker class="foo/entry/prev" value="⠿"/>
+              <marker class="foo/entry" value="⠿⠿"/>
+            </block>
+            <block>
+              <marker class="foo/prev" value="⠿⠿"/>
+              <marker class="foo" value="⠿⠿⠿"/>
+              ⠤⠤⠤
+            </block>
+          </sequence>
           </sequence>
         </obfl>
       </x:document>
@@ -5580,14 +5597,14 @@
             </meta>
           </head>
           <body>
-            <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <volume rows="5" cols="10" rowgap="0" duplex="true">
               <section>
                 <page>
                   <row>⠤⠤⠤</row>
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠿⠀⠀⠀⠀⠀⠀⠀⠀⠿</row>
                 </page>
               </section>
               <section>
@@ -5596,7 +5613,16 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠿⠿⠀⠀⠀⠀⠀⠀⠀⠿</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿</row>
                 </page>
               </section>
             </volume>
