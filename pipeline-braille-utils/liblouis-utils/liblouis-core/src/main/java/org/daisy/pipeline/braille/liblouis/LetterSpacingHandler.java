@@ -85,6 +85,11 @@ public class LetterSpacingHandler {
 			return nextTranslatedRow(width, true);
 		}
 		
+		private final char blankChar = ' ';
+		// private final char blankChar = BRAILLE_PATTERN_BLANK;
+		private final char hyphenChar = '-';
+		// private final char hyphenChar = '\u2824';
+		
 		private final PeekingIterator<Character> input;
 		private StringBuilder charBuffer = new StringBuilder();
 		private boolean lastCharIsSpace = false;
@@ -104,8 +109,6 @@ public class LetterSpacingHandler {
 		private final static char TAB = '\t';
 		private final static char NBSP = '\u00a0';
 		private final static char BRAILLE_PATTERN_BLANK = '\u2800';
-		
-		private final static char HYPHENATE_CHARACTER = '\u2824';
 		
 		private void fillBuffer(int size) {
 			int bufSize = charBuffer.length();
@@ -131,13 +134,13 @@ public class LetterSpacingHandler {
 						break;
 					if (bufSize > 0)
 						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-					charBuffer.append(BRAILLE_PATTERN_BLANK);
+					charBuffer.append(blankChar);
 					bufSize ++;
 					swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
 					lastCharIsSpace = true;
 					break;
 				case NBSP:
-					charBuffer.append(BRAILLE_PATTERN_BLANK);
+					charBuffer.append(blankChar);
 					bufSize ++;
 					swoBuffer.add(NO_SOFT_WRAP);
 					lastCharIsSpace = false;
@@ -177,7 +180,7 @@ public class LetterSpacingHandler {
 				return rv; }
 				
 			// try to break later if the overflowing characters are blank
-			for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == BRAILLE_PATTERN_BLANK; i++)
+			for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == blankChar; i++)
 				if ((swoBuffer.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
 					String rv = charBuffer.substring(0, limit);
 					flushBuffer(i);
@@ -192,7 +195,7 @@ public class LetterSpacingHandler {
 						
 					// insert hyphen glyph at SHY
 					if (swoBuffer.get(i - 1) == 0x1)
-						rv += HYPHENATE_CHARACTER;
+						rv += hyphenChar;
 					flushBuffer(i);
 					return rv; }}
 				
