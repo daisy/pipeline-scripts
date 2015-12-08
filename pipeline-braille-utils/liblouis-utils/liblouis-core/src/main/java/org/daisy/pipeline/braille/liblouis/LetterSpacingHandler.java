@@ -70,15 +70,14 @@ public class LetterSpacingHandler {
 			boundaries = result.getHyphenPositions();
 
 			for(int i = 0; i < braille.length() - 1; i++) {
-				if(!Character.isSpaceChar(braille.charAt(i)))
-					out += braille.charAt(i);
+				out += braille.charAt(i);
 				if((4 & boundaries[i]) == 4) {
 					for (int j = 0; j < letterSpacing; j++) {
 						out += " ";
 					}
 				}
-				if(((8 & boundaries[i]) == 8) && !Character.isSpaceChar(braille.charAt(i))) {
-					for (int j = 0; j < wordSpacing; j++) {
+				if(((8 & boundaries[i]) == 8)) {
+					for (int j = 0; j < wordSpacing - 1; j++) {
 						out += " ";
 					}
 				}
@@ -90,13 +89,14 @@ public class LetterSpacingHandler {
 		return out;
 	}
 
+	// 8 signifies a word beginning after a space 
 	public static byte[] detectBoundaries(String text) {
 		byte[] boundaries = new byte[text.length() - 1];
 
 		for(int i = 0; i < boundaries.length; i++){
 			if(Character.isLetter(text.charAt(i)) && Character.isLetter(text.charAt(i+1)))
 				boundaries[i] |= 4;
-			if(Character.isSpaceChar(text.charAt(i)) || Character.isSpaceChar(text.charAt(i+1)))
+			if(Character.isSpaceChar(text.charAt(i)))
 				boundaries[i] |= 8;
 		}
 
