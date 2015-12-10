@@ -91,8 +91,7 @@ public class LetterSpacingHandlerTest {
 			"foo   bar",
 			handler.translateWithSpacing("foo bar", 0, 3).nextLine(100));
 	}
-	
-	@Ignore // pending
+
 	@Test
 	public void testTranslateWithWhiteSpaceProcessingAndWordSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
@@ -150,7 +149,6 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar quux 123456", 2, 5).nextLine(100));
 	}
 	
-	@Ignore // pending
 	@Test
 	public void testTranslateWithWordSpacingAndLineBreaking() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);

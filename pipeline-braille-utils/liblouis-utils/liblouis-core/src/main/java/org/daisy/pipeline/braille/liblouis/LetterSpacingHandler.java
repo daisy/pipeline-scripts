@@ -34,7 +34,7 @@ public class LetterSpacingHandler {
 			for (ServiceReference<LiblouisTableJnaImplProvider> ref :
 				     context.getServiceReferences(LiblouisTableJnaImplProvider.class, null)) {
 				LiblouisTableJnaImplProvider provider = context.getService(ref);
-				this.table = provider.get(tableQuery).iterator().next().getTranslator();
+				this.table = provider.get("(white-space)" + tableQuery).iterator().next().getTranslator();
 				break; }}
 		catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e); }
