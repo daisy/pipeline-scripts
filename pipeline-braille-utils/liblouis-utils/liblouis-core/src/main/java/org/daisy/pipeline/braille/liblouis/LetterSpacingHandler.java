@@ -255,8 +255,8 @@ public class LetterSpacingHandler {
 		for(int i = 0; i < boundaries.length; i++){
 			if(Character.isLetter(text.charAt(i)) && Character.isLetter(text.charAt(i+1)))
 				boundaries[i] |= 4;
-			if(Character.isSpaceChar(text.charAt(i)))
-				boundaries[i] |= 8;
+			if((text.charAt(i) == '-') || (text.charAt(i+1) == '-'))
+				boundaries[i] |= 4;
 		}
 
 		return boundaries;
