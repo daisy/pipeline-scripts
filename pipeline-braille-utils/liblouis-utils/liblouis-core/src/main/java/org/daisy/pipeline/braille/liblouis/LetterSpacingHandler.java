@@ -71,6 +71,11 @@ public class LetterSpacingHandler {
 	private static class LineBreaker implements LineIterator {
 		
 		private LineBreaker(String text) {
+			this(text, 1);
+		}
+
+		private LineBreaker(String text, int wordSpacing) {
+			this.wordSpacing = wordSpacing;
 			input = Iterators.peekingIterator(Lists.charactersOf(text).iterator());
 		}
 		
@@ -110,6 +115,8 @@ public class LetterSpacingHandler {
 		private final static char NBSP = '\u00a0';
 		private final static char BRAILLE_PATTERN_BLANK = '\u2800';
 		
+		private final int wordSpacing;
+
 		private void fillBuffer(int size) {
 			int bufSize = charBuffer.length();
 		  loop: while (input.hasNext()) {
@@ -134,9 +141,11 @@ public class LetterSpacingHandler {
 						break;
 					if (bufSize > 0)
 						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-					charBuffer.append(blankChar);
-					bufSize ++;
-					swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
+					for (int i = 0; i < wordSpacing; i++) {
+						charBuffer.append(blankChar);
+						bufSize ++;
+						swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
+					}
 					lastCharIsSpace = true;
 					break;
 				case NBSP:
@@ -227,12 +236,7 @@ public class LetterSpacingHandler {
 				out += braille.charAt(i);
 				if((4 & boundaries[i]) == 4) {
 					for (int j = 0; j < letterSpacing; j++) {
-						out += " ";
-					}
-				}
-				if(((8 & boundaries[i]) == 8)) {
-					for (int j = 0; j < wordSpacing - 1; j++) {
-						out += " ";
+						out += '\u00a0';
 					}
 				}
 			}
@@ -240,7 +244,7 @@ public class LetterSpacingHandler {
 		}
 		catch (TranslationException e) {
 			throw new RuntimeException(e); }
-		return new LineBreaker(out);
+		return new LineBreaker(out, wordSpacing);
 	}
 
 	// 8 signifies a word beginning after a space 

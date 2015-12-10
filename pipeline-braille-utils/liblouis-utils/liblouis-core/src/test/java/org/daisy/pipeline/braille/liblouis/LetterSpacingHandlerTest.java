@@ -59,7 +59,6 @@ public class LetterSpacingHandlerTest {
 			textFromLetterSpacing("foo bar", 2));
 	}
 	
-	@Ignore // broken
 	@Test
 	public void testTranslateWithLetterSpacingAndPunctuations() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
@@ -71,7 +70,6 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar.", 2).nextLine(100));
 	}
 	
-	@Ignore // broken
 	@Test
 	public void testTranslateWithLetterSpacingAndContractions() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.ctb')", context);
@@ -83,7 +81,6 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar", 2).nextLine(100));
 	}
 	
-	@Ignore // broken
 	@Test
 	public void testTranslateWithWordSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
@@ -125,7 +122,6 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foo​bar", 0, 2).nextLine(100));
 	}
 	
-	@Ignore // broken
 	@Test
 	public void testTranslateWithLetterSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
@@ -137,7 +133,6 @@ public class LetterSpacingHandlerTest {
 			handler.translateWithSpacing("foobar quux 123456", 2).nextLine(100));
 	}
 
-	@Ignore // broken
 	@Test
 	public void testTranslateWithLetterSpacingAndWordSpacing() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
