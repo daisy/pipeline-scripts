@@ -31,9 +31,9 @@ import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.JobContext;
 import org.daisy.pipeline.braille.common.MathMLTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.util.Tuple3;
 import org.daisy.pipeline.braille.common.XProcTransform;
 
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public class PxTransformStep extends Eval {
 	
 	private final JobContext context;
-	private final Iterable<Transform.Provider<XProcTransform>> providers;
+	private final Iterable<TransformProvider<XProcTransform>> providers;
 	private final ReadableDocument pipeline;
 	
 	private static final QName _query = new QName("query");
@@ -59,7 +59,7 @@ public class PxTransformStep extends Eval {
 	private static final QName _namespace = new QName("namespace");
 	private static final QName _value = new QName("value");
 	
-	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<Transform.Provider<XProcTransform>> providers) {
+	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<TransformProvider<XProcTransform>> providers) {
 		super(runtime, step);
 		this.context = new JobContextImpl(runtime.getMessageListener());
 		this.providers = providers;
@@ -172,10 +172,10 @@ public class PxTransformStep extends Eval {
 			policy = ReferencePolicy.DYNAMIC
 		)
 		@SuppressWarnings(
-			"unchecked" // safe cast to Transform.Provider<XProcTransform>
+			"unchecked" // safe cast to TransformProvider<XProcTransform>
 		)
 		public void bindXProcTransformProvider(XProcTransform.Provider<?> provider) {
-			providers.add((Transform.Provider<XProcTransform>)provider);
+			providers.add((TransformProvider<XProcTransform>)provider);
 			logger.debug("Adding XProcTransform provider: {}", provider);
 		}
 		
@@ -184,7 +184,7 @@ public class PxTransformStep extends Eval {
 			logger.debug("Removing XProcTransform provider: {}", provider);
 		}
 		
-		private List<Transform.Provider<XProcTransform>> providers = new ArrayList<Transform.Provider<XProcTransform>>();
+		private List<TransformProvider<XProcTransform>> providers = new ArrayList<TransformProvider<XProcTransform>>();
 		
 	}
 	

@@ -21,18 +21,19 @@ import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.concat;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.concat;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.varyLocale;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
@@ -127,7 +128,7 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 			TextTransform.Provider.class
 		}
 	)
-	public static class Provider extends AbstractTransform.Provider<DotifyTranslator>
+	public static class Provider extends AbstractTransformProvider<DotifyTranslator>
 	                             implements DotifyTranslator.Provider {
 		
 		/**
@@ -156,9 +157,9 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		
 		private final static Iterable<DotifyTranslator> empty = Iterables.<DotifyTranslator>empty();
 		
-		private Transform.Provider<DotifyTranslator> _provider
+		private TransformProvider<DotifyTranslator> _provider
 		= varyLocale(
-			new AbstractTransform.Provider<DotifyTranslator>() {
+			new AbstractTransformProvider<DotifyTranslator>() {
 				public Iterable<DotifyTranslator> _get(String query) {
 					Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 					Optional<String> o;
@@ -248,10 +249,10 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 			policy = ReferencePolicy.DYNAMIC
 		)
 		@SuppressWarnings(
-			"unchecked" // safe cast to Transform.Provider<Hyphenator>
+			"unchecked" // safe cast to TransformProvider<Hyphenator>
 		)
 		protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
-			hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
+			hyphenatorProviders.add((TransformProvider<Hyphenator>)provider);
 			hyphenatorProvider.invalidateCache();
 			logger.debug("Adding Hyphenator provider: " + provider);
 		}
@@ -262,10 +263,10 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 			logger.debug("Removing Hyphenator provider: " + provider);
 		}
 		
-		private List<Transform.Provider<Hyphenator>> hyphenatorProviders
-		= new ArrayList<Transform.Provider<Hyphenator>>();
+		private List<TransformProvider<Hyphenator>> hyphenatorProviders
+		= new ArrayList<TransformProvider<Hyphenator>>();
 		
-		private Transform.Provider.MemoizingProvider<Hyphenator> hyphenatorProvider
+		private TransformProvider.util.MemoizingProvider<Hyphenator> hyphenatorProvider
 		= memoize(dispatch(hyphenatorProviders));
 		
 	}

@@ -25,6 +25,6 @@ package org.daisy.pipeline.braille.common;
  */
 public interface BrailleTranslator extends TextTransform {
 	
-	public interface Provider<T extends BrailleTranslator> extends TextTransform.Provider<T> {}
+	public interface Provider<T extends BrailleTranslator> extends TransformProvider<T> {}
 	
 }

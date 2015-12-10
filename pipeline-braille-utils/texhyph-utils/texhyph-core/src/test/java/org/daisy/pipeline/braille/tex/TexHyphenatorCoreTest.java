@@ -5,7 +5,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
@@ -45,7 +46,7 @@ public class TexHyphenatorCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		Transform.Provider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
+		TransformProvider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
 		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foobar"));
 		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foo-bar"));
 		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foobar"));
@@ -74,10 +75,10 @@ public class TexHyphenatorCoreTest {
 		);
 	}
 	
-	private <T extends Transform> Transform.Provider<T> getProvider(Class<T> transformerClass, Class<? extends Transform.Provider<T>> providerClass) {
-		List<Transform.Provider<T>> providers = new ArrayList<Transform.Provider<T>>();
+	private <T extends Transform> TransformProvider<T> getProvider(Class<T> transformerClass, Class<? extends TransformProvider<T>> providerClass) {
+		List<TransformProvider<T>> providers = new ArrayList<TransformProvider<T>>();
 		try {
-			for (ServiceReference<? extends Transform.Provider<T>> ref : context.getServiceReferences(providerClass, null))
+			for (ServiceReference<? extends TransformProvider<T>> ref : context.getServiceReferences(providerClass, null))
 				providers.add(context.getService(ref)); }
 		catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e); }

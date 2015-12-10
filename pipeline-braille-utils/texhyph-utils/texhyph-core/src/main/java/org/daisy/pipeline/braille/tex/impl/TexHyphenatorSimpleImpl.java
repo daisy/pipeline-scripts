@@ -12,10 +12,11 @@ import com.google.common.base.Optional;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.fromNullable;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
 		Hyphenator.Provider.class
 	}
 )
-public class TexHyphenatorSimpleImpl extends AbstractTransform.Provider<TexHyphenator>
+public class TexHyphenatorSimpleImpl extends AbstractTransformProvider<TexHyphenator>
 	                                 implements TexHyphenator.Provider {
 	
 	private TexHyphenatorTableRegistry tableRegistry;

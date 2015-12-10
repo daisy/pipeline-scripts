@@ -56,7 +56,7 @@ public abstract class BundledResourcePath implements ResourcePath {
 		return identifier;
 	}
 	
-	private final ResourceResolver resolver = new MemoizingResolver() {
+	private final ResourceResolver resolver = new util.MemoizingResolver() {
 		public URL _apply(URI resource) {
 			logger.trace("Resolving " + resource + " within " + identifier + " (real path: " + path + "; unpack dir: " + unpackDir + ")");
 			resource = resource.normalize();

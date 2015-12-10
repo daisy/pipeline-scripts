@@ -188,7 +188,19 @@ public abstract class util {
 	
 	public static abstract class Iterables {
 		
-		protected static abstract class memoize<T> implements Iterable<T> {
+		public static <T> Iterable<T> memoize(final Iterable<T> iterable) {
+			return new Memoize<T>() {
+				protected Iterator<T> _iterator() {
+					return iterable.iterator();
+				}
+				@Override
+				public String toString() {
+					return "memoize( " + iterable + " )";
+				}
+			};
+		}
+		
+		protected static abstract class Memoize<T> implements Iterable<T> {
 			private final ArrayList<T> cache = new ArrayList<T>();
 			protected abstract Iterator<T> _iterator();
 			private Iterator<T> _iterator;
@@ -221,18 +233,6 @@ public abstract class util {
 					}
 				};
 			}
-		}
-		
-		public static <T> Iterable<T> memoize(final Iterable<T> iterable) {
-			return new memoize<T>() {
-				protected Iterator<T> _iterator() {
-					return iterable.iterator();
-				}
-				@Override
-				public String toString() {
-					return "memoize( " + iterable + " )";
-				}
-			};
 		}
 	}
 	

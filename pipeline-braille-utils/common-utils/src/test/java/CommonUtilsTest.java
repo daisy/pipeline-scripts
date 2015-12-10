@@ -13,8 +13,8 @@ import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -117,7 +117,7 @@ public class CommonUtilsTest {
 				else
 					return empty;
 			}
-			public Transform.Provider<UppercaseTransform> withContext(Logger context) {
+			public TransformProvider<UppercaseTransform> withContext(Logger context) {
 				return new Provider(context);
 			}
 		}

@@ -55,7 +55,7 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
-	private Provider.MemoizingProvider<String,Table> tableProvider
+	private Provider.util.MemoizingProvider<String,Table> tableProvider
 	= memoize(dispatch(tableProviders));
 	
 	@Override

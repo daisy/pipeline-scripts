@@ -198,7 +198,7 @@ public class PEF2TextStep extends DefaultStep {
 		}
 		
 		private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
-		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,Table> tableProvider
+		private org.daisy.pipeline.braille.common.Provider.util.MemoizingProvider<String,Table> tableProvider
 		= memoize(dispatch(tableProviders));
 		
 	}

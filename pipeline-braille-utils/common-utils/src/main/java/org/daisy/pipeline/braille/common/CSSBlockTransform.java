@@ -17,6 +17,6 @@ public interface CSSBlockTransform extends Transform {
 	
 	public TextTransform asTextTransform();
 	
-	public interface Provider<T extends CSSBlockTransform> extends Transform.Provider<T> {}
+	public interface Provider<T extends CSSBlockTransform> extends TransformProvider<T> {}
 	
 }

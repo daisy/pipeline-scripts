@@ -9,6 +9,6 @@ package org.daisy.pipeline.braille.common;
  */
 public interface CSSStyledDocumentTransform extends Transform {
 	
-	public interface Provider<T extends CSSStyledDocumentTransform> extends Transform.Provider<T> {}
+	public interface Provider<T extends CSSStyledDocumentTransform> extends TransformProvider<T> {}
 	
 }

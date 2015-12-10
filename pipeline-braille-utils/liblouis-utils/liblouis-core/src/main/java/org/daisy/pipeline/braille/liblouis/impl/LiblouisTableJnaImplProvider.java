@@ -16,13 +16,14 @@ import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.warn;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.warn;
 import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.varyLocale;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
 import static org.daisy.pipeline.braille.common.util.Files.unpack;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
@@ -60,7 +61,7 @@ import org.slf4j.LoggerFactory;
 		LiblouisTableJnaImplProvider.class
 	}
 )
-public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<LiblouisTableJnaImplProvider.LiblouisTableJnaImpl> {
+public class LiblouisTableJnaImplProvider extends AbstractTransformProvider<LiblouisTableJnaImplProvider.LiblouisTableJnaImpl> {
 	
 	public class LiblouisTableJnaImpl extends LiblouisTable implements Transform {
 		
@@ -203,9 +204,9 @@ public class LiblouisTableJnaImplProvider extends AbstractTransform.Provider<Lib
 		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTableJnaImplProvider");
 	}
 	
-	private Transform.Provider<LiblouisTableJnaImpl> _provider
+	private TransformProvider<LiblouisTableJnaImpl> _provider
 	= varyLocale(
-		new AbstractTransform.Provider<LiblouisTableJnaImpl>() {
+		new AbstractTransformProvider<LiblouisTableJnaImpl>() {
 			public Iterable<LiblouisTableJnaImpl> _get(final String query) {
 				return Iterables.of(
 					new WithSideEffect<LiblouisTableJnaImpl,Logger>() {

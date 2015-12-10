@@ -16,7 +16,7 @@ import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.TransformProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
@@ -243,7 +243,7 @@ public class DotifyFormatterTest {
 				return Optional.<NumberBrailleTranslator>fromNullable(
 					query.equals("(number-translator)") ? instance : null).asSet();
 			}
-			public Transform.Provider<NumberBrailleTranslator> withContext(Logger context) {
+			public TransformProvider<NumberBrailleTranslator> withContext(Logger context) {
 				return this;
 			}
 		}

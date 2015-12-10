@@ -16,7 +16,7 @@ import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -67,7 +67,7 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 		tableProvider = null;
 	}
 	
-	public Transform.Provider<LiblouisHyphenator> withContext(Logger context) {
+	public TransformProvider<LiblouisHyphenator> withContext(Logger context) {
 		return this;
 	}
 	
@@ -92,8 +92,8 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 	
 	private final static Iterable<LiblouisHyphenator> empty = Optional.<LiblouisHyphenator>absent().asSet();
 	
-	private Provider.MemoizingProvider<String,LiblouisHyphenator> provider
-	= new Provider.MemoizingProvider<String,LiblouisHyphenator>() {
+	private Provider.util.MemoizingProvider<String,LiblouisHyphenator> provider
+	= new Provider.util.Memoize<String,LiblouisHyphenator>() {
 		public Iterable<LiblouisHyphenator> _get(String query) {
 			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 			Optional<String> o;

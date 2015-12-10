@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.daisy.pipeline.braille.common.ResourceResolver.util.MemoizingResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

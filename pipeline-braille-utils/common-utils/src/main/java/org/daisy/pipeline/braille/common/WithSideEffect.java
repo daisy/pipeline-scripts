@@ -44,23 +44,9 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 		return withSideEffect.apply(firstWorld);
 	}
 	
-	public static <T,W> WithSideEffect<T,W> of(final T value) {
-		return new WithSideEffect<T,W>() {
-			public T _apply() {
-				return value;
-			}
-		};
-	}
-	
-	public static <T,W> WithSideEffect<T,W> fromNullable(final T value) {
-		return new WithSideEffect<T,W>() {
-			public T _apply() {
-				if (value == null)
-					throw new NoSuchElementException();
-				return value;
-			}
-		};
-	}
+	/* --------- */
+	/* Exception */
+	/* --------- */
 	
 	@SuppressWarnings("serial")
 	public static class Exception extends NoSuchElementException {
@@ -74,7 +60,41 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 		}
 	}
 	
+	/* -- */
+	/* of */
+	/* -- */
+		
+	public static <T,W> WithSideEffect<T,W> of(final T value) {
+		return new WithSideEffect<T,W>() {
+			public T _apply() {
+				return value;
+			}
+		};
+	}
+	
+	/* ------------ */
+	/* fromNullable */
+	/* ------------ */
+		
+	public static <T,W> WithSideEffect<T,W> fromNullable(final T value) {
+		return new WithSideEffect<T,W>() {
+			public T _apply() {
+				if (value == null)
+					throw new NoSuchElementException();
+				return value;
+			}
+		};
+	}
+	
+	/* ================== */
+	/*       UTILS        */
+	/* ================== */
+	
 	public static abstract class util {
+		
+		/* -------- */
+		/* Function */
+		/* -------- */
 		
 		public static abstract class Function<F,T,W> implements com.google.common.base.Function<F,WithSideEffect<T,W>> {
 			public abstract T _apply(F from);
@@ -97,25 +117,37 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 			}
 		}
 		
+		/* -------- */
+		/* Iterable */
+		/* -------- */
+		
 		public static interface Iterable<T,W> extends com.google.common.base.Function<W,java.lang.Iterable<T>> {}
 		
+		/* --------- */
+		/* Iterables */
+		/* --------- */
+		
 		public static abstract class Iterables {
+			
+			/* empty */
 			
 			public static <T,W> Iterable<T,W> empty() {
 				return of(Optional.<WithSideEffect<T,W>>absent().asSet());
 			}
+			
+			/* of */
 			
 			public static <T,W> Iterable<T,W> of(WithSideEffect<T,W> element) {
 				return of(Optional.of(element).asSet());
 			}
 			
 			public static <T,W> Iterable<T,W> of(java.lang.Iterable<WithSideEffect<T,W>> iterable) {
-				return new of<T,W>(iterable);
+				return new Of<T,W>(iterable);
 			}
 			
-			protected static class of<T,W> implements Iterable<T,W> {
+			protected static class Of<T,W> implements Iterable<T,W> {
 				protected final java.lang.Iterable<WithSideEffect<T,W>> iterable;
-				protected of(java.lang.Iterable<WithSideEffect<T,W>> iterable) {
+				protected Of(java.lang.Iterable<WithSideEffect<T,W>> iterable) {
 					this.iterable = iterable;
 				}
 				public java.lang.Iterable<T> apply(final W world) {
@@ -137,6 +169,8 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 					};
 				}
 			}
+			
+			/* transform */
 			
 			public static <F,T,W> Iterable<T,W> transform(final Iterable<F,W> from, final com.google.common.base.Function<F,T> function) {
 				return new Iterable<T,W>() {
@@ -162,8 +196,10 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 				);
 			}
 			
+			/* concat */
+			
 			public static <T,W> Iterable<T,W> concat(final java.lang.Iterable<? extends Iterable<T,W>> inputs) {
-				return new concat<T,W>() {
+				return new Concat<T,W>() {
 					protected Iterator<? extends Iterable<T,W>> iterator(W world) {
 						return inputs.iterator();
 					}
@@ -171,20 +207,20 @@ public abstract class WithSideEffect<T,W> implements Function<W,T> {
 			}
 			
 			public static <T,W> Iterable<T,W> concat(final Iterable<? extends Iterable<T,W>,W> inputs) {
-				return new concat<T,W>() {
+				return new Concat<T,W>() {
 					protected Iterator<? extends Iterable<T,W>> iterator(W world) {
 						return inputs.apply(world).iterator();
 					}
 				};
 			}
 			
-			protected static abstract class concat<T,W> implements Iterable<T,W> {
+			protected static abstract class Concat<T,W> implements Iterable<T,W> {
 				protected abstract Iterator<? extends Iterable<T,W>> iterator(W world);
 				public java.lang.Iterable<T> apply(final W world) {
 					return new java.lang.Iterable<T>() {
 						public Iterator<T> iterator() {
 							return new AbstractIterator<T>() {
-								Iterator<? extends Iterable<T,W>> iterableIterator = concat.this.iterator(world);
+								Iterator<? extends Iterable<T,W>> iterableIterator = Concat.this.iterator(world);
 								Iterator<T> current;
 								protected T computeNext() {
 									while (current == null || !current.hasNext()) {

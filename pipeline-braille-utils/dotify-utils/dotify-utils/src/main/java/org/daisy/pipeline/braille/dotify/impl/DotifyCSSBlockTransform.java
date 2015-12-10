@@ -15,16 +15,17 @@ import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
@@ -44,7 +45,7 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 			CSSBlockTransform.Provider.class
 		}
 	)
-	public class Provider extends AbstractTransform.Provider<DotifyCSSBlockTransform>
+	public class Provider extends AbstractTransformProvider<DotifyCSSBlockTransform>
 		                  implements XProcTransform.Provider<DotifyCSSBlockTransform>, CSSBlockTransform.Provider<DotifyCSSBlockTransform> {
 		
 		private URI href;
@@ -121,10 +122,10 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 			dotifyTranslatorProvider.invalidateCache();
 		}
 		
-		private List<Transform.Provider<DotifyTranslator>> dotifyTranslatorProviders
-		= new ArrayList<Transform.Provider<DotifyTranslator>>();
+		private List<TransformProvider<DotifyTranslator>> dotifyTranslatorProviders
+		= new ArrayList<TransformProvider<DotifyTranslator>>();
 		
-		private Transform.Provider.MemoizingProvider<DotifyTranslator> dotifyTranslatorProvider
+		private TransformProvider.util.MemoizingProvider<DotifyTranslator> dotifyTranslatorProvider
 		= memoize(dispatch(dotifyTranslatorProviders));
 	
 	}

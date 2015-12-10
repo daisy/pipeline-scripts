@@ -15,14 +15,15 @@ import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.varyLocale;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import org.daisy.pipeline.braille.dotify.DotifyHyphenator;
@@ -63,7 +64,7 @@ public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyp
 			Hyphenator.Provider.class
 		}
 	)
-	public static class Provider extends AbstractTransform.Provider<DotifyHyphenator>
+	public static class Provider extends AbstractTransformProvider<DotifyHyphenator>
 	                             implements DotifyHyphenator.Provider {
 		
 		/**
@@ -87,9 +88,9 @@ public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyp
 		
 		private final static Iterable<DotifyHyphenator> empty = Iterables.<DotifyHyphenator>empty();
 		
-		private Transform.Provider<DotifyHyphenator> _provider
+		private TransformProvider<DotifyHyphenator> _provider
 		= varyLocale(
-			new AbstractTransform.Provider<DotifyHyphenator>() {
+			new AbstractTransformProvider<DotifyHyphenator>() {
 				public Iterable<DotifyHyphenator> _get(String query) {
 					Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
 					Optional<String> o;

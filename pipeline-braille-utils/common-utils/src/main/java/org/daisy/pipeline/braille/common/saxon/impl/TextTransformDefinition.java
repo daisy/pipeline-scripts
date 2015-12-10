@@ -21,8 +21,8 @@ import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,10 +50,10 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<BrailleTranslator>
+		"unchecked" // safe cast to TransformProvider<BrailleTranslator>
 	)
 	protected void bindTextTransformProvider(BrailleTranslator.Provider<?> provider) {
-		providers.add((Transform.Provider<BrailleTranslator>)provider);
+		providers.add((TransformProvider<BrailleTranslator>)provider);
 		logger.debug("Adding BrailleTranslator provider: {}", provider);
 	}
 	
@@ -63,9 +63,9 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		logger.debug("Removing BrailleTranslator provider: {}", provider);
 	}
 	
-	private List<Transform.Provider<BrailleTranslator>> providers = new ArrayList<Transform.Provider<BrailleTranslator>>();
+	private List<TransformProvider<BrailleTranslator>> providers = new ArrayList<TransformProvider<BrailleTranslator>>();
 	
-	private Provider.MemoizingProvider<String,BrailleTranslator> translators
+	private Provider.util.MemoizingProvider<String,BrailleTranslator> translators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {

@@ -6,6 +6,6 @@ package org.daisy.pipeline.braille.common;
  */
 public interface MathMLTransform extends Transform {
 	
-	public interface Provider<T extends MathMLTransform> extends Transform.Provider<T> {}
+	public interface Provider<T extends MathMLTransform> extends TransformProvider<T> {}
 	
 }

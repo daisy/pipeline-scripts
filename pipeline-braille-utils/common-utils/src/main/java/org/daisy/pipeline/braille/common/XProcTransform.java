@@ -15,6 +15,6 @@ public interface XProcTransform extends Transform {
 	 */
 	public Tuple3<URI,QName,Map<String,String>> asXProc();
 	
-	public interface Provider<T extends XProcTransform> extends Transform.Provider<T> {}
+	public interface Provider<T extends XProcTransform> extends TransformProvider<T> {}
 	
 }

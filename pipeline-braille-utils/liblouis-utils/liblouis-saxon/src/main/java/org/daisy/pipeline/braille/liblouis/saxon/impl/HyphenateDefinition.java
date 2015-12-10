@@ -18,7 +18,8 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -57,9 +58,9 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		logger.debug("Removing LiblouisHyphenator provider: {}", provider);
 	}
 	
-	private List<Transform.Provider<LiblouisHyphenator>> providers
-	= new ArrayList<Transform.Provider<LiblouisHyphenator>>();
-	private Provider.MemoizingProvider<String,LiblouisHyphenator> hyphenators
+	private List<TransformProvider<LiblouisHyphenator>> providers
+	= new ArrayList<TransformProvider<LiblouisHyphenator>>();
+	private Provider.util.MemoizingProvider<String,LiblouisHyphenator> hyphenators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {

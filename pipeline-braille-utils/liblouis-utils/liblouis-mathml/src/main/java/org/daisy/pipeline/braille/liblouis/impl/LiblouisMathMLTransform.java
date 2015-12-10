@@ -13,9 +13,10 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.of;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.of;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
@@ -39,7 +40,7 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 			MathMLTransform.Provider.class
 		}
 	)
-	public class Provider extends AbstractTransform.Provider<LiblouisMathMLTransform>
+	public class Provider extends AbstractTransformProvider<LiblouisMathMLTransform>
 		                  implements XProcTransform.Provider<LiblouisMathMLTransform>, MathMLTransform.Provider<LiblouisMathMLTransform> {
 		
 		private URI href;

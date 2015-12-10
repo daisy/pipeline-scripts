@@ -19,13 +19,14 @@ import static com.google.common.collect.Iterables.transform;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.debug;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.fromNullable;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.of;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.debug;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.of;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.TextTransform;
@@ -61,7 +62,7 @@ import org.slf4j.LoggerFactory;
 		org.daisy.pipeline.braille.common.Hyphenator.Provider.class
 	}
 )
-public class LibhyphenJnaImpl extends AbstractTransform.Provider<LibhyphenHyphenator>
+public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphenator>
 	                          implements LibhyphenHyphenator.Provider {
 	
 	private final static char SHY = '\u00AD';

@@ -14,8 +14,8 @@
     </x:context>
     <x:expect label="result">
       <doc xml:lang="en">
-        <p style="{{ display: block }}">
-          <span style="{{ hyphens: manual; white-space: pre-wrap }}">
+        <p style="display: block">
+          <span style="hyphens: manual; white-space: pre-wrap">
             ⠋⠕⠕­<span>⠃⠜</span>
           </span>
         </p>
@@ -46,7 +46,7 @@
     </x:context>
     <x:expect label="result">
       <doc xml:lang="en">
-        <p style="{{ display: block }}">
+        <p style="display: block">
           <span>
             ⠋⠕⠕ <span>⠃⠜</span>
           </span>

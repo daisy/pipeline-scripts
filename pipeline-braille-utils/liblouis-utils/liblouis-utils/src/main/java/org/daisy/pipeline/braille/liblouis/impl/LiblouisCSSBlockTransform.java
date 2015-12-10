@@ -17,16 +17,17 @@ import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
 import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
@@ -49,7 +50,7 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			CSSBlockTransform.Provider.class
 		}
 	)
-	public class Provider extends AbstractTransform.Provider<LiblouisCSSBlockTransform>
+	public class Provider extends AbstractTransformProvider<LiblouisCSSBlockTransform>
 		                  implements XProcTransform.Provider<LiblouisCSSBlockTransform>, CSSBlockTransform.Provider<LiblouisCSSBlockTransform> {
 		
 		private URI href;
@@ -132,9 +133,9 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			liblouisTranslatorProvider.invalidateCache();
 		}
 	
-		private List<Transform.Provider<LiblouisTranslator>> liblouisTranslatorProviders
-		= new ArrayList<Transform.Provider<LiblouisTranslator>>();
-		private Transform.Provider.MemoizingProvider<LiblouisTranslator> liblouisTranslatorProvider
+		private List<TransformProvider<LiblouisTranslator>> liblouisTranslatorProviders
+		= new ArrayList<TransformProvider<LiblouisTranslator>>();
+		private TransformProvider.util.MemoizingProvider<LiblouisTranslator> liblouisTranslatorProvider
 		= memoize(dispatch(liblouisTranslatorProviders));
 		
 		private static final Logger logger = LoggerFactory.getLogger(Provider.class);

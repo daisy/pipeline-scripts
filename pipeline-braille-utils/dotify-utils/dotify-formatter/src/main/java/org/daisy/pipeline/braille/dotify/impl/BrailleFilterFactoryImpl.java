@@ -22,10 +22,10 @@ import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
-import org.daisy.pipeline.braille.common.Provider.MemoizingProvider;
+import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
 import org.osgi.service.component.annotations.Component;
@@ -72,10 +72,10 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<BrailleTranslator>
+		"unchecked" // safe cast to TransformProvider<BrailleTranslator>
 	)
 	protected void bindBrailleTranslatorProvider(BrailleTranslator.Provider<?> provider) {
-		brailleTranslatorProviders.add((Transform.Provider<BrailleTranslator>)provider);
+		brailleTranslatorProviders.add((TransformProvider<BrailleTranslator>)provider);
 		logger.debug("Adding BrailleTranslator provider: {}", provider);
 	}
 	
@@ -85,10 +85,10 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		logger.debug("Removing BrailleTranslator provider: {}", provider);
 	}
 	
-	private final List<Transform.Provider<BrailleTranslator>> brailleTranslatorProviders
-	= new ArrayList<Transform.Provider<BrailleTranslator>>();
+	private final List<TransformProvider<BrailleTranslator>> brailleTranslatorProviders
+	= new ArrayList<TransformProvider<BrailleTranslator>>();
 	
-	private final MemoizingProvider<String,BrailleTranslator> brailleTranslatorProvider
+	private final Provider.util.MemoizingProvider<String,BrailleTranslator> brailleTranslatorProvider
 	= memoize(dispatch(brailleTranslatorProviders));
 	
 	private final BrailleTranslator defaultNumberTranslator = new NumberBrailleTranslator();

@@ -83,7 +83,7 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	}
 		
 	private List<TableProvider> otherProviders = new ArrayList<TableProvider>();
-	private Provider.MemoizingProvider<String,Table> backingProvider
+	private Provider.util.MemoizingProvider<String,Table> backingProvider
 	= memoize(dispatch(otherProviders));
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocaleTableProvider.class);

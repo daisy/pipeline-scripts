@@ -20,17 +20,18 @@ import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.concat;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.concat;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -64,7 +65,7 @@ import org.slf4j.LoggerFactory;
 		TextTransform.Provider.class
 	}
 )
-public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provider<LiblouisTranslator> implements LiblouisTranslator.Provider {
+public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider<LiblouisTranslator> implements LiblouisTranslator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
@@ -95,12 +96,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<Hyphenator>
+		"unchecked" // safe cast to TransformProvider<Hyphenator>
 	)
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
 		if (provider instanceof LiblouisHyphenatorJnaImplProvider)
 			return;
-		hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
+		hyphenatorProviders.add((TransformProvider<Hyphenator>)provider);
 		hyphenatorProvider.invalidateCache();
 		logger.debug("Adding Hyphenator provider: " + provider);
 	}
@@ -113,10 +114,10 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		logger.debug("Removing Hyphenator provider: " + provider);
 	}
 	
-	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
-	= new ArrayList<Transform.Provider<Hyphenator>>();
+	private List<TransformProvider<Hyphenator>> hyphenatorProviders
+	= new ArrayList<TransformProvider<Hyphenator>>();
 	
-	private Transform.Provider.MemoizingProvider<Hyphenator> hyphenatorProvider
+	private TransformProvider.util.MemoizingProvider<Hyphenator> hyphenatorProvider
 	= memoize(dispatch(hyphenatorProviders));
 	
 	private final static Iterable<LiblouisTranslator> empty

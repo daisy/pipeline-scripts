@@ -17,10 +17,11 @@ import net.davidashen.text.Utf8TexParser.TexParserException;
 
 import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.fromNullable;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
 		Hyphenator.Provider.class
 	}
 )
-public class TexHyphenatorDotifyImpl extends AbstractTransform.Provider<TexHyphenator>
+public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphenator>
 	                                 implements TexHyphenator.Provider {
 	
 	private TexHyphenatorTableRegistry tableRegistry;
