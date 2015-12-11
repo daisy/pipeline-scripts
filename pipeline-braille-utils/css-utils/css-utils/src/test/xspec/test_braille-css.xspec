@@ -23,7 +23,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_03" pending="vendor-prefixed value not implemented">
+	<x:scenario label="test_03">
 		<x:call function="css:specified-properties">
 			<x:param select="'#all invalid'"/>
 			<x:param select="true()"/>
@@ -102,7 +102,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_09" pending="vendor-prefixed function not implemented">
+	<x:scenario label="test_09">
 		<x:call function="css:parse-content-list">
 			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) -x-foo(bar, baz) string(print-page, start)'"/>
 			<x:param select="//a">

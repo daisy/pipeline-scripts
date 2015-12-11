@@ -41,4 +41,9 @@
 		<xsl:sequence select="3 + $groups + $groups"/>
 	</xsl:function>
 	
+	<xsl:function name="re:comma-separated-groups" as="xs:integer">
+		<xsl:param name="groups" as="xs:integer"/>
+		<xsl:sequence select="3 + $groups + $groups"/>
+	</xsl:function>
+
 </xsl:stylesheet>
