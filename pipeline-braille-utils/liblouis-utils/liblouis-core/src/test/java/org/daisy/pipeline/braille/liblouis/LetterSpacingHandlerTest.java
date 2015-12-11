@@ -189,8 +189,9 @@ public class LetterSpacingHandlerTest {
 			//                   |<- 20
 			"norf\n" +
 			"quux\n" +
-			"foobar",
-			fillLines(handler.translateWithSpacing("norf quux foobar", 0, 2), 20)); // words are split up using U+2028
+			"foobar\n" +
+			"xyzzy",
+			fillLines(handler.translateWithSpacing("norf quux foobar xyzzy", 0, 2), 20)); // words are split up using U+2028
 	}
 	
 	private static String fillLines(LineIterator lines, int width) {
