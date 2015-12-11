@@ -286,7 +286,7 @@
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
         <xsl:sequence select="if ($index)
                               then matches($display, $css:applies-to[$index])
-                              else matches($property, '^-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*$')"/> <!-- might apply -->
+                              else matches($property, re:exact($css:VENDOR_PRF_IDENT_RE))"/> <!-- might apply -->
     </xsl:function>
     
     <!-- ================== -->

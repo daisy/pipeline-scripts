@@ -81,7 +81,8 @@
                          @css:counter-reset|
                          @css:counter-set|
                          @css:counter-increment|
-                         @css:string-set" mode="display-none">
+                         @css:string-set|
+                         @css:*[matches(local-name(),'^_')]" mode="display-none">
         <xsl:sequence select="."/>
     </xsl:template>
     

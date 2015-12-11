@@ -103,9 +103,13 @@
         <xsl:variable name="properties" as="element()*"
                       select="css:parse-declaration-list($stylesheet[not(@selector)]/@style)"/>
         <xsl:variable name="margin-top" as="xs:integer"
-                      select="($properties[@name='margin-top'][css:is-valid(.)]/xs:integer(@value),0)[1]"/>
+                      select="max(($properties[@name='margin-top'][css:is-valid(.)]/xs:integer(@value),0))"/>
         <xsl:variable name="margin-bottom" as="xs:integer"
-                      select="($properties[@name='margin-bottom'][css:is-valid(.)]/xs:integer(@value),0)[1]"/>
+                      select="max(($properties[@name='margin-bottom'][css:is-valid(.)]/xs:integer(@value),0))"/>
+        <xsl:variable name="margin-left" as="xs:integer"
+                      select="max(($properties[@name='margin-left'][css:is-valid(.)]/xs:integer(@value),0))"/>
+        <xsl:variable name="margin-right" as="xs:integer"
+                      select="max(($properties[@name='margin-right'][css:is-valid(.)]/xs:integer(@value),0))"/>
         <xsl:choose>
             <xsl:when test="exists(($top-left, $top-center, $top-right)) or $margin-top &gt; 0">
                 <xsl:call-template name="headers">
@@ -132,6 +136,16 @@
                 <footer/>
             </xsl:otherwise>
         </xsl:choose>
+        <xsl:call-template name="margin-region">
+            <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@left'][1]/@style"/>
+            <xsl:with-param name="side" select="'left'"/>
+            <xsl:with-param name="min-width" select="$margin-left"/>
+        </xsl:call-template>
+        <xsl:call-template name="margin-region">
+            <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@right'][1]/@style"/>
+            <xsl:with-param name="side" select="'right'"/>
+            <xsl:with-param name="min-width" select="$margin-right"/>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:template name="headers"> <!-- obfl:header* -->
@@ -180,7 +194,7 @@
         <xsl:variable name="white-space" as="xs:string" select="($properties[@name='white-space']/@value,'normal')[1]"/>
         <xsl:variable name="text-transform" as="xs:string" select="($properties[@name='text-transform']/@value,'auto')[1]"/>
         <xsl:variable name="content" as="element()*">
-            <xsl:apply-templates select="css:parse-content-list($properties[@name='content'][1]/@value,())" mode="eval-content-list">
+            <xsl:apply-templates select="css:parse-content-list($properties[@name='content'][1]/@value,())" mode="eval-content-list-top-bottom">
                 <xsl:with-param name="white-space" select="$white-space"/>
                 <xsl:with-param name="text-transform" select="$text-transform"/>
             </xsl:apply-templates>
@@ -194,7 +208,24 @@
         </xsl:for-each-group>
     </xsl:template>
     
-    <xsl:template match="css:string[@value]" mode="eval-content-list">
+    <xsl:template name="margin-region" as="element()?"> <!-- obfl:margin-region? -->
+        <xsl:param name="margin-stylesheet" as="xs:string?"/>
+        <xsl:param name="side" as="xs:string" required="yes"/>
+        <xsl:param name="min-width" as="xs:integer" required="yes"/>
+        <xsl:variable name="properties" as="element()*" select="css:parse-declaration-list($margin-stylesheet)"/>
+        <xsl:variable name="indicators" as="element()*">
+            <xsl:apply-templates select="css:parse-content-list($properties[@name='content'][1]/@value,())" mode="eval-content-list-left-right"/>
+        </xsl:variable>
+        <xsl:if test="exists($indicators) or $min-width &gt; 0">
+            <margin-region align="{$side}" width="{max((count($indicators),$min-width))}">
+                <indicators>
+                    <xsl:sequence select="$indicators"/>
+                </indicators>
+            </margin-region>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="css:string[@value]" mode="eval-content-list-top-bottom">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
         <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
         <xsl:choose>
@@ -236,7 +267,7 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:counter[not(@target)][@name='page']" mode="eval-content-list">
+    <xsl:template match="css:counter[not(@target)][@name='page']" mode="eval-content-list-top-bottom">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
         <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
         <xsl:if test="$white-space!='normal'">
@@ -250,7 +281,7 @@
         </current-page>
     </xsl:template>
     
-    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list-top-bottom">
         <xsl:param name="white-space" as="xs:string" tunnel="yes" select="'normal'"/>
         <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
         <xsl:param name="page-side" as="xs:string" tunnel="yes" select="'both'"/>
@@ -382,39 +413,64 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:attr" mode="eval-content-list">
-        <xsl:message>attr() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:custom-func[@name='-obfl-marker-indicator'][matches(@arg2,$css:STRING_RE) and not(@arg3)]"
+                  mode="eval-content-list-left-right" priority="1">
+        <marker-indicator markers="indicator/{@arg1}" indicator="{substring(@arg2,2,string-length(@arg2)-2)}"/>
     </xsl:template>
     
-    <xsl:template match="css:content" mode="eval-content-list">
-        <xsl:message>content() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:custom-func[@name='-obfl-marker-indicator']" mode="eval-content-list-left-right">
+        <xsl:message>-obfl-marker-indicator() function requires exactly two arguments</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:text[@target]" mode="eval-content-list">
-        <xsl:message>target-text() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:attr" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>attr() function not supported in page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:string[@name][@target]" mode="eval-content-list">
-        <xsl:message>target-string() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:content" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>content() function not supported in page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:counter[@target]" mode="eval-content-list">
-        <xsl:message>target-counter() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:text[@target]" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>target-text() function not supported in page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:counter[not(@target)][not(@name='page')]" mode="eval-content-list">
-        <xsl:message>counter() function not supported in page header and footer for other counters than 'page'</xsl:message>
+    <xsl:template match="css:string[@value]" mode="eval-content-list-left-right">
+        <xsl:message>strings not supported in left and right page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:leader" mode="eval-content-list">
-        <xsl:message>leader() function not supported in page header and footer</xsl:message>
-    </xsl:template>
-
-    <xsl:template match="css:flow[@from]" mode="eval-content-list">
-        <xsl:message>flow() function not supported in page header and footer</xsl:message>
+    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list-left-right">
+        <xsl:message>string() function not supported in left and right page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="*" mode="eval-content-list">
+    <xsl:template match="css:string[@name][@target]" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>target-string() function not supported in page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[@target]" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>target-counter() function not supported in page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[not(@target)]" mode="eval-content-list-left-right">
+        <xsl:message>counter() function not supported in left and right page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:counter[not(@target)][not(@name='page')]" mode="eval-content-list-top-bottom">
+        <xsl:message>counter() function not supported in page margin for other counters than 'page'</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:leader" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>leader() function not supported in page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:flow[@from]" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>flow() function not supported in page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:custom-func[@name='-obfl-marker-indicator']" mode="eval-content-list-top-bottom">
+        <xsl:message>-obfl-marker-indicator() function not supported in top and bottom page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="eval-content-list-top-bottom eval-content-list-left-right">
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>
     

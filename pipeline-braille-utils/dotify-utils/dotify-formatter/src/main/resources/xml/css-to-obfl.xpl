@@ -21,6 +21,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
+    <p:import href="shift-obfl-marker.xpl"/>
     
     <p:for-each>
         <p:add-xml-base/>
@@ -56,10 +57,10 @@
                 attributes.
             </p:documentation>
         </css:make-pseudo-elements>
-        <css:parse-properties properties="string-set counter-reset counter-set counter-increment">
+        <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
             <p:documentation>
-                Make css:string-set, css:counter-reset, css:counter-set and css:counter-increment
-                attributes.
+                Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
+                css:_obfl-marker attributes.
             </p:documentation>
         </css:parse-properties>
         <css:eval-string-set>
@@ -214,6 +215,11 @@
                 Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </css:shift-string-set>
+        <pxi:shift-obfl-marker>
+            <p:documentation>
+                Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
+            </p:documentation>
+        </pxi:shift-obfl-marker>
         <p:identity name="_2"/>
         <p:identity>
             <p:documentation>
@@ -245,7 +251,7 @@
         <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
             <p:documentation>
                 All css:_ elements except for root elements and empty elements with a css:string-set
-                or css:string-entry attribute within a css:box element should be gone now. <!--
+                or css:_obfl-marker attribute within a css:box element should be gone now. <!--
                 depends on shift-id and shift-string-set -->
             </p:documentation>
         </p:unwrap>
@@ -276,7 +282,7 @@
                         <xsl:variable name="new:properties" as="xs:string*"
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
-                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',
+                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-marker',
                                                'margin-bottom', 'orphans',                          'word-spacing',
                                                'border-left',   'widows',                           'letter-spacing',
                                                'border-right',
@@ -291,6 +297,8 @@
                                                     then $css:property/@value=('before','center','after')
                                                     else if ($css:property/@name='-obfl-vertical-position')
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
+                                                    else if ($css:property/@name='-obfl-marker')
+                                                    then matches($css:property/@value,'^(\p{L}|_)(\p{L}|_|-)*$')
                                                     else (
                                                       css:is-valid($css:property)
                                                       and not($css:property/@value=('inherit','initial'))
@@ -304,6 +312,8 @@
                                                   then 'after'
                                                   else if ($property='-obfl-vertical-position')
                                                   then 'auto'
+                                                  else if ($property='-obfl-marker')
+                                                  then 'none'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
@@ -384,7 +394,7 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <p:insert match="obfl:marker" position="before">
+    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
         </p:input>

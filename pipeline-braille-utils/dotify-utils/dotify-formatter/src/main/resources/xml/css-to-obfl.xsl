@@ -191,9 +191,8 @@
     
     <xsl:template match="css:box[@type='block']" name="block">
         <block>
-            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set)"/>
-            <xsl:apply-templates select="@css:string-entry"/>
-            <xsl:apply-templates select="@css:string-set"/>
+            <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:_obfl-marker)"/>
+            <xsl:apply-templates select="@css:string-entry|@css:string-set|@css:_obfl-marker"/>
             <xsl:apply-templates/>
             <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
         </block>
@@ -201,7 +200,7 @@
     
     <xsl:template match="css:box[@type='inline']">
         <xsl:variable name="attrs" as="attribute()*">
-            <xsl:apply-templates select="@* except @css:string-set"/>
+            <xsl:apply-templates select="@* except (@css:string-set|@css:_obfl-marker)"/>
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="exists($attrs)">
@@ -210,13 +209,13 @@
                 -->
                 <span>
                     <xsl:sequence select="$attrs"/>
-                    <xsl:apply-templates select="@css:string-set"/>
+                    <xsl:apply-templates select="@css:string-set|@css:_obfl-marker"/>
                     <xsl:apply-templates/>
                     <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates select="@css:string-set"/>
+                <xsl:apply-templates select="@css:string-set|@css:_obfl-marker"/>
                 <xsl:apply-templates/>
                 <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
             </xsl:otherwise>
@@ -285,10 +284,10 @@
     -->
     <xsl:template match="css:box[@type='block' and @css:line-height and (@css:margin-top or @css:margin-bottom or @css:border-top or @css:border-bottom)]">
       <block>
-          <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|
+          <xsl:apply-templates select="@* except (@css:string-entry|@css:string-set|@css:_obfl-marker|
                                                   @css:line-height|
                                                   @css:text-align|@css:text-indent|@page-break-inside)"/>
-          <xsl:apply-templates select="@css:string-entry|@css:string-set"/>
+          <xsl:apply-templates select="@css:string-entry|@css:string-set|@css:_obfl-marker"/>
           <block>
               <xsl:apply-templates select="@css:line-height|
                                            @css:text-align|@css:text-indent|@page-break-inside|@css:orphans|@css:widows"/>
@@ -401,7 +400,6 @@
                         <xsl:attribute name="{local-name()}-align"
                                        select="'center'"/>
                     </xsl:when>
-                    
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
@@ -505,6 +503,11 @@
     
     <xsl:template match="css:string[@value]" mode="eval-string-set" as="xs:string">
         <xsl:sequence select="string(@value)"/>
+    </xsl:template>
+    
+    <xsl:template match="css:box/@css:_obfl-marker|
+                         css:box/css:_/@css:_obfl-marker">
+        <marker class="indicator/{.}" value="x"/>
     </xsl:template>
     
     <xsl:template match="text()">
