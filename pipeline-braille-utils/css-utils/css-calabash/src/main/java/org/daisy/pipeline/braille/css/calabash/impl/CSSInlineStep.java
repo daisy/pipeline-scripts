@@ -46,6 +46,7 @@ import cz.vutbr.web.css.MediaSpec;
 import cz.vutbr.web.css.NetworkProcessor;
 import cz.vutbr.web.css.NodeData;
 import cz.vutbr.web.css.Rule;
+import cz.vutbr.web.css.RuleFactory;
 import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
@@ -79,6 +80,7 @@ import net.sf.saxon.tree.util.NamespaceIterator;
 import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
 import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSProperty;
+import org.daisy.braille.css.BrailleCSSRuleFactory;
 import org.daisy.braille.css.RuleVolume;
 import org.daisy.braille.css.RuleVolumeArea;
 import org.daisy.braille.css.SupportedBrailleCSS;
@@ -199,6 +201,7 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static final SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
 	private static final SupportedCSS printCSS = SupportedPrintCSS.getInstance();
+	private static final RuleFactory ruleFactory = new BrailleCSSRuleFactory();
 	private static DeclarationTransformer brailleDeclarationTransformer;
 	private static DeclarationTransformer printDeclarationTransformer;
 	
@@ -223,6 +226,7 @@ public class CSSInlineStep extends DefaultStep {
 		                       URL[] defaultSheets) throws Exception {
 			super(xproc);
 			
+			CSSFactory.registerRuleFactory(ruleFactory);
 			CSSFactory.registerCSSParserFactory(parserFactory);
 			
 			URI baseURI = new URI(document.getBaseURI());
@@ -231,7 +235,7 @@ public class CSSInlineStep extends DefaultStep {
 			
 			CSSFactory.registerSupportedCSS(brailleCSS);
 			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
-			StyleSheet brailleStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
+			StyleSheet brailleStyle = (StyleSheet)ruleFactory.createStyleSheet().unlock();
 			if (defaultSheets != null)
 				for (URL sheet : defaultSheets)
 					brailleStyle = parserFactory.append(sheet, network, null, SourceType.URL, brailleStyle, sheet);
@@ -241,7 +245,7 @@ public class CSSInlineStep extends DefaultStep {
 			// media print
 			CSSFactory.registerSupportedCSS(printCSS);
 			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
-			StyleSheet printStyle = (StyleSheet)CSSFactory.getRuleFactory().createStyleSheet().unlock();
+			StyleSheet printStyle = (StyleSheet)ruleFactory.createStyleSheet().unlock();
 			if (defaultSheets != null)
 				for (URL sheet : defaultSheets)
 					printStyle = parserFactory.append(sheet, network, null, SourceType.URL, printStyle, sheet);
@@ -418,7 +422,7 @@ public class CSSInlineStep extends DefaultStep {
 	}
 	
 	private static void insertMarginStyle(StringBuilder builder, RuleMargin ruleMargin) {
-		builder.append("@").append(ruleMargin.getMarginArea().value).append(" { ");
+		builder.append("@").append(ruleMargin.getMarginArea()).append(" { ");
 		for (Declaration decl : ruleMargin)
 			insertDeclaration(builder, decl);
 		builder.append("} ");
@@ -461,7 +465,7 @@ public class CSSInlineStep extends DefaultStep {
 	}
 	
 	private static RulePage makePageRule(String name, String pseudo, List<RulePage> from) {
-		RulePage pageRule = CSSFactory.getRuleFactory().createPage().setName(name).setPseudo(pseudo);
+		RulePage pageRule = ruleFactory.createPage().setName(name).setPseudo(pseudo);
 		Set<String> properties = new HashSet<String>();
 		for (RulePage f : from)
 			for (Rule<?> r : f)
@@ -472,10 +476,10 @@ public class CSSInlineStep extends DefaultStep {
 						pageRule.add(r); }
 				else if (r instanceof RuleMargin) {
 					RuleMargin m = (RuleMargin)r;
-					String marginArea = m.getMarginArea().value;
+					String marginArea = m.getMarginArea();
 					RuleMargin marginRule = getRuleMargin(pageRule, marginArea);
 					if (marginRule == null) {
-						marginRule = CSSFactory.getRuleFactory().createMargin(marginArea);
+						marginRule = ruleFactory.createMargin(marginArea);
 						pageRule.add(marginRule);
 						marginRule.replaceAll(m); }
 					else
@@ -494,7 +498,7 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static RuleMargin getRuleMargin(Collection<? extends Rule<?>> rule, String marginArea) {
 		for (RuleMargin m : filter(rule, RuleMargin.class))
-			if (m.getMarginArea().value.equals(marginArea))
+			if (m.getMarginArea().equals(marginArea))
 				return m;
 		return null;
 	}
