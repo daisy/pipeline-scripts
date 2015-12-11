@@ -148,7 +148,7 @@ public class LetterSpacingHandlerTest {
 			"f  o  o  b  a  r     q  u  u  x     #abcdef",
 			handler.translateWithSpacing("foobar quux 123456", 2, 5).nextLine(100));
 	}
-	
+
 	@Test
 	public void testTranslateWithWordSpacingAndLineBreaking() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
@@ -173,6 +173,17 @@ public class LetterSpacingHandlerTest {
 			"f o o b a r   f o o-\n" +
 			"b a r   f o o b a r",
 			fillLines(handler.translateWithSpacing("foo­bar foo­bar foo­bar", 1, 3), 20)); // words are split up using shy
+	}
+
+	@Test
+	public void testTranslateWithPreservedLineBreaks() {
+		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
+		assertEquals(
+			//                   |<- 20
+			"foobar\n" +
+			"foobar\n" +
+			"foobar",
+			fillLines(handler.translateWithSpacing("foobar foobar foobar", 0, 2), 20)); // words are split up using U+2028
 	}
 	
 	private static String fillLines(LineIterator lines, int width) {
