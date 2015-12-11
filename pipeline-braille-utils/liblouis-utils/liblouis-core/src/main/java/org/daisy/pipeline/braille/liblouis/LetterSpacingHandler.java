@@ -183,7 +183,7 @@ public class LetterSpacingHandler {
 			for (int i = 0; i < bufSize; i++) {
 				if (swoBuffer.get(i) == HARD_WRAP) {
 					String rv = charBuffer.substring(0, i + 1);
-					flushBuffer(bufSize - i - 1);
+					flushBuffer(i + 1);
 					return rv;
 				}
 			}
