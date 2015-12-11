@@ -200,8 +200,7 @@ public class LetterSpacingHandler {
 					
 				// break at SPACE, ZWSP or SHY
 				if (swoBuffer.get(i - 1) > 0) {
-					// strip leading and trailing whitespace
-					String rv = charBuffer.substring(0, i).trim();
+					String rv = charBuffer.substring(0, i);
 
 					// insert hyphen glyph at SHY
 					if (swoBuffer.get(i - 1) == 0x1)
