@@ -2438,6 +2438,7 @@
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
                 </page>
                 <page>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
@@ -2445,7 +2446,7 @@
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
-                  <row>⠀⠀⠀⠀⠀⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠿⠀⠀⠀⠀⠀</row>
                 </page>
                 <page>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
@@ -2453,7 +2454,7 @@
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠀⠤⠤⠤⠤</row>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠿</row>
+                  <row>⠀⠀⠀⠀⠀⠿⠀⠀⠀⠀⠀</row>
                 </page>
               </section>
             </volume>
@@ -2535,7 +2536,7 @@
   <!--
       marks in left margin
   -->
-  <x:scenario label="test_28" focus="true">
+  <x:scenario label="test_28">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
@@ -2602,6 +2603,84 @@
                   <row>⠿⠀⠤⠤⠤⠀⠤⠤⠤⠀⠤⠤⠤</row>
                   <row>⠀⠀⠤⠤⠤⠀⠤⠤⠤⠀⠤⠤⠤</row>
                   <row>⠿⠀⠤⠤⠤⠀⠤⠤⠤⠀⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_29" pending="regression in dotify 2.0.0-SNAPSHOT?">
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" page-width="10" page-height="6" duplex="true" page-number-variable="page">
+              <default-template>
+                <header/>
+                <footer>
+                  <field>
+                    <marker-reference marker="foo" direction="forward" scope="page-content"/>
+                  </field>
+                  <field>
+                    <string value=""/>
+                  </field>
+                  <field>
+                    <string value=""/>
+                  </field>
+                </footer>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <block>
+                <marker class="foo" value="1"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                <marker class="foo" value="2"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="10" rows="6" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <!-- 1 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 2 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2 -->
+                </page>
+                <page>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
                 </page>
               </section>
             </volume>

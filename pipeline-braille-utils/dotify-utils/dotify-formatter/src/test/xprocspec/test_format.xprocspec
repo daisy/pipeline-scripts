@@ -94,7 +94,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_02" pending="in liblouis implementation running headers/footers are better centered">
+  <x:scenario label="test_02">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -135,8 +135,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="5" duplex="true" page-number-variable="page">
@@ -146,9 +145,9 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-header" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="running-header" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="running-header/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="running-header" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="running-header" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-header/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -159,14 +158,14 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
@@ -189,16 +188,16 @@
             </block>
             <block break-before="page">
               <marker class="print-page/prev" value="⠤⠤"/>
-              <marker class="print-page" value=""/>
+              <marker class="print-page" value="​"/>
               <marker class="running-header/prev" value="​"/>
               <marker class="running-header" value="⠤⠤"/>
               ⠤⠤⠤
             </block>
             <block break-before="page">
-              <marker class="print-page/prev" value=""/>
+              <marker class="print-page/prev" value="​"/>
               <marker class="print-page" value="⠤⠤⠤"/>
               <marker class="running-footer/prev" value="⠤⠤"/>
-              <marker class="running-footer" value=""/>
+              <marker class="running-footer" value="​"/>
               ⠤⠤⠤
             </block>
           </sequence>
@@ -208,7 +207,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="in liblouis implementation running headers/footers are better centered">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -283,8 +283,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="5" duplex="true" page-number-variable="page">
@@ -301,14 +300,14 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
@@ -324,10 +323,10 @@
           </sequence>
           <sequence master="b">
             <block>
-              <marker class="print-page/entry/prev" value="​"/>
               <marker class="print-page/entry" value="⠤"/>
-              <marker class="running-footer/entry/prev" value="​"/>
               <marker class="running-footer/entry" value="⠤⠤"/>
+            </block>
+            <block>
               ⠤⠤⠤
             </block>
           </sequence>
@@ -368,7 +367,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_04" pending="dotify page numbering bug?">
+  <x:scenario label="test_04">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -460,12 +459,12 @@
             </block>
           </sequence>
           <sequence master="a">
-            <block break-before="page">
+            <block>
               ⠤⠤⠤
             </block>
           </sequence>
           <sequence master="a" initial-page-number="10">
-            <block break-before="page">
+            <block>
               ⠤⠤⠤
             </block>
             <block break-before="page">
@@ -483,7 +482,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="dotify page numbering bug?">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -545,7 +545,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_05" pending="roman numbers are not translated">
+  <x:scenario label="test_05" pending="Invalid input: 'i' (roman numbers are not translated)">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -711,8 +711,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="body" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -726,9 +725,9 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                   <string value=" "/>
                   <current-page number-format="default"/>
                 </field>
@@ -2109,7 +2108,7 @@
   <!--
       Cross-references: table of content
   -->
-  <x:scenario label="test_20" pending="leader issue">
+  <x:scenario label="test_20" pending="leader issue + java.lang.ArrayIndexOutOfBoundsException">
       <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2286,7 +2285,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_21" pending="leader issue">
+  <x:scenario label="test_21" pending="leader issue + java.lang.ArrayIndexOutOfBoundsException">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2466,7 +2465,7 @@
   <!--
       reference to inline element
   -->
-  <x:scenario label="test_22" pending="bug in dotify?">
+  <x:scenario label="test_22" pending="Failed to complete volume division (Dotify bug?)">
       <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4484,7 +4483,7 @@
       Left corner: range of print pages covered on current page
       Right corner of right page: range of print pages covered on current page spread
   -->
-  <x:scenario label="test_48" pending="using spread scope on first page leads to wrong results. fix with @page:first">
+  <x:scenario label="test_48">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4542,8 +4541,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="6" duplex="true" page-number-variable="page">
@@ -4551,18 +4549,18 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp" start-offset="-1"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp" start-offset="-1"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
                 </field>
               </footer>
@@ -4571,9 +4569,9 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>
@@ -4656,7 +4654,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="using spread scope on first page leads to wrong results. fix with @page:first">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -4675,7 +4674,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 1     ...     1 -->
+                  <row>⠼⠁⠒⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠒⠼⠁</row> <!-- 1-1   ...   1-1 -->
                 </page>
                 <!-- left -->
                 <page>
@@ -4685,7 +4684,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2  -->
+                  <row>⠼⠃⠒⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2-2 -->
                 </page>
                 <!-- right -->
                 <page>
@@ -4716,7 +4715,7 @@
                   <row>⠁⠁⠁</row>
                   <!-- print page 6 -->
                   <row/>
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5     ...   4-5 -->
+                  <row>⠼⠑⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5-5   ...   4-5 -->
                 </page>
               </section>
             </volume>
@@ -4757,8 +4756,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="20" page-height="6" duplex="true" page-number-variable="page">
@@ -4766,9 +4764,9 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -4857,7 +4855,7 @@
   <!--
       pagenums within paragraph
   -->
-  <x:scenario label="test_53" pending="broke in dotify 2.0.0-SNAPSHOT?">
+  <x:scenario label="test_53">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4904,8 +4902,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="10" page-height="6" duplex="true" page-number-variable="page">
@@ -4913,9 +4910,9 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="def:tmp"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -4969,7 +4966,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="regression in dotify 2.0.0-SNAPSHOT?">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5306,7 +5304,7 @@
   <!--
       Volume pseudo-classes
   -->
-  <x:scenario label="test_51" pending="implementation does not support different target volume size">
+  <x:scenario label="test_51">
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5357,7 +5355,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="implementation does not support different target volume size">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5530,8 +5529,7 @@
     <x:context label="obfl">
       <x:document type="port" port="obfl"/>
     </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="generated variable name in marker-references makes test very brittle">
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
           <layout-master name="a" page-width="10" page-height="5" duplex="true" page-number-variable="page">
@@ -5539,15 +5537,17 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="foo" direction="forward" scope="page" text-style="def:tmp"/>
-                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="defifndef:tmp"/>
-                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="ifndef:tmp"/>
+                  <marker-reference marker="foo" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
-                  <string value=""/>
+                  <marker-reference marker="foo/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
+                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
+                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
@@ -5561,7 +5561,6 @@
           </sequence>
           <sequence master="a">
             <block>
-              <marker class="foo/entry/prev" value="​"/>
               <marker class="foo/entry" value="⠿"/>
             </block>
             <block>
@@ -5573,7 +5572,6 @@
           </sequence>
           <sequence master="a">
             <block>
-              <marker class="foo/entry/prev" value="⠿"/>
               <marker class="foo/entry" value="⠿⠿"/>
             </block>
             <block>
@@ -5588,7 +5586,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              pending="regression in dotify 2.0.0-SNAPSHOT?">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
