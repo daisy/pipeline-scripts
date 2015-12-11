@@ -7,3 +7,5 @@ punctuation . 46
 numsign 3456
 
 sign \x200B 2b
+sign \x00AD 2c
+sign \x2028 2d

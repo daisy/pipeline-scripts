@@ -257,6 +257,8 @@ public class LetterSpacingHandler {
 				boundaries[i] |= 4;
 			if((text.charAt(i) == '-') || (text.charAt(i+1) == '-'))
 				boundaries[i] |= 4;
+			if((text.charAt(i) == '\u00ad')) // SHY is not actual character, so boundary only after SHY
+				boundaries[i] |= 4;
 		}
 
 		return boundaries;
