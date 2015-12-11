@@ -177,7 +177,17 @@ public class LetterSpacingHandlerTest {
 			fillLines(handler.translateWithSpacing("foo­bar foo­bar foo­bar", 1, 3), 20)); // words are split up using shy
 	}
 
-	@Ignore // pending
+	@Test
+	public void testSoftHyphensWithSpaces() {
+		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);
+		assertEquals(
+			//                   |<- 20
+			"f o o b a r   f o o-\n" +
+			" b a r   f o o-\n" +
+			" b a r",
+			fillLines(handler.translateWithSpacing("foo­ bar foo­ bar foo­ bar", 1, 3), 20)); // words are split up using shy
+	}
+
 	@Test
 	public void testTranslateWithPreservedLineBreaks() {
 		LetterSpacingHandler handler = new LetterSpacingHandler("(table:'foobar.cti')", context);

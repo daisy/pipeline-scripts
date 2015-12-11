@@ -114,6 +114,7 @@ public class LetterSpacingHandler {
 		private final static char TAB = '\t';
 		private final static char NBSP = '\u00a0';
 		private final static char BRAILLE_PATTERN_BLANK = '\u2800';
+		private final static char LS = '\u2028';
 		
 		private final int wordSpacing;
 
@@ -153,6 +154,9 @@ public class LetterSpacingHandler {
 					bufSize ++;
 					swoBuffer.add(NO_SOFT_WRAP);
 					lastCharIsSpace = false;
+					break;
+				case LS:
+					
 					break;
 				default:
 					if (bufSize >= size) break loop;
@@ -207,6 +211,7 @@ public class LetterSpacingHandler {
 						rv += hyphenChar;
 
 					// strip leading SPACE in remaining text
+					// NB: breaks cases where space after SHY is not from letter-spacing
 					while(i < bufSize && charBuffer.charAt(i) == blankChar) i++;
 					flushBuffer(i);
 					return rv; }}
