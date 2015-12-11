@@ -205,6 +205,9 @@ public class LetterSpacingHandler {
 					// insert hyphen glyph at SHY
 					if (swoBuffer.get(i - 1) == 0x1)
 						rv += hyphenChar;
+
+					// strip leading SPACE in remaining text
+					while(i < bufSize && charBuffer.charAt(i) == blankChar) i++;
 					flushBuffer(i);
 					return rv; }}
 				
