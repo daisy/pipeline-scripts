@@ -41,7 +41,7 @@
   <!--
       Custom values
   -->
-  <x:scenario label="test_02" pending="not implemented">
+  <x:scenario label="test_02">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
@@ -53,7 +53,8 @@
               </style>
             </head>
             <body>
-              <p/>
+              <p id="1"/>
+              <p id="2"/>
             </body>
           </document>
         </x:document>
@@ -75,7 +76,7 @@
   <!--
       Custom functions
   -->
-  <x:scenario label="test_03" pending="not implemented">
+  <x:scenario label="test_03">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
