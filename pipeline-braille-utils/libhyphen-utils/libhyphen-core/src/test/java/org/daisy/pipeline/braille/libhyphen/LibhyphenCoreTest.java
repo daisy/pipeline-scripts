@@ -2,6 +2,8 @@ package org.daisy.pipeline.braille.libhyphen;
 
 import javax.inject.Inject;
 
+import static org.daisy.pipeline.braille.common.Query.util.query;
+
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
@@ -42,8 +44,8 @@ public class LibhyphenCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", provider.withContext(messageBus).get("(table:'foobar.dic')").iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.withContext(messageBus).get("(table:'foobar.dic')").iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next().transform("foo-bar"));
 	}
 	
 	@Configuration

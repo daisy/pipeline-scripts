@@ -1,7 +1,6 @@
 package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.net.URI;
@@ -9,11 +8,8 @@ import javax.xml.namespace.QName;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.AbstractTransform;
@@ -25,6 +21,9 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.l
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
@@ -67,20 +66,18 @@ public interface DotifyCSSStyledDocumentTransform extends XProcTransform, CSSSty
 		 *
 		 * Other features are used for finding sub-transformers of type CSSBlockTransform.
 		 */
-		protected Iterable<DotifyCSSStyledDocumentTransform> _get(final String query) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("formatter")) != null)
-				if (!o.get().equals("dotify"))
+		protected Iterable<DotifyCSSStyledDocumentTransform> _get(Query query) {
+			final MutableQuery q = mutableQuery(query);
+			if (q.containsKey("formatter"))
+				if (!"dotify".equals(q.removeOnly("formatter").getValue().get()))
 					return empty;
-			final String cssBlockTransformQuery = serializeQuery(q);
-			Iterable<CSSBlockTransform> cssBlockTransforms = logSelect(cssBlockTransformQuery, cssBlockTransformProvider);
+			Iterable<CSSBlockTransform> cssBlockTransforms = logSelect(q, cssBlockTransformProvider);
 			return transform(
 				cssBlockTransforms,
 				new Function<CSSBlockTransform,DotifyCSSStyledDocumentTransform>() {
 					public DotifyCSSStyledDocumentTransform _apply(CSSBlockTransform cssBlockTransform) {
 						return __apply(
-							logCreate(new TransformImpl(cssBlockTransformQuery, cssBlockTransform))
+							logCreate(new TransformImpl(q.toString(), cssBlockTransform))
 						);
 					}
 				}

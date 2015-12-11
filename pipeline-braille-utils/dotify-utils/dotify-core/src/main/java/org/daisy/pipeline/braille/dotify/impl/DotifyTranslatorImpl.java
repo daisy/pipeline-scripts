@@ -6,12 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleFilterFactoryService;
@@ -29,6 +24,9 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.l
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
@@ -146,13 +144,12 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		 *
 		 * No other features are allowed.
 		 */
-		public Iterable<DotifyTranslator> _get(String query) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("translator")) != null)
-				if (!o.get().equals("dotify"))
+		public Iterable<DotifyTranslator> _get(Query query) {
+			MutableQuery q = mutableQuery(query);
+			if (q.containsKey("translator"))
+				if (!"dotify".equals(q.removeOnly("translator").getValue().get()))
 					return empty;
-			return logSelect(serializeQuery(q), _provider);
+			return logSelect(q, _provider);
 		}
 		
 		private final static Iterable<DotifyTranslator> empty = Iterables.<DotifyTranslator>empty();
@@ -160,15 +157,19 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		private TransformProvider<DotifyTranslator> _provider
 		= varyLocale(
 			new AbstractTransformProvider<DotifyTranslator>() {
-				public Iterable<DotifyTranslator> _get(String query) {
-					Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-					Optional<String> o;
-					if ((o = q.remove("locale")) != null) {
-						final String locale = Locales.toString(parseLocale(o.get()), '-');
+				public Iterable<DotifyTranslator> _get(Query query) {
+					MutableQuery q = mutableQuery(query);
+					if (q.containsKey("locale")) {
+						final String locale = Locales.toString(parseLocale(q.removeOnly("locale").getValue().get()), '-');
 						final String mode = BrailleTranslatorFactory.MODE_UNCONTRACTED;
-						final String hyphenator = ((o = q.remove("hyphenator")) != null) ? o.get() : "auto";
-						if (q.size() > 0) {
-							logger.warn("Unsupported feature '"+ q.keySet().iterator().next() + "'");
+						String v = null;
+						if (q.containsKey("hyphenator"))
+							v = q.removeOnly("hyphenator").getValue().get();
+						else
+							v = "auto";
+						final String hyphenator = v;
+						if (!q.isEmpty()) {
+							logger.warn("Unsupported feature '"+ q.iterator().next().getKey() + "'");
 							return empty; }
 						Iterable<BrailleFilter> filters = Iterables.transform(
 							factoryServices,
@@ -187,13 +188,11 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 									public Iterable<DotifyTranslator> _apply(final BrailleFilter filter) {
 										Iterable<DotifyTranslator> translators = empty;
 										if (!"none".equals(hyphenator)) {
-											ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-												= new ImmutableMap.Builder<String,Optional<String>>();
+											MutableQuery hyphenatorQuery = mutableQuery();
 											if (!"auto".equals(hyphenator))
-												hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
-											hyphenatorQuery.put("locale", Optional.of(locale));
-											Iterable<Hyphenator> hyphenators = logSelect(
-												serializeQuery(hyphenatorQuery.build()), hyphenatorProvider);
+												hyphenatorQuery.add("hyphenator", hyphenator);
+											hyphenatorQuery.add("locale", locale);
+											Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQuery, hyphenatorProvider);
 											translators = Iterables.transform(
 												hyphenators,
 												new Function<Hyphenator,DotifyTranslator>() {

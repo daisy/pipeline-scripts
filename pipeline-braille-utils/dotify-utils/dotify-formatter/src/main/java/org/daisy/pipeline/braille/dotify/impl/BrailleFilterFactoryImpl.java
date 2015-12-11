@@ -25,6 +25,8 @@ import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
@@ -61,7 +63,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 			query = "";
 		else if (query.trim().equals("auto"))
 			return defaultNumberTranslator;
-		return brailleTranslatorProvider.get(query).iterator().next();
+		return brailleTranslatorProvider.get(query(query)).iterator().next();
 	}
 	
 	@Reference(
@@ -88,7 +90,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	private final List<TransformProvider<BrailleTranslator>> brailleTranslatorProviders
 	= new ArrayList<TransformProvider<BrailleTranslator>>();
 	
-	private final Provider.util.MemoizingProvider<String,BrailleTranslator> brailleTranslatorProvider
+	private final Provider.util.MemoizingProvider<Query,BrailleTranslator> brailleTranslatorProvider
 	= memoize(dispatch(brailleTranslatorProviders));
 	
 	private final BrailleTranslator defaultNumberTranslator = new NumberBrailleTranslator();

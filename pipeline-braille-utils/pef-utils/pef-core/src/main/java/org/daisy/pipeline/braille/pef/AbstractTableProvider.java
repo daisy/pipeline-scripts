@@ -9,14 +9,15 @@ import java.util.NoSuchElementException;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.braille.api.factory.FactoryProperties;
 import org.daisy.braille.api.table.Table;
 
 public abstract class AbstractTableProvider implements TableProvider, org.daisy.braille.api.table.TableProvider {
 	
-	protected abstract Iterable<Table> get(Map<String,Optional<String>> query);
+	protected abstract Iterable<Table> _get(Query query);
 	
 	private final Map<String,Table> tablesFromId = new HashMap<String,Table>();
 	
@@ -25,22 +26,24 @@ public abstract class AbstractTableProvider implements TableProvider, org.daisy.
 	}
 	
 	public Table newFactory(String identifier) {
+		MutableQuery q = mutableQuery();
+		q.add("id", identifier);
 		try {
-			return get("(id:'" + identifier + "')").iterator().next(); }
+			return get(q).iterator().next(); }
 		catch (NoSuchElementException e) {
 			return null; }
 	}
 	
-	public Iterable<Table> get(String query) {
-		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("id")) != null) {
-			if (q.size() == 0)
-				return Optional.fromNullable(tablesFromId.get(o.get())).asSet();
+	public final Iterable<Table> get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("id")) {
+			String id = q.removeOnly("id").getValue().get();
+			if (q.isEmpty())
+				return Optional.fromNullable(tablesFromId.get(id)).asSet();
 			else
 				return empty; }
 		else
-			return cache(get(q));
+			return cache(_get(query));
 	}
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
@@ -47,10 +48,10 @@ public class TexHyphenatorCoreTest {
 	@Test
 	public void testHyphenate() {
 		TransformProvider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
-		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.tex')").iterator().next().transform("foo-bar"));
-		assertEquals("foo\u00ADbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get("(table:'foobar.properties')").iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get(query("(table:'foobar.tex')")).iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get(query("(table:'foobar.tex')")).iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar", provider.get(query("(table:'foobar.properties')")).iterator().next().transform("foobar"));
+		assertEquals("foo-\u200Bbar", provider.get(query("(table:'foobar.properties')")).iterator().next().transform("foo-bar"));
 	}
 	
 	@Configuration

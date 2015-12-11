@@ -1,6 +1,5 @@
 package org.daisy.pipeline.braille.liblouis.pef.impl;
 
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Function;
@@ -14,7 +13,10 @@ import org.daisy.braille.api.factory.AbstractFactory;
 import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider;
 import org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider.LiblouisTableJnaImpl;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
@@ -71,15 +73,16 @@ public class LiblouisDisplayTableProvider extends AbstractTableProvider {
 	 *
 	 * All matched tables must be of type "display table".
 	 */
-	protected Iterable<Table> get(Map<String,Optional<String>> query) {
-		for (String feature : query.keySet())
-			if (!supportedFeatures.contains(feature)) {
+	protected Iterable<Table> _get(Query query) {
+		for (Feature feature : query)
+			if (!supportedFeatures.contains(feature.getKey())) {
 				logger.debug("Unsupported feature: " + feature);
 				return empty; }
-		query.put("display", Optional.<String>absent());
+		MutableQuery q = mutableQuery(query);
+		q.add("display");
 		return filter(
 			transform(
-				tableProvider.get(serializeQuery(query)),
+				tableProvider.get(q),
 				new Function<LiblouisTableJnaImpl,Table>() {
 					public Table apply(LiblouisTableJnaImpl table) {
 						return new LiblouisDisplayTable(table.getTranslator()); }}),

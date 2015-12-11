@@ -5,40 +5,42 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+
 import org.slf4j.Logger;
 
 public abstract class AbstractTransformProvider<T extends Transform> implements TransformProvider<T> {
 	
-	private Map<String,Iterable<T>> transformCache = new HashMap<String,Iterable<T>>();
+	private Map<Query,Iterable<T>> transformCache = new HashMap<Query,Iterable<T>>();
 	
 	private Map<Logger,TransformProvider<T>> providerCache = new HashMap<Logger,TransformProvider<T>>();
 	
-	protected abstract Iterable<T> _get(String query);
+	protected abstract Iterable<T> _get(Query query);
 	
-	private final java.lang.Iterable<T> get(String query, Logger context) {
-		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("id")) != null && q.isEmpty())
-			return Optional.fromNullable(fromId(o.get())).asSet();
+	private final java.lang.Iterable<T> get(Query query, Logger context) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("id")) {
+			Feature f = q.removeOnly("id");
+			if (q.isEmpty())
+				return Optional.fromNullable(fromId(f.getValue().get())).asSet(); }
+		Iterable<T> i;
+		if (transformCache.containsKey(query))
+			i = transformCache.get(query);
 		else {
-			Iterable<T> i;
-			if (transformCache.containsKey(query))
-				i = transformCache.get(query);
-			else {
-				// memoize() doesn't make sense
-				i = util.Iterables.memoize(_get(query));
-				transformCache.put(query, i); }
-			return rememberId(i.apply(context)); }
+			// memoize() doesn't make sense
+			i = util.Iterables.memoize(_get(query));
+			transformCache.put(query, i); }
+		return rememberId(i.apply(context));
 	}
 	
-	public java.lang.Iterable<T> get(String query) {
+	public java.lang.Iterable<T> get(Query query) {
 		return get(query, null);
 	}
 	
@@ -68,7 +70,7 @@ public abstract class AbstractTransformProvider<T extends Transform> implements 
 		private DerivativeProvider(final Logger context) {
 			this.context = context;
 		}
-		public java.lang.Iterable<T> get(String query) {
+		public java.lang.Iterable<T> get(Query query) {
 			return AbstractTransformProvider.this.get(query, context);
 		}
 		public TransformProvider<T> withContext(Logger context) {
@@ -132,14 +134,14 @@ public abstract class AbstractTransformProvider<T extends Transform> implements 
 					return t; }};
 		}
 		
-		public static <T extends Transform> Iterable<T> logSelect(final String query,
+		public static <T extends Transform> Iterable<T> logSelect(final Query query,
 		                                                          final TransformProvider<T> provider) {
 			// not using provider.withContext() because memoizing only makes sense if sub-providers
 			// have no side-effects and provided transformers have no context
 			return logSelect(query, provider.withContext(null).get(query));
 		}
 		
-		public static <T extends Transform> Iterable<T> logSelect(final String query,
+		public static <T extends Transform> Iterable<T> logSelect(final Query query,
 		                                                          final java.lang.Iterable<T> iterable) {
 			return Iterables.of(
 				new java.lang.Iterable<WithSideEffect<T,Logger>>() {

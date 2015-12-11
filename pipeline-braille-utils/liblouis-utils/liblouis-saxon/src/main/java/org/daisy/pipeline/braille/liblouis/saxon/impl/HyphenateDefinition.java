@@ -17,7 +17,8 @@ import net.sf.saxon.value.StringValue;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
@@ -60,7 +61,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 	
 	private List<TransformProvider<LiblouisHyphenator>> providers
 	= new ArrayList<TransformProvider<LiblouisHyphenator>>();
-	private Provider.util.MemoizingProvider<String,LiblouisHyphenator> hyphenators
+	private Provider.util.MemoizingProvider<Query,LiblouisHyphenator> hyphenators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -91,7 +92,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = ((AtomicSequence)arguments[0]).getStringValue();
+					Query query = query(((AtomicSequence)arguments[0]).getStringValue());
 					Hyphenator hyphenator;
 					try {
 						hyphenator = hyphenators.get(query).iterator().next(); }

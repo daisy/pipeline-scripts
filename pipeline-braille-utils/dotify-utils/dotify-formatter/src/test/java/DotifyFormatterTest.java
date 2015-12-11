@@ -16,6 +16,7 @@ import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.TransformProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -239,9 +240,9 @@ public class DotifyFormatterTest {
 		public static class Provider implements BrailleTranslator.Provider<NumberBrailleTranslator>,
 		                                        CSSStyledTextTransform.Provider<NumberBrailleTranslator> {
 			final static NumberBrailleTranslator instance = new NumberBrailleTranslator();
-			public Iterable<NumberBrailleTranslator> get(String query) {
+			public Iterable<NumberBrailleTranslator> get(Query query) {
 				return Optional.<NumberBrailleTranslator>fromNullable(
-					query.equals("(number-translator)") ? instance : null).asSet();
+					query.toString().equals("(number-translator)") ? instance : null).asSet();
 			}
 			public TransformProvider<NumberBrailleTranslator> withContext(Logger context) {
 				return this;

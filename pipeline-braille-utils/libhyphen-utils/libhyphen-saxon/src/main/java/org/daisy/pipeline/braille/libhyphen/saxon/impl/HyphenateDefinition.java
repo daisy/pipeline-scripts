@@ -12,6 +12,8 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.libhyphen.LibhyphenHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -77,7 +79,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = ((AtomicSequence)arguments[0]).getStringValue();
+					Query query = query(((AtomicSequence)arguments[0]).getStringValue());
 					LibhyphenHyphenator hyphenator;
 					try { hyphenator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {

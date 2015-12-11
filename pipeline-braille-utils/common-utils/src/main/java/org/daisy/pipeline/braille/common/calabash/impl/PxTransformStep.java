@@ -32,6 +32,8 @@ import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.JobContext;
 import org.daisy.pipeline.braille.common.MathMLTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.util.Tuple3;
@@ -88,7 +90,7 @@ public class PxTransformStep extends Eval {
 	
 	private void setup() {
 		if (!setup) {
-			String query = getOption(_query).getString();
+			Query query = query(getOption(_query).getString());
 			final String type = getOption(_type, "#any");
 			Predicate<Object> filter;
 			if (type.equals("mathml") || type.equals("math"))

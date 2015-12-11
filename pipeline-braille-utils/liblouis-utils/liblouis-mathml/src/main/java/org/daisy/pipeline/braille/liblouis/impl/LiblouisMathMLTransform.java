@@ -1,6 +1,5 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.net.URI;
@@ -8,10 +7,9 @@ import javax.xml.namespace.QName;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
+import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
@@ -53,11 +51,9 @@ public interface LiblouisMathMLTransform extends MathMLTransform, XProcTransform
 		private final static Iterable<LiblouisMathMLTransform> empty
 		= Iterables.<LiblouisMathMLTransform>empty();
 		
-		protected Iterable<LiblouisMathMLTransform> _get(final String query) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.get("locale")) != null) {
-				MathCode code = mathCodeFromLocale(parseLocale(o.get()));
+		protected Iterable<LiblouisMathMLTransform> _get(final Query query) {
+			if (query.containsKey("locale")) {
+				MathCode code = mathCodeFromLocale(parseLocale(query.getOnly("locale").getValue().get()));
 				if (code != null)
 					return of(logCreate((LiblouisMathMLTransform)new TransformImpl(code))); }
 			return empty;

@@ -17,6 +17,8 @@ import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
@@ -59,7 +61,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private List<TransformProvider<LiblouisTranslator>> providers
 	= new ArrayList<TransformProvider<LiblouisTranslator>>();
-	private Provider.util.MemoizingProvider<String,LiblouisTranslator> translators
+	private Provider.util.MemoizingProvider<Query,LiblouisTranslator> translators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -91,7 +93,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = arguments[0].head().getStringValue();
+					Query query = query(arguments[0].head().getStringValue());
 					LiblouisTranslator translator;
 					try { translator = translators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {

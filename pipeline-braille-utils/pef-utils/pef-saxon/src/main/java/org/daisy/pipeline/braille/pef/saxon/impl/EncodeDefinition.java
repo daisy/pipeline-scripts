@@ -18,6 +18,9 @@ import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import org.osgi.service.component.annotations.Component;
@@ -54,9 +57,11 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 		this.tableProvider.invalidateCache();
 	}
 	
-	private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
-	private Provider.util.MemoizingProvider<String,Table> tableProvider
+	private final List<TableProvider> tableProviders = new ArrayList<TableProvider>();
+	private Provider.util.MemoizingProvider<Query,Table> tableProvider
 	= memoize(dispatch(tableProviders));
+	private final Query fallbackQuery = mutableQuery()
+		.add("id", "org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US");
 	
 	@Override
 	public StructuredQName getFunctionQName() {
@@ -90,13 +95,17 @@ public class EncodeDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String tableQuery = ((AtomicSequence)arguments[0]).getStringValue();
+					Query tableQuery = query(((AtomicSequence)arguments[0]).getStringValue());
 					String braille = ((AtomicSequence)arguments[1]).getStringValue();
+					Table table;
 					try {
-						Table table = tableProvider.get(tableQuery).iterator().next();
-						return new StringValue(table.newBrailleConverter().toText(braille)); }
+						table = tableProvider.get(tableQuery).iterator().next(); }
 					catch (NoSuchElementException e) {
-						throw new RuntimeException("Could not find a table for query: " + tableQuery); }}
+						try {
+							table = tableProvider.get(fallbackQuery).iterator().next(); }
+						catch (NoSuchElementException e2) {
+							throw new RuntimeException("Could not find a table for query: " + tableQuery); }}
+					return new StringValue(table.newBrailleConverter().toText(braille)); }
 				catch (Exception e) {
 					logger.error("pef:encode failed", e);
 					throw new XPathException("pef:encode failed"); }

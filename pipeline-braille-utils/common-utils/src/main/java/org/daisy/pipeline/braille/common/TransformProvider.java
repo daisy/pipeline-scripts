@@ -6,20 +6,19 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.util.Locales;
 import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.slf4j.Logger;
 
-public interface TransformProvider<T extends Transform> extends Provider<String,T>, Contextual<Logger,TransformProvider<T>> {
+public interface TransformProvider<T extends Transform> extends Provider<Query,T>, Contextual<Logger,TransformProvider<T>> {
 	
 	/* ================== */
 	/*       UTILS        */
@@ -32,14 +31,14 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 		/* --------- */
 		
 		public interface MemoizingProvider<T extends Transform>
-			extends Provider.util.MemoizingProvider<String,T>, TransformProvider<T> {}
+			extends Provider.util.MemoizingProvider<Query,T>, TransformProvider<T> {}
 		
 		public static <T extends Transform> MemoizingProvider<T> memoize(TransformProvider<T> provider) {
 			return new MemoizeFromProvider<T>(provider);
 		}
 		
 		private static abstract class Memoize<T extends Transform>
-				extends Provider.util.Memoize<String,T> implements MemoizingProvider<T> {
+				extends Provider.util.Memoize<Query,T> implements MemoizingProvider<T> {
 			
 			private Map<Logger,TransformProvider<T>> providerCache = new HashMap<Logger,TransformProvider<T>>();
 			
@@ -58,13 +57,13 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 			}
 			
 			private class DerivativeProvider
-					extends Provider.util.Memoize<String,T>
+					extends Provider.util.Memoize<Query,T>
 					implements TransformProvider<T> {
 				private final TransformProvider<T> provider;
 				private DerivativeProvider(TransformProvider<T> provider) {
 					this.provider = provider;
 				}
-				public Iterable<T> _get(String query) {
+				public Iterable<T> _get(Query query) {
 					return provider.get(query);
 				}
 				public TransformProvider<T> withContext(Logger context) {
@@ -78,7 +77,7 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 			private MemoizeFromProvider(TransformProvider<T> provider) {
 				this.provider = provider;
 			}
-			protected Iterable<T> _get(String query) {
+			protected Iterable<T> _get(Query query) {
 				return provider.get(query);
 			}
 			protected TransformProvider<T> _withContext(Logger context) {
@@ -95,7 +94,7 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 		/* ---------- */
 		
 		public static abstract class Dispatch<T extends Transform>
-				extends Provider.util.Dispatch<String,T> implements TransformProvider<T> {
+				extends Provider.util.Dispatch<Query,T> implements TransformProvider<T> {
 			
 			private final Logger context;
 			
@@ -105,11 +104,11 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 			
 			protected abstract Iterable<TransformProvider<T>> _dispatch();
 			
-			public final Iterable<Provider<String,T>> dispatch() {
+			public final Iterable<Provider<Query,T>> dispatch() {
 				return transform(
 					_dispatch(),
-					new Function<TransformProvider<T>,Provider<String,T>>() {
-						public Provider<String,T> apply(TransformProvider<T> provider) {
+					new Function<TransformProvider<T>,Provider<Query,T>>() {
+						public Provider<Query,T> apply(TransformProvider<T> provider) {
 							return provider.withContext(context); }});
 			}
 		}
@@ -148,7 +147,7 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 			return t;
 		}
 		
-		public static <T extends Transform> java.lang.Iterable<T> logSelect(final String query,
+		public static <T extends Transform> java.lang.Iterable<T> logSelect(final Query query,
                                                                             final TransformProvider<T> provider,
                                                                             final Logger context) {
 			return new Iterable<T>() {
@@ -180,7 +179,7 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 		}
 		
 		private static class VaryLocale<T extends Transform>
-				extends Provider.util.VaryLocale<String,T> implements TransformProvider<T> {
+				extends Provider.util.VaryLocale<Query,T> implements TransformProvider<T> {
 			
 			private final TransformProvider<T> delegate;
 			private final Logger context;
@@ -188,21 +187,20 @@ public interface TransformProvider<T extends Transform> extends Provider<String,
 				this.delegate = delegate;
 				this.context = context;
 			}
-			public Iterable<T> _get(String query) {
+			public Iterable<T> _get(Query query) {
 				return delegate.withContext(context).get(query);
 			}
-			public Locale getLocale(String query) {
-				Map<String,Optional<String>> q = parseQuery(query);
-				Optional<String> o;
-				if ((o = q.get("locale")) != null)
-					return parseLocale(o.get());
+			public Locale getLocale(Query query) {
+				if (query.containsKey("locale"))
+					return parseLocale(query.getOnly("locale").getValue().get());
 				else
 					return null;
 			}
-			public String assocLocale(String query, Locale locale) {
-				Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-				q.put("locale", Optional.of(Locales.toString(locale, '_')));
-				return serializeQuery(q);
+			public Query assocLocale(Query query, Locale locale) {
+				MutableQuery q = mutableQuery(query);
+				q.removeAll("locale");
+				q.add("locale", Locales.toString(locale, '_'));
+				return q.asImmutable();
 			}
 			public TransformProvider<T> withContext(Logger context) {
 				return new VaryLocale<T>(delegate, context);

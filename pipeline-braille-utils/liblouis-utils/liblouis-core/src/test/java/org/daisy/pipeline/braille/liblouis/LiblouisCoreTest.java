@@ -12,8 +12,11 @@ import org.daisy.braille.api.table.TableCatalogService;
 
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
+
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
@@ -47,7 +50,6 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,44 +109,48 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testGetTranslatorFromQuery1() {
-		provider.withContext(messageBus).get("(locale:foo)").iterator().next();
+		provider.withContext(messageBus).get(query("(locale:foo)")).iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery2() {
-		provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
+		provider.withContext(messageBus).get(query("(table:'foobar.cti')")).iterator().next();
 	}
 	
 	@Test
 	public void testGetTranslatorFromQuery3() {
-		provider.withContext(messageBus).get("(locale:foo_BAR)").iterator().next();
+		provider.withContext(messageBus).get(query("(locale:foo_BAR)")).iterator().next();
 	}
 	
 	@Test(expected=NoSuchElementException.class)
 	public void testGetTranslatorFromQuery4() {
-		provider.withContext(messageBus).get("(locale:bar)").iterator().next();
+		provider.withContext(messageBus).get(query("(locale:bar)")).iterator().next();
 	}
 	
 	@Test
 	public void testTranslate() {
-		assertEquals("⠋⠕⠕⠃⠁⠗", provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next().transform("foobar"));
+		assertEquals("⠋⠕⠕⠃⠁⠗",
+		             provider.withContext(messageBus).get(
+			             query("(table:'foobar.cti')")).iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testTranslateStyled() {
-		assertEquals("⠋⠕⠕⠃⠁⠗", provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next().transform("foobar", Typeform.ITALIC));
+		assertEquals("⠋⠕⠕⠃⠁⠗",
+		             provider.withContext(messageBus).get(
+			             query("(table:'foobar.cti')")).iterator().next().transform("foobar", Typeform.ITALIC));
 	}
 	
 	@Test
 	public void testTranslateSegments() {
-		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get(query("(table:'foobar.cti')")).iterator().next();
 		assertArrayEquals(new String[]{"⠋⠕⠕","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
 		assertArrayEquals(new String[]{"⠋⠕⠕","","⠃⠁⠗"}, translator.transform(new String[]{"foo","","bar"}));
 	}
 	
 	@Test
 	public void testTranslateSegmentsFuzzy() {
-		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.ctb')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get(query("(table:'foobar.ctb')")).iterator().next();
 		assertArrayEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"foo","bar"}));
 		assertArrayEquals(new String[]{"⠋⠥","⠃⠁⠗"}, translator.transform(new String[]{"fo","obar"}));
 		assertArrayEquals(new String[]{"⠋⠥\u00AD","⠃⠁⠗"}, translator.transform(new String[]{"fo","o\u00ADbar"}));
@@ -158,24 +164,28 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", (hyphenatorProvider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foobar"));
+		assertEquals("foo\u00ADbar",
+		             (hyphenatorProvider.withContext(messageBus).get(
+			             query("(table:'foobar.cti,foobar.dic')")).iterator().next()).transform("foobar"));
 	}
 	
 	@Test
 	public void testHyphenateCompoundWord() {
-		assertEquals("foo-\u200Bbar", (hyphenatorProvider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next()).transform("foo-bar"));
+		assertEquals("foo-\u200Bbar",
+		             (hyphenatorProvider.withContext(messageBus).get(
+			             query("(table:'foobar.cti,foobar.dic')")).iterator().next()).transform("foo-bar"));
 	}
 	
 	@Test
 	public void testTranslateAndHyphenateSomeSegments() {
-		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti,foobar.dic')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get(query("(table:'foobar.cti,foobar.dic')")).iterator().next();
 		assertArrayEquals(new String[]{"⠋⠕⠕\u00AD⠃⠁⠗ ","⠋⠕⠕⠃⠁⠗"},
 		             translator.transform(new String[]{"foobar ","foobar"}, new String[]{"hyphens:auto","hyphens:none"}));
 	}
 	
 	@Test
 	public void testWhiteSpaceProcessing() {
-		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'foobar.cti')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get(query("(table:'foobar.cti')")).iterator().next();
 		assertEquals("⠋⠕⠕    ⠃⠁⠗ ⠃⠁⠵",
 		             translator.transform("foo    bar\nbaz"));
 		assertEquals("⠋⠕⠕    ⠃⠁⠗\n⠃⠁⠵",
@@ -188,7 +198,7 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testWhiteSpaceLost() {
-		LiblouisTranslator translator = provider.withContext(messageBus).get("(table:'delete-ws.utb')").iterator().next();
+		LiblouisTranslator translator = provider.withContext(messageBus).get(query("(table:'delete-ws.utb')")).iterator().next();
 		assertArrayEquals(new String[]{"","⠋⠕⠕⠃⠁⠗\u00AD","","⠃⠁⠵"},
 		             translator.transform(new String[]{"","foo    bar\n","\u00AD","baz"}, new String[]{"","white-space:pre-wrap","",""}));
 	}
@@ -196,23 +206,23 @@ public class LiblouisCoreTest {
 	@Test
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
-		Provider<String,Table> tableProvider = dispatch(tableProviders);
+		Provider<Query,Table> tableProvider = dispatch(tableProviders);
 		
 		// (liblouis-table: ...)
-		Table table = tableProvider.get("(liblouis-table:'foobar.dis')").iterator().next();
+		Table table = tableProvider.get(query("(liblouis-table:'foobar.dis')")).iterator().next();
 		BrailleConverter converter = table.newBrailleConverter();
 		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
 		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
 		
 		//  (locale: ...)
-		table = tableProvider.get("(locale:foo)").iterator().next();
+		table = tableProvider.get(query("(locale:foo)")).iterator().next();
 		converter = table.newBrailleConverter();
 		assertEquals("⠋⠕⠕⠀⠃⠁⠗", converter.toBraille("foo bar"));
 		assertEquals("foo bar", converter.toText("⠋⠕⠕⠀⠃⠁⠗"));
 		
 		// (id: ...)
 		String id = table.getIdentifier();
-		assertEquals(table, tableProvider.get("(id:'" + id + "')").iterator().next());
+		assertEquals(table, tableProvider.get(query("(id:'" + id + "')")).iterator().next());
 		assertEquals(table, tableCatalog.newTable(id));
 	}
 	

@@ -15,6 +15,7 @@ import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.TransformProvider;
+import org.daisy.pipeline.braille.common.Query;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -109,8 +110,8 @@ public class CommonUtilsTest {
 			private Provider(Logger context) {
 				logger = context;
 			}
-			public Iterable<UppercaseTransform> get(String query) {
-				if (query.equals("(uppercase)")) {
+			public Iterable<UppercaseTransform> get(Query query) {
+				if (query.toString().equals("(uppercase)")) {
 					if (logger != null)
 						logger.info("Selecting " + instance);
 					return instance; }

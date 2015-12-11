@@ -1,17 +1,13 @@
 package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 import org.daisy.pipeline.braille.common.AbstractTransform;
@@ -22,6 +18,9 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.I
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.CSSBlockTransform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
@@ -66,20 +65,18 @@ public interface DotifyCSSBlockTransform extends XProcTransform, CSSBlockTransfo
 		 *
 		 * Other features are used for finding sub-transformers of type DotifyTranslator.
 		 */
-		protected Iterable<DotifyCSSBlockTransform> _get(final String query) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("translator")) != null)
-				if (!o.get().equals("dotify"))
+		protected Iterable<DotifyCSSBlockTransform> _get(Query query) {
+			final MutableQuery q = mutableQuery(query);
+			if (q.containsKey("translator"))
+				if (!"dotify".equals(q.removeOnly("translator").getValue().get()))
 					return empty;
-			final String translatorQuery = serializeQuery(q);
-			Iterable<DotifyTranslator> translators = logSelect(translatorQuery, dotifyTranslatorProvider);
+			Iterable<DotifyTranslator> translators = logSelect(q, dotifyTranslatorProvider);
 			return transform(
 				translators,
 				new Function<DotifyTranslator,DotifyCSSBlockTransform>() {
 					public DotifyCSSBlockTransform _apply(DotifyTranslator translator) {
 						return __apply(
-							logCreate(new TransformImpl(translatorQuery, translator))
+							logCreate(new TransformImpl(q.toString(), translator))
 						);
 					}
 				}

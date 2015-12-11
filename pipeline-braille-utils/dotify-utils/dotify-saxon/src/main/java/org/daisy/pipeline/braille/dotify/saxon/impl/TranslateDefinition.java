@@ -11,6 +11,8 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -82,7 +84,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			@Override
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = arguments[0].head().getStringValue();
+					Query query = query(arguments[0].head().getStringValue());
 					DotifyTranslator translator;
 					try { translator = provider.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {

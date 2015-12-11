@@ -11,13 +11,8 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
 import static com.google.common.collect.Iterables.toArray;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
@@ -29,6 +24,9 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.l
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
@@ -147,42 +145,41 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	 *
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
-	protected final Iterable<LiblouisTranslator> _get(String query) {
-		final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("translator")) != null)
-			if (!"liblouis".equals(o.get()))
+	protected final Iterable<LiblouisTranslator> _get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("translator"))
+			if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 				return empty;
 		String table = null;
-		if ((o = q.remove("liblouis-table")) != null)
-			table = o.get();
-		if ((o = q.remove("table")) != null)
+		if (q.containsKey("liblouis-table"))
+			table = q.removeOnly("liblouis-table").getValue().get();
+		if (q.containsKey("table"))
 			if (table != null) {
 				logger.warn("A query with both 'table' and 'liblouis-table' never matches anything");
 				return empty; }
 			else
-				table = o.get();
+				table = q.removeOnly("table").getValue().get();
 		String v = null;
-		if ((o = q.remove("hyphenator")) != null)
-			v = o.get();
+		if (q.containsKey("hyphenator"))
+			v = q.removeOnly("hyphenator").getValue().get();
 		else
 			v = "auto";
 		final String hyphenator = v;
 		v = null;
-		if ((o = q.remove("locale")) != null)
-			v = o.get();
+		if (q.containsKey("locale"))
+			v = q.removeAll("locale").iterator().next().getValue().get();
 		final String locale = v;
-		if (table != null && q.size() > 0) {
+		if (table != null && !q.isEmpty()) {
 			logger.warn("A query with both 'table' or 'liblouis-table' and '"
-			            + q.keySet().iterator().next() + "' never matches anything");
+			            + q.iterator().next().getKey() + "' never matches anything");
 			return empty; }
 		if (table != null)
-			q.put("table", Optional.of(table));
+			q.add("table", table);
 		if (locale != null)
-			q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-		q.put("unicode", Optional.<String>absent());
-		q.put("white-space", Optional.<String>absent());
-		Iterable<LiblouisTableJnaImpl> tables = logSelect(serializeQuery(q), tableProvider);
+			q.add("locale", Locales.toString(parseLocale(locale), '_'));
+		q.add("unicode");
+		q.add("white-space");
+		Iterable<LiblouisTableJnaImpl> tables = logSelect(q.asImmutable(), tableProvider);
 		return concat(
 			transform(
 				tables,
@@ -198,15 +195,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 										);
 										break; }
 							if (!"liblouis".equals("hyphenator")) {
-								ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-									= new ImmutableMap.Builder<String,Optional<String>>();
+								MutableQuery hyphenatorQuery = mutableQuery();
 								if (!"auto".equals(hyphenator))
-									hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+									hyphenatorQuery.add("hyphenator", hyphenator);
 								if (locale != null)
-									hyphenatorQuery.put("locale", Optional.of(locale));
-								String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
-								Iterable<Hyphenator> hyphenators
-									= logSelect(hyphenatorQueryString, hyphenatorProvider);
+									hyphenatorQuery.add("locale", locale);
+								Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQuery.asImmutable(), hyphenatorProvider);
 								translators = concat(
 									translators,
 									transform(

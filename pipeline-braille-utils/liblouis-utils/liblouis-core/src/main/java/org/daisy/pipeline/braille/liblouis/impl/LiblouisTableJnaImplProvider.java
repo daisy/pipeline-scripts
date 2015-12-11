@@ -2,25 +2,24 @@ package org.daisy.pipeline.braille.liblouis.impl;
 
 import java.io.File;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
 
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.warn;
 import org.daisy.pipeline.braille.common.NativePath;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.Transform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
@@ -195,7 +194,7 @@ public class LiblouisTableJnaImplProvider extends AbstractTransformProvider<Libl
 		logger.debug("Registering Liblouis table registry: " + registry);
 	}
 	
-	public Iterable<LiblouisTableJnaImpl> _get(final String query) {
+	public Iterable<LiblouisTableJnaImpl> _get(Query query) {
 		return logSelect(query, _provider);
 	}
 	
@@ -207,41 +206,45 @@ public class LiblouisTableJnaImplProvider extends AbstractTransformProvider<Libl
 	private TransformProvider<LiblouisTableJnaImpl> _provider
 	= varyLocale(
 		new AbstractTransformProvider<LiblouisTableJnaImpl>() {
-			public Iterable<LiblouisTableJnaImpl> _get(final String query) {
+			public Iterable<LiblouisTableJnaImpl> _get(final Query query) {
 				return Iterables.of(
 					new WithSideEffect<LiblouisTableJnaImpl,Logger>() {
 						public LiblouisTableJnaImpl _apply() {
-							final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
+							MutableQuery q = mutableQuery(query);
 							String table = null;
 							String type = "translation";
 							boolean unicode = false;
 							boolean whiteSpace = false;
-							Optional<String> o;
-							if ((o = q.remove("unicode")) != null)
-								unicode = true;
-							if ((o = q.remove("white-space")) != null)
-								whiteSpace = true;
-							if ((o = q.remove("display")) != null) {
+							if (q.containsKey("unicode")) {
+								q.removeOnly("unicode");
+								unicode = true; }
+							if (q.containsKey("white-space")) {
+								q.removeOnly("white-space");
+								whiteSpace = true; }
+							if (q.containsKey("display")) {
+								q.removeOnly("display");
 								if (unicode) {
 									logger.warn("A query with '(unicode)(display)' never matches anything");
 									throw new NoSuchElementException(); }
 								type = "display"; }
-							if ((o = q.get("table")) != null || (o = q.get("liblouis-table")) != null)
-								table = o.get();
-							else if (q.size() > 0) {
+							if (q.containsKey("table"))
+								table = q.removeOnly("table").getValue().get();
+							else if (q.containsKey("liblouis-table"))
+								table = q.removeOnly("liblouis-table").getValue().get();
+							else if (!q.isEmpty()) {
 								StringBuilder b = new StringBuilder();
 								b.append("type:");
 								b.append(type);
 								b.append(" ");
-								for (String k : q.keySet()) {
+								for (Feature f : q) {
+									String k = f.getKey();
 									if (!k.matches("[a-zA-Z0-9_-]+")) {
 										__apply(
 											warn("Invalid syntax for feature key: " + k));
 										throw new NoSuchElementException(); }
 									b.append(k);
-									o = q.get(k);
-									if (o.isPresent()) {
-										String v = o.get();
+									if (f.hasValue()) {
+										String v = f.getValue().get();
 										if (!v.matches("[a-zA-Z0-9_-]+")) {
 											__apply(
 												warn("Invalid syntax for feature value: " + v));

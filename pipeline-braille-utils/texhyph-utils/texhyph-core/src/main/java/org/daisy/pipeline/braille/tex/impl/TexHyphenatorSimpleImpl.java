@@ -4,13 +4,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
-import com.google.common.base.Optional;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
@@ -18,6 +13,9 @@ import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterable
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -90,24 +88,25 @@ public class TexHyphenatorSimpleImpl extends AbstractTransformProvider<TexHyphen
 	 *
 	 * No other features are allowed.
 	 */
-	public Iterable<TexHyphenator> _get(String query) {
-		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("hyphenator")) != null)
-			if (!"texhyph".equals(o.get()) && !"tex".equals(o.get()))
-				return fromNullable(fromId(o.get()));
-		if ((o = q.remove("table")) != null) {
-			if (q.size() > 0) {
-				logger.warn("A query with both 'table' and '" + q.keySet().iterator().next() + "' never matches anything");
+	public Iterable<TexHyphenator> _get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("hyphenator")) {
+			String v = q.removeOnly("hyphenator").getValue().get();
+			if (!"texhyph".equals(v) && !"tex".equals(v))
+				return fromNullable(fromId(v)); }
+		if (q.containsKey("table")) {
+			String v = q.removeOnly("table").getValue().get();
+			if (!q.isEmpty()) {
+				logger.warn("A query with both 'table' and '" + q.iterator().next().getKey() + "' never matches anything");
 				return empty; }
-			return fromNullable(get(asURI(o.get()))); }
+			return fromNullable(get(asURI(v))); }
 		Locale locale;
-		if ((o = q.remove("locale")) != null)
-			locale = parseLocale(o.get());
+		if (q.containsKey("locale"))
+			locale = parseLocale(q.removeOnly("locale").getValue().get());
 		else
 			locale = parseLocale("und");
 		if (!q.isEmpty()) {
-			logger.warn("A query with '" + q.keySet().iterator().next() + "' never matches anything");
+			logger.warn("A query with '" + q.iterator().next().getKey() + "' never matches anything");
 			return empty; }
 		if (tableRegistry != null) {
 			return transform(

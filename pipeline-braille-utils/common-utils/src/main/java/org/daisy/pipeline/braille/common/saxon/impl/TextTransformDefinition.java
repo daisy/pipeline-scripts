@@ -22,6 +22,8 @@ import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.TransformProvider;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 
 import org.osgi.service.component.annotations.Component;
@@ -65,7 +67,7 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	private List<TransformProvider<BrailleTranslator>> providers = new ArrayList<TransformProvider<BrailleTranslator>>();
 	
-	private Provider.util.MemoizingProvider<String,BrailleTranslator> translators
+	private Provider.util.MemoizingProvider<Query,BrailleTranslator> translators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -98,7 +100,7 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = arguments[0].head().getStringValue();
+					Query query = query(arguments[0].head().getStringValue());
 					String[] text = sequenceToArray(arguments[1]);
 					try {
 						if (arguments.length > 2) {

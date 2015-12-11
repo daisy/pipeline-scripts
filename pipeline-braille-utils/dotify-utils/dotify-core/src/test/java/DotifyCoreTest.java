@@ -1,5 +1,6 @@
 import javax.inject.Inject;
 
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.dotify.DotifyHyphenator;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
@@ -63,31 +64,31 @@ public class DotifyCoreTest {
 	
 	@Test
 	public void testSelect() {
-		provider.get("(locale:sv-SE)").iterator().next();
+		provider.get(query("(locale:sv-SE)")).iterator().next();
 	}
 	
 	@Test
 	public void testFuzzySelect() {
-		provider.get("(locale:sv_SE_blah)").iterator().next();
+		provider.get(query("(locale:sv_SE_blah)")).iterator().next();
 	}
 	
 	@Test
 	public void testTranslate() {
-		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get("(locale:sv-SE)").iterator().next().transform("foobar"));
+		assertEquals("⠋⠕⠕⠃⠁⠗", provider.get(query("(locale:sv-SE)")).iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", hyphenatorProvider.get("(locale:sv-SE)").iterator().next().transform("foobar"));
+		assertEquals("foo\u00ADbar", hyphenatorProvider.get(query("(locale:sv-SE)")).iterator().next().transform("foobar"));
 	}
 	
 	@Test
 	public void testTranslateAndHyphenate() {
-		assertEquals("⠋⠕⠕\u00AD⠃⠁⠗", provider.get("(locale:sv-SE)").iterator().next().transform("foobar", "hyphens:auto"));
+		assertEquals("⠋⠕⠕\u00AD⠃⠁⠗", provider.get(query("(locale:sv-SE)")).iterator().next().transform("foobar", "hyphens:auto"));
 	}
 	
 	@Test(expected=RuntimeException.class)
 	public void testTranslateAndNotHyphenate() {
-		assertEquals("⠋⠕⠕\u00AD⠃⠁⠗", provider.get("(locale:sv-SE)(hyphenator:none)").iterator().next().transform("foobar", "hyphens:auto"));
+		assertEquals("⠋⠕⠕\u00AD⠃⠁⠗", provider.get(query("(locale:sv-SE)(hyphenator:none)")).iterator().next().transform("foobar", "hyphens:auto"));
 	}
 }
