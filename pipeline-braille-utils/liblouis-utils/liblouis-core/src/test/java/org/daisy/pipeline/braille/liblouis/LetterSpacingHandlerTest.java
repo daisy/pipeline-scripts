@@ -183,9 +183,14 @@ public class LetterSpacingHandlerTest {
 		assertEquals(
 			//                   |<- 20
 			"foobar\n" +
-			"foobar\n" +
 			"foobar",
-			fillLines(handler.translateWithSpacing("foobar foobar foobar", 0, 2), 20)); // words are split up using U+2028
+			fillLines(handler.translateWithSpacing("foobar foobar", 0, 2), 20)); // words are split up using U+2028
+		assertEquals(
+			//                   |<- 20
+			"foobar\n" +
+			"quux\n" +
+			"foobar",
+			fillLines(handler.translateWithSpacing("foobar quux foobar", 0, 2), 20)); // words are split up using U+2028
 	}
 	
 	private static String fillLines(LineIterator lines, int width) {

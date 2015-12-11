@@ -105,6 +105,7 @@ public class LetterSpacingHandler {
 		private final static byte SOFT_WRAP_WITH_HYPHEN = (byte)0x1;
 		private final static byte SOFT_WRAP_WITHOUT_HYPHEN = (byte)0x3;
 		private final static byte SOFT_WRAP_AFTER_SPACE = (byte)0x7;
+		private final static byte HARD_WRAP = (byte)0x15;
 		
 		private final static char SHY = '\u00ad';
 		private final static char ZWSP = '\u200b';
@@ -156,9 +157,8 @@ public class LetterSpacingHandler {
 					lastCharIsSpace = false;
 					break;
 				case LS:
-					charBuffer.append('\n');
-					bufSize ++;
-					swoBuffer.add(NO_SOFT_WRAP);
+					if (bufSize > 0)
+						swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | HARD_WRAP));
 					lastCharIsSpace = true;
 					break;
 				default:
@@ -178,6 +178,15 @@ public class LetterSpacingHandler {
 		private String nextTranslatedRow(int limit, boolean force) {
 			fillBuffer(limit + 1);
 			int bufSize = charBuffer.length();
+
+			// always break at preserved line breaks
+			for (int i = 0; i < bufSize; i++) {
+				if (swoBuffer.get(i) == HARD_WRAP) {
+					String rv = charBuffer.substring(0, i + 1);
+					flushBuffer(bufSize - i - 1);
+					return rv;
+				}
+			}
 				
 			// no need to break if remaining text is shorter than line
 			if (bufSize <= limit) {
