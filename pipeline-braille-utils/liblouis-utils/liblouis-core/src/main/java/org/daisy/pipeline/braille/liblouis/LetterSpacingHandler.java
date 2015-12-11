@@ -156,7 +156,10 @@ public class LetterSpacingHandler {
 					lastCharIsSpace = false;
 					break;
 				case LS:
-					
+					charBuffer.append('\n');
+					bufSize ++;
+					swoBuffer.add(NO_SOFT_WRAP);
+					lastCharIsSpace = true;
 					break;
 				default:
 					if (bufSize >= size) break loop;
