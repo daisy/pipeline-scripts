@@ -1602,7 +1602,7 @@
   <!--
       No page breaking between border and content
   -->
-  <x:scenario label="test_23" pending="bugs">
+  <x:scenario label="test_23">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
@@ -2021,7 +2021,7 @@
   <!--
       Block with bottom border followed by block with keep="all", orphans or widows
   -->
-  <x:scenario label="test_25" pending="bugs">
+  <x:scenario label="test_25">
     <x:call step="pxi:test">
       <x:input port="source">
         <x:document type="inline">
