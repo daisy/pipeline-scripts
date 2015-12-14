@@ -18,7 +18,6 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
 import org.daisy.pipeline.braille.common.util.Locales;
@@ -45,19 +44,17 @@ public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyp
 		return hyphenator;
 	}
 	
-	public String transform(String text) {
-		return hyphenator.hyphenate(text);
-	}
-	
 	public String[] transform(String[] text) {
-		throw new UnsupportedOperationException();
+		String[] hyphenated = new String[text.length];
+		for (int i = 0; i < text.length; i++)
+			hyphenated[i] = hyphenator.hyphenate(text[i]);
+		return hyphenated;
 	}
 	
 	@Component(
 		name = "org.daisy.pipeline.braille.dotify.DotifyHyphenatorImpl.Provider",
 		service = {
 			DotifyHyphenator.Provider.class,
-			TextTransform.Provider.class,
 			Hyphenator.Provider.class
 		}
 	)

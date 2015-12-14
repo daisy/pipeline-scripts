@@ -1,10 +1,10 @@
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Map;
+import java.util.List;
 import javax.inject.Inject;
-import javax.xml.namespace.QName;
 
 import com.google.common.base.Optional;
 
@@ -12,14 +12,13 @@ import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.TransformProvider;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
-import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
-import org.daisy.pipeline.braille.common.XProcTransform;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
@@ -69,6 +68,7 @@ public class CommonUtilsTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			brailleModule("css-core"),
 			thisBundle(),
 			xspecBundles(),
@@ -84,27 +84,37 @@ public class CommonUtilsTest {
 	public void registerUppercaseTransformProvider() {
 		UppercaseTransform.Provider provider = new UppercaseTransform.Provider();
 		Hashtable<String,Object> properties = new Hashtable<String,Object>();
-		context.registerService(BrailleTranslator.Provider.class.getName(), provider, properties);
-		context.registerService(XProcTransform.Provider.class.getName(), provider, properties);
+		context.registerService(BrailleTranslatorProvider.class.getName(), provider, properties);
+		context.registerService(TransformProvider.class.getName(), provider, properties);
 	}
 	
-	private static class UppercaseTransform extends AbstractTransform implements BrailleTranslator, XProcTransform {
-		public String transform(String text) {
-			return text.toUpperCase();
+	private static class UppercaseTransform extends AbstractBrailleTranslator implements BrailleTranslator {
+		
+		public FromStyledTextToBraille fromStyledTextToBraille() {
+			return fromStyledTextToBraille;
 		}
-		public String[] transform(String[] text) {
-			String[] ret = new String[text.length];
-			for (int i = 0; i < text.length; i++)
-				ret[i] = transform(text[i]);
-			return ret;
-		}
+		
+		private FromStyledTextToBraille fromStyledTextToBraille = new FromStyledTextToBraille() {
+			public Iterable<String> transform(Iterable<CSSStyledText> styledText) {
+				List<String> ret = new ArrayList<String>();
+				for (CSSStyledText t : styledText)
+					ret.add(t.getText().toUpperCase());
+				return ret;
+			}
+		};
+		
 		private final URI href = asURI(new File(new File(PathUtils.getBaseDir()), "target/test-classes/uppercase.xpl"));
-		public Tuple3<URI,QName,Map<String,String>> asXProc() {
-			return new Tuple3<URI,QName,Map<String,String>>(href, null, null);
+		
+		@Override
+		public XProc asXProc() {
+			return new XProc(href, null, null);
 		}
+		
 		private static final Iterable<UppercaseTransform> instance = Optional.of(new UppercaseTransform()).asSet();
+		
 		private static final Iterable<UppercaseTransform> empty = Optional.<UppercaseTransform>absent().asSet();
-		public static class Provider implements BrailleTranslator.Provider<UppercaseTransform>, XProcTransform.Provider<UppercaseTransform> {
+		
+		public static class Provider implements BrailleTranslatorProvider<UppercaseTransform> {
 			private Logger logger;
 			public Provider() {}
 			private Provider(Logger context) {

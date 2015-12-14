@@ -1,6 +1,7 @@
 package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 
+import com.google.common.base.Optional;
+import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.singletonIterator;
 
@@ -19,15 +22,15 @@ import org.daisy.dotify.api.translator.Translatable;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.dotify.api.translator.TranslationException;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Query;
 import static org.daisy.pipeline.braille.common.Query.util.query;
-import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,15 +49,13 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	
 	public BrailleFilter newFilter(String locale, String mode) throws TranslatorConfigurationException {
 		try {
-			BrailleTranslator translator = getBrailleTranslator(mode);
+			BrailleTranslator.FromStyledTextToBraille translator = getBrailleTranslator(mode);
 			return new BrailleFilterImpl(translator); }
 		catch (NoSuchElementException e) {
 			throw new TranslatorConfigurationException("Factory does not support " + locale + "/" + mode); }
 	}
 	
-	private final static Pattern MODE = Pattern.compile("dotify:format(?: +(.*))?");
-	
-	private BrailleTranslator getBrailleTranslator(String mode) throws NoSuchElementException {
+	private BrailleTranslator.FromStyledTextToBraille getBrailleTranslator(String mode) throws NoSuchElementException {
 		Matcher m = MODE.matcher(mode);
 		if (!m.matches())
 			throw new NoSuchElementException();
@@ -62,46 +63,41 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		if (query == null)
 			query = "";
 		else if (query.trim().equals("auto"))
-			return defaultNumberTranslator;
-		return brailleTranslatorProvider.get(query(query)).iterator().next();
+			return defaultNumberTranslator.fromStyledTextToBraille();
+		for (BrailleTranslator t : brailleTranslatorProvider.get(query(query)))
+			try { return t.fromStyledTextToBraille(); }
+			catch (UnsupportedOperationException e) {}
+		throw new NoSuchElementException();
 	}
 	
 	@Reference(
 		name = "BrailleTranslatorProvider",
 		unbind = "unbindBrailleTranslatorProvider",
-		service = BrailleTranslator.Provider.class,
+		service = BrailleTranslatorProvider.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to TransformProvider<BrailleTranslator>
+		"unchecked" // safe cast to BrailleTranslatorProvider<BrailleTranslator>
 	)
-	protected void bindBrailleTranslatorProvider(BrailleTranslator.Provider<?> provider) {
-		brailleTranslatorProviders.add((TransformProvider<BrailleTranslator>)provider);
+	protected void bindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
+		brailleTranslatorProviders.add((BrailleTranslatorProvider<BrailleTranslator>)provider);
 		logger.debug("Adding BrailleTranslator provider: {}", provider);
 	}
 	
-	protected void unbindBrailleTranslatorProvider(BrailleTranslator.Provider<?> provider) {
+	protected void unbindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
 		brailleTranslatorProviders.remove(provider);
 		brailleTranslatorProvider.invalidateCache();
 		logger.debug("Removing BrailleTranslator provider: {}", provider);
 	}
 	
-	private final List<TransformProvider<BrailleTranslator>> brailleTranslatorProviders
-	= new ArrayList<TransformProvider<BrailleTranslator>>();
+	private final List<BrailleTranslatorProvider<BrailleTranslator>> brailleTranslatorProviders
+	= new ArrayList<BrailleTranslatorProvider<BrailleTranslator>>();
 	
 	private final Provider.util.MemoizingProvider<Query,BrailleTranslator> brailleTranslatorProvider
 	= memoize(dispatch(brailleTranslatorProviders));
 	
 	private final BrailleTranslator defaultNumberTranslator = new NumberBrailleTranslator();
-	
-	private final static char SHY = '\u00ad';
-	private final static char ZWSP = '\u200b';
-	private final static char SPACE = ' ';
-	private final static char CR = '\r';
-	private final static char LF = '\n';
-	private final static char TAB = '\t';
-	private final static char NBSP = '\u00a0';
 	
 	/**
 	 * BrailleTranslator that can translate numbers.
@@ -111,7 +107,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	 * space characters (SPACE, NBSP, BRAILLE PATTERN BLANK) and
 	 * pre-hyphenation characters (SHY and ZWSP).
 	 */
-	private static class NumberBrailleTranslator extends AbstractTransform implements BrailleTranslator {
+	private static class NumberBrailleTranslator extends AbstractBrailleTranslator implements BrailleTranslator {
 		
 		private final static Pattern VALID_INPUT = Pattern.compile("[0-9\u2800-\u28ff" + SHY + ZWSP + SPACE + LF + CR + TAB + NBSP + "]*");
 		private final static Pattern NUMBER = Pattern.compile("[0-9]+");
@@ -119,20 +115,32 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		private final static String[] DIGIT_TABLE = new String[]{
 			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
 		
-		public String transform(String text) {
+		@Override
+		public FromStyledTextToBraille fromStyledTextToBraille() {
+			return fromStyledTextToBraille;
+		}
+		
+		private final FromStyledTextToBraille fromStyledTextToBraille = new FromStyledTextToBraille() {
+			public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
+				int size = size(styledText);
+				String[] braille = new String[size];
+				int i = 0;
+				for (CSSStyledText t : styledText) {
+					String style = t.getStyle();
+					if (style != null && !style.isEmpty())
+						throw new RuntimeException("Translator does not support style '" + style + "'");
+					braille[i++] = NumberBrailleTranslator.this.transform(t.getText()); }
+				return Arrays.asList(braille);
+			}
+		};
+		
+		private String transform(String text) {
 			
 			// The input text must consist of only digits, braille pattern characters and
 			// pre-hyphenation characters.
 			if (!VALID_INPUT.matcher(text).matches())
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			return translateNumbers(text);
-		}
-		
-		public String[] transform(String[] text) {
-			String[] result = new String[text.length];
-			for (int i = 0; i < text.length; i++)
-				result[i] = transform(text[i]);
-			return result;
 		}
 		
 		private static String translateNumbers(String text) {
@@ -161,7 +169,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	}
 	
 	/**
-	 * BrailleFilter wrapper for a org.daisy.pipeline.braille.common.BrailleTranslator.
+	 * BrailleFilter wrapper for a org.daisy.pipeline.braille.common.BrailleTranslator.FromStyledTextToBraille
 	 *
 	 * Supports special variable assignments (in the form of "def:foo") and tests (in the form of
 	 * "ifdef:foo" or "ifndef:foo") in text attributes in order to support special ad hoc handling
@@ -169,43 +177,30 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	 */
 	private static class BrailleFilterImpl implements BrailleFilter {
 		
-		private final CSSStyledTextTransform translator;
+		private final BrailleTranslator.FromStyledTextToBraille translator;
 		
-		private BrailleFilterImpl(BrailleTranslator translator) {
-			if (translator instanceof CSSStyledTextTransform)
-				this.translator = (CSSStyledTextTransform)translator;
-			else
-				this.translator = new FakeCSSStyledTextTransform(translator);
+		private BrailleFilterImpl(BrailleTranslator.FromStyledTextToBraille translator) {
+			this.translator = translator;
 		}
-		
-		private final static Pattern BRAILLE = Pattern.compile("[\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
-		private final static Pattern TEXTATTR = Pattern.compile(
-			"\\s*(?<special>(?<key>(?:ifn?)?def)\\s*:\\s*(?<var>[^\\s]+)(?:\\s+|$))?(?<css>.*)"
-		);
 		
 		public String filter(Translatable specification) throws TranslationException {
 			
-			String text = specification.getText();
-			
-			// If input text is a space, it will be user for calculating the
-			// margin character (see org.daisy.dotify.formatter.impl.FormatterContext)
-			if (" ".equals(text))
-				return "\u2800";
-			
-			// If input text is "??", it will be used for creating a placeholder for content that
-			// can not be computed yet (forward references, see org.daisy.dotify.formatter.impl.BlockContentManager).
-			// Because normally this will never end up in the resulting PEF, it is okay to return it
-			// untranslated.
-			if ("??".equals(text))
-				return "??";
-			
-			// Convert specification to text + CSS style and translate. Text attributes are assumed
-			// to contain only CSS or special variable assignments/tests. CSS inheritance is assumed
-			// to have been performed already.
-			boolean hyphenating = specification.isHyphenating();
-			TextAttribute attributes = specification.getAttributes();
-			if (attributes == null) {
+			if (specification.getAttributes() == null && specification.isHyphenating() == false) {
 				
+				String text = specification.getText();
+				
+				// If input text is a space, it will be user for calculating the
+				// margin character (see org.daisy.dotify.formatter.impl.FormatterContext)
+				if (" ".equals(text))
+					return "\u2800";
+			
+				// If input text is "??", it will be used for creating a placeholder for content that
+				// can not be computed yet (forward references, see org.daisy.dotify.formatter.impl.BlockContentManager).
+				// Because normally this will never end up in the resulting PEF, it is okay to return it
+				// untranslated.
+				if ("??".equals(text))
+					return "??";
+			
 				// Because (1) there is not yet a way to enable translation while formatting only for
 				// certain document fragments and at the same time handle pre-translated text correctly
 				// with respect to white space processing and line breaking, and (2) because this
@@ -218,114 +213,109 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				// even if that was intended to happen.
 				if (BRAILLE.matcher(text).matches())
 					return text;
-				else if (hyphenating)
-					return translator.transform(text, "hyphens:auto");
-				else
-					return translator.transform(text); }
-			else {
-				List<String> segments = new ArrayList<String>();
-				List<String> styles = new ArrayList<String>();
-				Set<String> env = null;
-				int i = 0;
-				Iterator<TextAttribute> attrs = flattenAttributes(attributes);
-				String segment = "";
-				String style = "";
-				while (attrs.hasNext()) {
-					TextAttribute attr = attrs.next();
-					String s = text.substring(i, i + attr.getWidth());
-					String id = attr.getDictionaryIdentifier();
-					if (id == null)
-						id = "";
-					Matcher m = TEXTATTR.matcher(id);
-					m.matches();
-					id = m.group("css");
-					if (m.group("special") != null) {
-						String key = m.group("key");
-						String var = m.group("var");
-						if (env == null)
-							env = new HashSet<String>();
-						if (key.equals("def"))
-							env.add(var);
-						else if (key.equals("ifdef") && !env.contains(var) || key.equals("ifndef") && env.contains(var))
-							s = ""; }
-					if (hyphenating)
-						id = "hyphens:auto; " + id;
-					if (id.equals(style))
-						segment += s;
-					else {
-						if (!segment.isEmpty()) {
-							segments.add(segment);
-							styles.add(style); }
-						segment = s;
-						style = id; }
-					i += attr.getWidth(); }
-				if (i != text.length())
-					throw new RuntimeException("Coding error");
-				if (!segment.isEmpty()) {
-					segments.add(segment);
-					styles.add(style); }
-				return join(translator.transform(segments.toArray(new String[segments.size()]),
-				                                 styles.toArray(new String[styles.size()]))); }
-		}
-		
-		private static Iterator<TextAttribute> flattenAttributes(TextAttribute attributes) {
-			if (attributes.hasChildren())
-				return flattenAttributes(attributes.iterator());
-			else
-				return singletonIterator(attributes);
-		}
-		
-		private static Iterator<TextAttribute> flattenAttributes(Iterator<TextAttribute> attributes) {
-			if (attributes.hasNext())
-				return concat(flattenAttributes(attributes.next()), flattenAttributes(attributes));
-			else
-				return attributes;
-		}
-	}
-	
-	/**
-	 * CSSStyledTextTransform that wraps a BrailleTranslator and throws Exceptions when non-empty
-	 * styles are encountered.
-	 */
-	private static class FakeCSSStyledTextTransform implements CSSStyledTextTransform {
-		
-		private final BrailleTranslator translator;
-		
-		public String getIdentifier() {
-			return translator.getIdentifier();
-		}
-		
-		private FakeCSSStyledTextTransform(BrailleTranslator translator) {
-			this.translator = translator;
-		}
-		
-		public String transform(String text) {
-			return translator.transform(text);
-		}
-	
-		public String[] transform(String[] text) {
-			return translator.transform(text);
-		}
-		
-		public String transform(String text, String style) {
-			if (style != null && !style.isEmpty())
-				throw new RuntimeException("Translator does not support style '" + style + "'");
-			return translator.transform(text);
-		}
-	
-		public String[] transform(String[] text, String[] style) {
-			if (style != null)
-				for (String s : style)
-					if (s != null && !s.isEmpty())
-						throw new RuntimeException("Translator does not support style '" + s + "'");
-			return translator.transform(text);
-		}
-	
-		public boolean isHyphenating() {
-			return false;
+			}
+			return join(translator.transform(cssStyledTextFromTranslatable(specification)));
 		}
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(BrailleFilterFactoryImpl.class);
 	
+	/* ============================== */
+	/* SHARED CONSTANTS AND UTILITIES */
+	/* ============================== */
+	
+	protected final static Pattern MODE = Pattern.compile("dotify:format(?: +(.*))?");
+	
+	private final static char SHY = '\u00ad';
+	private final static char ZWSP = '\u200b';
+	private final static char SPACE = ' ';
+	private final static char CR = '\r';
+	private final static char LF = '\n';
+	private final static char TAB = '\t';
+	private final static char NBSP = '\u00a0';
+	
+	protected final static Pattern BRAILLE = Pattern.compile("[\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
+	
+	private final static Pattern TEXTATTR = Pattern.compile(
+		"\\s*(?<special>(?<key>(?:ifn?)?def)\\s*:\\s*(?<var>[^\\s]+)(?:\\s+|$))?(?<css>.*)"
+	);
+	
+	/**
+	 * Convert Translatable specification to text + CSS style. Text attributes are assumed to
+	 * contain only CSS or special variable assignments/tests. CSS inheritance is assumed to have
+	 * been performed already.
+	 */
+	protected static Iterable<CSSStyledText> cssStyledTextFromTranslatable(Translatable specification) {
+		String text = specification.getText();
+		boolean hyphenating = specification.isHyphenating();
+		TextAttribute attributes = specification.getAttributes();
+		if (attributes == null)
+			return handleVariables(Optional.of(new CSSStyledText(text, hyphenating ? "hyphens:auto" : "")).asSet());
+		else {
+			List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
+			Iterator<TextAttribute> attrs = flattenAttributes(attributes);
+			int i = 0;
+			while (attrs.hasNext()) {
+				TextAttribute attr = attrs.next();
+				String segment = text.substring(i, i + attr.getWidth());
+				String style = attr.getDictionaryIdentifier();
+				if (style == null)
+					style = "";
+				if (hyphenating) {
+					if (style.isEmpty())
+						style = "hyphens: auto";
+					else
+						style += "; hyphens: auto"; }
+				segments.add(new CSSStyledText(segment, style));
+				i += attr.getWidth(); }
+			if (i != text.length())
+				throw new RuntimeException("Coding error");
+			return handleVariables(segments); }
+	}
+	
+	private static Iterable<CSSStyledText> handleVariables(Iterable<CSSStyledText> styledText) {
+		List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
+		Set<String> env = null;
+		String segment = "";
+		String style = "";
+		for (CSSStyledText st : styledText) {
+			String t = st.getText();
+			String s = st.getStyle();
+			Matcher m = TEXTATTR.matcher(s);
+			m.matches();
+			s = m.group("css");
+			if (m.group("special") != null) {
+				String key = m.group("key");
+				String var = m.group("var");
+				if (env == null)
+					env = new HashSet<String>();
+				if (key.equals("def"))
+					env.add(var);
+				else if (key.equals("ifdef") && !env.contains(var) || key.equals("ifndef") && env.contains(var))
+					t = ""; }
+			if (s.equals(style))
+				segment += t;
+			else {
+				if (!segment.isEmpty())
+					segments.add(new CSSStyledText(segment, style));
+				segment = t;
+				style = s; }}
+		if (!segment.isEmpty())
+			segments.add(new CSSStyledText(segment, style));
+		return segments;
+	}
+	
+	private static Iterator<TextAttribute> flattenAttributes(TextAttribute attributes) {
+		if (attributes.hasChildren())
+			return flattenAttributes(attributes.iterator());
+		else
+			return singletonIterator(attributes);
+	}
+	
+	private static Iterator<TextAttribute> flattenAttributes(Iterator<TextAttribute> attributes) {
+		if (attributes.hasNext())
+			return concat(flattenAttributes(attributes.next()), flattenAttributes(attributes));
+		else
+			return attributes;
+	}
 }

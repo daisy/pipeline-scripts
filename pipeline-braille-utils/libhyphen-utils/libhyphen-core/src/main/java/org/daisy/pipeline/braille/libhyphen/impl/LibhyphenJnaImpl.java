@@ -28,7 +28,6 @@ import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -57,7 +56,6 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.libhyphen.LibhyphenJnaImpl",
 	service = {
 		LibhyphenHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		org.daisy.pipeline.braille.common.Hyphenator.Provider.class
 	}
 )
@@ -196,10 +194,6 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 		
 		public URI asLibhyphenTable() {
 			return table;
-		}
-		
-		public String transform(String text) {
-			return transform(new String[]{text})[0];
 		}
 		
 		public String[] transform(String[] text) {

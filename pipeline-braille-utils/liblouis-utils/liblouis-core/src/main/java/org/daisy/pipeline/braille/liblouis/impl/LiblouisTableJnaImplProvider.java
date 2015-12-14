@@ -61,7 +61,8 @@ import org.slf4j.LoggerFactory;
 	}
 )
 public class LiblouisTableJnaImplProvider extends AbstractTransformProvider<LiblouisTableJnaImplProvider.LiblouisTableJnaImpl> {
-	
+
+	// FIXME: isn't really a Transform
 	public class LiblouisTableJnaImpl extends LiblouisTable implements Transform {
 		
 		private final Translator translator;
@@ -77,6 +78,10 @@ public class LiblouisTableJnaImplProvider extends AbstractTransformProvider<Libl
 		
 		public String getIdentifier() {
 			return toString();
+		}
+		
+		public XProc asXProc() throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
 		}
 	}
 	

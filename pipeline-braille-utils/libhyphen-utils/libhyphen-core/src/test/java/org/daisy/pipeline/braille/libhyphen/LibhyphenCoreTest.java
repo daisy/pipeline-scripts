@@ -44,8 +44,12 @@ public class LibhyphenCoreTest {
 	
 	@Test
 	public void testHyphenate() {
-		assertEquals("foo\u00ADbar", provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar",
+		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
+		                 .transform(new String[]{"foobar"})[0]);
+		assertEquals("foo-\u200Bbar",
+		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
+		                 .transform(new String[]{"foo-bar"})[0]);
 	}
 	
 	@Configuration
@@ -62,6 +66,7 @@ public class LibhyphenCoreTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),

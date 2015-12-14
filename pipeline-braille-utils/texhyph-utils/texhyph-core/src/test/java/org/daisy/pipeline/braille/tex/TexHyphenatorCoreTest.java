@@ -48,10 +48,18 @@ public class TexHyphenatorCoreTest {
 	@Test
 	public void testHyphenate() {
 		TransformProvider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
-		assertEquals("foo\u00ADbar", provider.get(query("(table:'foobar.tex')")).iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get(query("(table:'foobar.tex')")).iterator().next().transform("foo-bar"));
-		assertEquals("foo\u00ADbar", provider.get(query("(table:'foobar.properties')")).iterator().next().transform("foobar"));
-		assertEquals("foo-\u200Bbar", provider.get(query("(table:'foobar.properties')")).iterator().next().transform("foo-bar"));
+		assertEquals("foo\u00ADbar",
+		             provider.get(query("(table:'foobar.tex')")).iterator().next()
+		                     .transform(new String[]{"foobar"})[0]);
+		assertEquals("foo-\u200Bbar",
+		             provider.get(query("(table:'foobar.tex')")).iterator().next()
+		                     .transform(new String[]{"foo-bar"})[0]);
+		assertEquals("foo\u00ADbar",
+		             provider.get(query("(table:'foobar.properties')")).iterator().next()
+		                     .transform(new String[]{"foobar"})[0]);
+		assertEquals("foo-\u200Bbar",
+		             provider.get(query("(table:'foobar.properties')")).iterator().next()
+		                     .transform(new String[]{"foo-bar"})[0]);
 	}
 	
 	@Configuration
@@ -67,6 +75,7 @@ public class TexHyphenatorCoreTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),

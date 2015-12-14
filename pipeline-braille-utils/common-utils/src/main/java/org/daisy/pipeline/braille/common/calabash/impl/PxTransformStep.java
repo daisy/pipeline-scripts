@@ -7,12 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Predicate;
-import static com.google.common.base.Predicates.alwaysFalse;
-import static com.google.common.base.Predicates.alwaysTrue;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.filter;
-
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
@@ -27,17 +21,14 @@ import net.sf.saxon.s9api.QName;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import org.daisy.pipeline.braille.common.calabash.JobContextImpl;
-import org.daisy.pipeline.braille.common.CSSBlockTransform;
-import org.daisy.pipeline.braille.common.CSSStyledDocumentTransform;
 import org.daisy.pipeline.braille.common.JobContext;
-import org.daisy.pipeline.braille.common.MathMLTransform;
+import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Transform.XProc;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import org.daisy.pipeline.braille.common.Query;
 import static org.daisy.pipeline.braille.common.Query.util.query;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.logSelect;
-import org.daisy.pipeline.braille.common.util.Tuple3;
-import org.daisy.pipeline.braille.common.XProcTransform;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,21 +41,20 @@ import org.slf4j.LoggerFactory;
 public class PxTransformStep extends Eval {
 	
 	private final JobContext context;
-	private final Iterable<TransformProvider<XProcTransform>> providers;
+	private final TransformProvider<Transform> provider;
 	private final ReadableDocument pipeline;
 	
 	private static final QName _query = new QName("query");
-	private static final QName _type = new QName("type");
 	private static final QName _temp_dir = new QName("temp-dir");
 	private static final QName _step = new QName("step");
 	private static final QName _name = new QName("name");
 	private static final QName _namespace = new QName("namespace");
 	private static final QName _value = new QName("value");
 	
-	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, Iterable<TransformProvider<XProcTransform>> providers) {
+	private PxTransformStep(XProcRuntime runtime, XAtomicStep step, TransformProvider<Transform> provider) {
 		super(runtime, step);
 		this.context = new JobContextImpl(runtime.getMessageListener());
-		this.providers = providers;
+		this.provider = provider;
 		pipeline = new ReadableDocument(runtime);
 		setInput("pipeline", pipeline);
 	}
@@ -91,35 +81,26 @@ public class PxTransformStep extends Eval {
 	private void setup() {
 		if (!setup) {
 			Query query = query(getOption(_query).getString());
-			final String type = getOption(_type, "#any");
-			Predicate<Object> filter;
-			if (type.equals("mathml") || type.equals("math"))
-				filter = instanceOf(MathMLTransform.Provider.class);
-			else if (type.equals("css-block") || type.equals("block"))
-				filter = instanceOf(CSSBlockTransform.Provider.class);
-			else if (type.equals("css") || type.equals("embossed"))
-				filter = instanceOf(CSSStyledDocumentTransform.Provider.class);
-			else if (type.equals("#any"))
-				filter = alwaysTrue();
-			else
-				filter = alwaysFalse();
-			XProcTransform transform = null;
+			XProc xproc = null;
 			try {
-				transform = logSelect(query, dispatch(filter(providers, filter)), context).iterator().next(); }
-			catch (NoSuchElementException e) {
-				throw new RuntimeException("Could not find an XProcTransform for query: " + query + " and type: " + type); }
+				for (Transform t : logSelect(query, provider, context))
+					try {
+						xproc = t.asXProc();
+						break; }
+					catch (UnsupportedOperationException e) {}}
+			catch (NoSuchElementException e) {}
+			if (xproc == null)
+				throw new RuntimeException("Could not find a Transform for query: " + query);
 			RuntimeValue tempDir = getOption(_temp_dir);
-			Tuple3<URI,javax.xml.namespace.QName,Map<String,String>> t = transform.asXProc();
-			URI href = t._1;
-			pipeline.setURI(href);
-			if (t._2 != null) {
-				final QName step = new QName(t._2);
+			pipeline.setURI(xproc.getURI());
+			if (xproc.getName() != null) {
+				final QName step = new QName(xproc.getName());
 				setOption(_step, new RuntimeValue() { public QName getQName() { return step; }});
 				throw new RuntimeException("p:library not supported due to a bug in cx:eval"); }
-			if (t._3 != null || tempDir != null) {
+			if (xproc.getOptions() != null || tempDir != null) {
 				final Map<String,String> options = new HashMap<String,String>();
-				if (t._3 != null)
-					options.putAll(t._3);
+				if (xproc.getOptions() != null)
+					options.putAll(xproc.getOptions());
 				if (tempDir != null)
 					options.put("temp-dir", tempDir.getString());
 				setInput("options", new com.xmlcalabash.io.ReadableDocument(runtime) {
@@ -163,30 +144,31 @@ public class PxTransformStep extends Eval {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PxTransformStep(runtime, step, providers);
+			return new PxTransformStep(runtime, step, provider);
 		}
 		
 		@Reference(
 			name = "XProcTransformProvider",
 			unbind = "unbindXProcTransformProvider",
-			service = XProcTransform.Provider.class,
+			service = TransformProvider.class,
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC
 		)
 		@SuppressWarnings(
 			"unchecked" // safe cast to TransformProvider<XProcTransform>
 		)
-		public void bindXProcTransformProvider(XProcTransform.Provider<?> provider) {
-			providers.add((TransformProvider<XProcTransform>)provider);
+		public void bindXProcTransformProvider(TransformProvider<?> provider) {
+			providers.add((TransformProvider<Transform>)provider);
 			logger.debug("Adding XProcTransform provider: {}", provider);
 		}
 		
-		public void unbindXProcTransformProvider(XProcTransform.Provider<?> provider) {
+		public void unbindXProcTransformProvider(TransformProvider<?> provider) {
 			providers.remove(provider);
 			logger.debug("Removing XProcTransform provider: {}", provider);
 		}
 		
-		private List<TransformProvider<XProcTransform>> providers = new ArrayList<TransformProvider<XProcTransform>>();
+		private List<TransformProvider<Transform>> providers = new ArrayList<TransformProvider<Transform>>();
+		private TransformProvider<Transform> provider = dispatch(providers);
 		
 	}
 	

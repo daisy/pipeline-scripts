@@ -4,30 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.net.URI;
-import javax.xml.namespace.QName;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
-import org.daisy.pipeline.braille.common.CSSBlockTransform;
 import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
-import static org.daisy.pipeline.braille.common.util.Tuple3;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
-import org.daisy.pipeline.braille.common.XProcTransform;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 
 import org.osgi.service.component.annotations.Activate;
@@ -40,17 +39,16 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTransform {
+public interface LiblouisCSSBlockTransform {
 	
 	@Component(
 		name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform.Provider",
 		service = {
-			XProcTransform.Provider.class,
-			CSSBlockTransform.Provider.class
+			BrailleTranslatorProvider.class,
+			TransformProvider.class
 		}
 	)
-	public class Provider extends AbstractTransformProvider<LiblouisCSSBlockTransform>
-		                  implements XProcTransform.Provider<LiblouisCSSBlockTransform>, CSSBlockTransform.Provider<LiblouisCSSBlockTransform> {
+	public class Provider extends AbstractTransformProvider<BrailleTranslator> implements BrailleTranslatorProvider<BrailleTranslator> {
 		
 		private URI href;
 		
@@ -59,8 +57,10 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			href = asURI(context.getBundleContext().getBundle().getEntry("xml/transform/liblouis-block-translate.xpl"));
 		}
 		
-		private final static Iterable<LiblouisCSSBlockTransform> empty
-		= Iterables.<LiblouisCSSBlockTransform>empty();
+		private final static Iterable<BrailleTranslator> empty = Iterables.<BrailleTranslator>empty();
+		
+		private final static List<String> supportedInput = ImmutableList.of("css");
+		private final static List<String> supportedOutput = ImmutableList.of("css");
 		
 		/**
 		 * Recognized features:
@@ -70,16 +70,23 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 		 *
 		 * Other features are used for finding sub-transformers of type LiblouisTranslator.
 		 */
-		protected Iterable<LiblouisCSSBlockTransform> _get(Query query) {
+		protected Iterable<BrailleTranslator> _get(Query query) {
 			final MutableQuery q = mutableQuery(query);
+			for (Feature f : q.removeAll("input"))
+				if (!supportedInput.contains(f.getValue().get()))
+					return empty;
+			for (Feature f : q.removeAll("output"))
+				if (!supportedOutput.contains(f.getValue().get()))
+					return empty;
 			if (q.containsKey("translator"))
 				if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 					return empty;
+			q.add("input", "text-css");
 			Iterable<LiblouisTranslator> translators = logSelect(q, liblouisTranslatorProvider);
 			return transform(
 				translators,
-				new Function<LiblouisTranslator,LiblouisCSSBlockTransform>() {
-					public LiblouisCSSBlockTransform _apply(LiblouisTranslator translator) {
+				new Function<LiblouisTranslator,BrailleTranslator>() {
+					public BrailleTranslator _apply(LiblouisTranslator translator) {
 						return __apply(
 							logCreate(new TransformImpl(q.toString(), translator))
 						);
@@ -88,22 +95,19 @@ public interface LiblouisCSSBlockTransform extends CSSBlockTransform, XProcTrans
 			);
 		}
 		
-		private class TransformImpl extends AbstractTransform implements LiblouisCSSBlockTransform {
+		private class TransformImpl extends AbstractBrailleTranslator {
 			
 			private final LiblouisTranslator translator;
-			private final Tuple3<URI,QName,Map<String,String>> xproc;
+			private final XProc xproc;
 			
 			private TransformImpl(String translatorQuery, LiblouisTranslator translator) {
 				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
-				xproc = new Tuple3<URI,QName,Map<String,String>>(href, null, options);
+				xproc = new XProc(href, null, options);
 				this.translator = translator;
 			}
 			
-			public TextTransform asTextTransform() {
-				return translator;
-			}
-			
-			public Tuple3<URI,QName,Map<String,String>> asXProc() {
+			@Override
+			public XProc asXProc() {
 				return xproc;
 			}
 			

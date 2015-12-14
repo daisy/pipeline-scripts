@@ -31,14 +31,14 @@
     </css:inline>
     
     <p:viewport match="math:math">
-        <px:transform type="mathml">
-            <p:with-option name="query" select="concat('(locale:',$lang,')')"/>
+        <px:transform>
+            <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </px:transform>
     </p:viewport>
     
-    <px:transform type="css" name="pef">
-        <p:with-option name="query" select="concat($transform,'(locale:',$lang,')')"/>
+    <px:transform name="pef">
+        <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:transform>
     

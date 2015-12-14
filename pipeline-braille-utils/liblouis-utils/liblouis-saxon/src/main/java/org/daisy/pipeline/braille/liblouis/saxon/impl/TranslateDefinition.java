@@ -2,7 +2,6 @@ package org.daisy.pipeline.braille.liblouis.saxon.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -15,6 +14,7 @@ import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
+import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Query;
@@ -94,16 +94,22 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
 					Query query = query(arguments[0].head().getStringValue());
-					LiblouisTranslator translator;
-					try { translator = translators.get(query).iterator().next(); }
-					catch (NoSuchElementException e) {
-						throw new RuntimeException("Could not find a translator for query: " + query); }
-					String[] text = sequenceToArray(arguments[1]);
+					List<String> text = sequenceToList(arguments[1]);
+					List<CSSStyledText> styledText = new ArrayList<CSSStyledText>();
 					if (arguments.length > 2) {
-						String[] style = sequenceToArray(arguments[2]);
-						return arrayToSequence(translator.transform(text, style)); }
+						List<String> style = sequenceToList(arguments[2]);
+						if (style.size() != text.size())
+							throw new RuntimeException("Lengths of text and style sequences must match");
+						for (int i = 0; i < text.size(); i++)
+							styledText.add(new CSSStyledText(text.get(i), style.get(i))); }
 					else
-						return arrayToSequence(translator.transform(text)); }
+						for (int i = 0; i < text.size(); i++)
+							styledText.add(new CSSStyledText(text.get(i), ""));
+					for (LiblouisTranslator t : translators.get(query))
+						try {
+							return iterableToSequence(t.fromStyledTextToBraille().transform(styledText)); }
+						catch (UnsupportedOperationException e) {}
+					throw new RuntimeException("Could not find a LiblouisTranslator for query: " + query); }
 				catch (Exception e) {
 					logger.error("louis:translate failed", e);
 					throw new XPathException("louis:translate failed"); }
@@ -111,16 +117,16 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		};
 	}
 	
-	private static String[] sequenceToArray(Sequence seq) throws XPathException {
+	private static List<String> sequenceToList(Sequence seq) throws XPathException {
 		List<String> list = new ArrayList<String>();
 		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
 			list.add(i.current().getStringValue());
-		return list.toArray(new String[list.size()]);
+		return list;
 	}
 	
-	private static Sequence arrayToSequence(String[] array) {
+	private static Sequence iterableToSequence(Iterable<String> iterable) {
 		List<StringValue> list = new ArrayList<StringValue>();
-		for (String s : array)
+		for (String s : iterable)
 			list.add(new StringValue(s));
 		return new SequenceExtent<StringValue>(list);
 	}

@@ -23,7 +23,7 @@
 		</p:input>
 	</p:xslt>
 	
-	<px:transform type="css-block">
+	<px:transform>
 		<p:with-option name="query" select="$query"/>
 		<p:with-option name="temp-dir" select="$temp-dir"/>
 	</px:transform>

@@ -47,12 +47,16 @@ public class LiblouisTablesTest {
 	
 	@Test
 	public void testQueryTranslator() {
-		assertTrue(provider.get(query("(locale:nl_BE)")).iterator().next().asLiblouisTable().asURIs()[2].toString().endsWith("manifest/nl_BE"));
+		assertTrue(provider.get(query("(locale:nl_BE)")).iterator().next()
+		           .asLiblouisTable().asURIs()[2].toString().endsWith("manifest/nl_BE"));
 	}
 	
 	@Test
 	public void testUnicodeBraille() {
-		assertTrue(provider.get(query("(locale:nl_BE)")).iterator().next().transform("foobar").matches("[\\s\\t\\n\u00a0\u00ad\u200b\u2800-\u28ff]*"));
+		assertTrue(provider.get(query("(locale:nl_BE)")).iterator().next()
+		           .fromTypeformedTextToBraille()
+		           .transform(new String[]{"foobar"}, new byte[]{LiblouisTranslator.Typeform.PLAIN})[0]
+		           .matches("[\\s\\t\\n\u00a0\u00ad\u200b\u2800-\u28ff]*"));
 	}
 	
 	private void assertNotEmpty(String message, Iterable<?> iterable) {
@@ -78,6 +82,7 @@ public class LiblouisTablesTest {
 			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),

@@ -12,7 +12,6 @@ import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.pipeline.braille.common.TextTransform;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -40,7 +39,6 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImplProvider",
 	service = {
 		LiblouisHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		Hyphenator.Provider.class
 	}
 )
@@ -145,10 +143,6 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 		private final static char ZWSP = '\u200B';
 		private final static char US = '\u001F';
 		private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
-		
-		public String transform(String text) {
-			return insertHyphens(text, doHyphenate(text), SHY, ZWSP);
-		}
 		
 		public String[] transform(String text[]) {
 			// This byte array is used not only to track the hyphen

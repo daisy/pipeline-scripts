@@ -21,7 +21,6 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.pipeline.braille.common.TextTransform;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -43,7 +42,6 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.tex.impl.TexHyphenatorDotifyImpl",
 	service = {
 		TexHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		Hyphenator.Provider.class
 	}
 )
@@ -214,15 +212,14 @@ public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphen
 			return table;
 		}
 		
-		public String transform(String text) {
-			try {
-				return hyphenator.hyphenate(text, beginLimit, endLimit); }
-			catch (Exception e) {
-				throw new RuntimeException("Error during TeX hyphenation", e); }
-		}
-		
 		public String[] transform(String[] text) {
-			throw new UnsupportedOperationException();
+			String[] hyphenated = new String[text.length];
+			for (int i = 0; i < text.length; i++)
+				try {
+					hyphenated[i] = hyphenator.hyphenate(text[i], beginLimit, endLimit); }
+				catch (Exception e) {
+					throw new RuntimeException("Error during TeX hyphenation", e); }
+			return hyphenated;
 		}
 	}
 	
