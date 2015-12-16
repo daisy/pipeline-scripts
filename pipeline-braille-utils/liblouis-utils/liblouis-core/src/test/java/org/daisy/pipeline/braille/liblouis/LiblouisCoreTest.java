@@ -13,6 +13,8 @@ import org.daisy.braille.api.table.TableCatalogService;
 
 import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
 import org.daisy.pipeline.braille.common.BrailleTranslator.FromStyledTextToBraille;
+import org.daisy.pipeline.braille.common.BrailleTranslator.LineBreakingFromStyledText;
+import org.daisy.pipeline.braille.common.BrailleTranslator.LineIterator;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Query;
@@ -255,6 +257,157 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testTranslateWithLetterSpacingAndPunctuations() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		assertEquals(
+			braille("f o o b a r."),
+			translator.transform(styledText("foobar.", "letter-spacing:1")));
+		assertEquals(
+			braille("f  o  o  b  a  r."),
+			translator.transform(styledText("foobar.", "letter-spacing:2")));
+	}
+	
+	@Test
+	public void testTranslateWithLetterSpacingAndContractions() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.ctb')(output:ascii)")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		assertEquals(
+			braille("fu b a r"),
+			translator.transform(styledText("foobar", "letter-spacing:1")));
+		assertEquals(
+			braille("fu  b  a  r"),
+			translator.transform(styledText("foobar", "letter-spacing:2")));
+	}
+	
+	@Test
+	public void testTranslateWithWordSpacing() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			"foo⠀⠀bar",
+			translator.transform(styledText("foo bar", "word-spacing:2")).getTranslatedRemainder());
+		assertEquals(
+			"foo⠀⠀⠀bar",
+			translator.transform(styledText("foo bar", "word-spacing:3")).getTranslatedRemainder());
+	}
+
+	@Test
+	public void testTranslateWithWhiteSpaceProcessingAndWordSpacing() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		// space in input, two spaces in output
+		assertEquals(
+			"foo⠀⠀bar",
+			translator.transform(styledText("foo bar", "word-spacing:2")).getTranslatedRemainder());
+		// two spaces in input, two spaces in output
+		assertEquals(
+			"foo⠀⠀bar",
+			translator.transform(styledText("foo  bar", "word-spacing:2")).getTranslatedRemainder());
+		// newline + tab in input, two spaces in output
+		assertEquals(
+			"foo⠀⠀bar",
+			translator.transform(styledText("foo\n	bar", "word-spacing:2")).getTranslatedRemainder());
+		// no-break space in input, space in output
+		assertEquals(
+			"foo⠀bar",
+			translator.transform(styledText("foo bar", "word-spacing:2")).getTranslatedRemainder());
+		// no-break space + space in input, three spaces in output
+		assertEquals(
+			"foo⠀⠀⠀bar",
+			translator.transform(styledText("foo  bar", "word-spacing:2")).getTranslatedRemainder());
+		// zero-width space in input, no space in output
+		assertEquals(
+			"foobar",
+			translator.transform(styledText("foo​bar", "word-spacing:2")).getTranslatedRemainder());
+	}
+	
+	@Test
+	public void testTranslateWithLetterSpacing() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀q⠀u⠀u⠀x⠀⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:1; word-spacing:3")).getTranslatedRemainder());
+		assertEquals(
+			"f⠀⠀o⠀⠀o⠀⠀b⠀⠀a⠀⠀r⠀⠀⠀⠀⠀q⠀⠀u⠀⠀u⠀⠀x⠀⠀⠀⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:2; word-spacing:5")).getTranslatedRemainder());
+	}
+
+	@Test
+	public void testTranslateWithLetterSpacingAndWordSpacing() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀q⠀u⠀u⠀x⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:1; word-spacing:2")).getTranslatedRemainder());
+		assertEquals(
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀q⠀u⠀u⠀x⠀⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:1; word-spacing:3")).getTranslatedRemainder());
+		assertEquals(
+			"f⠀⠀o⠀⠀o⠀⠀b⠀⠀a⠀⠀r⠀⠀⠀⠀q⠀⠀u⠀⠀u⠀⠀x⠀⠀⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:2; word-spacing:4")).getTranslatedRemainder());
+		assertEquals(
+			"f⠀⠀o⠀⠀o⠀⠀b⠀⠀a⠀⠀r⠀⠀⠀⠀⠀q⠀⠀u⠀⠀u⠀⠀x⠀⠀⠀⠀⠀#abcdef",
+			translator.transform(styledText("foobar quux 123456", "letter-spacing:2; word-spacing:5")).getTranslatedRemainder());
+	}
+
+	// Tests with trailing spaces are not 100% correct according to spec, but spaces at the end of
+	// lines do not matter, because they are invisible.
+	@Test
+	public void testTranslateWithWordSpacingAndLineBreaking() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			//                   |<- 20
+			"foobar⠀⠀foobar⠀⠀\n" +
+			"foobar",
+			fillLines(translator.transform(styledText("foobar foobar foobar", "word-spacing:2")), 20));
+		assertEquals(
+			//                   |<- 20
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀\n" +
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀\n" +
+			"f⠀o⠀o⠀b⠀a⠀r",
+			fillLines(translator.transform(styledText("foobar foobar foobar", "letter-spacing:1; word-spacing:3")), 20));
+		assertEquals(
+			//                        |<- 25
+			"f⠀o⠀o⠀-⠀b⠀a⠀r⠀⠀⠀f⠀o⠀o⠀-\n" +
+			"b⠀a⠀r⠀⠀⠀f⠀o⠀o⠀-⠀b⠀a⠀r",
+			fillLines(translator.transform(styledText("foo-​bar foo-​bar foo-​bar", "letter-spacing:1; word-spacing:3")), 25)); // words are split up using hyphen + zwsp
+		assertEquals(
+			//                   |<- 20
+			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀f⠀o⠀o⠤\n" +
+			"b⠀a⠀r⠀⠀⠀f⠀o⠀o⠀b⠀a⠀r",
+			fillLines(translator.transform(styledText("foo­bar foo­bar foo­bar", "letter-spacing:1; word-spacing:3")), 20)); // words are split up using shy
+	}
+
+	@Test
+	public void testTranslateWithPreservedLineBreaks() {
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.cti')(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			//                   |<- 20
+			"foobar\n" +
+			"quux",
+			fillLines(translator.transform(styledText("foobar quux", "word-spacing:2")), 20)); // words are split up using U+2028
+		assertEquals(
+			//                   |<- 20
+			"norf\n" +
+			"quux\n" +
+			"foobar\n" +
+			"xyzzy",
+			fillLines(translator.transform(styledText("norf quux foobar xyzzy", "word-spacing:2")), 20)); // words are split up using U+2028
+	}
+	
+	@Test
 	public void testDisplayTableProvider() {
 		Iterable<TableProvider> tableProviders = getServices(TableProvider.class);
 		Provider<Query,Table> tableProvider = dispatch(tableProviders);
@@ -294,6 +447,15 @@ public class LiblouisCoreTest {
 	
 	private Iterable<String> braille(String... text) {
 		return Arrays.asList(text);
+	}
+	
+	private static String fillLines(LineIterator lines, int width) {
+		StringBuilder sb = new StringBuilder();
+		while (lines.hasNext()) {
+			sb.append(lines.nextTranslatedRow(width, true));
+			if (lines.hasNext())
+				sb.append('\n'); }
+		return sb.toString();
 	}
 	
 	@Inject

@@ -125,7 +125,6 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	= Iterables.<LiblouisTranslator>empty();
 	
 	private final static List<String> supportedInput = ImmutableList.of("text-css");
-	private final static List<String> supportedOutput = ImmutableList.of("braille");
 	
 	/**
 	 * Recognized features:
@@ -156,9 +155,14 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		for (Feature f : q.removeAll("input"))
 			if (!supportedInput.contains(f.getValue().get()))
 				return empty;
-		for (Feature f : q.removeAll("output"))
-			if (!supportedOutput.contains(f.getValue().get()))
-				return empty;
+		boolean asciiBraille = false;
+		if (q.containsKey("output")) {
+			String v = q.removeOnly("output").getValue().get();
+			if ("braille".equals(v)) {}
+			else if ("ascii".equals(v))
+				asciiBraille = true;
+			else
+				return empty; }
 		if (q.containsKey("translator"))
 			if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 				return empty;
@@ -189,7 +193,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			q.add("table", table);
 		if (locale != null)
 			q.add("locale", Locales.toString(parseLocale(locale), '_'));
-		q.add("unicode");
+		if (!asciiBraille)
+			q.add("unicode");
 		q.add("white-space");
 		Iterable<LiblouisTableJnaImpl> tables = logSelect(q.asImmutable(), tableProvider);
 		return concat(
@@ -279,12 +284,11 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
 				int size = size(styledText);
 				String[] text = new String[size];
-				String[] style = new String[size];
+				List<Map<String,String>> style = new ArrayList<Map<String,String>>();
 				int i = 0;
 				for (CSSStyledText t : styledText) {
-					text[i] = t.getText();
-					style[i] = t.getStyle();
-					i++; }
+					text[i++] = t.getText();
+					style.add(new HashMap<String,String>(CSS_PARSER.split(t.getStyle()))); }
 				return Arrays.asList(LiblouisTranslatorImpl.this.transform(text, style));
 			}
 		};
@@ -296,56 +300,109 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		
 		private final LineBreakingFromStyledText lineBreakingFromStyledText = new LineBreakingFromStyledText() {
 			public LineIterator transform(java.lang.Iterable<CSSStyledText> styledText) {
-				return new DefaultLineBreaker(join(fromStyledTextToBraille.transform(styledText)));
+				int size = size(styledText);
+				String[] text = new String[size];
+				List<Map<String,String>> styles = new ArrayList<Map<String,String>>();
+				int wordSpacing = -1;
+				int i = 0;
+				for (CSSStyledText st : styledText) {
+					Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(st.getStyle()));
+					int spacing = 1;
+					String val = style.remove("word-spacing");
+					if (val != null) {
+						try { spacing = Integer.parseInt(val); }
+						catch (NumberFormatException e) {
+							logger.warn("word-spacing: {} not supported, illegal number", val); }
+						if (spacing < 0) {
+							logger.warn("word-spacing: {} not supported, must be non-negative", val);
+							spacing = 1; }}
+					if (wordSpacing < 0)
+						wordSpacing = spacing;
+					else if (wordSpacing != spacing)
+						throw new RuntimeException("word-spacing must be constant, but both "
+						                           + wordSpacing + " and " + spacing + " specified");
+					text[i++] = st.getText();
+					styles.add(style); }
+				return new DefaultLineBreaker(join(LiblouisTranslatorImpl.this.transform(text, styles)), wordSpacing);
 			}
 		};
 		
-		private String[] transform(String[] text, String[] cssStyle) {
-			byte[] typeform = new byte[cssStyle.length];
-			boolean[] hyphenate = new boolean[cssStyle.length];
-			boolean[] preserveLines = new boolean[cssStyle.length];
-			boolean[] preserveSpace = new boolean[cssStyle.length];
-			for (int i = 0; i < cssStyle.length; i++) {
-				Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(cssStyle[i]));
-				String val = style.remove("text-transform");
+		private String[] transform(String[] text, List<Map<String,String>> styles) {
+			int size = text.length;
+			byte[] typeform = new byte[size];
+			boolean[] hyphenate = new boolean[size];
+			boolean[] preserveLines = new boolean[size];
+			boolean[] preserveSpace = new boolean[size];
+			int[] letterSpacing = new int[size];
+			for (int i = 0; i < size; i++) {
 				typeform[i] = Typeform.PLAIN;
-				if (val != null) {
-					text[i] = textFromTextTransform(text[i], val);
-					typeform[i] |= typeformFromTextTransform(val);
-				}
-				val = style.remove("hyphens");
 				hyphenate[i] = false;
+				preserveLines[i] = preserveSpace[i] = false;
+				letterSpacing[i] = 0;
+				Map<String,String> style = styles.get(i);
+				String val = style.remove("text-transform");
+				if (val != null) {
+					if ("none".equals(val)) {
+						if (!style.isEmpty()) {
+							logger.warn("text-transform: none can not be used in combination with "
+							            + style.keySet().iterator().next());
+							continue; }}
+					else if ("auto".equals(val)) {}
+					else {
+						text[i] = textFromTextTransform(text[i], val);
+						typeform[i] |= typeformFromTextTransform(val); }}
+				val = style.remove("hyphens");
 				if (val != null)
 					if ("auto".equals(val))
 						hyphenate[i] = true;
 				val = style.remove("white-space");
-				preserveLines[i] = preserveSpace[i] = false;
 				if (val != null)
 					if ("pre-wrap".equals(val))
 						preserveLines[i] = preserveSpace[i] = true;
 					else if ("pre-line".equals(val))
 						preserveLines[i] = true;
+				val = style.remove("letter-spacing");
+				if (val != null) {
+					try { letterSpacing[i] = Integer.parseInt(val); }
+					catch (NumberFormatException e) {
+						logger.warn("letter-spacing: {} not supported, illegal number", val); }
+					if (letterSpacing[i] < 0) {
+						logger.warn("letter-spacing: {} not supported, must be non-negative", val);
+						letterSpacing[i] = 0; }}
 				typeform[i] |= typeformFromInlineCSS(style); }
-			return transform(text, typeform, hyphenate, preserveLines, preserveSpace);
+			return transform(text, typeform, hyphenate, preserveLines, preserveSpace, letterSpacing);
 		}
 		
 		private String[] transform(String[] text, byte[] typeform) {
-			boolean[] hyphenate = new boolean[text.length];
-			boolean[] preserveLines = new boolean[text.length];
-			boolean[] preserveSpace = new boolean[text.length];
-			for (int i = 0; i < hyphenate.length; i++)
+			int size = text.length;
+			boolean[] hyphenate = new boolean[size];
+			boolean[] preserveLines = new boolean[size];
+			boolean[] preserveSpace = new boolean[size];
+			int[] letterSpacing = new int[size];
+			for (int i = 0; i < hyphenate.length; i++) {
 				hyphenate[i] = preserveLines[i] = preserveSpace[i] = false;
-			return transform(text, typeform, hyphenate, preserveLines, preserveSpace);
+				letterSpacing[i] = 0; }
+			return transform(text, typeform, hyphenate, preserveLines, preserveSpace, letterSpacing);
 		}
 		
+		protected final static char RS = '\u001E';
 		protected final static char US = '\u001F';
-		protected final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
+		protected final static char NBSP = '\u00A0';
+		protected final static Splitter SEGMENT_SPLITTER = Splitter.on(RS);
 		private final static Pattern ON_NBSP_SPLITTER = Pattern.compile("[\\xAD\\u200B]*\\xA0[\\xAD\\u200B\\xA0]*");
 		private final static Pattern ON_SPACE_SPLITTER = Pattern.compile("[\\xAD\\u200B]*[\\x20\t\\n\\r\\u2800\\xA0][\\xAD\\u200B\\x20\t\\n\\r\\u2800\\xA0]*");
 		private final static Pattern LINE_SPLITTER = Pattern.compile("[\\xAD\\u200B]*[\\n\\r][\\xAD\\u200B\\n\\r]*");
 		
+		// the positions in the text where spacing must be inserted have been previously indicated with a US control character
+		private String applyLetterSpacing(String text, int letterSpacing) {
+			String space = "";
+			for (int i = 0; i < letterSpacing; i++)
+				space += NBSP;
+			return text.replaceAll("\u001F", space);
+		}
+		
 		private String[] transform(String[] text, byte[] typeform, boolean[] hyphenate,
-		                           boolean[] preserveLines, boolean[] preserveSpace) {
+		                           boolean[] preserveLines, boolean[] preserveSpace, int[] letterSpacing) {
 			
 			// text with some segments split up into white space segments that need to be preserved
 			// in the output and other segments
@@ -400,7 +457,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 				String[] textWithWsReplaced = new String[textWithWs.length];
 				for (int i = 0; i < textWithWs.length; i++)
 					textWithWsReplaced[i] = pre[i] ? "\u00A0" : textWithWs[i];
-				Tuple2<String,byte[]> t = extractHyphens(join(textWithWsReplaced, US), SHY, ZWSP);
+				Tuple2<String,byte[]> t = extractHyphens(join(textWithWsReplaced, RS), SHY, ZWSP);
 				joinedText = t._1;
 				positions = t._2;
 				String[] nohyph = toArray(SEGMENT_SPLITTER.split(joinedText), String.class);
@@ -412,7 +469,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					for (int k = 0; k < l; k++)
 						joinedTextMapping[i++] = j;
 					j++; }
-				t = extractHyphens(positions, joinedText, null, null, US);
+				t = extractHyphens(positions, joinedText, null, null, null, RS);
 				joinedText = t._1;
 				positions = t._2;
 				if (joinedText.matches("\\xA0*"))
@@ -444,6 +501,13 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						positions[i] += autoHyphens[i]; }
 			}
 			
+			// add letter information to positions array
+			boolean someLetterSpacing = false; {
+				for (int i = 0; i < letterSpacing.length; i++)
+					if (letterSpacing[i] > 0) someLetterSpacing = true; }
+			if (someLetterSpacing)
+				positions = detectLetterBoundaries(positions, joinedText, (byte)4);
+			
 			// typeform var with the same length as joinedText
 			byte[] _typeform = null;
 			for (byte b : typeform)
@@ -463,7 +527,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					joinedBraille = r.getBraille();
 					byte[] pos = r.getHyphenPositions();
 					if (pos != null)
-						joinedBraille = insertHyphens(joinedBraille, pos, SHY, ZWSP, US);
+						joinedBraille = insertHyphens(joinedBraille, pos, SHY, ZWSP, US, RS);
 				}
 				
 				// single segment
@@ -510,9 +574,13 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					if (brailleWithWs == null) {
 						
 						// number the segments
+						// bits taken in position array for hyphenation points, letter boundaries and segment boundaries
+						int x = 4;
+						// number of remaining values that can be used for numbering the segments
+						int y = 2^(8-4);
 						for (int i = 0; i < positions.length; i++) {
-							int n = (joinedTextMapping[i + 1] % 31) + 1;
-							positions[i] |= (byte)(n << 3); }
+							int n = (joinedTextMapping[i + 1] % (y-1)) + 1;
+							positions[i] |= (byte)(n << x); }
 						
 						// split at all positions where the segment number is increased in the output
 						TranslationResult r = translator.translate(joinedText, positions, _typeform);
@@ -521,7 +589,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						{
 							String s = joinedBrailleWithoutHyphens;
 							if (pos != null)
-								s = insertHyphens(joinedBrailleWithoutHyphens, pos, SHY, ZWSP, US);
+								s = insertHyphens(joinedBrailleWithoutHyphens, pos, SHY, ZWSP, US, RS);
 							if (!s.equals(joinedBraille))
 								throw new RuntimeException("Coding error");
 						}
@@ -540,12 +608,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 								b.append(SHY);
 							if ((pos[j] & 2) == 2)
 								b.append(ZWSP);
-							int n = mod(pos[j] >> 3, 32);
+							int n = mod(pos[j] >> x, y);
 							if (n > 0)
-								if (mod(n - l - 1, 31) > 0) {
+								if (mod(n - l - 1, y-1) > 0) {
 									brailleWithWs[l] = b.toString();
 									b = new StringBuffer();
-									if ((pos[j] & 4) == 4) {
+									if ((pos[j] & 8) == 8) {
 										if (pre[l]) {
 											Matcher m = Pattern.compile("\\xA0([\\xAD\\u200B]*)").matcher(brailleWithWs[l]);
 											if (m.matches())
@@ -559,7 +627,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 											pre[l + 1] = false;
 											wsLost = true; }}
 									l++;
-									while (mod(n - l - 1, 31) > 0) {
+									while (mod(n - l - 1, y-1) > 0) {
 										brailleWithWs[l] = "";
 										if (pre[l])
 											wsLost = true;
@@ -591,6 +659,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 				braille[i] = "";
 			for (int j = 0; j < brailleWithWs.length; j++)
 				braille[textWithWsMapping[j]] += brailleWithWs[j];
+			
+			// apply letter spacing
+			if (someLetterSpacing)
+				for (int i = 0; i < braille.length; i++)
+					braille[i] = applyLetterSpacing(braille[i], letterSpacing[i]);
+			
 			return braille;
 		}
 		
@@ -610,6 +684,21 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 				i = m.end(); }
 			split.add(text.substring(i));
 			return split.toArray(new String[split.size()]);
+		}
+		
+		/*
+		 * Detect where letter boundaries meet. Length of addTo must be one less than length of text.
+		 */
+		private static byte[] detectLetterBoundaries(byte[] addTo, String text, byte val) {
+			for(int i = 0; i < addTo.length; i++){
+				if(Character.isLetter(text.charAt(i)) && Character.isLetter(text.charAt(i+1)))
+					addTo[i] |= val;
+				if((text.charAt(i) == '-') || (text.charAt(i+1) == '-'))
+					addTo[i] |= val;
+				if((text.charAt(i) == '\u00ad')) // SHY is not actual character, so boundary only after SHY
+					addTo[i] |= val;
+				}
+			return addTo;
 		}
 		
 		@Override
@@ -683,11 +772,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	 * These values can be added for multiple emphasis.
 	 * @see http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString
 	 */
-	protected static byte typeformFromInlineCSS(String style) {
-		return typeformFromInlineCSS(CSS_PARSER.split(style));
-	}
-	
-	protected static byte typeformFromInlineCSS(Map<String,String> style) {
+	private static byte typeformFromInlineCSS(Map<String,String> style) {
 		byte typeform = Typeform.PLAIN;
 		for (String prop : style.keySet()) {
 			String value = style.get(prop);
@@ -700,6 +785,11 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			else
 				logger.warn("Inline CSS property {} not supported", prop); }
 		return typeform;
+	}
+	
+	// for unit tests
+	protected static byte typeformFromInlineCSS(String style) {
+		return typeformFromInlineCSS(CSS_PARSER.split(style));
 	}
 	
 	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
