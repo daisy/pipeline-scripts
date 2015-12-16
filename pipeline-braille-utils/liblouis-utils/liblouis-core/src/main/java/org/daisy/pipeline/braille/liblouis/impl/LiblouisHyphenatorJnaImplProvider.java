@@ -1,22 +1,18 @@
 package org.daisy.pipeline.braille.liblouis.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-
 import org.daisy.pipeline.braille.common.AbstractTransform;
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
-import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -43,7 +39,6 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImplProvider",
 	service = {
 		LiblouisHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		Hyphenator.Provider.class
 	}
 )
@@ -67,7 +62,7 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 		tableProvider = null;
 	}
 	
-	public Transform.Provider<LiblouisHyphenator> withContext(Logger context) {
+	public TransformProvider<LiblouisHyphenator> withContext(Logger context) {
 		return this;
 	}
 	
@@ -86,43 +81,42 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 	 *
 	 * Other features are passed on to lou_findTable.
 	 */
-	public Iterable<LiblouisHyphenator> get(String query) {
+	public Iterable<LiblouisHyphenator> get(Query query) {
 		return provider.get(query);
 	}
 	
 	private final static Iterable<LiblouisHyphenator> empty = Optional.<LiblouisHyphenator>absent().asSet();
 	
-	private Provider.MemoizingProvider<String,LiblouisHyphenator> provider
-	= new Provider.MemoizingProvider<String,LiblouisHyphenator>() {
-		public Iterable<LiblouisHyphenator> _get(String query) {
-			final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("hyphenator")) != null)
-				if (!"liblouis".equals(o.get()))
+	private Provider.util.MemoizingProvider<Query,LiblouisHyphenator> provider
+	= new Provider.util.Memoize<Query,LiblouisHyphenator>() {
+		public Iterable<LiblouisHyphenator> _get(Query query) {
+			MutableQuery q = mutableQuery(query);
+			if (q.containsKey("hyphenator"))
+				if (!"liblouis".equals(q.removeOnly("hyphenator").getValueOrNull()))
 					return empty;
 			String table = null;
-			if ((o = q.remove("liblouis-table")) != null)
-				table = o.get();
-			if ((o = q.remove("table")) != null)
+			if (q.containsKey("liblouis-table"))
+				table = q.removeOnly("liblouis-table").getValue().get();
+			if (q.containsKey("table"))
 				if (table != null) {
 					logger.warn("A query with both 'table' and 'liblouis-table' never matches anything");
 					return empty; }
 				else
-					table = o.get();
+					table = q.removeOnly("table").getValue().get();
 			String v = null;
 			v = null;
-			if ((o = q.remove("locale")) != null)
-				v = o.get();
+			if (q.containsKey("locale"))
+				v = q.removeOnly("locale").getValue().get();
 			final String locale = v;
-			if (table != null && q.size() > 0) {
+			if (table != null && !q.isEmpty()) {
 				logger.warn("A query with both 'table' or 'liblouis-table' and '"
-				            + q.keySet().iterator().next() + "' never matches anything");
+				            + q.iterator().next().getKey() + "' never matches anything");
 				return empty; }
 			if (table != null)
-				q.put("table", Optional.of(table));
+				q.add("table", table);
 			if (locale != null)
-				q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-			Iterable<LiblouisTableJnaImpl> tables = tableProvider.get(serializeQuery(q));
+				q.add("locale", Locales.toString(parseLocale(locale), '_'));
+			Iterable<LiblouisTableJnaImpl> tables = tableProvider.get(q.asImmutable());
 			return transform(
 				tables,
 				new Function<LiblouisTableJnaImpl,LiblouisHyphenator>() {
@@ -149,10 +143,6 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 		private final static char ZWSP = '\u200B';
 		private final static char US = '\u001F';
 		private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
-		
-		public String transform(String text) {
-			return insertHyphens(text, doHyphenate(text), SHY, ZWSP);
-		}
 		
 		public String[] transform(String text[]) {
 			// This byte array is used not only to track the hyphen

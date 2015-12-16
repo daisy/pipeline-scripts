@@ -1,14 +1,13 @@
 package org.daisy.pipeline.braille.pef.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.Optional;
 
 import org.daisy.braille.api.table.Table;
 import org.daisy.braille.api.table.TableCatalogService;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import org.osgi.service.component.annotations.Component;
@@ -37,12 +36,12 @@ public class BrailleUtilsTableCatalog implements TableProvider {
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();
 	
-	public Iterable<Table> get(String query) {
-		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("id")) != null)
-			if (q.size() == 0)
-				return Optional.fromNullable(catalog.newTable(o.get())).asSet();
+	public Iterable<Table> get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("id")) {
+			String id = q.removeOnly("id").getValue().get();
+			if (q.isEmpty())
+				return Optional.fromNullable(catalog.newTable(id)).asSet(); }
 		return empty;
 	}
 }

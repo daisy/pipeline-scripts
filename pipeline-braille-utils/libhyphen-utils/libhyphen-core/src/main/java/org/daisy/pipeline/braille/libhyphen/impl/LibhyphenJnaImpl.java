@@ -4,31 +4,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.debug;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.fromNullable;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.of;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.debug;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.of;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
-import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
@@ -57,11 +56,10 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.libhyphen.LibhyphenJnaImpl",
 	service = {
 		LibhyphenHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		org.daisy.pipeline.braille.common.Hyphenator.Provider.class
 	}
 )
-public class LibhyphenJnaImpl extends AbstractTransform.Provider<LibhyphenHyphenator>
+public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphenator>
 	                          implements LibhyphenHyphenator.Provider {
 	
 	private final static char SHY = '\u00AD';
@@ -135,31 +133,31 @@ public class LibhyphenJnaImpl extends AbstractTransform.Provider<LibhyphenHyphen
 	 * - locale: Matches only hyphenators with that locale.
 	 *
 	 */
-	protected final Iterable<LibhyphenHyphenator> _get(String query) {
-		final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("hyphenator")) != null)
-			if (!"hyphen".equals(o.get()))
-				return fromNullable(fromId(o.get()));
+	protected final Iterable<LibhyphenHyphenator> _get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("hyphenator")) {
+			String v = q.removeOnly("hyphenator").getValue().get();
+			if (!"hyphen".equals(v))
+				return fromNullable(fromId(v)); }
 		String table = null;
-		if ((o = q.remove("libhyphen-table")) != null)
-			table = o.get();
-		if ((o = q.remove("table")) != null)
+		if (q.containsKey("libhyphen-table"))
+			table = q.removeOnly("libhyphen-table").getValue().get();
+		if (q.containsKey("table"))
 			if (table != null) {
 				logger.warn("A query with both 'table' and 'libhyphen-table' never matches anything");
 				return empty; }
 			else
-				table = o.get();
+				table = q.removeOnly("table").getValue().get();
 		if (table != null) {
-			if (q.size() > 0) {
+			if (!q.isEmpty()) {
 				logger.warn("A query with both 'table' or 'libhyphen-table' and '"
-				            + q.keySet().iterator().next() + "' never matches anything");
+				            + q.iterator().next().getKey() + "' never matches anything");
 				return empty; }
 			return of(get(asURI(table))); }
 		if (tableProvider != null) {
 			String locale = "und";
-			if ((o = q.remove("locale")) != null)
-				locale = o.get();
+			if (q.containsKey("locale"))
+				locale = q.removeOnly("locale").getValue().get();
 			return transform(
 				tableProvider.get(parseLocale(locale)),
 				new Function<URI,LibhyphenHyphenator>() {
@@ -196,10 +194,6 @@ public class LibhyphenJnaImpl extends AbstractTransform.Provider<LibhyphenHyphen
 		
 		public URI asLibhyphenTable() {
 			return table;
-		}
-		
-		public String transform(String text) {
-			return transform(new String[]{text})[0];
 		}
 		
 		public String[] transform(String[] text) {

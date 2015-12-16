@@ -13,7 +13,6 @@
         <p:input port="source" sequence="false"/>
         <p:output port="result" sequence="false"/>
         <p:option name="query" required="true"/>
-        <p:option name="type" required="true"/>
         <p:option name="temp-dir" required="false"/>
     </p:declare-step>
     

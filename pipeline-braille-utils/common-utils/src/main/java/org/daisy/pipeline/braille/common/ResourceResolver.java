@@ -12,9 +12,16 @@ public interface ResourceResolver {
 	 */
 	public URL resolve(URI resource);
 	
-	public static abstract class MemoizingResolver extends Memoizing<URI,URL> implements ResourceResolver {
-		public URL resolve(URI resource) {
-			return apply(resource);
+	/* ================== */
+	/*       UTILS        */
+	/* ================== */
+	
+	public static abstract class util {
+		
+		public static abstract class MemoizingResolver extends Memoizing.util.AbstractMemoizing<URI,URL> implements ResourceResolver {
+			public URL resolve(URI resource) {
+				return apply(resource);
+			}
 		}
 	}
 }

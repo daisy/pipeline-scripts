@@ -8,8 +8,10 @@ package org.daisy.pipeline.braille.common;
  * no other transformations are allowed.
  *
  */
-public interface Hyphenator extends TextTransform {
+public interface Hyphenator extends Transform {
 	
-	public interface Provider<T extends Hyphenator> extends TextTransform.Provider<T> {}
+	public String[] transform(String[] text);
+	
+	public interface Provider<T extends Hyphenator> extends TransformProvider<T> {}
 	
 }

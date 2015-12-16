@@ -64,7 +64,7 @@ public class LibhyphenTableRegistry extends ResourceRegistry<LibhyphenTablePath>
 		return provider.get(locale);
 	}
 	
-	private final Provider.MemoizingProvider<Locale,URI> provider
+	private final Provider.util.MemoizingProvider<Locale,URI> provider
 		= memoize(
 			varyLocale(
 				dispatch(paths.values())));

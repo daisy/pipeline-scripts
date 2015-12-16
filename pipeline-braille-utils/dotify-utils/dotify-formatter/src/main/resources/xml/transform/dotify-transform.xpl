@@ -15,7 +15,7 @@
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
 	<p:import href="../format.xpl"/>
 	
-	<px:transform type="css-block">
+	<px:transform>
 		<p:with-option name="query" select="$css-block-transform"/>
 		<p:with-option name="temp-dir" select="$temp-dir"/>
 	</px:transform>

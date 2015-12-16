@@ -13,7 +13,10 @@ import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.pipeline.braille.pef.AbstractTableProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
@@ -47,18 +50,18 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	 * - locale: A locale that is mapped to a specific table
 	 *     that is a sane default for that locale.
 	 */
-	protected Iterable<Table> get(Map<String,Optional<String>> query) {
-		for (String feature : query.keySet())
-			if (!supportedFeatures.contains(feature)) {
+	protected Iterable<Table> _get(Query query) {
+		for (Feature feature : query)
+			if (!supportedFeatures.contains(feature.getKey())) {
 				logger.debug("Unsupported feature: " + feature);
 				return empty; }
 		Iterable<Table> tables = empty;
-		Optional<String> o;
-		if ((o = query.remove("locale")) != null) {
-			String identifier = tablesFromLocale.get(o.get());
-			if (identifier != null) {
-				query.put("id", Optional.of(identifier));
-				tables = backingProvider.get(serializeQuery(query)); }}
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("locale")) {
+			String id = tablesFromLocale.get(q.removeOnly("locale").getValue().get());
+			if (id != null) {
+				q.add("id", id);
+				tables = backingProvider.get(q); }}
 		return tables;
 	}
 	
@@ -83,7 +86,7 @@ public class LocaleTableProvider extends AbstractTableProvider {
 	}
 		
 	private List<TableProvider> otherProviders = new ArrayList<TableProvider>();
-	private Provider.MemoizingProvider<String,Table> backingProvider
+	private Provider.util.MemoizingProvider<Query,Table> backingProvider
 	= memoize(dispatch(otherProviders));
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocaleTableProvider.class);

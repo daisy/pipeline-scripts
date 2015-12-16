@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -8,15 +9,16 @@ import javax.inject.Inject;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import static com.google.common.collect.Iterables.size;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
 import org.daisy.maven.xspec.XSpecRunner;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
-import org.daisy.pipeline.braille.common.Transform;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.TransformProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
@@ -117,8 +119,8 @@ public class DotifyFormatterTest {
 	public void NumberBrailleTranslatorProvider() {
 		NumberBrailleTranslator.Provider provider = new NumberBrailleTranslator.Provider();
 		Hashtable<String,Object> properties = new Hashtable<String,Object>();
-		context.registerService(BrailleTranslator.Provider.class.getName(), provider, properties);
-		context.registerService(CSSStyledTextTransform.Provider.class.getName(), provider, properties);
+		context.registerService(BrailleTranslatorProvider.class.getName(), provider, properties);
+		context.registerService(TransformProvider.class.getName(), provider, properties);
 	}
 	
 	@Inject
@@ -148,7 +150,23 @@ public class DotifyFormatterTest {
 		assertTrue("XProcSpec tests should run with success", success);
 	}
 	
-	private static class NumberBrailleTranslator extends AbstractTransform implements BrailleTranslator, CSSStyledTextTransform {
+	private static class NumberBrailleTranslator extends AbstractBrailleTranslator {
+		
+		@Override
+		public FromStyledTextToBraille fromStyledTextToBraille() {
+			return fromStyledTextToBraille;
+		}
+		
+		private final FromStyledTextToBraille fromStyledTextToBraille = new FromStyledTextToBraille() {
+			public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
+				int size = size(styledText);
+				String[] braille = new String[size];
+				int i = 0;
+				for (CSSStyledText t : styledText)
+					braille[i++] = NumberBrailleTranslator.this.transform(t.getText(), t.getStyle());
+				return Arrays.asList(braille);
+			}
+		};
 		
 		private final static char SHY = '\u00ad';
 		private final static char ZWSP = '\u200b';
@@ -167,33 +185,13 @@ public class DotifyFormatterTest {
 		private final static Splitter.MapSplitter CSS_PARSER
 			= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 		
-		public String transform(String text) {
-			if (!VALID_INPUT.matcher(text).matches())
-				throw new RuntimeException("Invalid input: \"" + text + "\"");
-			return translateNumbers(text, false);
-		}
-		
-		public String[] transform(String[] text) {
-			String[] result = new String[text.length];
-			for (int i = 0; i < text.length; i++)
-				result[i] = transform(text[i]);
-			return result;
-		}
-		
-		public String transform(String text, String style) {
+		private String transform(String text, String style) {
 			if (!VALID_INPUT.matcher(text).matches())
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			Map<String,String> parsedStyle = CSS_PARSER.split(style);
 			if (parsedStyle.containsKey("text-transform") && "downshift".equals(parsedStyle.get("text-transform")))
 				return translateNumbers(text, true);
 			return translateNumbers(text, false);
-		}
-		
-		public String[] transform(String[] text, String[] style) {
-			String[] result = new String[text.length];
-			for (int i = 0; i < text.length; i++)
-				result[i] = transform(text[i], style[i]);
-			return result;
 		}
 		
 		private static String translateNumbers(String text, boolean downshift) {
@@ -236,16 +234,13 @@ public class DotifyFormatterTest {
 			             .replace('m', '⠍');
 		}
 		
-		public boolean isHyphenating() { return false; }
-		
-		public static class Provider implements BrailleTranslator.Provider<NumberBrailleTranslator>,
-		                                        CSSStyledTextTransform.Provider<NumberBrailleTranslator> {
+		public static class Provider implements BrailleTranslatorProvider<NumberBrailleTranslator> {
 			final static NumberBrailleTranslator instance = new NumberBrailleTranslator();
-			public Iterable<NumberBrailleTranslator> get(String query) {
+			public Iterable<NumberBrailleTranslator> get(Query query) {
 				return Optional.<NumberBrailleTranslator>fromNullable(
-					query.equals("(number-translator)") ? instance : null).asSet();
+					query.toString().equals("(number-translator)") ? instance : null).asSet();
 			}
-			public Transform.Provider<NumberBrailleTranslator> withContext(Logger context) {
+			public TransformProvider<NumberBrailleTranslator> withContext(Logger context) {
 				return this;
 			}
 		}

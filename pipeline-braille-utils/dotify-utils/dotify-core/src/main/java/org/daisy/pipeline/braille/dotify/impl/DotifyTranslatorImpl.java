@@ -1,17 +1,15 @@
 package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.Iterables.size;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleFilterFactoryService;
@@ -20,21 +18,27 @@ import org.daisy.dotify.api.translator.Translatable;
 import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.concat;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
-import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.concat;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.TextTransform;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.varyLocale;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.varyLocale;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
+import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
 
 import org.osgi.service.component.annotations.Component;
@@ -45,7 +49,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTranslator {
+public class DotifyTranslatorImpl extends AbstractBrailleTranslator implements DotifyTranslator {
 	
 	private final BrailleFilter filter;
 	private final boolean hyphenating;
@@ -70,31 +74,43 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		return filter;
 	}
 	
-	public boolean isHyphenating() {
-		return hyphenating;
+	@Override
+	public FromStyledTextToBraille fromStyledTextToBraille() {
+		return fromStyledTextToBraille;
 	}
+	
+	private final FromStyledTextToBraille fromStyledTextToBraille = new FromStyledTextToBraille() {
+		public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
+			int size = size(styledText);
+			String[] braille = new String[size];
+			int i = 0;
+			for (CSSStyledText t : styledText)
+				braille[i++] = DotifyTranslatorImpl.this.transform(t.getText(), t.getStyle());
+			return Arrays.asList(braille);
+		}
+	};
+	
+	@Override
+	public LineBreakingFromStyledText lineBreakingFromStyledText() {
+		return lineBreakingFromStyledText;
+	}
+		
+	private final LineBreakingFromStyledText lineBreakingFromStyledText = new LineBreakingFromStyledText() {
+		public LineIterator transform(java.lang.Iterable<CSSStyledText> styledText) {
+			return new DefaultLineBreaker(join(fromStyledTextToBraille.transform(styledText)));
+		}
+	};
 	
 	private String transform(String text, boolean hyphenate) {
 		if (hyphenate && !hyphenating)
 			throw new RuntimeException("'hyphens:auto' is not supported");
 		try {
 			if (hyphenate && externalHyphenator != null)
-				return filter.filter(Translatable.text(externalHyphenator.transform(text)).hyphenate(false).build());
+				return filter.filter(Translatable.text(externalHyphenator.transform(new String[]{text})[0]).hyphenate(false).build());
 			else
 				return filter.filter(Translatable.text(text).hyphenate(hyphenate).build()); }
 		catch (TranslationException e) {
 			throw new RuntimeException(e); }
-	}
-	
-	public String transform(String text) {
-		return transform(text, false);
-	}
-	
-	public String[] transform(String[] text) {
-		String[] result = new String[text.length];
-		for (int i = 0; i < text.length; i++)
-			result[i] = transform(text[i]);
-		return result;
 	}
 	
 	public String transform(String text, String cssStyle) {
@@ -112,22 +128,15 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		return transform(text, hyphenate);
 	}
 	
-	public String[] transform(String[] text, String[] cssStyle) {
-		String[] result = new String[text.length];
-		for (int i = 0; i < text.length; i++)
-			result[i] = transform(text[i], cssStyle[i]);
-		return result;
-	}
-	
 	@Component(
 		name = "org.daisy.pipeline.braille.dotify.DotifyTranslatorImpl.Provider",
 		service = {
 			DotifyTranslator.Provider.class,
-			BrailleTranslator.Provider.class,
-			TextTransform.Provider.class
+			BrailleTranslatorProvider.class,
+			TransformProvider.class
 		}
 	)
-	public static class Provider extends AbstractTransform.Provider<DotifyTranslator>
+	public static class Provider extends AbstractTransformProvider<DotifyTranslator>
 	                             implements DotifyTranslator.Provider {
 		
 		/**
@@ -145,29 +154,41 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 		 *
 		 * No other features are allowed.
 		 */
-		public Iterable<DotifyTranslator> _get(String query) {
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-			Optional<String> o;
-			if ((o = q.remove("translator")) != null)
-				if (!o.get().equals("dotify"))
+		public Iterable<DotifyTranslator> _get(Query query) {
+			MutableQuery q = mutableQuery(query);
+			for (Feature f : q.removeAll("input"))
+				if (!supportedInput.contains(f.getValue().get()))
 					return empty;
-			return logSelect(serializeQuery(q), _provider);
+			for (Feature f : q.removeAll("output"))
+				if (!supportedOutput.contains(f.getValue().get()))
+					return empty;
+			if (q.containsKey("translator"))
+				if (!"dotify".equals(q.removeOnly("translator").getValue().get()))
+					return empty;
+			return logSelect(q, _provider);
 		}
 		
 		private final static Iterable<DotifyTranslator> empty = Iterables.<DotifyTranslator>empty();
 		
-		private Transform.Provider<DotifyTranslator> _provider
+		private final static List<String> supportedInput = ImmutableList.of("text-css");
+		private final static List<String> supportedOutput = ImmutableList.of("braille");
+		
+		private TransformProvider<DotifyTranslator> _provider
 		= varyLocale(
-			new AbstractTransform.Provider<DotifyTranslator>() {
-				public Iterable<DotifyTranslator> _get(String query) {
-					Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-					Optional<String> o;
-					if ((o = q.remove("locale")) != null) {
-						final String locale = Locales.toString(parseLocale(o.get()), '-');
+			new AbstractTransformProvider<DotifyTranslator>() {
+				public Iterable<DotifyTranslator> _get(Query query) {
+					MutableQuery q = mutableQuery(query);
+					if (q.containsKey("locale")) {
+						final String locale = Locales.toString(parseLocale(q.removeOnly("locale").getValue().get()), '-');
 						final String mode = BrailleTranslatorFactory.MODE_UNCONTRACTED;
-						final String hyphenator = ((o = q.remove("hyphenator")) != null) ? o.get() : "auto";
-						if (q.size() > 0) {
-							logger.warn("Unsupported feature '"+ q.keySet().iterator().next() + "'");
+						String v = null;
+						if (q.containsKey("hyphenator"))
+							v = q.removeOnly("hyphenator").getValue().get();
+						else
+							v = "auto";
+						final String hyphenator = v;
+						if (!q.isEmpty()) {
+							logger.warn("Unsupported feature '"+ q.iterator().next().getKey() + "'");
 							return empty; }
 						Iterable<BrailleFilter> filters = Iterables.transform(
 							factoryServices,
@@ -186,13 +207,11 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 									public Iterable<DotifyTranslator> _apply(final BrailleFilter filter) {
 										Iterable<DotifyTranslator> translators = empty;
 										if (!"none".equals(hyphenator)) {
-											ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-												= new ImmutableMap.Builder<String,Optional<String>>();
+											MutableQuery hyphenatorQuery = mutableQuery();
 											if (!"auto".equals(hyphenator))
-												hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
-											hyphenatorQuery.put("locale", Optional.of(locale));
-											Iterable<Hyphenator> hyphenators = logSelect(
-												serializeQuery(hyphenatorQuery.build()), hyphenatorProvider);
+												hyphenatorQuery.add("hyphenator", hyphenator);
+											hyphenatorQuery.add("locale", locale);
+											Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQuery, hyphenatorProvider);
 											translators = Iterables.transform(
 												hyphenators,
 												new Function<Hyphenator,DotifyTranslator>() {
@@ -248,10 +267,10 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 			policy = ReferencePolicy.DYNAMIC
 		)
 		@SuppressWarnings(
-			"unchecked" // safe cast to Transform.Provider<Hyphenator>
+			"unchecked" // safe cast to TransformProvider<Hyphenator>
 		)
 		protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
-			hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
+			hyphenatorProviders.add((TransformProvider<Hyphenator>)provider);
 			hyphenatorProvider.invalidateCache();
 			logger.debug("Adding Hyphenator provider: " + provider);
 		}
@@ -262,10 +281,10 @@ public class DotifyTranslatorImpl extends AbstractTransform implements DotifyTra
 			logger.debug("Removing Hyphenator provider: " + provider);
 		}
 		
-		private List<Transform.Provider<Hyphenator>> hyphenatorProviders
-		= new ArrayList<Transform.Provider<Hyphenator>>();
+		private List<TransformProvider<Hyphenator>> hyphenatorProviders
+		= new ArrayList<TransformProvider<Hyphenator>>();
 		
-		private Transform.Provider.MemoizingProvider<Hyphenator> hyphenatorProvider
+		private TransformProvider.util.MemoizingProvider<Hyphenator> hyphenatorProvider
 		= memoize(dispatch(hyphenatorProviders));
 		
 	}

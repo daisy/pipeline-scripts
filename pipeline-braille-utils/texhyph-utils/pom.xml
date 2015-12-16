@@ -18,8 +18,8 @@
   <name>DP2 Braille Modules :: texhyph-utils</name>
 
   <modules>
-    <!-- <module>texhyph-core</module> -->
-    <!-- <module>texhyph-saxon</module> -->
+    <module>texhyph-core</module>
+    <module>texhyph-saxon</module>
     <!-- <module>texhyph-utils</module> -->
   </modules>
   

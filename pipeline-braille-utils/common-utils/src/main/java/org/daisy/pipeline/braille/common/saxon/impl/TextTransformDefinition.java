@@ -2,9 +2,6 @@ package org.daisy.pipeline.braille.common.saxon.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import static com.google.common.collect.Iterables.filter;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -18,11 +15,13 @@ import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.CSSStyledTextTransform;
+import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,29 +42,30 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 			"http://www.daisy.org/ns/pipeline/functions", "text-transform");
 	
 	@Reference(
-		name = "TextTransformProvider",
-		unbind = "unbindTextTransformProvider",
-		service = BrailleTranslator.Provider.class,
+		name = "BrailleTranslatorProvider",
+		unbind = "unbindBrailleTranslatorProvider",
+		service = BrailleTranslatorProvider.class,
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<BrailleTranslator>
+		"unchecked" // safe cast to BrailleTranslatorProvider<BrailleTranslator>
 	)
-	protected void bindTextTransformProvider(BrailleTranslator.Provider<?> provider) {
-		providers.add((Transform.Provider<BrailleTranslator>)provider);
+	protected void bindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
+		providers.add((BrailleTranslatorProvider<BrailleTranslator>)provider);
 		logger.debug("Adding BrailleTranslator provider: {}", provider);
 	}
 	
-	protected void unbindTextTransformProvider(BrailleTranslator.Provider<?> provider) {
+	protected void unbindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
 		providers.remove(provider);
 		translators.invalidateCache();
 		logger.debug("Removing BrailleTranslator provider: {}", provider);
 	}
 	
-	private List<Transform.Provider<BrailleTranslator>> providers = new ArrayList<Transform.Provider<BrailleTranslator>>();
+	private List<BrailleTranslatorProvider<BrailleTranslator>> providers
+	= new ArrayList<BrailleTranslatorProvider<BrailleTranslator>>();
 	
-	private Provider.MemoizingProvider<String,BrailleTranslator> translators
+	private Provider.util.MemoizingProvider<Query,BrailleTranslator> translators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -98,20 +98,23 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = arguments[0].head().getStringValue();
-					String[] text = sequenceToArray(arguments[1]);
-					try {
-						if (arguments.length > 2) {
-							String[] style = sequenceToArray(arguments[2]);
-							if (style.length != text.length)
-								throw new RuntimeException("Lengths of text and style sequences must match");
-							CSSStyledTextTransform translator = filter(translators.get(query), CSSStyledTextTransform.class).iterator().next();
-							return arrayToSequence(translator.transform(text, style)); }
-						else {
-							BrailleTranslator translator = translators.get(query).iterator().next();
-							return arrayToSequence(translator.transform(text)); }}
-					catch (NoSuchElementException e) {
-						throw new RuntimeException("Could not find a translator for query: " + query); }}
+					Query query = query(arguments[0].head().getStringValue());
+					List<String> text = sequenceToList(arguments[1]);
+					List<CSSStyledText> styledText = new ArrayList<CSSStyledText>();
+					if (arguments.length > 2) {
+						List<String> style = sequenceToList(arguments[2]);
+						if (style.size() != text.size())
+							throw new RuntimeException("Lengths of text and style sequences must match");
+						for (int i = 0; i < text.size(); i++)
+							styledText.add(new CSSStyledText(text.get(i), style.get(i))); }
+					else
+						for (int i = 0; i < text.size(); i++)
+							styledText.add(new CSSStyledText(text.get(i), ""));
+					for (BrailleTranslator t : translators.get(query))
+						try {
+							return iterableToSequence(t.fromStyledTextToBraille().transform(styledText)); }
+						catch (UnsupportedOperationException e) {}
+					throw new RuntimeException("Could not find a BrailleTranslator for query: " + query); }
 				catch (Exception e) {
 					logger.error("pf:text-transform failed", e);
 					throw new XPathException("pf:text-transform failed"); }
@@ -119,16 +122,16 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		};
 	}
 	
-	private static String[] sequenceToArray(Sequence seq) throws XPathException {
+	private static List<String> sequenceToList(Sequence seq) throws XPathException {
 		List<String> list = new ArrayList<String>();
 		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
 			list.add(i.current().getStringValue());
-		return list.toArray(new String[list.size()]);
+		return list;
 	}
 	
-	private static Sequence arrayToSequence(String[] array) {
+	private static Sequence iterableToSequence(Iterable<String> iterable) {
 		List<StringValue> list = new ArrayList<StringValue>();
-		for (String s : array)
+		for (String s : iterable)
 			list.add(new StringValue(s));
 		return new SequenceExtent<StringValue>(list);
 	}

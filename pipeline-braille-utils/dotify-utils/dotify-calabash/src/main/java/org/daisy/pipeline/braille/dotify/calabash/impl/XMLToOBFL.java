@@ -26,7 +26,8 @@ import org.daisy.dotify.api.tasks.TaskSystemFactoryException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryMakerService;
 import org.daisy.dotify.common.io.FileIO;
 import org.daisy.dotify.common.io.TempFileHandler;
-import org.daisy.pipeline.braille.css.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -115,9 +116,9 @@ public class XMLToOBFL extends DefaultStep {
 			
 			RuntimeValue rv = getOption(_dotifyOptions);
 			if (rv!=null) {
-				Map<String, Optional<String>> opts = Query.parseQuery(rv.getString());
-				for (String key : opts.keySet()) {
-					Optional<String> val = opts.get(key);
+				for (Feature f : query(rv.getString())) {
+					String key = f.getKey();
+					Optional<String> val = f.getValue();
 					//if there isn't a value, just repeat the key
 					params.put(key, val.or(key));
 				}

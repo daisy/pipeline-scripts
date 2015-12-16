@@ -6,23 +6,21 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
-
-import com.google.common.base.Optional;
 
 import net.davidashen.text.Utf8TexParser.TexParserException;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
 import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.fromNullable;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import static org.daisy.pipeline.braille.common.util.Files.isAbsoluteFile;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
@@ -44,11 +42,10 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.tex.impl.TexHyphenatorDotifyImpl",
 	service = {
 		TexHyphenator.Provider.class,
-		TextTransform.Provider.class,
 		Hyphenator.Provider.class
 	}
 )
-public class TexHyphenatorDotifyImpl extends AbstractTransform.Provider<TexHyphenator>
+public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphenator>
 	                                 implements TexHyphenator.Provider {
 	
 	private TexHyphenatorTableRegistry tableRegistry;
@@ -96,32 +93,33 @@ public class TexHyphenatorDotifyImpl extends AbstractTransform.Provider<TexHyphe
 	 *
 	 * No other features are allowed.
 	 */
-	public Iterable<TexHyphenator> _get(String query) {
-		Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("hyphenator")) != null)
-			if (!"texhyph".equals(o.get()) && !"tex".equals(o.get()))
-				return fromNullable(fromId(o.get()));
-		if ((o = q.remove("table")) != null) {
-			if (q.size() > 0) {
-				logger.warn("A query with both 'table' and '" + q.keySet().iterator().next() + "' never matches anything");
+	public Iterable<TexHyphenator> _get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		if (q.containsKey("hyphenator")) {
+			String v = q.removeOnly("hyphenator").getValue().get();
+			if (!"texhyph".equals(v) && !"tex".equals(v))
+				return fromNullable(fromId(v)); }
+		if (q.containsKey("table")) {
+			String v = q.removeOnly("table").getValue().get();
+			if (!q.isEmpty()) {
+				logger.warn("A query with both 'table' and '" + q.iterator().next().getKey() + "' never matches anything");
 				return empty; }
-			return fromNullable(get(asURI(o.get()))); }
+			return fromNullable(get(asURI(v))); }
 		Locale locale;
-		if ((o = q.remove("locale")) != null)
-			locale = parseLocale(o.get());
+		if (q.containsKey("locale"))
+			locale = parseLocale(q.removeOnly("locale").getValue().get());
 		else
 			locale = parseLocale("und");
 		if (!q.isEmpty()) {
-			logger.warn("A query with '" + q.keySet().iterator().next() + "' never matches anything");
+			logger.warn("A query with '" + q.iterator().next().getKey() + "' never matches anything");
 			return empty; }
 		if (tableRegistry != null) {
-			transform(
+			return transform(
 				tableRegistry.get(locale),
 				new Function<URI,TexHyphenator>() {
 					public TexHyphenator _apply(URI table) {
 						return get(table); }}); }
-			return empty;
+		return empty;
 	}
 	
 	private TexHyphenator get(URI table) {
@@ -214,15 +212,14 @@ public class TexHyphenatorDotifyImpl extends AbstractTransform.Provider<TexHyphe
 			return table;
 		}
 		
-		public String transform(String text) {
-			try {
-				return hyphenator.hyphenate(text, beginLimit, endLimit); }
-			catch (Exception e) {
-				throw new RuntimeException("Error during TeX hyphenation", e); }
-		}
-		
 		public String[] transform(String[] text) {
-			throw new UnsupportedOperationException();
+			String[] hyphenated = new String[text.length];
+			for (int i = 0; i < text.length; i++)
+				try {
+					hyphenated[i] = hyphenator.hyphenate(text[i], beginLimit, endLimit); }
+				catch (Exception e) {
+					throw new RuntimeException("Error during TeX hyphenation", e); }
+			return hyphenated;
 		}
 	}
 	

@@ -9,16 +9,20 @@ import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.AtomicSequence;
 import net.sf.saxon.om.Sequence;
+import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
 
 import org.daisy.pipeline.braille.common.Hyphenator;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
 
 import org.osgi.service.component.annotations.Component;
@@ -57,9 +61,9 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		logger.debug("Removing LiblouisHyphenator provider: {}", provider);
 	}
 	
-	private List<Transform.Provider<LiblouisHyphenator>> providers
-	= new ArrayList<Transform.Provider<LiblouisHyphenator>>();
-	private Provider.MemoizingProvider<String,LiblouisHyphenator> hyphenators
+	private List<TransformProvider<LiblouisHyphenator>> providers
+	= new ArrayList<TransformProvider<LiblouisHyphenator>>();
+	private Provider.util.MemoizingProvider<Query,LiblouisHyphenator> hyphenators
 	= memoize(dispatch(providers));
 	
 	public StructuredQName getFunctionQName() {
@@ -90,19 +94,33 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 		return new ExtensionFunctionCall() {
 			public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 				try {
-					String query = ((AtomicSequence)arguments[0]).getStringValue();
+					Query query = query(((AtomicSequence)arguments[0]).getStringValue());
+					String[] text = sequenceToArray(arguments[1]);
 					Hyphenator hyphenator;
 					try {
 						hyphenator = hyphenators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
-						throw new RuntimeException("Could not find a translator for query: " + query); }
-					String text = ((AtomicSequence)arguments[1]).getStringValue();
-					return new StringValue(hyphenator.transform(text)); }
+						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
+					return arrayToSequence(hyphenator.transform(text));}
 				catch (Exception e) {
 					logger.error("louis:hyphenate failed", e);
 					throw new XPathException("louis:hyphenate failed"); }
 			}
 		};
+	}
+	
+	private static String[] sequenceToArray(Sequence seq) throws XPathException {
+		List<String> list = new ArrayList<String>();
+		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
+			list.add(i.current().getStringValue());
+		return list.toArray(new String[list.size()]);
+	}
+	
+	private static Sequence arrayToSequence(String[] array) {
+		List<StringValue> list = new ArrayList<StringValue>();
+		for (String s : array)
+			list.add(new StringValue(s));
+		return new SequenceExtent<StringValue>(list);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(HyphenateDefinition.class);

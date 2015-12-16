@@ -11,27 +11,29 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.toArray;
 
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
-
-import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables;
-import org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Function;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.concat;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.Iterables.transform;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logCreate;
-import static org.daisy.pipeline.braille.common.AbstractTransform.Provider.util.logSelect;
-import org.daisy.pipeline.braille.common.BrailleTranslator;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.concat;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
 import org.daisy.pipeline.braille.common.Hyphenator;
-import org.daisy.pipeline.braille.common.Transform;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.memoize;
-import static org.daisy.pipeline.braille.common.Transform.Provider.util.dispatch;
-import org.daisy.pipeline.braille.common.TextTransform;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import org.daisy.pipeline.braille.common.TransformProvider;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.memoize;
+import static org.daisy.pipeline.braille.common.TransformProvider.util.dispatch;
 import org.daisy.pipeline.braille.common.util.Locales;
 import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
@@ -60,11 +62,11 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisTranslatorJnaImplProvider",
 	service = {
 		LiblouisTranslator.Provider.class,
-		BrailleTranslator.Provider.class,
-		TextTransform.Provider.class
+		BrailleTranslatorProvider.class,
+		TransformProvider.class
 	}
 )
-public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provider<LiblouisTranslator> implements LiblouisTranslator.Provider {
+public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider<LiblouisTranslator> implements LiblouisTranslator.Provider {
 	
 	private final static char SHY = '\u00AD';
 	private final static char ZWSP = '\u200B';
@@ -95,12 +97,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		policy = ReferencePolicy.DYNAMIC
 	)
 	@SuppressWarnings(
-		"unchecked" // safe cast to Transform.Provider<Hyphenator>
+		"unchecked" // safe cast to TransformProvider<Hyphenator>
 	)
 	protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
 		if (provider instanceof LiblouisHyphenatorJnaImplProvider)
 			return;
-		hyphenatorProviders.add((Transform.Provider<Hyphenator>)provider);
+		hyphenatorProviders.add((TransformProvider<Hyphenator>)provider);
 		hyphenatorProvider.invalidateCache();
 		logger.debug("Adding Hyphenator provider: " + provider);
 	}
@@ -113,14 +115,17 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		logger.debug("Removing Hyphenator provider: " + provider);
 	}
 	
-	private List<Transform.Provider<Hyphenator>> hyphenatorProviders
-	= new ArrayList<Transform.Provider<Hyphenator>>();
+	private List<TransformProvider<Hyphenator>> hyphenatorProviders
+	= new ArrayList<TransformProvider<Hyphenator>>();
 	
-	private Transform.Provider.MemoizingProvider<Hyphenator> hyphenatorProvider
+	private TransformProvider.util.MemoizingProvider<Hyphenator> hyphenatorProvider
 	= memoize(dispatch(hyphenatorProviders));
 	
 	private final static Iterable<LiblouisTranslator> empty
 	= Iterables.<LiblouisTranslator>empty();
+	
+	private final static List<String> supportedInput = ImmutableList.of("text-css");
+	private final static List<String> supportedOutput = ImmutableList.of("braille");
 	
 	/**
 	 * Recognized features:
@@ -146,42 +151,47 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 	 *
 	 * A translator will only use external hyphenators with the same locale as the translator itself.
 	 */
-	protected final Iterable<LiblouisTranslator> _get(String query) {
-		final Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(parseQuery(query));
-		Optional<String> o;
-		if ((o = q.remove("translator")) != null)
-			if (!"liblouis".equals(o.get()))
+	protected final Iterable<LiblouisTranslator> _get(Query query) {
+		MutableQuery q = mutableQuery(query);
+		for (Feature f : q.removeAll("input"))
+			if (!supportedInput.contains(f.getValue().get()))
+				return empty;
+		for (Feature f : q.removeAll("output"))
+			if (!supportedOutput.contains(f.getValue().get()))
+				return empty;
+		if (q.containsKey("translator"))
+			if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 				return empty;
 		String table = null;
-		if ((o = q.remove("liblouis-table")) != null)
-			table = o.get();
-		if ((o = q.remove("table")) != null)
+		if (q.containsKey("liblouis-table"))
+			table = q.removeOnly("liblouis-table").getValue().get();
+		if (q.containsKey("table"))
 			if (table != null) {
 				logger.warn("A query with both 'table' and 'liblouis-table' never matches anything");
 				return empty; }
 			else
-				table = o.get();
+				table = q.removeOnly("table").getValue().get();
 		String v = null;
-		if ((o = q.remove("hyphenator")) != null)
-			v = o.get();
+		if (q.containsKey("hyphenator"))
+			v = q.removeOnly("hyphenator").getValue().get();
 		else
 			v = "auto";
 		final String hyphenator = v;
 		v = null;
-		if ((o = q.remove("locale")) != null)
-			v = o.get();
+		if (q.containsKey("locale"))
+			v = q.removeAll("locale").iterator().next().getValue().get();
 		final String locale = v;
-		if (table != null && q.size() > 0) {
+		if (table != null && !q.isEmpty()) {
 			logger.warn("A query with both 'table' or 'liblouis-table' and '"
-			            + q.keySet().iterator().next() + "' never matches anything");
+			            + q.iterator().next().getKey() + "' never matches anything");
 			return empty; }
 		if (table != null)
-			q.put("table", Optional.of(table));
+			q.add("table", table);
 		if (locale != null)
-			q.put("locale", Optional.of(Locales.toString(parseLocale(locale), '_')));
-		q.put("unicode", Optional.<String>absent());
-		q.put("white-space", Optional.<String>absent());
-		Iterable<LiblouisTableJnaImpl> tables = logSelect(serializeQuery(q), tableProvider);
+			q.add("locale", Locales.toString(parseLocale(locale), '_'));
+		q.add("unicode");
+		q.add("white-space");
+		Iterable<LiblouisTableJnaImpl> tables = logSelect(q.asImmutable(), tableProvider);
 		return concat(
 			transform(
 				tables,
@@ -197,15 +207,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 										);
 										break; }
 							if (!"liblouis".equals("hyphenator")) {
-								ImmutableMap.Builder<String,Optional<String>> hyphenatorQuery
-									= new ImmutableMap.Builder<String,Optional<String>>();
+								MutableQuery hyphenatorQuery = mutableQuery();
 								if (!"auto".equals(hyphenator))
-									hyphenatorQuery.put("hyphenator", Optional.of(hyphenator));
+									hyphenatorQuery.add("hyphenator", hyphenator);
 								if (locale != null)
-									hyphenatorQuery.put("locale", Optional.of(locale));
-								String hyphenatorQueryString = serializeQuery(hyphenatorQuery.build());
-								Iterable<Hyphenator> hyphenators
-									= logSelect(hyphenatorQueryString, hyphenatorProvider);
+									hyphenatorQuery.add("locale", locale);
+								Iterable<Hyphenator> hyphenators = logSelect(hyphenatorQuery.asImmutable(), hyphenatorProvider);
 								translators = concat(
 									translators,
 									transform(
@@ -232,7 +239,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisTranslatorJnaImplProvider");
 	}
 	
-	private static class LiblouisTranslatorImpl extends AbstractTransform implements LiblouisTranslator {
+	private static class LiblouisTranslatorImpl extends AbstractBrailleTranslator implements LiblouisTranslator {
 		
 		private final LiblouisTable table;
 		protected final Translator translator;
@@ -248,27 +255,52 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 			this.hyphenator = hyphenator;
 		}
 		
+		// FIXME: not if (input:text-css)
 		public LiblouisTable asLiblouisTable() {
 			return table;
 		}
 		
-		public boolean isHyphenating() {
-			return hyphenator != null;
+		public FromTypeformedTextToBraille fromTypeformedTextToBraille() {
+			return fromTypeformedTextToBraille;
 		}
 		
-		public String transform(String text) {
-			return transform(new String[]{text})[0];
+		private FromTypeformedTextToBraille fromTypeformedTextToBraille = new FromTypeformedTextToBraille() {
+			public String[] transform(String[] text, byte[] typeform) {
+				return LiblouisTranslatorImpl.this.transform(text, typeform);
+			}
+		};
+		
+		@Override
+		public FromStyledTextToBraille fromStyledTextToBraille() {
+			return fromStyledTextToBraille;
 		}
 		
-		public String[] transform(String[] text) {
-			return transform(text, new byte[]{Typeform.PLAIN});
+		private FromStyledTextToBraille fromStyledTextToBraille = new FromStyledTextToBraille() {
+			public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
+				int size = size(styledText);
+				String[] text = new String[size];
+				String[] style = new String[size];
+				int i = 0;
+				for (CSSStyledText t : styledText) {
+					text[i] = t.getText();
+					style[i] = t.getStyle();
+					i++; }
+				return Arrays.asList(LiblouisTranslatorImpl.this.transform(text, style));
+			}
+		};
+		
+		@Override
+		public LineBreakingFromStyledText lineBreakingFromStyledText() {
+			return lineBreakingFromStyledText;
 		}
 		
-		public String transform(String text, String cssStyle) {
-			return transform(new String[]{text}, new String[]{cssStyle})[0];
-		}
+		private final LineBreakingFromStyledText lineBreakingFromStyledText = new LineBreakingFromStyledText() {
+			public LineIterator transform(java.lang.Iterable<CSSStyledText> styledText) {
+				return new DefaultLineBreaker(join(fromStyledTextToBraille.transform(styledText)));
+			}
+		};
 		
-		public String[] transform(String[] text, String[] cssStyle) {
+		private String[] transform(String[] text, String[] cssStyle) {
 			byte[] typeform = new byte[cssStyle.length];
 			boolean[] hyphenate = new boolean[cssStyle.length];
 			boolean[] preserveLines = new boolean[cssStyle.length];
@@ -297,11 +329,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 			return transform(text, typeform, hyphenate, preserveLines, preserveSpace);
 		}
 		
-		public String transform(String text, byte typeform) {
-			return transform(new String[]{text}, new byte[]{typeform})[0];
-		}
-		
-		public String[] transform(String[] text, byte[] typeform) {
+		private String[] transform(String[] text, byte[] typeform) {
 			boolean[] hyphenate = new boolean[text.length];
 			boolean[] preserveLines = new boolean[text.length];
 			boolean[] preserveSpace = new boolean[text.length];
@@ -569,7 +597,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		protected byte[] doHyphenate(String text) {
 			if (hyphenator == null)
 				throw new RuntimeException("'hyphens:auto' is not supported");
-			return extractHyphens(hyphenator.transform(text), SHY, ZWSP)._2;
+			return extractHyphens(hyphenator.transform(new String[]{text})[0], SHY, ZWSP)._2;
 		}
 		
 		private static String[] splitInclDelimiter(String text, Pattern delimiterPattern) {
@@ -625,11 +653,6 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransform.Provide
 		
 		private LiblouisTranslatorHyphenatorImpl(Translator translator) {
 			super(translator);
-		}
-		
-		@Override
-		public boolean isHyphenating() {
-			return true;
 		}
 		
 		@Override

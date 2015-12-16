@@ -5,26 +5,38 @@ import java.util.Map;
 
 import com.google.common.base.Function;
 
-public abstract class Memoizing<K,V> implements Function<K,V> {
+public interface Memoizing<K,V> extends Function<K,V> {
 	
-	private final Map<K,V> cache = new HashMap<K,V>();
+	public void invalidateCache();
 	
-	/**
-	 * @param key must not be mutated.
-	 */
-	protected abstract V _apply(K key);
+	/* ================== */
+	/*       UTILS        */
+	/* ================== */
 	
-	public final V apply(K key) {
-		if (cache.containsKey(key))
-			return cache.get(key);
-		V value = _apply(key);
-		if (value != null) {
-			cache.put(key, value);
-			return value; }
-		return null;
-	}
+	public static abstract class util {
+		
+		public static abstract class AbstractMemoizing<K,V> implements Memoizing<K,V> {
+			
+			private final Map<K,V> cache = new HashMap<K,V>();
+			
+			/**
+			 * @param key must not be mutated.
+			 */
+			protected abstract V _apply(K key);
 	
-	public void invalidateCache() {
-		cache.clear();
+			public final V apply(K key) {
+				if (cache.containsKey(key))
+					return cache.get(key);
+				V value = _apply(key);
+				if (value != null) {
+					cache.put(key, value);
+					return value; }
+				return null;
+			}
+	
+			public void invalidateCache() {
+				cache.clear();
+			}
+		}
 	}
 }

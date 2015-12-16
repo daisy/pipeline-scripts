@@ -33,10 +33,10 @@ public class TexHyphenatorTablePath extends BundledResourcePath implements Provi
 		return provider.get(locale);
 	}
 	
-	private Provider<Locale,URI> provider = new Provider.NULL<Locale,URI>();
+	private Provider<Locale,URI> provider = Provider.util.<Locale,URI>empty();
 	
 	private void initProvider(URL manifestURL) {
-		provider = new SimpleMappingProvider<Locale,URI>(manifestURL) {
+		provider = new Provider.util.SimpleMappingProvider<Locale,URI>(manifestURL) {
 			public Locale parseKey(String locale) {
 				return parseLocale(locale);
 			}

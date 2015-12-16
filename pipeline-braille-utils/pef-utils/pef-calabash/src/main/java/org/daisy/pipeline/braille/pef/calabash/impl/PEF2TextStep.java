@@ -9,16 +9,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import com.google.common.base.Optional;
 
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
@@ -36,13 +32,13 @@ import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
-
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.pef.TableProvider;
 import org.daisy.pipeline.braille.pef.calabash.impl.BRFWriter.Padding;
 import org.daisy.pipeline.braille.pef.calabash.impl.BRFWriter.PageBreaks;
-
-import static org.daisy.pipeline.braille.css.Query.parseQuery;
-import static org.daisy.pipeline.braille.css.Query.serializeQuery;
 
 import org.xml.sax.SAXException;
 
@@ -70,13 +66,15 @@ public class PEF2TextStep extends DefaultStep {
 	// private static final QName _page_breaks = new QName("page-breaks");
 	private static final QName _pad = new QName("pad");
 	
-	private final org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider;
+	private static final Query EN_US = mutableQuery().add("id", "org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US");
+	
+	private final org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider;
 	
 	private ReadablePipe source = null;
 	
 	private PEF2TextStep(XProcRuntime runtime,
 	                     XAtomicStep step,
-	                     org.daisy.pipeline.braille.common.Provider<String,Table> tableProvider) {
+	                     org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider) {
 		super(runtime, step);
 		this.tableProvider = tableProvider;
 	}
@@ -96,33 +94,29 @@ public class PEF2TextStep extends DefaultStep {
 		super.run();
 		try {
 			
-			Map<String,Optional<String>> q = new HashMap<String,Optional<String>>(
-				parseQuery(getOption(_table).getString()));
+			MutableQuery q = mutableQuery(query(getOption(_table).getString()));
 			
 			final LineBreaks lineBreaks; {
 				String s = getOption(_breaks, "DEFAULT");
-				Optional<String> o;
-				if ((o = q.remove("line-breaks")) != null)
-					s = o.get();
+				if (q.containsKey("line-breaks"))
+					s = q.removeOnly("line-breaks").getValue().get();
 				lineBreaks = new StandardLineBreaks(StandardLineBreaks.Type.valueOf(s.toUpperCase())); }
 			final PageBreaks pageBreaks; {
 				String s = "\u000c";
-				Optional<String> o;
-				if ((o = q.remove("page-breaks")) != null)
-					s = o.get();
+				if (q.containsKey("page-breaks"))
+					s = q.removeOnly("page-breaks").getValue().get();
 				final String pb = s;
 				pageBreaks = new PageBreaks() {
 					public String getString() {
 						return pb; }}; }
 			final BrailleConverter brailleConverter; {
-				String tableQuery = serializeQuery(q);
+				Query tableQuery = q.asImmutable();
 				Table table;
 				try {
 					table = tableProvider.get(tableQuery).iterator().next(); }
 				catch (NoSuchElementException e) {
 					logger.warn("pef:pef2text failed, table not found: " + tableQuery, e);
-					table = tableProvider.get(
-						"(id:'org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US')").iterator().next(); }
+					table = tableProvider.get(EN_US).iterator().next(); }
 				brailleConverter = table.newBrailleConverter(); }
 			final Padding padding = Padding.valueOf(getOption(_pad, "NONE").toUpperCase());
 			
@@ -198,7 +192,7 @@ public class PEF2TextStep extends DefaultStep {
 		}
 		
 		private List<TableProvider> tableProviders = new ArrayList<TableProvider>();
-		private org.daisy.pipeline.braille.common.Provider.MemoizingProvider<String,Table> tableProvider
+		private org.daisy.pipeline.braille.common.Provider.util.MemoizingProvider<Query,Table> tableProvider
 		= memoize(dispatch(tableProviders));
 		
 	}

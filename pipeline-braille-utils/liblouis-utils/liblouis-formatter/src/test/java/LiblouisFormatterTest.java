@@ -57,6 +57,7 @@ public class LiblouisFormatterTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			brailleModule("common-utils"),
 			brailleModule("liblouis-core"),
 			brailleModule("liblouis-saxon"),

@@ -5,6 +5,10 @@ import javax.inject.Inject;
 import org.daisy.braille.api.table.Table;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -41,16 +45,25 @@ public class PefCoreTest {
 	
 	@Test
 	public void testBrailleUtilsTableCatalog() {
-		Provider<String,Table> provider = getProvider();
-		Table table = provider.get("(id:'org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US')").iterator().next();
+		Provider<Query,Table> provider = getProvider();
+		MutableQuery q = mutableQuery();
+		q.add("id", "org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US");
+		Table table = provider.get(q).iterator().next();
+		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
+	}
+	
+	@Test
+	public void testLocaleTableProvider1() {
+		Provider<Query,Table> provider = getProvider();
+		Table table = provider.get(query("(locale:en)")).iterator().next();
 		assertEquals("FOOBAR", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
 	
 	@Ignore // wait for BRAILLO_6DOT_031_01 support in braille-utils
 	@Test
-	public void testLocaleTableProvider() {
-		Provider<String,Table> provider = getProvider();
-		Table table = provider.get("(locale:nl)").iterator().next();
+	public void testLocaleTableProvider2() {
+		Provider<Query,Table> provider = getProvider();
+		Table table = provider.get(query("(locale:nl)")).iterator().next();
 		assertEquals("foobar", table.newBrailleConverter().toText("⠋⠕⠕⠃⠁⠗"));
 	}
 	
@@ -68,6 +81,7 @@ public class PefCoreTest {
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
@@ -79,7 +93,7 @@ public class PefCoreTest {
 	@Inject
 	BundleContext context;
 	
-	private Provider<String,Table> getProvider() {
+	private Provider<Query,Table> getProvider() {
 		List<TableProvider> providers = new ArrayList<TableProvider>();
 		try {
 			for (ServiceReference<? extends TableProvider> ref : context.getServiceReferences(TableProvider.class, null))

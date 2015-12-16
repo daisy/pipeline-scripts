@@ -2,11 +2,10 @@ package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.regex.Matcher;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.PeekingIterator;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleTranslator;
@@ -18,10 +17,24 @@ import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 import org.daisy.dotify.api.translator.TranslatorSpecification;
 
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
+import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.Provider;
+import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.pipeline.braille.common.Query;
+import static org.daisy.pipeline.braille.common.Query.util.query;
+import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
+import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.BRAILLE;
+import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.cssStyledTextFromTranslatable;
+import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.MODE;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component(
 	name = "org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl",
@@ -41,9 +54,36 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		this.filterFactory = filterFactory;
 	}
 	
+	@Reference(
+		name = "BrailleTranslatorProvider",
+		unbind = "unbindBrailleTranslatorProvider",
+		service = BrailleTranslatorProvider.class,
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	@SuppressWarnings(
+		"unchecked" // safe cast to BrailleTranslatorProvider<BrailleTranslator>
+	)
+	protected void bindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
+		brailleTranslatorProviders.add((BrailleTranslatorProvider<org.daisy.pipeline.braille.common.BrailleTranslator>)provider);
+		logger.debug("Adding BrailleTranslator provider: {}", provider);
+	}
+	
+	protected void unbindBrailleTranslatorProvider(BrailleTranslatorProvider<?> provider) {
+		brailleTranslatorProviders.remove(provider);
+		brailleTranslatorProvider.invalidateCache();
+		logger.debug("Removing BrailleTranslator provider: {}", provider);
+	}
+	
+	private final List<BrailleTranslatorProvider<org.daisy.pipeline.braille.common.BrailleTranslator>> brailleTranslatorProviders
+	= new ArrayList<BrailleTranslatorProvider<org.daisy.pipeline.braille.common.BrailleTranslator>>();
+	
+	private final Provider.util.MemoizingProvider<Query,org.daisy.pipeline.braille.common.BrailleTranslator> brailleTranslatorProvider
+	= memoize(dispatch(brailleTranslatorProviders));
+	
 	public boolean supportsSpecification(String locale, String mode) {
 		try {
-			filterFactory.newFilter(locale, mode);
+			factory.newTranslator(locale, mode);
 			return true; }
 		catch (TranslatorConfigurationException e) {
 			return false; }
@@ -54,25 +94,29 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	}
 	
 	public BrailleTranslatorFactory newFactory() {
-		return new BrailleTranslatorFactoryImpl();
+		return factory;
 	}
 	
-	public <T> void setReference(Class<T> c, T reference) throws TranslatorConfigurationException {}
+	private BrailleTranslatorFactory factory = new BrailleTranslatorFactoryImpl();
 	
 	private class BrailleTranslatorFactoryImpl implements BrailleTranslatorFactory {
-		public BrailleTranslatorImpl newTranslator(String locale, String mode) throws TranslatorConfigurationException {
-			return new BrailleTranslatorImpl(mode, filterFactory.newFilter(locale, mode));
+		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
+			Matcher m = MODE.matcher(mode);
+			if (!m.matches())
+				throw new TranslatorConfigurationException();
+			String query = m.group(1);
+			if (query == null)
+				query = "";
+			if (!query.trim().equals("auto"))
+				for (org.daisy.pipeline.braille.common.BrailleTranslator t : brailleTranslatorProvider.get(query(query)))
+					try {
+						return new BrailleTranslatorFromBrailleTranslator(mode, t.lineBreakingFromStyledText()); }
+					catch (UnsupportedOperationException e) {}
+			return new BrailleTranslatorFromFilter(mode, filterFactory.newFilter(locale, mode));
 		}
 	}
 	
-	private final static char SHY = '\u00ad';
-	private final static char ZWSP = '\u200b';
-	private final static char SPACE = ' ';
-	private final static char CR = '\r';
-	private final static char LF = '\n';
-	private final static char TAB = '\t';
-	private final static char NBSP = '\u00a0';
-	private final static char BRAILLE_PATTERN_BLANK = '\u2800';
+	public <T> void setReference(Class<T> c, T reference) throws TranslatorConfigurationException {}
 	
 	/**
 	 * BrailleTranslator with <a
@@ -91,176 +135,53 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	 * breaking. These hyphenation characters must have been removed from the
 	 * input when no breaking within words is desired at all (hyphens:none).
 	 */
-	private static class BrailleTranslatorImpl implements BrailleTranslator {
+	private static class BrailleTranslatorFromFilter implements BrailleTranslator {
 		
 		private final String mode;
 		private final BrailleFilter filter;
 		
-		private BrailleTranslatorImpl(String mode, BrailleFilter filter) {
+		private BrailleTranslatorFromFilter(String mode, BrailleFilter filter) {
 			this.mode = mode;
 			this.filter = filter;
 		}
 		
 		public BrailleTranslatorResult translate(Translatable input) throws TranslationException {
-			return new BrailleTranslatorResultImpl(filter.filter(input));
+			return new DefaultLineBreaker(filter.filter(input));
 		}
 		
 		public String getTranslatorMode() {
 			return mode;
 		}
+	}
+	
+	private static class BrailleTranslatorFromBrailleTranslator implements BrailleTranslator {
 		
-		// FIXME: should not be hard-coded
-		private final static char HYPHENATE_CHARACTER = '\u2824';
+		private final String mode;
+		private final org.daisy.pipeline.braille.common.BrailleTranslator.LineBreakingFromStyledText translator;
 		
-		private final static byte NO_SOFT_WRAP = (byte)0x0;
-		private final static byte SOFT_WRAP_WITH_HYPHEN = (byte)0x1;
-		private final static byte SOFT_WRAP_WITHOUT_HYPHEN = (byte)0x3;
-		private final static byte SOFT_WRAP_AFTER_SPACE = (byte)0x7;
+		private BrailleTranslatorFromBrailleTranslator(
+				String mode,
+				org.daisy.pipeline.braille.common.BrailleTranslator.LineBreakingFromStyledText translator) {
+			this.mode = mode;
+			this.translator = translator;
+		}
 		
-		private static class BrailleTranslatorResultImpl implements BrailleTranslatorResult {
-			
-			private final PeekingIterator<Character> input;
-			
-			private BrailleTranslatorResultImpl(String text) {
-				this.input = Iterators.peekingIterator(Lists.charactersOf(text).iterator());
-			}
-			
-			private StringBuilder charBuffer = new StringBuilder();
-			
-			/**
-			 * Array with soft wrap opportunity info
-			 * - SPACE, LF, CR, TAB and ZWSP create normal soft wrap opportunities
-			 * - SHY create soft wrap opportunities that insert a hyphen glyph
-			 * - normal soft wrap opportunities override soft wrap opportunities that insert a hyphen glyph
-			 *
-			 * @see <a href="http://snaekobbi.github.io/braille-css-spec/#h3_line-breaking">Braille CSS – § 9.4 Line Breaking</a>
-			 */
-			private ArrayList<Byte> swoBuffer = new ArrayList<Byte>();
-			
-			private boolean lastCharIsSpace = false;
-			
-			/**
-			 * Fill the character and soft wrap opportunity buffers while normalising and collapsing spaces
-			 * - until the buffers are at least 'size' long
-			 * - or until the remaining input is empty
-			 * - and while the remaining input starts with SPACE, LF, CR, TAB, NBSP or BRAILLE PATTERN BLANK
-			 */
-			private void fillBuffer(int size) {
-				int bufSize = charBuffer.length();
-				loop: while (input.hasNext()) {
-					char next = input.peek();
-					switch (next) {
-					case SHY:
-						if (bufSize > 0)
-							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITH_HYPHEN));
-						lastCharIsSpace = false;
-						break;
-					case ZWSP:
-						if (bufSize > 0)
-							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-						lastCharIsSpace = false;
-						break;
-					case SPACE:
-					case LF:
-					case CR:
-					case TAB:
-					case BRAILLE_PATTERN_BLANK:
-						if (lastCharIsSpace)
-							break;
-						if (bufSize > 0)
-							swoBuffer.set(bufSize - 1, (byte)(swoBuffer.get(bufSize - 1) | SOFT_WRAP_WITHOUT_HYPHEN));
-						charBuffer.append(BRAILLE_PATTERN_BLANK);
-						bufSize ++;
-						swoBuffer.add(SOFT_WRAP_AFTER_SPACE);
-						lastCharIsSpace = true;
-						break;
-					case NBSP:
-						charBuffer.append(BRAILLE_PATTERN_BLANK);
-						bufSize ++;
-						swoBuffer.add(NO_SOFT_WRAP);
-						lastCharIsSpace = false;
-						break;
-					default:
-						if (bufSize >= size) break loop;
-						charBuffer.append(next);
-						bufSize ++;
-						swoBuffer.add(NO_SOFT_WRAP);
-						lastCharIsSpace = false; }
-					input.next(); }
-			}
-			
-			/**
-			 * Flush the first 'size' elements of the character and soft wrap opportunity buffers
-			 * Assumes that 'size &lt;= charBuffer.length()'
-			 */
-			private void flushBuffer(int size) {
-				charBuffer = new StringBuilder(charBuffer.substring(size));
-				swoBuffer = new ArrayList<Byte>(swoBuffer.subList(size, swoBuffer.size()));
-			}
-			
-			public String nextTranslatedRow(int limit, boolean force) {
-				fillBuffer(limit + 1);
-				int bufSize = charBuffer.length();
-				
-				// no need to break if remaining text is shorter than line
-				if (bufSize <= limit) {
-					String rv = charBuffer.toString();
-					charBuffer.setLength(0);
-					swoBuffer.clear();
-					return rv; }
-				
-				// break at SPACE or ZWSP
-				if ((swoBuffer.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
-					String rv = charBuffer.substring(0, limit);
-					
-					// strip leading SPACE in remaining text
-					while (limit < bufSize && swoBuffer.get(limit) == SOFT_WRAP_AFTER_SPACE) limit++;
-					flushBuffer(limit);
-					return rv; }
-				
-				// try to break later if the overflowing characters are blank
-				for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == BRAILLE_PATTERN_BLANK; i++)
-					if ((swoBuffer.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
-						String rv = charBuffer.substring(0, limit);
-						flushBuffer(i);
-						return rv; }
-				
-				// try to break sooner
-				for (int i = limit - 1; i > 0; i--) {
-					
-					// break at SPACE, ZWSP or SHY
-					if (swoBuffer.get(i - 1) > 0) {
-						String rv = charBuffer.substring(0, i);
-						
-						// insert hyphen glyph at SHY
-						if (swoBuffer.get(i - 1) == 0x1)
-							rv += HYPHENATE_CHARACTER;
-						flushBuffer(i);
-						return rv; }}
-				
-				// force hard break
-				if (force) {
-					String rv = charBuffer.substring(0, limit);
-					flushBuffer(limit);
-					return rv; }
-				
-				return "";
-			}
-			
-			public String getTranslatedRemainder() {
-				while (input.hasNext()) fillBuffer(1000);
-				return charBuffer.toString();
-			}
-			
-			public int countRemaining() {
-				while (input.hasNext()) fillBuffer(1000);
-				return charBuffer.length();
-			}
-			
-			public boolean hasNext() {
-				fillBuffer(1);
-				return charBuffer.length() > 0;
-			}
+		public BrailleTranslatorResult translate(Translatable input) throws TranslationException {
+			if (input.getAttributes() == null && input.isHyphenating() == false) {
+				String text = input.getText();
+				if (" ".equals(text))
+					return new DefaultLineBreaker("\u2800");
+				if ("??".equals(text))
+					return new DefaultLineBreaker("??");
+				if (BRAILLE.matcher(text).matches())
+					return new DefaultLineBreaker(text); }
+			return translator.transform(cssStyledTextFromTranslatable(input));
+		}
+		
+		public String getTranslatorMode() {
+			return mode;
 		}
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(BrailleTranslatorFactoryServiceImpl.class);
 }

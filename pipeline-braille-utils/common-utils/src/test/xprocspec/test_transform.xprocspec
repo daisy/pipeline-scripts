@@ -10,7 +10,6 @@
                     <doc>foobar</doc>
                 </x:document>
             </x:input>
-            <x:option name="type" select="'#any'"/>
             <x:option name="query" select="'(uppercase)'"/>
         </x:call>
         <x:context label="result">

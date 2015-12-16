@@ -46,6 +46,7 @@ public class TexHyphenatorSaxonTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
 			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
 			brailleModule("common-utils"),
 			brailleModule("css-core"),
