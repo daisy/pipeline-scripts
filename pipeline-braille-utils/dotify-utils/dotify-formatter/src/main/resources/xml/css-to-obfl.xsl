@@ -114,6 +114,7 @@
                                             <xsl:apply-templates select="$volume-begin-content" mode="eval-volume-area-content-list">
                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                             </xsl:apply-templates>
                                         </sequence>
                                     </pre-content>
@@ -125,6 +126,7 @@
                                             <xsl:apply-templates select="$volume-end-content" mode="eval-volume-area-content-list">
                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                             </xsl:apply-templates>
                                         </sequence>
                                     </post-content>
@@ -152,6 +154,7 @@
             <xsl:apply-templates select="collection()/*[not(@css:flow)]">
                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
             </xsl:apply-templates>
         </obfl>
     </xsl:template>
@@ -232,6 +235,12 @@
         </xsl:next-match>
     </xsl:template>
     
+    <xsl:template match="css:box[@css:word-spacing]" priority="0.8">
+        <xsl:next-match>
+            <xsl:with-param name="word-spacing" tunnel="yes" select="xs:integer(@css:word-spacing)"/>
+        </xsl:next-match>
+    </xsl:template>
+    
     <xsl:template match="css:box/@type|
                          css:box/@name|
                          css:box/@part"/>
@@ -255,6 +264,8 @@
             ignored. FIXME: make use of style elements.
         -->
     </xsl:template>
+    
+    <xsl:template match="@css:word-spacing"/>
     
     <xsl:template match="@css:collapsing-margins"/>
     
@@ -502,36 +513,80 @@
         </xsl:call-template>
     </xsl:template>
     
+    <!--
+        FIXME: only if within block and no sibling blocks
+    -->
     <xsl:template name="text">
         <xsl:param name="text" as="xs:string" required="yes"/>
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
+        <xsl:param name="word-spacing" as="xs:integer" tunnel="yes"/>
         <xsl:variable name="text" as="xs:string">
             <xsl:choose>
                 <!--
                     text-transform values 'none' and 'auto' are handled during formatting. A
                     translation is performed only when there are non-braille characters in the text.
                 -->
-                <xsl:when test="$text-transform=('none','auto')">
-                    <xsl:value-of select="$text"/>
+                <xsl:when test="$text-transform=('none','auto') or not($word-spacing=1)">
+                    <xsl:sequence select="$text"/>
                 </xsl:when>
                 <!--
                     Other values are handled by translating prior to formatting.
                 -->
                 <xsl:otherwise>
-                    <xsl:value-of select="pf:text-transform($braille-translator-query,
+                    <xsl:sequence select="pf:text-transform($braille-translator-query,
                                                             $text,
                                                             concat('text-transform:',$text-transform))"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="text" as="xs:string" select="translate($text,'&#x2800;',' ')"/>
+        <xsl:variable name="text" as="xs:string">
+            <xsl:choose>
+                <!--
+                    For 'hyphens:none' all SHY and ZWSP characters are removed from the text in advance.
+                -->
+                <xsl:when test="$hyphens='none'">
+                    <xsl:sequence select="replace($text,'[&#x00AD;&#x200B;]','')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$text"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="text" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="$word-spacing=1">
+                    <xsl:sequence select="$text"/>
+                </xsl:when>
+                <!--
+                    FIXME: style elements are currently processed in a step before line breaking (in
+                    MarkerProcessorFactoryServiceImpl) so that they can't be used for
+                    word-spacing. Performing word spacing in XSLT instead.
+                -->
+                <xsl:otherwise>
+                    <xsl:variable name="words" as="xs:string*">
+                        <xsl:analyze-string select="$text" regex="[&#x00AD;&#x200B;]*[ \t\n\r][&#x00AD;&#x200B; \t\n\r]*">
+                            <xsl:matching-substring/>
+                            <xsl:non-matching-substring>
+                                <xsl:sequence select="."/>
+                            </xsl:non-matching-substring>
+                        </xsl:analyze-string>
+                    </xsl:variable>
+                    <xsl:variable name="spacing" as="xs:string" select="concat(string-join(for $x in 1 to $word-spacing return '&#x00A0;',''),'&#x200B;')"/>
+                    <xsl:sequence select="string-join($words, $spacing)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:choose>
-            <!--
-                For 'hyphens:none' all SHY and ZWSP characters are removed from the text in advance.
-            -->
-            <xsl:when test="$hyphens='none'">
-                <xsl:value-of select="replace($text,'[&#x00AD;&#x200B;]','')"/>
+            <xsl:when test="not($word-spacing=1) and not($text-transform=('none','auto'))">
+                <!--
+                    text-transform has not been applied yet
+                -->
+                <style>
+                    <xsl:attribute name="name" select="concat('text-transform:',$text-transform)"/>
+                    <xsl:value-of select="$text"/>
+                </style>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$text"/>

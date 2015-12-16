@@ -15,10 +15,16 @@
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
 	<p:import href="../format.xpl"/>
 	
+	<!-- for debug info -->
+	<p:for-each><p:identity/></p:for-each>
+	
 	<px:transform>
 		<p:with-option name="query" select="$css-block-transform"/>
 		<p:with-option name="temp-dir" select="$temp-dir"/>
 	</px:transform>
+	
+	<!-- for debug info -->
+	<p:for-each><p:identity/></p:for-each>
 	
 	<dotify:format>
 		<p:with-option name="text-transform" select="$text-transform"/>

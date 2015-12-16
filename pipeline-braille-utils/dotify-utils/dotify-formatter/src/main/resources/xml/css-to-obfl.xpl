@@ -277,8 +277,8 @@
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
                                                'margin-top',    'page-break-inside', 'line-height', 'white-space',
-                                               'margin-bottom', 'orphans',
-                                               'border-left',   'widows',
+                                               'margin-bottom', 'orphans',                          'word-spacing',
+                                               'border-left',   'widows',                           'letter-spacing',
                                                'border-right',
                                                'border-top',
                                                'border-bottom')"/>
@@ -309,12 +309,12 @@
                         <xsl:function name="new:is-inherited" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="$property=('text-transform','hyphens')"/>
+                            <xsl:sequence select="$property=('text-transform','hyphens','word-spacing')"/>
                         </xsl:function>
                         <xsl:function name="new:applies-to" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="$context/@type='block' or $property=('text-transform','hyphens')"/>
+                            <xsl:sequence select="$context/@type='block' or $property=('text-transform','hyphens','word-spacing')"/>
                         </xsl:function>
                     </xsl:stylesheet>
                 </p:inline>

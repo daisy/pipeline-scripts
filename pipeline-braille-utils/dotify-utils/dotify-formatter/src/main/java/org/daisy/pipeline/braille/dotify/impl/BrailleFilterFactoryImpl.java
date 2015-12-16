@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 )
 public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	
-	public BrailleFilter newFilter(String locale, String mode) throws TranslatorConfigurationException {
+	public BrailleFilterImpl newFilter(String locale, String mode) throws TranslatorConfigurationException {
 		try {
 			BrailleTranslator.FromStyledTextToBraille translator = getBrailleTranslator(mode);
 			return new BrailleFilterImpl(translator); }
@@ -175,7 +175,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	 * "ifdef:foo" or "ifndef:foo") in text attributes in order to support special ad hoc handling
 	 * of marker-references.
 	 */
-	private static class BrailleFilterImpl implements BrailleFilter {
+	public static class BrailleFilterImpl implements BrailleFilter {
 		
 		private final BrailleTranslator.FromStyledTextToBraille translator;
 		
@@ -184,6 +184,10 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		}
 		
 		public String filter(Translatable specification) throws TranslationException {
+			return join(filterRetain(specification));
+		}
+		
+		public String[] filterRetain(Translatable specification) throws TranslationException {
 			
 			if (specification.getAttributes() == null && specification.isHyphenating() == false) {
 				
@@ -192,14 +196,14 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				// If input text is a space, it will be user for calculating the
 				// margin character (see org.daisy.dotify.formatter.impl.FormatterContext)
 				if (" ".equals(text))
-					return "\u2800";
+					return new String[]{"\u2800"};
 			
 				// If input text is "??", it will be used for creating a placeholder for content that
 				// can not be computed yet (forward references, see org.daisy.dotify.formatter.impl.BlockContentManager).
 				// Because normally this will never end up in the resulting PEF, it is okay to return it
 				// untranslated.
 				if ("??".equals(text))
-					return "??";
+					return new String[]{"??"};
 			
 				// Because (1) there is not yet a way to enable translation while formatting only for
 				// certain document fragments and at the same time handle pre-translated text correctly
@@ -212,9 +216,14 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				// input. Secondly, text consisting of only braille will not be translated a second time
 				// even if that was intended to happen.
 				if (BRAILLE.matcher(text).matches())
-					return text;
+					return new String[]{text};
 			}
-			return join(translator.transform(cssStyledTextFromTranslatable(specification)));
+			Iterable<String> result = translator.transform(cssStyledTextFromTranslatable(specification));
+			String[] array = new String[size(result)];
+			int i = 0;
+			for (String s : result)
+				array[i++] = s;
+			return array;
 		}
 	}
 	

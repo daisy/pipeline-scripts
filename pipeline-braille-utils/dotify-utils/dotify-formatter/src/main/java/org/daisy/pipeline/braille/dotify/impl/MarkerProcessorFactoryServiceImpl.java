@@ -1,11 +1,12 @@
 package org.daisy.pipeline.braille.dotify.impl;
 
-import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.MarkerProcessor;
 import org.daisy.dotify.api.translator.MarkerProcessorConfigurationException;
 import org.daisy.dotify.api.translator.MarkerProcessorFactory;
 import org.daisy.dotify.api.translator.MarkerProcessorFactoryService;
 import org.daisy.dotify.api.translator.TextAttribute;
+import org.daisy.dotify.api.translator.Translatable;
+import org.daisy.dotify.api.translator.TranslationException;
 import org.daisy.dotify.api.translator.TranslatorConfigurationException;
 
 import static org.daisy.pipeline.braille.common.util.Strings.join;
@@ -57,9 +58,9 @@ public class MarkerProcessorFactoryServiceImpl implements MarkerProcessorFactory
 	
 	private static class MarkerProcessorImpl implements MarkerProcessor {
 		
-		private final BrailleFilter filter;
+		private final BrailleFilterFactoryImpl.BrailleFilterImpl filter;
 		
-		private MarkerProcessorImpl(BrailleFilter filter) {
+		private MarkerProcessorImpl(BrailleFilterFactoryImpl.BrailleFilterImpl filter) {
 			this.filter = filter;
 		}
 		
@@ -67,9 +68,11 @@ public class MarkerProcessorFactoryServiceImpl implements MarkerProcessorFactory
 			return join(processAttributesRetain(atts, text));
 		}
 		
-		// FIXME: don't ignore text attributes!
 		public String[] processAttributesRetain(TextAttribute atts, String[] text) {
-			return text;
+			try {
+				return filter.filterRetain(Translatable.text(join(text)).attributes(atts).build()); }
+			catch (TranslationException e) {
+				throw new RuntimeException(e); }
 		}
 	}
 }

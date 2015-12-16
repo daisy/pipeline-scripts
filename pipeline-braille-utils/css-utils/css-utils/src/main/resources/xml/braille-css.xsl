@@ -53,7 +53,9 @@
                  'font-weight',
                  'text-decoration',
                  'color',
-                 'line-height')"/>
+                 'line-height',
+                 'letter-spacing',
+                 'word-spacing')"/>
     
     <xsl:variable name="css:values" as="xs:string*"
         select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
@@ -96,6 +98,8 @@
                  re:exact(re:or(('normal','bold','100','200','300','400','500','600','700','800','900'))),
                  re:exact(re:or(('none','underline','overline','line-through','blink'))),
                  re:exact($css:COLOR_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
                  re:exact($css:NON_NEGATIVE_INTEGER_RE))"/>
     
     <xsl:variable name="css:applies-to" as="xs:string*"
@@ -139,7 +143,9 @@
                  '.*',
                  '.*',
                  '.*',
-                 '^(block|list-item)$')"/>
+                 '^(block|list-item)$',
+                 '.*',
+                 '.*')"/>
     
     <xsl:variable name="css:initial-values" as="xs:string*"
         select="('inline',
@@ -182,6 +188,8 @@
                  'normal',
                  'none',
                  '#000000',
+                 '1',
+                 '0',
                  '1')"/>
     
     <xsl:variable name="css:media" as="xs:string*"
@@ -224,6 +232,8 @@
                  'print',
                  'print',
                  'print',
+                 'embossed',
+                 'embossed',
                  'embossed')"/>
     
     <xsl:variable name="css:inherited-properties" as="xs:string*"
@@ -238,7 +248,9 @@
                  'font-weight',
                  'text-decoration',
                  'color',
-                 'line-height')"/>
+                 'line-height',
+                 'letter-spacing',
+                 'word-spacing')"/>
     
     <xsl:variable name="css:paged-media-properties" as="xs:string*"
         select="('page-break-before',
