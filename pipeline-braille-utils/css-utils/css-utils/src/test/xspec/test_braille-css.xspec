@@ -30,9 +30,10 @@
 			<x:param select="true()"/>
 			<x:param select="true()"/>
 			<x:param select="//bar">
-				<foo css:display="block" css:page="size: 10 10">
-					<bar style="display: inherit;
+				<foo css:orphans="3" css:page="size: 10 10">
+					<bar style="display: -foo-something;
 					            left: invalid;
+					            orphans: inherit;
 					            page-break-before: initial;
 					            string-set: print-page attr(num);
 					            someprop: someval;
@@ -41,7 +42,8 @@
 			</x:param>
 		</x:call>
 		<x:expect label="result">
-			<css:property name="display" value="block"/>
+			<css:property name="display" value="-foo-something"/>
+			<css:property name="orphans" value="3"/>
 			<css:property name="page-break-before" value="auto"/>
 			<css:property name="string-set" value="print-page attr(num)"/>
 			<css:property name="-foo-someprop" value="someval"/>
@@ -67,7 +69,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_06" >
+	<x:scenario label="test_06">
 		<x:call function="css:parse-stylesheet">
 			<x:param select="'::before { content: &quot; } &quot; }
 			                 {display:block}
@@ -102,7 +104,7 @@
 	
 	<x:scenario label="test_09">
 		<x:call function="css:parse-content-list">
-			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) string(print-page, start)'"/>
+			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) -x-foo(bar, baz) string(print-page, start)'"/>
 			<x:param select="//a">
 				<doc>
 					<a ref="#foo">foo</a>
@@ -112,6 +114,7 @@
 		<x:expect label="result">
 			<css:string target="#foo" name="print-page"/>
 			<css:counter name="braille-page" style="lower-roman"/>
+			<css:custom-func name="-x-foo" arg1="bar" arg2="baz"/>
 			<css:string name="print-page" scope="start"/>
 		</x:expect>
 	</x:scenario>

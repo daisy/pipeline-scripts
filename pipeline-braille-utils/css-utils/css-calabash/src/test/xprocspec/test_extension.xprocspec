@@ -3,6 +3,9 @@
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="../resources/inline.xpl">
   
+  <!--
+      Custom properties
+  -->
   <x:scenario label="test_01">
     <x:call step="css:inline">
       <x:input port="source">
@@ -10,11 +13,13 @@
           <document>
             <head>
               <style media="embossed" type="text/css">
-                p.foo-bar { foo: bar; }
+                p#1 { foo: bar }
+                p#2 { -x-foo: bar }
               </style>
             </head>
             <body>
-              <p class="foo-bar"/>
+              <p id="1"/>
+              <p id="2"/>
             </body>
           </document>
         </x:document>
@@ -26,12 +31,16 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p class="foo-bar"/>
+          <p id="1"/>
+          <p id="2" style="-x-foo: bar;"/>
         </body>
       </x:document>
     </x:expect>
   </x:scenario>
   
+  <!--
+      Custom values
+  -->
   <x:scenario label="test_02">
     <x:call step="css:inline">
       <x:input port="source">
@@ -39,11 +48,13 @@
           <document>
             <head>
               <style media="embossed" type="text/css">
-                p.foo-bar { -obfl-foo: bar; }
+                p#1 { display: foo }
+                p#2 { display: -x-foo }
               </style>
             </head>
             <body>
-              <p class="foo-bar"/>
+              <p id="1"/>
+              <p id="2"/>
             </body>
           </document>
         </x:document>
@@ -55,24 +66,32 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p class="foo-bar" style="-obfl-foo: bar;"/>
+          <p id="1"/>
+          <p id="2" style="display: -x-foo;"/>
         </body>
       </x:document>
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_03" pending="not supported yet">
+  <!--
+      Custom functions
+  -->
+  <x:scenario label="test_03">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
           <document>
             <head>
               <style media="embossed" type="text/css">
-                p.display-foo { display: -obfl-foo; }
+                p#1 { content: foo(bar) }
+                p#2 { content: -x-foo(bar) }
+                p#3 { content: -x-foo(bar, '⠿') }
               </style>
             </head>
             <body>
-              <p class="display-foo"/>
+              <p id="1"/>
+              <p id="2"/>
+              <p id="3"/>
             </body>
           </document>
         </x:document>
@@ -84,10 +103,47 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p class="display-foo" style="display: -obfl-foo"/>
+          <p id="1"/>
+          <p id="2" style="content: -x-foo(bar);"/>
+          <p id="3" style="content: -x-foo(bar, '⠿');"/>
         </body>
       </x:document>
     </x:expect>
   </x:scenario>
   
+  <!--
+      Custom pseudo elements
+  -->
+  <x:scenario label="test_04" pending="not implemented">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                p#1::foo { display: block }
+                p#2::-x-foo { display: block }
+              </style>
+            </head>
+            <body>
+              <p id="1"/>
+              <p id="2"/>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <p id="1"/>
+          <p id="2" style="::-x-foo { display: block }"/>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+    
 </x:description>

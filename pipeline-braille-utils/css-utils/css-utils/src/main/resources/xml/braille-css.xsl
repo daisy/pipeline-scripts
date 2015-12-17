@@ -58,7 +58,7 @@
                  'word-spacing')"/>
     
     <xsl:variable name="css:values" as="xs:string*"
-        select="(re:exact(re:or(('block','inline','list-item','none','page-break'))),
+        select="(re:exact(re:or(('block','inline','list-item','none','page-break',$css:VENDOR_PRF_IDENT_RE))),
                  re:exact($css:IDENT_RE),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
@@ -264,7 +264,7 @@
         <xsl:variable name="index" select="index-of($css:properties, $css:property/@name)"/>
         <xsl:sequence select="if ($index)
                               then $css:property/@value=('inherit', 'initial') or matches($css:property/@value, $css:values[$index], 'x')
-                              else matches($css:property/@name, '^-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*$')"/> <!-- might be valid -->
+                              else matches($css:property/@name, re:exact($css:VENDOR_PRF_IDENT_RE))"/> <!-- might be valid -->
     </xsl:function>
     
     <xsl:function name="css:initial-value" as="xs:string?">
@@ -286,7 +286,7 @@
         <xsl:variable name="index" select="index-of($css:properties, $property)"/>
         <xsl:sequence select="if ($index)
                               then matches($display, $css:applies-to[$index])
-                              else matches($property, '^-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*$')"/> <!-- might apply -->
+                              else matches($property, re:exact($css:VENDOR_PRF_IDENT_RE))"/> <!-- might apply -->
     </xsl:function>
     
     <!-- ================== -->

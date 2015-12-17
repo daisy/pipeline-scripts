@@ -40,6 +40,9 @@
     <xsl:variable name="css:IDENT_LIST_RE" select="re:space-separated($css:IDENT_RE)"/>
     <xsl:variable name="css:IDENT_LIST_RE_groups" select="re:space-separated-groups($css:IDENT_RE_groups)"/>
     
+    <xsl:variable name="css:VENDOR_PRF_IDENT_RE" select="'-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*'"/>
+    <xsl:variable name="css:VENDOR_PRF_IDENT_RE_groups" select="3"/>
+    
     <!--
         <integer>
     -->
@@ -139,6 +142,19 @@
     <xsl:variable name="css:FLOW_FN_RE_ident" select="1"/>
     <xsl:variable name="css:FLOW_FN_RE_groups" select="$css:FLOW_FN_RE_ident + $css:IDENT_RE_groups"/>
     
+    <!--
+        -foo-bar([<ident>|<string>|<integer>][,[<ident>|<string>|<integer>]]*)
+    -->
+    <xsl:variable name="css:VENDOR_PRF_FN_ARG_RE" select="re:or(($css:IDENT_RE,$css:STRING_RE,$css:INTEGER_RE))"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_ARG_RE_ident" select="1"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_ARG_RE_string" select="$css:VENDOR_PRF_FN_ARG_RE_ident + $css:IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_ARG_RE_integer" select="$css:VENDOR_PRF_FN_ARG_RE_string + $css:STRING_RE_groups + 1"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_ARG_RE_groups" select="$css:VENDOR_PRF_FN_ARG_RE_integer + $css:INTEGER_RE_groups"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_RE" select="concat('(',$css:VENDOR_PRF_IDENT_RE,')\(\s*(',re:comma-separated($css:VENDOR_PRF_FN_ARG_RE),')\s*\)')"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_RE_func" select="1"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_RE_args" select="$css:VENDOR_PRF_FN_RE_func + $css:VENDOR_PRF_IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:VENDOR_PRF_FN_RE_groups" select="$css:VENDOR_PRF_FN_RE_args + re:comma-separated-groups($css:VENDOR_PRF_FN_ARG_RE_groups)"/>
+    
     <xsl:variable name="css:CONTENT_RE" select="concat('(',$css:STRING_RE,')|
                                                         (',$css:CONTENT_FN_RE,')|
                                                         (',$css:ATTR_FN_RE,')|
@@ -148,7 +164,8 @@
                                                         (',$css:TARGET_STRING_FN_RE,')|
                                                         (',$css:TARGET_COUNTER_FN_RE,')|
                                                         (',$css:LEADER_FN_RE,')|
-                                                        (',$css:FLOW_FN_RE,')')"/>
+                                                        (',$css:FLOW_FN_RE,')|
+                                                        (',$css:VENDOR_PRF_FN_RE,')')"/>
     <xsl:variable name="css:CONTENT_RE_string" select="1"/>
     <xsl:variable name="css:CONTENT_RE_content_fn" select="$css:CONTENT_RE_string + $css:STRING_RE_groups + 1"/>
     <xsl:variable name="css:CONTENT_RE_attr_fn" select="$css:CONTENT_RE_content_fn + $css:CONTENT_FN_RE_groups + 1"/>
@@ -178,7 +195,10 @@
     <xsl:variable name="css:CONTENT_RE_leader_fn_pattern" select="$css:CONTENT_RE_leader_fn + $css:LEADER_FN_RE_pattern"/>
     <xsl:variable name="css:CONTENT_RE_flow_fn" select="$css:CONTENT_RE_leader_fn + $css:LEADER_FN_RE_groups + 1"/>
     <xsl:variable name="css:CONTENT_RE_flow_fn_ident" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_ident"/>
-    <xsl:variable name="css:CONTENT_RE_groups" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_groups"/>
+    <xsl:variable name="css:CONTENT_RE_vendor_prf_fn" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_groups + 1"/>
+    <xsl:variable name="css:CONTENT_RE_vendor_prf_fn_func" select="$css:CONTENT_RE_vendor_prf_fn + $css:VENDOR_PRF_FN_RE_func"/>
+    <xsl:variable name="css:CONTENT_RE_vendor_prf_fn_args" select="$css:CONTENT_RE_vendor_prf_fn + $css:VENDOR_PRF_FN_RE_args"/>
+    <xsl:variable name="css:CONTENT_RE_groups" select="$css:CONTENT_RE_vendor_prf_fn + $css:VENDOR_PRF_FN_RE_groups"/>
     
     <xsl:variable name="css:CONTENT_LIST_RE" select="re:space-separated($css:CONTENT_RE)"/>
     <xsl:variable name="css:CONTENT_LIST_RE_groups" select="re:space-separated-groups($css:CONTENT_RE_groups)"/>
@@ -397,6 +417,18 @@
                         -->
                         <xsl:when test="regex-group($css:CONTENT_RE_flow_fn)!=''">
                             <css:flow from="{regex-group($css:CONTENT_RE_flow_fn_ident)}"/>
+                        </xsl:when>
+                        <!--
+                            -foo-bar([<ident>|<string>|<integer>][,[<ident>|<string>|<integer>]]*)
+                        -->
+                        <xsl:when test="regex-group($css:CONTENT_RE_vendor_prf_fn)!=''">
+                            <css:custom-func name="{regex-group($css:CONTENT_RE_vendor_prf_fn_func)}">
+                                <xsl:analyze-string select="regex-group($css:CONTENT_RE_vendor_prf_fn_args)" regex="{$css:VENDOR_PRF_FN_ARG_RE}">
+                                    <xsl:matching-substring>
+                                        <xsl:attribute name="arg{(position()+1) idiv 2}" select="."/>
+                                    </xsl:matching-substring>
+                                </xsl:analyze-string>
+                            </css:custom-func>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:matching-substring>

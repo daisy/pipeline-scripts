@@ -34,7 +34,7 @@
             validate
         -->
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="$properties[@name=$css:properties]" mode="css:validate"/>
+            <xsl:apply-templates select="$properties" mode="css:validate"/>
         </xsl:variable>
         <!--
             inherit
