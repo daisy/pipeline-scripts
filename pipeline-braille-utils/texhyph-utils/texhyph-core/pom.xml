@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.8</version>
+    <version>1.9.9-SNAPSHOT</version>
     <relativePath>../../../parent/</relativePath>
   </parent>
 
   <artifactId>texhyph-core</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: texhyph-utils :: texhyph-core</name>

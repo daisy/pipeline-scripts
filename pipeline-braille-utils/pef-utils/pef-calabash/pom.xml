@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.8</version>
+    <version>1.9.9-SNAPSHOT</version>
     <relativePath>../../../parent/</relativePath>
   </parent>
 
   <artifactId>pef-calabash</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: pef-utils :: pef-calabash</name>
