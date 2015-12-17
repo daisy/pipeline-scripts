@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>libhyphen-core</artifactId>
-  <version>3.0.3-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: libhyphen-utils :: libhyphen-core</name>
@@ -57,12 +57,17 @@
       <classifier>linux</classifier>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        optional (causes circular dependency issues)
+    -->
+    <!--
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>libhyphen-libreoffice-tables</artifactId>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+    -->
     <!--
         test dependencies
     -->
