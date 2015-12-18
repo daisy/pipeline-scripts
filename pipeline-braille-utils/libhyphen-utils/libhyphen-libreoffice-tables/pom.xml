@@ -4,11 +4,11 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.9-SNAPSHOT</version>
     <relativePath>../../../parent/</relativePath>
   </parent>
   <artifactId>libhyphen-libreoffice-tables</artifactId>
-  <version>4.0.1-SNAPSHOT</version>
+  <version>4.0.0-2-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>DP2 Braille Modules :: libhyphen-utils :: libhyphen-libreoffice-tables</name>
   <dependencies>
