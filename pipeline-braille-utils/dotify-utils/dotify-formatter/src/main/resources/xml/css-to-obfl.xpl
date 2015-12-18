@@ -282,7 +282,7 @@
                         <xsl:variable name="new:properties" as="xs:string*"
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
-                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-marker',
+                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',
                                                'margin-bottom', 'orphans',                          'word-spacing',
                                                'border-left',   'widows',                           'letter-spacing',
                                                'border-right',
@@ -297,8 +297,6 @@
                                                     then $css:property/@value=('before','center','after')
                                                     else if ($css:property/@name='-obfl-vertical-position')
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
-                                                    else if ($css:property/@name='-obfl-marker')
-                                                    then matches($css:property/@value,'^(\p{L}|_)(\p{L}|_|-)*$')
                                                     else (
                                                       css:is-valid($css:property)
                                                       and not($css:property/@value=('inherit','initial'))
@@ -312,8 +310,6 @@
                                                   then 'after'
                                                   else if ($property='-obfl-vertical-position')
                                                   then 'auto'
-                                                  else if ($property='-obfl-marker')
-                                                  then 'none'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
