@@ -5,6 +5,7 @@ Library of building blocks that the
 [top-level scripts](../pipeline-braille-scripts) are made up from. The
 building blocks are divided into logical *groups*:
 
+- [`common-utils`](common-utils/src/main)
 - [`css-utils`](css-utils)
 - [`dotify-utils`](dotify-utils)
 - [`libhyphen-utils`](libhyphen-utils)

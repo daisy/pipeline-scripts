@@ -3,30 +3,15 @@ pef-utils
 
 Building blocks related to [PEF][] (Portable Embosser Format).
 
-[library.xsl](pef-utils/src/main/resources/xml/library.xsl)
--------------------------------------------------
-
-- `pef:encode`: Re-encode a Braille string (Unicode Braille) using a
-  specified character set.
-
-[library.xpl](pef-utils/src/main/resources/xml/library.xpl)
--------------------------------------------------
-
-- `pef:pef2text`: Convert a PEF document into a textual (ASCII-based)
-  format.
-- `pef:text2pef`: Convert an ASCII-based Braille format into PEF.
-- `pef:validate`: Validate a PEF document.
-- `pef:merge`: Merge PEF documents on volume- or section-level.
-- `pef:store`: Store a PEF document to disk, possibly in an
-  ASCII-based format or with an HTML preview.
-- `pef:compare`: Compare two PEF documents.
-- `x:pef-compare`: Compare two PEF documents as a custom [XProcSpec][] assertion.
-
 Submodules
 ----------
 
-- [`pef-calabash`](pef-calabash): XProc bindings for [BrailleUtils][].
-- [`pef-saxon`](pef-saxon): XPath bindings for BrailleUtils.
+- [`pef-utils`](pef-utils/src/main)
+- [`pef-core`](pef-core/src/main)
+- [`pef-calabash`](pef-calabash/src/main): XProc bindings for
+  [BrailleUtils][].
+- [`pef-saxon`](pef-saxon/src/main): XPath bindings for BrailleUtils.
+
 
 [PEF]: http://pef-format.org
 [BrailleUtils]: http://code.google.com/p/brailleutils
