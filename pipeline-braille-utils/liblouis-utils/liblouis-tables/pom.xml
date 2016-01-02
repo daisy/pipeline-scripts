@@ -47,53 +47,7 @@
   </dependencies>
   
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <targetPath>tables</targetPath>
-        <directory>${basedir}/target/generated-resources/tables</directory>
-      </resource>
-    </resources>
     <plugins>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>checkout</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <mkdir dir="target/checkout" />
-                <get dest="target/checkout/liblouis.tar.gz" src="${liblouis.tarball.url}" usetimestamp="true" skipexisting="true" />
-                <local name="checksum.matches" />
-                <local name="checksum.matches.fail" />
-                <checksum file="target/checkout/liblouis.tar.gz" algorithm="sha1" property="${liblouis.tarball.sha1}" verifyproperty="checksum.matches" />
-                <condition property="checksum.matches.fail">
-                  <equals arg1="${checksum.matches}" arg2="false" />
-                </condition>
-                <fail if="checksum.matches.fail">Checksum error</fail>
-                <untar src="target/checkout/liblouis.tar.gz" compression="gzip" dest="target/generated-resources">
-                  <patternset>
-                    <include name="*/tables/*" />
-                    <exclude name="*/tables/lang2table" />
-                    <exclude name="*/tables/Makefile.am" />
-                    <exclude name="*/tables/maketablelist.sh" />
-                    <exclude name="*/tables/README" />
-                  </patternset>
-                  <mapper>
-                    <globmapper from="liblouis-liblouis-e043e8c/*" to="*" />
-                  </mapper>
-                </untar>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.ops4j.pax.exam</groupId>
         <artifactId>maven-paxexam-plugin</artifactId>
@@ -130,5 +84,55 @@
       </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>generate-liblouis-files</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>checkout</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <mkdir dir="target/checkout" />
+                    <get dest="target/checkout/liblouis.tar.gz" src="${liblouis.tarball.url}" usetimestamp="true" skipexisting="true" />
+                    <local name="checksum.matches" />
+                    <local name="checksum.matches.fail" />
+                    <checksum file="target/checkout/liblouis.tar.gz" algorithm="sha1" property="${liblouis.tarball.sha1}" verifyproperty="checksum.matches" />
+                    <condition property="checksum.matches.fail">
+                      <equals arg1="${checksum.matches}" arg2="false" />
+                    </condition>
+                    <fail if="checksum.matches.fail">Checksum error</fail>
+                    <untar src="target/checkout/liblouis.tar.gz" compression="gzip" dest="src/main/resources">
+                      <patternset>
+                        <include name="*/tables/*" />
+                        <exclude name="*/tables/lang2table" />
+                        <exclude name="*/tables/Makefile.am" />
+                        <exclude name="*/tables/maketablelist.sh" />
+                        <exclude name="*/tables/README" />
+                      </patternset>
+                      <mapper>
+                        <globmapper from="liblouis-liblouis-e043e8c/*" to="*" />
+                      </mapper>
+                    </untar>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
