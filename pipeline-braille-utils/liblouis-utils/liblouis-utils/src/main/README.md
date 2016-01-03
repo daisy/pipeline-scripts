@@ -12,6 +12,12 @@
   - `louis:translate-mathml`: Translate a MathML document to Braille
     using liblouisutdml.
 
+## OSGi services
+
+### Transformers (`org.daisy.pipeline.braille.common.TransformProvider`)
+
+- [`org.daisy.pipeline.braille.liblouis.impl.LiblouisCSSBlockTransform.Provider`](java/org/daisy/pipeline/braille/liblouis/impl/LiblouisCSSBlockTransform.java): `(input:css)(output:css)(translator:liblouis)`
+
 
 <link rev="dp2:doc" href="./"/>
 <link rel="rdf:type" href="http://www.daisy.org/ns/pipeline/apidoc"/>

@@ -7,10 +7,16 @@
 
 ### CSS
 
-- `http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css`
-- `http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/reset.css`
-- `http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css`
-- `http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/ueb.css`
+- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css`](resources/css/default.css)
+- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/reset.css`](resources/css/reset.css)
+- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css`](resources/css/bana.css)
+- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/ueb.css`](resources/css/ueb.css)
+
+## OSGi services
+
+### Scripts (`org.daisy.pipeline.script.XProcScriptService`)
+
+- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/zedai-to-pef.xpl`](resources/xml/zedai-to-pef.xpl)
 
 
 <link rev="dp2:doc" href="./"/>

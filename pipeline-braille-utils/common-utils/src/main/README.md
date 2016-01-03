@@ -18,9 +18,19 @@ General purpose building blocks.
   - `px:validate-braille`
   - `px:xslt-for-each`
 
-## Java
+## Java API
 
 - package <a href="java/org/daisy/pipeline/braille/common/" class="apidoc">`org.daisy.pipeline.braille.common`</a>
+
+## OSGi services
+
+### Saxon functions (`net.sf.saxon.lib.ExtensionFunctionDefinition`)
+
+- [`{http://www.daisy.org/ns/pipeline/functions}text-transform`](java/org/daisy/pipeline/braille/common/saxon/impl/TextTransformDefinition.java)
+
+### Calabash steps (`org.daisy.common.xproc.calabash.XProcStepProvider`)
+
+- [`{http://www.daisy.org/ns/pipeline/xproc}transform`](java/org/daisy/pipeline/braille/common/calabash/impl/PxTransformStep.java)
 
 
 <link rev="dp2:doc" href="./"/>

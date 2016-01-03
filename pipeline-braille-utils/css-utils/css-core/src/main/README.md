@@ -1,6 +1,6 @@
 # css-core API
 
-## Java
+## Java API
 
 - package <a href="java/org/daisy/pipeline/braille/css/" class="apidoc"><code>org.daisy.pipeline.braille.css</code></a>
 

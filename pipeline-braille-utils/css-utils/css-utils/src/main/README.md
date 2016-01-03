@@ -27,6 +27,8 @@
   - `css:shift-id`
   - `css:shift-string-set`
   - `css:split`
+  
+- <a href="resources/xml/transform/block-translator-template.xsl" class="apidoc">`http://www.daisy.org/pipeline/modules/braille/css-utils/transform/block-translator-template.xsl`</a>
 
 
 <link rev="dp2:doc" href="./"/>
