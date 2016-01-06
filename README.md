@@ -21,6 +21,16 @@ into subdirectories in a logical and consistent way.
   from. The building blocks are divided into logical *groups* such as
   `css-utils`, `pef-utils`, `liblouis-utils`, etc.
 
+Building
+--------
+Build and run the unit tests with:
+
+```sh
+mvn clean install
+```
+
+The recommended version of Java is 7.
+
 Release procedure
 -----------------
 - Version number should match next version of pipeline-assembly.
