@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 import static com.google.common.collect.Iterables.size;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
@@ -142,10 +143,16 @@ public class DotifyFormatterTest {
 	@Test
 	public void runXProcSpec() throws Exception {
 		File baseDir = new File(PathUtils.getBaseDir());
-		boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
+		boolean success = xprocspecRunner.run(ImmutableMap.of("test_format",
+		                                                      new File(baseDir, "src/test/xprocspec/test_format.xprocspec"),
+		                                                      "test_obfl-to-pef",
+		                                                      new File(baseDir, "src/test/xprocspec/test_obfl-to-pef.xprocspec"),
+		                                                      "test_propagate-page-break.xprocspec",
+		                                                      new File(baseDir, "src/test/xprocspec/test_propagate-page-break.xprocspec")),
 		                                      new File(baseDir, "target/xprocspec-reports"),
 		                                      new File(baseDir, "target/surefire-reports"),
 		                                      new File(baseDir, "target/xprocspec"),
+		                                      null,
 		                                      new XProcSpecRunner.Reporter.DefaultReporter());
 		assertTrue("XProcSpec tests should run with success", success);
 	}

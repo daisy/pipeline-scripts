@@ -4,6 +4,9 @@
                script="../../main/resources/xml/format.xpl">
   
   <x:scenario label="test_01">
+    <x:documentation>
+      Tests page styles with different dimensions in the same document.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -95,6 +98,10 @@
   </x:scenario>
   
   <x:scenario label="test_02">
+    <x:documentation>
+      Tests rendering print page, running header and running footer in page margin. The strings are
+      set, and sometimes emptied, individually at various places in the document.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -259,6 +266,10 @@
   </x:scenario>
   
   <x:scenario label="test_03">
+    <x:documentation>
+      Tests rendering print page and running footer in bottom page margin. The print page and
+      running footer strings are set in a previous section that has no page margin.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -367,6 +378,10 @@
   </x:scenario>
   
   <x:scenario label="test_04">
+    <x:documentation>
+      Tests counter(page) and counter-set:page. In different sections the page number is placed in
+      different positions (header, footer or nowhere). Broken: Dotify page numbering bug?
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -481,8 +496,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
-              pending="dotify page numbering bug?">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -544,7 +558,11 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_05" pending="Invalid input: 'i' (roman numbers are not translated)">
+  <x:scenario label="test_05" pending="xfail doesn't work because of error">
+    <x:documentation>
+      Tests counter(page) with different counter styles. Broken: "Invalid input: 'i'" (roman numbers
+      are not translated).
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -691,91 +709,14 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_06">
-    <x:call step="dotify:format">
-      <x:input port="source">
-        <x:document type="inline">
-          <doc style="text-transform:none">
-            <body style="@page {
-                         size: 15 5;
-                         @bottom-right { content: string(print-page) ' ' counter(page) }}">
-              <section style="string-set: print-page '⠤⠤'">
-                ⠤⠤⠤
-              </section>
-            </body>
-          </doc>
-        </x:document>
-      </x:input>
-    </x:call>
-    <x:context label="obfl">
-      <x:document type="port" port="obfl"/>
-    </x:context>
-    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
-      <x:document type="inline">
-        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-          <layout-master name="body" page-width="15" page-height="5" duplex="true" page-number-variable="page">
-            <default-template>
-              <header/>
-              <footer>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
-                  <string value=" "/>
-                  <current-page number-format="default"/>
-                </field>
-              </footer>
-            </default-template>
-          </layout-master>
-          <sequence master="body">
-            <block>
-              <marker class="print-page/prev" value="​"/>
-              <marker class="print-page" value="⠤⠤"/>
-              ⠤⠤⠤
-            </block>
-          </sequence>
-        </obfl>
-      </x:document>
-    </x:expect>
-    <x:context label="pef">
-      <x:document type="port" port="result"/>
-    </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-      <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
-            <meta>
-              <dc:format>application/x-pef+xml</dc:format>
-            </meta>
-          </head>
-          <body>
-            <volume rows="5" cols="15" rowgap="0" duplex="true">
-              <section>
-                <page>
-                  <row>⠤⠤⠤</row>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠀⠼⠁</row>
-                </page>
-              </section>
-            </volume>
-          </body>
-        </pef>
-      </x:document>
-    </x:expect>
-  </x:scenario>
-  
   <!--
-      Page break control, including keeping multiple blocks together
+      TODO: move orphans and widows to their own test?
   -->
   <x:scenario label="test_07">
+    <x:documentation>
+      Tests page-break-inside:avoid and page-break-after:avoid, both on text-only blocks and on
+      blocks with nested blocks. Also tests orphans and widows.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1145,10 +1086,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Widow/orphan control on blocks with borders
-  -->
   <x:scenario label="test_08">
+    <x:documentation>
+      Tests orphans and widows on blocks with top/bottom borders. Counting of orphan and widow lines
+      does not include borders.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1284,10 +1226,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      page-break-after: always
-  -->
   <x:scenario label="test_09">
+    <x:documentation>
+      Tests page-break-after:always.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1349,10 +1291,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      forced page break before a first-child box is moved to its container
-  -->
   <x:scenario label="test_10">
+    <x:documentation>
+      Tests that forced page break before a first-child box is moved to container.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1439,10 +1381,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      borders
-  -->
   <x:scenario label="test_11">
+    <x:documentation>
+      Tests nested blocks with borders and margins.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1571,6 +1513,9 @@
   </x:scenario>
   
   <x:scenario label="test_12">
+    <x:documentation>
+      Tests top and bottom borders with pattern "⠒".
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1645,6 +1590,9 @@
   </x:scenario>
   
   <x:scenario label="test_13">
+    <x:documentation>
+      Tests ::after pseudo element.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1711,10 +1659,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Left/right margins
-  -->
   <x:scenario label="test_14">
+    <x:documentation>
+      Tests cumulation of left margins.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1773,10 +1721,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Negative left/right margin
-  -->
   <x:scenario label="test_15">
+    <x:documentation>
+      Tests cumulation of left margins including negative margins.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1835,10 +1783,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Indentation
-  -->
   <x:scenario label="test_16">
+    <x:documentation>
+      Tests text-indent.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1896,10 +1844,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Hanging indentation
-  -->
   <x:scenario label="test_17">
+    <x:documentation>
+      Tests hanging indentation (negative text-indent).
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -1960,6 +1908,10 @@
   </x:scenario>
   
   <x:scenario label="test_18">
+    <x:documentation>
+      Tests print page break indicator line within block. The line breaks the block in two
+      fragments. The text-indent of the block is only applied to the first fragment.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2031,10 +1983,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Lists
-  -->
   <x:scenario label="test_19">
+    <x:documentation>
+      Tests display:list-item, list-style-type and counter-reset.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2105,9 +2057,14 @@
   </x:scenario>
   
   <!--
-      Cross-references: table of content
+      TODO: check if java.lang.ArrayIndexOutOfBoundsException is still the case => yes, make new
+      test! (or is this same as leader issue?)
   -->
-  <x:scenario label="test_20" pending="leader issue + java.lang.ArrayIndexOutOfBoundsException">
+  <x:scenario label="test_20" pending="xfail doesn't work because of error">
+    <x:documentation>
+      Tests a table of content with target-text(), target-string(), target-counter() and
+      leader(). Broken: leader issue: see https://github.com/braillespecs/obfl/issues/31.
+    </x:documentation>
       <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2284,7 +2241,15 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_21" pending="leader issue + java.lang.ArrayIndexOutOfBoundsException">
+  <!--
+      TODO: check if java.lang.ArrayIndexOutOfBoundsException is still the case => yes, make new test!
+  -->
+  <x:scenario label="test_21" pending="xfail doesn't work because of error">
+    <x:documentation>
+      Tests target-text() and target-counter() with both forward references (table of contents in
+      the front) and backward references (index in the back). Broken: leader issue: see
+      https://github.com/braillespecs/obfl/issues/31.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2461,11 +2426,12 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      reference to inline element
-  -->
-  <x:scenario label="test_22" pending="Failed to complete volume division (Dotify bug?)">
-      <x:call step="dotify:format">
+  <x:scenario label="test_22" pending="xfail doesn't work because of error">
+    <x:documentation>
+      Tests target-counter() referencing inline element. Broken: "Failed to complete volume
+      division": is this a Dotify bug?
+    </x:documentation>
+    <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
           <doc style="{ text-transform:none } @page { size: 14 8 }">
@@ -2542,6 +2508,9 @@
   </x:scenario>
   
   <x:scenario label="test_23">
+    <x:documentation>
+      Tests generated newline (&#xA;) and white-space:pre-line.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2598,6 +2567,9 @@
   </x:scenario>
   
   <x:scenario label="test_24">
+    <x:documentation>
+      Tests -obfl-vertical-position and -obfl-vertical-align:before.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2658,10 +2630,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      hyphenation
-  -->
   <x:scenario label="test_25">
+    <x:documentation>
+      Tests (pre-)hyphenation.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2717,10 +2689,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      collapsing margins
-  -->
   <x:scenario label="test_26">
+    <x:documentation>
+      Tests collapsing of margins of adjacent sibling blocks.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2787,10 +2759,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      empty block and collapsing margins
-  -->
   <x:scenario label="test_27">
+    <x:documentation>
+      Tests collapsing of margins of three adjacent sibling blocks, the middle one being empty.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2849,10 +2821,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-    Double line spacing per paragraph
-  -->
   <x:scenario label="test_28">
+    <x:documentation>
+      Tests line-height:2 on blocks.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2924,10 +2896,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-    Double line spacing per doc
-  -->
   <x:scenario label="test_29">
+    <x:documentation>
+      Tests line-height:2 on root element.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -2999,10 +2971,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      line-height and margin|padding-top|bottom
-  -->
   <x:scenario label="test_30">
+    <x:documentation>
+      Tests combination of line-height:2 and margin-top or margin-bottom.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3077,10 +3049,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      line-height and border-top|bottom
-  -->
   <x:scenario label="test_31">
+    <x:documentation>
+      Tests combination of line-height:2 and border-bottom.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3141,10 +3113,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      line-height and margin|padding|border-top|bottom and text-align
-  -->
   <x:scenario label="test_32">
+    <x:documentation>
+      Tests combination of line-height:2, margin-bottom, and text-align. Text-align must end up on
+      inner block.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3205,8 +3178,10 @@
     </x:expect>
   </x:scenario>
   
-  <!-- Page top margin, no header, 1 row -->
   <x:scenario label="test_33">
+    <x:documentation>
+      Tests margin-top:1 in @page.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3274,8 +3249,10 @@
     </x:expect>
   </x:scenario>
   
-  <!-- Page top margin, no header, 2 rows -->
   <x:scenario label="test_34">
+    <x:documentation>
+      Tests margin-top:2 in @page.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3355,8 +3332,10 @@
     </x:expect>
   </x:scenario>
   
-  <!-- Page top margin, header, 1 row -->
   <x:scenario label="test_35">
+    <x:documentation>
+      Tests simple content in @top-left.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3424,8 +3403,10 @@
     </x:expect>
   </x:scenario>
   
-  <!-- Page top margin, header, 2 rows -->
   <x:scenario label="test_36">
+    <x:documentation>
+      Tests simple content in @top-left within two-line top page margin.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3505,8 +3486,10 @@
     </x:expect>
   </x:scenario>
 
-  <!-- :left and :right pseudoselectors -->
   <x:scenario label="test_37">
+    <x:documentation>
+      Tests @page:right and @page:left pseudo-selectors.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3612,10 +3595,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      empty blocks
-  -->
   <x:scenario label="test_38">
+    <x:documentation>
+      Tests empty blocks. Blocks containing only an empty span or a blank braille pattern are also
+      considered empty.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3694,10 +3678,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      empty block and border
-  -->
   <x:scenario label="test_39">
+    <x:documentation>
+      Tests empty blocks with border. A block containing a blank braille pattern is also considered
+      empty.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3757,10 +3742,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      empty target box
-  -->
   <x:scenario label="test_40">
+    <x:documentation>
+      Tests empty target box. The id is shifted to the next non-empty block.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3828,10 +3813,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      text-transform, hyphens
-  -->
   <x:scenario label="test_41">
+    <x:documentation>
+      Tests hyphens:none and text-transform. Both are currently handled in XSLT (not in Dotify).
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3912,10 +3897,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin
-  -->
   <x:scenario label="test_42">
+    <x:documentation>
+      Tests margin-bottom:1 in @page.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -3999,10 +3984,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin, height 2
-  -->
   <x:scenario label="test_43">
+    <x:documentation>
+      Tests margin-bottom:2 in @page.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4097,10 +4082,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin, content in footer, height 1
-  -->
   <x:scenario label="test_44">
+    <x:documentation>
+      Tests simple content in @bottom-left.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4184,10 +4169,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin, single line content in footer, height 2
-  -->
   <x:scenario label="test_45">
+    <x:documentation>
+      Tests simple content in @bottom-left within two-line bottom page margin.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4282,10 +4267,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin, multiple line content in footer, height 2
-  -->
   <x:scenario label="test_46">
+    <x:documentation>
+      Tests newline (&#x0a;) with white-space:pre-wrap in bottom page margin, which results into
+      multi-line footer.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4380,10 +4366,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Page bottom margin, multiple line content in footer, height 1
-  -->
   <x:scenario label="test_47">
+    <x:documentation>
+      Tests newline (&#x0a;) with white-space:pre-wrap in bottom page margin, which results into
+      multi-line footer, even with margin-bottom:1.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4478,11 +4465,14 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Left corner: range of print pages covered on current page
-      Right corner of right page: range of print pages covered on current page spread
-  -->
   <x:scenario label="test_48">
+    <x:documentation>
+      Tests rendering of range of print pages covered on current page (left corner of all pages) or
+      current page spread (right corner of right-hand pages). Broken: behavior of page-content
+      changed in Dotify 2.0.0 (see https://github.com/joeha480/dotify/issues/150) and I wrongly
+      assume that scope page-content with start-offset -1 would return something when evaluated on
+      the first page of the document (see https://github.com/joeha480/dotify/issues/144).
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4653,8 +4643,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
-              pending="using spread scope on first page leads to wrong results. fix with @page:first">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -4673,7 +4662,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠁⠒⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠒⠼⠁</row> <!-- 1-1   ...   1-1 -->
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 1     ...     1 --> <!-- was: 1-1   ...    -1 -->
                 </page>
                 <!-- left -->
                 <page>
@@ -4683,7 +4672,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠃⠒⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2-2 -->
+                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2 --> <!-- was: 1-2 -->
                 </page>
                 <!-- right -->
                 <page>
@@ -4694,7 +4683,7 @@
                   <!-- print page 3 -->
                   <row>⠁⠁⠁</row>
                   <!-- print page 4 -->
-                  <row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃⠒⠼⠉</row> <!-- 2-3   ...   2-3 -->
+                  <row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃⠒⠼⠉</row> <!-- 2-3   ...   2-3 --> <!-- was: 2-3   ...   1-3 -->
                 </page>
                 <!-- left -->
                 <page>
@@ -4704,7 +4693,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠙⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4-5 -->
+                  <row>⠼⠙⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4-5 --> <!-- was: 3-5 -->
                 </page>
                 <!-- right -->
                 <page>
@@ -4714,7 +4703,7 @@
                   <row>⠁⠁⠁</row>
                   <!-- print page 6 -->
                   <row/>
-                  <row>⠼⠑⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5-5   ...   4-5 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5     ...   4-5 --> <!-- was: 5     ...   3-5 -->
                 </page>
               </section>
             </volume>
@@ -4725,6 +4714,9 @@
   </x:scenario>
   
   <x:scenario label="test_52">
+    <x:documentation>
+      Tests string-set on not-rendered elements in between blocks.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4851,10 +4843,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      pagenums within paragraph
-  -->
   <x:scenario label="test_53">
+    <x:documentation>
+      Tests string-set on not-rendered elements inside blocks. Broken: behavior of page-content
+      changed in Dotify 2.0.0 (see https://github.com/joeha480/dotify/issues/150)
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -4965,8 +4958,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
-              pending="regression in dotify 2.0.0-SNAPSHOT?">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5029,10 +5021,10 @@
     </x:expect>
   </x:scenario>
   
-   <!--
-      Volume areas
-  -->
   <x:scenario label="test_49">
+    <x:documentation>
+      Tests flow, flow() and @begin.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5108,10 +5100,10 @@
     </x:expect>
   </x:scenario>
   
-   <!--
-      Volume size
-  -->
   <x:scenario label="test_50">
+    <x:documentation>
+      Tests max-length.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5300,10 +5292,12 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      Volume pseudo-classes
-  -->
   <x:scenario label="test_51">
+    <x:documentation>
+      Tests volume pseudo-class @volume:first. Broken: "Implementation does not support different
+      target volume size. All volumes must have the same target size." (see
+      https://github.com/joeha480/dotify/issues/102)
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5354,8 +5348,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
-              pending="implementation does not support different target volume size">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5494,10 +5487,11 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      correct resolving of "first" and "start" string assignments with multiple sequences
-  -->
   <x:scenario label="test_54">
+    <x:documentation>
+      Tests string(..., first) and string(..., start) with multiple sequences. Broken: behavior of
+      page-content changed in Dotify 2.0.0 (see https://github.com/joeha480/dotify/issues/150)
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5585,8 +5579,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
-              pending="regression in dotify 2.0.0-SNAPSHOT?">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5630,10 +5623,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      left margin
-  -->
   <x:scenario label="test_55">
+    <x:documentation>
+      Tests margin-left in @page.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5713,11 +5706,11 @@
       </x:document>
     </x:expect>
   </x:scenario>
-
-  <!--
-      marks in left margin
-  -->
+  
   <x:scenario label="test_56">
+    <x:documentation>
+      Tests -obfl-marker-indicator() in @left.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
@@ -5798,10 +5791,10 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      marks in (forced) left margin
-  -->
   <x:scenario label="test_57">
+    <x:documentation>
+      Tests -obfl-marker-indicator() in @left when @page has no margin-left.
+    </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">

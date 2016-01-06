@@ -3,7 +3,7 @@
 CURDIR=$( cd $( dirname "$0" ) && pwd )
 SAXON=${HOME}/.m2/repository/net/sf/saxon/Saxon-HE/9.5.1-5/Saxon-HE-9.5.1-5.jar
 
-for f in $CURDIR/src/test/xprocspec/test_{format,obfl-to-pef}.xprocspec; do
+for f in $CURDIR/src/test/xprocspec/test_dotify.formatter.impl.xprocspec; do
     output_dir=$CURDIR/target/dotify-tests/$(basename $f)
     mkdir -p $output_dir
     java -jar "$SAXON" \

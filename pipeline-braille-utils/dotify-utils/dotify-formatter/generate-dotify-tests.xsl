@@ -18,6 +18,8 @@
                 <xsl:apply-templates select="x:call/x:input[@port='source']/x:document[@type='inline']/obfl:obfl|
                                              x:expect/x:document[@type='inline']/obfl:obfl">
                     <xsl:with-param name="title" select="@label" tunnel="yes"/>
+                    <xsl:with-param name="description" tunnel="yes"
+                                    select="if (x:documentation) then normalize-space(x:documentation) else ()"/>
                     <xsl:with-param name="level" select="0" tunnel="yes"/>
                 </xsl:apply-templates>
             </xsl:result-document>
@@ -25,6 +27,8 @@
                 <xsl:text>&#x0a;</xsl:text>
                 <xsl:apply-templates select="x:expect/x:document[@type='inline']/pef:pef">
                     <xsl:with-param name="title" select="@label" tunnel="yes"/>
+                    <xsl:with-param name="description" tunnel="yes"
+                                    select="if (x:documentation) then normalize-space(x:documentation) else ()"/>
                     <xsl:with-param name="level" select="0" tunnel="yes"/>
                 </xsl:apply-templates>
             </xsl:result-document>
@@ -64,7 +68,8 @@
     
     <xsl:template name="title-and-description">
         <xsl:param name="level" as="xs:integer" tunnel="yes"/>
-        <xsl:param name="title" tunnel="yes"/>
+        <xsl:param name="title" as="xs:string" tunnel="yes"/>
+        <xsl:param name="description" as="xs:string?" tunnel="yes"/>
         <xsl:text>&#x0a;</xsl:text>
         <xsl:value-of select="string-join(for $x in 1 to $level return '   ', '')"/>
         <dc:title>
@@ -72,7 +77,9 @@
         </dc:title>
         <xsl:text>&#x0a;</xsl:text>
         <xsl:value-of select="string-join(for $x in 1 to $level return '   ', '')"/>
-        <dc:description/>
+        <dc:description>
+            <xsl:value-of select="$description"/>
+        </dc:description>
     </xsl:template>
     
     <!--
