@@ -50,6 +50,7 @@ import cz.vutbr.web.css.RuleFactory;
 import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
 import cz.vutbr.web.css.Selector;
+import cz.vutbr.web.css.Selector.PseudoElement;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
 import cz.vutbr.web.css.Term;
@@ -83,6 +84,7 @@ import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.BrailleCSSRuleFactory;
 import org.daisy.braille.css.RuleVolume;
 import org.daisy.braille.css.RuleVolumeArea;
+import org.daisy.braille.css.SelectorImpl.StackedPseudoElementImpl;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
@@ -283,7 +285,8 @@ public class CSSInlineStep extends DefaultStep {
 			
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				boolean isRoot = !seenRoot;
-				addStartElement((Element)node);
+				Element elem = (Element)node;
+				addStartElement(elem);
 				NamedNodeMap attributes = node.getAttributes();
 				for (int i=0; i<attributes.getLength(); i++) {
 					Node attr = attributes.item(i);
@@ -294,18 +297,16 @@ public class CSSInlineStep extends DefaultStep {
 					else
 						addAttribute(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getNodeValue()); }
 				StringBuilder style = new StringBuilder();
-				NodeData brailleData = brailleStylemap.get((Element)node);
+				NodeData brailleData = brailleStylemap.get(elem);
 				if (brailleData != null)
 					insertStyle(style, brailleData);
-				NodeData printData = printStylemap.get((Element)node);
+				NodeData printData = printStylemap.get(elem);
 				if (printData != null)
 					insertStyle(style, printData);
-				NodeData beforeData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.BEFORE);
-				if (beforeData != null)
-					insertPseudoStyle(style, beforeData, Selector.PseudoDeclaration.BEFORE);
-				NodeData afterData = brailleStylemap.get((Element)node, Selector.PseudoDeclaration.AFTER);
-				if (afterData != null)
-					insertPseudoStyle(style, afterData, Selector.PseudoDeclaration.AFTER);
+				for (PseudoElement pseudo : brailleStylemap.pseudoSet(elem)) {
+					NodeData pseudoData = brailleStylemap.get(elem, pseudo);
+					if (pseudoData != null)
+						insertPseudoStyle(style, pseudoData, pseudo); }
 				BrailleCSSProperty.Page pageProperty = null;
 				if (brailleData != null)
 					pageProperty = brailleData.<BrailleCSSProperty.Page>getProperty("page", false);
@@ -391,11 +392,20 @@ public class CSSInlineStep extends DefaultStep {
 			builder.append("; "); }
 	}
 	
-	private static void insertPseudoStyle(StringBuilder builder, NodeData nodeData, Selector.PseudoDeclaration decl) {
+	private static void pseudoElementToString(StringBuilder builder, PseudoElement elem) {
+		if (elem instanceof StackedPseudoElementImpl)
+			for (PseudoElement e : (StackedPseudoElementImpl)elem)
+				pseudoElementToString(builder, e);
+		else
+			builder.append("::").append(elem.getName());
+	}
+	
+	private static void insertPseudoStyle(StringBuilder builder, NodeData nodeData, PseudoElement elem) {
 		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
 			builder.insert(0, "{ ");
 			builder.append("} "); }
-		builder.append(decl.isPseudoElement() ? "::" : ":").append(decl.value()).append(" { ");
+		pseudoElementToString(builder, elem);
+		builder.append(" { ");
 		insertStyle(builder, nodeData);
 		builder.append("} ");
 	}

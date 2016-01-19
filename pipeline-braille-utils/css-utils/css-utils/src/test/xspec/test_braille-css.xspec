@@ -84,6 +84,17 @@
 	
 	<x:scenario label="test_07">
 		<x:call function="css:parse-stylesheet">
+			<x:param select="'::before { display: block }
+			                  ::before::before { display: block }
+			                  ::before::before::before { display: block }'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:rule selector="::before" style="{{ display: block }} ::before {{ display: block }} ::before::before {{ display: block }}"/>
+		</x:expect>
+	</x:scenario>
+	
+	<x:scenario label="test_08">
+		<x:call function="css:parse-stylesheet">
 			<x:param select="'@page { size: 15 15; @bottom-right { content: counter(braille-page, lower-roman) }'"/>
 		</x:call>
 		<x:expect label="result">
@@ -92,7 +103,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_08">
+	<x:scenario label="test_09">
 		<x:call function="css:parse-declaration-list">
 			<x:param select="'  display: none;  string-set : print-page attr(value) ;  '"/>
 		</x:call>
@@ -102,7 +113,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_09">
+	<x:scenario label="test_10">
 		<x:call function="css:parse-content-list">
 			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) -x-foo(bar, baz) string(print-page, start)'"/>
 			<x:param select="//a">
@@ -119,7 +130,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_10">
+	<x:scenario label="test_11">
 		<x:call function="css:parse-string-set">
 			<x:param select="'print-page &quot;page &quot; attr(num), running-header &quot;foo&quot;'"/>
 		</x:call>
@@ -129,7 +140,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_11">
+	<x:scenario label="test_12">
 		<x:call function="css:parse-counter-set">
 			<x:param select="'foo 2 bar'"/>
 			<x:param select="0"/>
@@ -140,25 +151,26 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_12">
+	<x:scenario label="test_13">
 		<x:context mode="css:serialize">
 			<css:string target="#foo" name="print-page"/>
 		</x:context>
 		<x:expect label="result" select="'target-string(url(&quot;#foo&quot;), print-page)'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_13">
+	<x:scenario label="test_14">
 		<x:call function="css:serialize-stylesheet">
 			<x:param>
 				<css:rule selector="@page" style="{{ size: 40 25; }} @bottom-center {{ content: &quot;foo&quot; }} :left {{ @bottom-left {{ content: counter(page) }} }}"/>
 				<css:rule style="display:block"/>
 				<css:rule selector="@volume" style="{{ min-length: 20; max-length: 100; }} :nth(2) {{ max-length: 50; }}"/>
+				<css:rule selector="::before" style="{{ content: &quot;foo&quot; }} ::after {{ content: &quot;foo&quot; }}"/>
 			</x:param>
 		</x:call>
-		<x:expect label="result" select="'display:block @page { size: 40 25; @bottom-center { content: &quot;foo&quot; } } @page:left { @bottom-left { content: counter(page) } } @volume { min-length: 20; max-length: 100; } @volume:nth(2) { max-length: 50; }'"/>
+		<x:expect label="result" select="'display:block @page { size: 40 25; @bottom-center { content: &quot;foo&quot; } } @page:left { @bottom-left { content: counter(page) } } @volume { min-length: 20; max-length: 100; } @volume:nth(2) { max-length: 50; } ::before { content: &quot;foo&quot; } ::before::after { content: &quot;foo&quot; }'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_14">
+	<x:scenario label="test_15">
 		<x:call function="css:serialize-declaration-list">
 			<x:param>
 				<css:property name="display" value="none"/>
@@ -168,14 +180,14 @@
 		<x:expect label="result" select="'display: none; string-set: print-page attr(value)'"/>
 	</x:scenario>
 	
-	<x:scenario label="test_15">
+	<x:scenario label="test_16">
 		<x:context mode="css:eval">
 			<css:string value="foobar"/>
 		</x:context>
 		<x:expect label="result" select="&quot;foobar&quot;"/>
 	</x:scenario>
 	
-	<x:scenario label="test_16">
+	<x:scenario label="test_17">
 		<x:call function="css:counter-value">
 			<x:param select="'list-item'"/>
 			<x:param select="/ul/li[3]">
@@ -200,7 +212,7 @@
 		<x:expect label="result" select="5"/>
 	</x:scenario>
 	
-	<x:scenario label="test_17">
+	<x:scenario label="test_18">
 		<x:call function="css:counter-value">
 			<x:param select="'list-item'"/>
 			<x:param select="(//css:marker)[4]">
@@ -227,14 +239,14 @@
 		<x:expect label="result" select="2"/>
 	</x:scenario>
 	
-	<x:scenario label="test_18">
+	<x:scenario label="test_19">
 		<x:call function="css:parse-symbols">
 			<x:param select="' x &quot; ⠚ &quot; &quot;&quot;'"/>
 		</x:call>
 		<x:expect label="result" select="('x',' ⠚ ','')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_19">
+	<x:scenario label="test_20">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="100"/>
 			<x:param name="style" select="css:counter-style('decimal')"/>
@@ -242,7 +254,7 @@
 		<x:expect label="result" select="('100','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_20">
+	<x:scenario label="test_21">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="-25"/>
 			<x:param name="style" select="css:counter-style('decimal')"/>
@@ -250,7 +262,7 @@
 		<x:expect label="result" select="('-25','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_21">
+	<x:scenario label="test_22">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="100"/>
 			<x:param name="style" select="css:counter-style('lower-alpha')"/>
@@ -258,7 +270,7 @@
 		<x:expect label="result" select="('cv','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_22">
+	<x:scenario label="test_23">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="1998"/>
 			<x:param name="style" select="css:counter-style('lower-roman')"/>
@@ -266,7 +278,7 @@
 		<x:expect label="result" select="('mcmxcviii','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_23">
+	<x:scenario label="test_24">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="1998"/>
 			<x:param name="style" select="css:counter-style('upper-roman')"/>
@@ -274,7 +286,7 @@
 		<x:expect label="result" select="('MCMXCVIII','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_24">
+	<x:scenario label="test_25">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="1998"/>
 			<x:param name="style">
@@ -286,7 +298,7 @@
 		<x:expect label="result" select="('⠍⠉⠍⠭⠉⠧⠊⠊⠊','none')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_25">
+	<x:scenario label="test_26">
 		<x:call template="css:counter-representation">
 			<x:param name="value" select="1998"/>
 			<x:param name="style">
@@ -298,7 +310,7 @@
 		<x:expect label="result" select="('mcmxcviii','uppercase')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_26">
+	<x:scenario label="test_27">
 		<x:call template="css:counter">
 			<x:param name="name" select="'list-item'"/>
 			<x:param name="style" select="'decimal'"/>
@@ -313,7 +325,7 @@
 		<x:expect label="result" select="('3','auto')"/>
 	</x:scenario>
 	
-	<x:scenario label="test_27">
+	<x:scenario label="test_28">
 		<x:call function="css:string">
 			<x:param select="'print-page'"/>
 			<x:param select="//p[last()]">
@@ -332,7 +344,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_28">
+	<x:scenario label="test_29">
 		<x:call function="css:computed-properties">
 			<x:param select="'text-transform'"/>
 			<x:param select="true()"/>
@@ -349,7 +361,7 @@
 		</x:expect>
 	</x:scenario>
 	
-	<x:scenario label="test_29">
+	<x:scenario label="test_30">
 		<x:call function="css:computed-properties">
 			<x:param select="'hyphens'"/>
 			<x:param select="true()"/>

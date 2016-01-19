@@ -16,9 +16,11 @@
         <xsl:variable name="context" select="if (self::css:before or self::css:after) then parent::* else ."/>
         <xsl:copy>
             <xsl:sequence select="@* except @css:content"/>
+            <xsl:apply-templates select="css:before"/>
             <xsl:apply-templates select="css:parse-content-list(@css:content, $context)" mode="eval-content-list">
                 <xsl:with-param name="context" select="$context"/>
             </xsl:apply-templates>
+            <xsl:apply-templates select="css:after"/>
         </xsl:copy>
     </xsl:template>
     

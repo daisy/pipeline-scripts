@@ -23,6 +23,30 @@
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
     
+    <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-element">
+        <p:input port="source"/>
+        <p:output port="result"/>
+        <css:parse-stylesheet>
+            <p:documentation>
+                Make css:page, css:volume, css:after and css:before attributes.
+            </p:documentation>
+        </css:parse-stylesheet>
+        <p:choose>
+            <p:when test="//*/@css:before or //*/@css:after">
+                <css:make-pseudo-elements>
+                    <p:documentation>
+                        Make css:before and css:after pseudo-elements from css:before and css:after
+                        attributes.
+                    </p:documentation>
+                </css:make-pseudo-elements>
+                <pxi:recursive-parse-stylesheet-and-make-pseudo-element/>
+            </p:when>
+            <p:otherwise>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
+    </p:declare-step>
+    
     <p:for-each>
         <p:add-xml-base/>
         <p:xslt>
@@ -46,17 +70,12 @@
     </p:for-each>
     
     <p:for-each>
-        <css:parse-stylesheet>
+        <pxi:recursive-parse-stylesheet-and-make-pseudo-element>
             <p:documentation>
-                Make css:page, css:volume, css:after and css:before attributes.
-            </p:documentation>
-        </css:parse-stylesheet>
-        <css:make-pseudo-elements>
-            <p:documentation>
-                Make css:before and css:after pseudo-elements from css:before and css:after
+                Make css:after and css:before pseudo-elements and css:page and css:volume
                 attributes.
             </p:documentation>
-        </css:make-pseudo-elements>
+        </pxi:recursive-parse-stylesheet-and-make-pseudo-element>
         <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
             <p:documentation>
                 Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and

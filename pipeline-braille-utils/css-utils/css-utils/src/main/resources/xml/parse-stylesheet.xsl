@@ -21,7 +21,7 @@
     </xsl:template>
     
     <xsl:template match="css:rule">
-        <xsl:attribute name="css:{replace(@selector, '^(@|::|:)', '')}" select="@style"/>
+        <xsl:attribute name="css:{replace(replace(@selector, '^(@|::|:)', ''),'^-','_')}" select="@style"/>
     </xsl:template>
     
 </xsl:stylesheet>
