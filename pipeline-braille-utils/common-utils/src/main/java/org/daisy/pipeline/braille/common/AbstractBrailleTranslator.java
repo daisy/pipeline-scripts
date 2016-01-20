@@ -153,9 +153,7 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 					if (wrapInfo.get(i) == HARD_WRAP) {
 						String rv = charBuffer.substring(0, i + 1);
 						flushBuffer(i + 1);
-						return rv;
-					}
-				}
+						return rv; }}
 				
 				// no need to break if remaining text is shorter than line
 				if (bufSize <= limit) {
@@ -163,6 +161,14 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 					charBuffer.setLength(0);
 					wrapInfo.clear();
 					return rv; }
+				
+				// return nothing if limit is 0
+				if (limit == 0) {
+					
+					// strip leading SPACE in remaining text
+					while (limit < bufSize && wrapInfo.get(limit) == SOFT_WRAP_AFTER_SPACE) limit++;
+					flushBuffer(limit);
+					return ""; }
 				
 				// break at SPACE or ZWSP
 				if ((wrapInfo.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {

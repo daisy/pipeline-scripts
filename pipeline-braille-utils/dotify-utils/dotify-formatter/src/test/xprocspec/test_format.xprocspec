@@ -2056,10 +2056,6 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      TODO: check if java.lang.ArrayIndexOutOfBoundsException is still the case => yes, make new
-      test! (or is this same as leader issue?)
-  -->
   <x:scenario label="test_20" pending="xfail doesn't work because of error">
     <x:documentation>
       Tests a table of content with target-text(), target-string(), target-counter() and
@@ -2241,9 +2237,6 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      TODO: check if java.lang.ArrayIndexOutOfBoundsException is still the case => yes, make new test!
-  -->
   <x:scenario label="test_21" pending="xfail doesn't work because of error">
     <x:documentation>
       Tests target-text() and target-counter() with both forward references (table of contents in
