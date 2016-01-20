@@ -25,17 +25,21 @@
     <p:output port="result">
         <p:documentation>
             A 'page-break-before' property with value 'left', 'right' or 'always' is propagated to
-            the closest ancestor-or-self block box with a preceding sibling. A 'page-break-after'
-            property with value 'avoid' is propagated to the closest ancestor-or-self block box with
-            a following sibling. A 'page-break-before' property with value 'avoid' is converted into
-            a 'page-break-after' property on the preceding sibling of the closest ancestor-or-self
-            block box with a preceding sibling. A 'page-break-after' property with value 'left',
-            'right' or 'always' is converted into a 'page-break-before' property on the immediately
-            following block box. A 'page-break-inside' property with value 'avoid' on a box with
-            child block boxes is propagated to all its children, and all children except the last
-            get a 'page-break-after' property with value 'avoid'. In case of conflicting values
-            between adjacent siblings, the value 'always' takes precedence over 'avoid', and 'avoid'
-            takes precedence over 'auto'.
+            the closest ancestor-or-self block box with a preceding sibling, or if there is no such
+            element, to the root element. A 'page-break-after' property with value 'avoid' is
+            propagated to the closest ancestor-or-self block box with a following sibling. A
+            'page-break-before' property with value 'avoid' is converted into a 'page-break-after'
+            property on the preceding sibling of the closest ancestor-or-self block box with a
+            preceding sibling. A 'page-break-after' property with value 'left', 'right' or 'always'
+            is converted into a 'page-break-before' property on the immediately following block box,
+            or if there is no such element, moved to the root element. A 'page-break-inside'
+            property with value 'avoid' on a box with child block boxes is propagated to all its
+            children, and all children except the last get a 'page-break-after' property with value
+            'avoid'. In case of conflicting values for a certain property, 'left' and 'right' win
+            from 'always', 'always' wins from 'avoid', and 'avoid' wins from 'auto'. When 'left' and
+            'right' are combined, the value specified on the latest element in the document wins. In
+            case of conflicting values between adjacent siblings, the value 'always' takes
+            precedence over 'avoid'.
         </p:documentation>
     </p:output>
     
@@ -52,6 +56,6 @@
         In case of conflicting values between adjacent siblings, the value 'always' takes precedence
         over 'avoid'.
     -->
-    <p:delete match="@css:page-break-after[.='avoid' and parent::*/following-sibling::*[1]/@css:page-break-before='always']"/>
+    <p:delete match="@css:page-break-after[.='avoid' and parent::*/following-sibling::*[1]/@css:page-break-before=('always','right','left')]"/>
     
 </p:declare-step>

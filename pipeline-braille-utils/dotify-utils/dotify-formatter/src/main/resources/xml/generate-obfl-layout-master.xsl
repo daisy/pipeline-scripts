@@ -43,7 +43,7 @@
                        page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
             <xsl:if test="$right-page-stylesheet">
                 <!--
-                    FIXME: is this influenced by initial-page-number?
+                    FIXME: is this influenced by initial-page-number? see https://github.com/joeha480/dotify/issues/134
                 -->
                 <template use-when="(= (% $page 2) 1)">
                     <xsl:call-template name="template">

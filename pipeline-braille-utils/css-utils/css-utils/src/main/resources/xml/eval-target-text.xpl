@@ -19,8 +19,10 @@
     
     <p:output port="result" sequence="true">
         <p:documentation>
-            css:text elements are replaces by the string value of their target element (the element
-            whose css:id attribute corresponds with the css:text element's target attribute).
+            css:text elements are replaced by the string value of their target element (the element
+            whose css:id attribute corresponds with the css:text element's target attribute) and
+            wrapped in an inline css:box element with a css:anchor attribute that matches the xml:id
+            attribute of the target element.
         </p:documentation>
     </p:output>
     

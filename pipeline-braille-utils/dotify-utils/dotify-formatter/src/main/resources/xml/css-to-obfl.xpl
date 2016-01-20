@@ -143,6 +143,16 @@
                 Make css:white-space elements from css:white-space attributes.
             </p:documentation>
         </css:preserve-white-space>
+        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:_obfl-toc" attribute-value="x">
+            <p:documentation>
+                Mark display:-obfl-toc elements.
+            </p:documentation>
+        </p:add-attribute>
+        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:display" attribute-value="block">
+            <p:documentation>
+                Treat display:-obfl-toc as block.
+            </p:documentation>
+        </p:add-attribute>
         <css:make-boxes>
             <p:documentation>
                 Make css:box elements based on css:display and css:list-style-type attributes. <!--
@@ -170,15 +180,24 @@
     
     <p:group>
         <p:documentation>
-            Split normal flow into sections.
+            Split flows into sections.
         </p:documentation>
-        <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:for-each>
             <css:parse-counter-set counters="page">
                 <p:documentation>
                     Make css:counter-set-page attributes.
                 </p:documentation>
             </css:parse-counter-set>
+            <p:delete match="/*[@css:flow]//*/@css:page|
+                             /*[@css:flow]//*/@css:volume|
+                             /*[@css:flow]//*/@css:counter-set-page|
+                             //*[@css:obfl-toc]//*/@css:page-break-before|
+                             //*[@css:obfl-toc]//*/@css:page-break-after">
+                <p:documentation>
+                    Don't support 'page', 'volume' and 'counter-set: page' within named flows. Don't
+                    support 'page-break-before' and 'page-break-after' within display:-obfl-toc.
+                </p:documentation>
+            </p:delete>
             <css:split split-before="*[@css:page or @css:volume or @css:counter-set-page]|
                                      css:box[@type='block' and @css:page-break-before='right']"
                        split-after="*[@css:page or @css:volume]|
@@ -198,7 +217,7 @@
                     Move css:page, css:counter-set-page and css:volume attributes to css:_ root
                     element.
                 </p:documentation>
-                <p:wrap wrapper="css:_" match="/*"/>
+                <p:wrap wrapper="css:_" match="/*[not(@css:flow)]"/>
                 <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
                                   label="(descendant::*/@css:page)[last()]"/>
                 <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
@@ -208,8 +227,6 @@
                 <p:delete match="/*//*/@css:page"/>
                 <p:delete match="/*//*/@css:counter-set-page"/>
                 <p:delete match="/*//*/@css:volume"/>
-                <p:delete match="@css:page-break-before[.='right']|
-                                 @css:page-break-after[.='right']"/>
             </p:group>
             <p:rename match="css:box[@type='inline']
                              [matches(string(.), '^[\s&#x2800;]*$') and
@@ -224,11 +241,19 @@
                 </p:documentation>
             </p:rename>
         </p:for-each>
-        <css:repeat-string-set>
+        <p:group>
             <p:documentation>
                 Repeat css:string-set attributes at the beginning of sections as css:string-entry.
             </p:documentation>
-        </css:repeat-string-set>
+            <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
+            <css:repeat-string-set name="_2"/>
+            <p:identity>
+                <p:input port="source">
+                    <p:pipe step="_2" port="result"/>
+                    <p:pipe step="_1" port="not-matched"/>
+                </p:input>
+            </p:identity>
+        </p:group>
         <css:shift-string-set>
             <p:documentation>
                 Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
@@ -239,16 +264,6 @@
                 Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </pxi:shift-obfl-marker>
-        <p:identity name="_2"/>
-        <p:identity>
-            <p:documentation>
-                Add named flows back to the sequence.
-            </p:documentation>
-            <p:input port="source">
-                <p:pipe step="_2" port="result"/>
-                <p:pipe step="_1" port="not-matched"/>
-            </p:input>
-        </p:identity>
         <css:shift-id>
             <p:documentation>
                 Move css:id attributes to css:box elements.
@@ -301,7 +316,7 @@
                         <xsl:variable name="new:properties" as="xs:string*"
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
-                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',
+                                               'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
                                                'margin-bottom', 'orphans',                          'word-spacing',
                                                'border-left',   'widows',                           'letter-spacing',
                                                'border-right',
@@ -316,6 +331,8 @@
                                                     then $css:property/@value=('before','center','after')
                                                     else if ($css:property/@name='-obfl-vertical-position')
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
+                                                    else if ($css:property/@name='-obfl-toc-range')
+                                                    then ($context/@css:_obfl-toc and $css:property/@value=('document','volume'))
                                                     else (
                                                       css:is-valid($css:property)
                                                       and not($css:property/@value=('inherit','initial'))
@@ -329,6 +346,8 @@
                                                   then 'after'
                                                   else if ($property='-obfl-vertical-position')
                                                   then 'auto'
+                                                  else if ($property='-obfl-toc-range')
+                                                  then 'document'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
@@ -422,5 +441,18 @@
         because empty marker values would be regarded as absent in BrailleFilterImpl
     -->
     <p:add-attribute match="obfl:marker[@value='']" attribute-name="value" attribute-value="&#x200B;"/>
+    
+    <!--
+        move table-of-contents elements to the right place
+    -->
+    <p:group>
+        <p:identity name="_1"/>
+        <p:insert match="/obfl:obfl/obfl:volume-template[not(preceding-sibling::obfl:volume-template)]" position="before">
+            <p:input port="insertion" select="//obfl:toc-sequence/obfl:table-of-contents">
+                <p:pipe step="_1" port="result"/>
+            </p:input>
+        </p:insert>
+        <p:delete match="obfl:toc-sequence/obfl:table-of-contents"/>
+    </p:group>
     
 </p:declare-step>

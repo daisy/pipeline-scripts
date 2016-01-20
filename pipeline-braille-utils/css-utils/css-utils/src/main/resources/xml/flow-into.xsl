@@ -22,7 +22,7 @@
                         <xsl:copy>
                             <xsl:sequence select="@* except (@style|@css:flow|@css:id)"/>
                             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-                                                  css:specified-properties($css:properties, true(), false(), false(), .)
+                                                  css:specified-properties(($css:properties,'#all'), true(), false(), false(), .)
                                                   [not(@value='initial')]))"/>
                             <xsl:attribute name="css:anchor" select="if (@css:id) then string(@css:id) else generate-id(.)"/>
                             <xsl:apply-templates/>
