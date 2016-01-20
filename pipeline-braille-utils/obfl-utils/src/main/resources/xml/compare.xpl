@@ -25,6 +25,7 @@
                 <p:inline>
                     <xsl:stylesheet version="2.0">
                         <xsl:variable name="layout_names" as="xs:string*" select="/obfl:obfl/obfl:layout-master/@name/string()"/>
+                        <xsl:variable name="toc_names" as="xs:string*" select="/obfl:obfl/obfl:table-of-contents/@name/string()"/>
                         <xsl:variable name="ids" as="xs:string*" select="//@id/string()"/>
                         <xsl:template match="@*|node()">
                             <xsl:copy>
@@ -32,8 +33,13 @@
                             </xsl:copy>
                         </xsl:template>
                         <xsl:template match="obfl:layout-master/@name|
-                                             obfl:sequence/@master">
+                                             obfl:sequence/@master|
+                                             obfl:toc-sequence/@master">
                             <xsl:attribute name="{name(.)}" select="concat('layout',index-of($layout_names,string(.)))"/>
+                        </xsl:template>
+                        <xsl:template match="obfl:table-of-contents/@name|
+                                             obfl:toc-sequence/@toc">
+                            <xsl:attribute name="{name(.)}" select="concat('toc',index-of($toc_names,string(.)))"/>
                         </xsl:template>
                         <xsl:template match="@id|@ref-id">
                             <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.)))"/>
