@@ -2056,10 +2056,10 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_20" pending="xfail doesn't work because of error">
+  <x:scenario label="test_20">
     <x:documentation>
       Tests a table of content with target-text(), target-string(), target-counter() and
-      leader(). Broken: leader issue: see https://github.com/braillespecs/obfl/issues/31.
+      leader().
     </x:documentation>
       <x:call step="dotify:format">
       <x:input port="source">
@@ -2070,25 +2070,19 @@
                 <toc>
                   <entry ref="chapter_1" style="display: block;
                                                 content: target-text(attr(ref))
-                                                         ' '
-                                                         leader('⠄')
-                                                         ' '
+                                                         ' ⠄⠄⠄⠄⠄⠄⠄ '
                                                          target-string(attr(ref), print-page)
                                                          ' '
                                                          target-counter(attr(ref), page)"/>
                   <entry ref="chapter_2" style="display: block;
                                                 content: target-text(attr(ref))
-                                                         ' '
-                                                         leader('⠄')
-                                                         ' '
+                                                         ' ⠄⠄⠄⠄⠄⠄ '
                                                          target-string(attr(ref), print-page)
                                                          ' '
                                                          target-counter(attr(ref), page)"/>
                   <entry ref="chapter_3" style="display: block;
                                                 content: target-text(attr(ref))
-                                                         ' '
-                                                         leader('⠄')
-                                                         ' '
+                                                         ' ⠄⠄⠄⠄ '
                                                          target-string(attr(ref), print-page)
                                                          ' '
                                                          target-counter(attr(ref), page)"/>
@@ -2134,23 +2128,24 @@
           <sequence master="body">
             <block>
               ⠿
-              <leader pattern="⠄" position="100%" align="right"/>
+              ⠄⠄⠄⠄⠄⠄⠄
               ⠤
               <page-number ref-id="chapter_1" number-format="default"/>
             </block>
             <block>
               ⠿⠿
-              <leader pattern="⠄" position="100%" align="right"/>
+              ⠄⠄⠄⠄⠄⠄
               ⠤
               <page-number ref-id="chapter_2" number-format="default"/>
             </block>
             <block>
               ⠿⠿⠿
-              <leader pattern="⠄" position="100%" align="right"/>
+              ⠄⠄⠄⠄
               ⠤⠤
               <page-number ref-id="chapter_3" number-format="default"/>
             </block>
             <block align="center" break-before="page" id="chapter_1">
+              <marker class="print-page/prev" value="​"/>
               <marker class="print-page" value="⠤"/>
               ⠿
             </block>
@@ -2237,11 +2232,10 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_21" pending="xfail doesn't work because of error">
+  <x:scenario label="test_21">
     <x:documentation>
       Tests target-text() and target-counter() with both forward references (table of contents in
-      the front) and backward references (index in the back). Broken: leader issue: see
-      https://github.com/braillespecs/obfl/issues/31.
+      the front) and backward references (index in the back).
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -2252,15 +2246,11 @@
                 <toc>
                   <entry ref="chapter_1" style="display: block;
                                                 content: target-text(attr(ref))
-                                                         ' '
-                                                         leader('⠄')
-                                                         ' '
+                                                         ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
                                                          target-counter(attr(ref), page)"/>
                   <entry ref="chapter_2" style="display: block;
                                                 content: target-text(attr(ref))
-                                                         ' '
-                                                         leader('⠄')
-                                                         ' '
+                                                         ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
                                                          target-counter(attr(ref), page)"/>
                 </toc>
               </frontmatter>
@@ -2275,21 +2265,15 @@
                 <index>
                   <entry ref="x" style="display: block;
                                         content: target-text(attr(ref))
-                                                 ' '
-                                                 leader('⠄')
-                                                 ' '
+                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
                                                  target-counter(attr(ref), page)"/>
                   <entry ref="y" style="display: block;
                                         content: target-text(attr(ref))
-                                                 ' '
-                                                 leader('⠄')
-                                                 ' '
+                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
                                                  target-counter(attr(ref), page)"/>
                   <entry ref="z" style="display: block;
                                         content: target-text(attr(ref))
-                                                 ' '
-                                                 leader('⠄')
-                                                 ' '
+                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
                                                  target-counter(attr(ref), page)"/>
                 </index>
               </rearmatter>
@@ -2323,12 +2307,12 @@
           <sequence master="body">
             <block>
               ⠿
-              <leader pattern="⠄" position="100%" align="right"/>
+              ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
               <page-number ref-id="chapter_1" number-format="default"/>
             </block>
             <block>
               ⠿⠿
-              <leader pattern="⠄" position="100%" align="right"/>
+              ⠄⠄⠄⠄⠄⠄⠄⠄⠄
               <page-number ref-id="chapter_2" number-format="default"/>
             </block>
             <block break-before="page">
@@ -2351,17 +2335,17 @@
             <block break-before="page">
               <block>
                 ⠤⠤⠤
-                <leader pattern="⠄" position="100%" align="right"/>
+                ⠄⠄⠄⠄⠄⠄⠄⠄
                 <page-number ref-id="x" number-format="default"/>
               </block>
               <block>
                 ⠤⠤⠤
-                <leader pattern="⠄" position="100%" align="right"/>
+                ⠄⠄⠄⠄⠄⠄⠄⠄
                 <page-number ref-id="y" number-format="default"/>
               </block>
               <block>
                 ⠤⠤⠤
-                <leader pattern="⠄" position="100%" align="right"/>
+                ⠄⠄⠄⠄⠄⠄⠄⠄
                 <page-number ref-id="z" number-format="default"/>
               </block>
             </block>
