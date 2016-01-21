@@ -147,4 +147,24 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_02" pending="throws error because of whitespace only text nodes in note element">
+    <x:documentation>
+      see https://github.com/snaekobbi/pipeline-mod-mtm/issues/14
+    </x:documentation>
+    <x:call step="dotify:xml-to-obfl">
+      <x:input port="source">
+        <x:document type="file" href="../resources/simple-note.xml"/>
+      </x:input>
+      <x:option name="locale" select="'sv-SE'"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <_>...</_>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
