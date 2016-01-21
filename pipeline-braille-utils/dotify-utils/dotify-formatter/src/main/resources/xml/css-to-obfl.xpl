@@ -28,15 +28,15 @@
         <p:output port="result"/>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:volume, css:after and css:before attributes.
+                Make css:page, css:volume, css:after, css:before and css:duplicate attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <p:choose>
-            <p:when test="//*/@css:before or //*/@css:after">
+            <p:when test="//*/@css:before or //*/@css:after or //*/@css:duplicate">
                 <css:make-pseudo-elements>
                     <p:documentation>
-                        Make css:before and css:after pseudo-elements from css:before and css:after
-                        attributes.
+                        Make css:before, css:after and css:duplicate pseudo-elements from
+                        css:before, css:after and css:duplicate attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
                 <pxi:recursive-parse-stylesheet-and-make-pseudo-element/>
@@ -72,8 +72,8 @@
     <p:for-each>
         <pxi:recursive-parse-stylesheet-and-make-pseudo-element>
             <p:documentation>
-                Make css:after and css:before pseudo-elements and css:page and css:volume
-                attributes.
+                Make css:after, css:before and css:duplicate pseudo-elements and css:page and
+                css:volume attributes.
             </p:documentation>
         </pxi:recursive-parse-stylesheet-and-make-pseudo-element>
         <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
@@ -99,6 +99,11 @@
                     Make css:flow attributes.
                 </p:documentation>
             </css:parse-properties>
+            <p:delete match="css:duplicate[not(@css:flow)]">
+                <p:documentation>
+                    Only allow ::duplicate pseudo-elements that are moved into a named flow.
+                </p:documentation>
+            </p:delete>
         </p:for-each>
         <p:wrap wrapper="_" match="/*"/>
         <css:flow-into name="_1">

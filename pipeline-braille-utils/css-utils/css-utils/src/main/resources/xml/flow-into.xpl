@@ -12,14 +12,16 @@
     <p:input port="source">
         <p:documentation>
             Elements in the input that participate in a named flow must be identified with css:flow
-            attributes.
+            attributes. Duplicated elements must be reprented by css:duplicate elements with a
+            css:anchor attribute that points to the original element.
         </p:documentation>
     </p:input>
     
     <p:output port="result" primary="true">
         <p:documentation>
             The document on the 'result' port represents the normal flow. Elements that participate
-            in a named flow are replaced with an empty css:_ element with a css:id attribute.
+            in a named flow are replaced with an empty css:_ element with a css:id attribute, except
+            when the element is a css:duplicate.
         </p:documentation>
         <p:pipe step="result" port="result"/>
     </p:output>
@@ -33,9 +35,10 @@
             original document order. The document node gets a css:flow attribute that identifies the
             flow. Other css:flow attributes are dropped. Elements get a css:anchor attribute that
             matches the css:id attribute of the css:_ replacement element in the normal flow, thus
-            acting as a reference to the original position in the DOM. Style attributes are added in
-            the output in such a way that for each element, its computed style at the output is
-            equal to its computed style in the input.
+            acting as a reference to the original position in the DOM. Elements that already have a
+            css:anchor attribute don't get a new one. Style attributes are added in the output in
+            such a way that for each element, its computed style at the output is equal to its
+            computed style in the input.
         </p:documentation>
         <p:pipe step="result" port="secondary"/>
     </p:output>
