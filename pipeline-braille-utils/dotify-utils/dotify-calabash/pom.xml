@@ -30,6 +30,10 @@
       <artifactId>dotify.task-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.daisy.dotify</groupId>
+      <artifactId>dotify.task-runner</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-utils</artifactId>
     </dependency>

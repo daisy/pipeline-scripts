@@ -60,6 +60,7 @@ public class DotifyCalabashTest {
 			mavenBundle().groupId("org.daisy.libs").artifactId("saxon-he").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task-api").versionAsInProject(),
+			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task-runner").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
 			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task.impl").versionAsInProject(),
 			//formatter

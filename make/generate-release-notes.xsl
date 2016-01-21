@@ -37,6 +37,9 @@
 		<xsl:variable name="dotify.task-api-version" select="/pom:project/pom:dependencyManagement
 		                                                     /pom:dependencies/pom:dependency[pom:artifactId='dotify.task-api']
 		                                                     /pom:version"/>
+		<xsl:variable name="dotify.task-runner-version" select="/pom:project/pom:dependencyManagement
+		                                                        /pom:dependencies/pom:dependency[pom:artifactId='dotify.task-runner']
+		                                                        /pom:version"/>
 		<xsl:variable name="dotify.task.impl-version" select="/pom:project/pom:dependencyManagement
 		                                                      /pom:dependencies/pom:dependency[pom:artifactId='dotify.task.impl']
 		                                                      /pom:version"/>
@@ -122,6 +125,11 @@
 		<xsl:value-of select="$dotify.task-api-version"/>
 		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv</xsl:text>
 		<xsl:value-of select="$dotify.task-api-version"/>
+		<xsl:text>), task-runner&#10;</xsl:text>
+		<xsl:text>  [</xsl:text>
+		<xsl:value-of select="$dotify.task-runner-version"/>
+		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv</xsl:text>
+		<xsl:value-of select="$dotify.task-runner-version"/>
 		<xsl:text>), task.impl&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
 		<xsl:value-of select="$dotify.task.impl-version"/>

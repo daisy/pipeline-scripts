@@ -26,8 +26,11 @@ import org.daisy.dotify.api.tasks.TaskSystemFactoryException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryMakerService;
 import org.daisy.dotify.common.io.FileIO;
 import org.daisy.dotify.common.io.TempFileHandler;
+import org.daisy.dotify.tasks.runner.TaskRunner;
+
 import org.daisy.pipeline.braille.common.Query.Feature;
 import static org.daisy.pipeline.braille.common.Query.util.query;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -48,6 +51,7 @@ import com.xmlcalabash.runtime.XAtomicStep;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
+
 public class XMLToOBFL extends DefaultStep {
 	private static final QName _locale = new QName("locale");
 	private static final QName _format = new QName("format");
@@ -146,7 +150,7 @@ public class XMLToOBFL extends DefaultStep {
 		
 	private InputStream convert(TaskSystem system, InputStream is, OutputStream os, Map<String, Object> params) throws TaskSystemFactoryException, TaskSystemException, IOException {
 		// Copy source to file
-		File src = File.createTempFile("xml2obfl", ".tmp");
+		File src = File.createTempFile("xml-to-obfl", ".tmp");
 		src.deleteOnExit();
 		FileIO.copy(is, new FileOutputStream(src));
 		
@@ -156,24 +160,13 @@ public class XMLToOBFL extends DefaultStep {
 		List<InternalTask> tasks = system.compile(params);
 		
 		// Create a destination file
-		File dest = File.createTempFile("xml2obfl", ".tmp");
+		File dest = File.createTempFile("xml-to-obfl", ".tmp");
 		dest.deleteOnExit();
 		
 		// Run tasks
-		TempFileHandler fj = new TempFileHandler(src, dest);
-		for (InternalTask task : tasks) {
-			if (task instanceof ReadWriteTask) {
-				logger.info("Running (r/w) " + task.getName());
-				((ReadWriteTask)task).execute(fj.getInput(), fj.getOutput());
-				fj.reset();
-			} else if (task instanceof ReadOnlyTask) {
-				logger.info("Running (r) " + task.getName());
-				((ReadOnlyTask)task).execute(fj.getInput());
-			} else {
-				logger.warn("Unknown task type, skipping.");
-			}
-		}
-		fj.close();
+		TaskRunner runner = TaskRunner.withName("dotify:xml-to-obfl").build();
+		runner.runTasks(src, dest, tasks);
+		
 		// Return stream
 		return new FileInputStream(dest);
 	}
