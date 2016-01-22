@@ -718,6 +718,14 @@
         <leader pattern="{@pattern}" position="100%" align="right"/>
     </xsl:template>
     
+    <xsl:template match="css:custom-func[@name='-obfl-evaluate'][matches(@arg1,$css:STRING_RE) and not (@arg2)]" priority="1">
+        <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}"/>
+    </xsl:template>
+    
+    <xsl:template match="css:custom-func[@name='-obfl-evaluate']">
+        <xsl:message>-obfl-evaluate() function requires exactly one string argument</xsl:message>
+    </xsl:template>
+    
     <xsl:template match="css:box[@type='block']/@css:id" mode="#default table-of-contents">
         <xsl:variable name="id" as="xs:string" select="."/>
         <xsl:if test="collection()//css:counter[@target=$id]">
