@@ -11,6 +11,47 @@
     <p:option name="default-stylesheet" required="false" select="''"/>
     <p:option name="stylesheet" required="false" select="''"/>
     <p:option name="transform" required="false" select="''"/>
+    
+    <!--
+    <p:option name="page-width" required="false" select="'28'"/>
+    <p:option name="page-height" required="false" select="'29'"/>
+    <p:option name="predefined-page-formats" required="false" select="'A4'"/>
+    <p:option name="left-margin" required="false" select="'0'"/>
+    <p:option name="duplex" required="false" select="'true'"/>
+    <p:option name="levels-in-footer" required="false" select="'6'"/>
+    <p:option name="main-document-language" required="false" select="''"/>
+    <p:option name="contraction-grade" required="false" select="'0'"/>
+    <p:option name="hyphenation-with-single-line-spacing" required="false" select="'true'"/>
+    <p:option name="hyphenation-with-double-line-spacing" required="false" select="'false'"/>
+    <p:option name="line-spacing" required="false" select="'false'"/>
+    <p:option name="tab-width" required="false" select="'4'"/>
+    <p:option name="capital-letters" required="false" select="'true'"/>
+    <p:option name="accented-letters" required="false" select="'true'"/>
+    <p:option name="polite-forms" required="false" select="'false'"/>
+    <p:option name="downshift-ordinal-numbers" required="false" select="'false'"/>
+    <p:option name="include-captions" required="false" select="'true'"/>
+    <p:option name="include-images" required="false" select="'true'"/>
+    <p:option name="include-image-groups" required="false" select="'true'"/>
+    <p:option name="include-line-groups" required="false" select="'true'"/>
+    <p:option name="text-level-formatting" required="false" select="'true'"/>
+    <p:option name="include-note-references" required="false" select="'true'"/>
+    <p:option name="include-production-notes" required="false" select="'false'"/>
+    <p:option name="show-braille-page-numbers" required="false" select="'true'"/>
+    <p:option name="show-print-page-numbers" required="false" select="'true'"/>
+    <p:option name="force-braille-page-break" required="false" select="'false'"/>
+    <p:option name="generate-table-of-contents" required="false" select="'true'"/>
+    <p:option name="table-of-contents-depth" required="false" select="'6'"/>
+    <p:option name="ignore-document-title" required="false" select="'false'"/>
+    <p:option name="include-symbols-list" required="false" select="'true'"/>
+    <p:option name="choice-of-colophon" required="false" select="''"/>
+    <p:option name="footnotes-placement" required="false" select="''"/>
+    <p:option name="colophon-metadata-placement" required="false" select="''"/>
+    <p:option name="rear-cover-placement" required="false" select="''"/>
+    <p:option name="number-of-pages" required="false" select="'50'"/>
+    <p:option name="maximum-number-of-pages" required="false" select="'70'"/>
+    <p:option name="minimum-number-of-pages" required="false" select="'30'"/>
+    <p:option name="sbsform-macros" required="false" select="''"/>
+    -->
 
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>

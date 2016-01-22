@@ -29,65 +29,340 @@
         </dl>
     </p:documentation>
 
+    <!-- ============ -->
+    <!-- Main options -->
+    <!-- ============ -->
     <p:input port="source" primary="true" px:name="source" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">source</h2>
-            <p px:role="desc">Input DTBook.</p>
+            <h2 px:role="name">Input DTBook</h2>
+            <p px:role="desc"></p>
         </p:documentation>
     </p:input>
-    
     <p:option name="stylesheet" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">stylesheet</h2>
+            <h2 px:role="name">CSS stylesheets</h2>
             <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs. Applied prior to any style sheets linked from or embedded in the source document.</p>
         </p:documentation>
     </p:option>
-    
     <p:option name="transform" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">transform</h2>
-            <p px:role="desc">A transformer query.</p>
+            <h2 px:role="name">Transformer query</h2>
+            <p px:role="desc"></p>
             <pre><code class="default">(translator:liblouis)(formatter:dotify)</code></pre>
         </p:documentation>
     </p:option>
-    
     <p:option name="ascii-table" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">ascii-table</h2>
+            <h2 px:role="name">ASCII braille table</h2>
             <p px:role="desc">The ASCII braille table, used for example to render BRF files.</p>
         </p:documentation>
     </p:option>
-    
     <p:option name="include-preview" required="false" px:type="boolean" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">include-preview</h2>
+            <h2 px:role="name">Include preview</h2>
             <p px:role="desc">Whether or not to include a preview of the PEF in HTML.</p>
             <pre><code class="default">false</code></pre>
         </p:documentation>
     </p:option>
-    
     <p:option name="include-brf" required="false" px:type="boolean" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">include-brf</h2>
+            <h2 px:role="name">Include BRF</h2>
             <p px:role="desc">Whether or not to include an ASCII version of the PEF.</p>
             <pre><code class="default">false</code></pre>
         </p:documentation>
     </p:option>
     
-    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
+    <!-- =========== -->
+    <!-- Page layout -->
+    <!-- =========== -->
+    <p:option name="page-width" required="false" px:type="integer" select="'28'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">output-dir</h2>
-            <p px:role="desc">Directory for storing result files.</p>
+            <h2 px:role="name">Page layout: Page width</h2>
+            <p px:role="desc">The number of columns available for printing.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="page-height" required="false" px:type="integer" select="'29'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page layout: Page height</h2>
+            <p px:role="desc">The number of rows available for printing.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="predefined-page-formats" required="false" px:type="string" select="'A4'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page layout: Predefined page formats</h2>
+            <p px:role="desc">Paper size format.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="left-margin" required="false" px:type="integer" select="'0'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page layout: Left margin</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="duplex" required="false" px:type="string" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page layout: Duplex</h2>
+            <p px:role="desc">When enabled, will print on both sides of the paper.</p>
         </p:documentation>
     </p:option>
     
+    <!-- =============== -->
+    <!-- Headers/footers -->
+    <!-- =============== -->
+    <p:option name="levels-in-footer" required="false" px:type="integer" select="'6'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Headers/footers: Levels in footer</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ============================== -->
+    <!-- Translation/formatting of text -->
+    <!-- ============================== -->
+    <p:option name="main-document-language" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Main document language</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="contraction-grade" required="false" px:type="integer" select="'0'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Contraction grade</h2>
+            <p px:role="desc">Contraction grades are either uncontracted (0) or grade 1-3.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="hyphenation-with-single-line-spacing" required="false" px:type="string" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Hyphenation with single line spacing</h2>
+            <p px:role="desc">When enabled, will hyphenate content where single line spacing is used.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="hyphenation-with-double-line-spacing" required="false" px:type="string" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Hyphenation with double line spacing</h2>
+            <p px:role="desc">When enabled, will hyphenate content where double line spacing is used.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="line-spacing" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Line spacing</h2>
+            <p px:role="desc">When enabled, use single line spacing.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="tab-width" required="false" px:type="integer" select="'4'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Tab width</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="capital-letters" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Capital letters</h2>
+            <p px:role="desc">When enabled, will capitalize letters. When disabled, all letters are printed in lower case.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="accented-letters" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Accented letters</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="polite-forms" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Polite forms</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="downshift-ordinal-numbers" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Translation/formatting of text: Downshift ordinal numbers</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ============== -->
+    <!-- Block elements -->
+    <!-- ============== -->
+    <p:option name="include-captions" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Block elements: Include captions</h2>
+            <p px:role="desc">When enabled, will include captions for images, tables, and so on.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-images" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Block elements: Include images</h2>
+            <p px:role="desc">When enabled, will include the alt text of the images. When disabled, the images will be completely removed.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-image-groups" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Block elements: Include image groups</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-line-groups" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Block elements: Include line groups</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- =============== -->
+    <!-- Inline elements -->
+    <!-- =============== -->
+    <p:option name="text-level-formatting" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Inline elements: Text-level formatting (emphasis, strong)</h2>
+            <p px:role="desc">When enabled, text that is in bold or italics in the print version will be rendered in bold or italics in the braille version as well.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-note-references" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Inline elements: Include note references</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-production-notes" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Inline elements: Include production notes</h2>
+            <p px:role="desc">When enabled, production notes are included in the content.</p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ============ -->
+    <!-- Page numbers -->
+    <!-- ============ -->
+    <p:option name="show-braille-page-numbers" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page numbers: Show braille page numbers</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="show-print-page-numbers" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page numbers: Show print page numbers</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="force-braille-page-break" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Page numbers: Force braille page break</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ================= -->
+    <!-- Table of contents -->
+    <!-- ================= -->
+    <p:option name="generate-table-of-contents" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Table of contents: Generate table of contents</h2>
+            <p px:role="desc">When enabled, will generate a table of contents.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="table-of-contents-depth" required="false" px:type="integer" select="'6'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Table of contents: Table of contents depth</h2>
+            <p px:role="desc">The depth of the table of contents hierarchy to include when rendering the table of contents.</p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ================= -->
+    <!-- Generated content -->
+    <!-- ================= -->
+    <p:option name="ignore-document-title" required="false" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Generated content: Ignore document title</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-symbols-list" required="false" px:type="boolean" select="'true'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Generated content: Include symbols list</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="choice-of-colophon" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Generated content: Choice of colophon</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ==================== -->
+    <!-- Placement of content -->
+    <!-- ==================== -->
+    <p:option name="footnotes-placement" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Placement of content: Footnotes placement</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="colophon-metadata-placement" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Placement of content: Colophon/metadata placement</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="rear-cover-placement" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Placement of content: Rear cover placement</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ======= -->
+    <!-- Volumes -->
+    <!-- ======= -->
+    <p:option name="number-of-pages" required="false" px:type="integer" select="'50'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Volumes: Number of pages</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="maximum-number-of-pages" required="false" px:type="integer" select="'70'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Volumes: Maximum number of pages</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    <p:option name="minimum-number-of-pages" required="false" px:type="integer" select="'30'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Volumes: Minimum number of pages</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ============= -->
+    <!-- Miscellaneous -->
+    <!-- ============= -->
+    <p:option name="sbsform-macros" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Miscellaneous: SBSForm macros</h2>
+            <p px:role="desc"></p>
+        </p:documentation>
+    </p:option>
+    
+    <!-- ======= -->
+    <!-- Outputs -->
+    <!-- ======= -->
+    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Output directory</h2>
+            <p px:role="desc">Directory for storing result files.</p>
+        </p:documentation>
+    </p:option>
     <p:option name="temp-dir" required="false" px:output="temp" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">temp-dir</h2>
+            <h2 px:role="name">Temporary directory</h2>
             <p px:role="desc">Directory for storing temporary files.</p>
         </p:documentation>
     </p:option>
     
+    <!-- ======= -->
+    <!-- Imports -->
+    <!-- ======= -->
     <p:import href="dtbook-to-pef.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
@@ -95,7 +370,6 @@
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
-    
     <px:tempdir name="temp-dir">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:tempdir>
@@ -104,7 +378,6 @@
     <!-- ============= -->
     <!-- DTBOOK TO PEF -->
     <!-- ============= -->
-    
     <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
@@ -115,12 +388,49 @@
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
+        <!--<p:with-option "page-width" select="$page-width"/>
+        <p:with-option "page-height" select="$page-height"/>
+        <p:with-option "predefined-page-formats" select="$predefined-page-formats"/>
+        <p:with-option "left-margin" select="$left-margin"/>
+        <p:with-option "duplex" select="$duplex"/>
+        <p:with-option "levels-in-footer" select="$levels-in-footer"/>
+        <p:with-option "main-document-language" select="$main-document-language"/>
+        <p:with-option "contraction-grade" select="$contraction-grade"/>
+        <p:with-option "hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/>
+        <p:with-option "hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/>
+        <p:with-option "line-spacing" select="$line-spacing"/>
+        <p:with-option "tab-width" select="$tab-width"/>
+        <p:with-option "capital-letters" select="$capital-letters"/>
+        <p:with-option "accented-letters" select="$accented-letters"/>
+        <p:with-option "polite-forms" select="$polite-forms"/>
+        <p:with-option "downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/>
+        <p:with-option "include-captions" select="$include-captions"/>
+        <p:with-option "include-images" select="$include-images"/>
+        <p:with-option "include-image-groups" select="$include-image-groups"/>
+        <p:with-option "include-line-groups" select="$include-line-groups"/>
+        <p:with-option "text-level-formatting" select="$text-level-formatting"/>
+        <p:with-option "include-note-references" select="$include-note-references"/>
+        <p:with-option "include-production-notes" select="$include-production-notes"/>
+        <p:with-option "show-braille-page-numbers" select="$show-braille-page-numbers"/>
+        <p:with-option "show-print-page-numbers" select="$show-print-page-numbers"/>
+        <p:with-option "force-braille-page-break" select="$force-braille-page-break"/>
+        <p:with-option "generate-table-of-contents" select="$generate-table-of-contents"/>
+        <p:with-option "table-of-contents-depth" select="$table-of-contents-depth"/>
+        <p:with-option "ignore-document-title" select="$ignore-document-title"/>
+        <p:with-option "include-symbols-list" select="$include-symbols-list"/>
+        <p:with-option "choice-of-colophon" select="$choice-of-colophon"/>
+        <p:with-option "footnotes-placement" select="$footnotes-placement"/>
+        <p:with-option "colophon-metadata-placement" select="$colophon-metadata-placement"/>
+        <p:with-option "rear-cover-placement" select="$rear-cover-placement"/>
+        <p:with-option "number-of-pages" select="$number-of-pages"/>
+        <p:with-option "maximum-number-of-pages" select="$maximum-number-of-pages"/>
+        <p:with-option "minimum-number-of-pages" select="$minimum-number-of-pages"/>
+        <p:with-option "sbsform-macros" select="$sbsform-macros"/>-->
     </px:dtbook-to-pef.convert>
     
     <!-- ========= -->
     <!-- STORE PEF -->
     <!-- ========= -->
-    
     <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
