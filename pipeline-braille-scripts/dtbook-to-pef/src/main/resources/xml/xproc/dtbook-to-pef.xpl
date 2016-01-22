@@ -138,10 +138,10 @@
             <p px:role="desc">When enabled, will hyphenate content where double line spacing is used.</p>
         </p:documentation>
     </p:option>
-    <p:option name="line-spacing" required="false" px:type="boolean" select="'false'">
+    <p:option name="line-spacing" required="false" px:data-type="dtbook-to-pef:line-spacing" select="'single'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Line spacing</h2>
-            <p px:role="desc">When enabled, use single line spacing.</p>
+            <p px:role="desc">'single' or 'double' line spacing.</p>
         </p:documentation>
     </p:option>
     <p:option name="tab-width" required="false" px:type="integer" select="'4'">
