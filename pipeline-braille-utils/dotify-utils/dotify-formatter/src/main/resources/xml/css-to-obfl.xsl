@@ -169,6 +169,9 @@
                                                                         <on-toc-start>
                                                                             <xsl:call-template name="group-inline-elements">
                                                                                 <xsl:with-param name="elements" select="$on-first-toc-start-content"/>
+                                                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                                             </xsl:call-template>
                                                                         </on-toc-start>
                                                                     </xsl:if>
@@ -178,6 +181,9 @@
                                                                         <on-toc-end>
                                                                             <xsl:call-template name="group-inline-elements">
                                                                                 <xsl:with-param name="elements" select="$on-toc-end-content"/>
+                                                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                                             </xsl:call-template>
                                                                         </on-toc-end>
                                                                     </xsl:if>
@@ -189,6 +195,9 @@
                                                         <sequence master="{$pre-content-master}">
                                                             <xsl:call-template name="group-inline-elements">
                                                                 <xsl:with-param name="elements" select="$unwrap-flow"/>
+                                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                             </xsl:call-template>
                                                         </sequence>
                                                     </xsl:otherwise>
@@ -230,6 +239,9 @@
                                                 <sequence master="{$post-content-master}">
                                                     <xsl:call-template name="group-inline-elements">
                                                         <xsl:with-param name="elements" select="$unwrap-flow"/>
+                                                        <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                        <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                        <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                     </xsl:call-template>
                                                 </sequence>
                                             </xsl:for-each-group>
@@ -261,11 +273,20 @@
                     <xsl:if test="@css:counter-set-page">
                         <xsl:attribute name="initial-page-number" select="@css:counter-set-page"/>
                     </xsl:if>
-                    <xsl:apply-templates select=".">
+                    <xsl:if test="self::css:_">
+                        <xsl:apply-templates select="@* except @css:string-entry"/>
+                        <xsl:if test="@css:string-entry">
+                            <block>
+                                <xsl:apply-templates select="@css:string-entry"/>
+                            </block>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:call-template name="group-inline-elements">
+                        <xsl:with-param name="elements" select="if (self::css:_) then * else ."/>
                         <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                         <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                         <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                    </xsl:apply-templates>
+                    </xsl:call-template>
                 </sequence>
             </xsl:for-each>
         </obfl>
@@ -276,19 +297,11 @@
         <xsl:for-each-group select="$elements" group-adjacent="boolean(self::css:box[@type='block'])">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
-                    <xsl:apply-templates select="current-group()">
-                        <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                        <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                        <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                    </xsl:apply-templates>
+                    <xsl:apply-templates select="current-group()"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <block>
-                        <xsl:apply-templates select="current-group()">
-                            <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                            <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                            <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                        </xsl:apply-templates>
+                        <xsl:apply-templates select="current-group()"/>
                     </block>
                 </xsl:otherwise>
             </xsl:choose>
@@ -298,16 +311,6 @@
     <xsl:template match="/*/@css:counter-set-page|
                          /*/@css:page|
                          /*/@css:volume"/>
-    
-    <xsl:template match="/css:_">
-        <xsl:apply-templates select="@* except @css:string-entry"/>
-        <xsl:if test="@css:string-entry">
-            <block>
-                <xsl:apply-templates select="@css:string-entry"/>
-            </block>
-        </xsl:if>
-        <xsl:apply-templates/>
-    </xsl:template>
     
     <xsl:template match="css:box/css:_" mode="#default table-of-contents">
         <xsl:apply-templates select="@*|node()" mode="#current"/>

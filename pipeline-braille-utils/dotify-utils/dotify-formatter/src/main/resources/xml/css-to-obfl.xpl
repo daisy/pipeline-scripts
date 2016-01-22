@@ -401,9 +401,7 @@
         <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
     </p:for-each>
     
-    <p:split-sequence test="/*/@css:flow or
-                            //css:box[@type='block']
-                                     [@css:border-top|
+    <p:split-sequence test="//css:box[@css:border-top|
                                       @css:border-bottom|
                                       @css:margin-top|
                                       @css:margin-bottom|

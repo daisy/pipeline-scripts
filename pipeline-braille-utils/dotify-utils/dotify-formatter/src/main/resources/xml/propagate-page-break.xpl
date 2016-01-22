@@ -13,12 +13,13 @@
     
     <p:input port="source">
         <p:documentation>
-            The input is assumed to be a tree-of-boxes representation of a document that consists of
-            only css:box elements and text nodes (and css:_ elements if they are document
-            elements). Text and inline boxes must not have sibling block boxes, and there should be
-            no block boxes inside inline boxes. The 'page-break' properties of block boxes must be
-            declared in css:page-break-before, css:page-break-after and css:page-break-inside
-            attributes.
+            The input is assumed to be a tree-of-boxes representation of a document where boxes are
+            represented by css:box elements. The document root must be a box or a css:_ element. The
+            parent of a box must be another box (or a css:_ element if it's the document
+            root). Inline boxes must not have descendant or sibling block boxes. All other nodes
+            must have at least one inline box ancestor. The 'page-break' properties of block boxes
+            must be declared in css:page-break-before, css:page-break-after and
+            css:page-break-inside attributes.
         </p:documentation>
     </p:input>
     
