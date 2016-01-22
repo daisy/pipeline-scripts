@@ -240,16 +240,74 @@
     <!-- ================= -->
     <!-- Table of contents -->
     <!-- ================= -->
-    <p:option name="generate-table-of-contents" required="false" px:type="boolean" select="'true'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Table of contents: Generate table of contents</h2>
-            <p px:role="desc">When enabled, will generate a table of contents.</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="table-of-contents-depth" required="false" px:type="integer" select="'6'">
+    <p:option name="toc-depth" required="false" px:type="integer" select="'0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Table of contents: Table of contents depth</h2>
-            <p px:role="desc">The depth of the table of contents hierarchy to include when rendering the table of contents.</p>
+            <p px:role="desc">The depth of the table of contents hierarchy to include. '0' means no table of contents.
+
+A table of contents will be generated from the heading elements present in the document: from `h1`
+elements if the specified value for "depth" is 1, from `h1` and `h2` elements if the specified value
+is 2, etc. The resulting table of contents has the following nested structure:
+
+```xml
+<list id="generated-toc">
+  <li>
+      <a href="#ch_1">Chapter 1</a>
+      <list>
+          <li>
+              <a href="#ch_1_1">1.1</a>
+              ...
+          </li>
+          <li>
+              <a href="#ch_1_2">1.2</a>
+              ...
+          </li>
+          ...
+      </list>
+  </li>
+  ...
+</list>
+```
+
+`ch_1`, `ch_1_2` etc. are the IDs of the heading elements from which the list was constructed, and
+the content of the links are exact copies of the content of the heading elements. By default the
+list is not rendered. The list should be styled and positioned with CSS. The following rules are
+included by default:
+
+```css
+#generated-toc {
+  flow: document-toc;
+  display: -obfl-toc;
+  -obfl-toc-range: document;
+}
+
+#generated-toc::duplicate {
+  flow: volume-toc;
+  display: -obfl-toc;
+  -obfl-toc-range: volume;
+}
+```
+
+This means that a document range table of contents is added to the named flow called "document-toc",
+and a volume range table of contents is added to the named flow called "volume-toc". In order to
+consume these named flows use the function `flow()`. For example, to position the document range
+table of contents at the beginning of the first volume, and to repeat the volume range table of
+content at the beginning of every other volume, include the following additional rules:
+
+```css
+@volume {
+  @begin {
+    content: flow(volume-toc);
+  }
+}
+
+@volume:first {
+  @begin {
+    content: flow(document-toc);
+  }
+}
+```
+</p>
         </p:documentation>
     </p:option>
     
@@ -363,44 +421,43 @@
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-        <!--<p:with-option "page-width" select="$page-width"/>
-        <p:with-option "page-height" select="$page-height"/>
-        <p:with-option "predefined-page-formats" select="$predefined-page-formats"/>
-        <p:with-option "left-margin" select="$left-margin"/>
-        <p:with-option "duplex" select="$duplex"/>
-        <p:with-option "levels-in-footer" select="$levels-in-footer"/>
-        <p:with-option "main-document-language" select="$main-document-language"/>
-        <p:with-option "contraction-grade" select="$contraction-grade"/>
-        <p:with-option "hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/>
-        <p:with-option "hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/>
-        <p:with-option "line-spacing" select="$line-spacing"/>
-        <p:with-option "tab-width" select="$tab-width"/>
-        <p:with-option "capital-letters" select="$capital-letters"/>
-        <p:with-option "accented-letters" select="$accented-letters"/>
-        <p:with-option "polite-forms" select="$polite-forms"/>
-        <p:with-option "downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/>
-        <p:with-option "include-captions" select="$include-captions"/>
-        <p:with-option "include-images" select="$include-images"/>
-        <p:with-option "include-image-groups" select="$include-image-groups"/>
-        <p:with-option "include-line-groups" select="$include-line-groups"/>
-        <p:with-option "text-level-formatting" select="$text-level-formatting"/>
-        <p:with-option "include-note-references" select="$include-note-references"/>
-        <p:with-option "include-production-notes" select="$include-production-notes"/>
-        <p:with-option "show-braille-page-numbers" select="$show-braille-page-numbers"/>
-        <p:with-option "show-print-page-numbers" select="$show-print-page-numbers"/>
-        <p:with-option "force-braille-page-break" select="$force-braille-page-break"/>
-        <p:with-option "generate-table-of-contents" select="$generate-table-of-contents"/>
-        <p:with-option "table-of-contents-depth" select="$table-of-contents-depth"/>
-        <p:with-option "ignore-document-title" select="$ignore-document-title"/>
-        <p:with-option "include-symbols-list" select="$include-symbols-list"/>
-        <p:with-option "choice-of-colophon" select="$choice-of-colophon"/>
-        <p:with-option "footnotes-placement" select="$footnotes-placement"/>
-        <p:with-option "colophon-metadata-placement" select="$colophon-metadata-placement"/>
-        <p:with-option "rear-cover-placement" select="$rear-cover-placement"/>
-        <p:with-option "number-of-pages" select="$number-of-pages"/>
-        <p:with-option "maximum-number-of-pages" select="$maximum-number-of-pages"/>
-        <p:with-option "minimum-number-of-pages" select="$minimum-number-of-pages"/>
-        <p:with-option "sbsform-macros" select="$sbsform-macros"/>-->
+        <!-- <p:with-option name="page-width" select="$page-width"/> -->
+        <!-- <p:with-option name="page-height" select="$page-height"/> -->
+        <!-- <p:with-option name="predefined-page-formats" select="$predefined-page-formats"/> -->
+        <!-- <p:with-option name="left-margin" select="$left-margin"/> -->
+        <!-- <p:with-option name="duplex" select="$duplex"/> -->
+        <!-- <p:with-option name="levels-in-footer" select="$levels-in-footer"/> -->
+        <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
+        <!-- <p:with-option name="contraction-grade" select="$contraction-grade"/> -->
+        <!-- <p:with-option name="hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/> -->
+        <!-- <p:with-option name="hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/> -->
+        <!-- <p:with-option name="line-spacing" select="$line-spacing"/> -->
+        <!-- <p:with-option name="tab-width" select="$tab-width"/> -->
+        <!-- <p:with-option name="capital-letters" select="$capital-letters"/> -->
+        <!-- <p:with-option name="accented-letters" select="$accented-letters"/> -->
+        <!-- <p:with-option name="polite-forms" select="$polite-forms"/> -->
+        <!-- <p:with-option name="downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/> -->
+        <!-- <p:with-option name="include-captions" select="$include-captions"/> -->
+        <!-- <p:with-option name="include-images" select="$include-images"/> -->
+        <!-- <p:with-option name="include-image-groups" select="$include-image-groups"/> -->
+        <!-- <p:with-option name="include-line-groups" select="$include-line-groups"/> -->
+        <!-- <p:with-option name="text-level-formatting" select="$text-level-formatting"/> -->
+        <!-- <p:with-option name="include-note-references" select="$include-note-references"/> -->
+        <!-- <p:with-option name="include-production-notes" select="$include-production-notes"/> -->
+        <!-- <p:with-option name="show-braille-page-numbers" select="$show-braille-page-numbers"/> -->
+        <!-- <p:with-option name="show-print-page-numbers" select="$show-print-page-numbers"/> -->
+        <!-- <p:with-option name="force-braille-page-break" select="$force-braille-page-break"/> -->
+        <p:with-option name="toc-depth" select="$toc-depth"/>
+        <!-- <p:with-option name="ignore-document-title" select="$ignore-document-title"/> -->
+        <!-- <p:with-option name="include-symbols-list" select="$include-symbols-list"/> -->
+        <!-- <p:with-option name="choice-of-colophon" select="$choice-of-colophon"/> -->
+        <!-- <p:with-option name="footnotes-placement" select="$footnotes-placement"/> -->
+        <!-- <p:with-option name="colophon-metadata-placement" select="$colophon-metadata-placement"/> -->
+        <!-- <p:with-option name="rear-cover-placement" select="$rear-cover-placement"/> -->
+        <!-- <p:with-option name="number-of-pages" select="$number-of-pages"/> -->
+        <!-- <p:with-option name="maximum-number-of-pages" select="$maximum-number-of-pages"/> -->
+        <!-- <p:with-option name="minimum-number-of-pages" select="$minimum-number-of-pages"/> -->
+        <!-- <p:with-option name="sbsform-macros" select="$sbsform-macros"/> -->
     </px:dtbook-to-pef.convert>
     
     <!-- ========= -->
