@@ -92,7 +92,7 @@
 		<xsl:copy/>
 	</xsl:template>
 	
-	<xsl:template match="css:rule|css:property|css:content|css:string[@name]|css:counter|css:text|css:leader"
+	<xsl:template match="css:rule|css:property|css:content|css:string[@name]|css:counter|css:text|css:leader|css:custom-func"
 	              mode="translate-rule-list translate-declaration-list translate-content-list">
 		<xsl:sequence select="."/>
 	</xsl:template>
@@ -181,6 +181,10 @@
 	
 	<xsl:template match="css:leader" mode="eval-string-set-content-list">
 		<xsl:message>leader() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:custom-func" mode="eval-string-set-content-list">
+		<xsl:message><xsl:value-of select="@name"/>() function not supported in string-set property</xsl:message>
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='content']" mode="translate-declaration-list">

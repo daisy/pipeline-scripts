@@ -62,7 +62,8 @@
                          css:text|
                          css:string|
                          css:counter|
-                         css:leader">
+                         css:leader|
+                         css:custom-func">
         <xsl:sequence select="."/>
     </xsl:template>
     
@@ -75,7 +76,8 @@
                          css:text|
                          css:string|
                          css:counter|
-                         css:leader" mode="display-none"/>
+                         css:leader|
+                         css:custom-func" mode="display-none"/>
     
     <xsl:template match="@css:id|
                          @css:counter-reset|

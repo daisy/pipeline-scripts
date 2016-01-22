@@ -34,7 +34,7 @@
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:leader"
+    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:leader|css:custom-func"
                   mode="eval-content-list">
         <xsl:sequence select="."/>
     </xsl:template>

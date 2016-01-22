@@ -254,7 +254,8 @@
                              descendant::css:string or
                              descendant::css:counter or
                              descendant::css:text or
-                             descendant::css:leader)]"
+                             descendant::css:leader or
+                             descendant::css:custom-func)]"
                       new-name="css:_">
                 <p:documentation>
                     Delete empty inline boxes (possible side effect of css:split).
@@ -390,7 +391,8 @@
                                      descendant::css:string or
                                      descendant::css:counter or
                                      descendant::css:text or
-                                     descendant::css:leader)]
+                                     descendant::css:leader or
+                                     descendant::css:custom-func)]
                                 //text()">
             <p:documentation>
                 Remove text nodes from block boxes with no line boxes.
@@ -425,7 +427,8 @@
                                       descendant::css:string|
                                       descendant::css:counter|
                                       descendant::css:text|
-                                      descendant::css:leader]">
+                                      descendant::css:leader|
+                                      descendant::css:custom-func]">
         <p:documentation>
             Remove empty sections.
         </p:documentation>
