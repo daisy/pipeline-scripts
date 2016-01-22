@@ -47,47 +47,43 @@
         </p:choose>
     </p:declare-step>
     
-    <p:for-each>
-        <p:add-xml-base/>
-        <p:xslt>
-            <p:input port="stylesheet">
-                <p:inline>
-                    <xsl:stylesheet version="2.0">
-                        <xsl:template match="/*">
-                            <xsl:copy>
-                                <xsl:copy-of select="document('')/*/namespace::*[name()='obfl']"/>
-                                <xsl:copy-of select="document('')/*/namespace::*[name()='css']"/>
-                                <xsl:sequence select="@*|node()"/>
-                            </xsl:copy>
-                        </xsl:template>
-                    </xsl:stylesheet>
-                </p:inline>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-    </p:for-each>
+    <p:add-xml-base/>
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:inline>
+                <xsl:stylesheet version="2.0">
+                    <xsl:template match="/*">
+                        <xsl:copy>
+                            <xsl:copy-of select="document('')/*/namespace::*[name()='obfl']"/>
+                            <xsl:copy-of select="document('')/*/namespace::*[name()='css']"/>
+                            <xsl:sequence select="@*|node()"/>
+                        </xsl:copy>
+                    </xsl:template>
+                </xsl:stylesheet>
+            </p:inline>
+        </p:input>
+        <p:input port="parameters">
+            <p:empty/>
+        </p:input>
+    </p:xslt>
     
-    <p:for-each>
-        <pxi:recursive-parse-stylesheet-and-make-pseudo-element>
-            <p:documentation>
-                Make css:after, css:before and css:duplicate pseudo-elements and css:page and
-                css:volume attributes.
-            </p:documentation>
-        </pxi:recursive-parse-stylesheet-and-make-pseudo-element>
-        <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
-            <p:documentation>
-                Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
-                css:_obfl-marker attributes.
-            </p:documentation>
-        </css:parse-properties>
-        <css:eval-string-set>
-            <p:documentation>
-                Evaluate css:string-set attributes.
-            </p:documentation>
-        </css:eval-string-set>
-    </p:for-each>
+    <pxi:recursive-parse-stylesheet-and-make-pseudo-element>
+        <p:documentation>
+            Make css:after, css:before and css:duplicate pseudo-elements and css:page and
+            css:volume attributes.
+        </p:documentation>
+    </pxi:recursive-parse-stylesheet-and-make-pseudo-element>
+    <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
+        <p:documentation>
+            Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
+            css:_obfl-marker attributes.
+        </p:documentation>
+    </css:parse-properties>
+    <css:eval-string-set>
+        <p:documentation>
+            Evaluate css:string-set attributes.
+        </p:documentation>
+    </css:eval-string-set>
     
     <p:group>
         <p:documentation>
