@@ -22,9 +22,9 @@
             For each element in the input with a css:content attribute, the content list in that
             attribute is parsed, partly evaluated, and inserted in the output in place of the
             element's original content. String values and attr() values are evaluated to
-            text. target-text(), target-string(), target-counter() and leader() values are inserted
-            as css:text, css:string, css:counter and css:leader elements. string() and counter()
-            values are invalid.
+            text. target-text(), target-string(), target-counter() and leader() values and custom
+            function are inserted as css:text, css:string, css:counter, css:leader and
+            css:custom-func elements. string() and counter() values are invalid.
         </p:documentation>
     </p:output>
     

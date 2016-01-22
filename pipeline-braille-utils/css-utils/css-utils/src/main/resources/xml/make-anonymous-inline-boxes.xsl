@@ -70,7 +70,8 @@
                                          |descendant-or-self::css:string
                                          |descendant-or-self::css:counter
                                          |descendant-or-self::css:text
-                                         |descendant-or-self::css:leader))">
+                                         |descendant-or-self::css:leader
+                                         |descendant-or-self::css:custom-func))">
                     <xsl:sequence select="current-group()"/>
                 </xsl:when>
                 <xsl:otherwise>

@@ -51,4 +51,13 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_04">
+    <x:context>
+      <doc style="::-x-foo::before {{ display: block }}"/>
+    </x:context>
+    <x:expect label="result">
+      <doc css:_x-foo="::before {{ display: block }}"/>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

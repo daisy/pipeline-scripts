@@ -3,9 +3,6 @@
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="../resources/inline.xpl">
   
-  <!-- ======= -->
-  <!-- test_01 -->
-  <!-- ======= -->
   <!--
       Universal selector
   -->
@@ -40,9 +37,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_02 -->
-  <!-- ======= -->
   <!--
       Type selector
   -->
@@ -75,9 +69,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_03 -->
-  <!-- ======= -->
   <!--
       Descendant selector
   -->
@@ -116,9 +107,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_04 -->
-  <!-- ======= -->
   <!--
       Child selector
   -->
@@ -161,9 +149,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_05 -->
-  <!-- ======= -->
   <!--
       Adjacent selector
   -->
@@ -200,9 +185,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_06 -->
-  <!-- ======= -->
   <!--
       Attribute selectors
   -->
@@ -251,9 +233,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_07 -->
-  <!-- ======= -->
   <!--
       Class selectors
   -->
@@ -293,9 +272,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_08 -->
-  <!-- ======= -->
   <!--
       ID selectors
   -->
@@ -333,9 +309,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_09 -->
-  <!-- ======= -->
   <!--
       Pseudo classes
   -->
@@ -389,11 +362,8 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_10 -->
-  <!-- ======= -->
   <!--
-      Pseudo elements
+      Pseudo elements (including stacking)
   -->
   <x:scenario label="test_10">
     <x:call step="css:inline">
@@ -404,6 +374,7 @@
               <style media="embossed" type="text/css">
                 p::before { display: block }
                 p::after { display: block }
+                p::after::before { display: block }
               </style>
             </head>
             <body>
@@ -419,15 +390,12 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p style="::before { display: block; } ::after { display: block; }">foobar</p>
+          <p style="::after::before { display: block; } ::after { display: block; } ::before { display: block; }">foobar</p>
         </body>
       </x:document>
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_11 -->
-  <!-- ======= -->
   <!--
       Root selector
   -->

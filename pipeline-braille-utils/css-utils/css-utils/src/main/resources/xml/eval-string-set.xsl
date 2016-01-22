@@ -83,6 +83,10 @@
         <xsl:message>flow() function not supported in string-set property</xsl:message>
     </xsl:template>
     
+    <xsl:template match="css:custom-func" mode="eval-content-list">
+        <xsl:message><xsl:value-of select="@name"/>() function not supported in string-set property</xsl:message>
+    </xsl:template>
+    
     <xsl:template match="*" mode="eval-content-list">
         <xsl:message terminate="yes">Coding error</xsl:message>
     </xsl:template>

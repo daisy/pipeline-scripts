@@ -219,12 +219,13 @@
     <xsl:variable name="css:PSEUDOCLASS_RE" select="concat(':',$css:IDENT_RE,'(\([1-9][0-9]*\))?')"/>
     <xsl:variable name="css:PSEUDOCLASS_RE_groups" select="$css:IDENT_RE_groups + 1"/>
     
-    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')(',$css:PSEUDOCLASS_RE,')?|(::',$css:IDENT_RE,')|(',$css:PSEUDOCLASS_RE,'))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
+    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')(',$css:PSEUDOCLASS_RE,')?|(::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,'))((::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,'))*)|(',$css:PSEUDOCLASS_RE,'))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
     <xsl:variable name="css:RULE_RE_selector" select="2"/>
     <xsl:variable name="css:RULE_RE_selector_atrule" select="$css:RULE_RE_selector + 1"/>
     <xsl:variable name="css:RULE_RE_selector_atrule_pseudoclass" select="$css:RULE_RE_selector_atrule + $css:IDENT_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_selector_pseudoelement" select="$css:RULE_RE_selector_atrule_pseudoclass + $css:PSEUDOCLASS_RE_groups + 1"/>
-    <xsl:variable name="css:RULE_RE_selector_pseudoclass" select="$css:RULE_RE_selector_pseudoelement + $css:IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:RULE_RE_selector_pseudoelement_stack" select="$css:RULE_RE_selector_pseudoelement + 1 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:RULE_RE_selector_pseudoclass" select="$css:RULE_RE_selector_pseudoelement_stack + 2 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_value" select="$css:RULE_RE_selector_pseudoclass + $css:PSEUDOCLASS_RE_groups + 1"/>
     
     <!-- ======= -->
@@ -268,9 +269,12 @@
                             <xsl:variable name="style" as="xs:string"
                                           select="replace(regex-group($css:RULE_RE_value), '(^\s+|\s+$)', '')"/>
                             <xsl:choose>
-                                <xsl:when test="regex-group($css:RULE_RE_selector_atrule_pseudoclass)!=''">
+                                <xsl:when test="regex-group($css:RULE_RE_selector_atrule_pseudoclass)!='' or
+                                                regex-group($css:RULE_RE_selector_pseudoelement_stack)!=''">
                                     <xsl:element name="css:rule">
-                                        <xsl:attribute name="selector" select="regex-group($css:RULE_RE_selector_atrule_pseudoclass)"/>
+                                        <xsl:attribute name="selector" select="concat(
+                                                                                 regex-group($css:RULE_RE_selector_atrule_pseudoclass),
+                                                                                 regex-group($css:RULE_RE_selector_pseudoelement_stack))"/>
                                         <xsl:attribute name="style" select="$style"/>
                                     </xsl:element>
                                 </xsl:when>
@@ -683,7 +687,7 @@
             <xsl:when test="not(@selector)">
                 <xsl:sequence select="@style"/>
             </xsl:when>
-            <xsl:when test="matches(@selector,'^@')">
+            <xsl:when test="matches(@selector,'^(@|::)')">
                 <xsl:variable name="nested-rules" as="element()*" select="css:parse-stylesheet(@style)"/>
                 <xsl:sequence select="string-join((
                                         if ($nested-rules[not(matches(@selector,'^:'))])

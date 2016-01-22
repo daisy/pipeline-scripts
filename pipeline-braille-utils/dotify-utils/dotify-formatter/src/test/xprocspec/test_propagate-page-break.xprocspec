@@ -33,7 +33,9 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:box type="block">
+        <css:box type="block"
+                 css:page-break-before="left"
+                 css:page-break-after="always">
           <css:box type="block"
                    css:page-break-after="avoid"/>
           <css:box type="block">
