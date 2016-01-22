@@ -22,27 +22,41 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
+    <p:import href="make-on-volume-start-elements.xpl"/>
     
-    <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-element">
+    <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
-        <p:output port="result"/>
+        <p:output port="result" sequence="true"/>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:volume, css:after, css:before and css:duplicate attributes.
+                Make css:page, css:volume, css:after, css:before, css:duplicate and
+                css:_obfl-on-volume-start attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <p:choose>
-            <p:when test="//*/@css:before or //*/@css:after or //*/@css:duplicate">
+            <p:when test="//*/@css:before|
+                          //*/@css:after|
+                          //*/@css:duplicate|
+                          //*/@css:_obfl-on-volume-start">
                 <css:make-pseudo-elements>
                     <p:documentation>
                         Make css:before, css:after and css:duplicate pseudo-elements from
                         css:before, css:after and css:duplicate attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
-                <pxi:recursive-parse-stylesheet-and-make-pseudo-element/>
+                <p:delete match="css:duplicate/@css:_obfl-on-volume-start"/>
+                <pxi:make-on-volume-start-elements>
+                    <p:documentation>
+                        Make css:_obfl-on-volume-start pseudo-element documents from
+                        css:_obfl-on-volume-start attributes.
+                    </p:documentation>
+                </pxi:make-on-volume-start-elements>
+                <p:for-each>
+                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
+                </p:for-each>
             </p:when>
             <p:otherwise>
-                <p:identity/>
+                <p:rename match="@css:_obfl-on-volume-start-ref" new-name="css:_obfl-on-volume-start"/>
             </p:otherwise>
         </p:choose>
     </p:declare-step>
@@ -67,23 +81,26 @@
         </p:input>
     </p:xslt>
     
-    <pxi:recursive-parse-stylesheet-and-make-pseudo-element>
+    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
-            Make css:after, css:before and css:duplicate pseudo-elements and css:page and
-            css:volume attributes.
+            Make css:page and css:volume attributes, css:after, css:before and css:duplicate
+            pseudo-elements, and css:_obfl-on-volume-start pseudo-element documents.
         </p:documentation>
-    </pxi:recursive-parse-stylesheet-and-make-pseudo-element>
-    <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
-        <p:documentation>
-            Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
-            css:_obfl-marker attributes.
-        </p:documentation>
-    </css:parse-properties>
-    <css:eval-string-set>
-        <p:documentation>
-            Evaluate css:string-set attributes.
-        </p:documentation>
-    </css:eval-string-set>
+    </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    
+    <p:for-each>
+        <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
+            <p:documentation>
+                Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
+                css:_obfl-marker attributes.
+            </p:documentation>
+        </css:parse-properties>
+        <css:eval-string-set>
+            <p:documentation>
+                Evaluate css:string-set attributes.
+            </p:documentation>
+        </css:eval-string-set>
+    </p:for-each>
     
     <p:group>
         <p:documentation>
@@ -101,18 +118,20 @@
                 </p:documentation>
             </p:delete>
         </p:for-each>
+        <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:wrap wrapper="_" match="/*"/>
-        <css:flow-into name="_1">
+        <css:flow-into name="_2">
             <p:documentation>
                 Extract named flows based on css:flow attributes. Extracted elements are replaced
                 with empty css:_ elements with a css:id attribute.
             </p:documentation>
         </css:flow-into>
-        <p:filter select="/_/*" name="_2"/>
+        <p:filter select="/_/*" name="_3"/>
         <p:identity>
             <p:input port="source">
-                <p:pipe step="_2" port="result"/>
-                <p:pipe step="_1" port="flows"/>
+                <p:pipe step="_3" port="result"/>
+                <p:pipe step="_2" port="flows"/>
+                <p:pipe step="_1" port="not-matched"/>
             </p:input>
         </p:identity>
     </p:group>
