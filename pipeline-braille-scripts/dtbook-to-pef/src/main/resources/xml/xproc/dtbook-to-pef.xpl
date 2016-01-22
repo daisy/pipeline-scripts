@@ -35,7 +35,6 @@
     <p:input port="source" primary="true" px:name="source" px:media-type="application/x-dtbook+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Input DTBook</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:input>
     <p:option name="stylesheet" required="false" px:type="string" select="''">
@@ -47,7 +46,6 @@
     <p:option name="transform" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Transformer query</h2>
-            <p px:role="desc"></p>
             <pre><code class="default">(translator:liblouis)(formatter:dotify)</code></pre>
         </p:documentation>
     </p:option>
@@ -96,7 +94,6 @@
     <p:option name="left-margin" required="false" px:type="integer" select="'0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Left margin</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="duplex" required="false" px:type="string" select="'true'">
@@ -112,7 +109,6 @@
     <p:option name="levels-in-footer" required="false" px:type="integer" select="'6'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Headers/footers: Levels in footer</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -122,7 +118,6 @@
     <p:option name="main-document-language" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Main document language</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="contraction-grade" required="false" px:type="integer" select="'0'">
@@ -152,7 +147,6 @@
     <p:option name="tab-width" required="false" px:type="integer" select="'4'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Tab width</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="capital-letters" required="false" px:type="boolean" select="'true'">
@@ -164,19 +158,16 @@
     <p:option name="accented-letters" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Accented letters</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="polite-forms" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Polite forms</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="downshift-ordinal-numbers" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Downshift ordinal numbers</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -198,13 +189,11 @@
     <p:option name="include-image-groups" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include image groups</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="include-line-groups" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include line groups</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -220,7 +209,6 @@
     <p:option name="include-note-references" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Inline elements: Include note references</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="include-production-notes" required="false" px:type="boolean" select="'false'">
@@ -236,19 +224,16 @@
     <p:option name="show-braille-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show braille page numbers</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="show-print-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show print page numbers</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="force-braille-page-break" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Force braille page break</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -274,19 +259,16 @@
     <p:option name="ignore-document-title" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Generated content: Ignore document title</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="include-symbols-list" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Generated content: Include symbols list</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="choice-of-colophon" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Generated content: Choice of colophon</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -296,19 +278,16 @@
     <p:option name="footnotes-placement" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Placement of content: Footnotes placement</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="colophon-metadata-placement" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Placement of content: Colophon/metadata placement</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="rear-cover-placement" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Placement of content: Rear cover placement</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -318,19 +297,16 @@
     <p:option name="number-of-pages" required="false" px:type="integer" select="'50'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Number of pages</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="maximum-number-of-pages" required="false" px:type="integer" select="'70'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Maximum number of pages</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     <p:option name="minimum-number-of-pages" required="false" px:type="integer" select="'30'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Minimum number of pages</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
@@ -340,7 +316,6 @@
     <p:option name="sbsform-macros" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Miscellaneous: SBSForm macros</h2>
-            <p px:role="desc"></p>
         </p:documentation>
     </p:option>
     
