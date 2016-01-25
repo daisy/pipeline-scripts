@@ -55,10 +55,12 @@
                  'color',
                  'line-height',
                  'letter-spacing',
-                 'word-spacing')"/>
+                 'word-spacing',
+                 'render-table-by',
+                 'table-header-policy')"/>
     
     <xsl:variable name="css:values" as="xs:string*"
-        select="(re:exact(re:or(('block','inline','list-item','none','page-break',$css:VENDOR_PRF_IDENT_RE))),
+        select="(re:exact(re:or(('block','inline','list-item','none','table',$css:VENDOR_PRF_IDENT_RE))),
                  re:exact($css:IDENT_RE),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
                  re:exact(re:or(($css:NON_NEGATIVE_INTEGER_RE,'auto'))),
@@ -100,7 +102,9 @@
                  re:exact($css:COLOR_RE),
                  re:exact($css:NON_NEGATIVE_INTEGER_RE),
                  re:exact($css:NON_NEGATIVE_INTEGER_RE),
-                 re:exact($css:NON_NEGATIVE_INTEGER_RE))"/>
+                 re:exact($css:NON_NEGATIVE_INTEGER_RE),
+                 re:exact(re:or(('auto',re:comma-separated($css:IDENT_RE)))),
+                 re:exact(re:or(('once','always'))))"/>
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',
@@ -144,6 +148,8 @@
                  '.*',
                  '.*',
                  '^(block|list-item)$',
+                 '.*',
+                 '.*',
                  '.*',
                  '.*')"/>
     
@@ -190,7 +196,9 @@
                  '#000000',
                  '1',
                  '0',
-                 '1')"/>
+                 '1',
+                 'auto',
+                 'once')"/>
     
     <xsl:variable name="css:media" as="xs:string*"
         select="('embossed',
@@ -232,6 +240,8 @@
                  'print',
                  'print',
                  'print',
+                 'embossed',
+                 'embossed',
                  'embossed',
                  'embossed',
                  'embossed')"/>
