@@ -419,8 +419,11 @@ public class CSSInlineStep extends DefaultStep {
 		if (elem instanceof StackedPseudoElementImpl)
 			for (PseudoElement e : (StackedPseudoElementImpl)elem)
 				pseudoElementToString(builder, e);
-		else
+		else {
 			builder.append("::").append(elem.getName());
+			String[] args = elem.getArguments();
+			if (args.length > 0)
+				builder.append("(").append(join(args, ", ")).append(")"); }
 	}
 	
 	private static void insertPseudoStyle(StringBuilder builder, NodeData nodeData, PseudoElement elem) {
