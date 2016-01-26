@@ -390,7 +390,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body>
-          <p style="::after::before { display: block; } ::after { display: block; } ::before { display: block; }">foobar</p>
+          <p style="::after { display: block; } ::after::before { display: block; } ::before { display: block; }">foobar</p>
         </body>
       </x:document>
     </x:expect>

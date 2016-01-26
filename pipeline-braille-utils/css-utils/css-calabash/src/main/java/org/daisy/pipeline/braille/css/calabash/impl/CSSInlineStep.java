@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -303,7 +304,7 @@ public class CSSInlineStep extends DefaultStep {
 				NodeData printData = printStylemap.get(elem);
 				if (printData != null)
 					insertStyle(style, printData);
-				for (PseudoElement pseudo : brailleStylemap.pseudoSet(elem)) {
+				for (PseudoElement pseudo : sort(brailleStylemap.pseudoSet(elem), pseudoElementComparator)) {
 					NodeData pseudoData = brailleStylemap.get(elem, pseudo);
 					if (pseudoData != null)
 						insertPseudoStyle(style, pseudoData, pseudo); }
@@ -357,6 +358,28 @@ public class CSSInlineStep extends DefaultStep {
 			addStartElement(new NameOfNode(inode), inode.getSchemaType(), inscopeNS);
 		}
 	}
+	
+	private static <T extends Comparable<? super T>> Iterable<T> sort(Iterable<T> iterable) {
+		List<T> list = new ArrayList<T>();
+		for (T x : iterable)
+			list.add(x);
+		Collections.<T>sort(list);
+		return list;
+	}
+	
+	private static <T> Iterable<T> sort(Iterable<T> iterable, Comparator<? super T> comparator) {
+		List<T> list = new ArrayList<T>();
+		for (T x : iterable)
+			list.add(x);
+		Collections.<T>sort(list, comparator);
+		return list;
+	}
+	
+	private static Comparator<PseudoElement> pseudoElementComparator = new Comparator<PseudoElement>() {
+		public int compare(PseudoElement e1, PseudoElement e2) {
+			return e1.toString().compareTo(e2.toString());
+		}
+	};
 	
 	private static Function<Object,String> termToString = new Function<Object,String>() {
 		public String apply(Object term) {
