@@ -243,30 +243,30 @@
     <p:option name="toc-depth" required="false" px:type="integer" select="'0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Table of contents: Table of contents depth</h2>
-            <p px:role="desc">The depth of the table of contents hierarchy to include. '0' means no table of contents.
+            <p px:role="desc" xml:space="preserve">The depth of the table of contents hierarchy to include. '0' means no table of contents.
 
 A table of contents will be generated from the heading elements present in the document: from `h1`
 elements if the specified value for "depth" is 1, from `h1` and `h2` elements if the specified value
 is 2, etc. The resulting table of contents has the following nested structure:
 
-```xml
-<list id="generated-toc">
-  <li>
-      <a href="#ch_1">Chapter 1</a>
-      <list>
-          <li>
-              <a href="#ch_1_1">1.1</a>
+```
+&lt;list id="generated-toc"&gt;
+  &lt;li&gt;
+      &lt;a href="#ch_1"&gt;Chapter 1&lt;/a&gt;
+      &lt;list&gt;
+          &lt;li&gt;
+              &lt;a href="#ch_1_1"&gt;1.1&lt;/a&gt;
               ...
-          </li>
-          <li>
-              <a href="#ch_1_2">1.2</a>
+          &lt;/li&gt;
+          &lt;li&gt;
+              &lt;a href="#ch_1_2"&gt;1.2&lt;/a&gt;
               ...
-          </li>
+          &lt;/li&gt;
           ...
-      </list>
-  </li>
+      &lt;/list&gt;
+  &lt;/li&gt;
   ...
-</list>
+&lt;/list&gt;
 ```
 
 `ch_1`, `ch_1_2` etc. are the IDs of the heading elements from which the list was constructed, and
@@ -274,7 +274,7 @@ the content of the links are exact copies of the content of the heading elements
 list is not rendered. The list should be styled and positioned with CSS. The following rules are
 included by default:
 
-```css
+```
 #generated-toc {
   flow: document-toc;
   display: -obfl-toc;
@@ -294,7 +294,7 @@ consume these named flows use the function `flow()`. For example, to position th
 table of contents at the beginning of the first volume, and to repeat the volume range table of
 content at the beginning of every other volume, include the following additional rules:
 
-```css
+```
 @volume {
   @begin {
     content: flow(volume-toc);
