@@ -18,7 +18,7 @@
                          @css:page-break-after|
                          @css:page-break-inside"/>
     
-    <xsl:template match="css:box[@type='block']">
+    <xsl:template match="/*|css:box[@type='block']">
         <xsl:param name="avoid-break-after" as="xs:boolean" select="false()"/>
         <xsl:param name="avoid-break-inside" as="xs:boolean" select="false()"/>
         <xsl:variable name="avoid-break-inside" as="xs:boolean" select="$avoid-break-inside or @css:page-break-inside='avoid'"/>

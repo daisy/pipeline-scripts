@@ -579,8 +579,8 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="/*/@css:page-break-before[.='right']|
-                         /*/@css:page-break-after[.='right']"/>
+    <xsl:template match="/*/@css:page-break-before|
+                         /*/@css:page-break-after"/>
     
     <xsl:template match="@css:page-break-inside[.='avoid']">
         <xsl:attribute name="keep" select="'all'"/>

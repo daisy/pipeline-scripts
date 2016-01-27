@@ -83,7 +83,7 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:_>
+        <css:_ css:page-break-after="always">
             <css:box type="block">
               <css:box type="inline">
                 ⠤⠤⠤
