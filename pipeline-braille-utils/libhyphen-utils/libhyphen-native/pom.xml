@@ -5,7 +5,7 @@
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
     <version>1.9.9-SNAPSHOT</version>
-    <relativePath>../../../parent/</relativePath>
+    <relativePath>../../../maven/parent/</relativePath>
   </parent>
   <artifactId>libhyphen-native</artifactId>
   <version>1.1.6-SNAPSHOT</version>
