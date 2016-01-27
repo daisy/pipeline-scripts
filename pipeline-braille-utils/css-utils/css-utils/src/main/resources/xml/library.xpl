@@ -21,6 +21,7 @@
     <p:import href="parse-properties.xpl"/>
     <p:import href="parse-stylesheet.xpl"/>
     <p:import href="preserve-white-space.xpl"/>
+    <p:import href="render-table-by.xpl"/>
     <p:import href="repeat-string-set.xpl"/>
     <p:import href="shift-id.xpl"/>
     <p:import href="shift-string-set.xpl"/>

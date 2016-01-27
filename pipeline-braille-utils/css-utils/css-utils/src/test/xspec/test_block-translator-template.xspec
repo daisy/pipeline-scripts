@@ -13,7 +13,7 @@
     <x:expect label="result">
       <doc style="text-transform: none">
         <h style="display: block; string-set: running-footer &quot;foobar&quot;">FOOBAR</h>
-        <p style="display: block ::after {{ content: &quot;BAR&quot; }}">FOO</p>
+        <p style="{{ display: block }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
         <pagenum style="display: none; string-set: print-page &quot;ii&quot;" />
       </doc>
     </x:expect>

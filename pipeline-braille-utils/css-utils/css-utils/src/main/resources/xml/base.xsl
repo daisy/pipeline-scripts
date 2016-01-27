@@ -695,7 +695,7 @@
                 <xsl:sequence select="string-join((
                                         if ($nested-rules[not(matches(@selector,'^:'))])
                                           then concat(@selector,' { ',
-                                                      css:serialize-stylesheet($nested-rules[not(matches(@selector,'^:'))]),
+                                                      css:serialize-stylesheet($nested-rules[not(matches(@selector,'^:'))], true()),
                                                       ' }')
                                           else (),
                                         for $r in $nested-rules[matches(@selector,'^:')]
@@ -758,15 +758,28 @@
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules, false())"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-stylesheet" as="xs:string">
+        <xsl:param name="rules" as="element()*"/>
+        <xsl:param name="nested" as="xs:boolean"/>
         <xsl:variable name="serialized-declarations" as="xs:string*">
             <xsl:apply-templates select="$rules[not(@selector)]" mode="css:serialize"/>
+        </xsl:variable>
+        <xsl:variable name="serialized-declarations" as="xs:string?">
+            <xsl:if test="exists($serialized-declarations)">
+                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
+            </xsl:if>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
             <xsl:apply-templates select="$rules[@selector]" mode="css:serialize"/>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
-            <xsl:if test="$serialized-declarations">
-                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
+            <xsl:if test="exists($serialized-declarations)">
+                <xsl:sequence select="if (not($nested) and exists($serialized-rules))
+                                      then concat('{ ',$serialized-declarations,' }')
+                                      else $serialized-declarations"/>
             </xsl:if>
             <xsl:sequence select="$serialized-rules"/>
         </xsl:variable>
