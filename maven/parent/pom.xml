@@ -208,6 +208,39 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <configuration>
+          <transformationSets combine.self="override">
+            <transformationSet>
+              <dir>src</dir>
+              <includes>
+                <include>**/META-INF/catalog.xml</include>
+              </includes>
+              <stylesheet>org/daisy/pipeline/braille/build/catalog-to-ds.xsl</stylesheet>
+              <parameters>
+                <parameter>
+                  <name>outputDir</name>
+                  <value>${project.baseUri}/target/generated-resources</value>
+                </parameter>
+                <parameter>
+                  <name>version</name>
+                  <value>${project.version}</value>
+                </parameter>
+              </parameters>
+              <outputDir>${project.build.directory}/generated-resources</outputDir>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.daisy.pipeline.modules.braille</groupId>
+            <artifactId>build-helper</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
