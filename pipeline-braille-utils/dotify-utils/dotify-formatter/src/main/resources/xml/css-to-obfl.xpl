@@ -81,6 +81,18 @@
         </p:input>
     </p:xslt>
     
+    <css:parse-properties properties="render-table-by table-header-policy">
+        <p:documentation>
+            Make css:render-table-by and css:table-header-policy attributes.
+        </p:documentation>
+    </css:parse-properties>
+
+    <css:render-table-by>
+        <p:documentation>
+            Layout tables as lists.
+        </p:documentation>
+    </css:render-table-by>
+    
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before and css:duplicate

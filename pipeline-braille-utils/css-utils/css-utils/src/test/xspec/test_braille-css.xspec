@@ -167,7 +167,7 @@
 				<css:rule selector="::before" style="{{ content: &quot;foo&quot; }} ::after {{ content: &quot;foo&quot; }}"/>
 			</x:param>
 		</x:call>
-		<x:expect label="result" select="'display:block @page { size: 40 25; @bottom-center { content: &quot;foo&quot; } } @page:left { @bottom-left { content: counter(page) } } @volume { min-length: 20; max-length: 100; } @volume:nth(2) { max-length: 50; } ::before { content: &quot;foo&quot; } ::before::after { content: &quot;foo&quot; }'"/>
+		<x:expect label="result" select="'{ display:block } @page { size: 40 25; @bottom-center { content: &quot;foo&quot; } } @page:left { @bottom-left { content: counter(page) } } @volume { min-length: 20; max-length: 100; } @volume:nth(2) { max-length: 50; } ::before { content: &quot;foo&quot; } ::before::after { content: &quot;foo&quot; }'"/>
 	</x:scenario>
 	
 	<x:scenario label="test_15">

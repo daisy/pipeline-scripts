@@ -219,13 +219,16 @@
     <xsl:variable name="css:PSEUDOCLASS_RE" select="concat(':',$css:IDENT_RE,'(\([1-9][0-9]*\))?')"/>
     <xsl:variable name="css:PSEUDOCLASS_RE_groups" select="$css:IDENT_RE_groups + 1"/>
     
-    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')(',$css:PSEUDOCLASS_RE,')?|(::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,'))((::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,'))*)|(',$css:PSEUDOCLASS_RE,'))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
+    <xsl:variable name="css:PSEUDOELEMENT_RE" select="concat('::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,')(\(',$css:IDENT_RE,'\))?')"/>
+    <xsl:variable name="css:PSEUDOELEMENT_RE_groups" select="1 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1 + $css:IDENT_RE_groups"/>
+    
+    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')(',$css:PSEUDOCLASS_RE,')?|(',$css:PSEUDOELEMENT_RE,')((',$css:PSEUDOELEMENT_RE,')*)|(',$css:PSEUDOCLASS_RE,'))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
     <xsl:variable name="css:RULE_RE_selector" select="2"/>
     <xsl:variable name="css:RULE_RE_selector_atrule" select="$css:RULE_RE_selector + 1"/>
     <xsl:variable name="css:RULE_RE_selector_atrule_pseudoclass" select="$css:RULE_RE_selector_atrule + $css:IDENT_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_selector_pseudoelement" select="$css:RULE_RE_selector_atrule_pseudoclass + $css:PSEUDOCLASS_RE_groups + 1"/>
-    <xsl:variable name="css:RULE_RE_selector_pseudoelement_stack" select="$css:RULE_RE_selector_pseudoelement + 1 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1"/>
-    <xsl:variable name="css:RULE_RE_selector_pseudoclass" select="$css:RULE_RE_selector_pseudoelement_stack + 2 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:RULE_RE_selector_pseudoelement_stack" select="$css:RULE_RE_selector_pseudoelement + $css:PSEUDOELEMENT_RE_groups + 1"/>
+    <xsl:variable name="css:RULE_RE_selector_pseudoclass" select="$css:RULE_RE_selector_pseudoelement_stack + 1 + $css:PSEUDOELEMENT_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_value" select="$css:RULE_RE_selector_pseudoclass + $css:PSEUDOCLASS_RE_groups + 1"/>
     
     <!-- ======= -->
@@ -692,7 +695,7 @@
                 <xsl:sequence select="string-join((
                                         if ($nested-rules[not(matches(@selector,'^:'))])
                                           then concat(@selector,' { ',
-                                                      css:serialize-stylesheet($nested-rules[not(matches(@selector,'^:'))]),
+                                                      css:serialize-stylesheet($nested-rules[not(matches(@selector,'^:'))], true()),
                                                       ' }')
                                           else (),
                                         for $r in $nested-rules[matches(@selector,'^:')]
@@ -755,15 +758,28 @@
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules, false())"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-stylesheet" as="xs:string">
+        <xsl:param name="rules" as="element()*"/>
+        <xsl:param name="nested" as="xs:boolean"/>
         <xsl:variable name="serialized-declarations" as="xs:string*">
             <xsl:apply-templates select="$rules[not(@selector)]" mode="css:serialize"/>
+        </xsl:variable>
+        <xsl:variable name="serialized-declarations" as="xs:string?">
+            <xsl:if test="exists($serialized-declarations)">
+                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
+            </xsl:if>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
             <xsl:apply-templates select="$rules[@selector]" mode="css:serialize"/>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
-            <xsl:if test="$serialized-declarations">
-                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
+            <xsl:if test="exists($serialized-declarations)">
+                <xsl:sequence select="if (not($nested) and exists($serialized-rules))
+                                      then concat('{ ',$serialized-declarations,' }')
+                                      else $serialized-declarations"/>
             </xsl:if>
             <xsl:sequence select="$serialized-rules"/>
         </xsl:variable>
