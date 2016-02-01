@@ -122,7 +122,7 @@ public class CSSInlineStep extends DefaultStep {
 			public InputStream fetch(URL url) throws IOException {
 				try {
 					if (url != null) {
-						Source resolved = resolver.resolve(url.toString(), "");
+						Source resolved = resolver.resolve(asURI(url).toString(), "");
 						if (resolved != null) {
 							if (resolved instanceof StreamSource)
 								return ((StreamSource)resolved).getInputStream();
