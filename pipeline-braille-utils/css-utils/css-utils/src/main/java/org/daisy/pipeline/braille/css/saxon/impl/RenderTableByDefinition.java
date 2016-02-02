@@ -265,6 +265,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 										withinCell.headerPolicy = TableCell.HeaderPolicy.ONCE;
 									else if ("always".equals(attrValue))
 										withinCell.headerPolicy = TableCell.HeaderPolicy.ALWAYS;
+									else if ("front".equals(attrValue))
+										withinCell.headerPolicy = TableCell.HeaderPolicy.FRONT;
 									else
 										throw new RuntimeException(
 											"Expected value once|always for table-header-policy property but got " + attrValue); }
@@ -408,6 +410,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		
 		private abstract class TableCellCollection {
 			public abstract List<TableCell> newlyRenderedHeaders();
+			public abstract List<TableCell> newlyPromotedHeaders();
 			public abstract void write(XMLStreamWriter writer);
 		}
 		
@@ -433,24 +436,46 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				return newlyAppliedHeaders;
 			}
 			
-			List<TableCell> newlyRenderedHeaders;
-			public  List<TableCell> newlyRenderedHeaders() {
-				if (newlyRenderedHeaders == null) {
-					newlyRenderedHeaders = new ArrayList<TableCell>();
+			private List<TableCell> newlyRenderedOrPromotedHeaders;
+			private List<TableCell> newlyRenderedOrPromotedHeaders() {
+				if (newlyRenderedOrPromotedHeaders == null) {
+					newlyRenderedOrPromotedHeaders = new ArrayList<TableCell>();
 					Iterator<TableCell> lastAppliedHeaders = (
 						precedingSibling != null ? precedingSibling.newlyAppliedHeaders() : emptyList
 					).iterator();
 					boolean canOmit = true;
 					for (TableCell h : parent.deferredHeaders()) {
-						newlyRenderedHeaders.add(h);
+						newlyRenderedOrPromotedHeaders.add(h);
 						canOmit = false; }
 					for (TableCell h : newlyAppliedHeaders()) {
 						if (canOmit
-						    && h.headerPolicy == TableCell.HeaderPolicy.ONCE
+						    && h.headerPolicy != TableCell.HeaderPolicy.ALWAYS
 						    && lastAppliedHeaders.hasNext() && lastAppliedHeaders.next().equals(h))
 							continue;
-						newlyRenderedHeaders.add(h);
+						newlyRenderedOrPromotedHeaders.add(h);
 						canOmit = false; }}
+				return newlyRenderedOrPromotedHeaders;
+			}
+			
+			private List<TableCell> newlyPromotedHeaders;
+			public List<TableCell> newlyPromotedHeaders() {
+				if (newlyPromotedHeaders == null) {
+					newlyPromotedHeaders = new ArrayList<TableCell>();
+					int i = newlyRenderedOrPromotedHeaders().size() - 1;
+					while (i >= 0 && newlyRenderedOrPromotedHeaders().get(i).headerPolicy != TableCell.HeaderPolicy.FRONT)
+						i--;
+					while (i >= 0)
+						newlyPromotedHeaders.add(0, newlyRenderedOrPromotedHeaders().get(i--)); }
+				return newlyPromotedHeaders;
+			}
+			
+			private List<TableCell> newlyRenderedHeaders;
+			public  List<TableCell> newlyRenderedHeaders() {
+				if (newlyRenderedHeaders == null) {
+					newlyRenderedHeaders = new ArrayList<TableCell>();
+					int i = newlyRenderedOrPromotedHeaders().size() - 1;
+					while (i >= 0 && newlyRenderedOrPromotedHeaders().get(i).headerPolicy != TableCell.HeaderPolicy.FRONT)
+						newlyRenderedHeaders.add(0, newlyRenderedOrPromotedHeaders().get(i--)); }
 				return newlyRenderedHeaders;
 			}
 			
@@ -597,7 +622,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			private List<TableCell> deferredHeaders() {
 				if (deferredHeaders == null) {
 					deferredHeaders = new ArrayList<TableCell>();
-					if (newlyRenderedHeaders().isEmpty())
+					if (newlyRenderedOrPromotedHeaders().isEmpty())
 						deferredHeaders.addAll(previouslyDeferredHeaders());
 					deferredHeaders.addAll(newlyDeferredHeaders()); }
 				return deferredHeaders;
@@ -610,31 +635,51 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					return emptyList;
 			}
 			
-			private List<TableCell> newlyRenderedHeaders;
-			public List<TableCell> newlyRenderedHeaders() {
-				if (newlyRenderedHeaders == null) {
-					newlyRenderedHeaders = new ArrayList<TableCell>();
+			private List<TableCell> newlyRenderedOrPromotedHeaders;
+			private List<TableCell> newlyRenderedOrPromotedHeaders() {
+				if (newlyRenderedOrPromotedHeaders == null) {
+					newlyRenderedOrPromotedHeaders = new ArrayList<TableCell>();
 					int i = newlyAppliedHeaders().size() - 1;
 					while (i >= 0 && newlyAppliedHeaders().get(i).headerPolicy == TableCell.HeaderPolicy.ALWAYS)
 						i--;
-					i++;
-					if (i > 0) {
+					if (i >= 0) {
 						Iterator<TableCell> lastAppliedHeaders = (
 							precedingSibling != null ? precedingSibling.newlyAppliedHeaders() : emptyList
 						).iterator();
 						boolean canOmit = true;
 						for (TableCell h : previouslyDeferredHeaders()) {
-							newlyRenderedHeaders.add(h);
+							newlyRenderedOrPromotedHeaders.add(h);
 							canOmit = false; }
-						
-						for (int j = 0; j < i; j++) {
+						for (int j = 0; j <= i; j++) {
 							TableCell h = newlyAppliedHeaders().get(j);
 							if (canOmit
-							    && h.headerPolicy == TableCell.HeaderPolicy.ONCE
+							    && h.headerPolicy != TableCell.HeaderPolicy.ALWAYS
 							    && lastAppliedHeaders.hasNext() && lastAppliedHeaders.next().equals(h))
 								continue;
-							newlyRenderedHeaders.add(h);
+							newlyRenderedOrPromotedHeaders.add(h);
 							canOmit = false; }}}
+				return newlyRenderedOrPromotedHeaders;
+			}
+			
+			private List<TableCell> newlyPromotedHeaders;
+			public List<TableCell> newlyPromotedHeaders() {
+				if (newlyPromotedHeaders == null) {
+					newlyPromotedHeaders = new ArrayList<TableCell>();
+					int i = newlyRenderedOrPromotedHeaders().size() - 1;
+					while (i >= 0 && newlyRenderedOrPromotedHeaders().get(i).headerPolicy != TableCell.HeaderPolicy.FRONT)
+						i--;
+					while (i >= 0)
+						newlyPromotedHeaders.add(0, newlyRenderedOrPromotedHeaders().get(i--)); }
+				return newlyPromotedHeaders;
+			}
+			
+			private List<TableCell> newlyRenderedHeaders;
+			public List<TableCell> newlyRenderedHeaders() {
+				if (newlyRenderedHeaders == null) {
+					newlyRenderedHeaders = new ArrayList<TableCell>();
+					int i = newlyRenderedOrPromotedHeaders().size() - 1;
+					while (i >= 0 && newlyRenderedOrPromotedHeaders().get(i).headerPolicy != TableCell.HeaderPolicy.FRONT)
+						newlyRenderedHeaders.add(0, newlyRenderedOrPromotedHeaders().get(i--)); }
 				return newlyRenderedHeaders;
 			}
 			
@@ -643,22 +688,62 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				    && (children.get(0) instanceof TableCellGroup)
 				    && ((TableCellGroup)children.get(0)).groupingHeader == null)
 					children.get(0).write(writer);
-				else
-					for (TableCellCollection g : children) {
+				else {
+					List<List<TableCell>> promotedHeaders = null;
+					int i = 0;
+					for (TableCellCollection c : children) {
+						if (c instanceof TableCellGroup) {
+							TableCellGroup g = (TableCellGroup)c;
+							int j = 0;
+							for (TableCellCollection cc : g.children) {
+								if (!cc.newlyPromotedHeaders().isEmpty()) {
+									if (promotedHeaders == null) {
+										if (i == 0 && j == 0) {
+											writeStartElement(writer, _);
+											if (listItemStyle(groupingAxis) != null)
+												writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+											writeStartElement(writer, _);
+											if (listStyle(g.groupingAxis) != null)
+												writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
+											promotedHeaders = new ArrayList<List<TableCell>>(); }
+										else
+											throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
+									if (i == 0) {
+										writeStartElement(writer, _);
+										if (listStyle(g.groupingAxis) != null)
+											writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
+										for (TableCell h : cc.newlyPromotedHeaders())
+											h.write(writer);
+										writeEndElement(writer);
+										promotedHeaders.add(cc.newlyPromotedHeaders()); }
+									else if (!promotedHeaders.get(j).equals(cc.newlyPromotedHeaders()))
+										throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }
+								else if (promotedHeaders != null)
+									throw new RuntimeException("Some headers of children promoted but not all children have a promoted header.");
+								j++; }
+							if (promotedHeaders != null && promotedHeaders.size() != j) {
+								throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }}
+						else if (promotedHeaders != null)
+							throw new RuntimeException("Coding error");
+						i++; }
+					if (promotedHeaders != null) {
+						writeEndElement(writer);
+						writeEndElement(writer); }
+					for (TableCellCollection c : children) {
 						writeStartElement(writer, _);
 						if (listItemStyle(groupingAxis) != null)
 							writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
-						for (TableCell h : g.newlyRenderedHeaders())
+						for (TableCell h : c.newlyRenderedHeaders())
 							h.write(writer);
-						if (g instanceof TableCellGroup) {
+						if (c instanceof TableCellGroup) {
+							TableCellGroup g = (TableCellGroup)c;
 							writeStartElement(writer, _);
-							if (listStyle(((TableCellGroup)g).groupingAxis) != null)
-								writeAttribute(writer, _STYLE, listStyle(((TableCellGroup)g).groupingAxis));
-							g.write(writer);
-							writeEndElement(writer); }
-						else
-							g.write(writer);
-						writeEndElement(writer); }
+							if (listStyle(g.groupingAxis) != null)
+								writeAttribute(writer, _STYLE, listStyle(g.groupingAxis)); }
+						c.write(writer);
+						if (c instanceof TableCellGroup)
+							writeEndElement(writer);
+						writeEndElement(writer); }}
 			}
 		}
 		
@@ -821,7 +906,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		
 		private enum HeaderPolicy {
 			ALWAYS,
-			ONCE
+			ONCE,
+			FRONT
 		}
 		
 		// TODO: handle colgroup and rowgroup
