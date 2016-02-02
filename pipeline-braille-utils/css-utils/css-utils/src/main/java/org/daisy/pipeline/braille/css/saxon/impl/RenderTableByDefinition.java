@@ -399,34 +399,98 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					if (c.rowspan > 1 || c.colspan > 1)
 						throw new RuntimeException("Table data cells with rowspan or colspan not supported yet.");
 					dataCells.add(c); }
-			groupCellsByAxes(axes.iterator(), dataCells, new ArrayList<TableCell>(), tableListItemStyle, writer);
+			new TableCellGroup(dataCells, axes.iterator()).write(writer);
 			for (Function<XMLStreamWriter,Void> action : writeActionsAfter)
 				action.apply(writer);
 		}
 		
-		private void groupCellsByAxes(Iterator<String> remainingAxes, List<TableCell> remainingDataCellsInScope,
-		                              List<TableCell> previouslyAppliedHeaders, String listItemStyle,
-		                              XMLStreamWriter writer) {
-			List<TableCell> previouslyAppliedButNotRenderedHeaders = new ArrayList<TableCell>(); {
-				int i = previouslyAppliedHeaders.size() - 1;
-				for (; i >= 0; i--)
-					if (previouslyAppliedHeaders.get(i).headerPolicy == TableCell.HeaderPolicy.ONCE)
-						break;
-				i++;
-				for (; i < previouslyAppliedHeaders.size(); i++)
-					previouslyAppliedButNotRenderedHeaders.add(previouslyAppliedHeaders.get(i)); }
-			if (!remainingDataCellsInScope.isEmpty()) {
-				if (remainingAxes.hasNext()) {
-					String axis = remainingAxes.next();
-					List<String> remainingAxesList = ImmutableList.copyOf(remainingAxes);
-					String listStyle = tableByListStyles.get(axis);
-					String nextListItemStyle = tableByListItemStyles.get(axis);
+		private static final List<TableCell> emptyList = new ArrayList<TableCell>();
+		
+		private abstract class TableCellCollection {
+			public abstract List<TableCell> newlyRenderedHeaders();
+			public abstract void write(XMLStreamWriter writer);
+		}
+		
+		private class SingleTableCell extends TableCellCollection {
+			
+			private final TableCell cell;
+			private final TableCellGroup parent;
+			private final SingleTableCell precedingSibling;
+			
+			private SingleTableCell(TableCell cell, TableCellGroup parent, SingleTableCell precedingSibling) {
+				this.cell = cell;
+				this.parent = parent;
+				this.precedingSibling = precedingSibling;
+			}
+			
+			private List<TableCell> newlyAppliedHeaders;
+			public List<TableCell> newlyAppliedHeaders() {
+				if (newlyAppliedHeaders == null) {
+					newlyAppliedHeaders = new ArrayList<TableCell>();
+					for (TableCell h : findHeaders(cell))
+						if (!parent.appliedHeaders().contains(h))
+							newlyAppliedHeaders.add(h); }
+				return newlyAppliedHeaders;
+			}
+			
+			List<TableCell> newlyRenderedHeaders;
+			public  List<TableCell> newlyRenderedHeaders() {
+				if (newlyRenderedHeaders == null) {
+					newlyRenderedHeaders = new ArrayList<TableCell>();
+					Iterator<TableCell> lastAppliedHeaders = (
+						precedingSibling != null ? precedingSibling.newlyAppliedHeaders() : emptyList
+					).iterator();
+					boolean canOmit = true;
+					for (TableCell h : parent.deferredHeaders()) {
+						newlyRenderedHeaders.add(h);
+						canOmit = false; }
+					for (TableCell h : newlyAppliedHeaders()) {
+						if (canOmit
+						    && h.headerPolicy == TableCell.HeaderPolicy.ONCE
+						    && lastAppliedHeaders.hasNext() && lastAppliedHeaders.next().equals(h))
+							continue;
+						newlyRenderedHeaders.add(h);
+						canOmit = false; }}
+				return newlyRenderedHeaders;
+			}
+			
+			public void write(XMLStreamWriter writer) {
+				cell.write(writer);
+			}
+		}
+		
+		private class TableCellGroup extends TableCellCollection {
+			
+			private final TableCellGroup parent;
+			private final TableCell groupingHeader;
+			private final String groupingAxis;
+			private final TableCellGroup precedingSibling;
+			private final List<TableCellCollection> children;
+			
+			private TableCellGroup(List<TableCell> cells, Iterator<String> nextAxes) {
+				this(cells, nextAxes, null, null, null, null);
+			}
+			
+			private TableCellGroup(List<TableCell> cells, Iterator<String> nextAxes,
+			                       TableCellGroup parent, TableCell groupingHeader, String groupingAxis,
+			                       TableCellGroup precedingSibling) {
+				this.parent = parent;
+				this.groupingHeader = groupingHeader;
+				this.groupingAxis = groupingAxis;
+				this.precedingSibling = precedingSibling;
+				children = groupCellsBy(cells, nextAxes);
+			}
+			
+			private List<TableCellCollection> groupCellsBy(List<TableCell> cells, Iterator<String> axes) {
+				String firstAxis = axes.hasNext() ? axes.next() : null;
+				List<String> nextAxes = ImmutableList.copyOf(axes);
+				if (firstAxis != null) {
 					Map<TableCell,List<TableCell>> categories = new LinkedHashMap<TableCell,List<TableCell>>();
 					List<TableCell> uncategorized = null;
-					for (TableCell c : remainingDataCellsInScope) {
+					for (TableCell c : cells) {
 						boolean categorized = false;
 						for (TableCell h : findHeaders(c))
-							if (h.axis != null && h.axis.contains(axis)) {
+							if (h.axis != null && h.axis.contains(firstAxis)) {
 								List<TableCell> category = categories.get(h);
 								if (category == null) {
 									category = new ArrayList<TableCell>();
@@ -438,49 +502,21 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								uncategorized = new ArrayList<TableCell>();
 							uncategorized.add(c); }}
 					if (!categories.isEmpty()) {
+						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
+						TableCellGroup child = null;
 						for (TableCell h : categories.keySet()) {
-							writeStartElement(writer, _);
-							if (listItemStyle != null)
-								writeAttribute(writer, _STYLE, listItemStyle);
-							List<TableCell> newlyAppliedHeaders = new ArrayList<TableCell>();
-							for (TableCell hh : findHeaders(h))
-								if (!previouslyAppliedHeaders.contains(hh))
-									newlyAppliedHeaders.add(hh);
-							int i = newlyAppliedHeaders.size() - 1;
-							for (; i >= 0; i--)
-								if (newlyAppliedHeaders.get(i).headerPolicy == TableCell.HeaderPolicy.ONCE)
-									break;
-							i++;
-							if (i > 0) {
-								for (int j = 0; j < previouslyAppliedButNotRenderedHeaders.size(); j++)
-									for (Function<XMLStreamWriter,Void> action : previouslyAppliedButNotRenderedHeaders.get(j).writeActions)
-										action.apply(writer);
-								for (int k = 0; k < i; k++)
-									for (Function<XMLStreamWriter,Void> action : newlyAppliedHeaders.get(k).writeActions)
-										action.apply(writer); }
-							writeStartElement(writer, _);
-							if (listStyle != null)
-								writeAttribute(writer, _STYLE, listStyle);
-							List<TableCell> appliedHeaders = new ArrayList<TableCell>();
-							appliedHeaders.addAll(previouslyAppliedHeaders);
-							appliedHeaders.addAll(newlyAppliedHeaders);
-							groupCellsByAxes(remainingAxesList.iterator(), categories.get(h), appliedHeaders, nextListItemStyle, writer);
-							writeEndElement(writer);
-							writeEndElement(writer); }
+							child = new TableCellGroup(categories.get(h), nextAxes.iterator(), this, h, firstAxis, child);
+							children.add(child); }
 						if (uncategorized != null) {
-							writeStartElement(writer, _);
-							if (listItemStyle != null)
-								writeAttribute(writer, _STYLE, listItemStyle);
-							writeStartElement(writer, _);
-							if (listStyle != null)
-								writeAttribute(writer, _STYLE, listStyle);
-							groupCellsByAxes(remainingAxesList.iterator(), uncategorized, previouslyAppliedHeaders, nextListItemStyle, writer);
-							writeEndElement(writer);
-							writeEndElement(writer); }}
-					else if ("row".equals(axis)) {
+							child = new TableCellGroup(uncategorized, nextAxes.iterator(), this, null, firstAxis, child);
+							children.add(child); }
+						return children; }
+					else if ("row".equals(firstAxis)) {
+						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
+						TableCellGroup child = null;
 						Map<Integer,List<TableCell>> rows = new LinkedHashMap<Integer,List<TableCell>>();
 						int maxRow = 0;
-						for (TableCell c : remainingDataCellsInScope) {
+						for (TableCell c : cells) {
 							List<TableCell> row = rows.get(c.row);
 							if (row == null) {
 								row = new ArrayList<TableCell>();
@@ -489,19 +525,15 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							if (c.row > maxRow) maxRow = c.row; }
 						for (int i = 1; i <= maxRow; i++)
 							if (rows.containsKey(i)) {
-								writeStartElement(writer, _);
-								if (listItemStyle != null)
-									writeAttribute(writer, _STYLE, listItemStyle);
-								writeStartElement(writer, _);
-								if (listStyle != null)
-									writeAttribute(writer, _STYLE, listStyle);
-								groupCellsByAxes(remainingAxesList.iterator(), rows.get(i), previouslyAppliedHeaders, nextListItemStyle, writer);
-								writeEndElement(writer);
-								writeEndElement(writer); }}
-					else if ("col".equals(axis)) {
+								child = new TableCellGroup(rows.get(i), nextAxes.iterator(), this, null, firstAxis, child);
+								children.add(child); }
+						return children; }
+					else if ("col".equals(firstAxis)) {
+						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
+						TableCellGroup child = null;
 						Map<Integer,List<TableCell>> columns = new LinkedHashMap<Integer,List<TableCell>>();
 						int maxCol = 0;
-						for (TableCell c : remainingDataCellsInScope) {
+						for (TableCell c : cells) {
 							List<TableCell> column = columns.get(c.col);
 							if (column == null) {
 								column = new ArrayList<TableCell>();
@@ -510,44 +542,135 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							if (c.col > maxCol) maxCol = c.col; }
 						for (int i = 1; i <= maxCol; i++)
 							if (columns.containsKey(i)) {
-								writeStartElement(writer, _);
-								if (listItemStyle != null)
-									writeAttribute(writer, _STYLE, listItemStyle);
-								writeStartElement(writer, _);
-								if (listStyle != null)
-									writeAttribute(writer, _STYLE, listStyle);
-								groupCellsByAxes(remainingAxesList.iterator(), columns.get(i), previouslyAppliedHeaders, nextListItemStyle, writer);
-								writeEndElement(writer);
-								writeEndElement(writer); }}
+								child = new TableCellGroup(columns.get(i), nextAxes.iterator(), this, null, firstAxis, child);
+								children.add(child); }
+						return children; }
 					else
-						groupCellsByAxes(remainingAxesList.iterator(), uncategorized, previouslyAppliedHeaders, nextListItemStyle, writer); }
+						return groupCellsBy(cells, nextAxes.iterator()); }
 				else {
-					Iterator<TableCell> lastAppliedHeaders = new ArrayList<TableCell>().iterator();
-					for (TableCell c : remainingDataCellsInScope) {
-						writeStartElement(writer, _);
-						if (listItemStyle != null)
-							writeAttribute(writer, _STYLE, listItemStyle);
+					List<TableCellCollection> children = new ArrayList<TableCellCollection>();
+					SingleTableCell child = null;
+					for (TableCell c : cells) {
+						child = new SingleTableCell(c, this, child);
+						children.add(child); }
+					return children; }
+			}
+			
+			private List<TableCell> newlyAppliedHeaders;
+			public List<TableCell> newlyAppliedHeaders() {
+				if (newlyAppliedHeaders == null) {
+					newlyAppliedHeaders = new ArrayList<TableCell>();
+					if (groupingHeader != null)
+						for (TableCell h : findHeaders(groupingHeader))
+							if (!previouslyAppliedHeaders().contains(h))
+								newlyAppliedHeaders.add(h); }
+				return newlyAppliedHeaders;
+			}
+			
+			private List<TableCell> previouslyAppliedHeaders() {
+				if (parent != null)
+					return parent.appliedHeaders();
+				else
+					return emptyList;
+			}
+			
+			private List<TableCell> appliedHeaders;
+			public List<TableCell> appliedHeaders() {
+				if (appliedHeaders == null) {
+					appliedHeaders = new ArrayList<TableCell>();
+					appliedHeaders.addAll(previouslyAppliedHeaders());
+					appliedHeaders.addAll(newlyAppliedHeaders()); }
+				return appliedHeaders;
+			}
+			
+			private List<TableCell> newlyDeferredHeaders;
+			private List<TableCell> newlyDeferredHeaders() {
+				if (newlyDeferredHeaders == null) {
+					newlyDeferredHeaders = new ArrayList<TableCell>();
+					int i = newlyAppliedHeaders().size() - 1;
+					while (i >= 0 && newlyAppliedHeaders().get(i).headerPolicy == TableCell.HeaderPolicy.ALWAYS)
+						newlyDeferredHeaders.add(0, newlyAppliedHeaders().get(i--)); }
+				return newlyDeferredHeaders;
+			}
+			
+			private List<TableCell> deferredHeaders;
+			private List<TableCell> deferredHeaders() {
+				if (deferredHeaders == null) {
+					deferredHeaders = new ArrayList<TableCell>();
+					if (newlyRenderedHeaders().isEmpty())
+						deferredHeaders.addAll(previouslyDeferredHeaders());
+					deferredHeaders.addAll(newlyDeferredHeaders()); }
+				return deferredHeaders;
+			}
+			
+			private List<TableCell> previouslyDeferredHeaders() {
+				if (parent != null)
+					return parent.deferredHeaders();
+				else
+					return emptyList;
+			}
+			
+			private List<TableCell> newlyRenderedHeaders;
+			public List<TableCell> newlyRenderedHeaders() {
+				if (newlyRenderedHeaders == null) {
+					newlyRenderedHeaders = new ArrayList<TableCell>();
+					int i = newlyAppliedHeaders().size() - 1;
+					while (i >= 0 && newlyAppliedHeaders().get(i).headerPolicy == TableCell.HeaderPolicy.ALWAYS)
+						i--;
+					i++;
+					if (i > 0) {
+						Iterator<TableCell> lastAppliedHeaders = (
+							precedingSibling != null ? precedingSibling.newlyAppliedHeaders() : emptyList
+						).iterator();
 						boolean canOmit = true;
-						for (TableCell h : previouslyAppliedButNotRenderedHeaders)
-							for (Function<XMLStreamWriter,Void> action : h.writeActions) {
-								action.apply(writer);
-								canOmit = false; }
-						List<TableCell> newlyAppliedHeaders = new ArrayList<TableCell>();
-						for (TableCell h : findHeaders(c))
-							if (!previouslyAppliedHeaders.contains(h)) {
-								newlyAppliedHeaders.add(h);
-								if (canOmit
-								    && h.headerPolicy == TableCell.HeaderPolicy.ONCE
-								    && lastAppliedHeaders.hasNext() && lastAppliedHeaders.next().equals(h))
-									continue;
-								for (Function<XMLStreamWriter,Void> action : h.writeActions)
-									action.apply(writer);
-								canOmit = false; }
-						for (Function<XMLStreamWriter,Void> action : c.writeActions)
-							action.apply(writer);
-						writeEndElement(writer);
-						lastAppliedHeaders = newlyAppliedHeaders.iterator(); }}
-				}
+						for (TableCell h : previouslyDeferredHeaders()) {
+							newlyRenderedHeaders.add(h);
+							canOmit = false; }
+						
+						for (int j = 0; j < i; j++) {
+							TableCell h = newlyAppliedHeaders().get(j);
+							if (canOmit
+							    && h.headerPolicy == TableCell.HeaderPolicy.ONCE
+							    && lastAppliedHeaders.hasNext() && lastAppliedHeaders.next().equals(h))
+								continue;
+							newlyRenderedHeaders.add(h);
+							canOmit = false; }}}
+				return newlyRenderedHeaders;
+			}
+			
+			public void write(XMLStreamWriter writer) {
+				if (children.size() == 1
+				    && (children.get(0) instanceof TableCellGroup)
+				    && ((TableCellGroup)children.get(0)).groupingHeader == null)
+					children.get(0).write(writer);
+				else
+					for (TableCellCollection g : children) {
+						writeStartElement(writer, _);
+						if (listItemStyle(groupingAxis) != null)
+							writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+						for (TableCell h : g.newlyRenderedHeaders())
+							h.write(writer);
+						if (g instanceof TableCellGroup) {
+							writeStartElement(writer, _);
+							if (listStyle(((TableCellGroup)g).groupingAxis) != null)
+								writeAttribute(writer, _STYLE, listStyle(((TableCellGroup)g).groupingAxis));
+							g.write(writer);
+							writeEndElement(writer); }
+						else
+							g.write(writer);
+						writeEndElement(writer); }
+			}
+		}
+		
+		public String listStyle(String axis) {
+			return tableByListStyles.get(axis);
+		}
+			
+		public String listItemStyle(String axis) {
+			if (axis == null)
+				return tableListItemStyle;
+			else
+				return tableByListItemStyles.get(axis);
 		}
 		
 		// see https://www.w3.org/TR/REC-html40/struct/tables.html#h-11.4.3
@@ -658,41 +781,41 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					return c;
 			return null;
 		}
-		
-		private boolean isHeader(TableCell cell) {
-			return (cell.th || (cell.axis != null) || (cell.scope != null));
-		}
-		
-		private static final Comparator<TableCell> sortByRowAndThenColumn = new Comparator<TableCell>() {
-			public int compare(TableCell c1, TableCell c2) {
-				if (c1.row < c2.row)
-					return -1;
-				else if (c1.row > c2.row)
-					return 1;
-				else if (c1.col < c2.col)
-					return -1;
-				else if (c1.col > c2.col)
-					return 1;
-				else
-					return 0;
-			}
-		};
-		
-		private static final Comparator<TableCell> sortByColumnAndThenRow = new Comparator<TableCell>() {
-			public int compare(TableCell c1, TableCell c2) {
-				if (c1.col < c2.col)
-					return -1;
-				else if (c1.col > c2.col)
-					return 1;
-				else if (c1.row < c2.row)
-					return -1;
-				else if (c1.row > c2.row)
-					return 1;
-				else
-					return 0;
-			}
-		};
 	}
+	
+	private static boolean isHeader(TableCell cell) {
+		return (cell.th || (cell.axis != null) || (cell.scope != null));
+	}
+	
+	private static final Comparator<TableCell> sortByRowAndThenColumn = new Comparator<TableCell>() {
+		public int compare(TableCell c1, TableCell c2) {
+			if (c1.row < c2.row)
+				return -1;
+			else if (c1.row > c2.row)
+				return 1;
+			else if (c1.col < c2.col)
+				return -1;
+			else if (c1.col > c2.col)
+				return 1;
+			else
+				return 0;
+		}
+	};
+	
+	private static final Comparator<TableCell> sortByColumnAndThenRow = new Comparator<TableCell>() {
+		public int compare(TableCell c1, TableCell c2) {
+			if (c1.col < c2.col)
+				return -1;
+			else if (c1.col > c2.col)
+				return 1;
+			else if (c1.row < c2.row)
+				return -1;
+			else if (c1.row > c2.row)
+				return 1;
+			else
+				return 0;
+		}
+	};
 	
 	private static class TableCell {
 		
@@ -719,6 +842,11 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		private int colspan = 1;
 		
 		private List<Function<XMLStreamWriter,Void>> writeActions = new ArrayList<Function<XMLStreamWriter,Void>>();
+		
+		public void write(XMLStreamWriter writer) {
+			for (Function<XMLStreamWriter,Void> action : writeActions)
+				action.apply(writer);
+		}
 		
 		@Override
 		public String toString() {
@@ -773,11 +901,6 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				return i; }
 		catch(NumberFormatException e) {}
 		throw new RuntimeException("Expected positive integer but got "+ s);
-	}
-	
-	private static void requireThat(boolean test, String message) {
-		if (!test)
-			throw new RuntimeException(message);
 	}
 	
 	private static void assertThat(boolean test) {
