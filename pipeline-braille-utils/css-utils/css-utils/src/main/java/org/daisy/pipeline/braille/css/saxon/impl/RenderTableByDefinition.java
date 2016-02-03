@@ -157,6 +157,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 	
 	private static final String TABLE = "table";
 	private static final String THEAD = "thead";
+	private static final String TFOOT = "tfoot";
 	private static final String TBODY = "tbody";
 	private static final String TR = "tr";
 	private static final String TD = "td";
@@ -194,7 +195,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		final List<String> axes;
 		final List<Function<XMLStreamWriter,Void>> writeActionsBefore = new ArrayList<Function<XMLStreamWriter,Void>>();
 		final List<Function<XMLStreamWriter,Void>> writeActionsAfter = new ArrayList<Function<XMLStreamWriter,Void>>();
-		final List<TableCell> cells = new ArrayList<TableCell>();
+		final List<TableCell> allCellsSorted = new ArrayList<TableCell>();
 		final Set<CellCoordinates> coveredCoordinates = new HashSet<CellCoordinates>();
 		final Map<String,String> tableByListStyles = new HashMap<String,String>();
 		final Map<String,String> tableByListItemStyles = new HashMap<String,String>();
@@ -214,6 +215,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			CSSFactory.registerSupportedCSS(brailleCSS);
 			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
 			List<Function<XMLStreamWriter,Void>> writeActions = writeActionsBefore;
+			List<TableCell> headCells = new ArrayList<TableCell>();
+			List<TableCell> footCells = new ArrayList<TableCell>();
+			List<TableCell> bodyCells = new ArrayList<TableCell>();
+			List<TableCell> cells = bodyCells;
 			int depth = 0;
 			TableCell withinCell = null;
 			int row = 0;
@@ -233,8 +238,15 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								_ = HTML_;
 							else if (XMLNS_DTB.equals(name.getNamespaceURI()))
 								_ = DTB_; }
-						else if (isHTMLorDTBookElement(THEAD, name) || isHTMLorDTBookElement(TBODY, name))
-							break;
+						else if (isHTMLorDTBookElement(THEAD, name)) {
+							cells = headCells;
+							break; }
+						else if (isHTMLorDTBookElement(TFOOT, name)) {
+							cells = footCells;
+							break; }
+						else if (isHTMLorDTBookElement(TBODY, name)) {
+							cells = bodyCells;
+							break; }
 						else if (isHTMLorDTBookElement(TR, name)) {
 							row++;
 							col = 1;
@@ -362,6 +374,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						name = reader.getName();
 						depth--;
 						if (isHTMLorDTBookElement(THEAD, name)
+						    || isHTMLorDTBookElement(TFOOT, name)
 						    || isHTMLorDTBookElement(TBODY, name)
 						    || isHTMLorDTBookElement(TR, name))
 								break;
@@ -373,6 +386,9 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						break; }}
 				catch (NoSuchElementException e) {
 					break; }
+			allCellsSorted.addAll(headCells);
+			allCellsSorted.addAll(bodyCells);
+			allCellsSorted.addAll(footCells);
 		}
 		
 		private boolean isHTMLorDTBookElement(String element, QName name) {
@@ -396,7 +412,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			for (Function<XMLStreamWriter,Void> action : writeActionsBefore)
 				action.apply(writer);
 			List<TableCell> dataCells = new ArrayList<TableCell>();
-			for (TableCell c : cells)
+			for (TableCell c : allCellsSorted)
 				if (!isHeader(c)) {
 					if (c.rowspan > 1 || c.colspan > 1)
 						throw new RuntimeException("Table data cells with rowspan or colspan not supported yet.");
@@ -551,35 +567,29 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
 						TableCellGroup child = null;
 						Map<Integer,List<TableCell>> rows = new LinkedHashMap<Integer,List<TableCell>>();
-						int maxRow = 0;
 						for (TableCell c : cells) {
 							List<TableCell> row = rows.get(c.row);
 							if (row == null) {
 								row = new ArrayList<TableCell>();
 								rows.put(c.row, row); }
-							row.add(c);
-							if (c.row > maxRow) maxRow = c.row; }
-						for (int i = 1; i <= maxRow; i++)
-							if (rows.containsKey(i)) {
-								child = new TableCellGroup(rows.get(i), nextAxes.iterator(), this, null, firstAxis, child);
-								children.add(child); }
+							row.add(c); }
+						for (List<TableCell> row : rows.values()) {
+							child = new TableCellGroup(row, nextAxes.iterator(), this, null, firstAxis, child);
+							children.add(child); }
 						return children; }
 					else if ("col".equals(firstAxis)) {
 						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
 						TableCellGroup child = null;
 						Map<Integer,List<TableCell>> columns = new LinkedHashMap<Integer,List<TableCell>>();
-						int maxCol = 0;
 						for (TableCell c : cells) {
 							List<TableCell> column = columns.get(c.col);
 							if (column == null) {
 								column = new ArrayList<TableCell>();
 								columns.put(c.col, column); }
-							column.add(c);
-							if (c.col > maxCol) maxCol = c.col; }
-						for (int i = 1; i <= maxCol; i++)
-							if (columns.containsKey(i)) {
-								child = new TableCellGroup(columns.get(i), nextAxes.iterator(), this, null, firstAxis, child);
-								children.add(child); }
+							column.add(c); }
+						for (List<TableCell> column : columns.values()) {
+							child = new TableCellGroup(column, nextAxes.iterator(), this, null, firstAxis, child);
+							children.add(child); }
 						return children; }
 					else
 						return groupCellsBy(cells, nextAxes.iterator()); }
@@ -800,7 +810,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			// scope attribute can be used instead of headers (they should not be used in same table)
 			List<TableCell> rowHeaders = new ArrayList<TableCell>();
 			List<TableCell> colHeaders = new ArrayList<TableCell>();
-			for (TableCell h : cells)
+			for (TableCell h : allCellsSorted)
 				if (h != cell && h.scope != null) {
 					switch (h.scope) {
 					case ROW:
@@ -875,14 +885,14 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		}
 		
 		private TableCell getById(String id) {
-			for (TableCell c : cells)
+			for (TableCell c : allCellsSorted)
 				if (id.equals(c.id))
 					return c;
 			throw new RuntimeException("No element found with id " + id);
 		}
 		
 		private TableCell getByCoordinates(int row, int col) {
-			for (TableCell c : cells)
+			for (TableCell c : allCellsSorted)
 				if (c.row <= row && (c.row + c.rowspan - 1) >= row &&
 				    c.col <= col && (c.col + c.colspan - 1) >= col)
 					return c;
