@@ -482,6 +482,17 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			public void write(XMLStreamWriter writer) {
 				cell.write(writer);
 			}
+			
+			@Override
+			public String toString() {
+				XMLStreamWriterToString xml = new XMLStreamWriterToString();
+				write(xml);
+				StringBuilder s = new StringBuilder();
+				s.append("SingleTableCell[header: ").append(newlyRenderedHeaders());
+				s.append(", cell: ").append(cell);
+				s.append(", xml: ").append(xml).append("]");
+				return s.toString();
+			}
 		}
 		
 		private class TableCellGroup extends TableCellCollection {
@@ -745,6 +756,17 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							writeEndElement(writer);
 						writeEndElement(writer); }}
 			}
+			
+			@Override
+			public String toString() {
+				XMLStreamWriterToString xml = new XMLStreamWriterToString();
+				write(xml);
+				StringBuilder s = new StringBuilder();
+				s.append("TableCellGroup[header: ").append(newlyRenderedHeaders());
+				s.append(", children: ").append(children);
+				s.append(", xml: ").append(xml).append("]");
+				return s.toString();
+			}
 		}
 		
 		public String listStyle(String axis) {
@@ -936,12 +958,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		
 		@Override
 		public String toString() {
-			StringBuilder s = new StringBuilder();
-			s.append("table cell at [" + row + "," + col + "]: ");
 			XMLStreamWriterToString xml = new XMLStreamWriterToString();
-			for (Function<XMLStreamWriter,Void> a : writeActions)
-				a.apply(xml);
-			s.append(xml);
+			write(xml);
+			StringBuilder s = new StringBuilder();
+			s.append("TableCell{" + row + "," + col + "}[").append(xml).append("]");
 			return s.toString();
 		}
 	}
