@@ -195,7 +195,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		final List<String> axes;
 		final List<Function<XMLStreamWriter,Void>> writeActionsBefore = new ArrayList<Function<XMLStreamWriter,Void>>();
 		final List<Function<XMLStreamWriter,Void>> writeActionsAfter = new ArrayList<Function<XMLStreamWriter,Void>>();
-		final List<TableCell> allCellsSorted = new ArrayList<TableCell>();
+		final List<TableCell> cells = new ArrayList<TableCell>();
 		final Set<CellCoordinates> coveredCoordinates = new HashSet<CellCoordinates>();
 		final Map<String,String> tableByListStyles = new HashMap<String,String>();
 		final Map<String,String> tableByListItemStyles = new HashMap<String,String>();
@@ -215,14 +215,12 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			CSSFactory.registerSupportedCSS(brailleCSS);
 			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
 			List<Function<XMLStreamWriter,Void>> writeActions = writeActionsBefore;
-			List<TableCell> headCells = new ArrayList<TableCell>();
-			List<TableCell> footCells = new ArrayList<TableCell>();
-			List<TableCell> bodyCells = new ArrayList<TableCell>();
-			List<TableCell> cells = bodyCells;
 			int depth = 0;
 			TableCell withinCell = null;
-			int row = 0;
-			int col = 0;
+			TableCell.RowType rowType = TableCell.RowType.TBODY;
+			int rowGroup = 1;
+			int row = 1;
+			int col = 1;
 			QName name = null;
 			while (true)
 				try {
@@ -239,18 +237,15 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							else if (XMLNS_DTB.equals(name.getNamespaceURI()))
 								_ = DTB_; }
 						else if (isHTMLorDTBookElement(THEAD, name)) {
-							cells = headCells;
+							rowType = TableCell.RowType.THEAD;
 							break; }
 						else if (isHTMLorDTBookElement(TFOOT, name)) {
-							cells = footCells;
+							rowType = TableCell.RowType.TFOOT;
 							break; }
 						else if (isHTMLorDTBookElement(TBODY, name)) {
-							cells = bodyCells;
+							rowType = TableCell.RowType.TBODY;
 							break; }
 						else if (isHTMLorDTBookElement(TR, name)) {
-							row++;
-							col = 1;
-							while (isCovered(row, col)) col++;
 							break; }
 						else if (isHTMLorDTBookElement(COLGROUP, name) || isHTMLorDTBookElement(COL, name))
 							throw new RuntimeException("Elements colgroup and col not supported yet.");
@@ -259,10 +254,12 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							withinCell = new TableCell();
 							withinCell.row = row;
 							withinCell.col = col;
+							withinCell.rowGroup = rowGroup;
+							withinCell.rowType = rowType;
 							setCovered(row, col);
 							cells.add(withinCell);
 							if (isHTMLorDTBookElement(TH, name))
-								withinCell.th = true;
+								withinCell.type = TableCell.CellType.TH;
 							writeActions = withinCell.writeActions; }
 						writeActions.add(writeStartElement(name));
 						for (int i = 0; i < reader.getNamespaceCount(); i++)
@@ -375,9 +372,14 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						depth--;
 						if (isHTMLorDTBookElement(THEAD, name)
 						    || isHTMLorDTBookElement(TFOOT, name)
-						    || isHTMLorDTBookElement(TBODY, name)
-						    || isHTMLorDTBookElement(TR, name))
-								break;
+						    || isHTMLorDTBookElement(TBODY, name)) {
+							rowGroup++;
+							break; }
+						else if (isHTMLorDTBookElement(TR, name)) {
+							row++;
+							col = 1;
+							while (isCovered(row, col)) col++;
+							break; }
 						writeActions.add(writeEndElement);
 						if (isHTMLorDTBookElement(TD, name) || isHTMLorDTBookElement(TH, name)) {
 							withinCell = null;
@@ -386,9 +388,22 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						break; }}
 				catch (NoSuchElementException e) {
 					break; }
-			allCellsSorted.addAll(headCells);
-			allCellsSorted.addAll(bodyCells);
-			allCellsSorted.addAll(footCells);
+			
+			// rearrange row groups and order cells by row
+			sort(cells, compose(sortByRowType, sortByRow, sortByColumn));
+			rowGroup = 0;
+			row = 0;
+			int newRowGroup = rowGroup = 0;
+			int newRow = row = 0;
+			for (TableCell c : cells) {
+				if (c.rowGroup != rowGroup) {
+					rowGroup = c.rowGroup;
+					newRowGroup++; }
+				if (c.row != row) {
+					row = c.row;
+					newRow++; }
+				c.rowGroup = newRowGroup;
+				c.row = newRow; }
 		}
 		
 		private boolean isHTMLorDTBookElement(String element, QName name) {
@@ -412,7 +427,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			for (Function<XMLStreamWriter,Void> action : writeActionsBefore)
 				action.apply(writer);
 			List<TableCell> dataCells = new ArrayList<TableCell>();
-			for (TableCell c : allCellsSorted)
+			for (TableCell c : cells)
 				if (!isHeader(c)) {
 					if (c.rowspan > 1 || c.colspan > 1)
 						throw new RuntimeException("Table data cells with rowspan or colspan not supported yet.");
@@ -810,7 +825,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			// scope attribute can be used instead of headers (they should not be used in same table)
 			List<TableCell> rowHeaders = new ArrayList<TableCell>();
 			List<TableCell> colHeaders = new ArrayList<TableCell>();
-			for (TableCell h : allCellsSorted)
+			for (TableCell h : cells)
 				if (h != cell && h.scope != null) {
 					switch (h.scope) {
 					case ROW:
@@ -885,14 +900,14 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		}
 		
 		private TableCell getById(String id) {
-			for (TableCell c : allCellsSorted)
+			for (TableCell c : cells)
 				if (id.equals(c.id))
 					return c;
 			throw new RuntimeException("No element found with id " + id);
 		}
 		
 		private TableCell getByCoordinates(int row, int col) {
-			for (TableCell c : allCellsSorted)
+			for (TableCell c : cells)
 				if (c.row <= row && (c.row + c.rowspan - 1) >= row &&
 				    c.col <= col && (c.col + c.colspan - 1) >= col)
 					return c;
@@ -901,40 +916,56 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 	}
 	
 	private static boolean isHeader(TableCell cell) {
-		return (cell.th || (cell.axis != null) || (cell.scope != null));
+		return (cell.type == TableCell.CellType.TH || (cell.axis != null) || (cell.scope != null));
 	}
 	
-	private static final Comparator<TableCell> sortByRowAndThenColumn = new Comparator<TableCell>() {
-		public int compare(TableCell c1, TableCell c2) {
-			if (c1.row < c2.row)
-				return -1;
-			else if (c1.row > c2.row)
-				return 1;
-			else if (c1.col < c2.col)
-				return -1;
-			else if (c1.col > c2.col)
-				return 1;
-			else
+	@SafeVarargs
+	private static final <T> Comparator<T> compose(final Comparator<T>... comparators) {
+		return new Comparator<T>() {
+			public int compare(T x1, T x2) {
+				for (Comparator<T> comparator : comparators) {
+					int result = comparator.compare(x1, x2);
+					if (result != 0)
+						return result; }
 				return 0;
+			}
+		};
+	}
+	
+	private static final Comparator<TableCell> sortByRow = new Comparator<TableCell>() {
+		public int compare(TableCell c1, TableCell c2) {
+			return new Integer(c1.row).compareTo(c2.row);
 		}
 	};
 	
-	private static final Comparator<TableCell> sortByColumnAndThenRow = new Comparator<TableCell>() {
+	private static final Comparator<TableCell> sortByColumn = new Comparator<TableCell>() {
 		public int compare(TableCell c1, TableCell c2) {
-			if (c1.col < c2.col)
-				return -1;
-			else if (c1.col > c2.col)
-				return 1;
-			else if (c1.row < c2.row)
-				return -1;
-			else if (c1.row > c2.row)
-				return 1;
-			else
-				return 0;
+			return new Integer(c1.col).compareTo(c2.col);
 		}
 	};
+	
+	private static final Comparator<TableCell> sortByRowType = new Comparator<TableCell>() {
+		public int compare(TableCell c1, TableCell c2) {
+			return c1.rowType.compareTo(c2.rowType);
+		}
+	};
+	
+	private static final Comparator<TableCell> sortByRowAndThenColumn = compose(sortByRow, sortByColumn);
+	
+	private static final Comparator<TableCell> sortByColumnAndThenRow = compose(sortByColumn, sortByRow);
 	
 	private static class TableCell {
+		
+		private enum CellType {
+			TD,
+			TH
+		}
+		
+		private enum RowType {
+			THEAD,
+			TBODY,
+			TFOOT
+		}
 		
 		private enum HeaderPolicy {
 			ALWAYS,
@@ -948,9 +979,11 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			ROW
 		}
 		
+		private int rowGroup;
 		private int row;
 		private int col;
-		private boolean th = false;
+		private CellType type = CellType.TD;
+		private RowType rowType = RowType.TBODY;
 		private HeaderPolicy headerPolicy = HeaderPolicy.ONCE;
 		private String id;
 		private List<String> headers;
