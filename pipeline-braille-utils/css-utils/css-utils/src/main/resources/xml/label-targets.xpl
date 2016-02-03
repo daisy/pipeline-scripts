@@ -14,8 +14,7 @@
     <p:input port="source" sequence="true">
         <p:documentation>
             target-text(), target-string() and target-counter() values must be represented with
-            css:text, css:string and css:counter elements with a target attribute. css:flow
-            attributes indicate in which named flow elements are channeled.
+            css:text, css:string and css:counter elements with a target attribute.
         </p:documentation>
     </p:input>
     
@@ -23,8 +22,7 @@
         <p:documentation>
             For each element that is referenced somewhere, a css:id attribute that matches the
             xml:id or id attribute of the element is added in the output. No two elements will get
-            the same css:id attribute. Elements that are being channeled into a named flow will not
-            be labeled.
+            the same css:id attribute.
         </p:documentation>
     </p:output>
     

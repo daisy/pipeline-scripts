@@ -31,9 +31,10 @@
     
     <p:label-elements match="css:box"
                       attribute="css:id" replace="false"
-                      label="string(
+                      label="for $flow in (ancestor-or-self::*/@css:flow,'normal')[1] return
+                             string(
                                ((preceding::*|ancestor::*)[not(self::css:box)][@css:id]
-                                                          [not(ancestor-or-self::*/@css:flow)]
+                                                          [(ancestor-or-self::*/@css:flow,'normal')[1]=$flow]
                                 except (preceding::css:box|ancestor::css:box)
                                        [last()]/(preceding::*|ancestor::*)
                                )[last()]/@css:id)"/>
@@ -42,13 +43,11 @@
     <p:label-elements match="css:counter[@name][@target]" attribute="target"
                       label="for $target in @target return
                              //*[@css:id=$target]/(self::css:box|following::css:box|descendant::css:box)
-                             [not(ancestor-or-self::*/@css:flow)]
                              [1]/@css:id"/>
     
     <p:label-elements match="*[@css:anchor]" attribute="css:anchor"
                       label="for $anchor in @css:anchor return
                              //*[@css:id=$anchor]/(self::css:box|following::css:box|descendant::css:box)
-                             [not(ancestor-or-self::*/@css:flow)]
                              [1]/@css:id"/>
     
     <p:delete match="*[not(self::css:box)]/@css:id"/>

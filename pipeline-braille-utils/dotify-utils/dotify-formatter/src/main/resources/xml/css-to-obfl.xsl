@@ -347,18 +347,61 @@
             TODO: warning when not all references in a block point to the same element
             TODO: warning when a block has no references or descendant blocks with references
         -->
-        <xsl:variable name="ref-id" as="xs:string"
-                      select="(((descendant::css:box|following::css:box)/@css:anchor
-                               |(descendant::css:string|following::css:string)/@target
-                               |(descendant::css:counter|following::css:counter)/@target)[1],
-                               (preceding::css:box/@css:anchor
+        <xsl:variable name="descendant-refs" as="attribute()*"
+                      select="((descendant::css:box)/@css:anchor
+                               |(descendant::css:string)/@target
+                               |(descendant::css:counter)/@target)"/>
+        <xsl:variable name="following-refs" as="attribute()*"
+                      select="((following::css:box)/@css:anchor
+                               |(following::css:string)/@target
+                               |(following::css:counter)/@target)"/>
+        <xsl:variable name="preceding-refs" as="attribute()*"
+                      select="(preceding::css:box/@css:anchor
                                |preceding::css:string/@target
-                               |preceding::css:counter/@target)[last()])[1]"/>
-        <toc-entry ref-id="{$ref-id}">
-            <xsl:next-match>
-                <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
-            </xsl:next-match>
-        </toc-entry>
+                               |preceding::css:counter/@target)"/>
+        <xsl:choose>
+            <xsl:when test="exists($descendant-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+                <xsl:variable name="ref-id" as="xs:string"
+                              select="$descendant-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
+                <toc-entry ref-id="{$ref-id}">
+                    <xsl:next-match>
+                        <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
+                    </xsl:next-match>
+                </toc-entry>
+            </xsl:when>
+            <xsl:when test="exists($descendant-refs)">
+                <!--
+                    if the entry references an element in a named flow, we assume that element is
+                    part of the volume begin or end area, and is therefore omitted from the table of
+                    contents
+                -->
+            </xsl:when>
+            <xsl:when test="exists($following-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+                <xsl:variable name="ref-id" as="xs:string"
+                              select="$following-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
+                <toc-entry ref-id="{$ref-id}">
+                    <xsl:next-match>
+                        <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
+                    </xsl:next-match>
+                </toc-entry>
+            </xsl:when>
+            <xsl:when test="exists($preceding-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+                <xsl:variable name="ref-id" as="xs:string"
+                              select="$preceding-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][last()]"/>
+                <toc-entry ref-id="{$ref-id}">
+                    <xsl:next-match>
+                        <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
+                    </xsl:next-match>
+                </toc-entry>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message select="concat(
+                                       'An element with display: -obfl-toc must have at least one descendant ',
+                                       'target-counter(), target-string() or target-text() value (that references ',
+                                       'an element that does not participate in a named flow).')">
+                </xsl:message>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <!--
@@ -680,7 +723,7 @@
                       select="if (@target) then @target else
                               if (ancestor::*/@css:flow[not(.='normal')]) then ancestor::*/@css:anchor else ()"/>
         <xsl:variable name="target" as="element()?"
-                      select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
+                      select="if ($target) then collection()/*[not(@css:flow)]//*[@css:id=$target][1] else ."/>
         <xsl:if test="$target">
             <xsl:apply-templates select="css:string(@name, $target)" mode="eval-string"/>
         </xsl:if>
@@ -728,7 +771,7 @@
     
     <xsl:template match="css:box[@type='block']/@css:id" mode="#default table-of-contents">
         <xsl:variable name="id" as="xs:string" select="."/>
-        <xsl:if test="collection()//css:counter[@target=$id]">
+        <xsl:if test="not(ancestor::*/@css:flow[not(.='normal')])">
             <xsl:attribute name="id" select="$id"/>
         </xsl:if>
     </xsl:template>
