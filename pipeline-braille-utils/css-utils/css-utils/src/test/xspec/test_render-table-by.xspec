@@ -1063,4 +1063,554 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="pseudo-elements">
+    <x:call function="css:render-table-by">
+      <x:param select="'row'"/>
+      <x:param>
+        <table xmlns="http://www.w3.org/1999/xhtml"
+               style="{{ display: a }}
+                      ::list-item {{ display: b }}
+                      ::table-by(row) {{ display: c }}
+                      ::table-by(row)::list-item {{ display: d }}">
+          <tr>
+            <td>Cell 1.1</td>
+            <td>Cell 1.2</td>
+            <td>Cell 1.3</td>
+          </tr>
+          <tr>
+            <td>Cell 2.1</td>
+            <td>Cell 2.2</td>
+            <td>Cell 2.3</td>
+          </tr>
+          <tr>
+            <td>Cell 3.1</td>
+            <td>Cell 3.2</td>
+            <td>Cell 3.3</td>
+          </tr>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.w3.org/1999/xhtml" style="display: a">
+        <_ style="display: b">
+          <_ style="display: c">
+            <_ style="display: d">
+              <td>Cell 1.1</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 1.2</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 1.3</td>
+            </_>
+          </_>
+        </_>
+        <_ style="display: b">
+          <_ style="display: c">
+            <_ style="display: d">
+              <td>Cell 2.1</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 2.2</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 2.3</td>
+            </_>
+          </_>
+        </_>
+        <_ style="display: b">
+          <_ style="display: c">
+            <_ style="display: d">
+              <td>Cell 3.1</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 3.2</td>
+            </_>
+            <_ style="display: d">
+              <td>Cell 3.3</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="nested-column-headers-implicit">
+    <x:call function="css:render-table-by">
+      <x:param select="'row'"/>
+      <x:param>
+        <table xmlns="http://www.w3.org/1999/xhtml">
+          <tr>
+            <th colspan="2">Column 1</th>
+            <th>Column 2</th>
+          </tr>
+          <tr>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+          <tr>
+            <td>Cell 1.1A</td>
+            <td>Cell 1.1B</td>
+            <td>Cell 1.2</td>
+          </tr>
+          <tr>
+            <td>Cell 2.1A</td>
+            <td>Cell 2.1B</td>
+            <td>Cell 2.2</td>
+          </tr>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.w3.org/1999/xhtml">
+        <_>
+          <_>
+            <_>
+              <th>Column 1</th>
+              <th>A</th>
+              <td>Cell 1.1A</td>
+            </_>
+            <_>
+              <th>B</th>
+              <td>Cell 1.1B</td>
+            </_>
+            <_>
+              <th>Column 2</th>
+              <td>Cell 1.2</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <th>Column 1</th>
+              <th>A</th>
+              <td>Cell 2.1A</td>
+            </_>
+            <_>
+              <th>B</th>
+              <td>Cell 2.1B</td>
+            </_>
+            <_>
+              <th>Column 2</th>
+              <td>Cell 2.2</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="header-policy-front">
+    <x:call function="css:render-table-by">
+      <x:param select="'row'"/>
+      <x:param>
+        <table xmlns="http://www.w3.org/1999/xhtml">
+          <caption>Fünf Länder im Vergleich</caption>
+          <thead>
+            <tr>
+              <th css:table-header-policy="front">Land</th>
+              <th css:table-header-policy="front">Hauptstadt</th>
+              <th css:table-header-policy="front">Währung</th>
+              <th css:table-header-policy="front">Amtssprache</th>
+            </tr>
+          </thead>
+          <!--
+          <tfoot>
+            <tr>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+            </tr>
+          </tfoot>
+          -->
+          <tbody>
+            <tr>
+              <td><abbr>USA</abbr></td>
+              <td>Washington</td>
+              <td><abbr>US</abbr>-Dollar</td>
+              <td>Englisch</td>
+            </tr>
+            <tr>
+              <td>Japan</td>
+              <td>Tokio</td>
+              <td>Yen</td>
+              <td>Japanisch</td>
+            </tr>
+            <tr>
+              <td>Indien</td>
+              <td>Neu-Delhi</td>
+              <td>Rupie</td>
+              <td>Hindi</td>
+            </tr>
+            <tr>
+              <td>Grönland</td>
+              <td>Nuuk</td>
+              <td>Dänische Krone</td>
+              <td>Dänisch</td>
+            </tr>
+            <tr>
+              <td>Brasilien</td>
+              <td>Brasília</td>
+              <td>Real</td>
+              <td>Portugiesisch</td>
+            </tr>
+          </tbody>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.w3.org/1999/xhtml">
+        <caption>Fünf Länder im Vergleich</caption>
+        <_>
+          <_>
+            <_>
+              <th>Land</th>
+            </_>
+            <_>
+              <th>Hauptstadt</th>
+            </_>
+            <_>
+              <th>Währung</th>
+            </_>
+            <_>
+              <th>Amtssprache</th>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td><abbr>USA</abbr></td>
+            </_>
+            <_>
+              <td>Washington</td>
+            </_>
+            <_>
+              <td><abbr>US</abbr>-Dollar</td>
+            </_>
+            <_>
+              <td>Englisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Japan</td>
+            </_>
+            <_>
+              <td>Tokio</td>
+            </_>
+            <_>
+              <td>Yen</td>
+            </_>
+            <_>
+              <td>Japanisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Indien</td>
+            </_>
+            <_>
+              <td>Neu-Delhi</td>
+            </_>
+            <_>
+              <td>Rupie</td>
+            </_>
+            <_>
+              <td>Hindi</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Grönland</td>
+            </_>
+            <_>
+              <td>Nuuk</td>
+            </_>
+            <_>
+              <td>Dänische Krone</td>
+            </_>
+            <_>
+              <td>Dänisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Brasilien</td>
+            </_>
+            <_>
+              <td>Brasília</td>
+            </_>
+            <_>
+              <td>Real</td>
+            </_>
+            <_>
+              <td>Portugiesisch</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="header-policy-front-nested">
+    <x:call function="css:render-table-by">
+      <x:param select="'row'"/>
+      <x:param>
+        <table xmlns="http://www.w3.org/1999/xhtml">
+          <tr>
+            <th colspan="2">Column 1</th>
+            <th css:table-header-policy="front">Column 2</th>
+          </tr>
+          <tr>
+            <th css:table-header-policy="front">A</th>
+            <th css:table-header-policy="front">B</th>
+          </tr>
+          <tr>
+            <td>Cell 1.1A</td>
+            <td>Cell 1.1B</td>
+            <td>Cell 1.2</td>
+          </tr>
+          <tr>
+            <td>Cell 2.1A</td>
+            <td>Cell 2.1B</td>
+            <td>Cell 2.2</td>
+          </tr>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.w3.org/1999/xhtml">
+        <_>
+          <_>
+            <_>
+              <th>Column 1</th>
+              <th>A</th>
+            </_>
+            <_>
+              <th>B</th>
+            </_>
+            <_>
+              <th>Column 2</th>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Cell 1.1A</td>
+            </_>
+            <_>
+              <td>Cell 1.1B</td>
+            </_>
+            <_>
+              <td>Cell 1.2</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Cell 2.1A</td>
+            </_>
+            <_>
+              <td>Cell 2.1B</td>
+            </_>
+            <_>
+              <td>Cell 2.2</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="table-footer">
+    <x:call function="css:render-table-by">
+      <x:param select="'row'"/>
+      <x:param>
+        <table xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+          <caption>Fünf Länder im Vergleich</caption>
+          <thead>
+            <tr>
+              <th css:table-header-policy="front">Land</th>
+              <th css:table-header-policy="front">Hauptstadt</th>
+              <th css:table-header-policy="front">Währung</th>
+              <th css:table-header-policy="front">Amtssprache</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr>
+              <td><abbr>USA</abbr></td>
+              <td>Washington</td>
+              <td><abbr>US</abbr>-Dollar</td>
+              <td>Englisch</td>
+            </tr>
+            <tr>
+              <td>Japan</td>
+              <td>Tokio</td>
+              <td>Yen</td>
+              <td>Japanisch</td>
+            </tr>
+            <tr>
+              <td>Indien</td>
+              <td>Neu-Delhi</td>
+              <td>Rupie</td>
+              <td>Hindi</td>
+            </tr>
+            <tr>
+              <td>Grönland</td>
+              <td>Nuuk</td>
+              <td>Dänische Krone</td>
+              <td>Dänisch</td>
+            </tr>
+            <tr>
+              <td>Brasilien</td>
+              <td>Brasília</td>
+              <td>Real</td>
+              <td>Portugiesisch</td>
+            </tr>
+          </tbody>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+        <caption>Fünf Länder im Vergleich</caption>
+        <_>
+          <_>
+            <_>
+              <th>Land</th>
+            </_>
+            <_>
+              <th>Hauptstadt</th>
+            </_>
+            <_>
+              <th>Währung</th>
+            </_>
+            <_>
+              <th>Amtssprache</th>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>
+                <abbr>USA</abbr>
+              </td>
+            </_>
+            <_>
+              <td>Washington</td>
+            </_>
+            <_>
+              <td><abbr>US</abbr>-Dollar</td>
+            </_>
+            <_>
+              <td>Englisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Japan</td>
+            </_>
+            <_>
+              <td>Tokio</td>
+            </_>
+            <_>
+              <td>Yen</td>
+            </_>
+            <_>
+              <td>Japanisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Indien</td>
+            </_>
+            <_>
+              <td>Neu-Delhi</td>
+            </_>
+            <_>
+              <td>Rupie</td>
+            </_>
+            <_>
+              <td>Hindi</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Grönland</td>
+            </_>
+            <_>
+              <td>Nuuk</td>
+            </_>
+            <_>
+              <td>Dänische Krone</td>
+            </_>
+            <_>
+              <td>Dänisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Brasilien</td>
+            </_>
+            <_>
+              <td>Brasília</td>
+            </_>
+            <_>
+              <td>Real</td>
+            </_>
+            <_>
+              <td>Portugiesisch</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <td>Quelle: Wikipedia</td>
+            </_>
+            <_>
+              <td>Quelle: Wikipedia</td>
+            </_>
+            <_>
+              <td>Quelle: Wikipedia</td>
+            </_>
+            <_>
+              <td>Quelle: Wikipedia</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
