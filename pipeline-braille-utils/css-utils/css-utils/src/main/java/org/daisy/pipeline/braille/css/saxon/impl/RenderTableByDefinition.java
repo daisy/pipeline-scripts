@@ -606,6 +606,20 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							child = new TableCellGroup(column, nextAxes.iterator(), this, null, firstAxis, child);
 							children.add(child); }
 						return children; }
+					else if ("row-group".equals(firstAxis)) {
+						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
+						TableCellGroup child = null;
+						Map<Integer,List<TableCell>> rowGroups = new LinkedHashMap<Integer,List<TableCell>>();
+						for (TableCell c : cells) {
+							List<TableCell> rowGroup = rowGroups.get(c.rowGroup);
+							if (rowGroup == null) {
+								rowGroup = new ArrayList<TableCell>();
+								rowGroups.put(c.rowGroup, rowGroup); }
+							rowGroup.add(c); }
+						for (List<TableCell> rowGroup : rowGroups.values()) {
+							child = new TableCellGroup(rowGroup, nextAxes.iterator(), this, null, firstAxis, child);
+							children.add(child); }
+						return children; }
 					else
 						return groupCellsBy(cells, nextAxes.iterator()); }
 				else {

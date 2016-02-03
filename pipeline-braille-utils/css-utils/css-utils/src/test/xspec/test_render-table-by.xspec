@@ -1613,4 +1613,196 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="by-row-group">
+    <x:call function="css:render-table-by">
+      <x:param select="'row-group, row'"/>
+      <x:param>
+        <table xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+          <caption>Fünf Länder im Vergleich</caption>
+          <thead>
+            <tr>
+              <th>Land</th>
+              <th>Hauptstadt</th>
+              <th>Währung</th>
+              <th>Amtssprache</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+              <td>Quelle: Wikipedia</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr>
+              <td><abbr>USA</abbr></td>
+              <td>Washington</td>
+              <td><abbr>US</abbr>-Dollar</td>
+              <td>Englisch</td>
+            </tr>
+            <tr>
+              <td>Japan</td>
+              <td>Tokio</td>
+              <td>Yen</td>
+              <td>Japanisch</td>
+            </tr>
+            <tr>
+              <td>Indien</td>
+              <td>Neu-Delhi</td>
+              <td>Rupie</td>
+              <td>Hindi</td>
+            </tr>
+            <tr>
+              <td>Grönland</td>
+              <td>Nuuk</td>
+              <td>Dänische Krone</td>
+              <td>Dänisch</td>
+            </tr>
+            <tr>
+              <td>Brasilien</td>
+              <td>Brasília</td>
+              <td>Real</td>
+              <td>Portugiesisch</td>
+            </tr>
+          </tbody>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+        <caption>Fünf Länder im Vergleich</caption>
+        <_>
+          <_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td><abbr>USA</abbr></td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Washington</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td><abbr>US</abbr>-Dollar</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Englisch</td>
+                </_>
+              </_>
+            </_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td>Japan</td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Tokio</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td>Yen</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Japanisch</td>
+                </_>
+              </_>
+            </_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td>Indien</td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Neu-Delhi</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td>Rupie</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Hindi</td>
+                </_>
+              </_>
+            </_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td>Grönland</td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Nuuk</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td>Dänische Krone</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Dänisch</td>
+                </_>
+              </_>
+            </_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td>Brasilien</td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Brasília</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td>Real</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Portugiesisch</td>
+                </_>
+              </_>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <_>
+                <_>
+                  <th>Land</th>
+                  <td>Quelle: Wikipedia</td>
+                </_>
+                <_>
+                  <th>Hauptstadt</th>
+                  <td>Quelle: Wikipedia</td>
+                </_>
+                <_>
+                  <th>Währung</th>
+                  <td>Quelle: Wikipedia</td>
+                </_>
+                <_>
+                  <th>Amtssprache</th>
+                  <td>Quelle: Wikipedia</td>
+                </_>
+              </_>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
