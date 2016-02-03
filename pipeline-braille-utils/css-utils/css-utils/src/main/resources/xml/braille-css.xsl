@@ -104,7 +104,7 @@
                  re:exact($css:NON_NEGATIVE_INTEGER_RE),
                  re:exact($css:NON_NEGATIVE_INTEGER_RE),
                  re:exact(re:or(('auto',re:comma-separated($css:IDENT_RE)))),
-                 re:exact(re:or(('once','always'))))"/>
+                 re:exact(re:or(('once','always','front'))))"/>
     
     <xsl:variable name="css:applies-to" as="xs:string*"
         select="('.*',

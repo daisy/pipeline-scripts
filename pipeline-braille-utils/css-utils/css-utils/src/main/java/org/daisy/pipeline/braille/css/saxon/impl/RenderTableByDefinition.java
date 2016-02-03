@@ -731,8 +731,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 											throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
 									if (i == 0) {
 										writeStartElement(writer, _);
-										if (listStyle(g.groupingAxis) != null)
-											writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
+										if (listItemStyle(g.groupingAxis) != null)
+											writeAttribute(writer, _STYLE, listItemStyle(g.groupingAxis));
 										for (TableCell h : cc.newlyPromotedHeaders())
 											h.write(writer);
 										writeEndElement(writer);
