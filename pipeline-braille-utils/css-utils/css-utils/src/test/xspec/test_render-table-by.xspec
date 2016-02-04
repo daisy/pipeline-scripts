@@ -462,6 +462,82 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="by-column-implicit">
+    <x:call function="css:render-table-by">
+      <x:param select="'column'"/>
+      <x:param>
+        <table xmlns="http://www.w3.org/1999/xhtml">
+          <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <th>Column 3</th>
+          </tr>
+          <tr>
+            <td>Cell 1.1</td>
+            <td>Cell 1.2</td>
+            <td>Cell 1.3</td>
+          </tr>
+          <tr>
+            <td>Cell 2.1</td>
+            <td>Cell 2.2</td>
+            <td>Cell 2.3</td>
+          </tr>
+          <tr>
+            <td>Cell 3.1</td>
+            <td>Cell 3.2</td>
+            <td>Cell 3.3</td>
+          </tr>
+        </table>
+      </x:param>
+    </x:call>
+    <x:expect label="result">
+      <table xmlns="http://www.w3.org/1999/xhtml">
+        <_>
+          <_>
+            <_>
+              <th>Column 1</th>
+              <td>Cell 1.1</td>
+            </_>
+            <_>
+              <td>Cell 2.1</td>
+            </_>
+            <_>
+              <td>Cell 3.1</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <th>Column 2</th>
+              <td>Cell 1.2</td>
+            </_>
+            <_>
+              <td>Cell 2.2</td>
+            </_>
+            <_>
+              <td>Cell 3.2</td>
+            </_>
+          </_>
+        </_>
+        <_>
+          <_>
+            <_>
+              <th>Column 3</th>
+              <td>Cell 1.3</td>
+            </_>
+            <_>
+              <td>Cell 2.3</td>
+            </_>
+            <_>
+              <td>Cell 3.3</td>
+            </_>
+          </_>
+        </_>
+      </table>
+    </x:expect>
+  </x:scenario>
+  
   <!--
       Merged headings
       

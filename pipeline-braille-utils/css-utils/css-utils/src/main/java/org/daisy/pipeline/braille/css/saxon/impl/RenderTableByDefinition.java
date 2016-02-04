@@ -592,7 +592,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							child = new TableCellGroup(row, nextAxes.iterator(), this, null, firstAxis, child);
 							children.add(child); }
 						return children; }
-					else if ("col".equals(firstAxis)) {
+					else if ("column".equals(firstAxis) || "col".equals(firstAxis)) {
 						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
 						TableCellGroup child = null;
 						Map<Integer,List<TableCell>> columns = new LinkedHashMap<Integer,List<TableCell>>();
