@@ -138,7 +138,7 @@ public class LiblouisCoreTest {
 		assertEquals(braille("⠋⠕⠕⠃⠁⠗"),
 		             provider.withContext(messageBus)
 		                     .get(query("(table:'foobar.cti')")).iterator().next()
-		                     .fromStyledTextToBraille().transform(styledText("foobar","")));
+		                     .fromStyledTextToBraille().transform(text("foobar")));
 	}
 	
 	@Test
@@ -155,12 +155,9 @@ public class LiblouisCoreTest {
 		                                             .get(query("(table:'foobar.cti')")).iterator().next()
 		                                             .fromStyledTextToBraille();
 		assertEquals(braille("⠋⠕⠕","⠃⠁⠗"),
-		             translator.transform(styledText("foo","",
-		                                             "bar","")));
+		             translator.transform(text("foo","bar")));
 		assertEquals(braille("⠋⠕⠕","","⠃⠁⠗"),
-		             translator.transform(styledText("foo","",
-		                                             "",   "",
-		                                             "bar","")));
+		             translator.transform(text("foo","","bar")));
 	}
 	
 	@Test
@@ -169,35 +166,15 @@ public class LiblouisCoreTest {
 		                                             .get(query("(table:'foobar.ctb')")).iterator().next()
 		                                             .fromStyledTextToBraille();
 		assertEquals(braille("⠋⠥","⠃⠁⠗"),
-		             translator.transform(styledText("foo", "",
-		                                             "bar", "")));
+		             translator.transform(text("foo","bar")));
 		assertEquals(braille("⠋⠥","⠃⠁⠗"),
-		             translator.transform(styledText("fo",   "",
-		                                             "obar", "")));
+		             translator.transform(text("fo","obar")));
 		assertEquals(braille("⠋⠥\u00AD","⠃⠁⠗"),
-		             translator.transform(styledText("fo",         "",
-		                                             "o\u00ADbar", "")));
+		             translator.transform(text("fo","o\u00ADbar")));
 		assertEquals(braille("⠋⠥","","⠃⠁⠗"),
-		             translator.transform(styledText("fo",   "",
-		                                             "",     "",
-		                                             "obar", "")));
-		assertEquals(braille("⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠭ ", "⠋⠥", "⠃⠁⠗"),
-		             translator.transform(styledText("x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "x ",   "",
-		                                             "fo",   "",
-		                                             "obar", "")));
+		             translator.transform(text("fo","","obar")));
+		assertEquals(braille("⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠋⠥","⠃⠁⠗"),
+		             translator.transform(text("x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","fo","obar")));
 	}
 	
 	@Test
@@ -223,7 +200,7 @@ public class LiblouisCoreTest {
 		                                             .fromStyledTextToBraille();
 		assertEquals(braille("⠋⠕⠕\u00AD⠃⠁⠗ ","⠋⠕⠕⠃⠁⠗"),
 		             translator.transform(styledText("foobar ", "hyphens:auto",
-		                                                  "foobar",  "hyphens:none")));
+		                                             "foobar",  "hyphens:none")));
 	}
 	
 	@Test
@@ -232,10 +209,13 @@ public class LiblouisCoreTest {
 		                                             .get(query("(table:'foobar.cti')")).iterator().next()
 		                                             .fromStyledTextToBraille();
 		assertEquals(braille("⠋⠕⠕    ⠃⠁⠗ ⠃⠁⠵"),
-		             translator.transform(styledText("foo    bar\nbaz", "")));
+		             translator.transform(text("foo    bar\nbaz")));
 		assertEquals(braille("⠋⠕⠕    ⠃⠁⠗\n⠃⠁⠵"),
 		             translator.transform(styledText("foo    bar\nbaz", "white-space:pre-wrap")));
-		assertEquals(braille("","⠋⠕⠕    ⠃⠁⠗\n\u00AD","","⠃⠁⠵"),
+		assertEquals(braille("",
+		                     "⠋⠕⠕    ⠃⠁⠗\n\u00AD",
+		                     "",
+		                     "⠃⠁⠵"),
 		             translator.transform(styledText("",             "",
 		                                             "foo    bar\n", "white-space:pre-wrap",
 		                                             "\u00AD",       "",
@@ -247,13 +227,38 @@ public class LiblouisCoreTest {
 	@Test
 	public void testWhiteSpaceLost() {
 		FromStyledTextToBraille translator = provider.withContext(messageBus)
-		                                             .get(query("(table:'delete-ws.utb')")).iterator().next()
+		                                             .get(query("(table:'foobar.cti,delete-ws.utb')")).iterator().next()
 		                                             .fromStyledTextToBraille();
-		assertEquals(braille("","⠋⠕⠕⠃⠁⠗\u00AD","","⠃⠁⠵"),
+		assertEquals(braille("",
+		                     "⠋⠕⠕⠃⠁⠗\u00AD",
+		                     "",
+		                     "⠃⠁⠵"),
 		             translator.transform(styledText("",             "",
 		                                             "foo    bar\n", "white-space:pre-wrap",
 		                                             "\u00AD",       "",
 		                                             "baz",          "")));
+	}
+	
+	@Test
+	public void testSegmentationPreservedDespiteSpacesCollapsed() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.cti,squash-ws.utb')")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		
+		// up to 4 white space segments between "foo" and "bar" are handled
+		assertEquals(braille("⠋⠕⠕"," ","","","","⠃⠁⠗"),
+		             translator.transform(text("foo"," "," "," "," ","bar")));
+	}
+	
+	@Test(expected = AssertionError.class) // XFAIL
+	public void testSegmentationLostBecauseOfSpacesCollapsed() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.cti,squash-ws.utb')")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		
+		// fails when "foo" and "bar" have 5 or more white space segments in between them
+		assertEquals(braille("⠋⠕⠕"," ","","","","","⠃⠁⠗"),
+		             translator.transform(text("foo"," "," "," "," "," ","bar")));
 	}
 	
 	@Test
@@ -442,6 +447,13 @@ public class LiblouisCoreTest {
 			textSet = !textSet; }
 		if (textSet)
 			throw new RuntimeException();
+		return styledText;
+	}
+	
+	private Iterable<CSSStyledText> text(String... text) {
+		List<CSSStyledText> styledText = new ArrayList<CSSStyledText>();
+		for (String t : text)
+			styledText.add(new CSSStyledText(t, ""));
 		return styledText;
 	}
 	
