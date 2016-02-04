@@ -734,66 +734,61 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			}
 			
 			public void write(XMLStreamWriter writer) {
-				if (children.size() == 1
-				    && (children.get(0) instanceof TableCellGroup)
-				    && ((TableCellGroup)children.get(0)).groupingHeader == null)
-					children.get(0).write(writer);
-				else {
-					List<List<TableCell>> promotedHeaders = null;
-					int i = 0;
-					for (TableCellCollection c : children) {
-						if (c instanceof TableCellGroup) {
-							TableCellGroup g = (TableCellGroup)c;
-							int j = 0;
-							for (TableCellCollection cc : g.children) {
-								if (!cc.newlyPromotedHeaders().isEmpty()) {
-									if (promotedHeaders == null) {
-										if (i == 0 && j == 0) {
-											writeStartElement(writer, _);
-											if (listItemStyle(groupingAxis) != null)
-												writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
-											writeStartElement(writer, _);
-											if (listStyle(g.groupingAxis) != null)
-												writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
-											promotedHeaders = new ArrayList<List<TableCell>>(); }
-										else
-											throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
-									if (i == 0) {
+				List<List<TableCell>> promotedHeaders = null;
+				int i = 0;
+				for (TableCellCollection c : children) {
+					if (c instanceof TableCellGroup) {
+						TableCellGroup g = (TableCellGroup)c;
+						int j = 0;
+						for (TableCellCollection cc : g.children) {
+							if (!cc.newlyPromotedHeaders().isEmpty()) {
+								if (promotedHeaders == null) {
+									if (i == 0 && j == 0) {
 										writeStartElement(writer, _);
-										if (listItemStyle(g.groupingAxis) != null)
-											writeAttribute(writer, _STYLE, listItemStyle(g.groupingAxis));
-										for (TableCell h : cc.newlyPromotedHeaders())
-											h.write(writer);
-										writeEndElement(writer);
-										promotedHeaders.add(cc.newlyPromotedHeaders()); }
-									else if (!promotedHeaders.get(j).equals(cc.newlyPromotedHeaders()))
-										throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }
-								else if (promotedHeaders != null)
-									throw new RuntimeException("Some headers of children promoted but not all children have a promoted header.");
-								j++; }
-							if (promotedHeaders != null && promotedHeaders.size() != j) {
-								throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }}
-						else if (promotedHeaders != null)
-							throw new RuntimeException("Coding error");
-						i++; }
-					if (promotedHeaders != null) {
-						writeEndElement(writer);
-						writeEndElement(writer); }
-					for (TableCellCollection c : children) {
+										if (listItemStyle(groupingAxis) != null)
+											writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+										writeStartElement(writer, _);
+										if (listStyle(g.groupingAxis) != null)
+											writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
+										promotedHeaders = new ArrayList<List<TableCell>>(); }
+									else
+										throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
+								if (i == 0) {
+									writeStartElement(writer, _);
+									if (listItemStyle(g.groupingAxis) != null)
+										writeAttribute(writer, _STYLE, listItemStyle(g.groupingAxis));
+									for (TableCell h : cc.newlyPromotedHeaders())
+										h.write(writer);
+									writeEndElement(writer);
+									promotedHeaders.add(cc.newlyPromotedHeaders()); }
+								else if (!promotedHeaders.get(j).equals(cc.newlyPromotedHeaders()))
+									throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }
+							else if (promotedHeaders != null)
+								throw new RuntimeException("Some headers of children promoted but not all children have a promoted header.");
+							j++; }
+						if (promotedHeaders != null && promotedHeaders.size() != j) {
+							throw new RuntimeException("Headers of children promoted but not the same as promoted headers of sibling groups."); }}
+					else if (promotedHeaders != null)
+						throw new RuntimeException("Coding error");
+					i++; }
+				if (promotedHeaders != null) {
+					writeEndElement(writer);
+					writeEndElement(writer); }
+				for (TableCellCollection c : children) {
+					writeStartElement(writer, _);
+					if (listItemStyle(groupingAxis) != null)
+						writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+					for (TableCell h : c.newlyRenderedHeaders())
+						h.write(writer);
+					if (c instanceof TableCellGroup) {
+						TableCellGroup g = (TableCellGroup)c;
 						writeStartElement(writer, _);
-						if (listItemStyle(groupingAxis) != null)
-							writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
-						for (TableCell h : c.newlyRenderedHeaders())
-							h.write(writer);
-						if (c instanceof TableCellGroup) {
-							TableCellGroup g = (TableCellGroup)c;
-							writeStartElement(writer, _);
-							if (listStyle(g.groupingAxis) != null)
-								writeAttribute(writer, _STYLE, listStyle(g.groupingAxis)); }
-						c.write(writer);
-						if (c instanceof TableCellGroup)
-							writeEndElement(writer);
-						writeEndElement(writer); }}
+						if (listStyle(g.groupingAxis) != null)
+							writeAttribute(writer, _STYLE, listStyle(g.groupingAxis)); }
+					c.write(writer);
+					if (c instanceof TableCellGroup)
+						writeEndElement(writer);
+					writeEndElement(writer); }
 			}
 			
 			@Override
