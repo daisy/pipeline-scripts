@@ -114,7 +114,7 @@
   <!--
       Custom pseudo elements
   -->
-  <x:scenario label="test_04" pending="not implemented">
+  <x:scenario label="test_04">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
@@ -140,7 +140,7 @@
       <x:document type="inline">
         <body>
           <p id="1"/>
-          <p id="2" style="::-x-foo { display: block }"/>
+          <p id="2" style="::-x-foo { display: block; }"/>
         </body>
       </x:document>
     </x:expect>
