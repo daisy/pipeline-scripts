@@ -148,11 +148,24 @@
                                                                 <xsl:variable name="toc-name" select="generate-id($toc)"/>
                                                                 <xsl:variable name="toc-range" as="xs:string"
                                                                               select="($toc/@css:_obfl-toc-range,'document')[1]"/>
+                                                                <xsl:variable name="on-toc-start-content" as="element()*"
+                                                                              select="(collection()/*[@css:flow=concat('-obfl-on-toc-start/',
+                                                                                                                       $toc/@css:_obfl-on-toc-start)]/*,
+                                                                                       if (position()=2) then $on-first-toc-start-content else ())"/>
                                                                 <xsl:variable name="on-volume-start-content" as="element()*"
                                                                               select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
                                                                                       then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
                                                                                                                            $toc/@css:_obfl-on-volume-start)]/*
                                                                                       else ()"/>
+                                                                <xsl:variable name="on-volume-end-content" as="element()*"
+                                                                              select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-end)
+                                                                                      then collection()/*[@css:flow=concat('-obfl-on-volume-end/',
+                                                                                                                           $toc/@css:_obfl-on-volume-end)]/*
+                                                                                      else ()"/>
+                                                                <xsl:variable name="on-toc-end-content" as="element()*"
+                                                                              select="(current-group()[not(self::css:box[@type='block' and @css:_obfl-toc])],
+                                                                                       collection()/*[@css:flow=concat('-obfl-on-toc-end/',
+                                                                                                                       $toc/@css:_obfl-on-toc-end)]/*)"/>
                                                                 <toc-sequence master="{$pre-content-master}" range="{$toc-range}" toc="{$toc-name}">
                                                                     <!--
                                                                         Inserting table-of-contents here as child of toc-sequence. Will be moved to the
@@ -165,10 +178,10 @@
                                                                             <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                                         </xsl:apply-templates>
                                                                     </table-of-contents>
-                                                                    <xsl:if test="exists($on-first-toc-start-content) and position()=2">
+                                                                    <xsl:if test="exists($on-toc-start-content)">
                                                                         <on-toc-start>
                                                                             <xsl:call-template name="group-inline-elements">
-                                                                                <xsl:with-param name="elements" select="$on-first-toc-start-content"/>
+                                                                                <xsl:with-param name="elements" select="$on-toc-start-content"/>
                                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
@@ -185,8 +198,16 @@
                                                                             </xsl:call-template>
                                                                         </on-volume-start>
                                                                     </xsl:if>
-                                                                    <xsl:variable name="on-toc-end-content" as="element()*"
-                                                                                  select="current-group()[not(self::css:box[@type='block' and @css:_obfl-toc])]"/>
+                                                                    <xsl:if test="exists($on-volume-end-content)">
+                                                                        <on-volume-end>
+                                                                            <xsl:call-template name="group-inline-elements">
+                                                                                <xsl:with-param name="elements" select="$on-volume-end-content"/>
+                                                                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                                                                            </xsl:call-template>
+                                                                        </on-volume-end>
+                                                                    </xsl:if>
                                                                     <xsl:if test="exists($on-toc-end-content)">
                                                                         <on-toc-end>
                                                                             <xsl:call-template name="group-inline-elements">
@@ -553,7 +574,10 @@
     
     <xsl:template match="/*/*/@css:_obfl-toc|
                          /*/*[@css:_obfl-toc]/@css:_obfl-toc-range|
-                         /*/*[@css:_obfl-toc]/@css:_obfl-on-volume-start"
+                         /*/*[@css:_obfl-toc]/@css:_obfl-on-toc-start|
+                         /*/*[@css:_obfl-toc]/@css:_obfl-on-volume-start|
+                         /*/*[@css:_obfl-toc]/@css:_obfl-on-volume-end|
+                         /*/*[@css:_obfl-toc]/@css:_obfl-on-toc-end"
                   mode="table-of-contents"/>
     
     <xsl:template match="@css:collapsing-margins"/>
@@ -942,8 +966,11 @@
         <xsl:message>display: -obfl-toc only allowed on elements that are flowed into @begin area.</xsl:message>
     </xsl:template>
     
-    <xsl:template match="@css:_obfl-on-volume-start">
-        <xsl:message>::-obfl-on-volume-start pseudo-element only allowed on elements with display: -obfl-toc.</xsl:message>
+    <xsl:template match="@css:_obfl-on-toc-start|
+                         @css:_obfl-on-volume-start|
+                         @css:_obfl-on-volume-end|
+                         @css:_obfl-on-toc-end">
+        <xsl:message select="concat('::',replace(local-name(),'^_','-'),' pseudo-element only allowed on elements with display: -obfl-toc.')"/>
     </xsl:template>
     
     <xsl:template match="@*|*" mode="#default table-of-contents">

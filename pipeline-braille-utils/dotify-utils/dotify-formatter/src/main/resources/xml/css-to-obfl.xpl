@@ -22,41 +22,51 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
-    <p:import href="make-on-volume-start-elements.xpl"/>
+    <p:import href="make-obfl-pseudo-elements.xpl"/>
     
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
         <p:output port="result" sequence="true"/>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:volume, css:after, css:before, css:duplicate and
-                css:_obfl-on-volume-start attributes.
+                Make css:page, css:volume, css:after, css:before, css:duplicate,
+                css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end and
+                css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <p:choose>
             <p:when test="//*/@css:before|
                           //*/@css:after|
                           //*/@css:duplicate|
-                          //*/@css:_obfl-on-volume-start">
+                          //*/@css:_obfl-on-toc-start|
+                          //*/@css:_obfl-on-volume-start|
+                          //*/@css:_obfl-on-volume-end|
+                          //*/@css:_obfl-on-toc-end">
                 <css:make-pseudo-elements>
                     <p:documentation>
                         Make css:before, css:after and css:duplicate pseudo-elements from
                         css:before, css:after and css:duplicate attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
-                <p:delete match="css:duplicate/@css:_obfl-on-volume-start"/>
-                <pxi:make-on-volume-start-elements>
+                <p:delete match="css:duplicate/@css:_obfl-on-toc-start|
+                                 css:duplicate/@css:_obfl-on-volume-start|
+                                 css:duplicate/@css:_obfl-on-volume-end|
+                                 css:duplicate/@css:_obfl-on-toc-end"/>
+                <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
-                        Make css:_obfl-on-volume-start pseudo-element documents from
-                        css:_obfl-on-volume-start attributes.
+                        Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
                     </p:documentation>
-                </pxi:make-on-volume-start-elements>
+                </pxi:make-obfl-pseudo-elements>
                 <p:for-each>
                     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
                 </p:for-each>
             </p:when>
             <p:otherwise>
+                <p:rename match="@css:_obfl-on-toc-start-ref" new-name="css:_obfl-on-toc-start"/>
                 <p:rename match="@css:_obfl-on-volume-start-ref" new-name="css:_obfl-on-volume-start"/>
+                <p:rename match="@css:_obfl-on-volume-end-ref" new-name="css:_obfl-on-volume-end"/>
+                <p:rename match="@css:_obfl-on-toc-end-ref" new-name="css:_obfl-on-toc-end"/>
             </p:otherwise>
         </p:choose>
     </p:declare-step>
@@ -96,7 +106,8 @@
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before and css:duplicate
-            pseudo-elements, and css:_obfl-on-volume-start pseudo-element documents.
+            pseudo-elements, and css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+            css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
     

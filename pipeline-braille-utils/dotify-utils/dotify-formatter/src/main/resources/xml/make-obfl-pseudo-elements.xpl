@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-                type="pxi:make-on-volume-start-elements"
+                type="pxi:make-obfl-pseudo-elements"
                 exclude-inline-prefixes="#all"
                 version="1.0">
     
@@ -10,7 +10,7 @@
     
     <p:xslt name="xslt">
         <p:input port="stylesheet">
-            <p:document href="make-on-volume-start-elements.xsl"/>
+            <p:document href="make-obfl-pseudo-elements.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
