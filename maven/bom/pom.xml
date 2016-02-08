@@ -37,7 +37,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-calabash</artifactId>
-                <version>2.3.1-SNAPSHOT</version>
+                <version>2.4.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -47,7 +47,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-utils</artifactId>
-                <version>2.6.1-SNAPSHOT</version>
+                <version>2.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-formatter</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -77,7 +77,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dtbook-to-pef</artifactId>
-                <version>3.2.1-SNAPSHOT</version>
+                <version>3.3.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -230,18 +230,12 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.7.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>1.20-p5-SNAPSHOT</version>
+                <version>1.20-p5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xerces</groupId>
