@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-aggregator</artifactId>
-  <version>1.9.9</version>
+  <version>1.9.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DAISY Pipeline 2 :: Aggregator POM for the Braille Modules</name>
@@ -21,24 +21,24 @@
     <connection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</connection>
     <url>scm:git:git@github.com:daisy/pipeline-mod-braille.git</url>
     <developerConnection>scm:git:git@github.com:daisy/pipeline-mod-braille.git</developerConnection>
-    <tag>v1.9.9</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <modules>
     <module>maven/bom</module>
-    <module>maven/build-helper</module>
+    <!-- <module>maven/build-helper</module> -->
     <module>maven/parent</module>
-    <module>pipeline-braille-utils/common-utils</module>
-    <module>pipeline-braille-utils/css-utils</module>
+    <!-- <module>pipeline-braille-utils/common-utils</module> -->
+    <!-- <module>pipeline-braille-utils/css-utils</module> -->
     <!-- <module>pipeline-braille-utils/pef-utils</module> -->
-    <module>pipeline-braille-utils/obfl-utils</module>
+    <!-- <module>pipeline-braille-utils/obfl-utils</module> -->
     <!-- <module>pipeline-braille-utils/liblouis-utils</module> -->
-    <module>pipeline-braille-utils/dotify-utils</module>
+    <!-- <module>pipeline-braille-utils/dotify-utils</module> -->
     <!-- <module>pipeline-braille-utils/libhyphen-utils</module> -->
     <!-- <module>pipeline-braille-utils/texhyph-utils</module> -->
     <!-- <module>pipeline-braille-scripts/zedai-to-pef</module> -->
-    <module>pipeline-braille-scripts/dtbook-to-pef</module>
-    <module>pipeline-braille-scripts/html-to-pef</module>
+    <!-- <module>pipeline-braille-scripts/dtbook-to-pef</module> -->
+    <!-- <module>pipeline-braille-scripts/html-to-pef</module> -->
     <!--<module>pipeline-braille-scripts/epub-to-pef</module>-->
   </modules>
   
