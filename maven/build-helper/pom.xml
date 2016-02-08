@@ -12,9 +12,8 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>build-helper</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>DAISY Pipeline 2 :: Braille Modules Build Helper</name>
-  
 </project>
