@@ -299,27 +299,26 @@
                 </collection>
                 </xsl:for-each>
             -->
-            <xsl:for-each select="collection()/*[not(@css:flow)]">
-                <sequence master="{pxi:generate-layout-master-name(string(@css:page))}">
-                    <xsl:if test="@css:counter-set-page">
-                        <xsl:attribute name="initial-page-number" select="@css:counter-set-page"/>
-                    </xsl:if>
-                    <xsl:if test="self::css:_">
-                        <xsl:apply-templates select="@* except @css:string-entry"/>
-                        <xsl:if test="@css:string-entry">
-                            <block>
-                                <xsl:apply-templates select="@css:string-entry"/>
-                            </block>
-                        </xsl:if>
-                    </xsl:if>
-                    <xsl:call-template name="group-inline-elements">
-                        <xsl:with-param name="elements" select="if (self::css:_) then * else ."/>
-                        <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                        <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                        <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                    </xsl:call-template>
-                </sequence>
-            </xsl:for-each>
+            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-adjacent="string(@css:page)">
+                <xsl:variable name="layout-master" select="pxi:generate-layout-master-name(current-grouping-key())"/>
+                <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right' or @css:counter-set-page]">
+                    <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
+                        <sequence master="{$layout-master}">
+                            <xsl:variable name="first" as="element()" select="current-group()[1]"/>
+                            <xsl:apply-templates select="$first/@css:counter-set-page" mode="sequence"/>
+                            <xsl:apply-templates select="$first/(@* except @css:string-entry)"/>
+                            <xsl:apply-templates select="$first/@css:string-entry" mode="sequence"/>
+                            <xsl:call-template name="group-inline-elements">
+                                <xsl:with-param name="elements" select="for $x in current-group()
+                                                                        return if ($x/self::css:_) then $x/* else $x"/>
+                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                            </xsl:call-template>
+                        </sequence>
+                    </xsl:for-each-group>
+                </xsl:for-each-group>
+            </xsl:for-each-group>
         </obfl>
     </xsl:template>
     
@@ -337,6 +336,10 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:for-each-group>
+    </xsl:template>
+    
+    <xsl:template match="/*/@css:counter-set-page" mode="sequence">
+        <xsl:attribute name="initial-page-number" select="."/>
     </xsl:template>
     
     <xsl:template match="/*/@css:counter-set-page|
@@ -430,7 +433,7 @@
     -->
     <xsl:template match="css:box[@type='block']" priority="0.7" mode="#default table-of-contents">
         <xsl:apply-templates select="@* except (@type|
-                                                @css:string-entry|@css:string-set|@css:_obfl-marker|
+                                                @css:string-set|@css:_obfl-marker|
                                                 @css:line-height|
                                                 @css:text-align|@css:text-indent|@page-break-inside)"
                              mode="#current"/>
@@ -446,7 +449,7 @@
                                           @css:border-top or @css:border-bottom))]"
                   priority="0.6" mode="#default table-of-contents">
         <xsl:apply-templates select="@css:line-height|@css:text-align|@css:text-indent|@page-break-inside" mode="#current"/>
-        <xsl:apply-templates select="@css:string-entry|@css:string-set|@css:_obfl-marker" mode="#current"/>
+        <xsl:apply-templates select="@css:string-set|@css:_obfl-marker" mode="#current"/>
         <xsl:apply-templates mode="#current"/>
         <!-- <xsl:apply-templates select="@css:id" mode="anchor"/> -->
     </xsl:template>
@@ -460,7 +463,7 @@
                                  and (@css:margin-top or @css:margin-bottom or
                                       @css:border-top or @css:border-bottom)]"
                   priority="0.63" mode="#default table-of-contents">
-        <xsl:apply-templates select="@css:string-entry|@css:string-set|@css:_obfl-marker" mode="#current"/>
+        <xsl:apply-templates select="@css:string-set|@css:_obfl-marker" mode="#current"/>
         <xsl:next-match/>
     </xsl:template>
     
@@ -534,7 +537,7 @@
         </xsl:next-match>
     </xsl:template>
     
-    <xsl:template match="@css:hyphens" mode="#default table-of-contents">
+    <xsl:template match="css:box/@css:hyphens" mode="#default table-of-contents">
         <!--
             'hyphens:auto' corresponds with 'hyphenate="true"'. 'hyphens:manual' corresponds with
             'hyphenate="false"'. For 'hyphens:none' all SHY and ZWSP characters are removed from the
@@ -549,7 +552,7 @@
         </xsl:next-match>
     </xsl:template>
     
-    <xsl:template match="@css:text-transform" mode="#default table-of-contents">
+    <xsl:template match="css:box/@css:text-transform" mode="#default table-of-contents">
         <!--
             'text-transform:auto' corresponds with 'translate=""'. 'text-transform:none' would
             normally correspond with 'translate="pre-translated"', but because "pre-translated"
@@ -566,7 +569,7 @@
         </xsl:next-match>
     </xsl:template>
     
-    <xsl:template match="@css:word-spacing" mode="#default table-of-contents"/>
+    <xsl:template match="css:box/@css:word-spacing" mode="#default table-of-contents"/>
     
     <xsl:template match="css:box/@name" mode="#default table-of-contents"/>
     
@@ -582,15 +585,15 @@
     
     <xsl:template match="@css:collapsing-margins"/>
     
-    <xsl:template match="@css:margin-left|
-                         @css:margin-right|
-                         @css:margin-top|
-                         @css:margin-bottom"
+    <xsl:template match="css:box[@type='block']/@css:margin-left|
+                         css:box[@type='block']/@css:margin-right|
+                         css:box[@type='block']/@css:margin-top|
+                         css:box[@type='block']/@css:margin-bottom"
                   mode="#default table-of-contents">
         <xsl:attribute name="{local-name()}" select="format-number(xs:integer(number(.)), '0')"/>
     </xsl:template>
     
-    <xsl:template match="@css:line-height" mode="#default table-of-contents">
+    <xsl:template match="css:box[@type='block']/@css:line-height" mode="#default table-of-contents">
         <xsl:attribute name="row-spacing" select="format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
@@ -598,7 +601,7 @@
                   mode="#default table-of-contents"/>
     
     <xsl:template match="css:box[@type='block' and not(child::css:box[@type='block'])]/@css:text-indent"
-                  mode="#default table-of-contents">
+                  mode="#default table-of-contents" priority="0.6">
         <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(.))"/>
         <xsl:variable name="margin-left" as="xs:integer" select="(parent::*/@css:margin-left/xs:integer(number(.)),0)[1]"/>
         <xsl:if test="parent::*[@name or not(preceding-sibling::css:box)]">
@@ -609,33 +612,33 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="@css:text-indent" mode="#default table-of-contents"/>
+    <xsl:template match="css:box[@type='block']/@css:text-indent" mode="#default table-of-contents"/>
     
-    <xsl:template match="@css:text-align" mode="#default table-of-contents">
+    <xsl:template match="css:box[@type='block']/@css:text-align" mode="#default table-of-contents">
         <xsl:attribute name="align" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:_obfl-vertical-position">
+    <xsl:template match="css:box[@type='block']/@css:_obfl-vertical-position">
         <xsl:attribute name="vertical-position" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:_obfl-vertical-align">
+    <xsl:template match="css:box[@type='block']/@css:_obfl-vertical-align">
         <xsl:attribute name="vertical-align" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-before[.='always']">
+    <xsl:template match="css:box[@type='block']/@css:page-break-before[.='always']">
         <xsl:attribute name="break-before" select="'page'"/>
     </xsl:template>
     
     <!--
         FIXME: 'left' not supported, treating as 'always'
     -->
-    <xsl:template match="@css:page-break-before[.='left']">
+    <xsl:template match="css:box[@type='block']/@css:page-break-before[.='left']">
         <xsl:message select="concat(local-name(),':',.,' not supported yet. Treating like &quot;always&quot;.')"/>
         <xsl:attribute name="break-before" select="'page'"/>
     </xsl:template>
     
-    <xsl:template match="@css:page-break-after[.='avoid']">
+    <xsl:template match="css:box[@type='block']/@css:page-break-after[.='avoid']">
         <xsl:attribute name="keep-with-next" select="'1'"/>
         <!--
             keep-with-next="1" requires that keep="all". This gives it a slighly different meaning
@@ -646,30 +649,37 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="/*/@css:page-break-before|
-                         /*/@css:page-break-after"/>
+    <xsl:template match="/*/@css:page-break-before[.=('always','right')]|
+                         /*/@css:page-break-after[.=('always','right')]" priority="0.6"/>
     
-    <xsl:template match="@css:page-break-inside[.='avoid']">
+    <!--
+        FIXME: 'left' not supported
+    -->
+    <xsl:template match="/*/@css:page-break-before[.='left']|
+                         /*/@css:page-break-after[.='left']" priority="0.6"/>
+    
+    <xsl:template match="css:box[@type='block']/@css:page-break-inside[.='avoid']">
         <xsl:attribute name="keep" select="'all'"/>
     </xsl:template>
     
-    <xsl:template match="@css:orphans|@css:widows">
+    <xsl:template match="css:box[@type='block']/@css:orphans|
+                         css:box[@type='block']/@css:widows">
         <xsl:attribute name="{local-name()}" select="."/>
     </xsl:template>
     
-    <xsl:template match="@css:_obfl-vertical-position|
-                         @css:_obfl-vertical-align|
-                         @css:page-break-before|
-                         @css:page-break-after|
-                         @css:page-break-inside|
-                         @css:orphans|
-                         @css:widows"
+    <xsl:template match="css:box[@type='block']/@css:_obfl-vertical-position|
+                         css:box[@type='block']/@css:_obfl-vertical-align|
+                         css:box[@type='block']/@css:page-break-before|
+                         css:box[@type='block']/@css:page-break-after|
+                         css:box[@type='block']/@css:page-break-inside|
+                         css:box[@type='block']/@css:orphans|
+                         css:box[@type='block']/@css:widows"
                   mode="table-of-contents">
         <xsl:message select="concat('Property ',replace(local-name(),'^_','-'),' not supported inside an element with display: -obfl-toc')"/>
     </xsl:template>
     
-    <xsl:template match="@css:border-left|
-                         @css:border-right"
+    <xsl:template match="css:box[@type='block']/@css:border-left|
+                         css:box[@type='block']/@css:border-right"
                   mode="#default table-of-contents">
         <xsl:choose>
             <xsl:when test=".='none'">
@@ -697,8 +707,8 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="@css:border-top|
-                         @css:border-bottom"
+    <xsl:template match="css:box[@type='block']/@css:border-top|
+                         css:box[@type='block']/@css:border-bottom"
                   mode="#default table-of-contents">
         <xsl:choose>
             <xsl:when test=".='none'">
@@ -832,8 +842,12 @@
         <marker class="{@name}" value="{string-join($value,'')}"/>
     </xsl:template>
     
-    <xsl:template match="/*/@css:string-entry">
-        <xsl:apply-templates select="css:parse-string-set(.)" mode="parse-string-entry"/>
+    <xsl:template match="/*/@css:string-entry"/>
+    
+    <xsl:template match="/*/@css:string-entry" mode="sequence">
+        <block>
+            <xsl:apply-templates select="css:parse-string-set(.)" mode="parse-string-entry"/>
+        </block>
     </xsl:template>
     
     <xsl:template match="css:string-set" mode="parse-string-entry">
