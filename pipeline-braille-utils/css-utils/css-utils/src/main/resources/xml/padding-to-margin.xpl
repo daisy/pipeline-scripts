@@ -21,11 +21,11 @@
     
     <p:output port="result">
         <p:documentation>
-            For each box with 'padding' properties, the box's content is wrapped in an anonymous
-            block box. The box's css:padding-* attributes are moved to the anonymous box and renamed
-            to css:margin-*. A css:collapsing-margins attribute with value 'no' is added to the
-            anonymous box. Any 'inherit' values of non-inheriting properties (specified in style
-            attributes) of the box's child boxes are concretized.
+            For each block box with 'padding' properties, the box's content is wrapped in an
+            anonymous block box. The box's css:padding-* attributes are moved to the anonymous box
+            and renamed to css:margin-*. A css:collapsing-margins attribute with value 'no' is added
+            to the anonymous box. Any 'inherit' values of non-inheriting properties (specified in
+            style attributes) of the box's child boxes are concretized.
         </p:documentation>
     </p:output>
     

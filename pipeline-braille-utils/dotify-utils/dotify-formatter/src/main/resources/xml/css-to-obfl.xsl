@@ -583,8 +583,6 @@
                          /*/*[@css:_obfl-toc]/@css:_obfl-on-toc-end"
                   mode="table-of-contents"/>
     
-    <xsl:template match="@css:collapsing-margins"/>
-    
     <xsl:template match="css:box[@type='block']/@css:margin-left|
                          css:box[@type='block']/@css:margin-right|
                          css:box[@type='block']/@css:margin-top|

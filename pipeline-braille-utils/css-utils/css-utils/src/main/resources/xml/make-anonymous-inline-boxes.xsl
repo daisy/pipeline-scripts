@@ -14,10 +14,10 @@
     </xsl:template>
     
     <!--
-        unwrap inline boxes that contain block boxes
+        unwrap inline boxes that contain block/table/table-cell boxes
     -->
-    <xsl:template match="css:box[not(@type='block')
-                                 and descendant::css:box[@type='block']]">
+    <xsl:template match="css:box[@type='inline'
+                                 and descendant::css:box[@type=('block','table','table-cell')]]">
         <xsl:variable name="properties" as="element()*">
             <xsl:call-template name="inherit-properties"/>
         </xsl:variable>
@@ -54,7 +54,8 @@
     
     <xsl:template name="apply-templates">
         <xsl:param name="container" as="element()?" select="()" tunnel="yes"/>
-        <xsl:for-each-group select="*|text()" group-adjacent="boolean(descendant-or-self::css:box[@type='block'])">
+        <xsl:for-each-group select="*|text()"
+                            group-adjacent="boolean(descendant-or-self::css:box[@type=('block','table','table-cell')])">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
                     <xsl:for-each select="current-group()">

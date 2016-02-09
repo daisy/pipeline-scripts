@@ -35,7 +35,7 @@
       <css:_>
         <css:_ css:string-set="foo '1'"/>
         <css:box type="block">
-          <css:box>
+          <css:box type="inline">
             <css:_ css:string-set="foo '2'"/>
           </css:box>
         </css:box>
@@ -46,7 +46,7 @@
       <css:_>
         <css:_/>
         <css:box type="block" css:string-set="foo '1'">
-          <css:box>
+          <css:box type="inline">
             <css:_ css:string-set="foo '2'"/>
           </css:box>
         </css:box>

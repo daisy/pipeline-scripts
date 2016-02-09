@@ -13,7 +13,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="css:box[@type='block']">
+    <xsl:template match="css:box[@type=('block','table')]">
         <xsl:param name="used-container-left-content-edge" as="xs:integer" select="0"/>
         <xsl:param name="actual-container-left-content-edge" as="xs:integer" select="0"/>
         <xsl:param name="used-container-right-content-edge" as="xs:integer" select="0"/>
@@ -26,7 +26,7 @@
         <xsl:variable name="used-left-border-edge" as="xs:integer" select="$used-left-margin-edge + $computed-margin-left"/>
         <xsl:variable name="used-left-content-edge" as="xs:integer" select="$used-left-border-edge + $computed-border-left-width"/>
         <xsl:variable name="actual-left-margin-edge" as="xs:integer" select="$actual-container-left-content-edge"/>
-        <xsl:variable name="actual-left-border-edge" as="xs:integer" select="if (descendant::css:box[@type='block']
+        <xsl:variable name="actual-left-border-edge" as="xs:integer" select="if (child::css:box[@type=('block','table')]
                                                                                  and not((@css:border-left|@css:border-top|@css:border-bottom)[not(.='none')]))
                                                                              then $actual-left-margin-edge
                                                                              else max(($actual-left-margin-edge,$used-left-border-edge))"/>
@@ -36,7 +36,7 @@
         <xsl:variable name="used-first-line-left-edge" as="xs:integer" select="$used-left-content-edge + $computed-text-indent"/>
         <xsl:variable name="actual-first-line-left-edge" as="xs:integer" select="if ((@css:border-left|@css:border-top|@css:border-bottom)[not(.='none')])
                                                                                  then max(($used-first-line-left-edge,$actual-left-content-edge))
-                                                                                 else if (descendant::css:box[@type='block'])
+                                                                                 else if (child::css:box[@type=('block','table')])
                                                                                  then $actual-left-margin-edge
                                                                                  else max(($used-first-line-left-edge,$actual-left-margin-edge))"/>
         <xsl:variable name="actual-text-indent" as="xs:integer" select="$actual-first-line-left-edge - $actual-left-content-edge"/>
@@ -46,14 +46,14 @@
         <xsl:variable name="used-right-border-edge" as="xs:integer" select="$used-right-margin-edge + $computed-margin-right"/>
         <xsl:variable name="used-right-content-edge" as="xs:integer" select="$used-right-border-edge + $computed-border-right-width"/>
         <xsl:variable name="actual-right-margin-edge" as="xs:integer" select="$actual-container-right-content-edge"/>
-        <xsl:variable name="actual-right-border-edge" as="xs:integer" select="if (descendant::css:box[@type='block']
+        <xsl:variable name="actual-right-border-edge" as="xs:integer" select="if (child::css:box[@type=('block','table')]
                                                                                   and not((@css:border-right|css:border-top|@css:border-bottom)[not(.='none')]))
                                                                               then $actual-right-margin-edge
                                                                               else max(($actual-right-margin-edge,$used-right-border-edge))"/>
         <xsl:variable name="actual-right-content-edge" as="xs:integer" select="$actual-right-border-edge + $computed-border-right-width"/>
         <xsl:variable name="actual-margin-right" as="xs:integer" select="$actual-right-border-edge - $actual-right-margin-edge"/>
         <xsl:copy>
-            <xsl:sequence select="@* except (@css:margin-left|@css:margin-right|@css:text-indent)"/>
+            <xsl:apply-templates select="@* except (@css:margin-left|@css:margin-right|@css:text-indent)"/>
             <xsl:if test="$actual-margin-left &gt; 0">
                 <xsl:attribute name="css:margin-left" select="$actual-margin-left"/>
             </xsl:if>
@@ -73,6 +73,24 @@
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
+    
+    <xsl:template match="css:box[@type='table-cell']">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()">
+                <xsl:with-param name="used-container-left-content-edge" select="0"/>
+                <xsl:with-param name="actual-container-left-content-edge" select="0"/>
+                <xsl:with-param name="used-container-right-content-edge" select="0"/>
+                <xsl:with-param name="actual-container-right-content-edge" select="0"/>
+                <xsl:with-param name="computed-container-text-indent" select="0"/>
+                <xsl:with-param name="actual-container-text-indent" select="0"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    
+    <!--
+        ignore non-collapsing margins
+    -->
+    <xsl:template match="@css:collapsing-margins"/>
     
     <xsl:template match="@*|node()">
         <xsl:sequence select="."/>
