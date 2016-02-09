@@ -14,6 +14,7 @@
     <p:import href="make-anonymous-inline-boxes.xpl"/>
     <p:import href="make-boxes.xpl"/>
     <p:import href="make-pseudo-elements.xpl"/>
+    <p:import href="make-table-grid.xpl"/>
     <p:import href="new-definition.xpl"/>
     <p:import href="padding-to-margin.xpl"/>
     <p:import href="parse-content.xpl"/>

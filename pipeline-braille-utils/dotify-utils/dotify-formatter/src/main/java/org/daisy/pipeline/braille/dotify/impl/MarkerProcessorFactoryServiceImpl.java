@@ -34,6 +34,8 @@ public class MarkerProcessorFactoryServiceImpl implements MarkerProcessorFactory
 		this.filterFactory = filterFactory;
 	}
 	
+	public void setCreatedWithSPI() {}
+	
 	public boolean supportsSpecification(String locale, String mode) {
 		try {
 			filterFactory.newFilter(locale, mode);
