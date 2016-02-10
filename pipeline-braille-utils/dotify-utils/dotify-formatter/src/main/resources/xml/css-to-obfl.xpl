@@ -207,6 +207,25 @@
                 depends on flow-into, label-targets and make-table-grid -->
             </p:documentation>
         </css:make-boxes>
+        <p:group>
+            <p:documentation>
+                Move css:_obfl-table-col-spacing, css:_obfl-table-row-spacing and
+                css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
+            </p:documentation>
+            <css:parse-properties properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
+            <p:label-elements match="*[@css:_obfl-table-col-spacing]/css:box[@type='table']"
+                              attribute="css:_obfl-table-col-spacing"
+                              label="parent::*/@css:_obfl-table-col-spacing"/>
+            <p:label-elements match="*[@css:_obfl-table-row-spacing]/css:box[@type='table']"
+                              attribute="css:_obfl-table-row-spacing"
+                              label="parent::*/@css:_obfl-table-row-spacing"/>
+            <p:label-elements match="*[@css:_obfl-preferred-empty-space]/css:box[@type='table']"
+                              attribute="css:_obfl-preferred-empty-space"
+                              label="parent::*/@css:_obfl-preferred-empty-space"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-col-spacing"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-row-spacing"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-preferred-empty-space"/>
+        </p:group>
         <css:make-anonymous-inline-boxes>
             <p:documentation>
                 Wrap/unwrap with inline css:box elements.
@@ -374,9 +393,9 @@
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
                                                'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
-                                               'margin-bottom', 'orphans',                          'word-spacing',
-                                               'border-left',   'widows',                           'letter-spacing',
-                                               'border-right',
+                                               'margin-bottom', 'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
+                                               'border-left',   'widows',                           'letter-spacing', '-obfl-table-row-spacing',
+                                               'border-right',                                                        '-obfl-preferred-empty-space',
                                                'border-top',
                                                'border-bottom')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
@@ -386,7 +405,10 @@
                                                   and (
                                                     if ($css:property/@name='-obfl-vertical-align')
                                                     then $css:property/@value=('before','center','after')
-                                                    else if ($css:property/@name='-obfl-vertical-position')
+                                                    else if ($css:property/@name=('-obfl-vertical-position',
+                                                                                  '-obfl-table-col-spacing',
+                                                                                  '-obfl-table-row-spacing',
+                                                                                  '-obfl-preferred-empty-space'))
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
                                                     else if ($css:property/@name='-obfl-toc-range')
                                                     then ($context/@css:_obfl-toc and $css:property/@value=('document','volume'))
@@ -405,6 +427,10 @@
                                                   then 'auto'
                                                   else if ($property='-obfl-toc-range')
                                                   then 'document'
+                                                  else if ($property=('-obfl-table-col-spacing','-obfl-table-row-spacing'))
+                                                  then '0'
+                                                  else if ($property='-obfl-preferred-empty-space')
+                                                  then '2'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
@@ -425,6 +451,10 @@
                                                     then $context/@type=('block','table')
                                                     else if ($property=('text-indent','text-align'))
                                                     then $context/@type=('block','table-cell')
+                                                    else if ($property=('-obfl-table-col-spacing',
+                                                                        '-obfl-table-row-spacing',
+                                                                        '-obfl-preferred-empty-space'))
+                                                    then $context/@type='table'
                                                     else $context/@type='block'
                                                   )"/>
                         </xsl:function>

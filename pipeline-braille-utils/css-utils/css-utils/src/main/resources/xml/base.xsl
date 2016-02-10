@@ -533,7 +533,7 @@
         <xsl:param name="properties" as="xs:string*" select="('#all')"/>
         <xsl:param name="validate" as="xs:boolean" select="false()"/>
         <xsl:variable name="declarations" as="element()*">
-            <xsl:apply-templates select="@css:*[local-name()=$properties]" mode="css:attribute-as-property"/>
+            <xsl:apply-templates select="@css:*[replace(local-name(),'^_','-')=$properties]" mode="css:attribute-as-property"/>
         </xsl:variable>
         <xsl:variable name="declarations" as="element()*"
             select="(css:parse-declaration-list(css:parse-stylesheet(@style)

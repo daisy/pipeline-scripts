@@ -987,6 +987,13 @@
         <marker class="indicator/{.}" value="x"/>
     </xsl:template>
     
+    <xsl:template match="css:box[@type='table']/@css:_obfl-table-col-spacing|
+                         css:box[@type='table']/@css:_obfl-table-row-spacing|
+                         css:box[@type='table']/@css:_obfl-preferred-empty-space"
+                  mode="table">
+        <xsl:attribute name="{replace(local-name(),'^_obfl-','')}" select="format-number(xs:integer(.), '0')"/>
+    </xsl:template>
+    
     <xsl:template match="text()" mode="#default td table-of-contents">
         <xsl:call-template name="text">
             <xsl:with-param name="text" select="."/>

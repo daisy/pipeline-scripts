@@ -5928,7 +5928,11 @@
       <x:input port="source">
         <x:document type="inline">
           <table xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-                 style="{ display:table; padding-left:1; padding-right:1; text-transform:none }
+                 style="{ display:table;
+                          padding-left:1;
+                          padding-right:1;
+                          -obfl-table-col-spacing:1;
+                          text-transform:none }
                         @page { size: 20 12; }">
             <caption>
               <p style="display:block; text-align:center">
@@ -6004,7 +6008,7 @@
                 </block>
               </block>
             </block>
-            <table margin-left="1" margin-right="1">
+            <table margin-left="1" margin-right="1" table-col-spacing="1" >
               <thead>
                 <tr>
                   <td border-bottom-style="solid" border-bottom-align="center" col-span="2">⠤⠤⠤</td>
@@ -6066,16 +6070,16 @@
               <section>
                 <page>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠿⠿⠿⠿</row>
-                  <row>⠀⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠤⠤⠤</row>
-                  <row>⠀⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
-                  <row>⠀⠼⠁⠀⠀⠀⠤⠤⠤⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠤⠤⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠀⠀⠒⠒⠒⠒⠒</row>
+                  <row>⠀⠼⠁⠀⠀⠀⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤</row>
                   <row>⠀⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀</row>
                   <row>⠀⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row>
-                  <row>⠀⠤⠤⠤⠀⠀⠤⠤⠤⠀⠀⠤⠤⠤</row>
-                  <row>⠀⠤⠤⠤⠀⠀⠤⠤⠤⠀⠀⠤⠤⠤</row>
-                  <row>⠀⠀⠀⠀⠀⠀⠤⠤⠤⠀⠀⠤⠤⠤</row>
-                  <row>⠀⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒</row>
-                  <row>⠀⠤⠤⠤⠀⠀⠤⠤⠤⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤</row>
+                  <row>⠀⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒</row>
+                  <row>⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤⠀⠀⠀⠤⠤⠤</row>
                 </page>
               </section>
             </volume>
