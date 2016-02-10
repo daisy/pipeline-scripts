@@ -1108,10 +1108,27 @@
     </xsl:template>
     
     <xsl:template match="@*|*" mode="#default sequence table tr td table-of-contents">
-        <xsl:message terminate="yes">Coding error: unexpected <xsl:value-of select="if (self::*) then 'element ' else 'attribute @'"/>
-        <xsl:value-of select="name()"/>
-        </xsl:message>
+        <xsl:message terminate="yes">Coding error: unexpected <xsl:value-of select="pxi:get-path(.)"/> (mode was <xsl:apply-templates select="$pxi:mode" mode="#current"/>)</xsl:message>
     </xsl:template>
+    
+    <xsl:function name="pxi:get-path" as="xs:string">
+        <xsl:param name="x"/> <!-- element()|attribute() -->
+        <xsl:variable name="name" as="xs:string"
+                      select="if ($x/self::css:box[@name]) then $x/@name else name($x)"/>
+        <xsl:sequence select="if ($x/self::attribute())
+                              then concat(pxi:get-path($x/parent::*),'/@',$name)
+                              else if ($x/parent::*)
+                              then concat(pxi:get-path($x/parent::*),'/',$name,'[',(count($x/preceding-sibling::*)+1),']')
+                              else concat('/',$name)"/>
+    </xsl:function>
+    
+    <xsl:variable name="pxi:mode"><pxi:mode/></xsl:variable>
+    <xsl:template match="pxi:mode">#default</xsl:template>
+    <xsl:template match="pxi:mode" mode="sequence">sequence</xsl:template>
+    <xsl:template match="pxi:mode" mode="table">table</xsl:template>
+    <xsl:template match="pxi:mode" mode="tr">tr</xsl:template>
+    <xsl:template match="pxi:mode" mode="td">td</xsl:template>
+    <xsl:template match="pxi:mode" mode="table-of-contents">table-of-contents</xsl:template>
     
     <!-- ============================= -->
     <!-- eval-volume-area-content-list -->
