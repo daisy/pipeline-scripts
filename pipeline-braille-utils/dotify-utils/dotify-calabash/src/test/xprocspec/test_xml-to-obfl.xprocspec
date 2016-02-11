@@ -25,8 +25,7 @@
       <x:document type="port" port="result"/>
     </x:context>
     <x:expect label="result is obfl" type="xpath" test="/obfl:obfl"/>
-    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare"
-              pending="result differs after Dotify update">
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" hyphenate="true" xml:lang="sv">
           <meta xmlns:dc="http://purl.org/dc/elements/1.1/"/>
@@ -35,7 +34,7 @@
               <header>
                 <field>
                   <string value="  "/>
-                  <current-page style="roman"/>
+                  <current-page number-format="roman"/>
                 </field>
               </header>
               <footer/>
@@ -46,7 +45,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <current-page style="roman"/>
+                  <current-page number-format="roman"/>
                 </field>
               </header>
               <footer/>
@@ -57,7 +56,7 @@
               <header>
                 <field>
                   <string value="  "/>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
                 <field>
                   <marker-reference marker="pagenum-turn" direction="forward" scope="page-content"/>
@@ -74,7 +73,7 @@
                   <marker-reference marker="pagenum" direction="backward" scope="sequence"/>
                 </field>
                 <field>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </header>
               <footer/>
@@ -104,7 +103,7 @@
                 <field>
                   <string value="  "/>
                   <string value="Noter "/>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </header>
               <footer/>
@@ -116,7 +115,7 @@
                 </field>
                 <field>
                   <string value="Noter "/>
-                  <current-page style="default"/>
+                  <current-page number-format="default"/>
                 </field>
               </header>
               <footer/>
