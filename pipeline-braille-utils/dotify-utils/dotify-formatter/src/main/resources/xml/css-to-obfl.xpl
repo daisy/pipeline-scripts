@@ -186,7 +186,7 @@
                 Make css:white-space elements from css:white-space attributes.
             </p:documentation>
         </css:preserve-white-space>
-        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:_obfl-toc" attribute-value="x">
+        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:_obfl-toc" attribute-value="_">
             <p:documentation>
                 Mark display:-obfl-toc elements.
             </p:documentation>
@@ -196,12 +196,36 @@
                 Treat display:-obfl-toc as block.
             </p:documentation>
         </p:add-attribute>
+        <css:make-table-grid>
+            <p:documentation>
+                Create table grid structures from HTML/DTBook tables.
+            </p:documentation>
+        </css:make-table-grid>
         <css:make-boxes>
             <p:documentation>
                 Make css:box elements based on css:display and css:list-style-type attributes. <!--
-                depends on flow-into and label-targets -->
+                depends on flow-into, label-targets and make-table-grid -->
             </p:documentation>
         </css:make-boxes>
+        <p:group>
+            <p:documentation>
+                Move css:_obfl-table-col-spacing, css:_obfl-table-row-spacing and
+                css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
+            </p:documentation>
+            <css:parse-properties properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
+            <p:label-elements match="*[@css:_obfl-table-col-spacing]/css:box[@type='table']"
+                              attribute="css:_obfl-table-col-spacing"
+                              label="parent::*/@css:_obfl-table-col-spacing"/>
+            <p:label-elements match="*[@css:_obfl-table-row-spacing]/css:box[@type='table']"
+                              attribute="css:_obfl-table-row-spacing"
+                              label="parent::*/@css:_obfl-table-row-spacing"/>
+            <p:label-elements match="*[@css:_obfl-preferred-empty-space]/css:box[@type='table']"
+                              attribute="css:_obfl-preferred-empty-space"
+                              label="parent::*/@css:_obfl-preferred-empty-space"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-col-spacing"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-row-spacing"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-preferred-empty-space"/>
+        </p:group>
         <css:make-anonymous-inline-boxes>
             <p:documentation>
                 Wrap/unwrap with inline css:box elements.
@@ -234,21 +258,29 @@
             <p:delete match="/*[@css:flow]//*/@css:page|
                              /*[@css:flow]//*/@css:volume|
                              /*[@css:flow]//*/@css:counter-set-page|
+                             //css:box[@type='table']//*/@css:page-break-before|
+                             //css:box[@type='table']//*/@css:page-break-after|
+                             //css:box[@type='table']//*/@css:page|
+                             //css:box[@type='table']//*/@css:volume|
+                             //css:box[@type='table']//*/@css:counter-set-page|
                              //*[@css:obfl-toc]//*/@css:page-break-before|
                              //*[@css:obfl-toc]//*/@css:page-break-after">
                 <p:documentation>
-                    Don't support 'page', 'volume' and 'counter-set: page' within named flows. Don't
-                    support 'page-break-before' and 'page-break-after' within display:-obfl-toc.
+                    Don't support 'page', 'volume' and 'counter-set: page' within named flows or
+                    tables. Don't support 'page-break-before' and 'page-break-after' within tables
+                    or '-obfl-toc' elements.
                 </p:documentation>
             </p:delete>
             <css:split split-before="*[@css:page or @css:volume or @css:counter-set-page]|
-                                     css:box[@type='block' and @css:page-break-before='right']"
+                                     css:box[@type='block' and @css:page-break-before='right']|
+                                     css:box[@type='table']"
                        split-after="*[@css:page or @css:volume]|
-                                    css:box[@type='block' and @css:page-break-after='right']">
+                                    css:box[@type='block' and @css:page-break-after='right']|
+                                    css:box[@type='table']">
                 <p:documentation>
                     Split before and after css:page attributes, before css:counter-set-page
-                    attributes, before and after css:volume attributes and before
-                    css:page-break-before attributes with value 'right' and after
+                    attributes, before and after css:volume attributes, before and after tables,
+                    before css:page-break-before attributes with value 'right', and after
                     css:page-break-after attributes with value 'right'. <!-- depends on make-boxes
                     -->
                 </p:documentation>
@@ -361,9 +393,9 @@
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
                                                'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
-                                               'margin-bottom', 'orphans',                          'word-spacing',
-                                               'border-left',   'widows',                           'letter-spacing',
-                                               'border-right',
+                                               'margin-bottom', 'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
+                                               'border-left',   'widows',                           'letter-spacing', '-obfl-table-row-spacing',
+                                               'border-right',                                                        '-obfl-preferred-empty-space',
                                                'border-top',
                                                'border-bottom')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
@@ -373,7 +405,10 @@
                                                   and (
                                                     if ($css:property/@name='-obfl-vertical-align')
                                                     then $css:property/@value=('before','center','after')
-                                                    else if ($css:property/@name='-obfl-vertical-position')
+                                                    else if ($css:property/@name=('-obfl-vertical-position',
+                                                                                  '-obfl-table-col-spacing',
+                                                                                  '-obfl-table-row-spacing',
+                                                                                  '-obfl-preferred-empty-space'))
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
                                                     else if ($css:property/@name='-obfl-toc-range')
                                                     then ($context/@css:_obfl-toc and $css:property/@value=('document','volume'))
@@ -392,6 +427,10 @@
                                                   then 'auto'
                                                   else if ($property='-obfl-toc-range')
                                                   then 'document'
+                                                  else if ($property=('-obfl-table-col-spacing','-obfl-table-row-spacing'))
+                                                  then '0'
+                                                  else if ($property='-obfl-preferred-empty-space')
+                                                  then '2'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
@@ -402,7 +441,22 @@
                         <xsl:function name="new:applies-to" as="xs:boolean">
                             <xsl:param name="property" as="xs:string"/>
                             <xsl:param name="context" as="element()"/>
-                            <xsl:sequence select="$context/@type='block' or $property=('text-transform','hyphens','word-spacing')"/>
+                            <xsl:sequence select="$property=('text-transform','hyphens','word-spacing')
+                                                  or (
+                                                    if (matches($property,'^border-'))
+                                                    then $context/@type=('block','table','table-cell')
+                                                    else if (matches($property,'^margin-'))
+                                                    then $context/@type=('block','table','table-cell')
+                                                    else if ($property='line-height')
+                                                    then $context/@type=('block','table')
+                                                    else if ($property=('text-indent','text-align'))
+                                                    then $context/@type=('block','table-cell')
+                                                    else if ($property=('-obfl-table-col-spacing',
+                                                                        '-obfl-table-row-spacing',
+                                                                        '-obfl-preferred-empty-space'))
+                                                    then $context/@type='table'
+                                                    else $context/@type='block'
+                                                  )"/>
                         </xsl:function>
                     </xsl:stylesheet>
                 </p:inline>

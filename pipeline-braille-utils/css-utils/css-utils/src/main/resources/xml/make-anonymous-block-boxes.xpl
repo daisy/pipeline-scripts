@@ -15,20 +15,21 @@
             The input is assumed to be a tree-of-boxes representation of a document where boxes are
             represented by css:box elements. The document root must be a box or a css:_ element. The
             parent of a box must be another box (or a css:_ element if it's the document
-            root). Inline boxes must not have descendant block boxes. All other nodes must have at
-            least one inline box ancestor.
+            root). Inline boxes must not have non-inline descendant boxes. Table-cell boxes must
+            have a parent table box and table boxes must have only table-cell child boxes. All other
+            nodes must have at least one inline box ancestor.
         </p:documentation>
     </p:input>
     
     <p:output port="result">
         <p:documentation>
-            Adjacent inline boxes with one or more sibling block boxes are grouped and wrapped in an
-            anonymous block box.
+            Adjacent inline boxes with one or more sibling block or table boxes are grouped and
+            wrapped in an anonymous block box.
         </p:documentation>
     </p:output>
     
-    <p:wrap match="css:box[@type='inline'][preceding-sibling::css:box[@type='block'] or
-                                           following-sibling::css:box[@type='block']]"
+    <p:wrap match="css:box[@type='inline'][preceding-sibling::css:box[@type=('block','table')] or
+                                           following-sibling::css:box[@type=('block','table')]]"
             group-adjacent="true()"
             wrapper="css:_box_"/>
     

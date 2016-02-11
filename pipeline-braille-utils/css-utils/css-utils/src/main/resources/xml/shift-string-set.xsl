@@ -10,11 +10,11 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]/@css:string-set"/>
+    <xsl:template match="*[not(self::css:box) and not(ancestor::css:box[@type='inline'])]/@css:string-set"/>
     
     <xsl:template match="css:box">
         <xsl:variable name="pending" as="attribute()*"
-                      select="for $e in (preceding::*|ancestor::*)[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]
+                      select="for $e in (preceding::*|ancestor::*)[not(self::css:box) and not(ancestor::css:box[@type='inline'])]
                                                                   [@css:string-set]
                                         except (preceding::css:box|ancestor::css:box)
                                                [last()]/(preceding::*|ancestor::*)

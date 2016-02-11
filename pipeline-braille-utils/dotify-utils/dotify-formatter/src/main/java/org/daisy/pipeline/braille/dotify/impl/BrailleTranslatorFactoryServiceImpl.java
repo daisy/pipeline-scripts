@@ -54,6 +54,8 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		this.filterFactory = filterFactory;
 	}
 	
+	public void setCreatedWithSPI() {}
+	
 	@Reference(
 		name = "BrailleTranslatorProvider",
 		unbind = "unbindBrailleTranslatorProvider",

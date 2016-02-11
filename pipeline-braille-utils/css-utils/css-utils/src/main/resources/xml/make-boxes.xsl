@@ -42,6 +42,33 @@
         </xsl:choose>
     </xsl:template>
     
+    <xsl:template match="*[@css:table]" priority="0.6">
+        <css:box type="block">
+            <xsl:attribute name="name" select="name()"/>
+            <xsl:apply-templates select="@style|@css:*"/>
+            <xsl:apply-templates select="*[@css:table-caption]" mode="display-table"/>
+            <css:box type="table">
+                <xsl:apply-templates select="node() except *[@css:table-caption]" mode="display-table"/>
+            </css:box>
+        </css:box>
+    </xsl:template>
+    
+    <xsl:template match="*[@css:table-caption]" mode="display-table">
+        <css:box type="block">
+            <xsl:attribute name="name" select="name()"/>
+            <xsl:apply-templates select="@style|@css:*"/>
+            <xsl:apply-templates/>
+        </css:box>
+    </xsl:template>
+    
+    <xsl:template match="*[@css:table-cell]" mode="display-table">
+        <css:box type="table-cell">
+            <xsl:attribute name="name" select="name()"/>
+            <xsl:apply-templates select="@style|@css:*"/>
+            <xsl:apply-templates/>
+        </css:box>
+    </xsl:template>
+    
     <xsl:template match="*">
         <xsl:element name="css:box">
             <xsl:attribute name="type" select="'inline'"/>
@@ -50,8 +77,9 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="*" mode="display-none">
+    <xsl:template match="*" mode="display-none display-table">
         <xsl:element name="css:_">
+            <xsl:attribute name="name" select="name()"/>
             <xsl:apply-templates select="@*|node()" mode="#current"/>
         </xsl:element>
     </xsl:template>
@@ -68,7 +96,10 @@
     </xsl:template>
     
     <xsl:template match="@css:display|
-                         @css:list-style-type"/>
+                         @css:list-style-type|
+                         @css:table|
+                         @css:table-caption|
+                         @css:table-cell"/>
     
     <xsl:template match="@*|
                          text()|
@@ -77,15 +108,27 @@
                          css:string|
                          css:counter|
                          css:leader|
-                         css:custom-func" mode="display-none"/>
+                         css:custom-func"
+                  mode="display-none display-table"/>
     
     <xsl:template match="@css:id|
                          @css:counter-reset|
                          @css:counter-set|
                          @css:counter-increment|
                          @css:string-set|
-                         @css:*[matches(local-name(),'^_')]" mode="display-none">
+                         @css:*[matches(local-name(),'^_')]"
+                  mode="display-none display-table">
         <xsl:sequence select="."/>
+    </xsl:template>
+    
+    <xsl:template match="*[not(descendant::*[@css:table-cell])]/@css:display" mode="display-table">
+        <xsl:if test="not(.='none')">
+            <xsl:message select="concat('&quot;display&quot; property on &quot;',name(parent::*),'&quot; element within table must be &quot;none&quot;.')"/>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="@css:display" mode="display-table">
+        <xsl:message select="concat('&quot;display&quot; property on &quot;',name(parent::*),'&quot; element not supported.')"/>
     </xsl:template>
     
 </xsl:stylesheet>

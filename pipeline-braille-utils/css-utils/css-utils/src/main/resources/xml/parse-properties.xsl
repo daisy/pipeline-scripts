@@ -16,6 +16,10 @@
         </xsl:copy>
     </xsl:template>
     
+    <xsl:template match="css:counter/@style">
+        <xsl:sequence select="."/>
+    </xsl:template>
+    
     <xsl:template match="@style">
         <xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(.)"/>
         <xsl:variable name="properties" as="element()*"
