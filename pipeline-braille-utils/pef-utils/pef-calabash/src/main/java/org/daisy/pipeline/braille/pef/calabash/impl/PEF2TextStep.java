@@ -121,7 +121,9 @@ public class PEF2TextStep extends DefaultStep {
 			final Padding padding = Padding.valueOf(getOption(_pad, "NONE").toUpperCase());
 			
 			// Create EmbosserWriter
-			final OutputStream textStream = new FileOutputStream(new File(new URI(getOption(_href).getString())));
+			File textFile = new File(new URI(getOption(_href).getString()));
+			textFile.getParentFile().mkdirs();
+			final OutputStream textStream = new FileOutputStream(textFile);
 			EmbosserWriter writer = new BRFWriter() {
 				public LineBreaks getLinebreakStyle() {
 					return lineBreaks;
