@@ -69,10 +69,24 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
+    <p:option name="pef-output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">output-dir</h2>
-            <p px:role="desc">Directory for storing result files.</p>
+            <h2 px:role="name">PEF</h2>
+            <h2 px:role="desc">Output directory for the PEF</h2>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="brf-output-dir" px:output="result" px:type="anyDirURI" select="''" >
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">BRF</h2>
+            <h2 px:role="desc">Output directory for the BRF</h2>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="preview-output-dir" px:output="result" px:type="anyDirURI" select="''" >
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Preview</h2>
+            <h2 px:role="desc">Output directory for the HTML preview</h2>
         </p:documentation>
     </p:option>
     
@@ -92,7 +106,7 @@
     <!-- =============== -->
     
     <px:tempdir name="temp-dir">
-        <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
+        <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     <p:sink/>
     
@@ -116,17 +130,23 @@
     <!-- STORE PEF -->
     <!-- ========= -->
     
-    <pef:store>
-        <p:with-option name="output-dir" select="$output-dir"/>
-        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+    <p:group>
+        <p:variable name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="main" port="source"/>
-        </p:with-option>
-        <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
-            <p:pipe step="main" port="source"/>
-        </p:with-option>
-        <p:with-option name="include-preview" select="$include-preview"/>
-        <p:with-option name="include-brf" select="$include-brf"/>
-    </pef:store>
+        </p:variable>
+        <pef:store>
+            <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.pef')"/>
+            <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
+                                                       then concat($preview-output-dir,'/',$name,'.pef.html')
+                                                       else ''"/>
+            <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
+                                                   then concat($brf-output-dir,'/',$name,'.brf')
+                                                   else ''"/>
+            <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
+                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
+                <p:pipe step="main" port="source"/>
+            </p:with-option>
+        </pef:store>
+    </p:group>
     
 </p:declare-step>

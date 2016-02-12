@@ -6,7 +6,7 @@
     <x:scenario label="option: apply-document-specific-stylesheets (enabled)">
         <x:call step="px:epub3-to-pef">
             <x:option name="epub" select="resolve-uri('../resources/test-option_apply-document-specific-stylesheets/package.opf')"/>
-            <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
+            <x:option name="pef-output-dir" select="concat($temp-dir,'1/output-dir/')"/>
             <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
             <x:option name="apply-document-specific-stylesheets" select="true()"/>
             <x:option name="show-braille-page-numbers" select="false()"/>
@@ -55,7 +55,7 @@
     <x:scenario label="option: apply-document-specific-stylesheets (disabled)">
         <x:call step="px:epub3-to-pef">
             <x:option name="epub" select="resolve-uri('../resources/test-option_apply-document-specific-stylesheets/package.opf')"/>
-            <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
+            <x:option name="pef-output-dir" select="concat($temp-dir,'2/output-dir/')"/>
             <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
             <x:option name="apply-document-specific-stylesheets" select="false()"/>
             <x:option name="show-braille-page-numbers" select="false()"/>
@@ -104,7 +104,7 @@
     <x:scenario label="option: apply-document-specific-stylesheets (enabled, with global override)">
         <x:call step="px:epub3-to-pef">
             <x:option name="epub" select="resolve-uri('../resources/test-option_apply-document-specific-stylesheets/package.opf')"/>
-            <x:option name="output-dir" select="concat($temp-dir,'3/output-dir/')"/>
+            <x:option name="pef-output-dir" select="concat($temp-dir,'3/output-dir/')"/>
             <x:option name="temp-dir" select="concat($temp-dir,'3/temp-dir/')"/>
             <x:option name="apply-document-specific-stylesheets" select="true()"/>
             <x:option name="stylesheet" select="resolve-uri('../resources/test-option_apply-document-specific-stylesheets.override.css')"/>

@@ -10,7 +10,7 @@
         <x:document type="file" href="../resources/alice.xml"/>
       </x:input>
       <x:option name="include-preview" select="'true'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
     </x:call>
     <x:context label="the output directory contents">
@@ -38,7 +38,7 @@
           </document>
         </x:document>
       </x:input>
-      <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
     </x:call>
     <x:context label="pef">

@@ -23,7 +23,7 @@
       <x:option name="page-width" select="'35'"/>
       <x:option name="page-height" select="'20'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'page-size/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'page-size/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'page-size/temp-dir/')"/>
     </x:call>
     <x:context label="pef">
@@ -69,7 +69,7 @@
       </x:input>
       <x:option name="duplex" select="'false'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'duplex/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'duplex/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'duplex/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -133,7 +133,7 @@
       </x:input>
       <x:option name="levels-in-footer" select="'1'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'levels-in-footer/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'levels-in-footer/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'levels-in-footer/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -207,7 +207,7 @@
     <x:scenario label="enabled">
       <x:call>
         <x:option name="hyphenation" select="'true'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'hyphenation/enabled/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'hyphenation/enabled/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'hyphenation/enabled/temp-dir/')"/>
       </x:call>
       <x:context label="result">
@@ -238,7 +238,7 @@
     <x:scenario label="disabled">
       <x:call>
         <x:option name="hyphenation" select="'false'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'hyphenation/disabled/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'hyphenation/disabled/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'hyphenation/disabled/temp-dir/')"/>
       </x:call>
       <x:context label="result">
@@ -294,7 +294,7 @@
       </x:input>
       <x:option name="line-spacing" select="'double'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'line-spacing/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'line-spacing/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'line-spacing/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -342,7 +342,7 @@
       </x:input>
       <x:option name="capital-letters" select="'false'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'capital-letters/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'capital-letters/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'capital-letters/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -391,7 +391,7 @@
       </x:input>
       <x:option name="include-captions" select="'false'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'include-captions/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'include-captions/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'include-captions/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -440,7 +440,7 @@
       </x:input>
       <x:option name="include-images" select="'false'"/>
       <x:option name="show-braille-page-numbers" select="'false'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'include-images/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'include-images/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'include-images/temp-dir/')"/>
     </x:call>
     <x:context label="result">
@@ -493,7 +493,7 @@
     <x:scenario label="enabled">
       <x:call>
         <x:option name="include-line-groups" select="'true'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'include-line-groups/enabled/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'include-line-groups/enabled/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'include-line-groups/enabled/temp-dir/')"/>
       </x:call>
       <x:context label="result">
@@ -525,7 +525,7 @@
     <x:scenario label="enabled">
       <x:call>
         <x:option name="include-line-groups" select="'false'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'include-line-groups/disabled/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'include-line-groups/disabled/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'include-line-groups/disabled/temp-dir/')"/>
       </x:call>
       <x:context label="result">
@@ -598,7 +598,7 @@
       </x:documentation>
       <x:call>
         <x:option name="show-print-page-numbers" select="'false'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'show-print-page-numbers/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'show-print-page-numbers/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'show-print-page-numbers/temp-dir/')"/>
       </x:call>
       <x:context label="result">
@@ -641,7 +641,7 @@
       </x:documentation>
       <x:call>
         <x:option name="force-braille-page-break" select="'true'"/>
-        <x:option name="output-dir" select="concat($temp-dir,'force-braille-page-break/output-dir/')"/>
+        <x:option name="pef-output-dir" select="concat($temp-dir,'force-braille-page-break/output-dir/')"/>
         <x:option name="temp-dir" select="concat($temp-dir,'force-braille-page-break/temp-dir/')"/>
       </x:call>
       <x:context label="result">

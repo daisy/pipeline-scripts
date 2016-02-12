@@ -496,22 +496,25 @@ content at the beginning of every other volume, include the following additional
     <!-- ======= -->
     <!-- Outputs -->
     <!-- ======= -->
-    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
+    <p:option name="pef-output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Output directory for the PEF</h2>
+            <h2 px:role="name">PEF</h2>
+            <h2 px:role="desc">Output directory for the PEF</h2>
         </p:documentation>
     </p:option>
-    <p:option name="brf-output-dir" required="true" px:output="result" px:type="anyDirURI">
+    <p:option name="brf-output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Output directory for the BRF</h2>
+            <h2 px:role="name">BRF</h2>
+            <h2 px:role="desc">Output directory for the BRF</h2>
         </p:documentation>
     </p:option>
-    <p:option name="preview-output-dir" required="true" px:output="result" px:type="anyDirURI">
+    <p:option name="preview-output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Output directory for the HTML preview</h2>
+            <h2 px:role="name">Preview</h2>
+            <h2 px:role="desc">Output directory for the HTML preview</h2>
         </p:documentation>
     </p:option>
-    <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
+    <p:option name="temp-dir" required="false" px:output="temp" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Temporary directory</h2>
             <p px:role="desc">Directory for storing temporary files during conversion.</p>

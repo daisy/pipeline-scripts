@@ -19,7 +19,7 @@
           </html>
         </x:document>
       </x:input>
-      <x:option name="output-dir" select="resolve-uri('1/output-dir',$temp-dir)"/>
+      <x:option name="pef-output-dir" select="resolve-uri('1/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('1/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
       <x:option name="transform" select="'(locale:nl)(formatter:dotify)'"/>
@@ -50,7 +50,7 @@
           </html>
         </x:document>
       </x:input>
-      <x:option name="output-dir" select="resolve-uri('2/output-dir',$temp-dir)"/>
+      <x:option name="pef-output-dir" select="resolve-uri('2/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('2/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
       <!--

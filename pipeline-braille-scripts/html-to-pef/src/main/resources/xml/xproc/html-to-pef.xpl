@@ -66,10 +66,10 @@
     <p:option name="number-of-pages"/>
     <p:option name="maximum-number-of-pages"/>
     <p:option name="minimum-number-of-pages"/>
-    <p:option name="output-dir"/>
-    <p:option name="brf-output-dir" required="false"/>
-    <p:option name="preview-output-dir" required="false"/>
-    <p:option name="temp-dir" required="false"/>
+    <p:option name="pef-output-dir"/>
+    <p:option name="brf-output-dir"/>
+    <p:option name="preview-output-dir"/>
+    <p:option name="temp-dir"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/html-to-pef/library.xpl"/>
@@ -96,7 +96,7 @@
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
     <px:tempdir name="temp-dir">
-        <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
+        <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     
     <!-- ========= -->
@@ -127,17 +127,23 @@
     <!-- STORE PEF -->
     <!-- ========= -->
     <px:message message="Storing PEF"/>
-    <pef:store>
-        <p:with-option name="output-dir" select="$output-dir"/>
-        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+    <p:group>
+        <p:variable name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="html" port="result"/>
-        </p:with-option>
-        <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
-            <p:pipe step="html" port="result"/>
-        </p:with-option>
-        <p:with-option name="include-preview" select="$include-preview"/>
-        <p:with-option name="include-brf" select="$include-brf"/>
-    </pef:store>
+        </p:variable>
+        <pef:store>
+            <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.pef')"/>
+            <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
+                                                       then concat($preview-output-dir,'/',$name,'.pef.html')
+                                                       else ''"/>
+            <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
+                                                   then concat($brf-output-dir,'/',$name,'.brf')
+                                                   else ''"/>
+            <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
+                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
+                <p:pipe step="html" port="result"/>
+            </p:with-option>
+        </pef:store>
+    </p:group>
     
 </p:declare-step>

@@ -8,7 +8,7 @@
     <x:call step="px:html-to-pef">
       <x:option name="html" select="resolve-uri('../resources/alice.xhtml')"/>
       <x:option name="include-preview" select="'true'"/>
-      <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
     </x:call>
     <x:context label="the output directory contents">
@@ -22,7 +22,7 @@
     <x:call step="px:html-to-pef">
       <x:option name="html" select="resolve-uri('../resources/reset-test.html')"/>
       <x:option name="show-braille-page-numbers" select="false()"/>
-      <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
     </x:call>
     <x:context label="pef">

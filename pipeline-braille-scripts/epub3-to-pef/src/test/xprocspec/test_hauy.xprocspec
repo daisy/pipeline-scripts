@@ -6,7 +6,7 @@
   <x:scenario label="test C00000.epub with default.css">
     <x:call step="px:epub3-to-pef">
       <x:option name="epub" select="resolve-uri('../resources/C00000.epub')"/>
-      <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
     </x:call>
     <x:context label="the output directory contents">
@@ -18,7 +18,7 @@
   <x:scenario label="test default.css + reset.css + style.css">
     <x:call step="px:epub3-to-pef">
       <x:option name="epub" select="resolve-uri('../resources/simple-epub/package.opf')"/>
-      <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
+      <x:option name="pef-output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
       <x:option name="stylesheet" select="string-join((resolve-uri('../resources/reset.css'), resolve-uri('../resources/style.css')), ' ')"/>
       <x:option name="show-braille-page-numbers" select="false()"/>
