@@ -98,6 +98,18 @@ div.row {
     font-size: 125%;
     height: 1em;
 }
+div.row[rowgap="1"] {
+    height: 1.25em;
+}
+div.row[rowgap="2"] {
+    height: 1.5em;
+}
+div.row[rowgap="3"] {
+    height: 1.75em;
+}
+div.row[rowgap="4"] {
+    height: 2em;
+}
 span.label {
     background-color: #999;
     border: none;

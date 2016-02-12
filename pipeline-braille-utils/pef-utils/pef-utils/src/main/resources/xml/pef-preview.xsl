@@ -7,8 +7,6 @@
     exclude-result-prefixes="#all"
     version="2.0">
     
-    <xsl:output method="html" encoding="UTF-8"/>
-    
     <xsl:param name="table"/>
     
     <xsl:template match="/">
@@ -56,7 +54,10 @@
                                 </div>
                                 <div class="page">
                                     <xsl:for-each select="pef:row">
-                                        <div class="row"><xsl:sequence select="string(.)"/></div>
+                                        <div class="row">
+                                            <xsl:sequence select="@rowgap"/>
+                                            <xsl:sequence select="string(.)"/>
+                                        </div>
                                     </xsl:for-each>
                                 </div>
                             </a>
@@ -70,12 +71,18 @@
                         <div class="page">
                             <div class="braille-page">
                                 <xsl:for-each select="pef:row">
-                                    <div class="row"><xsl:sequence select="string(.)"/></div>
+                                    <div class="row">
+                                        <xsl:sequence select="@rowgap"/>
+                                        <xsl:sequence select="string(.)"/>
+                                    </div>
                                 </xsl:for-each>
                             </div>
                             <div class="text-page">
                                 <xsl:for-each select="pef:row">
-                                    <div class="row"><xsl:sequence select="pef:encode($table, string(.))"/></div>
+                                    <div class="row">
+                                        <xsl:sequence select="@rowgap"/>
+                                        <xsl:sequence select="pef:encode($table, string(.))"/>
+                                    </div>
                                 </xsl:for-each>
                             </div>
                         </div>
