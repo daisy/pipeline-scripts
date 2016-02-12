@@ -8,10 +8,12 @@ import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
+import static org.daisy.pipeline.pax.exam.Options.xprocspec;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,25 +40,21 @@ public class PefCalabashTest {
 		return options(
 			logbackConfigFile(),
 			calabashConfigFile(),
-			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
-			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.pef-tools").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			brailleModule("common-utils"),
-			brailleModule("css-core"),
-			brailleModule("pef-core"),
 			thisBundle(),
-			xprocspecBundles(),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				brailleModule("common-utils"),
+				brailleModule("css-core"),
+				brailleModule("pef-core"),
+				mavenBundle("org.daisy.braille:braille-utils.impl:?"),
+				mavenBundle("org.daisy.braille:braille-utils.pef-tools:?"),
+				// logging
+				logbackClassic(),
+				// xprocspec
+				xprocspec(),
+				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"))
 		);
 	}
 	
