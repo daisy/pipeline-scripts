@@ -19,6 +19,8 @@
 		</p:documentation>
 	</p:input>
 	
+	<p:input port="sass-variables" kind="parameter" primary="false"/>
+	
 	<p:output port="result" sequence="false" primary="true">
 		<p:documentation>
 			All styles are parsed, validated, normalized, cascaded and finally serialized into

@@ -1,11 +1,13 @@
 package org.daisy.pipeline.braille.css.calabash.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,22 +22,24 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Objects.firstNonNull;
+import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterators.addAll;
 
+import com.google.common.io.ByteSource;
 import com.xmlcalabash.core.XProcException;
 import com.xmlcalabash.core.XProcRuntime;
 import com.xmlcalabash.core.XProcStep;
 import com.xmlcalabash.io.ReadablePipe;
 import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 
@@ -64,6 +68,14 @@ import cz.vutbr.web.csskit.DefaultNetworkProcessor;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
+
+import io.bit3.jsass.CompilationException;
+import io.bit3.jsass.Compiler;
+import io.bit3.jsass.importer.Import;
+import io.bit3.jsass.importer.Importer;
+import io.bit3.jsass.Options;
+import io.bit3.jsass.Output;
+import io.bit3.jsass.OutputStyle;
 
 import net.sf.saxon.dom.DocumentOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
@@ -108,29 +120,91 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private ReadablePipe sourcePipe = null;
 	private WritablePipe resultPipe = null;
+	private Map<String,String> sassVariables = new HashMap<String,String>();
 	private NetworkProcessor network = null;
+	private Importer importer = null;
 	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
 	
 	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step, final URIResolver resolver) {
 		super(runtime, step);
+		importer = new Importer() {
+			public Collection<Import> apply(String url, Import previous) {
+				try {
+					URI uri = asURI(url);
+					URI base = previous.getAbsoluteUri();
+					
+					// base could be a file (is this a bug?)
+					File file = new File(base.toString());
+					if (file.exists())
+						base = file.toURI();
+					logger.debug("Importing SASS style sheet: " + uri + " (base = " + base + ")");
+					URI abs = base.resolve(uri);
+					try {
+						Source resolved = resolver.resolve(abs.toString(), "");
+						if (resolved != null) {
+							abs = asURI(resolved.getSystemId());
+							logger.debug("Resolved to: " + abs); }}
+					catch (TransformerException e) {
+						throw new IOException(e); }
+					try {
+						return ImmutableList.of(
+							new Import(uri, abs,
+							           byteSource(asURL(abs).openStream()).asCharSource(StandardCharsets.UTF_8).read())); }
+					catch (RuntimeException e) {
+						throw new IOException(e); }}
+				catch (IOException e) {
+					if (!url.endsWith(".scss"))
+						return apply(url + ".scss", previous);
+					else
+						throw new RuntimeException(e); }
+			}
+		};
 		network = new DefaultNetworkProcessor() {
 			@Override
 			public InputStream fetch(URL url) throws IOException {
+				logger.debug("Fetching CSS style sheet: " + url);
 				try {
-					if (url != null) {
-						Source resolved = resolver.resolve(asURI(url).toString(), "");
-						if (resolved != null) {
-							if (resolved instanceof StreamSource)
-								return ((StreamSource)resolved).getInputStream();
-							else
-								url = new URL(resolved.getSystemId());
-						}
-					}
-				} catch (TransformerException e) {
-				} catch (MalformedURLException e) {
-				}
-				return super.fetch(url);
+					Source resolved = resolver.resolve(asURI(url).toString(), "");
+					if (resolved != null) {
+						url = new URL(resolved.getSystemId());
+						logger.debug("Resolved to :" + url); }}
+				catch (TransformerException e) {
+					throw new IOException(e); }
+				InputStream is = super.fetch(url);
+				if (url.toString().endsWith(".scss")) {
+					Compiler sassCompiler = new Compiler();
+					Options options = new Options();
+					options.setIsIndentedSyntaxSrc(false);
+					options.setOutputStyle(OutputStyle.EXPANDED);
+					options.setSourceMapContents(false);
+					options.setSourceMapEmbed(false);
+					options.setSourceComments(false);
+					options.setPrecision(5);
+					options.setOmitSourceMapUrl(true);
+					options.getImporters().add(importer);
+					String scss = "";
+					for (String var : sassVariables.keySet())
+						scss += ("$" + var + ": " + sassVariables.get(var) + ";\n");
+					scss += byteSource(is).asCharSource(StandardCharsets.UTF_8).read();
+					try {
+						Output result = sassCompiler.compileString(scss, StandardCharsets.UTF_8, asURI(url), null, options);
+						if (result.getErrorStatus() != 0)
+							throw new IOException("Could not compile SASS style sheet: " + result.getErrorMessage());
+						String css = result.getCss();
+						return new ByteArrayInputStream(css.getBytes(StandardCharsets.UTF_8)); }
+					catch (CompilationException e) {
+						throw new IOException("Could not compile SASS style sheet", e); }}
+				else
+					return is;
+			}
+		};
+	}
+	
+	private static ByteSource byteSource(final InputStream is) {
+		return new ByteSource() {
+			public InputStream openStream() throws IOException {
+				return is;
 			}
 		};
 	}
@@ -143,6 +217,23 @@ public class CSSInlineStep extends DefaultStep {
 	@Override
 	public void setOutput(String port, WritablePipe pipe) {
 		resultPipe = pipe;
+	}
+	
+	@Override
+	public void setParameter(String port, QName name, RuntimeValue value) {
+		if ("sass-variables".equals(port))
+			if ("".equals(name.getNamespaceURI())) {
+				sassVariables.put(name.getLocalName(), value.getString());
+				return; }
+		super.setParameter(port, name, value);
+	}
+	
+	@Override
+	public void setParameter(QName name, RuntimeValue value) {
+		
+		// Calabash calls this function and never setParameter(String port,
+		// ...) so I just have to assume that port is "sass-variables"
+		setParameter("sass-variables", name, value);
 	}
 	
 	@Override

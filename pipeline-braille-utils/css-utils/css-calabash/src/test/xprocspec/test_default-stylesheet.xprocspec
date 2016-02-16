@@ -15,7 +15,7 @@
           </document>
         </x:document>
       </x:input>
-      <x:option name="default-stylesheet" select="'../resources/css/default.css'"/>
+      <x:option name="default-stylesheet" select="'../resources/css/css_1.css'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>
@@ -42,7 +42,7 @@
           </document>
         </x:document>
       </x:input>
-      <x:option name="default-stylesheet" select="'../resources/css/default.css ../resources/css/reset.css'"/>
+      <x:option name="default-stylesheet" select="'../resources/css/css_1.css ../resources/css/css_2_resets_css_1.css'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>
@@ -57,7 +57,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_01">
+  <x:scenario label="test_03">
     <x:call step="css:inline">
       <x:input port="source">
         <x:document type="inline">
@@ -74,7 +74,7 @@
           </document>
         </x:document>
       </x:input>
-      <x:option name="default-stylesheet" select="'../resources/css/default.css'"/>
+      <x:option name="default-stylesheet" select="'../resources/css/css_1.css'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>

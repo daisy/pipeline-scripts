@@ -56,6 +56,10 @@
       <artifactId>xml-apis</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.bit3</groupId>
+      <artifactId>jsass</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
@@ -128,7 +132,6 @@
     <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>pax-exam-helper</artifactId>
-      <version>1.9.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
