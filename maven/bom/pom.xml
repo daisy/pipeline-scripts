@@ -37,7 +37,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-calabash</artifactId>
-                <version>2.4.0</version>
+                <version>2.4.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>

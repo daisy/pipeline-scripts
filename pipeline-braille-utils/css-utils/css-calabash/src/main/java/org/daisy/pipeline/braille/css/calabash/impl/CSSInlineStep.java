@@ -25,7 +25,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 
 import com.google.common.base.Function;
-import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
@@ -50,7 +49,6 @@ import cz.vutbr.web.css.Rule;
 import cz.vutbr.web.css.RuleFactory;
 import cz.vutbr.web.css.RuleMargin;
 import cz.vutbr.web.css.RulePage;
-import cz.vutbr.web.css.Selector;
 import cz.vutbr.web.css.Selector.PseudoElement;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
@@ -63,7 +61,6 @@ import cz.vutbr.web.css.TermPair;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
 import cz.vutbr.web.csskit.DefaultNetworkProcessor;
-import cz.vutbr.web.csskit.RulePageImpl;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
@@ -85,7 +82,7 @@ import org.daisy.braille.css.BrailleCSSProperty;
 import org.daisy.braille.css.BrailleCSSRuleFactory;
 import org.daisy.braille.css.RuleVolume;
 import org.daisy.braille.css.RuleVolumeArea;
-import org.daisy.braille.css.SelectorImpl.StackedPseudoElementImpl;
+import org.daisy.braille.css.SelectorImpl.PseudoElementImpl;
 import org.daisy.braille.css.SupportedBrailleCSS;
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
@@ -416,9 +413,9 @@ public class CSSInlineStep extends DefaultStep {
 	}
 	
 	private static void pseudoElementToString(StringBuilder builder, PseudoElement elem) {
-		if (elem instanceof StackedPseudoElementImpl)
-			for (PseudoElement e : (StackedPseudoElementImpl)elem)
-				pseudoElementToString(builder, e);
+		if (elem instanceof PseudoElementImpl) {
+			builder.append(elem);
+			return; }
 		else {
 			builder.append("::").append(elem.getName());
 			String[] args = elem.getArguments();
