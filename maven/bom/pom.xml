@@ -42,7 +42,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-core</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -310,6 +310,11 @@
                 <groupId>com.googlecode.texhyphj</groupId>
                 <artifactId>texhyphj</artifactId>
                 <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bit3</groupId>
+                <artifactId>jsass</artifactId>
+                <version>4.1.0</version>
             </dependency>
             <!--
                 for liblouis-java and jhyphen

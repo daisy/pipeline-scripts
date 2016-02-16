@@ -25,6 +25,18 @@
       <groupId>org.daisy.braille</groupId>
       <artifactId>braille-css</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.bit3</groupId>
+      <artifactId>jsass</artifactId>
+    </dependency>
+    <!--
+        test dependencies
+    -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   
 </project>
