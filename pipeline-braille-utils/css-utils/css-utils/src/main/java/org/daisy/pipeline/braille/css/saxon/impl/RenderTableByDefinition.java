@@ -453,18 +453,20 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			private final TableCell cell;
 			private final TableCellGroup parent;
 			private final SingleTableCell precedingSibling;
+			private final boolean columnAppliedBeforeRow;
 			
-			private SingleTableCell(TableCell cell, TableCellGroup parent, SingleTableCell precedingSibling) {
+			private SingleTableCell(TableCell cell, TableCellGroup parent, SingleTableCell precedingSibling, boolean columnAppliedBeforeRow) {
 				this.cell = cell;
 				this.parent = parent;
 				this.precedingSibling = precedingSibling;
+				this.columnAppliedBeforeRow = columnAppliedBeforeRow;
 			}
 			
 			private List<TableCell> newlyAppliedHeaders;
 			public List<TableCell> newlyAppliedHeaders() {
 				if (newlyAppliedHeaders == null) {
 					newlyAppliedHeaders = new ArrayList<TableCell>();
-					for (TableCell h : findHeaders(cell))
+					for (TableCell h : findHeaders(cell, !columnAppliedBeforeRow))
 						if (!parent.appliedHeaders().contains(h))
 							newlyAppliedHeaders.add(h); }
 				return newlyAppliedHeaders;
@@ -536,18 +538,23 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			private final String groupingAxis;
 			private final TableCellGroup precedingSibling;
 			private final List<TableCellCollection> children;
+			private final boolean rowApplied;
+			private final boolean columnAppliedBeforeRow;
 			
 			private TableCellGroup(List<TableCell> cells, Iterator<String> nextAxes) {
-				this(cells, nextAxes, null, null, null, null);
+				this(cells, nextAxes, null, null, null, null, false, false);
 			}
 			
 			private TableCellGroup(List<TableCell> cells, Iterator<String> nextAxes,
 			                       TableCellGroup parent, TableCell groupingHeader, String groupingAxis,
-			                       TableCellGroup precedingSibling) {
+			                       TableCellGroup precedingSibling,
+			                       boolean rowApplied, boolean columnAppliedBeforeRow) {
 				this.parent = parent;
 				this.groupingHeader = groupingHeader;
 				this.groupingAxis = groupingAxis;
 				this.precedingSibling = precedingSibling;
+				this.rowApplied = rowApplied;
+				this.columnAppliedBeforeRow = columnAppliedBeforeRow;
 				children = groupCellsBy(cells, nextAxes);
 			}
 			
@@ -559,7 +566,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					List<TableCell> uncategorized = null;
 					for (TableCell c : cells) {
 						boolean categorized = false;
-						for (TableCell h : findHeaders(c))
+						for (TableCell h : findHeaders(c, !columnAppliedBeforeRow))
 							if (h.axis != null && h.axis.contains(firstAxis)) {
 								List<TableCell> category = categories.get(h);
 								if (category == null) {
@@ -575,10 +582,12 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						List<TableCellCollection> children = new ArrayList<TableCellCollection>();
 						TableCellGroup child = null;
 						for (TableCell h : categories.keySet()) {
-							child = new TableCellGroup(categories.get(h), nextAxes.iterator(), this, h, firstAxis, child);
+							child = new TableCellGroup(categories.get(h), nextAxes.iterator(), this, h, firstAxis, child,
+							                           rowApplied, columnAppliedBeforeRow);
 							children.add(child); }
 						if (uncategorized != null) {
-							child = new TableCellGroup(uncategorized, nextAxes.iterator(), this, null, firstAxis, child);
+							child = new TableCellGroup(uncategorized, nextAxes.iterator(), this, null, firstAxis, child,
+							                           rowApplied, columnAppliedBeforeRow);
 							children.add(child); }
 						return children; }
 					else if ("row".equals(firstAxis)) {
@@ -592,7 +601,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								rows.put(c.row, row); }
 							row.add(c); }
 						for (List<TableCell> row : rows.values()) {
-							child = new TableCellGroup(row, nextAxes.iterator(), this, null, firstAxis, child);
+							child = new TableCellGroup(row, nextAxes.iterator(), this, null, firstAxis, child, true, columnAppliedBeforeRow);
 							children.add(child); }
 						return children; }
 					else if ("column".equals(firstAxis) || "col".equals(firstAxis)) {
@@ -606,7 +615,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								columns.put(c.col, column); }
 							column.add(c); }
 						for (List<TableCell> column : columns.values()) {
-							child = new TableCellGroup(column, nextAxes.iterator(), this, null, firstAxis, child);
+							child = new TableCellGroup(column, nextAxes.iterator(), this, null, firstAxis, child, rowApplied, !rowApplied);
 							children.add(child); }
 						return children; }
 					else if ("row-group".equals(firstAxis)) {
@@ -620,7 +629,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								rowGroups.put(c.rowGroup, rowGroup); }
 							rowGroup.add(c); }
 						for (List<TableCell> rowGroup : rowGroups.values()) {
-							child = new TableCellGroup(rowGroup, nextAxes.iterator(), this, null, firstAxis, child);
+							child = new TableCellGroup(rowGroup, nextAxes.iterator(), this, null, firstAxis, child,
+							                           rowApplied, columnAppliedBeforeRow);
 							children.add(child); }
 						return children; }
 					else
@@ -629,7 +639,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					List<TableCellCollection> children = new ArrayList<TableCellCollection>();
 					SingleTableCell child = null;
 					for (TableCell c : cells) {
-						child = new SingleTableCell(c, this, child);
+						child = new SingleTableCell(c, this, child, columnAppliedBeforeRow);
 						children.add(child); }
 					return children; }
 			}
@@ -639,7 +649,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				if (newlyAppliedHeaders == null) {
 					newlyAppliedHeaders = new ArrayList<TableCell>();
 					if (groupingHeader != null)
-						for (TableCell h : findHeaders(groupingHeader))
+						for (TableCell h : findHeaders(groupingHeader, !columnAppliedBeforeRow))
 							if (!previouslyAppliedHeaders().contains(h))
 								newlyAppliedHeaders.add(h); }
 				return newlyAppliedHeaders;
@@ -955,20 +965,20 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		}
 		
 		// see https://www.w3.org/TR/REC-html40/struct/tables.html#h-11.4.3
-		private List<TableCell> findHeaders(TableCell cell) {
+		private List<TableCell> findHeaders(TableCell cell, boolean firstLeftThenUpward) {
 			List<TableCell> headers = new ArrayList<TableCell>();
 			if (isHeader(cell))
 				headers.add(cell);
-			findHeaders(headers, 0, cell);
+			findHeaders(headers, 0, cell, firstLeftThenUpward);
 			return headers;
 		}
 		
-		private int findHeaders(List<TableCell> headers, int index, TableCell cell) {
+		private int findHeaders(List<TableCell> headers, int index, TableCell cell, boolean firstLeftThenUpward) {
 			
 			// headers attribute
 			if (cell.headers != null) {
 				for (String id : cell.headers)
-					index = recurAddHeader(headers, index, getById(id));
+					index = recurAddHeader(headers, index, getById(id), firstLeftThenUpward);
 				return index; }
 			
 			// scope attribute can be used instead of headers (they should not be used in same table)
@@ -987,63 +997,71 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 						break; }}
 			sort(rowHeaders, sortByColumnAndThenRow);
 			for (TableCell h : rowHeaders)
-				index = recurAddHeader(headers, index, h);
+				index = recurAddHeader(headers, index, h, firstLeftThenUpward);
 			sort(colHeaders, sortByRowAndThenColumn);
 			for (TableCell h : colHeaders)
-				index = recurAddHeader(headers, index, h);
+				index = recurAddHeader(headers, index, h, firstLeftThenUpward);
 			
-			// search left from the cell's position to find row header cells
 			if (!isHeader(cell)) {
-				int k = 0;
-				for (int i = 0; i < cell.rowspan; i++)
-					for (int j = cell.col - 1; j > 0;) {
-						boolean foundHeader = false;
-						TableCell c = getByCoordinates(cell.row + i, j);
-						if (c != null && isHeader(c)) {
-							foundHeader = true;
-							if (c.scope == null) {
-								int l = recurAddHeader(headers, index, c) - index;
-								k += l;
-								if (l > 1)
-									break; }}
-						else if (foundHeader)
-							break;
-						if (c == null)
-							j--;
-						else
-							j = j - c.colspan; }
-				index += k; }
+				int direction = (firstLeftThenUpward ? 0 : 1);
+			  outer: while (true) {
+					switch (direction) {
+					case 0: { // search left from the cell's position to find row header cells
+						int k = 0;
+						for (int i = 0; i < cell.rowspan; i++)
+							for (int j = cell.col - 1; j > 0;) {
+								boolean foundHeader = false;
+								TableCell c = getByCoordinates(cell.row + i, j);
+								if (c != null && isHeader(c)) {
+									foundHeader = true;
+									if (c.scope == null) {
+										int l = recurAddHeader(headers, index, c, firstLeftThenUpward) - index;
+										k += l;
+										if (l > 1)
+											break; }}
+								else if (foundHeader)
+									break;
+								if (c == null)
+									j--;
+								else
+									j = j - c.colspan; }
+						index += k;
+						if (!firstLeftThenUpward)
+							break outer; }
+					case 1: { // search upwards from the cell's position to find column header cells
+						int k = 0;
+						for (int i = 0; i < cell.colspan; i++)
+							for (int j = cell.row - 1; j > 0;) {
+								boolean foundHeader = false;
+								TableCell c = getByCoordinates(j, cell.col + i);
+								if (c != null && isHeader(c)) {
+									foundHeader = true;
+									if (c.scope == null) {
+										int l = recurAddHeader(headers, index, c, firstLeftThenUpward) - index;
+										k += l;
+										if (l > 1)
+											break; }}
+								else if (foundHeader)
+									break;
+								if (c == null)
+									j--;
+								else
+									j = j - c.rowspan; }
+						index += k;
+						if (!firstLeftThenUpward) {
+							direction--;
+							continue outer; }
+						break outer; }}}}
 			
-			// search upwards from the cell's position to find column header cells
-			if (!isHeader(cell)) {
-				int k = 0;
-				for (int i = 0; i < cell.colspan; i++)
-					for (int j = cell.row - 1; j > 0;) {
-						boolean foundHeader = false;
-						TableCell c = getByCoordinates(j, cell.col + i);
-						if (c != null && isHeader(c)) {
-							foundHeader = true;
-							if (c.scope == null) {
-								int l = recurAddHeader(headers, index, c) - index;
-								k += l;
-								if (l > 1)
-									break; }}
-						else if (foundHeader)
-							break;
-						if (c == null)
-							j--;
-						else
-							j = j - c.rowspan; }
-				index += k; }
 			return index;
 		}
 		
-		private int recurAddHeader(List<TableCell> headers, int index, TableCell header) {
+		private int recurAddHeader(List<TableCell> headers, int index, TableCell header, boolean firstLeftThenUpward) {
 			if (headers.contains(header))
 				throw new RuntimeException();
 			else {
 				headers.add(index, header);
-				index = findHeaders(headers, index, header);
+				index = findHeaders(headers, index, header, firstLeftThenUpward);
 				index ++; }
 			return index;
 		}
