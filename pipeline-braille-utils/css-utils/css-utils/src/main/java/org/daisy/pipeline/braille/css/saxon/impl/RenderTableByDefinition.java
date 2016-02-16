@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
@@ -36,7 +37,6 @@ import cz.vutbr.web.css.Rule;
 import cz.vutbr.web.css.RuleFactory;
 import cz.vutbr.web.css.RuleSet;
 import cz.vutbr.web.css.Selector;
-import cz.vutbr.web.css.Selector.PseudoElement;
 import cz.vutbr.web.css.Selector.SelectorPart;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
@@ -72,7 +72,8 @@ import static org.daisy.pipeline.braille.common.util.Strings.join;
 import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
 import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSRuleFactory;
-import org.daisy.braille.css.SelectorImpl.StackedPseudoElementImpl;
+import org.daisy.braille.css.SelectorImpl.PseudoClassImpl;
+import org.daisy.braille.css.SelectorImpl.PseudoElementImpl;
 import org.daisy.braille.css.SupportedBrailleCSS;
 
 import org.osgi.service.component.annotations.Component;
@@ -197,9 +198,6 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		final List<Function<XMLStreamWriter,Void>> writeActionsAfter = new ArrayList<Function<XMLStreamWriter,Void>>();
 		final List<TableCell> cells = new ArrayList<TableCell>();
 		final Set<CellCoordinates> coveredCoordinates = new HashSet<CellCoordinates>();
-		final Map<String,String> tableByListStyles = new HashMap<String,String>();
-		final Map<String,String> tableByListItemStyles = new HashMap<String,String>();
-		String tableListItemStyle = null;
 		QName _;
 		
 		private TableAsList(String axes, XMLStreamReader reader) throws XMLStreamException, IOException, CSSException {
@@ -320,7 +318,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								// OK to pass null for base?
 								StyleSheet style = pf.parse(attrValue, network, null,
 								                            SourceType.INLINE, null, true, null);
-								List<String> newRuleSets = new ArrayList<String>();
+								String newStyle = null;
 								for (Rule<?> rule : style) {
 									assertThat(rule instanceof RuleSet);
 									RuleSet ruleset = (RuleSet)rule;
@@ -333,34 +331,39 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 									assertThat(selector.size() < 3);
 									if (selector.size() == 2) {
 										SelectorPart part = selector.get(1);
-										assertThat(part instanceof PseudoElement);
-										PseudoElement pseudo = (PseudoElement)part;
-										if (pseudo instanceof StackedPseudoElementImpl) {
-											Iterator<PseudoElement> it = ((StackedPseudoElementImpl)pseudo).iterator();
-											PseudoElement first = it.next();
-											PseudoElement second = it.next();
-											if (!(first instanceof StackedPseudoElementImpl) && "table-by".equals(first.getName())) {
-												String axis = first.getArguments()[0];
-												if (!(second instanceof StackedPseudoElementImpl) && "list-item".equals(second.getName()))
-													tableByListItemStyles.put(axis, serializeRuleSet(ruleset, null)); }
-											else
-												newRuleSets.add(serializeRuleSet(ruleset, pseudo)); }
-										else if ("list-item".equals(pseudo.getName())) {
-											tableListItemStyle = serializeRuleSet(ruleset, null); }
+										assertThat(part instanceof PseudoElementImpl);
+										PseudoElementImpl pseudo = (PseudoElementImpl)part;
+										if ("list-item".equals(pseudo.getName()))
+											addListItemStyle(
+												pseudo.getPseudoClasses(),
+												new ListItemStyle(pseudo.getStackedPseudoElement(), ruleset));
+										else if ("list-header".equals(pseudo.getName())) {
+											if (pseudo.getPseudoClasses().isEmpty())
+												addListHeaderStyle(
+													new ListItemStyle(pseudo.getStackedPseudoElement(), ruleset)); }
 										else if ("table-by".equals(pseudo.getName())) {
 											String axis = pseudo.getArguments()[0];
-											tableByListStyles.put(axis, serializeRuleSet(ruleset, null)); }
+											if (pseudo.getPseudoClasses().isEmpty()) {
+												if (pseudo.hasStackedPseudoElement()) {
+													pseudo = pseudo.getStackedPseudoElement();
+													if ("list-item".equals(pseudo.getName()))
+														getTableByStyle(axis).addListItemStyle(
+															pseudo.getPseudoClasses(),
+															new ListItemStyle(pseudo.getStackedPseudoElement(), ruleset));
+													else if ("list-header".equals(pseudo.getName())) {
+														if (pseudo.getPseudoClasses().isEmpty())
+															getTableByStyle(axis).addListHeaderStyle(
+																new ListItemStyle(pseudo.getStackedPseudoElement(), ruleset)); }
+													else
+														getTableByStyle(axis).addRuleSet(pseudo, ruleset); }
+												else
+													getTableByStyle(axis).addRuleSet(ruleset); }}
 										else
-											newRuleSets.add(serializeRuleSet(ruleset, pseudo)); }
+											newStyle = joinRuleSets(newStyle, serializeRuleSet(ruleset, pseudo)); }
 									else
-										newRuleSets.add(serializeRuleSet(ruleset, null)); }
-								if (!newRuleSets.isEmpty()) {
-									if (newRuleSets.size() > 1)
-										for (int j = 0; j < newRuleSets.size(); j++) {
-											String r = newRuleSets.get(j);
-											if (!r.endsWith("}"))
-												newRuleSets.set(j, "{ " + r + " }"); }
-									writeActions.add(writeAttribute(attrName, join(newRuleSets, " "))); }}
+										newStyle = joinRuleSets(newStyle, serializeRuleSet(ruleset, null)); }
+								if (newStyle != null)
+									writeActions.add(writeAttribute(attrName, newStyle)); }
 							else
 								writeActions.add(writeAttribute(attrName, attrValue)); }
 						break;
@@ -745,18 +748,18 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 								if (promotedHeaders == null) {
 									if (i == 0 && j == 0) {
 										writeStartElement(writer, _);
-										if (listItemStyle(groupingAxis) != null)
-											writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+										writeStyleAttribute(writer,
+										                    groupingAxis != null ? getTableByStyle(groupingAxis).getListHeaderStyle()
+										                                         : getListHeaderStyle());
 										writeStartElement(writer, _);
-										if (listStyle(g.groupingAxis) != null)
-											writeAttribute(writer, _STYLE, listStyle(g.groupingAxis));
+										writeStyleAttribute(writer, getTableByStyle(g.groupingAxis));
 										promotedHeaders = new ArrayList<List<TableCell>>(); }
 									else
 										throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
 								if (i == 0) {
 									writeStartElement(writer, _);
-									if (listItemStyle(g.groupingAxis) != null)
-										writeAttribute(writer, _STYLE, listItemStyle(g.groupingAxis));
+									Predicate<PseudoClassImpl> matcher = matchesPosition(j + 1, g.children.size());
+									writeStyleAttribute(writer, getTableByStyle(g.groupingAxis).getListItemStyle(matcher));
 									for (TableCell h : cc.newlyPromotedHeaders())
 										h.write(writer);
 									writeEndElement(writer);
@@ -774,21 +777,24 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				if (promotedHeaders != null) {
 					writeEndElement(writer);
 					writeEndElement(writer); }
+				i = 0;
 				for (TableCellCollection c : children) {
 					writeStartElement(writer, _);
-					if (listItemStyle(groupingAxis) != null)
-						writeAttribute(writer, _STYLE, listItemStyle(groupingAxis));
+					Predicate<PseudoClassImpl> matcher = matchesPosition(i + 1, children.size());
+					writeStyleAttribute(writer,
+					                    groupingAxis != null ? getTableByStyle(groupingAxis).getListItemStyle(matcher)
+					                                         : getListItemStyle(matcher));
 					for (TableCell h : c.newlyRenderedHeaders())
 						h.write(writer);
 					if (c instanceof TableCellGroup) {
 						TableCellGroup g = (TableCellGroup)c;
 						writeStartElement(writer, _);
-						if (listStyle(g.groupingAxis) != null)
-							writeAttribute(writer, _STYLE, listStyle(g.groupingAxis)); }
+						writeStyleAttribute(writer, getTableByStyle(g.groupingAxis)); }
 					c.write(writer);
 					if (c instanceof TableCellGroup)
 						writeEndElement(writer);
-					writeEndElement(writer); }
+					writeEndElement(writer);
+					i++; }
 			}
 			
 			@Override
@@ -803,15 +809,149 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			}
 		}
 		
-		public String listStyle(String axis) {
-			return tableByListStyles.get(axis);
+		private static void writeStyleAttribute(XMLStreamWriter writer, PseudoElementStyle style) {
+			if (!style.isEmpty())
+				writeAttribute(writer, _STYLE, style.toString());
 		}
+		
+		final private Map<String,TableByStyle> tableByStyles = new HashMap<String,TableByStyle>();
+		final private Map<List<PseudoClassImpl>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClassImpl>,ListItemStyle>();
+		private ListItemStyle listHeaderStyle = new ListItemStyle();
 			
-		public String listItemStyle(String axis) {
-			if (axis == null)
-				return tableListItemStyle;
+		public void addListItemStyle(List<PseudoClassImpl> pseudo, ListItemStyle style) {
+			if (!listItemStyles.containsKey(pseudo))
+				listItemStyles.put(pseudo, style);
 			else
-				return tableByListItemStyles.get(axis);
+				listItemStyles.put(pseudo, listItemStyles.get(pseudo).mergeWith(style));
+		}
+		
+		public void addListHeaderStyle(ListItemStyle style) {
+			listHeaderStyle = listHeaderStyle.mergeWith(style);
+		}
+		
+		public TableByStyle getTableByStyle(String axis) {
+			TableByStyle style = tableByStyles.get(axis);
+			if (style == null) {
+				style = new TableByStyle();
+				tableByStyles.put(axis, style); }
+			return style;
+		}
+		
+		public ListItemStyle getListItemStyle(Predicate<PseudoClassImpl> matcher) {
+			ListItemStyle style = new ListItemStyle();
+		  outer: for (List<PseudoClassImpl> pseudoClasses : listItemStyles.keySet()) {
+				for (PseudoClassImpl pseudoClass : pseudoClasses)
+					if (!matcher.apply(pseudoClass))
+						continue outer;
+				style = style.mergeWith(listItemStyles.get(pseudoClasses)); }
+			return style;
+		}
+		
+		public ListItemStyle getListHeaderStyle() {
+			return listHeaderStyle;
+		}
+		
+		private static class PseudoElementStyle {
+			
+			final protected Map<PseudoElementImpl,List<Declaration>> ruleSets = new HashMap<PseudoElementImpl,List<Declaration>>();
+			
+			public void addRuleSet(List<Declaration> ruleset) {
+				addRuleSet(null, ruleset);
+			}
+			
+			public void addRuleSet(PseudoElementImpl pseudo, List<Declaration> ruleset) {
+				if (!ruleset.isEmpty())
+					if (!ruleSets.containsKey(pseudo))
+						ruleSets.put(pseudo, ruleset);
+					else
+						ruleSets.put(pseudo, ImmutableList.<Declaration>builder().addAll(ruleSets.get(pseudo)).addAll(ruleset).build());
+			}
+			
+			public boolean isEmpty() {
+				return ruleSets.isEmpty();
+			}
+			
+			@Override
+			public String toString() {
+				String style = null;
+				for (PseudoElementImpl pseudo : ruleSets.keySet())
+					style = joinRuleSets(style, serializeRuleSet(ruleSets.get(pseudo), pseudo));
+				if (style != null)
+					return style;
+				else
+					return "";
+			}
+		}
+		
+		private static class TableByStyle extends PseudoElementStyle {
+			
+			final private Map<List<PseudoClassImpl>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClassImpl>,ListItemStyle>();
+			private ListItemStyle listHeaderStyle = new ListItemStyle();
+			
+			public TableByStyle() {}
+			
+			@SuppressWarnings("unused")
+			public TableByStyle(PseudoElementImpl pseudo, List<Declaration> ruleset) {
+				addRuleSet(pseudo, ruleset);
+			}
+			
+			public void addListItemStyle(List<PseudoClassImpl> pseudo, ListItemStyle style) {
+				if (!listItemStyles.containsKey(pseudo))
+					listItemStyles.put(pseudo, style);
+				else
+					listItemStyles.put(pseudo, listItemStyles.get(pseudo).mergeWith(style));
+			}
+			
+			public void addListHeaderStyle(ListItemStyle style) {
+				listHeaderStyle = listHeaderStyle.mergeWith(style);
+			}
+			
+			public ListItemStyle getListItemStyle(Predicate<PseudoClassImpl> matcher) {
+				ListItemStyle style = new ListItemStyle();
+			  outer: for (List<PseudoClassImpl> pseudoClasses : listItemStyles.keySet()) {
+					for (PseudoClassImpl pseudoClass : pseudoClasses)
+						if (!matcher.apply(pseudoClass))
+							continue outer;
+					style = style.mergeWith(listItemStyles.get(pseudoClasses)); }
+				return style;
+			}
+			
+			public ListItemStyle getListHeaderStyle() {
+				return listHeaderStyle;
+			}
+			
+			@SuppressWarnings("unused")
+			public TableByStyle mergeWith(TableByStyle style) {
+				for (Map.Entry<PseudoElementImpl,List<Declaration>> r: style.ruleSets.entrySet())
+					addRuleSet(r.getKey(), r.getValue());
+				for (Map.Entry<List<PseudoClassImpl>,ListItemStyle> s: style.listItemStyles.entrySet())
+					addListItemStyle(s.getKey(), s.getValue());
+				addListHeaderStyle(style.listHeaderStyle);
+				return this;
+			}
+		}
+		
+		private static class ListItemStyle extends PseudoElementStyle {
+			
+			public ListItemStyle() {}
+			
+			public ListItemStyle(PseudoElementImpl pseudo, List<Declaration> ruleset) {
+				addRuleSet(pseudo, ruleset);
+			}
+			
+			public ListItemStyle mergeWith(ListItemStyle style) {
+				for (Map.Entry<PseudoElementImpl,List<Declaration>> r: style.ruleSets.entrySet())
+					addRuleSet(r.getKey(), r.getValue());
+				return this;
+			}
+		}
+		
+		private final static Predicate<PseudoClassImpl> matchesPosition(final int position, final int elementCount) {
+			return new Predicate<PseudoClassImpl>() {
+				public boolean apply(PseudoClassImpl pseudo) {
+					return pseudo.matchesPosition(position, elementCount);
+				}
+			};
 		}
 		
 		// see https://www.w3.org/TR/REC-html40/struct/tables.html#h-11.4.3
@@ -1282,27 +1422,31 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		}
 	};
 	
-	private static String serializePseudoElement(PseudoElement element) {
-		StringBuilder b = new StringBuilder();
-		if (element instanceof StackedPseudoElementImpl)
-			for (PseudoElement e : (StackedPseudoElementImpl)element)
-				b.append(serializePseudoElement(e));
-		else {
-			b.append("::").append(element.getName());
-			String[] args = element.getArguments();
-			if (args.length > 0)
-				b.append("(").append(join(args, ", ")).append(")"); }
-		return b.toString();
-	}
-	
-	private static String serializeRuleSet(List<Declaration> declarations, PseudoElement pseudo) {
+	private static String serializeRuleSet(List<Declaration> declarations, PseudoElementImpl pseudo) {
 		StringBuilder b = new StringBuilder();
 		if (pseudo != null)
-			b.append(serializePseudoElement(pseudo)).append(" { ");
+			b.append(pseudo.toString()).append(" { ");
 		b.append(serializeDeclarations(declarations));
 		if (pseudo != null)
 			b.append(" }");
 		return b.toString();
+	}
+	
+	private static String joinRuleSets(String... ruleSets) {
+		String b = null;
+		for (String r : ruleSets)
+			if (r != null && !r.isEmpty())
+				if (b == null)
+					b = r;
+				else {
+					if (!b.endsWith("}"))
+						b = "{ " + b + " }";
+					b += " ";
+					if (!r.endsWith("}"))
+						b += ("{ " + r + " }");
+					else
+						b += r; }
+		return b;
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(RenderTableByDefinition.class);
