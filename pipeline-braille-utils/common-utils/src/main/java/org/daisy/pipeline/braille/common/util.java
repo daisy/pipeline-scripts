@@ -383,6 +383,8 @@ public abstract class util {
 					return ((File)o).toURI();
 				if (o instanceof URL) {
 					URL url = (URL)o;
+					if (url.getProtocol().equals("jar"))
+						return new URI("jar:" + new URI(null, url.getAuthority(), url.getPath(), url.getQuery(), url.getRef()).toASCIIString());
 					String authority = (url.getPort() != -1) ?
 						url.getHost() + ":" + url.getPort() :
 						url.getHost();

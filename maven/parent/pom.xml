@@ -208,42 +208,14 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>xml-maven-plugin</artifactId>
-        <configuration>
-          <transformationSets combine.self="override">
-            <transformationSet>
-              <dir>src</dir>
-              <includes>
-                <include>**/META-INF/catalog.xml</include>
-              </includes>
-              <stylesheet>org/daisy/pipeline/braille/build/catalog-to-ds.xsl</stylesheet>
-              <parameters>
-                <parameter>
-                  <name>outputDir</name>
-                  <value>${project.baseUri}/target/generated-resources</value>
-                </parameter>
-                <parameter>
-                  <name>version</name>
-                  <value>${project.version}</value>
-                </parameter>
-              </parameters>
-              <outputDir>${project.build.directory}/generated-resources</outputDir>
-            </transformationSet>
-          </transformationSets>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.daisy.pipeline.modules.braille</groupId>
-            <artifactId>build-helper</artifactId>
-            <version>1.0.0</version>
-          </dependency>
-        </dependencies>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.daisy.pipeline.modules.braille</groupId>
+          <artifactId>build-helper</artifactId>
+          <version>1.0.1-SNAPSHOT</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -355,6 +327,65 @@
       </plugins>
     </pluginManagement>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>pipeline-braille-xml-module</id>
+      <activation>
+        <file>
+          <exists>src/main/resources/META-INF/catalog.xml</exists>
+        </file>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <excludes>
+              <exclude>META-INF/catalog.xml</exclude>
+            </excludes>
+          </resource>
+          <resource>
+            <directory>${project.build.directory}/generated-resources</directory>
+            <includes>
+              <include>META-INF/catalog.xml</include>
+            </includes>
+          </resource>
+        </resources>
+        <plugins>
+          <!--
+              disable catalog-to-ds step from modules-parent
+          -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>xml-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.daisy.pipeline.modules.braille</groupId>
+            <artifactId>build-helper</artifactId>
+            <executions>
+              <execution>
+                <id>catalog-to-ds</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>catalog-to-ds</goal>
+                </goals>
+                <configuration>
+                  <catalogFile>src/main/resources/META-INF/catalog.xml</catalogFile>
+                  <outputDir>${project.build.directory}/generated-resources</outputDir>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   
   <!--
       for javax.persistence
