@@ -294,7 +294,7 @@
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.task-runner</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
