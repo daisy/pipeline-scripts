@@ -3,7 +3,7 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                type="px:catalog-to-ds"
+                type="px:process-catalog"
                 name="main"
                 exclude-inline-prefixes="#all">
 	
@@ -14,7 +14,7 @@
 	
 	<p:xslt name="xslt">
 		<p:input port="stylesheet">
-			<p:document href="catalog-to-ds.xsl"/>
+			<p:document href="process-catalog.xsl"/>
 		</p:input>
 		<p:with-param name="outputDir" select="$outputDir"/>
 		<p:with-param name="version" select="$version"/>

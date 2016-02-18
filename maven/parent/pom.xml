@@ -348,6 +348,8 @@
             <directory>${project.build.directory}/generated-resources</directory>
             <includes>
               <include>META-INF/catalog.xml</include>
+              <include>generated-scripts</include>
+              <include>generated-scripts/*</include>
             </includes>
           </resource>
         </resources>
@@ -370,10 +372,10 @@
             <artifactId>build-helper</artifactId>
             <executions>
               <execution>
-                <id>catalog-to-ds</id>
+                <id>process-catalog</id>
                 <phase>generate-resources</phase>
                 <goals>
-                  <goal>catalog-to-ds</goal>
+                  <goal>process-catalog</goal>
                 </goals>
                 <configuration>
                   <catalogFile>src/main/resources/META-INF/catalog.xml</catalogFile>

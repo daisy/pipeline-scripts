@@ -6,6 +6,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:html="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="#all" version="2.0">
     
     <xsl:param name="outputDir" required="no" select="''" as="xs:string"/>
@@ -29,7 +31,8 @@
         </xsl:result-document>
     </xsl:template>
     
-    <xsl:template match="cat:uri[@px:script]" mode="ds">
+    <xsl:template match="cat:uri[@px:script]|
+                         cat:uri[@px:extends-script]" mode="ds">
         <xsl:variable name="type" select="string(document(@uri,.)/*/@type)"/>
         <xsl:variable name="id" select="if (namespace-uri-for-prefix(substring-before($type,':'),document(@uri,.)/*)='http://www.daisy.org/ns/pipeline/xproc') then substring-after($type,':') else $type"/>
         <xsl:variable name="name" select="(document(@uri,.)//*[@pxd:role='name'])[1]"/>
@@ -50,6 +53,19 @@
         <xsl:next-match/>
     </xsl:template>
     
+    <xsl:template match="cat:uri[@px:extends-script]" mode="ds">
+        <xsl:next-match/>
+        <xsl:result-document href="{$outputDir}/generated-scripts/{replace(@uri,'^.*/([^/]+)$','$1')}" method="xml">
+            <xsl:apply-templates select="document(@uri,.)" mode="xproc">
+                <xsl:with-param name="original-script" select="document(@px:extends-script)" tunnel="yes"/>
+            </xsl:apply-templates>
+        </xsl:result-document>
+    </xsl:template>
+    
+    <xsl:template match="cat:uri[@px:extends-script]/@uri" mode="ds">
+        <xsl:attribute name="uri" select="concat('../generated-scripts/',replace(.,'^.*/([^/]+)$','$1'))"/>
+    </xsl:template>
+    
     <xsl:template match="cat:uri[@px:data-type]" mode="ds">
         <xsl:variable name="id" select="string(document(@uri,.)/*/@id)"/>
         <xsl:result-document href="{$outputDir}/OSGI-INF/{replace($id,'.*:','')}.xml" method="xml">
@@ -65,7 +81,72 @@
         </xsl:result-document>
         <xsl:next-match/>
     </xsl:template>
-
+    
+    <xsl:template match="cat:uri/@px:script|
+                         cat:uri/@px:extends-script|
+                         cat:uri/@px:data-type"
+                  mode="ds"/>
+    
+    <xsl:template match="p:input[@port]" mode="xproc">
+        <xsl:param name="original-script" as="document-node()" tunnel="yes"/>
+        <xsl:variable name="port" as="xs:string" select="@port"/>
+        <xsl:variable name="original-input" as="element()?" select="$original-script/*/p:input[@port=$port]"/>
+        <xsl:variable name="new-attributes" as="xs:string*" select="@*/concat('{',namespace-uri(.),'}',name(.))"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*" mode="#current"/>
+            <xsl:sequence select="$original-input/@*[not(concat('{',namespace-uri(.),'}',name(.))=$new-attributes)]"/>
+            <xsl:if test="not(p:documentation)">
+                <xsl:sequence select="$original-input/p:documentation"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()" mode="#current">
+                <xsl:with-param name="original-input" select="$original-input"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="p:option[@name]" mode="xproc">
+        <xsl:param name="original-script" as="document-node()" tunnel="yes"/>
+        <xsl:variable name="name" as="xs:string" select="@name"/>
+        <xsl:variable name="original-option" as="element()?" select="$original-script/*/p:option[@name=$name]"/>
+        <xsl:variable name="new-attributes" as="xs:string*" select="concat('{',namespace-uri(.),'}',name(.))"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*" mode="#current"/>
+            <xsl:sequence select="$original-option/@*[not(concat('{',namespace-uri(.),'}',name(.))=$new-attributes)]"/>
+            <xsl:if test="not(p:documentation)">
+                <xsl:sequence select="$original-option/p:documentation"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()" mode="#current">
+                <xsl:with-param name="original-option" select="$original-option"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="p:input/p:documentation">
+        <xsl:param name="original-input" as="element()?"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="not(descendant::*[pxd:role='name'])">
+                <xsl:sequence select="$original-input/p:documentation/*[pxd:role='name']"/>
+            </xsl:if>
+            <xsl:if test="not(descendant::*[pxd:role='desc'])">
+                <xsl:sequence select="$original-input/p:documentation/*[pxd:role='desc']"/>
+            </xsl:if>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="p:option/p:documentation">
+        <xsl:param name="original-option" as="element()?"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="not(descendant::*[pxd:role='name'])">
+                <xsl:sequence select="$original-option/p:documentation/*[pxd:role='name']"/>
+            </xsl:if>
+            <xsl:if test="not(descendant::*[pxd:role='desc'])">
+                <xsl:sequence select="$original-option/p:documentation/*[pxd:role='desc']"/>
+            </xsl:if>
+        </xsl:copy>
+    </xsl:template>
+    
     <xsl:template match="@*|node()" mode="ds xproc">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()" mode="#current"/>
