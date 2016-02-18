@@ -119,8 +119,8 @@
     <css:inline>
         <p:with-option name="default-stylesheet" select="string-join((
                                                            $default-stylesheet,
-                                                           $stylesheet,
-                                                           //d:file/resolve-uri(@href, base-uri(.))),' ')">
+                                                           //d:file/resolve-uri(@href, base-uri(.)),
+                                                           $stylesheet),' ')">
             <p:pipe step="generated-css" port="result"/>
         </p:with-option>
     </css:inline>
