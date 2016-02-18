@@ -116,7 +116,10 @@
           </xsl:for-each-group>
         </xsl:variable>
         <xsl:if test="exists($list)">
-          <list id="generated-toc">
+          <list id="generated-document-toc">
+            <xsl:sequence select="$list"/>
+          </list>
+          <list id="generated-volume-toc">
             <xsl:sequence select="$list"/>
           </list>
         </xsl:if>

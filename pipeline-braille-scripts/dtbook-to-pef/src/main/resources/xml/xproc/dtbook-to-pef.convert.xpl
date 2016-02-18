@@ -81,13 +81,13 @@
             <pxi:fileset-add-tempfile media-type="text/css" suffix=".css">
                 <p:input port="source">
                     <p:inline>
-                        <c:data>#generated-toc {
+                        <c:data>#generated-document-toc {
   flow: document-toc;
   display: -obfl-toc;
   -obfl-toc-range: document;
 }
 
-#generated-toc::duplicate {
+#generated-volume-toc {
   flow: volume-toc;
   display: -obfl-toc;
   -obfl-toc-range: volume;

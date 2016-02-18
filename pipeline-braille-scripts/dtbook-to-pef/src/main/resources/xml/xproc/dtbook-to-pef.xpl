@@ -250,7 +250,7 @@ elements if the specified value for "depth" is 1, from `h1` and `h2` elements if
 is 2, etc. The resulting table of contents has the following nested structure:
 
 ```
-&lt;list id="generated-toc"&gt;
+&lt;list id="generated-document-toc"&gt;
   &lt;li&gt;
       &lt;a href="#ch_1"&gt;Chapter 1&lt;/a&gt;
       &lt;list&gt;
@@ -269,19 +269,19 @@ is 2, etc. The resulting table of contents has the following nested structure:
 &lt;/list&gt;
 ```
 
-`ch_1`, `ch_1_2` etc. are the IDs of the heading elements from which the list was constructed, and
-the content of the links are exact copies of the content of the heading elements. By default the
-list is not rendered. The list should be styled and positioned with CSS. The following rules are
-included by default:
+Another one of these is generated but with ID `generated-volume-toc`. `ch_1`, `ch_1_2` etc. are the
+IDs of the heading elements from which the list was constructed, and the content of the links are
+exact copies of the content of the heading elements. By default the list is not rendered. The list
+should be styled and positioned with CSS. The following rules are included by default:
 
 ```
-#generated-toc {
+#generated-document-toc {
   flow: document-toc;
   display: -obfl-toc;
   -obfl-toc-range: document;
 }
 
-#generated-toc::duplicate {
+#generated-volume-toc {
   flow: volume-toc;
   display: -obfl-toc;
   -obfl-toc-range: volume;
