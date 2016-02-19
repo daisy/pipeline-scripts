@@ -2,6 +2,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <nextCatalog catalog="./pipeline-braille-scripts/dtbook-to-pef/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-scripts/zedai-to-pef/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./pipeline-braille-scripts/html-to-pef/src/main/resources/META-INF/catalog.xml"/>
+    <nextCatalog catalog="./pipeline-braille-scripts/epub3-to-pef/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/common-utils/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/css-utils/css-core/src/main/resources/META-INF/catalog.xml"/>
     <nextCatalog catalog="./pipeline-braille-utils/css-utils/css-utils/src/main/resources/META-INF/catalog.xml"/>

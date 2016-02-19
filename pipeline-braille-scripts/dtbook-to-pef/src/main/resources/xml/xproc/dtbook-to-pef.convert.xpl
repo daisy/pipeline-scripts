@@ -57,6 +57,7 @@
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
@@ -109,6 +110,9 @@
         </px:transform>
     </p:viewport>
 
+    <px:message severity="DEBUG">
+        <p:with-option name="message" select="concat('px:transform query=',concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')'))"/>
+    </px:message>
     <px:transform name="pef">
         <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>

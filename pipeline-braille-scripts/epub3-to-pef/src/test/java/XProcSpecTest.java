@@ -55,14 +55,16 @@ public class XProcSpecTest {
 				brailleModule("liblouis-formatter"),
 				brailleModule("liblouis-native").forThisPlatform(),
 				brailleModule("dotify-formatter"),
-				/*pipelineModule("metadata-utils"),*/
+				
+				
 				pipelineModule("file-utils"),
 				pipelineModule("fileset-utils"),
-				// for metadata-utils
-				/*pipelineModule("validation-utils"),
+				
+				
+				
 				pipelineModule("common-utils"),
-				pipelineModule("html-utils"),
-				pipelineModule("zip-utils"),*/
+				
+				pipelineModule("zip-utils"),
 				pipelineModule("mediatype-utils"),
 				// logging
 				logbackClassic(),

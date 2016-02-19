@@ -21,7 +21,7 @@
     <!-- <module>pef-calabash</module> -->
     <!-- <module>pef-core</module> -->
     <!-- <module>pef-saxon</module> -->
-    <!-- <module>pef-utils</module> -->
+    <module>pef-utils</module>
   </modules>
   
   <build>

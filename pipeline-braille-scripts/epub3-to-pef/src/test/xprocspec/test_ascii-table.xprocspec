@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.daisy.org/ns/xprocspec/xprocspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
@@ -6,22 +7,7 @@
   
   <x:scenario label="ascii-table has priority over xml:lang" pending="wait for BRAILLO_6DOT_031_01 support in braille-utils">
     <x:call step="px:epub3-to-pef">
-      <x:input port="source">
-        <x:document type="inline">
-          <dtbook version="2005-2" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
-            <head>
-              <meta>foobar</meta>
-            </head>
-            <book>
-              <level1>
-                <h1>Foo</h1>
-                <p>bar</p>
-                <p>123</p>
-              </level1>
-            </book>
-          </dtbook>
-        </x:document>
-      </x:input>
+      <x:option name="epub" select="resolve-uri('../resources/test_ascii-table_1/package.opf')"/>
       <x:option name="output-dir" select="resolve-uri('1/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('1/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
@@ -31,7 +17,7 @@
                                             (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="brf">
-      <x:document type="file" method="text" base-uri="temp-dir" href="1/output-dir/test_ascii-table.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="1/output-dir/test.brf"/>
     </x:context>
     <x:expect label="brf" type="compare" normalize-space="false">
       <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf"/>
@@ -40,27 +26,12 @@
 
   <x:scenario label="Table can be found by locale" pending="wait for BRAILLO_6DOT_031_01 support in braille-utils">
     <x:call step="px:epub3-to-pef">
-      <x:input port="source">
-        <x:document type="inline">
-          <dtbook version="2005-2" xml:lang="nl" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
-            <head>
-              <meta>foobar</meta>
-            </head>
-            <book>
-              <level1>
-                <h1>Foo</h1>
-                <p>bar</p>
-                <p>123</p>
-              </level1>
-            </book>
-          </dtbook>
-        </x:document>
-      </x:input>
+      <x:option name="epub" select="resolve-uri('../resources/test_ascii-table_2/package.opf')"/>
       <x:option name="output-dir" select="resolve-uri('2/output-dir',$temp-dir)"/>
       <x:option name="temp-dir" select="resolve-uri('2/temp-dir',$temp-dir)"/>
       <x:option name="include-brf" select="'true'"/>
       <!--
-        The locale will be extracted from xml:lang.
+        The locale will be extracted from dc:language in the OPF.
         This cannot be tested because ascii-table has to be empty,
         but then line-breaks is missing and the test fails on some platforms.
         Instead, just provide locale as a parameter.
@@ -70,7 +41,7 @@
                                             (page-breaks:&quot;---&quot;)'"/>
     </x:call>
     <x:context label="brf">
-      <x:document type="file" method="text" base-uri="temp-dir" href="2/output-dir/test_ascii-table.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="2/output-dir/test.brf"/>
     </x:context>
     <x:expect label="brf" type="compare" normalize-space="false">
       <x:document type="file" method="text" href="../resources/test_ascii-table_1.brf"/>

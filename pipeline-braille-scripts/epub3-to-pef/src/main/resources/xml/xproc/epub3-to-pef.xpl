@@ -7,6 +7,7 @@
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:opf="http://www.idpf.org/2007/opf"
                 exclude-inline-prefixes="#all"
                 name="main">
 
@@ -384,8 +385,10 @@ content at the beginning of every other volume, include the following additional
     <!-- Imports -->
     <!-- ======= -->
     <p:import href="epub3-to-pef.convert.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     
@@ -395,23 +398,24 @@ content at the beginning of every other volume, include the following additional
     <px:tempdir name="temp-dir">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:tempdir>
-    <p:sink/>
     
     <!--
         Until v1.10 of DP2 is released, we cannot point into ZIP files using URIs.
         So for now we unzip the entire EPUB before continuing.
         See: https://github.com/daisy/pipeline-modules-common/pull/73
     -->
+    <px:message message="Loading EPUB"/>
     <p:choose name="load">
         <p:when test="ends-with(lower-case($epub),'.epub')">
             <p:output port="fileset.out" primary="true"/>
-            <p:output port="in-memory.out">
+            <p:output port="in-memory.out" sequence="true">
                 <p:pipe port="in-memory.out" step="unzip"/>
             </p:output>
             
+            <px:message severity="DEBUG" message="EPUB is in a ZIP container; unzipping"/>
             <px:unzip-fileset name="unzip">
-                <p:with-option name="href" select="$epub-href"/>
-                <p:with-option name="unzipped-basedir" select="concat(string(/c:result),'epub/'">
+                <p:with-option name="href" select="$epub"/>
+                <p:with-option name="unzipped-basedir" select="concat(string(/c:result),'epub/')">
                     <p:pipe step="temp-dir" port="result"/>
                 </p:with-option>
             </px:unzip-fileset>
@@ -433,37 +437,45 @@ content at the beginning of every other volume, include the following additional
                     <p:with-option name="attribute-value" select="resolve-uri(/*/@href,base-uri())"/>
                 </p:add-attribute>
             </p:viewport>
-            <px:medatype-detect/>
+            <px:mediatype-detect/>
             
         </p:when>
         <p:otherwise>
             <p:output port="fileset.out" primary="true">
                 <p:pipe port="result" step="load.fileset"/>
             </p:output>
-            <p:output port="in-memory.out">
+            <p:output port="in-memory.out" sequence="true">
                 <p:pipe port="result" step="load.in-memory"/>
             </p:output>
             
+            <px:message message="EPUB is not in a container"/>
             <px:fileset-create>
-                <p:with-option name="base" select="replace($epub,'(.*/)([^/]*)','$1'"/>
+                <p:with-option name="base" select="replace($epub,'(.*/)([^/]*)','$1')"/>
             </px:fileset-create>
-            <px:filest-add-entry media-type="application/oebps-package+xml">
-                <p:with-option name="href" select="replace($epub,'(.*/)([^/]*)','$1'"/>
+            <px:fileset-add-entry media-type="application/oebps-package+xml">
+                <p:with-option name="href" select="replace($epub,'(.*/)([^/]*)','$2')"/>
                 <p:with-option name="original-href" select="$epub"/>
-            </px:filest-add-entry>
-            <px:medatype-detect/>
+            </px:fileset-add-entry>
+            <px:mediatype-detect/>
             <p:identity name="load.fileset"/>
             
-            <px:fileset-load/>
+            <px:fileset-load>
+                <p:input port="in-memory">
+                    <p:empty/>
+                </p:input>
+            </px:fileset-load>
             <p:identity name="load.in-memory"/>
         </p:otherwise>
     </p:choose>
     
     <!-- Get the OPF so that we can use the metadata in options -->
-    <px:fileset-load media-types="application/oebps-package+xml">
-        <p:input port="fileset">
+    <p:identity>
+        <p:input port="source">
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
+    </p:identity>
+    <px:message message="Getting the OPF"/>
+    <px:fileset-load media-types="application/oebps-package+xml">
         <p:input port="in-memory">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
@@ -474,17 +486,20 @@ content at the beginning of every other volume, include the following additional
     <!-- ============= -->
     <!-- EPUB 3 TO PEF -->
     <!-- ============= -->
-    <px:epub3-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css">
-        <p:input port="fileset">
+    <p:identity>
+        <p:input port="source">
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
-        <p:input port="in-memory">
+    </p:identity>
+    <px:message message="Done loading EPUB, starting conversion to PEF"/>
+    <px:epub3-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css" name="convert">
+        <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="if ($transform!='') then $transform
                                                 else '(translator:liblouis)(formatter:dotify)'"/>
-        <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/'">
+        <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
         <!-- <p:with-option name="page-width" select="$page-width"/> -->
@@ -525,14 +540,22 @@ content at the beginning of every other volume, include the following additional
         <!-- <p:with-option name="minimum-number-of-pages" select="$minimum-number-of-pages"/> -->
         <!-- <p:with-option name="sbsform-macros" select="$sbsform-macros"/> -->
     </px:epub3-to-pef.convert>
+    <p:sink/>
     
     <!-- ========= -->
     <!-- STORE PEF -->
     <!-- ========= -->
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="in-memory.out" step="convert"/>
+        </p:input>
+    </p:identity>
+    <px:message message="Storing PEF"/>
+    <p:delete match="/*/@xml:base"/>
     <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="if (ends-with(lower-case($epub),'.epub')) then replace($epub,'^.*/([^/]*)\.[^/\.]*$','$1')
-                                           else (/opf:package/opf:metadata/opf:identifier[not(@refines)])[1]">
+                                           else (/opf:package/opf:metadata/dc:identifier[not(@refines)], 'unknown-identifier')[1]">
             <p:pipe step="opf" port="result"/>
         </p:with-option>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
