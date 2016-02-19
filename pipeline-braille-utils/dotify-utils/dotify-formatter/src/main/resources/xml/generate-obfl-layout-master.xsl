@@ -22,6 +22,7 @@
     <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="xs:string"/>
         <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="duplex" as="xs:boolean"/>
         <xsl:variable name="page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet)"/>
         <xsl:variable name="right-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':right']/@style)"/>
         <xsl:variable name="left-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':left']/@style)"/>
@@ -39,7 +40,7 @@
                       select="css:parse-declaration-list($default-page-stylesheet[not(@selector)]/@style)"/>
         <xsl:variable name="size" as="xs:string"
                       select="($default-page-properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
-        <layout-master name="{$name}" duplex="true" page-number-variable="page"
+        <layout-master name="{$name}" duplex="{if ($duplex) then 'true' else 'false'}" page-number-variable="page"
                        page-width="{tokenize($size, '\s+')[1]}" page-height="{tokenize($size, '\s+')[2]}">
             <xsl:if test="$right-page-stylesheet">
                 <!--

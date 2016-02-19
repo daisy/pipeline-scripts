@@ -12,6 +12,7 @@
     </p:output>
     
     <p:option name="text-transform" select="'auto'"/>
+    <p:option name="duplex" select="'true'"/>
     
     <p:import href="css-to-obfl.xpl"/>
     <p:import href="obfl-normalize-space.xpl"/>
@@ -19,6 +20,7 @@
     
     <pxi:css-to-obfl name="obfl">
         <p:with-option name="text-transform" select="$text-transform"/>
+        <p:with-option name="duplex" select="$duplex"/>
     </pxi:css-to-obfl>
     
     <pxi:obfl-normalize-space/>

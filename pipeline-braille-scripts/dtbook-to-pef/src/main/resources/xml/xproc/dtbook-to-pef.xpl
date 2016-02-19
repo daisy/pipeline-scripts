@@ -95,11 +95,10 @@
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="duplex" required="false" px:type="string" select="'true'">
+    <p:option name="duplex" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Duplex</h2>
-            <p px:role="desc">When enabled, will print on both sides of the paper.
-**Not implemented**</p>
+            <p px:role="desc">When enabled, will print on both sides of the paper.</p>
         </p:documentation>
     </p:option>
     
@@ -455,7 +454,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="page-height" select="$page-height"/>
         <!-- <p:with-option name="predefined-page-formats" select="$predefined-page-formats"/> -->
         <!-- <p:with-option name="left-margin" select="$left-margin"/> -->
-        <!-- <p:with-option name="duplex" select="$duplex"/> -->
+        <p:with-option name="duplex" select="$duplex"/>
         <!-- <p:with-option name="levels-in-footer" select="$levels-in-footer"/> -->
         <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
         <!-- <p:with-option name="contraction-grade" select="$contraction-grade"/> -->

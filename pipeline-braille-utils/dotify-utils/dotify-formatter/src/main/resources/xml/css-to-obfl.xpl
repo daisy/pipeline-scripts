@@ -18,6 +18,7 @@
     <p:output port="result" sequence="false"/>
     
     <p:option name="text-transform" required="true"/>
+    <p:option name="duplex" required="true"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
@@ -519,6 +520,9 @@
             <p:document href="css-to-obfl.xsl"/>
         </p:input>
         <p:with-param name="braille-translator-query" select="if ($text-transform='auto') then '' else $text-transform">
+            <p:empty/>
+        </p:with-param>
+        <p:with-param name="duplex" select="$duplex">
             <p:empty/>
         </p:with-param>
     </p:xslt>

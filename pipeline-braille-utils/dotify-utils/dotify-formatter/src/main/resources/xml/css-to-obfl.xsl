@@ -13,7 +13,8 @@
     
     <xsl:include href="generate-obfl-layout-master.xsl"/>
     
-    <xsl:param name="braille-translator-query" as="xs:string" select="''"/>
+    <xsl:param name="braille-translator-query" as="xs:string" required="yes"/>
+    <xsl:param name="duplex" as="xs:string" required="yes"/>
     
     <xsl:key name="page-stylesheet" match="/*[not(@css:flow)]" use="string(@css:page)"/>
     
@@ -28,7 +29,8 @@
         <xsl:variable name="elem" as="element()" select="(collection()/*[not(@css:flow)]/key('page-stylesheet', $page-stylesheet))[1]"/>
         <xsl:sequence select="obfl:generate-layout-master(
                                 $elem/string(@css:page),
-                                pxi:generate-layout-master-name($page-stylesheet))"/>
+                                pxi:generate-layout-master-name($page-stylesheet),
+                                $duplex='true')"/>
     </xsl:function>
     
     <!--

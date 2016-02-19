@@ -22,7 +22,7 @@
     <p:option name="page-height" required="true"/>
     <!-- <p:option name="predefined-page-formats" required="true"/> -->
     <!-- <p:option name="left-margin" required="true"/> -->
-    <!-- <p:option name="duplex" required="true"/> -->
+    <p:option name="duplex" required="true"/>
     <!-- <p:option name="levels-in-footer" required="true"/> -->
     <!-- <p:option name="main-document-language" required="true"/> -->
     <!-- <p:option name="contraction-grade" required="true"/> -->
@@ -148,6 +148,7 @@
     <px:transform name="pef">
         <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
+        <p:with-param port="parameters" name="duplex" select="$duplex"/>
     </px:transform>
 
     <p:xslt name="metadata">
