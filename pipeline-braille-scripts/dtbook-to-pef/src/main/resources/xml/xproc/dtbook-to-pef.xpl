@@ -43,7 +43,7 @@
             <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs. Applied prior to any style sheets linked from or embedded in the source document.</p>
         </p:documentation>
     </p:option>
-    <p:option name="transform" required="false" px:type="string" select="'(translator:liblouis)(formatter:dotify)'">
+    <p:option name="transform" required="false" px:data-type="transform-query" select="'(translator:liblouis)(formatter:dotify)'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Transformer query</h2>
         </p:documentation>
