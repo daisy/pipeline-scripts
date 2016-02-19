@@ -73,15 +73,13 @@
     <p:option name="page-width" required="false" px:type="integer" select="'40'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page width</h2>
-            <p px:role="desc">The number of columns available for printing.
-**Not implemented**</p>
+            <p px:role="desc">The number of columns available for printing.</p>
         </p:documentation>
     </p:option>
     <p:option name="page-height" required="false" px:type="integer" select="'25'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page height</h2>
-            <p px:role="desc">The number of rows available for printing.
-**Not implemented**</p>
+            <p px:role="desc">The number of rows available for printing.</p>
         </p:documentation>
     </p:option>
     <p:option name="predefined-page-formats" required="false" px:type="string" select="'A4'">
@@ -453,8 +451,8 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-        <!-- <p:with-option name="page-width" select="$page-width"/> -->
-        <!-- <p:with-option name="page-height" select="$page-height"/> -->
+        <p:with-option name="page-width" select="$page-width"/>
+        <p:with-option name="page-height" select="$page-height"/>
         <!-- <p:with-option name="predefined-page-formats" select="$predefined-page-formats"/> -->
         <!-- <p:with-option name="left-margin" select="$left-margin"/> -->
         <!-- <p:with-option name="duplex" select="$duplex"/> -->

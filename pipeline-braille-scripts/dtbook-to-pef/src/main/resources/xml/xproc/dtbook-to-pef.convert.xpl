@@ -18,8 +18,8 @@
     <p:option name="stylesheet" required="true"/>
     <p:option name="transform" required="true"/>
     
-    <!-- <p:option name="page-width" required="true"/> -->
-    <!-- <p:option name="page-height" required="true"/> -->
+    <p:option name="page-width" required="true"/>
+    <p:option name="page-height" required="true"/>
     <!-- <p:option name="predefined-page-formats" required="true"/> -->
     <!-- <p:option name="left-margin" required="true"/> -->
     <!-- <p:option name="duplex" required="true"/> -->
@@ -76,6 +76,17 @@
         </p:with-option>
     </px:fileset-create>
     
+    <pxi:fileset-add-tempfile media-type="text/css" suffix=".scss">
+        <p:input port="source">
+            <p:inline>
+                        <c:data>@page {
+  size: $page-width $page-height;
+}
+</c:data>
+            </p:inline>
+        </p:input>
+    </pxi:fileset-add-tempfile>
+            
     <p:choose>
         <p:when test="not($toc-depth='0')">
             <pxi:fileset-add-tempfile media-type="text/css" suffix=".css">
@@ -123,6 +134,8 @@
                                                            $stylesheet),' ')">
             <p:pipe step="generated-css" port="result"/>
         </p:with-option>
+        <p:with-param port="sass-variables" name="page-width" select="$page-width"/>
+        <p:with-param port="sass-variables" name="page-height" select="$page-height"/>
     </css:inline>
 
     <p:viewport match="math:math">
