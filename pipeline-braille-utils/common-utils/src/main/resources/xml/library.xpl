@@ -10,8 +10,9 @@
     <p:import href="xslt-for-each.xpl"/>
     
     <p:declare-step type="px:transform">
-        <p:input port="source" sequence="false"/>
-        <p:output port="result" sequence="false"/>
+        <p:input port="source"/>
+        <p:input port="parameters" kind="parameter" primary="false"/>
+        <p:output port="result"/>
         <p:option name="query" required="true"/>
         <p:option name="temp-dir" required="false"/>
     </p:declare-step>

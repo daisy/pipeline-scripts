@@ -127,6 +127,14 @@ public class PxTransformStep extends Eval {
 	}
 	
 	@Override
+	public void setParameter(String port, QName name, RuntimeValue value) {
+		if ("parameters".equals(port))
+			setParameter(name, value);
+		else
+			throw new XProcException("No parameters allowed on port '" + port + "'");
+	}
+	
+	@Override
 	public void run() throws SaxonApiException {
 		try { setup(); }
 		catch (Exception e) {

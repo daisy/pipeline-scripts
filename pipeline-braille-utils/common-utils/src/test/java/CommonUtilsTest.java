@@ -24,11 +24,13 @@ import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
-import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
+import static org.daisy.pipeline.pax.exam.Options.xprocspec;
+import static org.daisy.pipeline.pax.exam.Options.xspec;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +47,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.osgi.framework.BundleContext;
@@ -61,19 +62,22 @@ public class CommonUtilsTest {
 		return options(
 			logbackConfigFile(),
 			calabashConfigFile(),
-			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			brailleModule("css-core"),
+			junitBundles(),
 			thisBundle(),
-			xspecBundles(),
-			xprocspecBundles(),
-			junitBundles()
+			mavenBundlesWithDependencies(
+				brailleModule("css-core"),
+				mavenBundle("org.daisy.dotify:dotify.api:?"),
+				// logging
+				logbackClassic(),
+				// xprocspec
+				xprocspec(),
+				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"),
+				// xspec
+				xspec(),
+				mavenBundle("org.apache.servicemix.bundles:org.apache.servicemix.bundles.xmlresolver:?"),
+				mavenBundle("org.daisy.pipeline:saxon-adapter:?"))
 		);
 	}
 	
