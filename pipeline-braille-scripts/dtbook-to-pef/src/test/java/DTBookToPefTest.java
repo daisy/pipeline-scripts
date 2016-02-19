@@ -31,7 +31,6 @@ import org.ops4j.pax.exam.util.PathUtils;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -71,10 +70,7 @@ public class DTBookToPefTest {
 				logbackClassic(),
 				// xprocspec
 				xprocspec(),
-				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?")),
-			
-			// FIXME: properly OSGify
-			wrappedBundle(mavenBundle("io.bit3:jsass:?"))
+				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"))
 		);
 	}
 	

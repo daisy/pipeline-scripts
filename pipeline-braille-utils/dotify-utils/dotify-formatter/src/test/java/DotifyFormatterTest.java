@@ -49,9 +49,7 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 import org.osgi.framework.BundleContext;
 
@@ -95,10 +93,7 @@ public class DotifyFormatterTest {
 				// xspec
 				xspec(),
 				mavenBundle("org.apache.servicemix.bundles:org.apache.servicemix.bundles.xmlresolver:?"),
-				mavenBundle("org.daisy.pipeline:saxon-adapter:?")),
-			
-			// FIXME: properly OSGify
-			wrappedBundle(mavenBundle("io.bit3:jsass:?"))
+				mavenBundle("org.daisy.pipeline:saxon-adapter:?"))
 		);
 	}
 	

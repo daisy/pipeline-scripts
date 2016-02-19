@@ -25,13 +25,14 @@
       <groupId>org.daisy.braille</groupId>
       <artifactId>braille-css</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.bit3</groupId>
-      <artifactId>jsass</artifactId>
-    </dependency>
     <!--
         test dependencies
     -->
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>io.bit3.jsass</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

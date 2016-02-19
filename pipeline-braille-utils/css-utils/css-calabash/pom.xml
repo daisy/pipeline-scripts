@@ -56,8 +56,8 @@
       <artifactId>xml-apis</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.bit3</groupId>
-      <artifactId>jsass</artifactId>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>io.bit3.jsass</artifactId>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>

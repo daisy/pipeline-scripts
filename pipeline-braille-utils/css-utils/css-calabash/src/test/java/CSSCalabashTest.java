@@ -29,9 +29,7 @@ import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -49,6 +47,7 @@ public class CSSCalabashTest {
 			mavenBundlesWithDependencies(
 				brailleModule("common-utils"),
 				brailleModule("css-core"),
+				mavenBundle("org.daisy.libs:io.bit3.jsass:?"),
 				mavenBundle("com.google.guava:guava:?"),
 				mavenBundle("org.daisy.libs:com.xmlcalabash:?"),
 				mavenBundle("org.daisy.libs:saxon-he:?"),
@@ -59,10 +58,7 @@ public class CSSCalabashTest {
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?")),
-			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/css-module/"),
-			
-			// FIXME: properly OSGify
-			wrappedBundle(mavenBundle("io.bit3:jsass:?"))
+			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/css-module/")
 		);
 	}
 	

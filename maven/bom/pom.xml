@@ -312,9 +312,12 @@
                 <version>1.2</version>
             </dependency>
             <dependency>
-                <groupId>io.bit3</groupId>
-                <artifactId>jsass</artifactId>
-                <version>4.1.0</version>
+                <groupId>org.daisy.libs</groupId>
+                <artifactId>io.bit3.jsass</artifactId>
+                <!--
+                    depends on https://github.com/daisy/osgi-libs/pull/33
+                -->
+                <version>4.1.0-SNAPSHOT</version>
             </dependency>
             <!--
                 for liblouis-java and jhyphen
