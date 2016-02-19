@@ -25,7 +25,6 @@
     <p:option name="duplex" required="true"/>
     <!-- <p:option name="levels-in-footer" required="true"/> -->
     <!-- <p:option name="main-document-language" required="true"/> -->
-    <!-- <p:option name="contraction-grade" required="true"/> -->
     <!-- <p:option name="hyphenation-with-single-line-spacing" required="true"/> -->
     <!-- <p:option name="hyphenation-with-double-line-spacing" required="true"/> -->
     <!-- <p:option name="line-spacing" required="true"/> -->

@@ -121,13 +121,6 @@
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="contraction-grade" required="false" px:type="integer" select="'0'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Translation/formatting of text: Contraction grade</h2>
-            <p px:role="desc">Contraction grades are either uncontracted (0) or grade 1-3.
-**Not implemented**</p>
-        </p:documentation>
-    </p:option>
     <p:option name="hyphenation-with-single-line-spacing" required="false" px:type="string" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Hyphenation with single line spacing</h2>
@@ -457,7 +450,6 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="duplex" select="$duplex"/>
         <!-- <p:with-option name="levels-in-footer" select="$levels-in-footer"/> -->
         <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
-        <!-- <p:with-option name="contraction-grade" select="$contraction-grade"/> -->
         <!-- <p:with-option name="hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/> -->
         <!-- <p:with-option name="hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/> -->
         <!-- <p:with-option name="line-spacing" select="$line-spacing"/> -->
