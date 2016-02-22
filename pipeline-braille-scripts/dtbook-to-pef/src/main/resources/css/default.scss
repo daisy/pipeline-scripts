@@ -6,6 +6,8 @@
  * - $hyphenation
  * - $line-spacing
  * - $capital-letters
+ * - $include-captions
+ * - $include-images
  */
 
 @page {
@@ -47,5 +49,17 @@
 @if $capital-letters != true {
 	:root {
 		text-transform: lowercase;
+	}
+}
+
+@if $include-captions != true {
+	caption {
+		display: none;
+	}
+}
+
+@if $include-images {
+	img::after {
+		content: attr(alt);
 	}
 }

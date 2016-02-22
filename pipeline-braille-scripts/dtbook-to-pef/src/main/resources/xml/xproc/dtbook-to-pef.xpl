@@ -200,7 +200,6 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Capital letters</h2>
             <p px:role="desc">When enabled, will indicate capital letters.
-            
 Makes the variable `$capital-letters` available in style sheets and includes the following rule by
 default:
 
@@ -239,14 +238,32 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include captions</h2>
             <p px:role="desc">When enabled, will include captions for images, tables, and so on.
-**Not implemented**</p>
+Makes the variable `$include-captions` available in style sheets and includes the following rule by
+default:
+
+```
+@if $include-captions != true {
+  caption {
+    display: none;
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="include-images" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include images</h2>
             <p px:role="desc">When enabled, will include the alt text of the images. When disabled, the images will be completely removed.
-**Not implemented**</p>
+Makes the variable `$include-images` available in style sheets and includes the following rule by
+default:
+
+```
+@if $include-images {
+  img::after {
+    content: attr(alt);
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="include-image-groups" required="false" px:type="boolean" select="'true'">
@@ -514,8 +531,8 @@ content at the beginning of every other volume, include the following additional
         <!-- <p:with-option name="accented-letters" select="$accented-letters"/> -->
         <!-- <p:with-option name="polite-forms" select="$polite-forms"/> -->
         <!-- <p:with-option name="downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/> -->
-        <!-- <p:with-option name="include-captions" select="$include-captions"/> -->
-        <!-- <p:with-option name="include-images" select="$include-images"/> -->
+        <p:with-option name="include-captions" select="$include-captions"/>
+        <p:with-option name="include-images" select="$include-images"/>
         <!-- <p:with-option name="include-image-groups" select="$include-image-groups"/> -->
         <!-- <p:with-option name="include-line-groups" select="$include-line-groups"/> -->
         <!-- <p:with-option name="text-level-formatting" select="$text-level-formatting"/> -->
