@@ -108,6 +108,11 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>libhyphen-libreoffice-tables</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>dotify-formatter</artifactId>
       <scope>test</scope>
     </dependency>

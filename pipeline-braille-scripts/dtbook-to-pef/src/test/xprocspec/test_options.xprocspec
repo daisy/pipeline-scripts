@@ -169,6 +169,95 @@
       </x:expect>
     </x:scenario>
     
+    <x:scenario label="hyphenation">
+      <x:documentation>
+        Tests hyphenation option.
+      </x:documentation>
+      <x:call>
+        <x:input port="source">
+          <x:document type="inline">
+            <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en" version="2005-3">
+              <head>
+                <style type="text/css">
+                  @page {
+                    size: 18 5;
+                  }
+                </style>
+              </head>
+              <book>
+                <level1>
+                  <h1>simpletest simpletest simpletest</h1>
+                </level1>
+              </book>
+            </dtbook>
+          </x:document>
+        </x:input>
+      </x:call>
+      <x:scenario label="enabled">
+        <x:call>
+          <x:option name="hyphenation" select="'true'"/>
+          <x:option name="output-dir" select="concat($temp-dir,'hyphenation/enabled/output-dir/')"/>
+          <x:option name="temp-dir" select="concat($temp-dir,'hyphenation/enabled/temp-dir/')"/>
+        </x:call>
+        <x:context label="result">
+          <x:document type="file" base-uri="temp-dir" href="hyphenation/enabled/output-dir/test_options.pef"/>
+        </x:context>
+        <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+          <x:document type="inline">
+            <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+              <head>
+                <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+                  <dc:format>application/x-pef+xml</dc:format>
+                </meta>
+              </head>
+              <body>
+                <volume cols="18" rows="5" rowgap="0" duplex="true">
+                  <section>
+                    <page>
+                      <row>⠎⠊⠍⠏⠇⠑⠞⠑⠌⠀⠎⠊⠍⠤</row>
+                      <row>⠏⠇⠑⠞⠑⠌⠀⠎⠊⠍⠏⠇⠑⠞⠑⠌</row>
+                    </page>
+                  </section>
+                </volume>
+              </body>
+            </pef>
+          </x:document>
+        </x:expect>
+      </x:scenario>
+      <x:scenario label="disabled">
+        <x:call>
+          <x:option name="hyphenation" select="'false'"/>
+          <x:option name="output-dir" select="concat($temp-dir,'hyphenation/disabled/output-dir/')"/>
+          <x:option name="temp-dir" select="concat($temp-dir,'hyphenation/disabled/temp-dir/')"/>
+        </x:call>
+        <x:context label="result">
+          <x:document type="file" base-uri="temp-dir" href="hyphenation/disabled/output-dir/test_options.pef"/>
+        </x:context>
+        <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+          <x:document type="inline">
+            <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+              <head>
+                <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+                  <dc:format>application/x-pef+xml</dc:format>
+                </meta>
+              </head>
+              <body>
+                <volume cols="18" rows="5" rowgap="0" duplex="true">
+                  <section>
+                    <page>
+                      <row>⠎⠊⠍⠏⠇⠑⠞⠑⠌</row>
+                      <row>⠎⠊⠍⠏⠇⠑⠞⠑⠌</row>
+                      <row>⠎⠊⠍⠏⠇⠑⠞⠑⠌</row>
+                    </page>
+                  </section>
+                </volume>
+              </body>
+            </pef>
+          </x:document>
+        </x:expect>
+      </x:scenario>
+    </x:scenario>
+      
   </x:scenario>
   
 </x:description>

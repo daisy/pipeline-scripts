@@ -25,8 +25,7 @@
     <p:option name="duplex" required="true"/>
     <p:option name="levels-in-footer" required="true"/>
     <!-- <p:option name="main-document-language" required="true"/> -->
-    <!-- <p:option name="hyphenation-with-single-line-spacing" required="true"/> -->
-    <!-- <p:option name="hyphenation-with-double-line-spacing" required="true"/> -->
+    <p:option name="hyphenation" required="true"/>
     <!-- <p:option name="line-spacing" required="true"/> -->
     <!-- <p:option name="tab-width" required="true"/> -->
     <!-- <p:option name="capital-letters" required="true"/> -->
@@ -91,6 +90,7 @@
         <p:with-param port="sass-variables" name="page-width" select="$page-width"/>
         <p:with-param port="sass-variables" name="page-height" select="$page-height"/>
         <p:with-param port="sass-variables" name="levels-in-footer" select="$levels-in-footer"/>
+        <p:with-param port="sass-variables" name="hyphenation" select="$hyphenation"/>
     </css:inline>
 
     <p:viewport match="math:math">

@@ -158,18 +158,20 @@ the following in your custom style sheet:
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="hyphenation-with-single-line-spacing" required="false" px:type="string" select="'true'">
+    <p:option name="hyphenation" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Translation/formatting of text: Hyphenation with single line spacing</h2>
-            <p px:role="desc">When enabled, will hyphenate content where single line spacing is used.
-**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="hyphenation-with-double-line-spacing" required="false" px:type="string" select="'false'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Translation/formatting of text: Hyphenation with double line spacing</h2>
-            <p px:role="desc">When enabled, will hyphenate content where double line spacing is used.
-**Not implemented**</p>
+            <h2 px:role="name">Translation/formatting of text: Hyphenation</h2>
+            <p px:role="desc">When enabled, will automatically hyphenate text.
+Makes the variable `$hyphenation` available in style sheets and includes the following rule by
+default:
+
+```
+@if $hyphenation {
+  :root {
+    hyphens: auto;
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="line-spacing" required="false" px:data-type="dtbook-to-pef:line-spacing" select="'single'">
@@ -486,8 +488,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="duplex" select="$duplex"/>
         <p:with-option name="levels-in-footer" select="$levels-in-footer"/>
         <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
-        <!-- <p:with-option name="hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/> -->
-        <!-- <p:with-option name="hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/> -->
+        <p:with-option name="hyphenation" select="$hyphenation"/>
         <!-- <p:with-option name="line-spacing" select="$line-spacing"/> -->
         <!-- <p:with-option name="tab-width" select="$tab-width"/> -->
         <!-- <p:with-option name="capital-letters" select="$capital-letters"/> -->

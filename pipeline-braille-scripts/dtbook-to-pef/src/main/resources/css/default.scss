@@ -3,6 +3,7 @@
  * - $page-width
  * - $page-height
  * - $levels-in-footer
+ * - $hyphenation
  */
 
 @page {
@@ -26,5 +27,11 @@
 		h#{$level} {
 			string-set: footer content();
 		}
+	}
+}
+
+@if $hyphenation {
+	:root {
+		hyphens: auto;
 	}
 }
