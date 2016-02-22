@@ -35,7 +35,7 @@
     <p:option name="include-captions" required="true"/>
     <p:option name="include-images" required="true"/>
     <!-- <p:option name="include-image-groups" required="true"/> -->
-    <!-- <p:option name="include-line-groups" required="true"/> -->
+    <p:option name="include-line-groups" required="true"/>
     <!-- <p:option name="text-level-formatting" required="true"/> -->
     <!-- <p:option name="include-note-references" required="true"/> -->
     <!-- <p:option name="include-production-notes" required="true"/> -->
@@ -95,6 +95,7 @@
         <p:with-param port="sass-variables" name="capital-letters" select="$capital-letters"/>
         <p:with-param port="sass-variables" name="include-captions" select="$include-captions"/>
         <p:with-param port="sass-variables" name="include-images" select="$include-images"/>
+        <p:with-param port="sass-variables" name="include-line-groups" select="$include-line-groups"/>
     </css:inline>
 
     <p:viewport match="math:math">

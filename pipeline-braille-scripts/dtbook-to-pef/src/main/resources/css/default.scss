@@ -8,6 +8,7 @@
  * - $capital-letters
  * - $include-captions
  * - $include-images
+ * - $include-line-groups
  */
 
 @page {
@@ -62,4 +63,8 @@
 	img::after {
 		content: attr(alt);
 	}
+}
+
+linegroup line {
+	display: if($include-line-groups, block, inline);
 }

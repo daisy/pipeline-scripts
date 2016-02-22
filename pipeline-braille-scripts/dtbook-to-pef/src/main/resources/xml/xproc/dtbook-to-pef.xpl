@@ -74,6 +74,7 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page width</h2>
             <p px:role="desc" xml:space="preserve">The number of columns available for printing.
+
 Makes the variable `$page-width` available in style sheets and includes the following rule by default:
 
 ```
@@ -87,6 +88,7 @@ Makes the variable `$page-width` available in style sheets and includes the foll
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page height</h2>
             <p px:role="desc" xml:space="preserve">The number of rows available for printing.
+
 Makes the variable `$page-height` available in style sheets and includes the following rule by default:
 
 ```
@@ -162,6 +164,7 @@ the following in your custom style sheet:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Hyphenation</h2>
             <p px:role="desc">When enabled, will automatically hyphenate text.
+
 Makes the variable `$hyphenation` available in style sheets and includes the following rule by
 default:
 
@@ -178,6 +181,7 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Line spacing</h2>
             <p px:role="desc">'single' or 'double' line spacing.
+
 Makes the variable `$line-spacing` available in style sheets and includes the following rule by
 default:
 
@@ -200,6 +204,7 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Capital letters</h2>
             <p px:role="desc">When enabled, will indicate capital letters.
+
 Makes the variable `$capital-letters` available in style sheets and includes the following rule by
 default:
 
@@ -238,6 +243,7 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include captions</h2>
             <p px:role="desc">When enabled, will include captions for images, tables, and so on.
+
 Makes the variable `$include-captions` available in style sheets and includes the following rule by
 default:
 
@@ -254,6 +260,7 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include images</h2>
             <p px:role="desc">When enabled, will include the alt text of the images. When disabled, the images will be completely removed.
+
 Makes the variable `$include-images` available in style sheets and includes the following rule by
 default:
 
@@ -275,7 +282,14 @@ default:
     <p:option name="include-line-groups" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include line groups</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <p px:role="desc">Makes the variable `$include-line-groups` available in style sheets
+and includes the following rule by default:
+
+```
+linegroup line {
+  display: if($include-line-groups, block, inline);
+}
+```</p>
         </p:documentation>
     </p:option>
     
@@ -332,6 +346,7 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Table of contents: Table of contents depth</h2>
             <p px:role="desc" xml:space="preserve">The depth of the table of contents hierarchy to include. '0' means no table of contents.
+
 A table of contents will be generated from the heading elements present in the document: from `h1`
 elements if the specified value for "depth" is 1, from `h1` and `h2` elements if the specified value
 is 2, etc. The resulting table of contents has the following nested structure:
@@ -534,7 +549,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="include-captions" select="$include-captions"/>
         <p:with-option name="include-images" select="$include-images"/>
         <!-- <p:with-option name="include-image-groups" select="$include-image-groups"/> -->
-        <!-- <p:with-option name="include-line-groups" select="$include-line-groups"/> -->
+        <p:with-option name="include-line-groups" select="$include-line-groups"/>
         <!-- <p:with-option name="text-level-formatting" select="$text-level-formatting"/> -->
         <!-- <p:with-option name="include-note-references" select="$include-note-references"/> -->
         <!-- <p:with-option name="include-production-notes" select="$include-production-notes"/> -->
