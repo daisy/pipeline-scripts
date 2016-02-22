@@ -122,7 +122,30 @@ Makes the variable `$page-height` available in style sheets and includes the fol
     <p:option name="levels-in-footer" required="false" px:type="integer" select="'6'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Headers/footers: Levels in footer</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <p px:role="desc">Makes the variable `$levels-in-footer` available in style sheets and
+includes the following rule by default:
+
+```
+@for $level from 1 through 6 {
+  @if $levels-in-footer >= $level {
+    h#{$level} {
+      string-set: footer content();
+    }
+  }
+}
+```
+
+In other words, the `footer` string is updated each time a heading with a level smaller than or
+equal to `levels-in-footer` is encountered. In order to use the `footer` string include a rule like
+the following in your custom style sheet:
+
+```
+@page {
+  @bottom-center {
+    content: string(footer);
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     
@@ -461,7 +484,7 @@ content at the beginning of every other volume, include the following additional
         <!-- <p:with-option name="predefined-page-formats" select="$predefined-page-formats"/> -->
         <!-- <p:with-option name="left-margin" select="$left-margin"/> -->
         <p:with-option name="duplex" select="$duplex"/>
-        <!-- <p:with-option name="levels-in-footer" select="$levels-in-footer"/> -->
+        <p:with-option name="levels-in-footer" select="$levels-in-footer"/>
         <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
         <!-- <p:with-option name="hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/> -->
         <!-- <p:with-option name="hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/> -->

@@ -23,7 +23,7 @@
     <!-- <p:option name="predefined-page-formats" required="true"/> -->
     <!-- <p:option name="left-margin" required="true"/> -->
     <p:option name="duplex" required="true"/>
-    <!-- <p:option name="levels-in-footer" required="true"/> -->
+    <p:option name="levels-in-footer" required="true"/>
     <!-- <p:option name="main-document-language" required="true"/> -->
     <!-- <p:option name="hyphenation-with-single-line-spacing" required="true"/> -->
     <!-- <p:option name="hyphenation-with-double-line-spacing" required="true"/> -->
@@ -90,6 +90,7 @@
         </p:with-option>
         <p:with-param port="sass-variables" name="page-width" select="$page-width"/>
         <p:with-param port="sass-variables" name="page-height" select="$page-height"/>
+        <p:with-param port="sass-variables" name="levels-in-footer" select="$levels-in-footer"/>
     </css:inline>
 
     <p:viewport match="math:math">

@@ -2,6 +2,7 @@
  * Parameters injected by dtbook-to-pef.convert:
  * - $page-width
  * - $page-height
+ * - $levels-in-footer
  */
 
 @page {
@@ -18,4 +19,12 @@
 	flow: volume-toc;
 	display: -obfl-toc;
 	-obfl-toc-range: volume;
+}
+
+@for $level from 1 through 6 {
+	@if $levels-in-footer >= $level {
+		h#{$level} {
+			string-set: footer content();
+		}
+	}
 }

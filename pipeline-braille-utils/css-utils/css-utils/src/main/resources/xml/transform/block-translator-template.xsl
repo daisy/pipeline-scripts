@@ -150,12 +150,20 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="css:string[@value]|css:attr|css:content" mode="eval-string-set-content-list" as="element()?">
+	<xsl:template match="css:string[@value]|css:attr" mode="eval-string-set-content-list" as="element()?">
 		<xsl:variable name="evaluated-string" as="xs:string?">
 			<xsl:apply-templates select="." mode="css:eval"/>
 		</xsl:variable>
 		<xsl:if test="exists($evaluated-string)">
 			<css:string value="{$evaluated-string}"/>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="css:content" mode="eval-string-set-content-list" as="element()?">
+		<xsl:param name="context" as="element()?" select="()" tunnel="yes"/>
+		<xsl:variable name="as-string" as="xs:string" select="string($context)"/>
+		<xsl:if test="not($as-string='')">
+			<css:string value="{$as-string}"/>
 		</xsl:if>
 	</xsl:template>
 	

@@ -4,7 +4,7 @@
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                script="../../main/resources/xml/xproc/dtbook-to-pef.xpl">
   
-  <x:scenario label="simple">
+  <x:scenario label="options">
     <x:call step="px:dtbook-to-pef">
       <x:input port="source">
         <x:document type="inline">
@@ -79,6 +79,87 @@
                 <section>
                   <page>
                     <row>⠎⠊⠍⠏⠇⠑⠀⠞⠑⠌</row>
+                  </page>
+                </section>
+              </volume>
+            </body>
+          </pef>
+        </x:document>
+      </x:expect>
+    </x:scenario>
+    
+    <x:scenario label="levels-in-footer">
+      <x:documentation>
+        Tests levels-in-footer option.
+      </x:documentation>
+      <x:call>
+        <x:input port="source">
+          <x:document type="inline">
+            <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en" version="2005-3">
+              <head>
+                <style type="text/css">
+                  @page {
+                    size: 15 5;
+                    @bottom-left {
+                      content: string(footer);
+                    }
+                  }
+                  h1, h2 {
+                    page-break-before: always;
+                  }
+                </style>
+              </head>
+              <book>
+                <level1>
+                  <h1>first h1</h1>
+                  <p>p</p>
+                  <h2>h2</h2>
+                  <p>p</p>
+                  <h1>second h1</h1>
+                  <p>p</p>
+                </level1>
+              </book>
+            </dtbook>
+          </x:document>
+        </x:input>
+        <x:option name="levels-in-footer" select="'1'"/>
+        <x:option name="output-dir" select="concat($temp-dir,'levels-in-footer/output-dir/')"/>
+        <x:option name="temp-dir" select="concat($temp-dir,'levels-in-footer/temp-dir/')"/>
+      </x:call>
+      <x:context label="result">
+        <x:document type="file" base-uri="temp-dir" href="levels-in-footer/output-dir/test_options.pef"/>
+      </x:context>
+      <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+        <x:document type="inline">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+            <head>
+              <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+                <dc:format>application/x-pef+xml</dc:format>
+              </meta>
+            </head>
+            <body>
+              <volume cols="15" rows="5" rowgap="0" duplex="true">
+                <section>
+                  <page>
+                    <row>⠋⠌⠀⠰⠓⠼⠁</row>
+                    <row>⠰⠏</row>
+                    <row/>
+                    <row/>
+                    <row>⠋⠌⠀⠰⠓⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  </page>
+                  <page>
+                    <row>⠰⠓⠼⠃</row>
+                    <row>⠰⠏</row>
+                    <row/>
+                    <row/>
+                    <row>⠋⠌⠀⠰⠓⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  </page>
+                  <page>
+                    <row>⠎⠑⠉⠕⠝⠙⠀⠰⠓⠼⠁</row>
+                    <row>⠰⠏</row>
+                    <row/>
+                    <row/>
+                    <row>⠎⠑⠉⠕⠝⠙⠀⠰⠓⠼⠁⠀⠀⠀⠀</row>
                   </page>
                 </section>
               </volume>
