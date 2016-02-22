@@ -9,6 +9,7 @@
  * - $include-captions
  * - $include-images
  * - $include-line-groups
+ * - $include-production-notes
  */
 
 @page {
@@ -53,10 +54,8 @@
 	}
 }
 
-@if $include-captions != true {
-	caption {
-		display: none;
-	}
+caption {
+	display: if($include-captions, block, none);
 }
 
 @if $include-images {
@@ -67,4 +66,8 @@
 
 linegroup line {
 	display: if($include-line-groups, block, inline);
+}
+
+prodnote {
+	display: if($include-production-notes, block, none);
 }

@@ -248,11 +248,10 @@ Makes the variable `$include-captions` available in style sheets and includes th
 default:
 
 ```
-@if $include-captions != true {
-  caption {
-    display: none;
-  }
+caption {
+  display: if($include-captions, block, none);
 }
+
 ```</p>
         </p:documentation>
     </p:option>
@@ -313,7 +312,15 @@ linegroup line {
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Inline elements: Include production notes</h2>
             <p px:role="desc">When enabled, production notes are included in the content.
-**Not implemented**</p>
+
+Makes the variable `$include-production-notes` available in style sheets and includes the following
+rule by default:
+
+```
+prodnote {
+  display: if($include-production-notes, block, none);
+}
+```</p>
         </p:documentation>
     </p:option>
     
@@ -552,7 +559,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="include-line-groups" select="$include-line-groups"/>
         <!-- <p:with-option name="text-level-formatting" select="$text-level-formatting"/> -->
         <!-- <p:with-option name="include-note-references" select="$include-note-references"/> -->
-        <!-- <p:with-option name="include-production-notes" select="$include-production-notes"/> -->
+        <p:with-option name="include-production-notes" select="$include-production-notes"/>
         <!-- <p:with-option name="show-braille-page-numbers" select="$show-braille-page-numbers"/> -->
         <!-- <p:with-option name="show-print-page-numbers" select="$show-print-page-numbers"/> -->
         <!-- <p:with-option name="force-braille-page-break" select="$force-braille-page-break"/> -->

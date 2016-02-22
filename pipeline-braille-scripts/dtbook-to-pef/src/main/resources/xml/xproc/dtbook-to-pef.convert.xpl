@@ -38,7 +38,7 @@
     <p:option name="include-line-groups" required="true"/>
     <!-- <p:option name="text-level-formatting" required="true"/> -->
     <!-- <p:option name="include-note-references" required="true"/> -->
-    <!-- <p:option name="include-production-notes" required="true"/> -->
+    <p:option name="include-production-notes" required="true"/>
     <!-- <p:option name="show-braille-page-numbers" required="true"/> -->
     <!-- <p:option name="show-print-page-numbers" required="true"/> -->
     <!-- <p:option name="force-braille-page-break" required="true"/> -->
@@ -96,6 +96,7 @@
         <p:with-param port="sass-variables" name="include-captions" select="$include-captions"/>
         <p:with-param port="sass-variables" name="include-images" select="$include-images"/>
         <p:with-param port="sass-variables" name="include-line-groups" select="$include-line-groups"/>
+        <p:with-param port="sass-variables" name="include-production-notes" select="$include-production-notes"/>
     </css:inline>
 
     <p:viewport match="math:math">
