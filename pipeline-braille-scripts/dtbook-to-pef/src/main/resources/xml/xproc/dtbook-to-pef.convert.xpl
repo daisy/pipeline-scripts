@@ -28,7 +28,7 @@
     <p:option name="hyphenation" required="true"/>
     <p:option name="line-spacing" required="true"/>
     <!-- <p:option name="tab-width" required="true"/> -->
-    <!-- <p:option name="capital-letters" required="true"/> -->
+    <p:option name="capital-letters" required="true"/>
     <!-- <p:option name="accented-letters" required="true"/> -->
     <!-- <p:option name="polite-forms" required="true"/> -->
     <!-- <p:option name="downshift-ordinal-numbers" required="true"/> -->
@@ -92,6 +92,7 @@
         <p:with-param port="sass-variables" name="levels-in-footer" select="$levels-in-footer"/>
         <p:with-param port="sass-variables" name="hyphenation" select="$hyphenation"/>
         <p:with-param port="sass-variables" name="line-spacing" select="$line-spacing"/>
+        <p:with-param port="sass-variables" name="capital-letters" select="$capital-letters"/>
     </css:inline>
 
     <p:viewport match="math:math">

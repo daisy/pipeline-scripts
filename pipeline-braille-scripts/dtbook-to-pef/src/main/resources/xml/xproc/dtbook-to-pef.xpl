@@ -199,8 +199,18 @@ default:
     <p:option name="capital-letters" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Capital letters</h2>
-            <p px:role="desc">When enabled, will capitalize letters. When disabled, all letters are printed in lower case.
-**Not implemented**</p>
+            <p px:role="desc">When enabled, will indicate capital letters.
+            
+Makes the variable `$capital-letters` available in style sheets and includes the following rule by
+default:
+
+```
+@if $capital-letters != true {
+  :root {
+    text-transform: lowercase;
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="accented-letters" required="false" px:type="boolean" select="'true'">
@@ -500,7 +510,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="hyphenation" select="$hyphenation"/>
         <p:with-option name="line-spacing" select="$line-spacing"/>
         <!-- <p:with-option name="tab-width" select="$tab-width"/> -->
-        <!-- <p:with-option name="capital-letters" select="$capital-letters"/> -->
+        <p:with-option name="capital-letters" select="$capital-letters"/>
         <!-- <p:with-option name="accented-letters" select="$accented-letters"/> -->
         <!-- <p:with-option name="polite-forms" select="$polite-forms"/> -->
         <!-- <p:with-option name="downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/> -->

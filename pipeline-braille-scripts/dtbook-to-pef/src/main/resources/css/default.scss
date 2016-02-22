@@ -5,6 +5,7 @@
  * - $levels-in-footer
  * - $hyphenation
  * - $line-spacing
+ * - $capital-letters
  */
 
 @page {
@@ -40,5 +41,11 @@
 @if $line-spacing == double {
 	:root {
 		line-height: 2;
+	}
+}
+
+@if $capital-letters != true {
+	:root {
+		text-transform: lowercase;
 	}
 }
