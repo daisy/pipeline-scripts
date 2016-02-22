@@ -68,6 +68,7 @@ public class XMLToOBFL extends DefaultStep {
 	
 	private ReadablePipe source = null;
 	private WritablePipe result = null;
+	private final Map<String,String> parameters = new HashMap<String,String>();
 	
 	private final Iterable<TaskSystemFactoryMakerService> taskSystemFactoryService;
 	
@@ -86,6 +87,20 @@ public class XMLToOBFL extends DefaultStep {
 	@Override
 	public void setOutput(String port, WritablePipe pipe) {
 		result = pipe;
+	}
+	
+	@Override
+	public void setParameter(String port, QName name, RuntimeValue value) {
+		if ("parameters".equals(port))
+			setParameter(name, value);
+		else
+			throw new XProcException("No parameters allowed on port '" + port + "'");
+	}
+	
+	@Override
+	public void setParameter(QName name, RuntimeValue value) {
+		if ("".equals(name.getNamespaceURI()))
+			parameters.put(name.getLocalName(), value.getString());
 	}
 	
 	@Override
@@ -127,6 +142,8 @@ public class XMLToOBFL extends DefaultStep {
 					params.put(key, val.or(key));
 				}
 			}
+			
+			params.putAll(parameters);
 			
 			InputStream resultStream = convert(
 					newTaskSystem(getOption(_locale, Locale.getDefault().toString()), getOption(_format, "obfl")), 

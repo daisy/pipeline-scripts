@@ -19,7 +19,9 @@
         </x:document>
       </x:input>
       <x:option name="locale" select="'sv-SE'"/>
-      <x:option name="dotify-options" select="'(rows:29)(cols:28)(rowgap:4)'"/>
+      <x:param port="parameters" name="rows" select="'29'"/>
+      <x:param port="parameters" name="cols" select="'28'"/>
+      <x:param port="parameters" name="rowgap" select="'4'"/>
     </x:call>
     <x:context label="result">
       <x:document type="port" port="result"/>

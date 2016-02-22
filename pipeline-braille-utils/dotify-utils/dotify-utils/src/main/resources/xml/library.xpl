@@ -12,15 +12,32 @@
     </p:declare-step>
     
     <p:declare-step type="dotify:xml-to-obfl">
-        <p:input port="source" sequence="false"/>
-        <p:output port="result" sequence="false"/>
+        <p:input port="source"/>
+        <p:output port="result"/>
         <p:option name="locale" required="true"/>
         <p:option name="format" required="false" select="'obfl'"/>
+        
+        <!--
+            Configuration can currently be done in 3 different ways: options, parameters and query
+            syntax.
+            
+            TODO:
+            - Use of query syntax should be limited to the selection of converters and should
+              represent a list of features. The purpose of the query syntax is to have something
+              universal and textual. In the context of an XProc step however it might make more sense
+              to use options (for general features, like "locale" and "format") and parameters (for
+              more specific features).
+            - Options should be used for general settings not specific to a converter.
+            - Parameters should be used for settings specific to a converter.
+        -->
+        
+        <!-- Parameters -->
+        <p:input port="parameters" kind="parameter" primary="false"/>
         
         <!-- Query syntax -->
         <p:option name="dotify-options" required="false"/>
         
-        <!-- Options (that can also be set using query syntax) -->
+        <!-- Options -->
         <p:option name="template" required="false" select="'default'"/>
         <p:option name="rows" required="false" select="29"/>
         <p:option name="cols" required="false" select="28"/>

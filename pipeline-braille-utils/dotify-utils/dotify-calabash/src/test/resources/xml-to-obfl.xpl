@@ -4,15 +4,12 @@
            xmlns:dotify="http://code.google.com/p/dotify/">
     
     <p:declare-step type="dotify:xml-to-obfl">
-        <p:input port="source" sequence="false"/>
-        <p:output port="result" sequence="false"/>
+        <p:input port="source"/>
+        <p:output port="result"/>
         <p:option name="locale" required="true"/>
         <p:option name="format" required="false" select="'obfl'"/>
-        
-        <!-- Query syntax -->
+        <p:input port="parameters" kind="parameter" primary="false"/>
         <p:option name="dotify-options" required="false"/>
-
-		<!-- Options (that can also be set using query syntax) -->
         <p:option name="template" required="false" select="'default'"/>
         <p:option name="rows" required="false" select="29"/>
         <p:option name="cols" required="false" select="28"/>
