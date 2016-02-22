@@ -29,7 +29,7 @@ Build and run the unit tests with:
 mvn clean install
 ```
 
-The recommended version of Java is 7.
+The required version of Java is 8.
 
 Release procedure
 -----------------

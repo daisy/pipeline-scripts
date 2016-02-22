@@ -1,5 +1,8 @@
 language: java
 
+jdk:
+  - oraclejdk8
+
 # configure the Maven environment
 before_install:
   - source <(curl -fsSL https://raw.github.com/daisy/maven-parents/travis/before_install)
