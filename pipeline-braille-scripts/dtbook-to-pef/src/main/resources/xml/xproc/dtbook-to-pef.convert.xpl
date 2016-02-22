@@ -26,7 +26,7 @@
     <p:option name="levels-in-footer" required="true"/>
     <!-- <p:option name="main-document-language" required="true"/> -->
     <p:option name="hyphenation" required="true"/>
-    <!-- <p:option name="line-spacing" required="true"/> -->
+    <p:option name="line-spacing" required="true"/>
     <!-- <p:option name="tab-width" required="true"/> -->
     <!-- <p:option name="capital-letters" required="true"/> -->
     <!-- <p:option name="accented-letters" required="true"/> -->
@@ -91,6 +91,7 @@
         <p:with-param port="sass-variables" name="page-height" select="$page-height"/>
         <p:with-param port="sass-variables" name="levels-in-footer" select="$levels-in-footer"/>
         <p:with-param port="sass-variables" name="hyphenation" select="$hyphenation"/>
+        <p:with-param port="sass-variables" name="line-spacing" select="$line-spacing"/>
     </css:inline>
 
     <p:viewport match="math:math">

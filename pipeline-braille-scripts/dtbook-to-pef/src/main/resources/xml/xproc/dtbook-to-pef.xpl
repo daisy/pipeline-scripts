@@ -178,7 +178,16 @@ default:
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Line spacing</h2>
             <p px:role="desc">'single' or 'double' line spacing.
-**Not implemented**</p>
+Makes the variable `$line-spacing` available in style sheets and includes the following rule by
+default:
+
+```
+@if $line-spacing == double {
+  :root {
+    line-height: 2;
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="tab-width" required="false" px:type="integer" select="'4'">
@@ -489,7 +498,7 @@ content at the beginning of every other volume, include the following additional
         <p:with-option name="levels-in-footer" select="$levels-in-footer"/>
         <!-- <p:with-option name="main-document-language" select="$main-document-language"/> -->
         <p:with-option name="hyphenation" select="$hyphenation"/>
-        <!-- <p:with-option name="line-spacing" select="$line-spacing"/> -->
+        <p:with-option name="line-spacing" select="$line-spacing"/>
         <!-- <p:with-option name="tab-width" select="$tab-width"/> -->
         <!-- <p:with-option name="capital-letters" select="$capital-letters"/> -->
         <!-- <p:with-option name="accented-letters" select="$accented-letters"/> -->

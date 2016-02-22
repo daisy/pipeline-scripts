@@ -4,6 +4,7 @@
  * - $page-height
  * - $levels-in-footer
  * - $hyphenation
+ * - $line-spacing
  */
 
 @page {
@@ -33,5 +34,11 @@
 @if $hyphenation {
 	:root {
 		hyphens: auto;
+	}
+}
+
+@if $line-spacing == double {
+	:root {
+		line-height: 2;
 	}
 }
