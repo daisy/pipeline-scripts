@@ -64,54 +64,9 @@
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-    <p:import href="fileset-add-tempfile.xpl"/>
     <p:import href="generate-toc.xpl"/>
-
+    
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
-    
-    <px:fileset-create name="temp-dir">
-        <p:with-option name="base" select="$temp-dir">
-            <p:empty/>
-        </p:with-option>
-    </px:fileset-create>
-    
-    <pxi:fileset-add-tempfile media-type="text/css" suffix=".scss">
-        <p:input port="source">
-            <p:inline>
-                        <c:data>@page {
-  size: $page-width $page-height;
-}
-</c:data>
-            </p:inline>
-        </p:input>
-    </pxi:fileset-add-tempfile>
-            
-    <p:choose>
-        <p:when test="not($toc-depth='0')">
-            <pxi:fileset-add-tempfile media-type="text/css" suffix=".css">
-                <p:input port="source">
-                    <p:inline>
-                        <c:data>#generated-document-toc {
-  flow: document-toc;
-  display: -obfl-toc;
-  -obfl-toc-range: document;
-}
-
-#generated-volume-toc {
-  flow: volume-toc;
-  display: -obfl-toc;
-  -obfl-toc-range: volume;
-}
-</c:data>
-                    </p:inline>
-                </p:input>
-            </pxi:fileset-add-tempfile>
-        </p:when>
-        <p:otherwise>
-            <p:identity/>
-        </p:otherwise>
-    </p:choose>
-    <p:identity name="generated-css"/>
     
     <px:dtbook-load name="load">
         <p:input port="source">
@@ -129,9 +84,9 @@
     <css:inline>
         <p:with-option name="default-stylesheet" select="string-join((
                                                            $default-stylesheet,
-                                                           //d:file/resolve-uri(@href, base-uri(.)),
+                                                           resolve-uri('../../css/default.scss'),
                                                            $stylesheet),' ')">
-            <p:pipe step="generated-css" port="result"/>
+            <p:inline><_/></p:inline>
         </p:with-option>
         <p:with-param port="sass-variables" name="page-width" select="$page-width"/>
         <p:with-param port="sass-variables" name="page-height" select="$page-height"/>

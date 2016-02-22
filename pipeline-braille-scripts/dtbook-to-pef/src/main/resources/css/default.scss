@@ -1,0 +1,21 @@
+/*
+ * Parameters injected by dtbook-to-pef.convert:
+ * - $page-width
+ * - $page-height
+ */
+
+@page {
+	size: $page-width $page-height;
+}
+
+#generated-document-toc {
+	flow: document-toc;
+	display: -obfl-toc;
+	-obfl-toc-range: document;
+}
+
+#generated-volume-toc {
+	flow: volume-toc;
+	display: -obfl-toc;
+	-obfl-toc-range: volume;
+}

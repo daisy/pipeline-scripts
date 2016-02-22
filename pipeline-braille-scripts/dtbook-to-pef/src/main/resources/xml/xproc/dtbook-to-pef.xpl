@@ -73,13 +73,27 @@
     <p:option name="page-width" required="false" px:type="integer" select="'40'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page width</h2>
-            <p px:role="desc">The number of columns available for printing.</p>
+            <p px:role="desc" xml:space="preserve">The number of columns available for printing.
+Makes the variable `$page-width` available in style sheets and includes the following rule by default:
+
+```
+@page {
+  size: $page-width $page-height;
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="page-height" required="false" px:type="integer" select="'25'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page height</h2>
-            <p px:role="desc">The number of rows available for printing.</p>
+            <p px:role="desc" xml:space="preserve">The number of rows available for printing.
+Makes the variable `$page-height` available in style sheets and includes the following rule by default:
+
+```
+@page {
+  size: $page-width $page-height;
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="predefined-page-formats" required="false" px:type="string" select="'A4'">
@@ -257,7 +271,6 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Table of contents: Table of contents depth</h2>
             <p px:role="desc" xml:space="preserve">The depth of the table of contents hierarchy to include. '0' means no table of contents.
-
 A table of contents will be generated from the heading elements present in the document: from `h1`
 elements if the specified value for "depth" is 1, from `h1` and `h2` elements if the specified value
 is 2, etc. The resulting table of contents has the following nested structure:
