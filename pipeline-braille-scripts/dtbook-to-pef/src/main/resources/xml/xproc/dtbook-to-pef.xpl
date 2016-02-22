@@ -330,19 +330,60 @@ prodnote {
     <p:option name="show-braille-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show braille page numbers</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <p px:role="desc">Makes the variable `$show-braille-page-numbers` available in style
+sheets. In order to use the variable include a rule like the following in your custom
+style sheet:
+
+```
+@if $show-braille-page-numbers {
+  @page {
+    @top-right {
+      content: counter(page);
+    }
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="show-print-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show print page numbers</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <p px:role="desc">Makes the variable `$show-print-page-numbers` available in style
+sheets and includes the following rule by default:
+
+```
+@if $show-print-page-numbers {
+  pagenum {
+    string-set: print-page content();
+  }
+}
+```
+
+In order to use the `print-page` string include a rule like the following in your custom style
+sheet:
+
+```
+@page {
+  @bottom-right {
+    content: string(print-page);
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     <p:option name="force-braille-page-break" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Force braille page break</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <p px:role="desc">Makes the variable `$force-braille-page-break` available in style
+sheets and includes the following rule by default:
+
+```
+@if $force-braille-page-break {
+  pagenum {
+    page-break-before: always;
+  }
+}
+```</p>
         </p:documentation>
     </p:option>
     
@@ -560,9 +601,9 @@ content at the beginning of every other volume, include the following additional
         <!-- <p:with-option name="text-level-formatting" select="$text-level-formatting"/> -->
         <!-- <p:with-option name="include-note-references" select="$include-note-references"/> -->
         <p:with-option name="include-production-notes" select="$include-production-notes"/>
-        <!-- <p:with-option name="show-braille-page-numbers" select="$show-braille-page-numbers"/> -->
-        <!-- <p:with-option name="show-print-page-numbers" select="$show-print-page-numbers"/> -->
-        <!-- <p:with-option name="force-braille-page-break" select="$force-braille-page-break"/> -->
+        <p:with-option name="show-braille-page-numbers" select="$show-braille-page-numbers"/>
+        <p:with-option name="show-print-page-numbers" select="$show-print-page-numbers"/>
+        <p:with-option name="force-braille-page-break" select="$force-braille-page-break"/>
         <p:with-option name="toc-depth" select="$toc-depth"/>
         <!-- <p:with-option name="ignore-document-title" select="$ignore-document-title"/> -->
         <!-- <p:with-option name="include-symbols-list" select="$include-symbols-list"/> -->

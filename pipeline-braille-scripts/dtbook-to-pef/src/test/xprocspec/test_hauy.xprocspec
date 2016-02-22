@@ -39,6 +39,7 @@
       <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
       <x:option name="stylesheet" select="'../resources/reset.css ../resources/style.css'"/>
+      <x:option name="show-braille-page-numbers" select="'false'"/>
     </x:call>
     <x:context label="pef">
       <x:document type="file" base-uri="temp-dir" href="2/output-dir/test_hauy.pef"/>

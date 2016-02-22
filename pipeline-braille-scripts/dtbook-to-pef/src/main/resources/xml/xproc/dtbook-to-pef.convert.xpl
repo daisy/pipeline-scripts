@@ -39,9 +39,9 @@
     <!-- <p:option name="text-level-formatting" required="true"/> -->
     <!-- <p:option name="include-note-references" required="true"/> -->
     <p:option name="include-production-notes" required="true"/>
-    <!-- <p:option name="show-braille-page-numbers" required="true"/> -->
-    <!-- <p:option name="show-print-page-numbers" required="true"/> -->
-    <!-- <p:option name="force-braille-page-break" required="true"/> -->
+    <p:option name="show-braille-page-numbers" required="true"/>
+    <p:option name="show-print-page-numbers" required="true"/>
+    <p:option name="force-braille-page-break" required="true"/>
     <p:option name="toc-depth" required="true"/>
     <!-- <p:option name="ignore-document-title" required="true"/> -->
     <!-- <p:option name="include-symbols-list" required="true"/> -->
@@ -97,6 +97,9 @@
         <p:with-param port="sass-variables" name="include-images" select="$include-images"/>
         <p:with-param port="sass-variables" name="include-line-groups" select="$include-line-groups"/>
         <p:with-param port="sass-variables" name="include-production-notes" select="$include-production-notes"/>
+        <p:with-param port="sass-variables" name="show-braille-page-numbers" select="$show-braille-page-numbers"/>
+        <p:with-param port="sass-variables" name="show-print-page-numbers" select="$show-print-page-numbers"/>
+        <p:with-param port="sass-variables" name="force-braille-page-break" select="$force-braille-page-break"/>
     </css:inline>
 
     <p:viewport match="math:math">
