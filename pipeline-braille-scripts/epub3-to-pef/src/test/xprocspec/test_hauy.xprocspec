@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://www.daisy.org/ns/xprocspec/xprocspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec" xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-  script="../../main/resources/xml/xproc/epub3-to-pef.xpl">
+  script="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/epub3-to-pef.xpl">
 
   <x:scenario label="test C00000.epub with default.css">
     <x:call step="px:epub3-to-pef">
