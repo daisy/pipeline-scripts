@@ -22,13 +22,13 @@
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
       <x:option name="stylesheet" select="string-join((resolve-uri('../resources/reset.css'), resolve-uri('../resources/style.css')), ' ')"/>
     </x:call>
-
+    
     <x:context label="the output directory contents">
       <x:document type="directory" base-uri="temp-dir" href="2/output-dir/"/>
     </x:context>
     <x:expect label="Exactly one PEF file should be present in the output directory" type="xpath" test="count(/*/*[ends-with(@name,'.pef')])" equals="1"/>
     <x:expect label="The PEF should have the name 'test.pef'" type="xpath" test="/*/*[ends-with(@name,'.pef')]/@name" equals="'test.pef'"/>
-
+    
     <x:context label="pef">
       <x:document type="file" base-uri="temp-dir" href="2/output-dir/test.pef"/>
     </x:context>

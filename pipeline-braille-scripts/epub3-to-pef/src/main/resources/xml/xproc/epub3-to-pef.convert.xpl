@@ -24,48 +24,48 @@
         <p:pipe port="result" step="in-memory.out"/>
     </p:output>
 
-    <p:option name="default-stylesheet" required="true"/>
-    <p:option name="stylesheet" required="true"/>
-    <p:option name="transform" required="true"/>
-    
-    <!-- <p:option name="page-width" required="true"/> -->
-    <!-- <p:option name="page-height" required="true"/> -->
-    <!-- <p:option name="predefined-page-formats" required="true"/> -->
-    <!-- <p:option name="left-margin" required="true"/> -->
-    <!-- <p:option name="duplex" required="true"/> -->
-    <!-- <p:option name="levels-in-footer" required="true"/> -->
-    <!-- <p:option name="main-document-language" required="true"/> -->
-    <!-- <p:option name="contraction-grade" required="true"/> -->
-    <!-- <p:option name="hyphenation-with-single-line-spacing" required="true"/> -->
-    <!-- <p:option name="hyphenation-with-double-line-spacing" required="true"/> -->
-    <!-- <p:option name="line-spacing" required="true"/> -->
-    <!-- <p:option name="tab-width" required="true"/> -->
-    <!-- <p:option name="capital-letters" required="true"/> -->
-    <!-- <p:option name="accented-letters" required="true"/> -->
-    <!-- <p:option name="polite-forms" required="true"/> -->
-    <!-- <p:option name="downshift-ordinal-numbers" required="true"/> -->
-    <!-- <p:option name="include-captions" required="true"/> -->
-    <!-- <p:option name="include-images" required="true"/> -->
-    <!-- <p:option name="include-image-groups" required="true"/> -->
-    <!-- <p:option name="include-line-groups" required="true"/> -->
-    <!-- <p:option name="text-level-formatting" required="true"/> -->
-    <!-- <p:option name="include-note-references" required="true"/> -->
-    <!-- <p:option name="include-production-notes" required="true"/> -->
-    <!-- <p:option name="show-braille-page-numbers" required="true"/> -->
-    <!-- <p:option name="show-print-page-numbers" required="true"/> -->
-    <!-- <p:option name="force-braille-page-break" required="true"/> -->
+    <p:option name="default-stylesheet" select="''"/>
+    <p:option name="stylesheet" select="''"/>
+    <p:option name="transform" select="''"/>
+    <!-- <p:option name="page-width" select="'28'"> -->
+    <!-- <p:option name="page-height" select="'29'"> -->
+    <!-- <p:option name="predefined-page-formats" select="'A4'"> -->
+    <!-- <p:option name="left-margin" select="'0'"> -->
+    <!-- <p:option name="duplex" select="'true'"> -->
+    <!-- <p:option name="levels-in-footer" select="'6'"> -->
+    <!-- <p:option name="main-document-language" select="''"> -->
+    <!-- <p:option name="contraction-grade" select="'0'"> -->
+    <!-- <p:option name="hyphenation-with-single-line-spacing" select="'true'"> -->
+    <!-- <p:option name="hyphenation-with-double-line-spacing" select="'false'"> -->
+    <!-- <p:option name="line-spacing" select="'single'"> -->
+    <!-- <p:option name="tab-width" select="'4'"> -->
+    <!-- <p:option name="capital-letters" select="'true'"> -->
+    <!-- <p:option name="accented-letters" select="'true'"> -->
+    <!-- <p:option name="polite-forms" select="'false'"> -->
+    <!-- <p:option name="downshift-ordinal-numbers" select="'false'"> -->
+    <!-- <p:option name="include-captions" select="'true'"> -->
+    <!-- <p:option name="include-images" select="'true'"> -->
+    <!-- <p:option name="include-image-groups" select="'true'"> -->
+    <!-- <p:option name="include-line-groups" select="'true'"> -->
+    <!-- <p:option name="text-level-formatting" select="'true'"> -->
+    <!-- <p:option name="include-note-references" select="'true'"> -->
+    <!-- <p:option name="include-production-notes" select="'false'"> -->
+    <!-- <p:option name="show-braille-page-numbers" select="'true'"> -->
+    <!-- <p:option name="show-print-page-numbers" select="'true'"> -->
+    <!-- <p:option name="force-braille-page-break" select="'false'"> -->
     <p:option name="toc-depth" required="true"/>
-    <!-- <p:option name="ignore-document-title" required="true"/> -->
-    <!-- <p:option name="include-symbols-list" required="true"/> -->
-    <!-- <p:option name="choice-of-colophon" required="true"/> -->
-    <!-- <p:option name="footnotes-placement" required="true"/> -->
-    <!-- <p:option name="colophon-metadata-placement" required="true"/> -->
-    <!-- <p:option name="rear-cover-placement" required="true"/> -->
-    <!-- <p:option name="number-of-pages" required="true"/> -->
-    <!-- <p:option name="maximum-number-of-pages" required="true"/> -->
-    <!-- <p:option name="minimum-number-of-pages" required="true"/> -->
-    <!-- <p:option name="sbsform-macros" required="true"/> -->
-
+    <!-- <p:option name="ignore-document-title" select="'false'"> -->
+    <!-- <p:option name="include-symbols-list" select="'true'"> -->
+    <!-- <p:option name="choice-of-colophon" select="''"> -->
+    <!-- <p:option name="footnotes-placement" select="''"> -->
+    <!-- <p:option name="colophon-metadata-placement" select="''"> -->
+    <!-- <p:option name="rear-cover-placement" select="''"> -->
+    <!-- <p:option name="number-of-pages" select="'50'"> -->
+    <!-- <p:option name="maximum-number-of-pages" select="'70'"> -->
+    <!-- <p:option name="minimum-number-of-pages" select="'30'"> -->
+    <!-- <p:option name="sbsform-macros" select="''"> -->
+    <p:option name="apply-document-specific-stylesheets" select="'false'"/>
+    
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
 
@@ -140,6 +140,11 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
+    <p:for-each>
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri(/*)"/>
+        </p:add-attribute>
+    </p:for-each>
     <p:wrap-sequence wrapper="wrapper"/>
     <p:xslt>
         <p:input port="parameters">
@@ -151,16 +156,36 @@
     </p:xslt>
     <p:filter select="/*/*"/>
     
-    <!-- In case there exists any CSS in the EPUB already; inline that CSS. -->
+    <!-- In case there exists any CSS in the EPUB already, and $apply-document-specific-stylesheets = 'true',  then inline that CSS. -->
+    <px:message message="Processing CSS that is already present in the EPUB"/>
     <p:for-each>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="base-uri(/*)"/>
         </p:add-attribute>
         
-        <px:message>
-            <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
+        <px:message severity="DEBUG">
+            <p:with-option name="message" select="concat('Deleting CSS that is not for embossed media from ',replace(base-uri(/*),'.*/',''),'')"/>
         </px:message>
-        <css:inline/>
+        <p:delete match="//@style | //html:link[@rel='stylesheet' and not(string(@media)='embossed')] | //html:style[not(string(@media)='embossed')]"/>
+        
+        <p:choose>
+            <p:when test="$apply-document-specific-stylesheets = 'true'">
+                <px:message severity="DEBUG">
+                    <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
+                </px:message>
+                <p:group>
+                    <!-- <link> not supported in css:inline so we provide the URIs to them explicitly -->
+                    <p:variable name="linked-stylesheets" select="string-join(//html:link[@rel='stylesheet' and @media='embossed']/resolve-uri(@href,base-uri(/*)), ' ')"/>
+                    <p:delete match="//html:link[@rel='stylesheet' and @media='embossed']"/>
+                    <css:inline>
+                        <p:with-option name="default-stylesheet" select="$linked-stylesheets"/>
+                    </css:inline>
+                </p:group>
+            </p:when>
+            <p:otherwise>
+                <p:delete match="//html:link[@rel='stylesheet' and @media='embossed']"/>
+            </p:otherwise>
+        </p:choose>
         
         <p:filter select="/*/html:body"/>
     </p:for-each>
@@ -197,14 +222,21 @@
     </p:xslt>
     
     <px:message message="Inlining global CSS"/>
-    <css:inline>
-        <p:with-option name="default-stylesheet" select="string-join((
-                                                           $default-stylesheet,
-                                                           $stylesheet,
-                                                           //d:file/resolve-uri(@href, base-uri(.))),' ')">
+    <p:group>
+        <p:variable name="default-stylesheet" select="string-join((
+                                                                    $default-stylesheet,
+                                                                    $stylesheet,
+                                                                    //d:file/resolve-uri(@href, base-uri(.))
+                                                                  ),' ')">
             <p:pipe step="generated-css" port="result"/>
-        </p:with-option>
-    </css:inline>
+        </p:variable>
+        <px:message severity="DEBUG">
+            <p:with-option name="message" select="concat('stylesheets: ',$default-stylesheet)"/>
+        </px:message>
+        <css:inline>
+            <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+        </css:inline>
+    </p:group>
     
     <p:group>
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">

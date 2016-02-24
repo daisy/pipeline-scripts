@@ -11,7 +11,7 @@
         <item id="item_2" media-type="application/xhtml+xml" href="content-2.xhtml"/>
         <item id="item_3" media-type="application/xhtml+xml" href="nav.xhtml" properties="nav"/>
     </manifest>
-    <spine toc="item_9">
+    <spine>
         <itemref id="itemref_1" idref="item_1"/>
         <itemref id="itemref_2" idref="item_2"/>
     </spine>
