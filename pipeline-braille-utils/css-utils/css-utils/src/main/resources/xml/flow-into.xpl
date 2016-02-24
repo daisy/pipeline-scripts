@@ -12,9 +12,10 @@
     <p:input port="source">
         <p:documentation>
             Elements in the input that participate in a named flow must be identified with css:flow
-            attributes. Duplicated elements must be reprented by css:duplicate elements with a
-            css:anchor attribute that points to the original element. ::footnote-call pseudo-element
-            rules must be declared in css:footnote-call attributes.
+            attributes. '::duplicate' and '::alternate' pseudo-elements must be reprented by
+            css:duplicate and css:alternate elements with a css:anchor attribute that points to the
+            original element. ::footnote-call pseudo-element rules must be declared in
+            css:footnote-call attributes.
         </p:documentation>
     </p:input>
     
@@ -24,8 +25,8 @@
             in a named flow are replaced with an empty css:_ element with a css:id attribute. If the
             element participates in the 'footnotes' flow and has a css:footnote-call attribute, then
             it is replaced with an empty css:footnote-call element with the value of the
-            css:footnote-call attribute in a 'style' attribute. If the element is a css:duplicate
-            there is no replacement.
+            css:footnote-call attribute in a 'style' attribute. If the element is a css:duplicate or
+            css:alternate there is no replacement.
         </p:documentation>
         <p:pipe step="result" port="result"/>
     </p:output>

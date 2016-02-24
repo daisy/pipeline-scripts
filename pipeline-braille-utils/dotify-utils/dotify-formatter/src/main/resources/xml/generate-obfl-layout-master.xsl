@@ -454,8 +454,12 @@
         <xsl:message>attr() function not supported in page margin</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:content" mode="eval-content-list-top-bottom eval-content-list-left-right">
+    <xsl:template match="css:content[not(@target)]" mode="eval-content-list-top-bottom eval-content-list-left-right">
         <xsl:message>content() function not supported in page margin</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:content[@target]" mode="eval-content-list-top-bottom eval-content-list-left-right">
+        <xsl:message>target-content() function not supported in page margin</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:text[@target]" mode="eval-content-list-top-bottom eval-content-list-left-right">

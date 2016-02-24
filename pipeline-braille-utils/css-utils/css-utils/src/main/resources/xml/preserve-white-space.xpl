@@ -14,8 +14,8 @@
             The 'white-space' properties of elements in the input must be declared in
             css:white-space attributes, and must conform to
             http://snaekobbi.github.io/braille-css-spec/#the-white-space-property. target-text(),
-            target-string() and target-counter() values must be represented by css:text, css:string
-            and css:counter elements.
+            target-string(), target-counter() and target-content() values must be represented by
+            css:text, css:string, css:counter and css:content elements.
         </p:documentation>
     </p:input>
     
@@ -24,8 +24,8 @@
             Each text node whose parent element's white-space property has a computed value of
             'pre-wrap' is wrapped in a css:white-space element. For text nodes with a value of
             'pre-line' only sequences of segment breaks are wrapped in a css:white-space element.
-            css:string, css:text and css:counter elements with a computed value of 'white-space' not
-            equal to 'normal' get a css:white-space attribute.
+            css:string, css:text, css:counter and css:content elements with a computed value of
+            'white-space' not equal to 'normal' get a css:white-space attribute.
         </p:documentation>
     </p:output>
     

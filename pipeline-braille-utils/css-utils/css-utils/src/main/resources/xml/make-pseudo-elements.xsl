@@ -10,11 +10,11 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[@css:before or @css:after or @css:duplicate]">
+    <xsl:template match="*[@css:before or @css:after or @css:duplicate or @css:alternate]">
         <xsl:variable name="id" select="if (@css:id) then string(@css:id) else generate-id(.)"/>
         <xsl:copy>
-            <xsl:sequence select="@* except (@css:before|@css:after|@css:duplicate)"/>
-            <xsl:if test="@css:duplicate">
+            <xsl:sequence select="@* except (@css:before|@css:after|@css:duplicate|@css:alternate)"/>
+            <xsl:if test="@css:duplicate or @css:alternate">
                 <xsl:attribute name="css:id" select="$id"/>
             </xsl:if>
             <xsl:if test="@css:before">
@@ -30,6 +30,9 @@
                 <xsl:sequence select="@* except (@style|@css:id|@css:anchor|@css:before|@css:after|@css:duplicate)"/>
                 <xsl:apply-templates/>
             </css:duplicate>
+        </xsl:if>
+        <xsl:if test="@css:alternate">
+            <css:alternate css:anchor="{$id}" style="{@css:alternate}"/>
         </xsl:if>
     </xsl:template>
     

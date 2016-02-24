@@ -159,7 +159,7 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template match="css:content" mode="eval-string-set-content-list" as="element()?">
+	<xsl:template match="css:content[not(@target)]" mode="eval-string-set-content-list" as="element()?">
 		<xsl:param name="context" as="element()?" select="()" tunnel="yes"/>
 		<xsl:variable name="as-string" as="xs:string" select="string($context)"/>
 		<xsl:if test="not($as-string='')">
@@ -185,6 +185,10 @@
 	
 	<xsl:template match="css:counter[@target]" mode="eval-string-set-content-list">
 		<xsl:message>target-counter() function not supported in string-set property</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="css:content[@target]" mode="eval-string-set-content-list">
+		<xsl:message>target-content() function not supported in string-set property</xsl:message>
 	</xsl:template>
 	
 	<xsl:template match="css:leader" mode="eval-string-set-content-list">

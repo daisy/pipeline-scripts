@@ -1163,7 +1163,8 @@
     </xsl:template>
     
     <xsl:template match="css:attr|
-                         css:content|
+                         css:content[@target]|
+                         css:content[not(@target)]|
                          css:string[@name][not(@target)]|
                          css:counter[not(@target)]|
                          css:text[@target]|

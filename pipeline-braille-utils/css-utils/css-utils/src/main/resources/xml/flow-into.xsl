@@ -24,7 +24,9 @@
                             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
                                                   css:specified-properties(($css:properties,'#all'), true(), false(), false(), .)
                                                   [not(@value='initial')]))"/>
-                            <xsl:attribute name="css:anchor" select="if (@css:id) then string(@css:id) else generate-id(.)"/>
+                            <xsl:if test="not(@css:anchor)">
+                                <xsl:attribute name="css:anchor" select="if (@css:id) then string(@css:id) else generate-id(.)"/>
+                            </xsl:if>
                             <xsl:apply-templates/>
                         </xsl:copy>
                     </xsl:for-each>
@@ -49,7 +51,9 @@
     </xsl:template>
     
     <xsl:template match="*[@css:flow[not(.='normal')]]">
-        <css:_ css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
+        <xsl:if test="not(@css:anchor)">
+            <css:_ css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
+        </xsl:if>
     </xsl:template>
     
     

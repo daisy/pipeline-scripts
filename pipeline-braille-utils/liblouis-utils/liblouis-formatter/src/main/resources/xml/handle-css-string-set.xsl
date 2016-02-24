@@ -69,7 +69,7 @@
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:content" mode="eval-content-list">
+    <xsl:template match="css:content[not(@target)]" mode="eval-content-list">
         <xsl:param name="context" as="element()"/>
         <xsl:sequence select="$context/child::node()"/>
     </xsl:template>

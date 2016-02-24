@@ -16,7 +16,8 @@
         <xsl:choose>
             <xsl:when test="//*[self::css:text[@target] or
                                 self::css:string[@name][@target] or
-                                self::css:counter[@target]]
+                                self::css:counter[@target] or
+                                self::css:content[@target]]
                                [replace(@target,'^#','')=$name]">
                 <xsl:copy>
                     <xsl:apply-templates select="@*"/>
@@ -34,7 +35,8 @@
     
     <xsl:template match="css:text[@target]|
                          css:string[@name][@target]|
-                         css:counter[@target]">
+                         css:counter[@target]|
+                         css:content[@target]">
         <xsl:variable name="name" as="xs:string" select="replace(@target,'^#','')"/>
         <xsl:variable name="target" as="element()?" select="//*[@xml:id=$name or @id=$name][1]"/>
         <xsl:if test="$target">

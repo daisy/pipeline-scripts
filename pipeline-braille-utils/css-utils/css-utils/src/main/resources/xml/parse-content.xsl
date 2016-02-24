@@ -13,7 +13,20 @@
     </xsl:template>
     
     <xsl:template match="*[@css:content]">
-        <xsl:variable name="context" select="if (self::css:before or self::css:after) then parent::* else ."/>
+        <xsl:variable name="context" as="element()">
+            <xsl:choose>
+                <xsl:when test="self::css:before or self::css:after">
+                    <xsl:sequence select="parent::*"/>
+                </xsl:when>
+                <xsl:when test="self::css:duplicate or self::css:alternate">
+                    <xsl:variable name="anchor" select="@css:anchor"/>
+                    <xsl:sequence select="//*[@css:id=$anchor]"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:copy>
             <xsl:sequence select="@* except @css:content"/>
             <xsl:apply-templates select="css:before"/>
@@ -34,7 +47,7 @@
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:leader|css:custom-func"
+    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:content[@target]|css:leader|css:custom-func"
                   mode="eval-content-list">
         <xsl:sequence select="."/>
     </xsl:template>
@@ -47,7 +60,7 @@
         <xsl:message>counter() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
-    <xsl:template match="css:content" mode="eval-content-list">
+    <xsl:template match="css:content[not(@target)]" mode="eval-content-list">
         <xsl:message>content() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     

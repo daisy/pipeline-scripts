@@ -50,7 +50,7 @@
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:content" mode="eval-content-list" as="xs:string">
+    <xsl:template match="css:content[not(@target)]" mode="eval-content-list" as="xs:string">
         <xsl:param name="context" as="element()" tunnel="yes"/>
         <xsl:sequence select="string($context)"/>
     </xsl:template>
@@ -73,6 +73,10 @@
     
     <xsl:template match="css:counter[@target]" mode="eval-content-list">
         <xsl:message>target-counter() function not supported in string-set property</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="css:content[@target]" mode="eval-content-list">
+        <xsl:message>target-content() function not supported in string-set property</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:leader" mode="eval-content-list">
