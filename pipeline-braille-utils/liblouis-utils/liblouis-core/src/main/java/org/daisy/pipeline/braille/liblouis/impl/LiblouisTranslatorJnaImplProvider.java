@@ -669,8 +669,12 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		}
 		
 		protected byte[] doHyphenate(String text) {
-			if (hyphenator == null)
-				throw new RuntimeException("'hyphens:auto' is not supported");
+			if (hyphenator == null) {
+				logger.warn("hyphens:auto not supported");
+				byte[] hyphens = new byte[text.length() - 1];
+				for (int i = 0; i < hyphens.length; i++)
+					hyphens[i] = 0;
+				return hyphens; }
 			return extractHyphens(hyphenator.transform(new String[]{text})[0], SHY, ZWSP)._2;
 		}
 		
