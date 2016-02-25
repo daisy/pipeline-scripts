@@ -23,48 +23,54 @@
     <p:output port="in-memory.out" sequence="true">
         <p:pipe port="result" step="in-memory.out"/>
     </p:output>
-
-    <p:option name="default-stylesheet" select="''"/>
+    
+    <p:input kind="parameter" port="parameters" sequence="true">
+        <p:inline>
+            <c:param-set/>
+        </p:inline>
+    </p:input>
+    
+    <!--<p:option name="default-stylesheet" select="''"/>
     <p:option name="stylesheet" select="''"/>
     <p:option name="transform" select="''"/>
-    <!-- <p:option name="page-width" select="'28'"> -->
-    <!-- <p:option name="page-height" select="'29'"> -->
-    <!-- <p:option name="predefined-page-formats" select="'A4'"> -->
-    <!-- <p:option name="left-margin" select="'0'"> -->
-    <!-- <p:option name="duplex" select="'true'"> -->
-    <!-- <p:option name="levels-in-footer" select="'6'"> -->
-    <!-- <p:option name="main-document-language" select="''"> -->
-    <!-- <p:option name="contraction-grade" select="'0'"> -->
-    <!-- <p:option name="hyphenation-with-single-line-spacing" select="'true'"> -->
-    <!-- <p:option name="hyphenation-with-double-line-spacing" select="'false'"> -->
-    <!-- <p:option name="line-spacing" select="'single'"> -->
-    <!-- <p:option name="tab-width" select="'4'"> -->
-    <!-- <p:option name="capital-letters" select="'true'"> -->
-    <!-- <p:option name="accented-letters" select="'true'"> -->
-    <!-- <p:option name="polite-forms" select="'false'"> -->
-    <!-- <p:option name="downshift-ordinal-numbers" select="'false'"> -->
-    <!-- <p:option name="include-captions" select="'true'"> -->
-    <!-- <p:option name="include-images" select="'true'"> -->
-    <!-- <p:option name="include-image-groups" select="'true'"> -->
-    <!-- <p:option name="include-line-groups" select="'true'"> -->
-    <!-- <p:option name="text-level-formatting" select="'true'"> -->
-    <!-- <p:option name="include-note-references" select="'true'"> -->
-    <!-- <p:option name="include-production-notes" select="'false'"> -->
-    <!-- <p:option name="show-braille-page-numbers" select="'true'"> -->
-    <!-- <p:option name="show-print-page-numbers" select="'true'"> -->
-    <!-- <p:option name="force-braille-page-break" select="'false'"> -->
+    <p:option name="page-width" select="'28'"/>
+    <p:option name="page-height" select="'29'"/>
+    <p:option name="predefined-page-formats" select="'A4'"/>
+    <p:option name="left-margin" select="'0'"/>
+    <p:option name="duplex" select="'true'"/>
+    <p:option name="levels-in-footer" select="'6'"/>
+    <p:option name="main-document-language" select="''"/>
+    <p:option name="contraction-grade" select="'0'"/>
+    <p:option name="hyphenation-with-single-line-spacing" select="'true'"/>
+    <p:option name="hyphenation-with-double-line-spacing" select="'false'"/>
+    <p:option name="line-spacing" select="'single'"/>
+    <p:option name="tab-width" select="'4'"/>
+    <p:option name="capital-letters" select="'true'"/>
+    <p:option name="accented-letters" select="'true'"/>
+    <p:option name="polite-forms" select="'false'"/>
+    <p:option name="downshift-ordinal-numbers" select="'false'"/>
+    <p:option name="include-captions" select="'true'"/>
+    <p:option name="include-images" select="'true'"/>
+    <p:option name="include-image-groups" select="'true'"/>
+    <p:option name="include-line-groups" select="'true'"/>
+    <p:option name="text-level-formatting" select="'true'"/>
+    <p:option name="include-note-references" select="'true'"/>
+    <p:option name="include-production-notes" select="'false'"/>
+    <p:option name="show-braille-page-numbers" select="'true'"/>
+    <p:option name="show-print-page-numbers" select="'true'"/>
+    <p:option name="force-braille-page-break" select="'false'"/>
     <p:option name="toc-depth" required="true"/>
-    <!-- <p:option name="ignore-document-title" select="'false'"> -->
-    <!-- <p:option name="include-symbols-list" select="'true'"> -->
-    <!-- <p:option name="choice-of-colophon" select="''"> -->
-    <!-- <p:option name="footnotes-placement" select="''"> -->
-    <!-- <p:option name="colophon-metadata-placement" select="''"> -->
-    <!-- <p:option name="rear-cover-placement" select="''"> -->
-    <!-- <p:option name="number-of-pages" select="'50'"> -->
-    <!-- <p:option name="maximum-number-of-pages" select="'70'"> -->
-    <!-- <p:option name="minimum-number-of-pages" select="'30'"> -->
-    <!-- <p:option name="sbsform-macros" select="''"> -->
-    <p:option name="apply-document-specific-stylesheets" select="'false'"/>
+    <p:option name="ignore-document-title" select="'false'"/>
+    <p:option name="include-symbols-list" select="'true'"/>
+    <p:option name="choice-of-colophon" select="''"/>
+    <p:option name="footnotes-placement" select="''"/>
+    <p:option name="colophon-metadata-placement" select="''"/>
+    <p:option name="rear-cover-placement" select="''"/>
+    <p:option name="number-of-pages" select="'50'"/>
+    <p:option name="maximum-number-of-pages" select="'70'"/>
+    <p:option name="minimum-number-of-pages" select="'30'"/>
+    <p:option name="sbsform-macros" select="''"/>
+    <p:option name="apply-document-specific-stylesheets" select="'false'"/>-->
     
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
@@ -76,6 +82,18 @@
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="fileset-add-tempfile.xpl"/>
+    
+    <!-- Ensure that there's exactly one c:param-set -->
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="main" port="parameters"/>
+        </p:input>
+    </p:identity>
+    <p:wrap-sequence wrapper="c:param-set"/>
+    <p:unwrap match="/c:param-set/c:param-set"/>
+    <p:delete match="/c:param-set/c:param[@name = following-sibling::c:param/@name]"/>
+    <p:identity name="parameters"/>
+    <p:sink/>
     
     <!-- Load OPF and add content files to fileset. -->
     <px:fileset-load media-types="application/oebps-package+xml">
@@ -105,7 +123,10 @@
     </px:fileset-create>
     
     <p:choose>
-        <p:when test="not($toc-depth='0')">
+        <p:xpath-context>
+            <p:pipe step="parameters" port="result"/>
+        </p:xpath-context>
+        <p:when test="not(/*/*[@name='toc-depth']/@value = '0')">
             <pxi:fileset-add-tempfile media-type="text/css" suffix=".css">
                 <p:input port="source">
                     <p:inline>
@@ -169,7 +190,10 @@
         <p:delete match="//@style | //html:link[@rel='stylesheet' and not(string(@media)='embossed')] | //html:style[not(string(@media)='embossed')]"/>
         
         <p:choose>
-            <p:when test="$apply-document-specific-stylesheets = 'true'">
+            <p:xpath-context>
+                <p:pipe step="parameters" port="result"/>
+            </p:xpath-context>
+            <p:when test="/*/*[@name='apply-document-specific-stylesheets']/@value = 'true'">
                 <px:message severity="DEBUG">
                     <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
                 </px:message>
@@ -179,6 +203,9 @@
                     <p:delete match="//html:link[@rel='stylesheet' and @media='embossed']"/>
                     <css:inline>
                         <p:with-option name="default-stylesheet" select="$linked-stylesheets"/>
+                        <p:input port="sass-variables">
+                            <p:pipe port="result" step="parameters"/>
+                        </p:input>
                     </css:inline>
                 </p:group>
             </p:when>
@@ -218,12 +245,17 @@
         <p:input port="stylesheet">
             <p:document href="../xslt/generate-toc.xsl"/>
         </p:input>
-        <p:with-param name="_depth" select="$toc-depth"/>
+        <p:with-param name="_depth" select="/*/*[@name='toc-depth']/@value">
+            <p:pipe step="parameters" port="result"/>
+        </p:with-param>
     </p:xslt>
     
     <px:message message="Inlining global CSS"/>
     <p:group>
-        <p:variable name="default-stylesheet" select="string-join((
+        <p:variable name="default-stylesheet" select="/*/*[@name='default-stylesheet']/@value">
+            <p:pipe step="parameters" port="result"/>
+        </p:variable>
+        <p:variable name="stylesheets-to-be-inlined" select="string-join((
                                                                     $default-stylesheet,
                                                                     $stylesheet,
                                                                     //d:file/resolve-uri(@href, base-uri(.))
@@ -231,10 +263,13 @@
             <p:pipe step="generated-css" port="result"/>
         </p:variable>
         <px:message severity="DEBUG">
-            <p:with-option name="message" select="concat('stylesheets: ',$default-stylesheet)"/>
+            <p:with-option name="message" select="concat('stylesheets: ',$stylesheets-to-be-inlined)"/>
         </px:message>
         <css:inline>
-            <p:with-option name="default-stylesheet" select="$default-stylesheet"/>
+            <p:with-option name="default-stylesheet" select="$stylesheets-to-be-inlined"/>
+            <p:input port="sass-variables">
+                <p:pipe port="result" step="parameters"/>
+            </p:input>
         </css:inline>
     </p:group>
     
@@ -253,7 +288,9 @@
         
         <px:message message="Transforming from XML with inline CSS to PEF"/>
         <px:transform>
-            <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
+            <p:with-option name="query" select="concat('(input:css)(output:pef)',/*/*[@name='transform']/@value,'(locale:',$lang,')')">
+                <p:pipe step="parameters" port="result"/>
+            </p:with-option>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </px:transform>
     </p:group>
