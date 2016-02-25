@@ -538,48 +538,9 @@ even though the provided CSS is more specific.
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-        
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
-        <!--<p:with-option name="page-width" select="$page-width"/>
-        <p:with-option name="page-height" select="$page-height"/>
-        <p:with-option name="predefined-page-formats" select="$predefined-page-formats"/>
-        <p:with-option name="left-margin" select="$left-margin"/>
-        <p:with-option name="duplex" select="$duplex"/>
-        <p:with-option name="levels-in-footer" select="$levels-in-footer"/>
-        <p:with-option name="main-document-language" select="$main-document-language"/>
-        <p:with-option name="contraction-grade" select="$contraction-grade"/>
-        <p:with-option name="hyphenation-with-single-line-spacing" select="$hyphenation-with-single-line-spacing"/>
-        <p:with-option name="hyphenation-with-double-line-spacing" select="$hyphenation-with-double-line-spacing"/>
-        <p:with-option name="line-spacing" select="$line-spacing"/>
-        <p:with-option name="tab-width" select="$tab-width"/>
-        <p:with-option name="capital-letters" select="$capital-letters"/>
-        <p:with-option name="accented-letters" select="$accented-letters"/>
-        <p:with-option name="polite-forms" select="$polite-forms"/>
-        <p:with-option name="downshift-ordinal-numbers" select="$downshift-ordinal-numbers"/>
-        <p:with-option name="include-captions" select="$include-captions"/>
-        <p:with-option name="include-images" select="$include-images"/>
-        <p:with-option name="include-image-groups" select="$include-image-groups"/>
-        <p:with-option name="include-line-groups" select="$include-line-groups"/>
-        <p:with-option name="text-level-formatting" select="$text-level-formatting"/>
-        <p:with-option name="include-note-references" select="$include-note-references"/>
-        <p:with-option name="include-production-notes" select="$include-production-notes"/>
-        <p:with-option name="show-braille-page-numbers" select="$show-braille-page-numbers"/>
-        <p:with-option name="show-print-page-numbers" select="$show-print-page-numbers"/>
-        <p:with-option name="force-braille-page-break" select="$force-braille-page-break"/>
-        <p:with-option name="toc-depth" select="$toc-depth"/>
-        <p:with-option name="ignore-document-title" select="$ignore-document-title"/>
-        <p:with-option name="include-symbols-list" select="$include-symbols-list"/>
-        <p:with-option name="choice-of-colophon" select="$choice-of-colophon"/>
-        <p:with-option name="footnotes-placement" select="$footnotes-placement"/>
-        <p:with-option name="colophon-metadata-placement" select="$colophon-metadata-placement"/>
-        <p:with-option name="rear-cover-placement" select="$rear-cover-placement"/>
-        <p:with-option name="number-of-pages" select="$number-of-pages"/>
-        <p:with-option name="maximum-number-of-pages" select="$maximum-number-of-pages"/>
-        <p:with-option name="minimum-number-of-pages" select="$minimum-number-of-pages"/>
-        <p:with-option name="sbsform-macros" select="$sbsform-macros"/>
-        <p:with-option name="apply-document-specific-stylesheets" select="$apply-document-specific-stylesheets"/>-->
     </px:epub3-to-pef.convert>
     <p:sink/>
     

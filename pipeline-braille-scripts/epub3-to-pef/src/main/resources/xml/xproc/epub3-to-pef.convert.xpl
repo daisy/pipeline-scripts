@@ -30,48 +30,6 @@
         </p:inline>
     </p:input>
     
-    <!--<p:option name="default-stylesheet" select="''"/>
-    <p:option name="stylesheet" select="''"/>
-    <p:option name="transform" select="''"/>
-    <p:option name="page-width" select="'28'"/>
-    <p:option name="page-height" select="'29'"/>
-    <p:option name="predefined-page-formats" select="'A4'"/>
-    <p:option name="left-margin" select="'0'"/>
-    <p:option name="duplex" select="'true'"/>
-    <p:option name="levels-in-footer" select="'6'"/>
-    <p:option name="main-document-language" select="''"/>
-    <p:option name="contraction-grade" select="'0'"/>
-    <p:option name="hyphenation-with-single-line-spacing" select="'true'"/>
-    <p:option name="hyphenation-with-double-line-spacing" select="'false'"/>
-    <p:option name="line-spacing" select="'single'"/>
-    <p:option name="tab-width" select="'4'"/>
-    <p:option name="capital-letters" select="'true'"/>
-    <p:option name="accented-letters" select="'true'"/>
-    <p:option name="polite-forms" select="'false'"/>
-    <p:option name="downshift-ordinal-numbers" select="'false'"/>
-    <p:option name="include-captions" select="'true'"/>
-    <p:option name="include-images" select="'true'"/>
-    <p:option name="include-image-groups" select="'true'"/>
-    <p:option name="include-line-groups" select="'true'"/>
-    <p:option name="text-level-formatting" select="'true'"/>
-    <p:option name="include-note-references" select="'true'"/>
-    <p:option name="include-production-notes" select="'false'"/>
-    <p:option name="show-braille-page-numbers" select="'true'"/>
-    <p:option name="show-print-page-numbers" select="'true'"/>
-    <p:option name="force-braille-page-break" select="'false'"/>
-    <p:option name="toc-depth" required="true"/>
-    <p:option name="ignore-document-title" select="'false'"/>
-    <p:option name="include-symbols-list" select="'true'"/>
-    <p:option name="choice-of-colophon" select="''"/>
-    <p:option name="footnotes-placement" select="''"/>
-    <p:option name="colophon-metadata-placement" select="''"/>
-    <p:option name="rear-cover-placement" select="''"/>
-    <p:option name="number-of-pages" select="'50'"/>
-    <p:option name="maximum-number-of-pages" select="'70'"/>
-    <p:option name="minimum-number-of-pages" select="'30'"/>
-    <p:option name="sbsform-macros" select="''"/>
-    <p:option name="apply-document-specific-stylesheets" select="'false'"/>-->
-    
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
 
@@ -255,6 +213,9 @@
         <p:variable name="default-stylesheet" select="/*/*[@name='default-stylesheet']/@value">
             <p:pipe step="parameters" port="result"/>
         </p:variable>
+        <p:variable name="stylesheet" select="/*/*[@name='stylesheet']/@value">
+            <p:pipe step="parameters" port="result"/>
+        </p:variable>
         <p:variable name="stylesheets-to-be-inlined" select="string-join((
                                                                     $default-stylesheet,
                                                                     $stylesheet,
@@ -277,6 +238,9 @@
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
             <p:pipe port="result" step="opf"/>
         </p:variable>
+        <p:variable name="transform-query" select="concat('(input:css)(output:pef)',/*/*[@name='transform']/@value,'(locale:',$lang,')')">
+            <p:pipe step="parameters" port="result"/>
+        </p:variable>
         
         <px:message message="Transforming MathML"/>
         <p:viewport match="math:math">
@@ -287,10 +251,11 @@
         </p:viewport>
         
         <px:message message="Transforming from XML with inline CSS to PEF"/>
+        <px:message severity="DEBUG">
+            <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+        </px:message>
         <px:transform>
-            <p:with-option name="query" select="concat('(input:css)(output:pef)',/*/*[@name='transform']/@value,'(locale:',$lang,')')">
-                <p:pipe step="parameters" port="result"/>
-            </p:with-option>
+            <p:with-option name="query" select="$transform-query"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </px:transform>
     </p:group>
