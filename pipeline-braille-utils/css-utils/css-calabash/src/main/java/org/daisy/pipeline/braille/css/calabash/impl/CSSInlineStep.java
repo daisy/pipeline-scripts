@@ -124,6 +124,12 @@ public class CSSInlineStep extends DefaultStep {
 	private NetworkProcessor network = null;
 	private Importer importer = null;
 	
+	private final String scssNumber = "\\d*\\.\\d+";
+	private final String scssColor = "(#[\\da-zA-Z]+|(rgb|hsl)a?\\([^)]*\\))";
+	private final String scssBadStringChars = "!\"#$'()*+,\\.\\/:<=>?@\\[\\\\\\]^`{|}~-";
+	private final String scssNumberColorString = "\\s*("+ scssNumber +"|"+ scssColor +"|"+ "[^"+scssBadStringChars+"]+" +"|"+ "\\\"[^'"+scssBadStringChars+"]+\\\"" +"|"+ "'[^\\\""+scssBadStringChars+"]+'" +")\\s*";
+	private final String scssValue = scssNumberColorString + "(" + "(\\s+|\\s*,\\s*)" + scssNumberColorString + ")*";
+	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
 	
 	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step, final URIResolver resolver) {
@@ -186,12 +192,9 @@ public class CSSInlineStep extends DefaultStep {
 					String scss = "";
 					for (String var : sassVariables.keySet()) {
 						String value = sassVariables.get(var);
-						System.out.println("processing ["+var+"]=["+value+"]");
-						if (value.matches(".*[^\\w #,%@/\\.'\"\u0100-\uFFFF-].*")) {
+						if (!value.matches(scssValue)) {
 							// if value contains special characters that can mess up parsing; wrap it in single quotes
-            				System.out.println("    contains special characters: ["+value.replaceAll("[^\\w #,%@/\\.'\"\u0100-\uFFFF-]","")+"]");
             				value = "'"+value.replaceAll("'", "\\\\'")+"'";
-            				System.out.println("                     replaced  : ["+var+"]=["+value+"]");
             			}
 						scss += ("$" + var + ": " + value + ";\n");
 					}
