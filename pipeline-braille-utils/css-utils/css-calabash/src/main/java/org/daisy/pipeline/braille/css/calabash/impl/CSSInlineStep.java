@@ -133,11 +133,6 @@ public class CSSInlineStep extends DefaultStep {
 				try {
 					URI uri = asURI(url);
 					URI base = previous.getAbsoluteUri();
-					
-					// base could be a file (is this a bug?)
-					File file = new File(base.toString());
-					if (file.exists())
-						base = file.toURI();
 					logger.debug("Importing SASS style sheet: " + uri + " (base = " + base + ")");
 					URI abs = base.resolve(uri);
 					try {

@@ -315,9 +315,9 @@
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>io.bit3.jsass</artifactId>
                 <!--
-                    depends on https://github.com/daisy/osgi-libs/pull/33
+                    depends on org.daisy.libs branch of https://github.com/snaekobbi/jsass
                 -->
-                <version>4.1.0-SNAPSHOT</version>
+                <version>4.1.0-1-SNAPSHOT</version>
             </dependency>
             <!--
                 for liblouis-java and jhyphen
