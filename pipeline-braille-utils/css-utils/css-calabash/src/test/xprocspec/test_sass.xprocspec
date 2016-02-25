@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.daisy.org/ns/xprocspec/xprocspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="../resources/inline.xpl">
@@ -321,6 +322,40 @@
         <body>
           <h1/>
           <p style="border-bottom: ⠿; border-top: ⠿;"/>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_11">
+    <x:documentation>
+      Allow using SASS variables with special characters.
+    </x:documentation>
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <link type="text/css" rel="stylesheet" href="../resources/sass/sass_6.scss" media="embossed"/>
+            </head>
+            <body>
+              <h1/>
+              <p/>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+      <x:param port="sass-variables" name="padding-left" select="'A great lot'':!'"/>
+      <x:param port="sass-variables" name="margin-left" select="'a lot'"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <h1/>
+          <p style="margin-left: 3; padding-left: 3;"/>
         </body>
       </x:document>
     </x:expect>

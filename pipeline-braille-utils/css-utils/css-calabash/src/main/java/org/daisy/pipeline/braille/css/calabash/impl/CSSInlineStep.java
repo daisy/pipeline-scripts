@@ -184,8 +184,17 @@ public class CSSInlineStep extends DefaultStep {
 					options.setOmitSourceMapUrl(true);
 					options.getImporters().add(importer);
 					String scss = "";
-					for (String var : sassVariables.keySet())
-						scss += ("$" + var + ": " + sassVariables.get(var) + ";\n");
+					for (String var : sassVariables.keySet()) {
+						String value = sassVariables.get(var);
+						System.out.println("processing ["+var+"]=["+value+"]");
+						if (value.matches(".*[^\\w #,%@/\\.'\"\u0100-\uFFFF-].*")) {
+							// if value contains special characters that can mess up parsing; wrap it in single quotes
+            				System.out.println("    contains special characters: ["+value.replaceAll("[^\\w #,%@/\\.'\"\u0100-\uFFFF-]","")+"]");
+            				value = "'"+value.replaceAll("'", "\\\\'")+"'";
+            				System.out.println("                     replaced  : ["+var+"]=["+value+"]");
+            			}
+						scss += ("$" + var + ": " + value + ";\n");
+					}
 					scss += byteSource(is).asCharSource(StandardCharsets.UTF_8).read();
 					try {
 						Output result = sassCompiler.compileString(scss, StandardCharsets.UTF_8, asURI(url), null, options);
