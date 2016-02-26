@@ -34,7 +34,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class DTBookToPefTest {
+public class XProcSpecTest {
 	
 	@Configuration
 	public Option[] config() {
@@ -46,26 +46,9 @@ public class DTBookToPefTest {
 			thisBundle(),
 			junitBundles(),
 			mavenBundlesWithDependencies(
-				brailleModule("common-utils"),
-				brailleModule("css-utils"),
-				brailleModule("pef-utils"),
-				brailleModule("liblouis-utils"),
-				brailleModule("dotify-utils"),
-				brailleModule("liblouis-tables"),
-				brailleModule("liblouis-formatter"),
-				brailleModule("liblouis-native").forThisPlatform(),
-				brailleModule("libhyphen-core"),
-				brailleModule("libhyphen-libreoffice-tables"),
-				brailleModule("libhyphen-native").forThisPlatform(),
-				brailleModule("dotify-formatter"),
-				pipelineModule("dtbook-utils"),
-				pipelineModule("metadata-utils"),
+				pipelineModule("common-utils"),
 				pipelineModule("file-utils"),
 				pipelineModule("fileset-utils"),
-				// for metadata-utils
-				pipelineModule("validation-utils"),
-				pipelineModule("dtbook-validator"),
-				pipelineModule("common-utils"),
 				pipelineModule("html-utils"),
 				pipelineModule("zip-utils"),
 				pipelineModule("mediatype-utils"),

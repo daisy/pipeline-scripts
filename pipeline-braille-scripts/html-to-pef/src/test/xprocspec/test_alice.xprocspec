@@ -2,13 +2,11 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-               script="../../main/resources/xml/html-to-pef.xpl">
+               script="http://www.daisy.org/pipeline/modules/braille/html-to-pef/html-to-pef.xpl">
   
   <x:scenario label="test alice.xhtml with default.css">
     <x:call step="px:html-to-pef">
-      <x:input port="source">
-        <x:document type="file" href="../resources/alice.xhtml"/>
-      </x:input>
+      <x:option name="html" select="resolve-uri('../resources/alice.xhtml')"/>
       <x:option name="include-preview" select="'true'"/>
       <x:option name="output-dir" select="concat($temp-dir,'1/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'1/temp-dir/')"/>
@@ -22,22 +20,7 @@
   
   <x:scenario label="test reset.css">
     <x:call step="px:html-to-pef">
-      <x:input port="source">
-        <x:document type="inline">
-          <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-            <head>
-              <title>foobar</title>
-              <link rel="stylesheet" media="embossed" type="text/css" href="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/reset.css"/>
-            </head>
-            <body>
-              <section>
-                <h1>foo</h1>
-                <p>bar</p>
-              </section>
-            </body>
-          </html>
-        </x:document>
-      </x:input>
+      <x:option name="html" select="resolve-uri('../resources/reset-test.html')"/>
       <x:option name="output-dir" select="concat($temp-dir,'2/output-dir/')"/>
       <x:option name="temp-dir" select="concat($temp-dir,'2/temp-dir/')"/>
     </x:call>

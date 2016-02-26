@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="pxi:fileset-add-tempfile"
+<p:declare-step type="px:fileset-add-tempfile"
                 name="main"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"

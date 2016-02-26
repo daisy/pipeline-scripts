@@ -127,7 +127,7 @@ public class CSSInlineStep extends DefaultStep {
 	private final String scssNumber = "\\d*\\.\\d+";
 	private final String scssColor = "(#[\\da-zA-Z]+|(rgb|hsl)a?\\([^)]*\\))";
 	private final String scssBadStringChars = "!\"#$'()*+,\\.\\/:<=>?@\\[\\\\\\]^`{|}~-";
-	private final String scssNumberColorString = "\\s*("+ scssNumber +"|"+ scssColor +"|"+ "[^"+scssBadStringChars+"]+" +"|"+ "\\\"[^'"+scssBadStringChars+"]+\\\"" +"|"+ "'[^\\\""+scssBadStringChars+"]+'" +")\\s*";
+	private final String scssNumberColorString = "\\s*(\\s*|"+ scssNumber +"|"+ scssColor +"|"+ "[^"+scssBadStringChars+"]+" +"|"+ "\\\"[^'"+scssBadStringChars+"]+\\\"" +"|"+ "'[^\\\""+scssBadStringChars+"]+'" +")\\s*";
 	private final String scssValue = scssNumberColorString + "(" + "(\\s+|\\s*,\\s*)" + scssNumberColorString + ")*";
 	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
@@ -194,7 +194,11 @@ public class CSSInlineStep extends DefaultStep {
 						String value = sassVariables.get(var);
 						if (!value.matches(scssValue)) {
 							// if value contains special characters that can mess up parsing; wrap it in single quotes
+							logger.debug("scss variable '"+var+"' contains special characters: "+value);
             				value = "'"+value.replaceAll("'", "\\\\'")+"'";
+            				logger.debug("scss variable '"+var+"' was escaped                : "+value);
+            			} else {
+            				logger.debug("scss variable '"+var+"' contains no special characters: "+value);
             			}
 						scss += ("$" + var + ": " + value + ";\n");
 					}

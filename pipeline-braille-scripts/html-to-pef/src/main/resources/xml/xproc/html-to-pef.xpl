@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:dtbook-to-pef" version="1.0"
+<p:declare-step type="px:html-to-pef" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -7,18 +7,10 @@
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 exclude-inline-prefixes="#all"
                 name="main">
-
+    
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-        <h1 px:role="name">DTBook to PEF</h1>
-        <p px:role="desc">Transforms a DTBook (DAISY 3 XML) document into a PEF.</p>
-        <dl px:role="author">
-            <dt>Name:</dt>
-            <dd px:role="name">Bert Frees</dd>
-            <dt>Organization:</dt>
-            <dd px:role="organization" href="http://www.sbs-online.ch/">SBS</dd>
-            <dt>E-mail:</dt>
-            <dd><a px:role="contact" href="mailto:bertfrees@gmail.com">bertfrees@gmail.com</a></dd>
-        </dl>
+        <h1 px:role="name">HTML to PEF</h1>
+        <p px:role="desc">Transforms a HTML document into a PEF.</p>
         <dl px:role="author">
             <dt>Name:</dt>
             <dd px:role="name">Jostein Austvik Jacobsen</dd>
@@ -28,12 +20,13 @@
             <dd><a px:role="contact" href="mailto:josteinaj@gmail.com">josteinaj@gmail.com</a></dd>
         </dl>
     </p:documentation>
-
-    <p:input port="source" primary="true" px:name="source" px:media-type="application/x-dtbook+xml">
+    
+    <p:option name="html" required="true" px:type="anyFileURI" px:sequence="false" px:media-type="application/xhtml+xml text/html">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Input DTBook</h2>
+            <h2 px:role="name">Input HTML</h2>
+            <p px:role="desc">The HTML you want to convert to braille.</p>
         </p:documentation>
-    </p:input>
+    </p:option>
     
     <p:option name="stylesheet"/>
     <p:option name="transform"/>
@@ -80,16 +73,11 @@
     <p:option name="html-output-dir" required="false"/>
     <p:option name="temp-dir" required="false"/>
     
-    <!-- ======= -->
-    <!-- Imports -->
-    <!-- ======= -->
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl">
-        <!-- NOTE: we cannot use a relative url to import dtbook-to-pef.convert.xpl directly here
-                   because this script uses px:extends-script in the XML catalog which
-                   changes the base URI of the script at build time. -->
-    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/html-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     
     <!-- ================================================= -->
     <!-- Create a <c:param-set/> of the options            -->
@@ -106,10 +94,14 @@
     <p:insert match="/*" position="last-child">
         <p:input port="insertion">
             <p:inline>
-                <c:param name="default-stylesheet" value="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css"/>
+                <c:param name="default-stylesheet" value="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css"/>
             </p:inline>
         </p:input>
     </p:insert>
+    <p:add-attribute match="/*/*[@name='transform']" attribute-name="value">
+        <p:with-option name="attribute-value"  select="if ($transform!='') then $transform
+                                                                           else '(translator:liblouis)(formatter:dotify)'"/>
+    </p:add-attribute>
     <p:identity name="input-options"/>
     <p:sink/>
     
@@ -119,34 +111,40 @@
     <px:tempdir name="temp-dir">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $output-dir"/>
     </px:tempdir>
-    <p:sink/>
     
-    <!-- ============= -->
-    <!-- DTBOOK TO PEF -->
-    <!-- ============= -->
-    <px:dtbook-to-pef.convert>
-        <p:input port="source">
-            <p:pipe step="main" port="source"/>
-        </p:input>
-        <p:with-option name="temp-dir" select="string(/c:result)">
+    <!-- ========= -->
+    <!-- LOAD HTML -->
+    <!-- ========= -->
+    <px:message message="Loading HTML"/>
+    <px:html-load name="html">
+        <p:with-option name="href" select="$html"/>
+    </px:html-load>
+    
+    <!-- ============ -->
+    <!-- HTML TO PEF -->
+    <!-- ============ -->
+    <px:message message="Done loading HTML, starting conversion to PEF"/>
+    <px:html-to-pef.convert name="convert">
+        <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
-    </px:dtbook-to-pef.convert>
+    </px:html-to-pef.convert>
     
     <!-- ========= -->
     <!-- STORE PEF -->
     <!-- ========= -->
+    <px:message message="Storing PEF"/>
     <pef:store>
         <p:with-option name="output-dir" select="$output-dir"/>
         <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
-            <p:pipe step="main" port="source"/>
+            <p:pipe step="html" port="result"/>
         </p:with-option>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                 else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
-            <p:pipe step="main" port="source"/>
+            <p:pipe step="html" port="result"/>
         </p:with-option>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-brf" select="$include-brf"/>

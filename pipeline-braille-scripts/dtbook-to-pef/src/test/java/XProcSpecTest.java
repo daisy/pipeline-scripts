@@ -60,6 +60,9 @@ public class XProcSpecTest {
 				pipelineModule("common-utils"),
 				pipelineModule("zip-utils"),
 				pipelineModule("mediatype-utils"),
+				pipelineModule("dtbook-utils"),
+				pipelineModule("dtbook-validator"),
+				pipelineModule("validation-utils"),
 				// logging
 				logbackClassic(),
 				// xprocspec

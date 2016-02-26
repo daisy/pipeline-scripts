@@ -39,7 +39,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-    <p:import href="fileset-add-tempfile.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
     <p:identity>
@@ -85,7 +85,7 @@
             <p:pipe step="parameters" port="result"/>
         </p:xpath-context>
         <p:when test="not(/*/*[@name='toc-depth']/@value = '0')">
-            <pxi:fileset-add-tempfile media-type="text/css" suffix=".css">
+            <px:fileset-add-tempfile media-type="text/css" suffix=".css">
                 <p:input port="source">
                     <p:inline>
                         <c:data>#generated-toc {
@@ -102,7 +102,7 @@
 </c:data>
                     </p:inline>
                 </p:input>
-            </pxi:fileset-add-tempfile>
+            </px:fileset-add-tempfile>
         </p:when>
         <p:otherwise>
             <p:identity/>
@@ -201,7 +201,7 @@
     <px:message message="Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
-            <p:document href="../xslt/generate-toc.xsl"/>
+            <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
         </p:input>
         <p:with-param name="_depth" select="/*/*[@name='toc-depth']/@value">
             <p:pipe step="parameters" port="result"/>
@@ -257,6 +257,10 @@
         <px:transform>
             <p:with-option name="query" select="$transform-query"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
+            <p:input port="parameters">
+                <!-- px:transform uses the 'duplex' parameter -->
+                <p:pipe port="result" step="parameters"/>
+            </p:input>
         </px:transform>
     </p:group>
     <p:identity name="pef"/>
