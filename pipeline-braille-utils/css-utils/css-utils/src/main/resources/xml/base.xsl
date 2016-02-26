@@ -756,6 +756,14 @@
         <xsl:sequence select="concat('leader(&quot;',@pattern,'&quot;)')"/>
     </xsl:template>
     
+    <xsl:template match="css:custom-func" mode="css:serialize" as="xs:string">
+        <xsl:sequence select="concat(
+                                @name,
+                                '(',
+                                string-join(for $i in 1 to 10 return @*[name()=concat('arg',$i)]/string(),', '),
+                                ')')"/>
+    </xsl:template>
+    
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/>
         <xsl:sequence select="css:serialize-stylesheet($rules, false())"/>
