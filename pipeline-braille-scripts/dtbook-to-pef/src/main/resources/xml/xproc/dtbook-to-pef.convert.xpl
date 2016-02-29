@@ -11,109 +11,115 @@
                 exclude-inline-prefixes="#all"
                 name="main">
     
-    <p:input port="source" px:media-type="application/x-dtbook+xml"/>
-    <p:output port="result" px:media-type="application/x-pef+xml"/>
-
-    <p:option name="default-stylesheet" required="true"/>
-    <p:option name="stylesheet" required="true"/>
-    <p:option name="transform" required="true"/>
+    <p:input port="source">
+        <p:documentation>DTBook</p:documentation>
+    </p:input>
+    <p:output port="result">
+        <p:documentation>PEF</p:documentation>
+    </p:output>
     
-    <p:option name="page-width" required="true"/>
-    <p:option name="page-height" required="true"/>
-    <!-- <p:option name="predefined-page-formats" required="true"/> -->
-    <!-- <p:option name="left-margin" required="true"/> -->
-    <p:option name="duplex" required="true"/>
-    <p:option name="levels-in-footer" required="true"/>
-    <!-- <p:option name="main-document-language" required="true"/> -->
-    <p:option name="hyphenation" required="true"/>
-    <p:option name="line-spacing" required="true"/>
-    <!-- <p:option name="tab-width" required="true"/> -->
-    <p:option name="capital-letters" required="true"/>
-    <!-- <p:option name="accented-letters" required="true"/> -->
-    <!-- <p:option name="polite-forms" required="true"/> -->
-    <!-- <p:option name="downshift-ordinal-numbers" required="true"/> -->
-    <p:option name="include-captions" required="true"/>
-    <p:option name="include-images" required="true"/>
-    <!-- <p:option name="include-image-groups" required="true"/> -->
-    <p:option name="include-line-groups" required="true"/>
-    <!-- <p:option name="text-level-formatting" required="true"/> -->
-    <!-- <p:option name="include-note-references" required="true"/> -->
-    <p:option name="include-production-notes" required="true"/>
-    <p:option name="show-braille-page-numbers" required="true"/>
-    <p:option name="show-print-page-numbers" required="true"/>
-    <p:option name="force-braille-page-break" required="true"/>
-    <p:option name="toc-depth" required="true"/>
-    <!-- <p:option name="ignore-document-title" required="true"/> -->
-    <!-- <p:option name="include-symbols-list" required="true"/> -->
-    <!-- <p:option name="choice-of-colophon" required="true"/> -->
-    <!-- <p:option name="footnotes-placement" required="true"/> -->
-    <!-- <p:option name="colophon-metadata-placement" required="true"/> -->
-    <!-- <p:option name="rear-cover-placement" required="true"/> -->
-    <!-- <p:option name="number-of-pages" required="true"/> -->
-    <!-- <p:option name="maximum-number-of-pages" required="true"/> -->
-    <!-- <p:option name="minimum-number-of-pages" required="true"/> -->
-    <!-- <p:option name="sbsform-macros" required="true"/> -->
-
+    <p:input kind="parameter" port="parameters" sequence="true">
+        <p:inline>
+            <c:param-set/>
+        </p:inline>
+    </p:input>
+    
+    <p:option name="default-stylesheet" select="'http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css'"/>
+    <p:option name="stylesheet" select="''"/>
+    <p:option name="transform" select="'(translator:liblouis)(formatter:dotify)'"/>
+    
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-    <p:import href="generate-toc.xpl"/>
     
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
+    
+    <!-- Ensure that there's exactly one c:param-set -->
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="main" port="parameters"/>
+        </p:input>
+    </p:identity>
+    <p:wrap-sequence wrapper="c:param-set"/>
+    <p:unwrap match="/c:param-set/c:param-set"/>
+    <p:delete match="/c:param-set/c:param[@name = following-sibling::c:param/@name]"/>
+    <p:identity name="parameters"/>
+    <p:sink/>
     
     <px:dtbook-load name="load">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
     </px:dtbook-load>
+    <p:sink/>
     
-    <pxi:generate-toc>
+    <p:identity>
         <p:input port="source">
             <p:pipe step="load" port="in-memory.out"/>
         </p:input>
-        <p:with-option name="depth" select="$toc-depth"/>
-    </pxi:generate-toc>
+    </p:identity>
+    <px:message message="Generating table of contents"/>
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
+        </p:input>
+        <p:with-param name="_depth" select="/*/*[@name='toc-depth']/@value">
+            <p:pipe step="parameters" port="result"/>
+        </p:with-param>
+    </p:xslt>
     
-    <css:inline>
-        <p:with-option name="default-stylesheet" select="string-join((
-                                                           $default-stylesheet,
-                                                           resolve-uri('../../css/default.scss'),
-                                                           $stylesheet),' ')">
+    <px:message message="Inlining CSS"/>
+    <p:group>
+        <p:variable name="stylesheets-to-be-inlined" select="string-join((
+                                                               $default-stylesheet,
+                                                               resolve-uri('../../css/default.scss'),
+                                                               $stylesheet),' ')">
             <p:inline><_/></p:inline>
-        </p:with-option>
-        <p:with-param port="sass-variables" name="page-width" select="$page-width"/>
-        <p:with-param port="sass-variables" name="page-height" select="$page-height"/>
-        <p:with-param port="sass-variables" name="levels-in-footer" select="$levels-in-footer"/>
-        <p:with-param port="sass-variables" name="hyphenation" select="$hyphenation"/>
-        <p:with-param port="sass-variables" name="line-spacing" select="$line-spacing"/>
-        <p:with-param port="sass-variables" name="capital-letters" select="$capital-letters"/>
-        <p:with-param port="sass-variables" name="include-captions" select="$include-captions"/>
-        <p:with-param port="sass-variables" name="include-images" select="$include-images"/>
-        <p:with-param port="sass-variables" name="include-line-groups" select="$include-line-groups"/>
-        <p:with-param port="sass-variables" name="include-production-notes" select="$include-production-notes"/>
-        <p:with-param port="sass-variables" name="show-braille-page-numbers" select="$show-braille-page-numbers"/>
-        <p:with-param port="sass-variables" name="show-print-page-numbers" select="$show-print-page-numbers"/>
-        <p:with-param port="sass-variables" name="force-braille-page-break" select="$force-braille-page-break"/>
-    </css:inline>
-
+        </p:variable>
+        <px:message severity="DEBUG">
+            <p:with-option name="message" select="concat('stylesheets: ',$stylesheets-to-be-inlined)"/>
+        </px:message>
+        <css:inline>
+            <p:with-option name="default-stylesheet" select="$stylesheets-to-be-inlined"/>
+            <p:input port="sass-variables">
+                <p:pipe port="result" step="parameters"/>
+            </p:input>
+        </css:inline>
+    </p:group>
+    
+    <px:message message="Transforming MathML"/>
     <p:viewport match="math:math">
         <px:transform>
             <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
         </px:transform>
     </p:viewport>
-
-    <px:transform name="pef">
-        <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
-        <p:with-option name="temp-dir" select="$temp-dir"/>
-        <p:with-param port="parameters" name="duplex" select="$duplex"/>
-    </px:transform>
+    
+    <px:message message="Transforming from XML with inline CSS to PEF"/>
+    <p:group>
+        <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')">
+            <p:pipe step="parameters" port="result"/>
+        </p:variable>
+        <px:message severity="DEBUG">
+            <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+        </px:message>
+        <px:transform>
+            <p:with-option name="query" select="$transform-query"/>
+            <p:with-option name="temp-dir" select="$temp-dir"/>
+            <p:input port="parameters">
+                <!-- px:transform uses the 'duplex' parameter -->
+                <p:pipe port="result" step="parameters"/>
+            </p:input>
+        </px:transform>
+    </p:group>
+    <p:identity name="pef"/>
 
     <p:xslt name="metadata">
         <p:input port="source">

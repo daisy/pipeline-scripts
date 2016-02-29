@@ -17,8 +17,12 @@
   <name>DP2 Braille Modules :: dtbook-to-pef</name>
 
   <dependencies>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>xml-to-pef</artifactId>
+    </dependency>
     <!--
-        OSGi runtime dependencies
+        runtime dependencies
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>

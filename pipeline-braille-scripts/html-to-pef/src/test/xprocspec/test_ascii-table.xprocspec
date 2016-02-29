@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-               script="../../main/resources/xml/html-to-pef.xpl">
+               script="http://www.daisy.org/pipeline/modules/braille/html-to-pef/html-to-pef.xpl">
   
   <x:scenario label="ascii-table has priority over xml:lang" pending="wait for BRAILLO_6DOT_031_01 support in braille-utils">
     <x:call step="px:html-to-pef">

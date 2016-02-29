@@ -31,8 +31,7 @@
         </xsl:result-document>
     </xsl:template>
     
-    <xsl:template match="cat:uri[@px:script]|
-                         cat:uri[@px:extends-script]" mode="ds">
+    <xsl:template match="cat:uri[@px:script]" mode="ds" priority="2">
         <xsl:variable name="type" select="string(document(@uri,.)/*/@type)"/>
         <xsl:variable name="id" select="if (namespace-uri-for-prefix(substring-before($type,':'),document(@uri,.)/*)='http://www.daisy.org/ns/pipeline/xproc') then substring-after($type,':') else $type"/>
         <xsl:variable name="name" select="(document(@uri,.)//*[@pxd:role='name'])[1]"/>
@@ -53,16 +52,20 @@
         <xsl:next-match/>
     </xsl:template>
     
-    <xsl:template match="cat:uri[@px:extends-script]" mode="ds">
+    <xsl:template match="cat:uri[@px:extends]" mode="ds">
         <xsl:next-match/>
         <xsl:result-document href="{$outputDir}/generated-scripts/{replace(@uri,'^.*/([^/]+)$','$1')}" method="xml">
+            <xsl:variable name="original-script" select="document(@px:extends)"/>
+            <xsl:if test="not($original-script)">
+                <xsl:message terminate="yes" select="concat('Unable to resolve script extension: ', @px:extends)"/>
+            </xsl:if>
             <xsl:apply-templates select="document(@uri,.)" mode="xproc">
-                <xsl:with-param name="original-script" select="document(@px:extends-script)" tunnel="yes"/>
+                <xsl:with-param name="original-script" select="$original-script" tunnel="yes"/>
             </xsl:apply-templates>
         </xsl:result-document>
     </xsl:template>
     
-    <xsl:template match="cat:uri[@px:extends-script]/@uri" mode="ds">
+    <xsl:template match="cat:uri[@px:extends]/@uri" mode="ds">
         <xsl:attribute name="uri" select="concat('../generated-scripts/',replace(.,'^.*/([^/]+)$','$1'))"/>
     </xsl:template>
     
@@ -83,7 +86,7 @@
     </xsl:template>
     
     <xsl:template match="cat:uri/@px:script|
-                         cat:uri/@px:extends-script|
+                         cat:uri/@px:extends|
                          cat:uri/@px:data-type"
                   mode="ds"/>
     
@@ -108,10 +111,10 @@
         <xsl:param name="original-script" as="document-node()" tunnel="yes"/>
         <xsl:variable name="name" as="xs:string" select="@name"/>
         <xsl:variable name="original-option" as="element()?" select="$original-script/*/p:option[@name=$name]"/>
-        <xsl:variable name="new-attributes" as="xs:string*" select="concat('{',namespace-uri(.),'}',name(.))"/>
+        <xsl:variable name="new-attributes" as="xs:string*" select="@*/concat('{',namespace-uri(.),'}',local-name(.))"/>
         <xsl:copy>
             <xsl:apply-templates select="@*" mode="#current"/>
-            <xsl:sequence select="$original-option/@*[not(concat('{',namespace-uri(.),'}',name(.))=$new-attributes)]"/>
+            <xsl:sequence select="$original-option/@*[not(concat('{',namespace-uri(.),'}',local-name(.))=$new-attributes)]"/>
             <xsl:if test="not(p:documentation)">
                 <xsl:sequence select="$original-option/p:documentation"/>
             </xsl:if>

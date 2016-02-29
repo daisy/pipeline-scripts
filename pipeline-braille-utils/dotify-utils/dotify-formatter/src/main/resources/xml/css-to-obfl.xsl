@@ -73,7 +73,10 @@
             <xsl:if test="count($volume-stylesheet) &gt; 1">
                 <xsl:message terminate="yes">Documents with more than one volume style are not supported.</xsl:message>
             </xsl:if>
-            <xsl:variable name="volume-stylesheet" as="xs:string" select="$volume-stylesheet[1]"/>
+            <xsl:if test="count($volume-stylesheet) = 0">
+                <xsl:message>Document does not have an associated volume style.</xsl:message>
+            </xsl:if>
+            <xsl:variable name="volume-stylesheet" as="xs:string" select="($volume-stylesheet,'')[1]"/>
             <xsl:if test="$volume-stylesheet!=''">
                 <xsl:variable name="volume-stylesheets" as="element()*" select="css:parse-stylesheet($volume-stylesheet)"/>
                 <xsl:variable name="volume-stylesheets" as="element()*">

@@ -1,0 +1,99 @@
+/*
+ * Parameters injected by epub3-to-pef.convert:
+ * - $page-width
+ * - $page-height
+ * - $levels-in-footer
+ * - $hyphenation
+ * - $line-spacing
+ * - $capital-letters
+ * - $include-captions
+ * - $include-images
+ * - $include-line-groups
+ * - $include-production-notes
+ * - $show-braille-page-numbers
+ * - $show-print-page-numbers
+ * - $force-braille-page-break
+ */
+
+@namespace epub url(http://www.idpf.org/2007/ops);
+
+@page {
+	size: $page-width $page-height;
+}
+
+#generated-document-toc {
+	flow: document-toc;
+	display: -obfl-toc;
+	-obfl-toc-range: document;
+}
+
+#generated-volume-toc {
+	flow: volume-toc;
+	display: -obfl-toc;
+	-obfl-toc-range: volume;
+}
+
+@for $level from 1 through 6 {
+	@if $levels-in-footer >= $level {
+		h#{$level} {
+			string-set: footer content();
+		}
+	}
+}
+
+@if $hyphenation {
+	:root {
+		hyphens: auto;
+	}
+}
+
+@if $line-spacing == double {
+	:root {
+		line-height: 2;
+	}
+}
+
+@if $capital-letters != true {
+	:root {
+		text-transform: lowercase;
+	}
+}
+
+caption {
+	display: if($include-captions, block, none);
+}
+
+@if $include-images {
+	img::after {
+		content: attr(alt);
+	}
+}
+
+.linegroup .line {
+	display: if($include-line-groups, block, inline);
+}
+
+.prodnote,
+[epub|type~='z3998:production'] {
+	display: if($include-production-notes, block, none);
+}
+
+@if $show-braille-page-numbers {
+	@page {
+		@top-right {
+			content: counter(page);
+		}
+	}
+}
+
+.page-front,
+.page-normal,
+.page-special,
+[epub|type='pagebreak'] {
+	@if $show-print-page-numbers {
+		string-set: print-page attr(title);
+	}
+	@if $force-braille-page-break {
+		page-break-before: always;
+	}
+}

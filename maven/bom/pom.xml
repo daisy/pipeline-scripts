@@ -81,6 +81,11 @@
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
+                <artifactId>epub3-to-pef</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>html-to-pef</artifactId>
                 <version>2.2.1</version>
             </dependency>
@@ -187,7 +192,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-utils</artifactId>
-                <version>1.1.4</version>
+                <version>1.1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -203,6 +208,11 @@
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>texhyph-utils</artifactId>
                 <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.daisy.pipeline.modules.braille</groupId>
+                <artifactId>xml-to-pef</artifactId>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>

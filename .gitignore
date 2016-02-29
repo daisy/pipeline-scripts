@@ -1,6 +1,9 @@
 # Maven
 target/
 
+# xspec
+xspec/*html
+
 # Eclipse
 .classpath
 .project
