@@ -358,7 +358,8 @@
                   mode="#default sequence"/>
     
     <xsl:template match="css:box/css:_" mode="#default table-of-contents">
-        <xsl:apply-templates select="@*|node()" mode="#current"/>
+        <xsl:apply-templates select="@* except @type" mode="#current"/>
+        <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
     <!--
