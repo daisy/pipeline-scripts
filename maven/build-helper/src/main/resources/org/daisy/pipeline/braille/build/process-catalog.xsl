@@ -97,7 +97,7 @@
         <xsl:variable name="new-attributes" as="xs:string*" select="@*/concat('{',namespace-uri(.),'}',name(.))"/>
         <xsl:copy>
             <xsl:apply-templates select="@*" mode="#current"/>
-            <xsl:sequence select="$original-input-or-option/@*[not(concat('{',namespace-uri(.),'}',name(.))=$new-attributes)]"/>
+            <xsl:sequence select="$original-input-or-option/@*[not(concat('{',namespace-uri(.),'}',name(.))=$new-attributes or name()='select' and current()/@required = 'true')]"/>
             <xsl:if test="not(p:documentation)">
                 <xsl:sequence select="$original-input-or-option/p:documentation"/>
             </xsl:if>
