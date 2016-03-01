@@ -55,7 +55,7 @@
     <xsl:template match="cat:uri[@px:extends]" mode="ds">
         <xsl:next-match/>
         <xsl:result-document href="{$outputDir}/generated-scripts/{replace(@uri,'^.*/([^/]+)$','$1')}" method="xml">
-            <xsl:variable name="original-script" select="document(@px:extends)"/>
+            <xsl:variable name="original-script" select="document((//cat:uri[current()/@px:extends=@name]/@uri, @px:extends)[1])"/>
             <xsl:if test="not($original-script)">
                 <xsl:message terminate="yes" select="concat('Unable to resolve script extension: ', @px:extends)"/>
             </xsl:if>
