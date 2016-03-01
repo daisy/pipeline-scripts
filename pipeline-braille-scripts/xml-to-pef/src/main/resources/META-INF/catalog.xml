@@ -4,9 +4,6 @@
   <!-- "abstract" script (other scripts can extend this one) -->
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xml-to-pef.xpl" uri="../xml/xproc/xml-to-pef.xpl"/>
   
-  <!-- datatypes -->
-  <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/line-spacing.xml" uri="../xml/data-types/line-spacing.xml" px:data-type="true"/>
-  
   <!-- xproc -->
   <uri name="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl" uri="../xml/xproc/library.xpl"/>
   

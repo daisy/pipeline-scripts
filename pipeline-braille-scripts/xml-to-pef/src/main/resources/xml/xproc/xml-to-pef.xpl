@@ -144,7 +144,19 @@ default:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="line-spacing" required="false" px:data-type="xml-to-pef:line-spacing" select="'single'">
+    <p:option name="line-spacing" required="false" select="'single'">
+        <p:pipeinfo>
+            <px:data-type>
+                <choice>
+                    <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0" xml:lang="en">
+                        <value>Single</value>
+                        <value>Double</value>
+                    </documentation>
+                    <value>single</value>
+                    <value>double</value>
+                </choice>
+            </px:data-type>
+        </p:pipeinfo>
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Line spacing</h2>
             <p px:role="desc">'single' or 'double' line spacing.

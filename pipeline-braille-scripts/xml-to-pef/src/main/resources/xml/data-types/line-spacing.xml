@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<choice id="xml-to-pef:line-spacing">
-    <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0" xml:lang="en">
-        <value>Single</value>
-        <value>Double</value>
-    </documentation>
-    <value>single</value>
-    <value>double</value>
-</choice>
