@@ -145,11 +145,12 @@
     <xsl:variable name="css:LEADER_FN_RE_groups" select="$css:LEADER_FN_RE_pattern + $css:BRAILLE_STRING_RE_groups"/>
     
     <!--
-        flow(<ident>): http://snaekobbi.github.io/braille-css-spec/#dfn-flow-1
+        flow(<ident>,<scope>?): http://snaekobbi.github.io/braille-css-spec/#dfn-flow-1
     -->
-    <xsl:variable name="css:FLOW_FN_RE" select="concat('flow\(\s*(',$css:IDENT_RE,')\s*\)')"/>
+    <xsl:variable name="css:FLOW_FN_RE" select="concat('flow\(\s*(',$css:IDENT_RE,')\s*(,\s*(document|volume)\s*)?\)')"/>
     <xsl:variable name="css:FLOW_FN_RE_ident" select="1"/>
-    <xsl:variable name="css:FLOW_FN_RE_groups" select="$css:FLOW_FN_RE_ident + $css:IDENT_RE_groups"/>
+    <xsl:variable name="css:FLOW_FN_RE_scope" select="$css:FLOW_FN_RE_ident + $css:IDENT_RE_groups + 2"/>
+    <xsl:variable name="css:FLOW_FN_RE_groups" select="$css:FLOW_FN_RE_scope"/>
     
     <!--
         -foo-bar([<ident>|<string>|<integer>][,[<ident>|<string>|<integer>]]*)
@@ -209,6 +210,7 @@
     <xsl:variable name="css:CONTENT_RE_leader_fn_pattern" select="$css:CONTENT_RE_leader_fn + $css:LEADER_FN_RE_pattern"/>
     <xsl:variable name="css:CONTENT_RE_flow_fn" select="$css:CONTENT_RE_leader_fn + $css:LEADER_FN_RE_groups + 1"/>
     <xsl:variable name="css:CONTENT_RE_flow_fn_ident" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_ident"/>
+    <xsl:variable name="css:CONTENT_RE_flow_fn_scope" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_scope"/>
     <xsl:variable name="css:CONTENT_RE_vendor_prf_fn" select="$css:CONTENT_RE_flow_fn + $css:FLOW_FN_RE_groups + 1"/>
     <xsl:variable name="css:CONTENT_RE_vendor_prf_fn_func" select="$css:CONTENT_RE_vendor_prf_fn + $css:VENDOR_PRF_FN_RE_func"/>
     <xsl:variable name="css:CONTENT_RE_vendor_prf_fn_args" select="$css:CONTENT_RE_vendor_prf_fn + $css:VENDOR_PRF_FN_RE_args"/>
@@ -446,7 +448,11 @@
                             flow(<ident>)
                         -->
                         <xsl:when test="regex-group($css:CONTENT_RE_flow_fn)!=''">
-                            <css:flow from="{regex-group($css:CONTENT_RE_flow_fn_ident)}"/>
+                            <css:flow from="{regex-group($css:CONTENT_RE_flow_fn_ident)}">
+                                <xsl:if test="regex-group($css:CONTENT_RE_flow_fn_scope)!=''">
+                                    <xsl:attribute name="scope" select="regex-group($css:CONTENT_RE_flow_fn_scope)"/>
+                                </xsl:if>
+                            </css:flow>
                         </xsl:when>
                         <!--
                             -foo-bar([<ident>|<string>|<integer>][,[<ident>|<string>|<integer>]]*)

@@ -63,6 +63,37 @@
         </xsl:for-each>
     </xsl:function>
     
+    <xsl:variable name="footnote-and-volume-range-flows" as="xs:string*">
+        <!--
+            FIXME: code duplication!
+        -->
+        <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:page))">
+            <xsl:variable name="page-style" as="xs:string" select="."/>
+            <xsl:variable name="page-style" as="element()*" select="css:parse-stylesheet($page-style)"/>
+            <xsl:variable name="page-style" as="element()*" select="if ($page-style[matches(@selector,'^:')])
+                                                                    then css:parse-stylesheet($page-style[not(@selector)]/@style)
+                                                                    else $page-style"/>
+            <xsl:variable name="footnotes-style" as="element()*"
+                          select="css:parse-declaration-list($page-style[@selector='@footnotes'][1]/@style)"/>
+            <xsl:sequence select="css:parse-content-list($footnotes-style[@name='content'][1]/@value,())
+                                  /self::css:flow[@from and not(@scope)]/@from"/>
+        </xsl:for-each>
+        <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))">
+            <xsl:variable name="volume-style" as="xs:string" select="."/>
+            <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet($volume-style)"/>
+            <xsl:variable name="volume-style" as="element()*" select="if ($volume-style[matches(@selector,'^:')])
+                                                                      then css:parse-stylesheet($volume-style[not(@selector)]/@style)
+                                                                      else $volume-style"/>
+            <xsl:for-each select="('@begin','@end')">
+                <xsl:variable name="volume-area" select="."/>
+                <xsl:variable name="volume-area-style" as="element()*"
+                              select="css:parse-declaration-list($volume-style[@selector=$volume-area][1]/@style)"/>
+                <xsl:sequence select="css:parse-content-list($volume-area-style[@name='content'][1]/@value,())
+                                      /self::css:flow[@from and @scope='volume']/@from"/>
+            </xsl:for-each>
+        </xsl:for-each>
+    </xsl:variable>
+    
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und" hyphenate="false">
             <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:page))">
@@ -129,7 +160,15 @@
                                         <xsl:variable name="pre-content-master" as="xs:string"
                                                       select="pxi:generate-layout-master-name(
                                                               (collection()/*[not(@css:flow)])[1]/string(@css:page))"/>
-                                        <xsl:for-each-group select="$volume-begin-content" group-ending-with="*[@css:page-break-after='right']">
+                                        <xsl:for-each-group select="$volume-begin-content" group-adjacent="boolean(self::obfl:list-of-references)">
+                                        <xsl:choose>
+                                        <xsl:when test="current-grouping-key()">
+                                            <dynamic-sequence master="{$pre-content-master}">
+                                                <xsl:sequence select="current-group()"/>
+                                            </dynamic-sequence>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                        <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
                                             <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right']">
                                                 <xsl:variable name="unwrap-flow" as="element()*"
                                                               select="for $e in current-group() return
@@ -240,6 +279,9 @@
                                                </xsl:choose>
                                             </xsl:for-each-group>
                                         </xsl:for-each-group>
+                                        </xsl:otherwise>
+                                        </xsl:choose>
+                                        </xsl:for-each-group>
                                     </pre-content>
                                 </xsl:if>
                                 <xsl:variable name="volume-end-style" as="element()*"
@@ -267,20 +309,31 @@
                                         <xsl:variable name="post-content-master" as="xs:string"
                                                       select="pxi:generate-layout-master-name(
                                                               (collection()/*[not(@css:flow)])[last()]/string(@css:page))"/>
-                                        <xsl:for-each-group select="$volume-end-content" group-ending-with="*[@css:page-break-after='right']">
-                                            <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right']">
-                                                <xsl:variable name="unwrap-flow" as="element()*"
-                                                              select="for $e in current-group() return
-                                                                      if ($e/self::css:_[@css:flow]) then $e/* else $e"/>
-                                                <sequence master="{$post-content-master}">
-                                                    <xsl:call-template name="group-inline-elements">
-                                                        <xsl:with-param name="elements" select="$unwrap-flow"/>
-                                                        <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                                                        <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                                                        <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                    </xsl:call-template>
-                                                </sequence>
-                                            </xsl:for-each-group>
+                                        <xsl:for-each-group select="$volume-end-content" group-adjacent="boolean(self::obfl:*)">
+                                            <xsl:choose>
+                                                <xsl:when test="current-grouping-key()">
+                                                    <dynamic-sequence master="{$post-content-master}">
+                                                        <xsl:sequence select="current-group()"/>
+                                                    </dynamic-sequence>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
+                                                        <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right']">
+                                                            <xsl:variable name="unwrap-flow" as="element()*"
+                                                                          select="for $e in current-group() return
+                                                                                  if ($e/self::css:_[@css:flow]) then $e/* else $e"/>
+                                                            <sequence master="{$post-content-master}">
+                                                                <xsl:call-template name="group-inline-elements">
+                                                                    <xsl:with-param name="elements" select="$unwrap-flow"/>
+                                                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                    <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                                                                </xsl:call-template>
+                                                            </sequence>
+                                                        </xsl:for-each-group>
+                                                    </xsl:for-each-group>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
                                         </xsl:for-each-group>
                                     </post-content>
                                 </xsl:if>
@@ -289,11 +342,8 @@
                     </xsl:for-each>
                 </xsl:if>
             </xsl:if>
-            <xsl:for-each select="collection()/*[@css:flow]">
+            <xsl:for-each select="collection()/*[@css:flow=$footnote-and-volume-range-flows]">
                 <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
-                <!--
-                    FIXME: not all flows needs to become a collection
-                -->
                 <xsl:if test="not(matches($flow,'^-obfl-on-((toc|volume)-(start|end))/'))">
                     <collection name="{$flow}">
                         <xsl:for-each select="*">
@@ -1157,9 +1207,13 @@
         </css:box>
     </xsl:template>
     
-    <xsl:template match="css:flow[@from]" mode="eval-volume-area-content-list">
+    <xsl:template match="css:flow[@from and not(@scope='volume')]" mode="eval-volume-area-content-list">
         <xsl:variable name="flow" as="xs:string" select="@from"/>
         <xsl:sequence select="collection()/*[@css:flow=$flow]"/>
+    </xsl:template>
+    
+    <xsl:template match="css:flow[@from=$footnote-and-volume-range-flows and @scope='volume']" mode="eval-volume-area-content-list">
+        <list-of-references collection="{@from}" range="volume"/>
     </xsl:template>
     
     <xsl:template match="css:attr|

@@ -86,6 +86,9 @@
             <xsl:if test="count($footnotes-content[self::css:flow[@from]]) > 1">
                 <xsl:message>not more than one flow() function supported in footnotes area</xsl:message>
             </xsl:if>
+            <xsl:if test="$footnotes-content[self::css:flow[@from and @scope]]">
+                <xsl:message select="concat(@scope,' argument of flow() function not allowed within footnotes area')"/>
+            </xsl:if>
             <xsl:for-each select="$footnotes-content[self::css:flow[@from]][1]">
                 <page-area align="bottom" max-height="{$footnotes-max-height}" collection="{@from}">
                     <xsl:if test="$footnotes-border-top!='none'">

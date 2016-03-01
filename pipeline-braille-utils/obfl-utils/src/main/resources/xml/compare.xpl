@@ -34,7 +34,8 @@
                         </xsl:template>
                         <xsl:template match="obfl:layout-master/@name|
                                              obfl:sequence/@master|
-                                             obfl:toc-sequence/@master">
+                                             obfl:toc-sequence/@master|
+                                             obfl:dynamic-sequence/@master">
                             <xsl:attribute name="{name(.)}" select="concat('layout',index-of($layout_names,string(.)))"/>
                         </xsl:template>
                         <xsl:template match="obfl:table-of-contents/@name|

@@ -115,7 +115,7 @@
 	
 	<x:scenario label="test_10">
 		<x:call function="css:parse-content-list">
-			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) -x-foo(bar, baz) string(print-page, start)'"/>
+			<x:param select="'target-string(attr(ref url), print-page) counter(braille-page, lower-roman) -x-foo(bar, baz) string(print-page, start) flow(foo, volume)'"/>
 			<x:param select="//a">
 				<doc>
 					<a ref="#foo">foo</a>
@@ -127,6 +127,7 @@
 			<css:counter name="braille-page" style="lower-roman"/>
 			<css:custom-func name="-x-foo" arg1="bar" arg2="baz"/>
 			<css:string name="print-page" scope="start"/>
+			<css:flow from="foo" scope="volume"/>
 		</x:expect>
 	</x:scenario>
 	
