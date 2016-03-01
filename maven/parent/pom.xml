@@ -350,6 +350,8 @@
               <include>META-INF/catalog.xml</include>
               <include>generated-scripts</include>
               <include>generated-scripts/*</include>
+              <include>data-types</include>
+              <include>data-types/**/*</include>
             </includes>
           </resource>
         </resources>
