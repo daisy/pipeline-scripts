@@ -6,6 +6,7 @@
     <p:import href="adjust-boxes.xpl"/>
     <p:import href="eval-counter.xpl"/>
     <p:import href="eval-string-set.xpl"/>
+    <p:import href="eval-target-content.xpl"/>
     <p:import href="eval-target-text.xpl"/>
     <p:import href="flow-into.xpl"/>
     <p:import href="inline.xpl"/>

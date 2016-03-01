@@ -30,23 +30,24 @@
         <p:output port="result" sequence="true"/>
         <css:parse-stylesheet>
             <p:documentation>
-                Make css:page, css:volume, css:after, css:before, css:duplicate,
-                css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end and
-                css:_obfl-on-toc-end attributes.
+                Make css:page, css:volume, css:after, css:before, css:footnote-call, css:duplicate,
+                css:alternate, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+                css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
         <p:choose>
             <p:when test="//*/@css:before|
                           //*/@css:after|
                           //*/@css:duplicate|
+                          //*/@css:alternate|
                           //*/@css:_obfl-on-toc-start|
                           //*/@css:_obfl-on-volume-start|
                           //*/@css:_obfl-on-volume-end|
                           //*/@css:_obfl-on-toc-end">
                 <css:make-pseudo-elements>
                     <p:documentation>
-                        Make css:before, css:after and css:duplicate pseudo-elements from
-                        css:before, css:after and css:duplicate attributes.
+                        Make css:before, css:after, css:duplicate and css:alternate pseudo-elements
+                        from css:before, css:after, css:duplicate and css:alternate attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
                 <p:delete match="css:duplicate/@css:_obfl-on-toc-start|
@@ -106,9 +107,10 @@
     
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
-            Make css:page and css:volume attributes, css:after, css:before and css:duplicate
-            pseudo-elements, and css:_obfl-on-toc-start, css:_obfl-on-volume-start,
-            css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
+            Make css:page, css:volume and css:footnote-call attributes, css:after, css:before,
+            css:duplicate and css:alternate pseudo-elements, and css:_obfl-on-toc-start,
+            css:_obfl-on-volume-start, css:_obfl-on-volume-end and css:_obfl-on-toc-end
+            pseudo-element documents.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
     
@@ -136,9 +138,11 @@
                     Make css:flow attributes.
                 </p:documentation>
             </css:parse-properties>
-            <p:delete match="css:duplicate[not(@css:flow)]">
+            <p:delete match="css:duplicate[not(@css:flow)]|
+                             css:alternate[not(@css:flow)]">
                 <p:documentation>
-                    Only allow ::duplicate pseudo-elements that are moved into a named flow.
+                    Only allow ::duplicate and ::alternate pseudo-elements if they are moved into a
+                    named flow.
                 </p:documentation>
             </p:delete>
         </p:for-each>
@@ -168,18 +172,29 @@
                 css:page-break-before and css:page-break-after attributes.
             </p:documentation>
         </css:parse-properties>
-        <css:parse-content>
-            <p:documentation>
-                Make css:string, css:text and css:counter elements from css:content attributes.
-            </p:documentation>
-        </css:parse-content>
     </p:for-each>
+    
+    <p:wrap-sequence wrapper="_"/>
+    <css:parse-content>
+      <p:documentation>
+        Make css:string, css:text, css:content and css:counter elements from css:content
+        attributes. <!-- depends on make-pseudo-elements and flow-into (::footnote-call
+        pseudo-element) -->
+      </p:documentation>
+    </css:parse-content>
+    <p:filter select="/_/*"/>
     
     <css:label-targets name="label-targets">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
         </p:documentation>
     </css:label-targets>
+    
+    <css:eval-target-content>
+        <p:documentation>
+            Evaluate css:content elements. <!-- depends on parse-content and label-targets -->
+        </p:documentation>
+    </css:eval-target-content>
     
     <p:for-each>
         <css:preserve-white-space>
@@ -310,6 +325,7 @@
                              descendant::css:string or
                              descendant::css:counter or
                              descendant::css:text or
+                             descendant::css:content or
                              descendant::css:leader or
                              descendant::css:custom-func)]"
                       new-name="css:_">
@@ -385,7 +401,11 @@
                 css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
-        <css:adjust-boxes/>
+        <css:adjust-boxes>
+          <p:documentation>
+            <!-- depends on make-anonymous-block-boxes -->
+          </p:documentation>
+        </css:adjust-boxes>
         <css:new-definition>
             <p:input port="definition">
                 <p:inline>
@@ -469,6 +489,7 @@
                                      descendant::css:string or
                                      descendant::css:counter or
                                      descendant::css:text or
+                                     descendant::css:content or
                                      descendant::css:leader or
                                      descendant::css:custom-func)]
                                 //text()">
@@ -505,6 +526,7 @@
                                       descendant::css:string|
                                       descendant::css:counter|
                                       descendant::css:text|
+                                      descendant::css:content|
                                       descendant::css:leader|
                                       descendant::css:custom-func]">
         <p:documentation>

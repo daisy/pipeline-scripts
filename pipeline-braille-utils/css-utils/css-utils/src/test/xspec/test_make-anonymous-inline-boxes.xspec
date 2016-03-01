@@ -102,4 +102,21 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_04">
+    <x:context>
+      <css:_>
+        <css:box type="inline">
+          ⠿⠿⠿
+        </css:box>
+      </css:_>
+    </x:context>
+    <x:expect label="result">
+      <css:_>
+        <css:box type="inline">
+          ⠿⠿⠿
+        </css:box>
+      </css:_>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

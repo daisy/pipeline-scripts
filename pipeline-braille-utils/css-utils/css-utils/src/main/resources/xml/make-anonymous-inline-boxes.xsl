@@ -46,14 +46,12 @@
             <xsl:sequence select="@* except @style"/>
             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list($properties))"/>
             <xsl:call-template name="apply-templates">
-                <xsl:with-param name="container" select="." tunnel="yes"/>
                 <xsl:with-param name="pending-properties" select="()" tunnel="yes"/>
             </xsl:call-template>
         </xsl:copy>
     </xsl:template>
     
     <xsl:template name="apply-templates">
-        <xsl:param name="container" as="element()?" select="()" tunnel="yes"/>
         <xsl:for-each-group select="*|text()"
                             group-adjacent="boolean(descendant-or-self::css:box[@type=('block','table','table-cell')])">
             <xsl:choose>
@@ -62,17 +60,22 @@
                         <xsl:apply-templates select="."/>
                     </xsl:for-each>
                 </xsl:when>
-                <xsl:when test="$container/self::css:box[@type='inline']">
+                <xsl:when test="ancestor-or-self::css:box[@type='inline'
+                                                          and not(descendant::css:box[@type=('block','table','table-cell')])]">
                     <xsl:sequence select="current-group()"/>
                 </xsl:when>
-                <xsl:when test="matches(string-join(current-group()/string(.), ''), '^[\s&#x2800;]*$')
-                                and not(current-group()/(
-                                          descendant-or-self::css:white-space
-                                         |descendant-or-self::css:string
-                                         |descendant-or-self::css:counter
-                                         |descendant-or-self::css:text
-                                         |descendant-or-self::css:leader
-                                         |descendant-or-self::css:custom-func))">
+                <xsl:when test="not(
+                                  current-group()/
+                                    (descendant-or-self::text()[not(matches(.,'^[\s&#x2800;]*$'))]
+                                     |descendant-or-self::css:white-space
+                                     |descendant-or-self::css:string
+                                     |descendant-or-self::css:counter
+                                     |descendant-or-self::css:text
+                                     |descendant-or-self::css:content
+                                     |descendant-or-self::css:leader
+                                     |descendant-or-self::css:custom-func
+                                     )[not(ancestor::css:box[@type='inline'
+                                                             and not(descendant::css:box[@type=('block','table','table-cell')])])])">
                     <xsl:sequence select="current-group()"/>
                 </xsl:when>
                 <xsl:otherwise>

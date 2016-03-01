@@ -34,14 +34,15 @@
                         </xsl:template>
                         <xsl:template match="obfl:layout-master/@name|
                                              obfl:sequence/@master|
-                                             obfl:toc-sequence/@master">
+                                             obfl:toc-sequence/@master|
+                                             obfl:dynamic-sequence/@master">
                             <xsl:attribute name="{name(.)}" select="concat('layout',index-of($layout_names,string(.)))"/>
                         </xsl:template>
                         <xsl:template match="obfl:table-of-contents/@name|
                                              obfl:toc-sequence/@toc">
                             <xsl:attribute name="{name(.)}" select="concat('toc',index-of($toc_names,string(.)))"/>
                         </xsl:template>
-                        <xsl:template match="@id|@ref-id">
+                        <xsl:template match="@id|@ref-id|obfl:anchor/@item">
                             <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.)))"/>
                         </xsl:template>
                     </xsl:stylesheet>

@@ -13,8 +13,9 @@
     
     <p:input port="source" sequence="true">
         <p:documentation>
-            target-text(), target-string() and target-counter() values must be represented with
-            css:text, css:string and css:counter elements with a target attribute.
+            target-text(), target-string(), target-counter() and target-content() values must be
+            represented with css:text, css:string, css:counter and css:content elements with a
+            target attribute.
         </p:documentation>
     </p:input>
     
@@ -37,7 +38,7 @@
         </p:input>
     </p:xslt>
     
-    <p:delete match="@css:_id_[not(string(.)=(//css:text|//css:string|//css:counter)/@target/string())]"/>
+    <p:delete match="@css:_id_[not(string(.)=(//css:text|//css:string|//css:counter|//css:content)/@target/string())]"/>
     <p:rename match="@css:_id_" new-name="css:id"/>
     
     <p:filter select="/_/*"/>

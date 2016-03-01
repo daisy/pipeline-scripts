@@ -131,8 +131,11 @@ public class DotifyFormatterTest {
 		                                                      new File(baseDir, "src/test/xprocspec/test_format.xprocspec"),
 		                                                      "test_obfl-to-pef",
 		                                                      new File(baseDir, "src/test/xprocspec/test_obfl-to-pef.xprocspec"),
+		                                                      // "test_dotify.formatter.impl",
+		                                                      // new File(baseDir, "src/test/xprocspec/test_dotify.formatter.impl.xprocspec"),
 		                                                      "test_propagate-page-break.xprocspec",
-		                                                      new File(baseDir, "src/test/xprocspec/test_propagate-page-break.xprocspec")),
+		                                                      new File(baseDir, "src/test/xprocspec/test_propagate-page-break.xprocspec")
+			                                      ),
 		                                      new File(baseDir, "target/xprocspec-reports"),
 		                                      new File(baseDir, "target/surefire-reports"),
 		                                      new File(baseDir, "target/xprocspec"),

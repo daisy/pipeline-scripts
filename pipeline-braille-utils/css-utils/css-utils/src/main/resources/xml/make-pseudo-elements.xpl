@@ -11,8 +11,8 @@
     
     <p:input port="source">
         <p:documentation>
-            Pseudo-element rules in the input must be declared in css:before, css:after and
-            css:duplicate attributes.
+            Pseudo-element rules in the input must be declared in css:before, css:after,
+            css:duplicate and css:alternate attributes.
         </p:documentation>
     </p:input>
     
@@ -21,12 +21,14 @@
             For each element with a css:before attribute in the input, an empty css:before element
             will be inserted in the output as the element's first child. Similarly, for each element
             with a css:after attribute, a css:after element will be inserted as the element's last
-            child. The css:before, css:after and css:duplicate attributes are moved to the inserted
-            elements and renamed to 'style'. For each element with a css:duplicate attribute in the
-            input, a copy of the element is inserted directly after the element, but the css:before,
-            css:after, css:duplicate and style attributes are omitted. The css:duplicate attribute
-            is moved to the copy and renamed to 'style'. The original element gets a css:id
-            attribute if it does not exist yet, and the copy gets a matching css:anchor attribute.
+            child. For each element with a css:alternate attribute in the input, an empty
+            css:alternate element is inserted directly after the element. For each element with a
+            css:duplicate attribute in the input, a copy of the element is inserted directly after
+            the element, but the css:before, css:after, css:duplicate, css:alternate and style
+            attributes are omitted. The css:before, css:after, css:duplicate and css:alternate
+            attributes are moved to the inserted elements and renamed to 'style'. In the case of
+            ::duplicate and ::alternate, the original element gets a css:id attribute, and the
+            pseudo-element gets a matching css:anchor attribute.
         </p:documentation>
     </p:output>
     

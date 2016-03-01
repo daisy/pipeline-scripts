@@ -88,6 +88,7 @@
                          text()|
                          css:white-space|
                          css:text|
+                         css:content|
                          css:string|
                          css:counter|
                          css:leader|
@@ -105,6 +106,7 @@
                          text()|
                          css:white-space|
                          css:text|
+                         css:content|
                          css:string|
                          css:counter|
                          css:leader|

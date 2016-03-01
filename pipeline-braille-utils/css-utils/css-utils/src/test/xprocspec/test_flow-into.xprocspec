@@ -20,7 +20,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <body style="text-align:right">
-          <css:_ css:id="d699e3"/>
+          <css:_ css:id="d955e3"/>
         </body>
       </x:document>
     </x:expect>
@@ -31,7 +31,72 @@
       <x:document type="inline">
         <css:_ css:flow="footnote">
           <note style="display: list-item; text-align: right"
-                css:anchor="d699e3"> foo </note>
+                css:anchor="d955e3"> foo </note>
+        </css:_>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_02">
+    <x:call step="css:flow-into">
+      <x:input port="source">
+        <x:document type="inline">
+          <_>
+            <note css:flow="footnotes" css:footnote-call="content:'x'"> foo </note>
+          </_>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <_>
+          <css:footnote-call css:id="d1055e3" style="content:'x'"/>
+        </_>
+      </x:document>
+    </x:expect>
+    <x:context label="flows">
+      <x:document type="port" port="flows"/>
+    </x:context>
+    <x:expect label="flows" type="compare">
+      <x:document type="inline">
+        <css:_ css:flow="footnotes">
+          <note css:anchor="d1055e3"> foo </note>
+        </css:_>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_03">
+    <x:call step="css:flow-into">
+      <x:input port="source">
+        <x:document type="inline">
+          <_>
+            <div css:id="x"/>
+            <css:duplicate css:anchor="x" css:flow="foo"/>
+          </_>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <_>
+          <div css:id="x"/>
+        </_>
+      </x:document>
+    </x:expect>
+    <x:context label="flows">
+      <x:document type="port" port="flows"/>
+    </x:context>
+    <x:expect label="flows" type="compare">
+      <x:document type="inline">
+        <css:_ css:flow="foo">
+          <css:duplicate css:anchor="x"/>
         </css:_>
       </x:document>
     </x:expect>

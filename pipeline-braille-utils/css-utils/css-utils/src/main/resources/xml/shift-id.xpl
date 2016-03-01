@@ -47,8 +47,8 @@
     
     <p:label-elements match="*[@css:anchor]" attribute="css:anchor"
                       label="for $anchor in @css:anchor return
-                             //*[@css:id=$anchor]/(self::css:box|following::css:box|descendant::css:box)
-                             [1]/@css:id"/>
+                             (//*[@css:id=$anchor]/(self::css:box|following::css:box|descendant::css:box)
+                              [1]/@css:id,'_')[1]"/>
     
     <p:delete match="*[not(self::css:box)]/@css:id"/>
     
