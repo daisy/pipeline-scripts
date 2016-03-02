@@ -37,7 +37,7 @@
                         <scr:provide interface="org.daisy.pipeline.datatypes.DatatypeService"/>
                     </scr:service>
                     <scr:reference bind="setUriResolver" cardinality="1..1" interface="javax.xml.transform.URIResolver" name="resolver" policy="static"/>
-                    <scr:property name="data-type.id" type="String" value="{@id}"/>
+                    <scr:property name="data-type.id" type="String" value="{replace(replace(@id,'^\{http://(.+)\}(.+)$','$1/$2'),'/','')}"/>
                     <scr:property name="data-type.url" type="String" value="{replace(@id,'^\{(.+)\}(.+)$','$1/$2.xml')}"/>
                 </scr:component>
             </xsl:result-document>
@@ -287,9 +287,10 @@
     <xsl:template match="p:option/p:pipeinfo/pxd:data-type" mode="script extend-script"/>
     
     <xsl:template match="p:option/p:pipeinfo/pxd:data-type" mode="data-type-attribute">
-        <xsl:attribute name="pxd:data-type">
+        <xsl:variable name="id" as="xs:string">
             <xsl:apply-templates select="." mode="data-type-id"/>
-        </xsl:attribute>
+        </xsl:variable>
+        <xsl:attribute name="pxd:data-type" select="replace(replace($id,'^\{http://(.+)\}(.+)$','$1/$2'),'/','')"/>
     </xsl:template>
     
     <xsl:template match="p:option/p:pipeinfo/pxd:data-type/*" mode="data-type-xml">
