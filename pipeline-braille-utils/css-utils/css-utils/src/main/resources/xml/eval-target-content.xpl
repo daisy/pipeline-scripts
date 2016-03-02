@@ -21,8 +21,8 @@
         <p:documentation>
             css:content elements are replaced by the child nodes of their target element (the
             element whose css:id attribute corresponds with the css:content element's target
-            attribute) and wrapped in an inline css:box element with a css:anchor attribute that
-            matches the xml:id attribute of the target element.
+            attribute). Elements get a css:anchor attribute that matches the xml:id attribute of the
+            target element.
         </p:documentation>
     </p:output>
     

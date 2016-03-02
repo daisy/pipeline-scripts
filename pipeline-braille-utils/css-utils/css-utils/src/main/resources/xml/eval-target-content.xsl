@@ -13,9 +13,24 @@
     
     <xsl:template match="css:content[@target]">
         <xsl:variable name="target" select="@target"/>
-        <css:box type="inline" css:anchor="{@target}">
-            <xsl:sequence select="//*[@css:id=$target][1]/child::node()"/>
-        </css:box>
+        <xsl:apply-templates select="//*[@css:id=$target][1]/child::node()" mode="add-anchor">
+            <xsl:with-param name="anchor" select="$target"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="add-anchor">
+        <xsl:param name="anchor" as="xs:string" required="yes"/>
+        <xsl:copy>
+            <xsl:sequence select="@*"/>
+            <xsl:if test="not(@css:anchor)">
+                <xsl:attribute name="css:anchor" select="$anchor"/>
+            </xsl:if>
+            <xsl:sequence select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()" mode="add-anchor">
+        <xsl:sequence select="."/>
     </xsl:template>
     
 </xsl:stylesheet>
