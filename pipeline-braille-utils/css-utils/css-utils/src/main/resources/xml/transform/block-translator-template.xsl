@@ -24,9 +24,7 @@
 	
 	<xsl:template match="*" mode="identify-blocks">
 		<xsl:param name="is-block" as="xs:boolean" select="true()" tunnel="yes"/>
-		<xsl:param name="display" as="xs:string" select="'block'" tunnel="yes"/>
 		<xsl:variable name="is-block" as="xs:boolean" select="$is-block and pxi:is-block(.)"/>
-		<xsl:variable name="display" as="xs:string" select="if ($display='none') then 'none' else pxi:display(.)"/>
 		<xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
 		<xsl:variable name="rules" as="element()*"
 		              select="if (parent::* or $rules[not(@selector)]) then $rules
@@ -39,52 +37,41 @@
 		<xsl:copy>
 			<xsl:sequence select="@* except @style"/>
 			<xsl:sequence select="css:style-attribute(css:serialize-stylesheet($translated-rules))"/>
-			<xsl:choose>
-				<xsl:when test="$display='none'">
-					<xsl:apply-templates select="*" mode="#current">
-						<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
-						<xsl:with-param name="display" select="$display" tunnel="yes"/>
-					</xsl:apply-templates>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="context" as="element()" select="."/>
-					<xsl:variable name="lang" as="xs:string?" select="pxi:lang(.)"/>
-					<xsl:variable name="space" as="xs:string?" select="pxi:space(.)"/>
-					<xsl:for-each-group select="*|text()" group-adjacent="$is-block and pxi:is-block(.)">
-						<xsl:choose>
-							<xsl:when test="current-grouping-key()">
+			<xsl:variable name="context" as="element()" select="."/>
+			<xsl:variable name="lang" as="xs:string?" select="pxi:lang(.)"/>
+			<xsl:variable name="space" as="xs:string?" select="pxi:space(.)"/>
+			<xsl:for-each-group select="*|text()" group-adjacent="$is-block and pxi:is-block(.)">
+				<xsl:choose>
+					<xsl:when test="current-grouping-key()">
+						<xsl:for-each select="current-group()">
+							<xsl:apply-templates select="." mode="#current">
+								<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
+							</xsl:apply-templates>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="block">
+							<xsl:element name="css:block">
+								<xsl:if test="$lang">
+									<xsl:attribute name="xml:lang" select="$lang"/>
+								</xsl:if>
+								<xsl:if test="$space">
+									<xsl:attribute name="xml:space" select="$space"/>
+								</xsl:if>
+								<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
+								                        css:computed-properties($inline-properties, false(), $context)
+								                        [not(@value=css:initial-value(@name))]))"/>
 								<xsl:for-each select="current-group()">
-									<xsl:apply-templates select="." mode="#current">
-										<xsl:with-param name="is-block" select="$is-block" tunnel="yes"/>
-										<xsl:with-param name="display" select="$display" tunnel="yes"/>
-									</xsl:apply-templates>
+									<xsl:sequence select="."/>
 								</xsl:for-each>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:variable name="block">
-									<xsl:element name="css:block">
-										<xsl:if test="$lang">
-											<xsl:attribute name="xml:lang" select="$lang"/>
-										</xsl:if>
-										<xsl:if test="$space">
-											<xsl:attribute name="xml:space" select="$space"/>
-										</xsl:if>
-										<xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
-										                        css:computed-properties($inline-properties, false(), $context)
-										                        [not(@value=css:initial-value(@name))]))"/>
-										<xsl:for-each select="current-group()">
-											<xsl:sequence select="."/>
-										</xsl:for-each>
-									</xsl:element>
-								</xsl:variable>
-								<xsl:apply-templates select="$block/css:block">
-									<xsl:with-param name="context" select="$context"/>
-								</xsl:apply-templates>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each-group>
-				</xsl:otherwise>
-			</xsl:choose>
+							</xsl:element>
+						</xsl:variable>
+						<xsl:apply-templates select="$block/css:block">
+							<xsl:with-param name="context" select="$context"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each-group>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -301,6 +288,7 @@
 	
 	<xsl:function name="pxi:is-block" as="xs:boolean">
 		<xsl:param name="node" as="node()"/>
+		<!-- 'none' also treated as block -->
 		<xsl:sequence select="boolean($node/descendant-or-self::*[pxi:display(.) != 'inline'])"/>
 	</xsl:function>
 	
