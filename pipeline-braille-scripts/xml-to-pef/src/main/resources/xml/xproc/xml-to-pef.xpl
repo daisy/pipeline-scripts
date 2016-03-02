@@ -28,13 +28,13 @@
             <p px:role="desc">The ASCII braille table, used for example to render BRF files.</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-preview" required="false" px:type="boolean" select="false()">
+    <p:option name="include-preview" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include preview</h2>
             <p px:role="desc">Whether or not to include a preview of the PEF in HTML.</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-brf" required="false" px:type="boolean" select="false()">
+    <p:option name="include-brf" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include BRF</h2>
             <p px:role="desc">Whether or not to include an ASCII version of the PEF.</p>
@@ -44,7 +44,7 @@
     <!-- =========== -->
     <!-- Page layout -->
     <!-- =========== -->
-    <p:option name="page-width" required="false" px:type="integer" select="40">
+    <p:option name="page-width" required="false" px:type="integer" select="'40'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page width</h2>
             <p px:role="desc" xml:space="preserve">The number of columns available for printing.
@@ -58,7 +58,7 @@ Makes the variable `$page-width` available in style sheets and includes the foll
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="page-height" required="false" px:type="integer" select="25">
+    <p:option name="page-height" required="false" px:type="integer" select="'25'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Page height</h2>
             <p px:role="desc" xml:space="preserve">The number of rows available for printing.
@@ -72,13 +72,13 @@ Makes the variable `$page-height` available in style sheets and includes the fol
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="left-margin" required="false" px:type="integer" select="0">
+    <p:option name="left-margin" required="false" px:type="integer" select="'0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Left margin</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="duplex" required="false" px:type="boolean" select="true()">
+    <p:option name="duplex" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page layout: Duplex</h2>
             <p px:role="desc">When enabled, will print on both sides of the paper.</p>
@@ -88,7 +88,7 @@ Makes the variable `$page-height` available in style sheets and includes the fol
     <!-- =============== -->
     <!-- Headers/footers -->
     <!-- =============== -->
-    <p:option name="levels-in-footer" required="false" px:type="integer" select="6">
+    <p:option name="levels-in-footer" required="false" px:type="integer" select="'6'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Headers/footers: Levels in footer</h2>
             <p px:role="desc">Makes the variable `$levels-in-footer` available in style sheets and
@@ -127,7 +127,7 @@ the following in your custom style sheet:
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="hyphenation" required="false" px:type="boolean" select="true()">
+    <p:option name="hyphenation" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Hyphenation</h2>
             <p px:role="desc">When enabled, will automatically hyphenate text.
@@ -173,13 +173,13 @@ default:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="tab-width" required="false" px:type="integer" select="4">
+    <p:option name="tab-width" required="false" px:type="integer" select="'4'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Tab width</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="capital-letters" required="false" px:type="boolean" select="true()">
+    <p:option name="capital-letters" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Capital letters</h2>
             <p px:role="desc">When enabled, will indicate capital letters.
@@ -196,19 +196,19 @@ default:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="accented-letters" required="false" px:type="boolean" select="true()">
+    <p:option name="accented-letters" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Accented letters</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="polite-forms" required="false" px:type="boolean" select="false()">
+    <p:option name="polite-forms" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Polite forms</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="downshift-ordinal-numbers" required="false" px:type="boolean" select="false()">
+    <p:option name="downshift-ordinal-numbers" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Translation/formatting of text: Downshift ordinal numbers</h2>
             <p px:role="desc">**Not implemented**</p>
@@ -218,7 +218,7 @@ default:
     <!-- ============== -->
     <!-- Block elements -->
     <!-- ============== -->
-    <p:option name="include-captions" required="false" px:type="boolean" select="true()">
+    <p:option name="include-captions" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include captions</h2>
             <p px:role="desc">When enabled, will include captions for images, tables, and so on.
@@ -234,7 +234,7 @@ caption {
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-images" required="false" px:type="boolean" select="true()">
+    <p:option name="include-images" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include images</h2>
             <p px:role="desc">When enabled, will include the alt text of the images. When disabled, the images will be completely removed.
@@ -251,13 +251,13 @@ default:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-image-groups" required="false" px:type="boolean" select="true()">
+    <p:option name="include-image-groups" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include image groups</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-line-groups" required="false" px:type="boolean" select="true()">
+    <p:option name="include-line-groups" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Block elements: Include line groups</h2>
             <p px:role="desc">Makes the variable `$include-line-groups` available in style sheets
@@ -274,19 +274,19 @@ linegroup line {
     <!-- =============== -->
     <!-- Inline elements -->
     <!-- =============== -->
-    <p:option name="text-level-formatting" required="false" px:type="boolean" select="true()">
+    <p:option name="text-level-formatting" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Inline elements: Text-level formatting (emphasis, strong)</h2>
             <p px:role="desc">When enabled, text that is in bold or italics in the print version will be rendered in bold or italics in the braille version as well. **Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-note-references" required="false" px:type="boolean" select="true()">
+    <p:option name="include-note-references" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Inline elements: Include note references</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-production-notes" required="false" px:type="boolean" select="false()">
+    <p:option name="include-production-notes" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Inline elements: Include production notes</h2>
             <p px:role="desc">When enabled, production notes are included in the content.
@@ -305,7 +305,7 @@ prodnote {
     <!-- ============ -->
     <!-- Page numbers -->
     <!-- ============ -->
-    <p:option name="show-braille-page-numbers" required="false" px:type="boolean" select="true()">
+    <p:option name="show-braille-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show braille page numbers</h2>
             <p px:role="desc">Makes the variable `$show-braille-page-numbers` available in style
@@ -323,7 +323,7 @@ style sheet:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="show-print-page-numbers" required="false" px:type="boolean" select="true()">
+    <p:option name="show-print-page-numbers" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Show print page numbers</h2>
             <p px:role="desc">Makes the variable `$show-print-page-numbers` available in style
@@ -349,7 +349,7 @@ sheet:
 ```</p>
         </p:documentation>
     </p:option>
-    <p:option name="force-braille-page-break" required="false" px:type="boolean" select="false()">
+    <p:option name="force-braille-page-break" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Page numbers: Force braille page break</h2>
             <p px:role="desc">Makes the variable `$force-braille-page-break` available in style
@@ -368,7 +368,7 @@ sheets and includes the following rule by default:
     <!-- ================= -->
     <!-- Table of contents -->
     <!-- ================= -->
-    <p:option name="toc-depth" required="false" px:type="integer" select="0">
+    <p:option name="toc-depth" required="false" px:type="integer" select="'0'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Table of contents: Table of contents depth</h2>
             <p px:role="desc" xml:space="preserve">The depth of the table of contents hierarchy to include. '0' means no table of contents.
@@ -442,13 +442,13 @@ content at the beginning of every other volume, include the following additional
     <!-- ================= -->
     <!-- Generated content -->
     <!-- ================= -->
-    <p:option name="ignore-document-title" required="false" px:type="boolean" select="false()">
+    <p:option name="ignore-document-title" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Generated content: Ignore document title</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="include-symbols-list" required="false" px:type="boolean" select="true()">
+    <p:option name="include-symbols-list" required="false" px:type="boolean" select="'true'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Generated content: Include symbols list</h2>
             <p px:role="desc">**Not implemented**</p>
@@ -486,19 +486,19 @@ content at the beginning of every other volume, include the following additional
     <!-- ======= -->
     <!-- Volumes -->
     <!-- ======= -->
-    <p:option name="number-of-pages" required="false" px:type="integer" select="50">
+    <p:option name="number-of-pages" required="false" px:type="integer" select="'50'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Number of pages</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="maximum-number-of-pages" required="false" px:type="integer" select="70">
+    <p:option name="maximum-number-of-pages" required="false" px:type="integer" select="'70'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Maximum number of pages</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="minimum-number-of-pages" required="false" px:type="integer" select="30">
+    <p:option name="minimum-number-of-pages" required="false" px:type="integer" select="'30'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Volumes: Minimum number of pages</h2>
             <p px:role="desc">**Not implemented**</p>
