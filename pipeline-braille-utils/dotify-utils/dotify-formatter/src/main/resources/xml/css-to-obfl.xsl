@@ -695,13 +695,13 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:box[@css:hyphens]" priority="1" mode="#default td table-of-contents">
+    <xsl:template match="css:box[@css:hyphens]" priority="1" mode="#default td table table-of-contents">
         <xsl:next-match>
             <xsl:with-param name="hyphens" tunnel="yes" select="@css:hyphens"/>
         </xsl:next-match>
     </xsl:template>
     
-    <xsl:template match="css:box/@css:hyphens" mode="#default td table-of-contents">
+    <xsl:template match="css:box/@css:hyphens" mode="#default td table table-of-contents">
         <!--
             'hyphens:auto' corresponds with 'hyphenate="true"'. 'hyphens:manual' corresponds with
             'hyphenate="false"'. For 'hyphens:none' all SHY and ZWSP characters are removed from the
