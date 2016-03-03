@@ -198,6 +198,38 @@
             <head>
               <style media="embossed" type="text/css">
                 @page {
+                  size: 15 15;
+                }
+                @page {
+                  @top-right {
+                    content: counter(page);
+                  }
+                }
+              </style>
+            </head>
+            <body style="page:auto"/>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body style="@page { size: 15 15; @top-right { content: counter(page); } }"/>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_06">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                @page {
                   margin-left: 1;
                   @left {
                     content: 'foo'

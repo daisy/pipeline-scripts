@@ -362,7 +362,11 @@ public class CSSInlineStep extends DefaultStep {
 				if (pageRule == null) {
 					pageRule = new HashMap<String,RulePage>();
 					pageRules.put(name, pageRule); }
-				pageRule.put(pseudo, r);
+				if (pageRule.containsKey(pseudo))
+					pageRule.put(pseudo, makePageRule(name, "".equals(pseudo) ? null : pseudo,
+					                                  ImmutableList.of(r, pageRule.get(pseudo))));
+				else
+					pageRule.put(pseudo, r);
 			}
 			
 			volumeRules = new HashMap<String,Map<String,RuleVolume>>();
@@ -373,7 +377,11 @@ public class CSSInlineStep extends DefaultStep {
 				if (volumeRule == null) {
 					volumeRule = new HashMap<String,RuleVolume>();
 					volumeRules.put(name, volumeRule); }
-				volumeRule.put(pseudo, r);
+				if (volumeRule.containsKey(pseudo))
+					volumeRule.put(pseudo, makeVolumeRule(name, "".equals(pseudo) ? null : pseudo,
+					                                      ImmutableList.of(r, volumeRule.get(pseudo))));
+				else
+					volumeRule.put(pseudo, r);
 			}
 			
 			startDocument(baseURI);
