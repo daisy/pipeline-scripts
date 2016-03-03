@@ -47,17 +47,18 @@
         <xsl:value-of select="string($context/@*[name()=$name])"/>
     </xsl:template>
     
-    <xsl:template match="css:text[@target]|css:string[@name][@target]|css:counter[@target]|css:content[@target]|css:leader|css:custom-func"
+    <xsl:template match="css:text[@target]|
+                         css:string[@name][@target]|
+                         css:counter|
+                         css:content[@target]|
+                         css:leader|
+                         css:custom-func"
                   mode="eval-content-list">
         <xsl:sequence select="."/>
     </xsl:template>
     
     <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
         <xsl:message>string() function not supported in content property of (pseudo-)elements</xsl:message>
-    </xsl:template>
-    
-    <xsl:template match="css:counter[not(@target)]" mode="eval-content-list">
-        <xsl:message>counter() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:content[not(@target)]" mode="eval-content-list">
