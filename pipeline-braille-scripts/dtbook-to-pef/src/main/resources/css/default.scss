@@ -1,19 +1,20 @@
 /*
- * Parameters injected by dtbook-to-pef.convert:
- * - $page-width
- * - $page-height
- * - $levels-in-footer
- * - $hyphenation
- * - $line-spacing
- * - $capital-letters
- * - $include-captions
- * - $include-images
- * - $include-line-groups
- * - $include-production-notes
- * - $show-braille-page-numbers
- * - $show-print-page-numbers
- * - $force-braille-page-break
+ * Parameters injected by dtbook-to-pef.convert
  */
+
+$page-width: 40 !default;
+$page-height: 25 !default;
+$levels-in-footer: 6 !default;
+$hyphenation: true !default;
+$line-spacing: single !default;
+$capital-letters: true !default;
+$include-captions: true !default;
+$include-images: true !default;
+$include-line-groups: true !default;
+$include-production-notes: false !default;
+$show-braille-page-numbers: true !default;
+$show-print-page-numbers: true !default;
+$force-braille-page-break: false !default;
 
 @page {
 	size: $page-width $page-height;
