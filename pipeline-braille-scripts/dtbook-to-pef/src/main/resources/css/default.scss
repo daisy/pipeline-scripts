@@ -75,14 +75,6 @@ prodnote {
 	display: if($include-production-notes, block, none);
 }
 
-@if $show-braille-page-numbers {
-	@page {
-		@top-right {
-			content: counter(page);
-		}
-	}
-}
-
 @if $show-print-page-numbers {
 	pagenum {
 		string-set: print-page content();

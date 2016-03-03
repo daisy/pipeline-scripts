@@ -75,14 +75,6 @@ caption {
 	display: if($include-production-notes, block, none);
 }
 
-@if $show-braille-page-numbers {
-	@page {
-		@top-right {
-			content: counter(page);
-		}
-	}
-}
-
 .page-front,
 .page-normal,
 .page-special {
