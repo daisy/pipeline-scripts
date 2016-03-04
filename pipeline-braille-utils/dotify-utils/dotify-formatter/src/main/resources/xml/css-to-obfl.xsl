@@ -76,7 +76,7 @@
             <xsl:variable name="footnotes-style" as="element()*"
                           select="css:parse-declaration-list($page-style[@selector='@footnotes'][1]/@style)"/>
             <xsl:sequence select="css:parse-content-list($footnotes-style[@name='content'][1]/@value,())
-                                  /self::css:flow[@from and not(@scope)]/@from"/>
+                                  /self::css:flow[@from and (not(@scope) or @scope='page')]/@from"/>
         </xsl:for-each>
         <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))">
             <xsl:variable name="volume-style" as="xs:string" select="."/>
@@ -1207,7 +1207,10 @@
         </css:box>
     </xsl:template>
     
-    <xsl:template match="css:flow[@from and not(@scope='volume')]" mode="eval-volume-area-content-list">
+    <!--
+        default scope within volume area is 'document'
+    -->
+    <xsl:template match="css:flow[@from and (not(@scope) or @scope='document')]" mode="eval-volume-area-content-list">
         <xsl:variable name="flow" as="xs:string" select="@from"/>
         <xsl:sequence select="collection()/*[@css:flow=$flow]"/>
     </xsl:template>

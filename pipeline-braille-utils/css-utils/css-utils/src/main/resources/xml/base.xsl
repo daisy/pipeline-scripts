@@ -789,6 +789,10 @@
         <xsl:sequence select="concat('leader(&quot;',@pattern,'&quot;)')"/>
     </xsl:template>
     
+    <xsl:template match="css:flow[@from]" mode="css:serialize" as="xs:string">
+        <xsl:sequence select="string-join(('flow(',@from,if (@scope) then (', ',@scope) else (),')'),'')"/>
+    </xsl:template>
+    
     <xsl:template match="css:custom-func" mode="css:serialize" as="xs:string">
         <xsl:sequence select="concat(
                                 @name,

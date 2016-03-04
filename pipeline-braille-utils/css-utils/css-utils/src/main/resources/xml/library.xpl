@@ -8,6 +8,7 @@
     <p:import href="eval-string-set.xpl"/>
     <p:import href="eval-target-content.xpl"/>
     <p:import href="eval-target-text.xpl"/>
+    <p:import href="flow-from.xpl"/>
     <p:import href="flow-into.xpl"/>
     <p:import href="inline.xpl"/>
     <p:import href="label-targets.xpl"/>

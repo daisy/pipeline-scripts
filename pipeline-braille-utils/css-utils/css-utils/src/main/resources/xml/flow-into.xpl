@@ -12,21 +12,21 @@
     <p:input port="source">
         <p:documentation>
             Elements in the input that participate in a named flow must be identified with css:flow
-            attributes. '::duplicate' and '::alternate' pseudo-elements must be reprented by
-            css:duplicate and css:alternate elements with a css:anchor attribute that points to the
-            original element. ::footnote-call pseudo-element rules must be declared in
-            css:footnote-call attributes.
+            attributes. '::footnote-call', '::duplicate' and '::alternate' pseudo-elements must be
+            reprented by css:footnote-call, css:duplicate and css:alternate elements with a
+            css:anchor attribute that points to the original element.
         </p:documentation>
     </p:input>
     
     <p:output port="result" primary="true">
         <p:documentation>
             The document on the 'result' port represents the normal flow. Elements that participate
-            in a named flow are replaced with an empty css:_ element with a css:id attribute. If the
-            element participates in the 'footnotes' flow and has a css:footnote-call attribute, then
-            it is replaced with an empty css:footnote-call element with the value of the
-            css:footnote-call attribute in a 'style' attribute. If the element is a css:duplicate or
-            css:alternate there is no replacement.
+            in a named flow are replaced with an empty css:_ element with a css:id attribute. The
+            css:id attribute is either taken from the element that is moved to the flow, or
+            generated. If the element is a css:duplicate or css:alternate, there is no
+            replacement. If the element has an associated css:footnote-call or css:alternate
+            pseudo-element that remains in the normal flow, there is also no replacement, and the
+            pseudo-element gets a css:id attribute.
         </p:documentation>
         <p:pipe step="result" port="result"/>
     </p:output>
@@ -39,9 +39,11 @@
             element, which is the document node of that flow. Elements are ordered according to the
             original document order. The document node gets a css:flow attribute that identifies the
             flow. Other css:flow attributes are dropped. Elements get a css:anchor attribute that
-            matches the css:id attribute of the (css:_ or css:footnote-call) replacement element in
-            the normal flow, thus acting as a reference to the original position in the
-            DOM. Elements that already have a css:anchor attribute don't get a new one. Style
+            matches the css:id attribute of the (css:_, css:alternate or css:footnote-call)
+            replacement element in the normal flow, thus acting as a reference to the original
+            position in the DOM. Elements that already have a css:anchor attribute don't get a new
+            one. Elements with an associated css:alternate pseudo-element in the normal flow get an
+            css:anchor attribute that matches the css:id attribute of the the pseudo-element. Style
             attributes are added in the output in such a way that for each element, its computed
             style at the output is equal to its computed style in the input.
         </p:documentation>

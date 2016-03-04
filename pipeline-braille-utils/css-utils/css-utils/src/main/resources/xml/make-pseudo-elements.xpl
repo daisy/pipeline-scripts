@@ -12,7 +12,8 @@
     <p:input port="source">
         <p:documentation>
             Pseudo-element rules in the input must be declared in css:before, css:after,
-            css:duplicate and css:alternate attributes.
+            css:duplicate, css:alternate and css:footnote-call attributes. Elements in the input
+            that participate in a named flow must be identified with css:flow attributes.
         </p:documentation>
     </p:input>
     
@@ -21,14 +22,16 @@
             For each element with a css:before attribute in the input, an empty css:before element
             will be inserted in the output as the element's first child. Similarly, for each element
             with a css:after attribute, a css:after element will be inserted as the element's last
-            child. For each element with a css:alternate attribute in the input, an empty
-            css:alternate element is inserted directly after the element. For each element with a
-            css:duplicate attribute in the input, a copy of the element is inserted directly after
-            the element, but the css:before, css:after, css:duplicate, css:alternate and style
-            attributes are omitted. The css:before, css:after, css:duplicate and css:alternate
-            attributes are moved to the inserted elements and renamed to 'style'. In the case of
-            ::duplicate and ::alternate, the original element gets a css:id attribute, and the
-            pseudo-element gets a matching css:anchor attribute.
+            child. For each element with a css:alternate or css:footnote-call attribute in the
+            input, an empty css:alternate or css:footnote-call element is inserted directly after
+            the element. A css:footnote-call element is only generated when the main element
+            participates in the 'footnotes' flow. For each element with a css:duplicate attribute in
+            the input, a copy of the element is inserted directly after the element, but the
+            css:before, css:after, css:footnote-call, css:duplicate, css:alternate and style
+            attributes are omitted. The css:before, css:after, css:footnote-call, css:duplicate and
+            css:alternate attributes are moved to the inserted elements and renamed to 'style'. In
+            the case of ::footnote-call, ::duplicate and ::alternate, the original element gets a
+            css:id attribute, and the pseudo-element gets a matching css:anchor attribute.
         </p:documentation>
     </p:output>
     

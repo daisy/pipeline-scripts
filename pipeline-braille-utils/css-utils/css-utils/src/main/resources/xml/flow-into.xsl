@@ -20,7 +20,7 @@
                 <css:_ css:flow="{$flow}">
                     <xsl:for-each select="$root//*[@css:flow=$flow]">
                         <xsl:copy>
-                            <xsl:sequence select="@* except (@style|@css:flow|@css:footnote-call|@css:id)"/>
+                            <xsl:sequence select="@* except (@style|@css:flow|@css:id)"/>
                             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
                                                   css:specified-properties(($css:properties,'#all'), true(), false(), false(), .)
                                                   [not(@value='initial')]))"/>
@@ -42,23 +42,41 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="@css:flow|
-                         @css:footnote-call"/>
-    
-    <xsl:template match="*[@css:flow='footnotes' and @css:footnote-call]" priority="0.6">
-        <css:footnote-call style="{@css:footnote-call}"
-                           css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
-    </xsl:template>
+    <xsl:template match="@css:flow"/>
     
     <xsl:template match="*[@css:flow[not(.='normal')]]">
         <xsl:if test="not(@css:anchor)">
-            <css:_ css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
+            <xsl:if test="not(@css:id and @css:id=(//css:footnote-call|//css:alternate[not(@css:flow[not(.='normal')])])/@css:anchor)">
+                <css:_ css:id="{if (@css:id) then string(@css:id) else generate-id(.)}"/>
+            </xsl:if>
         </xsl:if>
     </xsl:template>
     
+    <xsl:template match="css:footnote-call|
+                         css:alternate[not(@css:flow[not(.='normal')])]">
+        <xsl:variable name="anchor" as="xs:string" select="@css:anchor"/>
+        <xsl:variable name="anchor" as="element()" select="//*[@css:id=$anchor]"/>
+        <xsl:choose>
+            <xsl:when test="$anchor/@css:flow[not(.='normal')]">
+                <xsl:copy>
+                    <xsl:apply-templates select="@* except @css:anchor"/>
+                    <xsl:if test="not((preceding::css:footnote-call|
+                                       preceding::css:alternate[not(@css:flow[not(.='normal')])])
+                                      [@css:anchor=$anchor])">
+                        <xsl:attribute name="css:id"
+                                       select="if ($anchor/@css:id) then string($anchor/@css:id) else generate-id($anchor)"/>
+                    </xsl:if>
+                    <xsl:apply-templates/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message>::<xsl:value-of select="local-name()"/> pseudo-elements may not participate in the normal flow if their main elements also participates in the normal flow.</xsl:message>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
-    <xsl:template match="*[not(descendant-or-self::*/(@css:flow|@css:footnote-call))]">
-        <xsl:sequence select="."/>
+    <xsl:template match="css:duplicate[not(@css:flow[not(.='normal')])]">
+        <xsl:message>::duplicate pseudo-elements must participate in a named flow.</xsl:message>
     </xsl:template>
     
 </xsl:stylesheet>

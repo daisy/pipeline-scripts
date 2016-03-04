@@ -24,10 +24,10 @@
             For each element in the input with a css:content attribute, the content list in that
             attribute is parsed, partly evaluated, and inserted in the output in place of the
             element's original content. String values and attr() values are evaluated to
-            text. target-text(), target-string(), target-counter(), target-content() and leader()
-            values and custom function are inserted as css:text, css:string, css:counter,
-            css:content, css:leader and css:custom-func elements. string() and counter() values are
-            invalid.
+            text. counter(), target-counter(), target-text(), target-string(), target-content(),
+            flow() and leader() values and custom function are inserted as css:counter, css:text,
+            css:string, css:content, css:flow, css:leader and css:custom-func elements. string()
+            values are invalid.
         </p:documentation>
     </p:output>
     

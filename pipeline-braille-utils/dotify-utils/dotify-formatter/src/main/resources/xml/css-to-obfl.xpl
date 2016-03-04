@@ -35,19 +35,26 @@
                 css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
+        <css:parse-properties properties="flow">
+            <p:documentation>
+                Make css:flow attributes.
+            </p:documentation>
+        </css:parse-properties>
         <p:choose>
             <p:when test="//*/@css:before|
                           //*/@css:after|
                           //*/@css:duplicate|
                           //*/@css:alternate|
+                          //*/@css:footnote-call|
                           //*/@css:_obfl-on-toc-start|
                           //*/@css:_obfl-on-volume-start|
                           //*/@css:_obfl-on-volume-end|
                           //*/@css:_obfl-on-toc-end">
                 <css:make-pseudo-elements>
                     <p:documentation>
-                        Make css:before, css:after, css:duplicate and css:alternate pseudo-elements
-                        from css:before, css:after, css:duplicate and css:alternate attributes.
+                        Make css:before, css:after, css:duplicate, css:alternate and
+                        css:footnote-call pseudo-elements from css:before, css:after, css:duplicate,
+                        css:alternate and css:footnote-call attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
                 <p:delete match="css:duplicate/@css:_obfl-on-toc-start|
@@ -107,18 +114,18 @@
     
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
-            Make css:page, css:volume and css:footnote-call attributes, css:after, css:before,
-            css:duplicate and css:alternate pseudo-elements, and css:_obfl-on-toc-start,
+            Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
+            css:alternate and css:footnote-call pseudo-elements, and css:_obfl-on-toc-start,
             css:_obfl-on-volume-start, css:_obfl-on-volume-end and css:_obfl-on-toc-end
             pseudo-element documents.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
     
     <p:for-each>
-        <css:parse-properties properties="string-set counter-reset counter-set counter-increment -obfl-marker">
+        <css:parse-properties properties="content string-set counter-reset counter-set counter-increment -obfl-marker">
             <p:documentation>
-                Make css:string-set, css:counter-reset, css:counter-set, css:counter-increment and
-                css:_obfl-marker attributes.
+                Make css:content, css:string-set, css:counter-reset, css:counter-set,
+                css:counter-increment and css:_obfl-marker attributes.
             </p:documentation>
         </css:parse-properties>
         <css:eval-string-set>
@@ -127,6 +134,15 @@
             </p:documentation>
         </css:eval-string-set>
     </p:for-each>
+    
+    <p:wrap-sequence wrapper="_"/>
+    <css:parse-content>
+        <p:documentation>
+            Make css:string, css:text, css:content and css:counter elements from css:content
+            attributes. <!-- depends on make-pseudo-element -->
+        </p:documentation>
+    </css:parse-content>
+    <p:filter select="/_/*"/>
     
     <p:group>
         <p:documentation>
@@ -138,13 +154,6 @@
                     Make css:flow attributes.
                 </p:documentation>
             </css:parse-properties>
-            <p:delete match="css:duplicate[not(@css:flow)]|
-                             css:alternate[not(@css:flow)]">
-                <p:documentation>
-                    Only allow ::duplicate and ::alternate pseudo-elements if they are moved into a
-                    named flow.
-                </p:documentation>
-            </p:delete>
         </p:for-each>
         <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:wrap wrapper="_" match="/*"/>
@@ -164,26 +173,6 @@
         </p:identity>
     </p:group>
     
-    <p:for-each>
-        <css:parse-properties properties="content white-space display list-style-type
-                                          page-break-before page-break-after">
-            <p:documentation>
-                Make css:content, css:white-space, css:display, css:list-style-type,
-                css:page-break-before and css:page-break-after attributes.
-            </p:documentation>
-        </css:parse-properties>
-    </p:for-each>
-    
-    <p:wrap-sequence wrapper="_"/>
-    <css:parse-content>
-      <p:documentation>
-        Make css:string, css:text, css:content and css:counter elements from css:content
-        attributes. <!-- depends on make-pseudo-elements and flow-into (::footnote-call
-        pseudo-element) -->
-      </p:documentation>
-    </css:parse-content>
-    <p:filter select="/_/*"/>
-    
     <css:label-targets name="label-targets">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
@@ -196,7 +185,19 @@
         </p:documentation>
     </css:eval-target-content>
     
+    <css:flow-from>
+        <p:documentation>
+            Evaluate css:flow elements. <!-- depends on parse-content -->
+        </p:documentation>
+    </css:flow-from>
+    
     <p:for-each>
+        <css:parse-properties properties="white-space display list-style-type page-break-before page-break-after">
+            <p:documentation>
+                Make css:white-space, css:display, css:list-style-type, css:page-break-before and
+                css:page-break-after attributes.
+            </p:documentation>
+        </css:parse-properties>
         <css:preserve-white-space>
             <p:documentation>
                 Make css:white-space elements from css:white-space attributes.
@@ -242,11 +243,6 @@
             <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-row-spacing"/>
             <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-preferred-empty-space"/>
         </p:group>
-        <css:make-anonymous-inline-boxes>
-            <p:documentation>
-                Wrap/unwrap with inline css:box elements.
-            </p:documentation>
-        </css:make-anonymous-inline-boxes>
     </p:for-each>
     
     <css:eval-counter exclude-counters="page">
@@ -260,6 +256,14 @@
             Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
         </p:documentation>
     </css:eval-target-text>
+    
+    <p:for-each>
+        <css:make-anonymous-inline-boxes>
+            <p:documentation>
+                Wrap/unwrap with inline css:box elements.
+            </p:documentation>
+        </css:make-anonymous-inline-boxes>
+    </p:for-each>
     
     <p:group>
         <p:documentation>

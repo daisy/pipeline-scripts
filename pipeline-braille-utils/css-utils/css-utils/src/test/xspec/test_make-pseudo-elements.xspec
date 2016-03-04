@@ -72,4 +72,22 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_04">
+    <x:context>
+      <doc>
+        <body>
+          <p css:flow="footnotes" css:footnote-call="content:'aaa'"/>
+        </body>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc>
+        <body>
+          <p css:id="..." css:flow="footnotes"/>
+          <css:footnote-call css:anchor="..." style="content:'aaa'"/>
+        </body>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

@@ -79,7 +79,7 @@
 		<xsl:copy/>
 	</xsl:template>
 	
-	<xsl:template match="css:rule|css:property|css:content|css:string[@name]|css:counter|css:text|css:leader|css:custom-func"
+	<xsl:template match="css:rule|css:property|css:content|css:string[@name]|css:counter|css:text|css:leader|css:custom-func|css:flow[@from]"
 	              mode="translate-rule-list translate-declaration-list translate-content-list">
 		<xsl:sequence select="."/>
 	</xsl:template>
