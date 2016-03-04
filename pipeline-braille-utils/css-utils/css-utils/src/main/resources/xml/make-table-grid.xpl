@@ -20,7 +20,7 @@
     
     <p:output port="result">
         <p:documentation>
-            Each table elements with a 'display' property of 'table' is marked with a css:table
+            Each table element with a 'display' property of 'table' is marked with a css:table
             attribute. Its table cells are marked with a css:table-cell attribute. The table cell's
             group, position and dimensions are indicated with css:table-header-group,
             css:table-row-group, css:table-footer-group, css:table-row, css:table-column,

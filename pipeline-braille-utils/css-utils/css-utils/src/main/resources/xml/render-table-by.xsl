@@ -7,7 +7,7 @@
     
     <xsl:include href="library.xsl"/>
     
-    <xsl:template match="*[@css:render-table-by]">
+    <xsl:template match="*[@css:render-table-by and not(@css:display='table')]">
         <xsl:sequence select="css:render-table-by(@css:render-table-by, .)"/>
     </xsl:template>
     

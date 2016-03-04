@@ -588,60 +588,82 @@
     </xsl:template>
     
     <xsl:template match="css:box[@type='table']" mode="table">
-        <xsl:apply-templates select="@* except @type" mode="#current"/>
-        <xsl:variable name="header-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-header-group]"/>
-        <xsl:variable name="body-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-row-group]"/>
-        <xsl:variable name="footer-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-footer-group]"/>
-        <xsl:variable name="header" as="element()*">
-            <xsl:for-each-group select="$header-cells" group-by="@css:table-row">
-                <xsl:sort select="xs:integer(current-grouping-key())"/>
-                <tr>
-                    <xsl:for-each select="current-group()">
-                        <xsl:sort select="xs:integer(@css:table-column)"/>
-                        <xsl:apply-templates select="." mode="tr"/>
-                    </xsl:for-each>
-                </tr>
-            </xsl:for-each-group>
-        </xsl:variable>
-        <xsl:variable name="body" as="element()*">
-            <xsl:for-each-group select="$body-cells" group-by="@css:table-row-group">
-                <xsl:sort select="xs:integer(current-grouping-key())"/>
-                <xsl:for-each-group select="current-group()" group-by="@css:table-row">
+        <xsl:apply-templates select="@* except (@type|@css:render-table-by)" mode="#current"/>
+        <xsl:if test="@css:render-table-by and not(@css:render-table-by='column')">
+            <xsl:message>'render-table-by' property with a value other than 'column' is not supported on elements with 'display: table'.</xsl:message>
+        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@css:render-table-by='column'">
+                <xsl:for-each-group select="css:box[@type='table-cell']" group-by="@css:table-column">
                     <xsl:sort select="xs:integer(current-grouping-key())"/>
                     <tr>
                         <xsl:for-each select="current-group()">
-                            <xsl:sort select="xs:integer(@css:table-column)"/>
+                            <xsl:sort select="if (@css:table-header-group) then 1 else
+                                              if (@css:table-row-group) then 2 else
+                                              if (@css:table-footer-group) then 3 else ()"/>
+                            <xsl:sort select="xs:integer((@css:table-header-group,@css:table-row-group,@css:table-footer-group)[1])"/>
+                            <xsl:sort select="xs:integer(@css:table-row)"/>
                             <xsl:apply-templates select="." mode="tr"/>
                         </xsl:for-each>
                     </tr>
                 </xsl:for-each-group>
-            </xsl:for-each-group>
-        </xsl:variable>
-        <xsl:variable name="footer" as="element()*">
-            <xsl:for-each-group select="$footer-cells" group-by="@css:table-row">
-                <xsl:sort select="xs:integer(current-grouping-key())"/>
-                <tr>
-                    <xsl:for-each select="current-group()">
-                        <xsl:sort select="xs:integer(@css:table-column)"/>
-                        <xsl:apply-templates select="." mode="tr"/>
-                    </xsl:for-each>
-                </tr>
-            </xsl:for-each-group>
-        </xsl:variable>
-        <xsl:apply-templates select="node() except ($header-cells|$body-cells|$footer-cells)" mode="table"/>
-        <xsl:choose>
-            <xsl:when test="exists($header)">
-                <thead>
-                    <xsl:sequence select="$header"/>
-                </thead>
-                <tbody>
-                    <xsl:sequence select="$body"/>
-                    <xsl:sequence select="$footer"/>
-                </tbody>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:sequence select="$body"/>
-                <xsl:sequence select="$footer"/>
+                <xsl:variable name="header-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-header-group]"/>
+                <xsl:variable name="body-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-row-group]"/>
+                <xsl:variable name="footer-cells" as="element()*" select="css:box[@type='table-cell' and @css:table-footer-group]"/>
+                <xsl:variable name="header" as="element()*">
+                    <xsl:for-each-group select="$header-cells" group-by="@css:table-row">
+                        <xsl:sort select="xs:integer(current-grouping-key())"/>
+                        <tr>
+                            <xsl:for-each select="current-group()">
+                                <xsl:sort select="xs:integer(@css:table-column)"/>
+                                <xsl:apply-templates select="." mode="tr"/>
+                            </xsl:for-each>
+                        </tr>
+                    </xsl:for-each-group>
+                </xsl:variable>
+                <xsl:variable name="body" as="element()*">
+                    <xsl:for-each-group select="$body-cells" group-by="@css:table-row-group">
+                        <xsl:sort select="xs:integer(current-grouping-key())"/>
+                        <xsl:for-each-group select="current-group()" group-by="@css:table-row">
+                            <xsl:sort select="xs:integer(current-grouping-key())"/>
+                            <tr>
+                                <xsl:for-each select="current-group()">
+                                    <xsl:sort select="xs:integer(@css:table-column)"/>
+                                    <xsl:apply-templates select="." mode="tr"/>
+                                </xsl:for-each>
+                            </tr>
+                        </xsl:for-each-group>
+                    </xsl:for-each-group>
+                </xsl:variable>
+                <xsl:variable name="footer" as="element()*">
+                    <xsl:for-each-group select="$footer-cells" group-by="@css:table-row">
+                        <xsl:sort select="xs:integer(current-grouping-key())"/>
+                        <tr>
+                            <xsl:for-each select="current-group()">
+                                <xsl:sort select="xs:integer(@css:table-column)"/>
+                                <xsl:apply-templates select="." mode="tr"/>
+                            </xsl:for-each>
+                        </tr>
+                    </xsl:for-each-group>
+                </xsl:variable>
+                <xsl:apply-templates select="node() except ($header-cells|$body-cells|$footer-cells)" mode="table"/>
+                <xsl:choose>
+                    <xsl:when test="exists($header)">
+                        <thead>
+                            <xsl:sequence select="$header"/>
+                        </thead>
+                        <tbody>
+                            <xsl:sequence select="$body"/>
+                            <xsl:sequence select="$footer"/>
+                        </tbody>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="$body"/>
+                        <xsl:sequence select="$footer"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -649,10 +671,12 @@
     <xsl:template match="css:box[@type='table-cell']" mode="tr">
         <td>
             <xsl:if test="@css:table-row-span">
-                <xsl:attribute name="row-span" select="@css:table-row-span"/>
+                <xsl:attribute name="{if (parent::*/@css:render-table-by='column') then 'col-span' else 'row-span'}"
+                               select="@css:table-row-span"/>
             </xsl:if>
             <xsl:if test="@css:table-column-span">
-                <xsl:attribute name="col-span" select="@css:table-column-span"/>
+                <xsl:attribute name="{if (parent::*/@css:render-table-by='column') then 'row-span' else 'col-span'}"
+                               select="@css:table-column-span"/>
             </xsl:if>
             <xsl:apply-templates select="@* except (@type|
                                                     @css:table-header-group|

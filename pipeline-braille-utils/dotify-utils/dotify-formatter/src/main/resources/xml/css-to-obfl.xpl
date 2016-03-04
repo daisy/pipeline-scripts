@@ -100,12 +100,12 @@
         </p:input>
     </p:xslt>
     
-    <css:parse-properties properties="render-table-by table-header-policy">
+    <css:parse-properties properties="display render-table-by table-header-policy">
         <p:documentation>
-            Make css:render-table-by and css:table-header-policy attributes.
+            Make css:display, css:render-table-by and css:table-header-policy attributes.
         </p:documentation>
     </css:parse-properties>
-
+    
     <css:render-table-by>
         <p:documentation>
             Layout tables as lists.
@@ -226,10 +226,13 @@
         </css:make-boxes>
         <p:group>
             <p:documentation>
-                Move css:_obfl-table-col-spacing, css:_obfl-table-row-spacing and
-                css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
+                Move css:render-table-by, css:_obfl-table-col-spacing, css:_obfl-table-row-spacing
+                and css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
             </p:documentation>
             <css:parse-properties properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
+            <p:label-elements match="*[@css:render-table-by]/css:box[@type='table']"
+                              attribute="css:render-table-by"
+                              label="parent::*/@css:render-table-by"/>
             <p:label-elements match="*[@css:_obfl-table-col-spacing]/css:box[@type='table']"
                               attribute="css:_obfl-table-col-spacing"
                               label="parent::*/@css:_obfl-table-col-spacing"/>
@@ -239,6 +242,7 @@
             <p:label-elements match="*[@css:_obfl-preferred-empty-space]/css:box[@type='table']"
                               attribute="css:_obfl-preferred-empty-space"
                               label="parent::*/@css:_obfl-preferred-empty-space"/>
+            <p:delete match="*[not(self::css:box[@type='table'])]/@css:render-table-by"/>
             <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-col-spacing"/>
             <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-table-row-spacing"/>
             <p:delete match="*[not(self::css:box[@type='table'])]/@css:_obfl-preferred-empty-space"/>
