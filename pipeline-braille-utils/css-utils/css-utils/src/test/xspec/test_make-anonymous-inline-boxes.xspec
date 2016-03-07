@@ -119,4 +119,29 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_05">
+    <x:context>
+      <css:box type="inline">
+        <css:box type="block">
+          <css:box type="inline" name="css:before">⠿⠿</css:box>
+          ⠤⠤⠤
+          <css:box type="block" name="css:after">⠿⠿</css:box>
+        </css:box>
+      </css:box>
+    </x:context>
+    <x:expect label="result">
+      <css:_>
+        <css:box type="block">
+          <css:box type="inline">
+            <css:box type="inline" name="css:before">⠿⠿</css:box>
+          ⠤⠤⠤
+          </css:box>
+          <css:box type="block" name="css:after">
+            <css:box type="inline">⠿⠿</css:box>
+          </css:box>
+        </css:box>
+      </css:_>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

@@ -52,6 +52,7 @@
     </xsl:template>
     
     <xsl:template name="apply-templates">
+        <xsl:variable name="this" as="element()" select="."/>
         <xsl:for-each-group select="*|text()"
                             group-adjacent="boolean(descendant-or-self::css:box[@type=('block','table','table-cell')])">
             <xsl:choose>
@@ -60,8 +61,8 @@
                         <xsl:apply-templates select="."/>
                     </xsl:for-each>
                 </xsl:when>
-                <xsl:when test="ancestor-or-self::css:box[@type='inline'
-                                                          and not(descendant::css:box[@type=('block','table','table-cell')])]">
+                <xsl:when test="$this/ancestor-or-self::css:box[@type='inline'
+                                                                and not(descendant::css:box[@type=('block','table','table-cell')])]">
                     <xsl:sequence select="current-group()"/>
                 </xsl:when>
                 <xsl:when test="not(
