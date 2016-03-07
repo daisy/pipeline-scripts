@@ -37,6 +37,7 @@ import cz.vutbr.web.css.Rule;
 import cz.vutbr.web.css.RuleFactory;
 import cz.vutbr.web.css.RuleSet;
 import cz.vutbr.web.css.Selector;
+import cz.vutbr.web.css.Selector.PseudoClass;
 import cz.vutbr.web.css.Selector.SelectorPart;
 import cz.vutbr.web.css.StyleSheet;
 import cz.vutbr.web.css.SupportedCSS;
@@ -768,7 +769,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 										throw new RuntimeException("Some headers of children promoted but not all children have a promoted header."); }
 								if (i == 0) {
 									writeStartElement(writer, _);
-									Predicate<PseudoClassImpl> matcher = matchesPosition(j + 1, g.children.size());
+									Predicate<PseudoClass> matcher = matchesPosition(j + 1, g.children.size());
 									writeStyleAttribute(writer, getTableByStyle(g.groupingAxis).getListItemStyle(matcher));
 									for (TableCell h : cc.newlyPromotedHeaders())
 										h.write(writer);
@@ -790,7 +791,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				i = 0;
 				for (TableCellCollection c : children) {
 					writeStartElement(writer, _);
-					Predicate<PseudoClassImpl> matcher = matchesPosition(i + 1, children.size());
+					Predicate<PseudoClass> matcher = matchesPosition(i + 1, children.size());
 					writeStyleAttribute(writer,
 					                    groupingAxis != null ? getTableByStyle(groupingAxis).getListItemStyle(matcher)
 					                                         : getListItemStyle(matcher));
@@ -825,10 +826,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		}
 		
 		final private Map<String,TableByStyle> tableByStyles = new HashMap<String,TableByStyle>();
-		final private Map<List<PseudoClassImpl>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClassImpl>,ListItemStyle>();
+		final private Map<List<PseudoClass>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClass>,ListItemStyle>();
 		private ListItemStyle listHeaderStyle = new ListItemStyle();
 			
-		public void addListItemStyle(List<PseudoClassImpl> pseudo, ListItemStyle style) {
+		public void addListItemStyle(List<PseudoClass> pseudo, ListItemStyle style) {
 			if (!listItemStyles.containsKey(pseudo))
 				listItemStyles.put(pseudo, style);
 			else
@@ -847,10 +848,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			return style;
 		}
 		
-		public ListItemStyle getListItemStyle(Predicate<PseudoClassImpl> matcher) {
+		public ListItemStyle getListItemStyle(Predicate<PseudoClass> matcher) {
 			ListItemStyle style = new ListItemStyle();
-		  outer: for (List<PseudoClassImpl> pseudoClasses : listItemStyles.keySet()) {
-				for (PseudoClassImpl pseudoClass : pseudoClasses)
+		  outer: for (List<PseudoClass> pseudoClasses : listItemStyles.keySet()) {
+				for (PseudoClass pseudoClass : pseudoClasses)
 					if (!matcher.apply(pseudoClass))
 						continue outer;
 				style = style.mergeWith(listItemStyles.get(pseudoClasses)); }
@@ -895,7 +896,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		
 		private static class TableByStyle extends PseudoElementStyle {
 			
-			final private Map<List<PseudoClassImpl>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClassImpl>,ListItemStyle>();
+			final private Map<List<PseudoClass>,ListItemStyle> listItemStyles = new LinkedHashMap<List<PseudoClass>,ListItemStyle>();
 			private ListItemStyle listHeaderStyle = new ListItemStyle();
 			
 			public TableByStyle() {}
@@ -905,7 +906,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				addRuleSet(pseudo, ruleset);
 			}
 			
-			public void addListItemStyle(List<PseudoClassImpl> pseudo, ListItemStyle style) {
+			public void addListItemStyle(List<PseudoClass> pseudo, ListItemStyle style) {
 				if (!listItemStyles.containsKey(pseudo))
 					listItemStyles.put(pseudo, style);
 				else
@@ -916,10 +917,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				listHeaderStyle = listHeaderStyle.mergeWith(style);
 			}
 			
-			public ListItemStyle getListItemStyle(Predicate<PseudoClassImpl> matcher) {
+			public ListItemStyle getListItemStyle(Predicate<PseudoClass> matcher) {
 				ListItemStyle style = new ListItemStyle();
-			  outer: for (List<PseudoClassImpl> pseudoClasses : listItemStyles.keySet()) {
-					for (PseudoClassImpl pseudoClass : pseudoClasses)
+			  outer: for (List<PseudoClass> pseudoClasses : listItemStyles.keySet()) {
+					for (PseudoClass pseudoClass : pseudoClasses)
 						if (!matcher.apply(pseudoClass))
 							continue outer;
 					style = style.mergeWith(listItemStyles.get(pseudoClasses)); }
@@ -934,7 +935,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			public TableByStyle mergeWith(TableByStyle style) {
 				for (Map.Entry<PseudoElementImpl,List<Declaration>> r: style.ruleSets.entrySet())
 					addRuleSet(r.getKey(), r.getValue());
-				for (Map.Entry<List<PseudoClassImpl>,ListItemStyle> s: style.listItemStyles.entrySet())
+				for (Map.Entry<List<PseudoClass>,ListItemStyle> s: style.listItemStyles.entrySet())
 					addListItemStyle(s.getKey(), s.getValue());
 				addListHeaderStyle(style.listHeaderStyle);
 				return this;
@@ -956,10 +957,12 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			}
 		}
 		
-		private final static Predicate<PseudoClassImpl> matchesPosition(final int position, final int elementCount) {
-			return new Predicate<PseudoClassImpl>() {
-				public boolean apply(PseudoClassImpl pseudo) {
-					return pseudo.matchesPosition(position, elementCount);
+		private final static Predicate<PseudoClass> matchesPosition(final int position, final int elementCount) {
+			return new Predicate<PseudoClass>() {
+				public boolean apply(PseudoClass pseudo) {
+					if (pseudo instanceof PseudoClassImpl)
+						return ((PseudoClassImpl)pseudo).matchesPosition(position, elementCount);
+					return false;
 				}
 			};
 		}
