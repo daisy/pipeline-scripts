@@ -201,6 +201,10 @@
         <xsl:apply-templates select="."/>
     </xsl:template>
     
+    <xsl:template match="css:before|css:after" mode="table">
+        <xsl:apply-templates select="."/>
+    </xsl:template>
+    
     <xsl:template match="html:col|      dtb:col|
                          html:colgroup| dtb:colgroup"
                   mode="table">

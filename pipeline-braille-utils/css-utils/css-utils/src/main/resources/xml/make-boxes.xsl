@@ -46,10 +46,12 @@
         <css:box type="block">
             <xsl:attribute name="name" select="name()"/>
             <xsl:apply-templates select="@style|@css:*"/>
+            <xsl:apply-templates select="css:before"/>
             <xsl:apply-templates select="*[@css:table-caption]" mode="display-table"/>
             <css:box type="table">
                 <xsl:apply-templates select="node() except *[@css:table-caption]" mode="display-table"/>
             </css:box>
+            <xsl:apply-templates select="css:after"/>
         </css:box>
     </xsl:template>
     
