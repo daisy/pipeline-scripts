@@ -5042,7 +5042,6 @@
           <sequence master="main">
             <block>
               ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
-              <anchor item="a"/>
             </block>
           </sequence>
         </obfl>
@@ -6725,11 +6724,7 @@
               ⠤⠤⠤
             </block>
             <block>
-              ⠤⠤⠤ ⠶
-              <anchor item="a"/>
-              ⠤⠤⠤ ⠶⠶
-              <anchor item="b"/>
-              ⠤⠤⠤
+              ⠤⠤⠤ ⠶ ⠤⠤⠤ ⠶⠶ ⠤⠤⠤
             </block>
             <block>
               <block> ⠿⠿⠿ </block>
@@ -6739,9 +6734,7 @@
               ⠤⠤⠤
             </block>
             <block>
-              ⠤⠤⠤ ⠶⠶⠶
-              <anchor item="c"/>
-              ⠤⠤⠤
+              ⠤⠤⠤ ⠶⠶⠶ ⠤⠤⠤
             </block>
             <block>
               <block> ⠿⠿⠿ </block>

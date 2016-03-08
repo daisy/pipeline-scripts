@@ -1026,7 +1026,7 @@
     
     <xsl:template match="css:box/@css:id" mode="anchor">
         <xsl:variable name="id" as="xs:string" select="."/>
-        <xsl:if test="collection()/*[@css:flow]/*/@css:anchor=$id">
+        <xsl:if test="collection()/*[@css:flow=$footnote-and-volume-range-flows]/*/@css:anchor=$id">
             <anchor item="{$id}"/>
         </xsl:if>
     </xsl:template>
