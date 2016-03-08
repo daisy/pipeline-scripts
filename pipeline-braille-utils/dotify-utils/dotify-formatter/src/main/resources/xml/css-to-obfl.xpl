@@ -57,10 +57,6 @@
                         css:alternate and css:footnote-call attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
-                <p:delete match="css:duplicate/@css:_obfl-on-toc-start|
-                                 css:duplicate/@css:_obfl-on-volume-start|
-                                 css:duplicate/@css:_obfl-on-volume-end|
-                                 css:duplicate/@css:_obfl-on-toc-end"/>
                 <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,

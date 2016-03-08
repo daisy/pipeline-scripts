@@ -30,8 +30,7 @@
         </xsl:if>
         <xsl:if test="@css:duplicate">
             <css:duplicate css:anchor="{$id}" style="{@css:duplicate}">
-                <xsl:sequence select="@* except (@style|@css:id|@css:anchor|
-                                                 @css:before|@css:after|@css:duplicate|@css:footnote-call)"/>
+                <xsl:sequence select="@* except (@style|@css:*)"/>
                 <xsl:apply-templates/>
             </css:duplicate>
         </xsl:if>

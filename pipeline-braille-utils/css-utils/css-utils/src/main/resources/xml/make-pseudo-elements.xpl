@@ -26,12 +26,12 @@
             input, an empty css:alternate or css:footnote-call element is inserted directly after
             the element. A css:footnote-call element is only generated when the main element
             participates in the 'footnotes' flow. For each element with a css:duplicate attribute in
-            the input, a copy of the element is inserted directly after the element, but the
-            css:before, css:after, css:footnote-call, css:duplicate, css:alternate and style
-            attributes are omitted. The css:before, css:after, css:footnote-call, css:duplicate and
-            css:alternate attributes are moved to the inserted elements and renamed to 'style'. In
-            the case of ::footnote-call, ::duplicate and ::alternate, the original element gets a
-            css:id attribute, and the pseudo-element gets a matching css:anchor attribute.
+            the input, a copy of the element is inserted directly after the element, but the style
+            attribute and any css:* attributes are omitted. The css:before, css:after,
+            css:footnote-call, css:duplicate and css:alternate attributes are moved to the inserted
+            elements and renamed to 'style'. In the case of ::footnote-call, ::duplicate and
+            ::alternate, the original element gets a css:id attribute, and the pseudo-element gets a
+            matching css:anchor attribute.
         </p:documentation>
     </p:output>
     
