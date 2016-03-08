@@ -18,7 +18,7 @@
                          @css:page-break-after|
                          @css:page-break-inside"/>
     
-    <xsl:template match="/*|css:box[@type='block']">
+    <xsl:template match="css:box[@type='block']">
         <xsl:param name="avoid-break-after" as="xs:boolean" select="false()"/>
         <xsl:param name="avoid-break-inside" as="xs:boolean" select="false()"/>
         <xsl:variable name="avoid-break-inside" as="xs:boolean" select="$avoid-break-inside or @css:page-break-inside='avoid'"/>
@@ -27,10 +27,10 @@
         <!--
             A 'page-break-before' property with value 'left', 'right' or 'always' is propagated to
             the closest ancestor-or-self block box with a preceding sibling, or if there is no such
-            element, to the root element
+            element, to the outermost ancestor-or-self block box.
         -->
         <xsl:variable name="page-break-before" as="xs:string*"
-                      select=".[preceding-sibling::* or not(parent::*)]
+                      select=".[preceding-sibling::* or not(parent::css:box)]
                               /(.|descendant::css:box[@type='block'])
                                [@css:page-break-before=('always','right','left')]
                                [not(preceding::* intersect $self/descendant::css:box[@type='block'])]
@@ -70,11 +70,11 @@
                                 /@css:page-break-after/string(),
                                $page-break-before)"/>
         <!--
-            or if there is no such element, moved to the root element.
+            or if there is no such element, moved to the outermost ancestor-or-self block box.
         -->
         <xsl:variable name="page-break-after" as="xs:string*"
                       select="($page-break-after,
-                               .[not(parent::*)]
+                               .[not(parent::css:box) and not(following-sibling::*)]
                                /(.|descendant::css:box[@type='block'])
                                  [@css:page-break-after=('always','right','left')]
                                  [not(following::* intersect $self/descendant::css:box[@type='block'])]

@@ -170,13 +170,10 @@
                                         <xsl:otherwise>
                                         <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
                                             <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right']">
-                                                <xsl:variable name="unwrap-flow" as="element()*"
-                                                              select="for $e in current-group() return
-                                                                      if ($e/self::css:_[@css:flow]) then $e/* else $e"/>
                                                 <xsl:choose>
-                                                    <xsl:when test="$unwrap-flow/self::css:box[@type='block' and @css:_obfl-toc]">
-                                                        <xsl:variable name="on-first-toc-start-content" as="element()*">
-                                                            <xsl:for-each-group select="$unwrap-flow"
+                                                    <xsl:when test="current-group()/self::css:box[@type='block' and @css:_obfl-toc]">
+                                                        <xsl:variable name="before-first-toc-content" as="element()*">
+                                                            <xsl:for-each-group select="current-group()"
                                                                                 group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
                                                                 <xsl:if test="position()=1
                                                                               and not(current-group()/self::css:box[@type='block' and @css:_obfl-toc])">
@@ -184,7 +181,7 @@
                                                                 </xsl:if>
                                                             </xsl:for-each-group>
                                                         </xsl:variable>
-                                                        <xsl:for-each-group select="$unwrap-flow"
+                                                        <xsl:for-each-group select="current-group()"
                                                                             group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
                                                             <xsl:variable name="toc" as="element()?"
                                                                           select="current-group()/self::css:box[@type='block' and @css:_obfl-toc]"/>
@@ -193,9 +190,8 @@
                                                                 <xsl:variable name="toc-range" as="xs:string"
                                                                               select="($toc/@css:_obfl-toc-range,'document')[1]"/>
                                                                 <xsl:variable name="on-toc-start-content" as="element()*"
-                                                                              select="(if (position()=2) then $on-first-toc-start-content else (),
-                                                                                       collection()/*[@css:flow=concat('-obfl-on-toc-start/',
-                                                                                                                       $toc/@css:_obfl-on-toc-start)]/*)"/>
+                                                                              select="collection()/*[@css:flow=concat('-obfl-on-toc-start/',
+                                                                                                                      $toc/@css:_obfl-on-toc-start)]/*"/>
                                                                 <xsl:variable name="on-volume-start-content" as="element()*"
                                                                               select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
                                                                                       then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
@@ -222,44 +218,52 @@
                                                                             <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
                                                                         </xsl:apply-templates>
                                                                     </table-of-contents>
-                                                                    <xsl:if test="exists($on-toc-start-content)">
+                                                                    <xsl:if test="(position()=2 and exists($before-first-toc-content))
+                                                                                  or exists($on-toc-start-content)
+                                                                                  or $toc/@css:page-break-before='always'">
                                                                         <on-toc-start>
-                                                                            <xsl:call-template name="group-inline-elements">
-                                                                                <xsl:with-param name="elements" select="$on-toc-start-content"/>
+                                                                            <xsl:if test="position()=2">
+                                                                                <xsl:apply-templates select="$before-first-toc-content" mode="sequence">
+                                                                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                                                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                                                                    <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                                                                                </xsl:apply-templates>
+                                                                            </xsl:if>
+                                                                            <xsl:if test="$toc/@css:page-break-before='always'">
+                                                                                <block break-before="page"/>
+                                                                            </xsl:if>
+                                                                            <xsl:apply-templates select="$on-toc-start-content" mode="sequence">
                                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                                            </xsl:call-template>
+                                                                            </xsl:apply-templates>
                                                                         </on-toc-start>
                                                                     </xsl:if>
                                                                     <xsl:if test="exists($on-volume-start-content)">
                                                                         <on-volume-start>
-                                                                            <xsl:call-template name="group-inline-elements">
-                                                                                <xsl:with-param name="elements" select="$on-volume-start-content"/>
+                                                                            <xsl:apply-templates select="$on-volume-start-content" mode="sequence">
                                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                                            </xsl:call-template>
+                                                                            </xsl:apply-templates>
                                                                         </on-volume-start>
                                                                     </xsl:if>
                                                                     <xsl:if test="exists($on-volume-end-content)">
                                                                         <on-volume-end>
-                                                                            <xsl:call-template name="group-inline-elements">
-                                                                                <xsl:with-param name="elements" select="$on-volume-end-content"/>
+                                                                            <xsl:apply-templates select="$on-volume-end-content" mode="sequence">
                                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                                            </xsl:call-template>
+                                                                            </xsl:apply-templates>
                                                                         </on-volume-end>
                                                                     </xsl:if>
                                                                     <xsl:if test="exists($on-toc-end-content)">
                                                                         <on-toc-end>
-                                                                            <xsl:call-template name="group-inline-elements">
-                                                                                <xsl:with-param name="elements" select="$on-toc-end-content"/>
+                                                                            <xsl:apply-templates select="$on-toc-end-content" mode="sequence">
                                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                                            </xsl:call-template>
+                                                                            </xsl:apply-templates>
                                                                         </on-toc-end>
                                                                     </xsl:if>
                                                                 </toc-sequence>
@@ -268,12 +272,11 @@
                                                     </xsl:when>
                                                     <xsl:otherwise>
                                                         <sequence master="{$pre-content-master}">
-                                                            <xsl:call-template name="group-inline-elements">
-                                                                <xsl:with-param name="elements" select="$unwrap-flow"/>
+                                                            <xsl:apply-templates select="current-group()" mode="sequence">
                                                                 <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                 <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                 <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                            </xsl:call-template>
+                                                            </xsl:apply-templates>
                                                         </sequence>
                                                     </xsl:otherwise>
                                                </xsl:choose>
@@ -319,16 +322,12 @@
                                                 <xsl:otherwise>
                                                     <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
                                                         <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right']">
-                                                            <xsl:variable name="unwrap-flow" as="element()*"
-                                                                          select="for $e in current-group() return
-                                                                                  if ($e/self::css:_[@css:flow]) then $e/* else $e"/>
                                                             <sequence master="{$post-content-master}">
-                                                                <xsl:call-template name="group-inline-elements">
-                                                                    <xsl:with-param name="elements" select="$unwrap-flow"/>
+                                                                <xsl:apply-templates select="current-group()" mode="sequence">
                                                                     <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
                                                                     <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
                                                                     <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                                                                </xsl:call-template>
+                                                                </xsl:apply-templates>
                                                             </sequence>
                                                         </xsl:for-each-group>
                                                     </xsl:for-each-group>
@@ -360,41 +359,26 @@
             </xsl:for-each>
             <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-adjacent="string(@css:page)">
                 <xsl:variable name="layout-master" select="pxi:generate-layout-master-name(current-grouping-key())"/>
-                <xsl:for-each-group select="current-group()" group-starting-with="*[@css:page-break-before='right' or @css:counter-set-page]">
-                    <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
-                        <sequence master="{$layout-master}">
-                            <xsl:variable name="first" as="element()" select="current-group()[1]"/>
-                            <xsl:apply-templates select="$first/@css:counter-set-page" mode="sequence"/>
-                            <xsl:apply-templates select="$first/(@* except (@css:counter-set-page,@css:string-entry))" mode="sequence"/>
-                            <xsl:apply-templates select="$first/@css:string-entry" mode="sequence"/>
-                            <xsl:call-template name="group-inline-elements">
-                                <xsl:with-param name="elements" select="for $x in current-group()
-                                                                        return if ($x/self::css:_) then $x/* else $x"/>
-                                <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-                                <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-                                <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-                            </xsl:call-template>
-                        </sequence>
+                <xsl:for-each-group select="current-group()" group-starting-with="*[@css:counter-set-page]">
+                    <xsl:for-each-group select="for $e in current-group() return if ($e/self::css:_) then $e/* else $e"
+                                        group-starting-with="*[@css:page-break-before='right']">
+                        <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
+                            <sequence master="{$layout-master}">
+                                <xsl:variable name="first" as="element()" select="current-group()[1]/(if (parent::*) then parent::* else self::*)"/>
+                                <xsl:apply-templates select="$first/@css:counter-set-page" mode="sequence"/>
+                                <xsl:apply-templates select="$first/(@* except (@css:counter-set-page,@css:string-entry))" mode="sequence"/>
+                                <xsl:apply-templates select="$first/@css:string-entry" mode="sequence"/>
+                                <xsl:apply-templates select="current-group()" mode="sequence">
+                                    <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
+                                    <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
+                                    <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
+                                </xsl:apply-templates>
+                            </sequence>
+                        </xsl:for-each-group>
                     </xsl:for-each-group>
                 </xsl:for-each-group>
             </xsl:for-each-group>
         </obfl>
-    </xsl:template>
-    
-    <xsl:template name="group-inline-elements">
-        <xsl:param name="elements" as="node()*" required="yes"/>
-        <xsl:for-each-group select="$elements" group-adjacent="boolean(self::css:box[@type=('block','table')])">
-            <xsl:choose>
-                <xsl:when test="current-grouping-key()">
-                    <xsl:apply-templates select="current-group()" mode="sequence"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <block>
-                        <xsl:apply-templates select="current-group()"/>
-                    </block>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:for-each-group>
     </xsl:template>
     
     <xsl:template match="css:box[@type='block']" mode="sequence">
@@ -766,6 +750,7 @@
     <xsl:template match="css:box/@part" mode="#default td table"/>
     
     <xsl:template match="/*/*/@css:_obfl-toc|
+                         /*/*[@css:_obfl-toc]/@css:page-break-before[.='always']|
                          /*/*[@css:_obfl-toc]/@css:_obfl-toc-range|
                          /*/*[@css:_obfl-toc]/@css:_obfl-on-toc-start|
                          /*/*[@css:_obfl-toc]/@css:_obfl-on-volume-start|
@@ -840,16 +825,27 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="/*/@css:page-break-before[.=('always','right')]|
-                         /*/@css:page-break-after[.=('always','right')]"
-                  mode="sequence" priority="0.6"/>
+    <!--
+        page-break-after:always becomes break-before="page" on next block unless there is no next block
+    -->
+    <xsl:template match="css:box[@type='block'][not(parent::css:box) and not(following-sibling::*)][@css:page-break-after[.='always']]"
+                  priority="1">
+        <xsl:next-match/>
+        <block break-before="page"/>
+    </xsl:template>
+    <xsl:template match="css:box[@type='block'][not(parent::css:box) and not(following-sibling::*)]/@css:page-break-after[.='always']"/>
+    
+    <!--
+        'right' is handled by starting new sequences
+    -->
+    <xsl:template match="css:box[@type='block'][not(parent::css:box) and not(preceding-sibling::*)]/@css:page-break-before[.='right']|
+                         css:box[@type='block'][not(parent::css:box) and not(following-sibling::*)]/@css:page-break-after[.='right']"/>
     
     <!--
         FIXME: 'left' not supported
     -->
-    <xsl:template match="/*/@css:page-break-before[.='left']|
-                         /*/@css:page-break-after[.='left']"
-                  mode="sequence" priority="0.6"/>
+    <xsl:template match="css:box[@type='block'][not(parent::css:box) and not(preceding-sibling::*)]/@css:page-break-before[.='left']|
+                         css:box[@type='block'][not(parent::css:box) and not(following-sibling::*)]/@css:page-break-after[.='left']"/>
     
     <xsl:template match="css:box[@type='block']/@css:page-break-inside[.='avoid']">
         <xsl:attribute name="keep" select="'all'"/>
@@ -862,7 +858,7 @@
     
     <xsl:template match="css:box[@type='block']/@css:_obfl-vertical-position|
                          css:box[@type='block']/@css:_obfl-vertical-align|
-                         css:box[@type='block']/@css:page-break-before|
+                         css:box[@type='block' and not(@css:_obfl-toc)]/@css:page-break-before|
                          css:box[@type='block']/@css:page-break-after|
                          css:box[@type='block']/@css:page-break-inside|
                          css:box[@type='block']/@css:orphans|
@@ -1236,7 +1232,8 @@
     -->
     <xsl:template match="css:flow[@from and (not(@scope) or @scope='document')]" mode="eval-volume-area-content-list">
         <xsl:variable name="flow" as="xs:string" select="@from"/>
-        <xsl:sequence select="collection()/*[@css:flow=$flow]"/>
+        <xsl:sequence select="for $e in collection()/*[@css:flow=$flow] return
+                              if ($e/self::css:_) then $e/* else $e"/>
     </xsl:template>
     
     <xsl:template match="css:flow[@from=$footnote-and-volume-range-flows and @scope='volume']" mode="eval-volume-area-content-list">

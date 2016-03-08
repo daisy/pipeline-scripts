@@ -83,13 +83,13 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <css:_ css:page-break-after="always">
+        <css:_>
             <css:box type="block">
               <css:box type="inline">
                 ⠤⠤⠤
               </css:box>
             </css:box>
-            <css:box type="block" css:page-break-before="always">
+            <css:box type="block" css:page-break-before="always" css:page-break-after="always">
               <css:box type="inline">
                 ⠤⠤⠤
               </css:box>

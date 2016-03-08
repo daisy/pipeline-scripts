@@ -25,20 +25,22 @@
     <p:output port="result">
         <p:documentation>
             Adjacent inline boxes with one or more sibling block or table boxes are grouped and
-            wrapped in an anonymous block box. Inline boxes that are top-level boxes in a named flow
-            are wrapped in an anonymous block box each and their css:anchor attributes are moved to
-            the anonymous block.
+            wrapped in an anonymous block box. If all top-level boxes in the normal flow are inline
+            they are wrapped in an anonymous block box too. Inline boxes that are top-level boxes in
+            a named flow are wrapped in an anonymous block box each and their css:anchor attributes
+            are moved to the anonymous block.
         </p:documentation>
     </p:output>
     
-    <p:wrap match="/css:_[@flow[not(.='normal')]]/css:box[@type='inline']" wrapper="css:_box_"/>
+    <p:wrap match="/css:_[@css:flow[not(.='normal')]]/css:box[@type='inline']" wrapper="css:_box_"/>
     <p:add-attribute match="css:_box_" attribute-name="type" attribute-value="block"/>
-    <p:label-elements match="css:_box_" attribute="css:anchor" label="*/@css:anchor"/>
+    <p:label-elements match="css:_box_[child::*/@css:anchor]" attribute="css:anchor" label="child::*/@css:anchor"/>
     <p:delete match="css:_box_/*/@css:anchor"/>
     <p:rename match="css:_box_" new-name="css:box"/>
     
     <p:wrap match="css:box[@type='inline'][preceding-sibling::css:box[@type=('block','table')] or
-                                           following-sibling::css:box[@type=('block','table')]]"
+                                           following-sibling::css:box[@type=('block','table')] or
+                                           parent::css:_]"
             group-adjacent="true()"
             wrapper="css:_box_"/>
     <p:add-attribute match="css:_box_" attribute-name="type" attribute-value="block"/>
