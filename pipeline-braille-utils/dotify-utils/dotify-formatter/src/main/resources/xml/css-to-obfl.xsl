@@ -193,9 +193,9 @@
                                                                 <xsl:variable name="toc-range" as="xs:string"
                                                                               select="($toc/@css:_obfl-toc-range,'document')[1]"/>
                                                                 <xsl:variable name="on-toc-start-content" as="element()*"
-                                                                              select="(collection()/*[@css:flow=concat('-obfl-on-toc-start/',
-                                                                                                                       $toc/@css:_obfl-on-toc-start)]/*,
-                                                                                       if (position()=2) then $on-first-toc-start-content else ())"/>
+                                                                              select="(if (position()=2) then $on-first-toc-start-content else (),
+                                                                                       collection()/*[@css:flow=concat('-obfl-on-toc-start/',
+                                                                                                                       $toc/@css:_obfl-on-toc-start)]/*)"/>
                                                                 <xsl:variable name="on-volume-start-content" as="element()*"
                                                                               select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
                                                                                       then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
