@@ -54,6 +54,8 @@
                       select="if ($footnotes-max-height='none')
                               then $page-height idiv 2
                               else xs:integer(number($footnotes-max-height))"/>
+        <xsl:variable name="footnotes-fallback-flow" as="xs:string?"
+                      select="$footnotes-properties[@name='-obfl-fallback-flow'][1]/@value"/>
         <layout-master name="{$name}" duplex="{if ($duplex) then 'true' else 'false'}" page-number-variable="page"
                        page-width="{$page-width}" page-height="{$page-height}">
             <xsl:if test="$right-page-stylesheet">
@@ -94,6 +96,11 @@
             </xsl:if>
             <xsl:for-each select="$footnotes-content[self::css:flow[@from]][1]">
                 <page-area align="bottom" max-height="{$footnotes-max-height}" collection="{@from}">
+                    <xsl:if test="exists($footnotes-fallback-flow)">
+                        <fallback>
+                            <rename collection="{@from}" to="{$footnotes-fallback-flow}"/>
+                        </fallback>
+                    </xsl:if>
                     <xsl:if test="$footnotes-border-top!='none'">
                         <before><leader pattern="{$footnotes-border-top}" position="100%" align="right"/></before>
                     </xsl:if>
