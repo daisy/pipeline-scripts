@@ -45,4 +45,17 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_04">
+    <x:context>
+      <doc>
+        <div style="::after {{ content: 'foo' }} ::after::before {{ display: block; content: 'bar' }}"/>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc style="text-transform: none">
+        <div style="::after {{ content: &quot;FOO&quot; }} ::after::before {{ display: block; content: &quot;BAR&quot; }}"/>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

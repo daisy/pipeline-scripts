@@ -86,24 +86,46 @@
 	
 	<xsl:template match="css:rule[not(@selector) or @selector=('::before', '::after')]" mode="translate-rule-list">
 		<xsl:param name="context" as="element()" tunnel="yes"/>
-		<xsl:variable name="properties" as="element()*" select="css:parse-declaration-list(@style)"/>
-		<xsl:variable name="properties" as="element()*" select="if (@selector or $context/parent::* or $properties[@name='text-transform'])
-		                                                        then $properties
-		                                                        else ($properties,css:property('text-transform','auto'))"/>
-		<xsl:variable name="translated-properties" as="element()*">
-			<xsl:apply-templates select="$properties" mode="translate-declaration-list">
-				<xsl:with-param name="mode" tunnel="yes"
-				                select="if (@selector='::before') then 'before'
-				                        else if (@selector='::after') then 'after'
-				                        else '#default'"/>
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:if test="$translated-properties">
-			<xsl:copy>
-				<xsl:sequence select="@selector"/>
-				<xsl:attribute name="style" select="css:serialize-declaration-list($translated-properties)"/>
-			</xsl:copy>
-		</xsl:if>
+		<xsl:param name="mode" as="xs:string" tunnel="yes" select="'#default'"/>
+		<xsl:variable name="rules" as="element()*" select="css:parse-stylesheet(@style)"/>
+		<xsl:choose>
+			<xsl:when test="not($rules[@selector])">
+				<xsl:variable name="properties" as="element()*" select="css:parse-declaration-list(@style)"/>
+				<xsl:variable name="properties" as="element()*" select="if (@selector or $context/parent::* or $properties[@name='text-transform'])
+				                                                        then $properties
+				                                                        else ($properties,css:property('text-transform','auto'))"/>
+				<xsl:variable name="translated-properties" as="element()*">
+					<xsl:apply-templates select="$properties" mode="translate-declaration-list">
+						<xsl:with-param name="mode" tunnel="yes"
+						                select="if (@selector='::before') then 'before'
+						                        else if (@selector='::after') then 'after'
+						                        else $mode"/>
+					</xsl:apply-templates>
+				</xsl:variable>
+				<xsl:if test="$translated-properties">
+					<xsl:copy>
+						<xsl:sequence select="@selector"/>
+						<xsl:attribute name="style" select="css:serialize-declaration-list($translated-properties)"/>
+					</xsl:copy>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="translated-rules" as="element()*">
+					<xsl:apply-templates select="$rules" mode="#current">
+						<xsl:with-param name="mode" tunnel="yes"
+						                select="if (@selector='::before') then 'before'
+						                        else if (@selector='::after') then 'after'
+						                        else $mode"/>
+					</xsl:apply-templates>
+				</xsl:variable>
+				<xsl:if test="$translated-rules">
+					<xsl:copy>
+						<xsl:sequence select="@selector"/>
+						<xsl:attribute name="style" select="css:serialize-stylesheet($translated-rules)"/>
+					</xsl:copy>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='text-transform']" mode="translate-declaration-list">
