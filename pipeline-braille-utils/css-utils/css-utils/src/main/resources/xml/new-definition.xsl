@@ -120,13 +120,21 @@
     
     <!--
         drop a property if it is not inherited and has the initial value according to the new
-        definition
+        definition, or if it is inherited and has the value of the parent element
     -->
     <xsl:template match="css:property[not(@value='inherit')]" mode="property" priority="0.7">
         <xsl:param name="context" as="element()" tunnel="yes"/>
+        <xsl:param name="parent-properties" as="element()*" select="()" tunnel="yes"/>
+        <xsl:variable name="name" as="xs:string" select="@name"/>
         <xsl:choose>
-            <xsl:when test="not($context/ancestor::css:box and new:is-inherited(@name, $context))
+            <xsl:when test="not(new:is-inherited(@name, $context))
                             and @value=new:initial-value(@name, $context)">
+                <drop>
+                    <xsl:sequence select="."/>
+                </drop>
+            </xsl:when>
+            <xsl:when test="new:is-inherited(@name, $context)
+                            and @value=($parent-properties[@name=$name]/@value,new:initial-value($name, $context))[1]">
                 <drop>
                     <xsl:sequence select="."/>
                 </drop>

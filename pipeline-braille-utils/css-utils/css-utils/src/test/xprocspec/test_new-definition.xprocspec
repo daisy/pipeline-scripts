@@ -10,8 +10,8 @@
       <x:input port="source">
         <x:document type="inline">
           <css:_ css:page="size: 10 10">
-            <css:box type="block" css:text-align="center">
-              <css:box type="block"/>
+            <css:box type="block" css:hyphens="auto" css:text-align="center">
+              <css:box type="block" css:hyphens="auto"/>
             </css:box>
           </css:_>
         </x:document>
@@ -19,21 +19,27 @@
       <x:input port="definition">
         <x:document type="inline">
           <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
-            <xsl:variable name="new:properties" as="xs:string*" select="('text-align')"/>
+            <xsl:variable name="new:properties" as="xs:string*" select="('text-align','hyphens')"/>
             <xsl:function name="new:is-valid" as="xs:boolean">
               <xsl:param name="css:property" as="element()"/>
               <xsl:param name="context" as="element()"/>
-              <xsl:sequence select="$css:property/@value=('left','center','right')"/>
+              <xsl:sequence select="if ($css:property/@name='text-align')
+                                    then $css:property/@value=('left','center','right')
+                                    else $css:property/@value=('auto','manual','none')"/>
             </xsl:function>
             <xsl:function name="new:initial-value" as="xs:string">
               <xsl:param name="property" as="xs:string"/>
               <xsl:param name="context" as="element()"/>
-              <xsl:sequence select="'left'"/>
+              <xsl:sequence select="if ($property='text-align')
+                                    then 'left'
+                                    else 'manual'"/>
             </xsl:function>
             <xsl:function name="new:is-inherited" as="xs:boolean">
               <xsl:param name="property" as="xs:string"/>
               <xsl:param name="context" as="element()"/>
-              <xsl:sequence select="false()"/>
+              <xsl:sequence select="if ($property='text-align')
+                                    then false()
+                                    else true()"/>
             </xsl:function>
             <xsl:function name="new:applies-to" as="xs:boolean">
               <xsl:param name="property" as="xs:string"/>
@@ -50,7 +56,7 @@
     <x:expect label="result" type="compare">
       <x:document type="inline">
         <css:_ css:page="size: 10 10">
-          <css:box type="block" css:text-align="center">
+          <css:box type="block" css:hyphens="auto" css:text-align="center">
             <css:box type="block" css:text-align="center"/>
           </css:box>
         </css:_>
