@@ -13,12 +13,10 @@
     <!--
         Anticipate a bug in Dotify's white space normalization
     -->
-    <xsl:template match="*[self::obfl:block or self::obfl:td]/text()[not(preceding-sibling::node()[not(self::obfl:marker or self::text()[normalize-space(.)=''])])]">
+    <xsl:template match="*[self::obfl:block or self::obfl:td]
+                         //text()[not((ancestor::obfl:block|ancestor::obfl:td)[last()]//node()
+                                      intersect preceding::node()[not(self::obfl:marker or self::text()[normalize-space(.)=''])])]">
         <xsl:sequence select="replace(., '^\s+', '')"/>
     </xsl:template>
-    
-    <!--
-        TODO: same for span?
-    -->
     
 </xsl:stylesheet>
