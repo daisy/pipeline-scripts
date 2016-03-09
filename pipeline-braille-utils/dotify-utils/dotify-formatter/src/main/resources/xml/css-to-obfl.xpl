@@ -181,12 +181,6 @@
         </p:documentation>
     </css:eval-target-content>
     
-    <css:flow-from>
-        <p:documentation>
-            Evaluate css:flow elements. <!-- depends on parse-content -->
-        </p:documentation>
-    </css:flow-from>
-    
     <p:for-each>
         <css:parse-properties properties="white-space display list-style-type page-break-before page-break-after">
             <p:documentation>
@@ -247,9 +241,16 @@
     
     <css:eval-counter exclude-counters="page">
         <p:documentation>
-            Evaluate css:counter elements. <!-- depends on label-targets and parse-content -->
+            Evaluate css:counter elements. <!-- depends on label-targets, parse-content and
+            make-boxes -->
         </p:documentation>
     </css:eval-counter>
+    
+    <css:flow-from>
+        <p:documentation>
+            Evaluate css:flow elements. <!-- depends on parse-content and eval-counter -->
+        </p:documentation>
+    </css:flow-from>
     
     <css:eval-target-text>
         <p:documentation>

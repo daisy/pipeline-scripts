@@ -6778,7 +6778,96 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_66" pending="not supported yet">
+  <x:scenario label="test_66">
+    <x:documentation>
+      Tests numbering of chapter endnotes.
+    </x:documentation>
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <body style="@page { size: 20 6 } { text-transform:none; counter-reset:note; }">
+            <section style="::after { display:block; content: flow(chapter-notes)}">
+              ⠤⠤⠤
+              <noteref ref="note_1"
+                       style="{ counter-increment: note; }
+                              ::after { content: '⠦' counter(note) '⠴'; }
+                              ::alternate {
+                                flow: chapter-notes;
+                                display: block;
+                                content: counter(note) ' ' target-content(attr(ref)); }"/>
+              ⠤⠤⠤
+              <noteref ref="note_2"
+                       style="{ counter-increment: note; }
+                              ::after { content: '⠦' counter(note) '⠴'; }
+                              ::alternate {
+                                flow: chapter-notes;
+                                display: block;
+                                content: counter(note) ' ' target-content(attr(ref)); }"/>
+              ⠤⠤⠤
+            </section>
+            <section class="notes" style="display:none">
+              <note id="note_1">
+                ⠿⠿⠿
+              </note>
+              <note id="note_2">
+                ⠿⠿⠿
+              </note>
+            </section>
+          </body>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" duplex="true" page-number-variable="page" page-width="20" page-height="6">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <block> ⠤⠤⠤ ⠦1⠴ ⠤⠤⠤ ⠦2⠴ ⠤⠤⠤ </block>
+            <block>
+              <block>1 ⠿⠿⠿ </block>
+              <block>2 ⠿⠿⠿ </block>
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="20" rows="6" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠀⠦⠼⠁⠴⠀⠤⠤⠤⠀⠦⠼⠃⠴⠀</row>
+                  <row>⠤⠤⠤</row>
+                  <row>⠼⠁⠀⠿⠿⠿</row>
+                  <row>⠼⠃⠀⠿⠿⠿</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_67" pending="not supported yet">
     <x:documentation>
       Tests nested footnotes (noteref inside note).
     </x:documentation>
@@ -6869,7 +6958,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_67">
+  <x:scenario label="test_68">
     <x:documentation>
       Tests -obfl-fallback-flow with footnotes small enough to fit in the @footnotes area.
     </x:documentation>
@@ -6980,7 +7069,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_68">
+  <x:scenario label="test_69">
     <x:documentation>
       Tests -obfl-fallback-flow with footnotes too big to fit in the @footnotes area.
     </x:documentation>
@@ -7100,7 +7189,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_69">
+  <x:scenario label="test_70">
     <x:documentation>
       Tests document scope table of contents in @begin area of first volume and volume scope table
       of contents in @begin are of subsequent volumes.
@@ -7423,7 +7512,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_70">
+  <x:scenario label="test_71">
     <x:documentation>
       Tests omitting of a table of contents entry that references an element in the volume @begin
       area.
@@ -7596,7 +7685,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_71">
+  <x:scenario label="test_72">
     <x:documentation>
       Tests page-break-after on elements in named flows.
     </x:documentation>
@@ -7699,7 +7788,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_72">
+  <x:scenario label="test_73">
     <x:documentation>
       Tests page-break-before on an element with display:-obfl-toc.
     </x:documentation>

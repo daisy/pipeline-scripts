@@ -93,6 +93,7 @@
                          css:content|
                          css:string|
                          css:counter|
+                         css:flow[@from]|
                          css:leader|
                          css:custom-func">
         <xsl:sequence select="."/>
@@ -111,6 +112,7 @@
                          css:content|
                          css:string|
                          css:counter|
+                         css:flow[@from]|
                          css:leader|
                          css:custom-func"
                   mode="display-none display-table"/>
