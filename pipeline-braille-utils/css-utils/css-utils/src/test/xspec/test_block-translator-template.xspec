@@ -58,4 +58,17 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_05">
+    <x:context>
+      <doc>
+        <div style="::table-by(foo)::list-item::after {{ content: ', ' }} ::table-by(foo)::list-item:last-child::after {{ content: none }}"/>
+      </doc>
+    </x:context>
+    <x:expect label="result">
+      <doc style="text-transform: none">
+        <div style="::table-by(foo)::list-item::after {{ content: ', ' }} ::table-by(foo)::list-item:last-child::after {{ content: none }}"/>
+      </doc>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
