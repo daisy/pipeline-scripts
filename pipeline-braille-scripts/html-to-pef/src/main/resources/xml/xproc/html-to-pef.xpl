@@ -89,6 +89,15 @@
             <p:pipe port="result" step="in-scope-names"/>
         </p:input>
     </p:identity>
+    <p:delete match="c:param[@name=('stylesheet',
+                                    'transform',
+                                    'ascii-table',
+                                    'include-brf',
+                                    'include-preview',
+                                    'pef-output-dir',
+                                    'brf-output-dir',
+                                    'preview-output-dir',
+                                    'temp-dir')]"/>
     <p:identity name="input-options"/>
     <p:sink/>
     
