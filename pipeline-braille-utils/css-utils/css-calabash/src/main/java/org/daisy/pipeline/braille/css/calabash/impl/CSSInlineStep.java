@@ -207,6 +207,7 @@ public class CSSInlineStep extends DefaultStep {
 						if (result.getErrorStatus() != 0)
 							throw new IOException("Could not compile SASS style sheet: " + result.getErrorMessage());
 						String css = result.getCss();
+						logger.debug(url + " compiled to:\n\n" + css);
 						return new ByteArrayInputStream(css.getBytes(StandardCharsets.UTF_8)); }
 					catch (CompilationException e) {
 						throw new IOException("Could not compile SASS style sheet", e); }}
