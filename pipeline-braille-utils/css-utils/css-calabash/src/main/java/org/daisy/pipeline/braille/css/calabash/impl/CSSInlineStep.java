@@ -187,14 +187,18 @@ public class CSSInlineStep extends DefaultStep {
 					String scss = "";
 					for (String var : sassVariables.keySet()) {
 						String value = sassVariables.get(var);
-						if (!value.matches(scssValue)) {
+						if (value.matches("\\s*")) {
+							logger.debug("scss variable '"+var+"' contains only white space: "+value);
+							value = "'"+value+"'";
+							logger.debug("scss variable '"+var+"' was quoted               : "+value);
+						} else if (!value.matches(scssValue)) {
 							// if value contains special characters that can mess up parsing; wrap it in single quotes
 							logger.debug("scss variable '"+var+"' contains special characters: "+value);
-            				value = "'"+value.replaceAll("'", "\\\\'")+"'";
-            				logger.debug("scss variable '"+var+"' was escaped                : "+value);
-            			} else {
-            				logger.debug("scss variable '"+var+"' contains no special characters: "+value);
-            			}
+							value = "'"+value.replaceAll("'", "\\\\'")+"'";
+							logger.debug("scss variable '"+var+"' was escaped                : "+value);
+						} else {
+							logger.debug("scss variable '"+var+"' contains no special characters: "+value);
+						}
 						scss += ("$" + var + ": " + value + ";\n");
 					}
 					scss += byteSource(is).asCharSource(StandardCharsets.UTF_8).read();
