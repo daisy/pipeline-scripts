@@ -3,7 +3,6 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
-                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:math="http://www.w3.org/1998/Math/MathML"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
@@ -32,7 +31,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
@@ -75,12 +74,12 @@
         <px:message severity="DEBUG">
             <p:with-option name="message" select="concat('stylesheets: ',$stylesheets-to-be-inlined)"/>
         </px:message>
-        <css:inline>
-            <p:with-option name="default-stylesheet" select="$stylesheets-to-be-inlined"/>
-            <p:input port="sass-variables">
+        <px:apply-stylesheets>
+            <p:with-option name="stylesheets" select="$stylesheets-to-be-inlined"/>
+            <p:input port="parameters">
                 <p:pipe port="result" step="parameters"/>
             </p:input>
-        </css:inline>
+        </px:apply-stylesheets>
     </p:group>
     
     <px:message message="Transforming MathML"/>
