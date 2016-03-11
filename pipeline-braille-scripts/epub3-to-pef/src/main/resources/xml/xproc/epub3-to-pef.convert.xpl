@@ -169,7 +169,7 @@
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
         </p:input>
-        <p:with-param name="_depth" select="/*/*[@name='toc-depth']/@value">
+        <p:with-param name="depth" select="/*/*[@name='toc-depth']/@value">
             <p:pipe step="parameters" port="result"/>
         </p:with-param>
     </p:xslt>
