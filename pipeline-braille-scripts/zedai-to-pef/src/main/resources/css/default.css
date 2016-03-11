@@ -25,6 +25,8 @@
  * - http://www.daisy.org/z3998/2012/auth/profiles/book/1.0/resources/z3998-book-single.rng
  */
 
+@namespace xml "http://www.w3.org/XML/1998/namespace";
+
    document,
 /*
  * document > *
@@ -377,4 +379,11 @@
               head
 {
   display: none;
+}
+
+/* ---------------------------------------------------------------------------- */
+
+/* xml:space */
+[xml|space=preserve] {
+  white-space: pre-wrap;
 }

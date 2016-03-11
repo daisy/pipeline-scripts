@@ -12,6 +12,8 @@
  * - http://www.w3.org/TR/html5/rendering.html
  */
 
+@namespace xml "http://www.w3.org/XML/1998/namespace";
+
 html, address,
 blockquote,
 body, dd, div,
@@ -43,4 +45,9 @@ head
 br::before {
   content: "\A";
   white-space: pre-line;
+}
+
+/* xml:space */
+[xml|space=preserve] {
+  white-space: pre-wrap;
 }
