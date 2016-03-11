@@ -73,12 +73,14 @@
 		<x:call function="css:parse-stylesheet">
 			<x:param select="'::before { content: &quot; } &quot; }
 			                 {display:block}
-			                 @page { size: 40 25 @top-right-corner { content: &quot; } &quot; }}'"/>
+			                 @page { size: 40 25 @top-right-corner { content: &quot; } &quot; }}
+			                 @volume { @begin { content: flow(titlepage); @page { size: 15 5; }}}'"/>
 		</x:call>
 		<x:expect label="result">
 			<css:rule selector="::before" style="content: &quot; }} &quot;"/>
 			<css:rule style="display:block"/>
 			<css:rule selector="@page" style="size: 40 25 @top-right-corner {{ content: &quot; }} &quot; }}"/>
+			<css:rule selector="@volume" style="@begin {{ content: flow(titlepage); @page {{ size: 15 5; }}}}"/>
 		</x:expect>
 	</x:scenario>
 	

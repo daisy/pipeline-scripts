@@ -18,6 +18,9 @@
     <p:import href="obfl-normalize-space.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
     
+    <!-- for debug info -->
+    <p:for-each><p:identity/></p:for-each>
+    
     <pxi:css-to-obfl name="obfl">
         <p:with-option name="text-transform" select="$text-transform"/>
         <p:with-option name="duplex" select="$duplex"/>

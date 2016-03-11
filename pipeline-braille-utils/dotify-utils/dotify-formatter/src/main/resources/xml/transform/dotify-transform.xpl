@@ -29,9 +29,6 @@
 		</p:input>
 	</px:transform>
 	
-	<!-- for debug info -->
-	<p:for-each><p:identity/></p:for-each>
-	
 	<dotify:format>
 		<p:with-option name="text-transform" select="$text-transform"/>
 		<p:with-option name="duplex" select="(//c:param[@name='duplex' and not(@namespace[not(.='')])]/@value,'true')[.=('true','false')][1]">

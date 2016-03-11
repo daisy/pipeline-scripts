@@ -230,7 +230,8 @@
     <xsl:variable name="css:DECLARATION_LIST_RE">([^'"\{\}]+|'[^']*'|"[^"]*")*</xsl:variable>
     <xsl:variable name="css:DECLARATION_LIST_RE_groups" select="1"/>
     
-    <xsl:variable name="css:NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'\s+\{',$css:DECLARATION_LIST_RE,'\}')"/>
+    <xsl:variable name="css:NESTED_NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'\s+\{',$css:DECLARATION_LIST_RE,'\}')"/>
+    <xsl:variable name="css:NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'\s+\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_NESTED_RULE_RE,')*)\}')"/>
     
     <xsl:variable name="css:PSEUDOCLASS_RE" select="concat(':',$css:IDENT_RE,'(\([1-9][0-9]*\))?')"/>
     <xsl:variable name="css:PSEUDOCLASS_RE_groups" select="$css:IDENT_RE_groups + 1"/>

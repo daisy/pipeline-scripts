@@ -431,15 +431,15 @@ public class CSSInlineStep extends DefaultStep {
 						name = pageProperty.toString();
 					Map<String,RulePage> pageRule = getPageRule(name, pageRules);
 					if (pageRule != null)
-						insertPageStyle(style, pageRule); }
+						insertPageStyle(style, pageRule, true); }
 				else if (isRoot) {
 					Map<String,RulePage> pageRule = getPageRule("auto", pageRules);
 					if (pageRule != null)
-						insertPageStyle(style, pageRule); }
+						insertPageStyle(style, pageRule, true); }
 				if (isRoot) {
 					Map<String,RuleVolume> volumeRule = getVolumeRule("auto", volumeRules);
 					if (volumeRule != null)
-						insertVolumeStyle(style, volumeRule); }
+						insertVolumeStyle(style, volumeRule, pageRules); }
 				if (normalizeSpace(style).length() > 0) {
 					addAttribute(_style, style.toString().trim()); }
 				receiver.startContent();
@@ -548,13 +548,13 @@ public class CSSInlineStep extends DefaultStep {
 		builder.append("} ");
 	}
 	
-	private static void insertPageStyle(StringBuilder builder, Map<String,RulePage> pageRule) {
+	private static void insertPageStyle(StringBuilder builder, Map<String,RulePage> pageRule, boolean topLevel) {
 		for (RulePage r : pageRule.values())
-			insertPageStyle(builder, r);
+			insertPageStyle(builder, r, topLevel);
 	}
 	
-	private static void insertPageStyle(StringBuilder builder, RulePage pageRule) {
-		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
+	private static void insertPageStyle(StringBuilder builder, RulePage pageRule, boolean topLevel) {
+		if (topLevel && builder.length() > 0 && !builder.toString().endsWith("} ")) {
 			builder.insert(0, "{ ");
 			builder.append("} "); }
 		builder.append("@page");
@@ -651,12 +651,12 @@ public class CSSInlineStep extends DefaultStep {
 		return null;
 	}
 	
-	private static void insertVolumeStyle(StringBuilder builder, Map<String,RuleVolume> volumeRule) {
+	private static void insertVolumeStyle(StringBuilder builder, Map<String,RuleVolume> volumeRule, Map<String,Map<String,RulePage>> pageRules) {
 		for (RuleVolume r : volumeRule.values())
-			insertVolumeStyle(builder, r);
+			insertVolumeStyle(builder, r, pageRules);
 	}
 	
-	private static void insertVolumeStyle(StringBuilder builder, RuleVolume volumeRule) {
+	private static void insertVolumeStyle(StringBuilder builder, RuleVolume volumeRule, Map<String,Map<String,RulePage>> pageRules) {
 		if (builder.length() > 0 && !builder.toString().endsWith("} ")) {
 			builder.insert(0, "{ ");
 			builder.append("} "); }
@@ -668,15 +668,22 @@ public class CSSInlineStep extends DefaultStep {
 		for (Declaration decl : filter(volumeRule, Declaration.class))
 			insertDeclaration(builder, decl);
 		for (RuleVolumeArea volumeArea : filter(volumeRule, RuleVolumeArea.class))
-			insertVolumeAreaStyle(builder, volumeArea);
+			insertVolumeAreaStyle(builder, volumeArea, pageRules);
 		builder.append("} ");
 	}
 	
-	private static void insertVolumeAreaStyle(StringBuilder builder, RuleVolumeArea ruleVolumeArea) {
+	private static void insertVolumeAreaStyle(StringBuilder builder, RuleVolumeArea ruleVolumeArea, Map<String,Map<String,RulePage>> pageRules) {
 		builder.append("@").append(ruleVolumeArea.getVolumeArea().value).append(" { ");
+		StringBuilder innerStyle = new StringBuilder();
+		Map<String,RulePage> pageRule = null;
 		for (Declaration decl : ruleVolumeArea)
-			insertDeclaration(builder, decl);
-		builder.append("} ");
+			if ("page".equals(decl.getProperty()))
+				pageRule = getPageRule(join(decl, " ", termToString), pageRules);
+			else
+				insertDeclaration(innerStyle, decl);
+		if (pageRule != null)
+			insertPageStyle(innerStyle, pageRule, false);
+		builder.append(innerStyle).append("} ");
 	}
 	
 	// TODO: what about volumes that match both :first and :last?

@@ -75,7 +75,7 @@
           <document>
             <head>
               <style media="embossed" type="text/css">
-                @volume  {
+                @volume {
                   @begin {
                     content: flow(volume-toc);
                   }
@@ -95,5 +95,42 @@
     <x:expect label="root-style" type="xpath" test="/*/@style"
               equals="'@volume { max-length: 75; @begin { content: flow(volume-toc); } }'"/>
   </x:scenario>
-
+  
+  <x:scenario label="test_04">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                @page {
+                  size: 15 5;
+                }
+                @page front {
+                  @top-right {
+                    content: counter(page);
+                  }
+                }
+                @volume {
+                  @begin {
+                    content: flow(frontmatter);
+                    page: front;
+                  }
+                }
+                @volume  {
+                  max-length: 75;
+                }
+              </style>
+            </head>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//document"/>
+    </x:context>
+    <x:expect label="root-style" type="xpath" test="/*/@style"
+              equals="'@page { size: 15 5; } @volume { max-length: 75; @begin { content: flow(frontmatter); @page { size: 15 5; @top-right { content: counter(page); } } } }'"/>
+  </x:scenario>
+  
 </x:description>
