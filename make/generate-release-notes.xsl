@@ -58,6 +58,9 @@
 		<xsl:variable name="jstyleparser-version" select="/pom:project/pom:dependencyManagement
 		                                                  /pom:dependencies/pom:dependency[pom:artifactId='jstyleparser']
 		                                                  /pom:version"/>
+		<xsl:variable name="jsass-version" select="/pom:project/pom:dependencyManagement
+		                                           /pom:dependencies/pom:dependency[pom:artifactId='jsass']
+		                                           /pom:version"/>
 		<xsl:variable name="libhyphen-version" select="/pom:project/pom:dependencyManagement
 		                                               /pom:dependencies/pom:dependency[pom:artifactId='hyphen']
 		                                               /pom:version"/>
@@ -70,7 +73,7 @@
 		<xsl:text>DAISY Pipeline 2 Braille Modules v</xsl:text>
 		<xsl:value-of select="$version"/>
 		<xsl:text>&#10;</xsl:text>
-		<xsl:text>=======================================&#10;&#10;</xsl:text>
+		<xsl:text>========================================&#10;&#10;</xsl:text>
 		<xsl:text>Changes&#10;</xsl:text>
 		<xsl:text>-------&#10;</xsl:text>
 		<xsl:text>- ...&#10;&#10;</xsl:text>
@@ -161,6 +164,11 @@
 		<xsl:value-of select="$jstyleparser-version"/>
 		<xsl:text>](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-</xsl:text>
 		<xsl:value-of select="$jstyleparser-version"/>
+		<xsl:text>))&#10;</xsl:text>
+		<xsl:text>- jsass ([</xsl:text>
+		<xsl:value-of select="$jsass-version"/>
+		<xsl:text>](https://github.com/snaekobbi/jsass/releases/tag/</xsl:text>
+		<xsl:value-of select="$jsass-version"/>
 		<xsl:text>))&#10;</xsl:text>
 		<xsl:text>- libhyphen ([</xsl:text>
 		<xsl:value-of select="$libhyphen-version"/>

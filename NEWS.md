@@ -1,3 +1,69 @@
+DAISY Pipeline 2 Braille Modules v1.9.10
+========================================
+
+Changes
+-------
+- New epub3-to-pef script (https://github.com/snaekobbi/pipeline-mod-braille/issues/43,
+  https://github.com/daisy/pipeline-mod-braille/pull/79)
+- Support for SASS style sheets (https://github.com/daisy/pipeline-mod-braille/pull/78)
+- New options `duplex`, `page-width`, `page-height`, `levels-in-footer`, `hyphenation`,
+  `line-spacing`, `capital-letters`, `include-captions`, `include-images`, `include-line-groups`,
+  `include-production-notes`, `show-braille-page-numbers`, `show-print-page-numbers` and
+  `force-braille-page-break` (https://github.com/snaekobbi/pipeline-mod-braille/issues/27)
+- Improved support for laying out tables as lists
+  -  `::list-header` pseudo-element
+  - Support pseudo-elements such as `::before` and pseudo-classes such as `:first-child` on
+    `::table-by()` and `::list-item` pseudo-elements
+  - Improved algorithm for finding headers
+- Support for footnotes and endnotes (https://github.com/snaekobbi/pipeline-mod-braille/pull/4,
+  https://github.com/snaekobbi/pipeline-mod-braille/issues/9,
+  https://github.com/snaekobbi/pipeline-mod-braille/issues/12)
+  - `@footnotes` page area
+  - `max-height` and `-obfl-fallback-flow` properties
+  - `::footnote-call` and `::alternate` pseudo-elements
+    (https://github.com/snaekobbi/braille-css/issues/12)
+  - `target-content()` function
+  - `volume` argument for `flow()` function
+- Support for matrix tables (https://github.com/snaekobbi/pipeline-mod-braille/issues/14)
+  - `display:table` property
+  - `-obfl-table-col-spacing`, `-obfl-table-row-spacing`, `-obfl-preferred-empty-space` and
+    `render-table-by:column` properties
+- Support for `page` property inside `@begin` and `@end` rules
+- Support for `xml-stylesheet` processing instruction
+  (https://github.com/snaekobbi/pipeline-mod-braille/issues/53)
+- Support for `:not()` and `:has()` pseudo-classes
+  (https://github.com/snaekobbi/braille-css/issues/8,
+  https://github.com/snaekobbi/braille-css/issues/14)
+- Support for `xml:space="preserve"` in default CSS
+  (https://github.com/daisy/pipeline-mod-braille/issues/53)
+- Support for rowgap in PEF preview (https://github.com/daisy/pipeline-mod-braille/issues/52)
+- Bugfixes (https://github.com/daisy/pipeline-mod-braille/issues/73, ...)
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), liblouis-java
+  ([1.4.0](https://github.com/liblouis/liblouis-java/releases/tag/1.4.0))
+- **dotify** (**api** [**2.4.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.api%2Fv2.4.0), **common**
+  [**2.0.2**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv2.0.2), hyphenator.impl
+  [2.0.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv2.0.1), **translator.impl**
+  [**2.1.1**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv2.1.1), **formatter.impl**
+  [**2.1.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv2.1.0), text.impl
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv1.0.0), **task-api**
+  [**2.1.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.1.0), **task-runner**
+  [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), **task.impl**
+  [**2.1.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.1.0))
+- brailleutils (api
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+- **braille-css** ([**1.8.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.8.0))
+- jstyleparser ([1.20-p5](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p5))
+- **jsass** ([**4.1.0-p1**](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
+- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+  ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
 DAISY Pipeline 2 Braille Modules v1.9.9
 =======================================
 
