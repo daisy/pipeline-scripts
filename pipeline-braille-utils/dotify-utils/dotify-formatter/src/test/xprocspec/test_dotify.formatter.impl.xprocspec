@@ -6024,5 +6024,703 @@
   </x:expect>
 </x:scenario>
 
+<x:scenario label="simple-table">
+  <x:documentation>
+    Tests simple table with no cell wrapping. The table takes up the space it needs to display the
+    table data.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table preferred-empty-space="0">
+              <tr>
+                <td>⠤⠤⠤</td>
+                <td>⠿⠿⠿⠿</td>
+                <td>⠤⠤⠤</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿⠿</td>
+                <td>⠤⠤⠤</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠤⠤⠤</td>
+                <td>⠿⠿</td>
+                <td>⠤⠤⠤</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠤⠤⠤⠀⠿⠿⠿⠿⠤⠤⠤</row>
+                <row>⠿⠿⠿⠿⠤⠤⠤⠀⠿⠿⠿</row>
+                <row>⠤⠤⠤⠀⠿⠿⠀⠀⠤⠤⠤</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-col-spacing">
+  <x:documentation>
+    Tests simple table with no cell wrapping. Column spacing is set to 1. The table takes up the
+    space it needs to display the table data and column spacing.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1" preferred-empty-space="0">
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠿⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠿⠀⠿⠿⠿⠀⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠀⠀⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-header-underline">
+  <x:documentation>
+    Tests simple table with no cell wrapping. Column spacing is set to 1. The table takes up the
+    space it needs to display the table data and column spacing. Cells in the first row have a
+    bottom border.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1" preferred-empty-space="0">
+              <tr>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠿⠀⠿⠿⠿</row>
+                <row>⠒⠒⠒⠒⠀⠒⠒⠒⠒⠀⠒⠒⠒</row>
+                <row>⠿⠿⠿⠿⠀⠿⠿⠿⠀⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠀⠀⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-fixed-width">
+  <x:documentation>
+    Tests simple table with no cell wrapping. Column spacing is set to 1. The column widths are
+    computed so that the total table width is equal to the specified width. All cells have similar
+    content, therefore all columns are equally wide. Cells in the first row have a bottom border to
+    indicate the column widths and spacing.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1" preferred-empty-space="3">
+              <tr>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿</row>
+                <row>⠒⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠒</row>
+                <row>⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-auto-column-width">
+  <x:documentation>
+    Tests simple table with no cell wrapping. Column spacing is set to 1. The column widths are
+    computed so that the total table width is equal to the specified width and the spacing between
+    cell data is optimal. Cells in the first row have a bottom border to indicate the column widths
+    and spacing.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1">
+              <tr>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠀⠿⠿⠿</row>
+                <row>⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒</row>
+                <row>⠿⠿⠿⠀⠀⠀⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-auto-column-width-cell-wrapping" pending="not implemented yet">
+  <x:documentation>
+    Tests table with data that can wrap multiple lines in a cell. The column widths are computed so
+    that the total table width is equal to the specified width and the table height is
+    minimized. Cells in the first row have a bottom border to indicate the column widths and
+    spacing.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table col-spacing="1">
+              <tr>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+                <td border-bottom-style="solid" border-bottom-width="1" border-bottom-align="center">⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿⠿ ⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿ ⠿⠿⠿</td>
+                <td>⠿⠿⠿ ⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠀⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀</row>
+                <row>⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠒⠒⠀⠒⠒⠒⠒⠒⠒⠒</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠿⠿⠿⠀⠀⠿⠿⠿⠀⠿⠿⠿</row>
+                <row>⠀⠀⠀⠀⠀⠿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠀⠀⠀⠀⠀⠿⠿⠿⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-header-repeat" pending="not implemented yet">
+  <x:documentation>
+    Tests repeating of table header rows on each page.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table col-spacing="1">
+              <tr>
+                <td>⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿</row>
+                <row>⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀</row>
+                <row>⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀</row>
+                <row>⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀</row>
+                <row>⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀</row>
+              </page>
+              <page>
+                <row>⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿</row>
+                <row>⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-leaders">
+  <x:documentation>
+    Tests leaders within table cells.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1" preferred-empty-space="0">
+              <tr>
+                <td>⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿ <leader pattern="⠄" position="100%" align="right"/></td>
+                <td>⠿⠿⠿ <leader pattern="⠄" position="100%" align="right"/></td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿ <leader pattern="⠄" position="100%" align="right"/></td>
+                <td>⠿ <leader pattern="⠄" position="100%" align="right"/></td>
+                <td>⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿</row>
+                <row>⠿⠿⠀⠄⠄⠀⠿⠿⠿⠀⠄⠀⠿⠿⠿</row>
+                <row>⠿⠀⠄⠄⠄⠀⠿⠀⠄⠄⠄⠀⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-colspan">
+  <x:documentation>
+    Tests a table cell spanning multiple columns.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table table-col-spacing="1" preferred-empty-space="2">
+              <tr>
+                <td>⠿⠿⠿⠿</td>
+                <td col-span="2">⠿⠿⠿⠿⠿⠿⠿⠿⠿</td>
+                <td>⠿⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+                <td>⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠀⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀⠿⠿⠿⠿</row>
+                <row>⠿⠿⠀⠀⠀⠿⠿⠀⠀⠀⠿⠿⠀⠀⠀⠿⠿</row>
+                <row>⠿⠿⠀⠀⠀⠿⠿⠀⠀⠀⠿⠿⠀⠀⠀⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="table-colspan-fill" pending="not implemented yet">
+  <x:documentation>
+    Tests a table cell spanning multiple columns. The cell text is centered and the remaining space
+    in the cell filled with a pattern.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" page-width="20" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <table col-spacing="1">
+              <tr>
+                <td>⠿⠿⠿⠿</td>
+                <td col-span="4">
+                  ⠸<leader pattern="⠒" position="50%" align="center"/>
+                  ⠿⠿⠿⠿⠿
+                  <leader pattern="⠒" position="50%" align="center"/>⠇
+                </td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+              <tr>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+                <td>⠿⠿⠿</td>
+              </tr>
+            </table>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+          <meta>
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume rows="5" cols="20" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠀⠸⠒⠒⠒⠀⠿⠿⠿⠿⠿⠀⠒⠒⠒⠇</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿</row>
+                <row>⠿⠿⠿⠀⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿⠀⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<!--
+<x:scenario label="table-fixed-column-width"/>
+<x:scenario label="table-fixed-column-width-cell-wrapping"/>
+<x:scenario label="table-cell-borders"/>
+<x:scenario label="table-cell-borders-collapsing"/>
+<x:scenario label="table-rowspan"/>
+<x:scenario label="table-fallback"/>
+-->
+
 </x:scenario>
 </x:description>
