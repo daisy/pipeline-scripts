@@ -12,8 +12,10 @@
     <xsl:output method="text" encoding="UTF-8" name="text"/>
     
     <xsl:template match="/">
-        <xsl:for-each select="//x:scenario">
-            <xsl:result-document href="{@label}-input.obfl" format="xml">
+        <xsl:for-each select="//x:scenario[not(child::x:scenario)]">
+            <xsl:result-document href="{replace(
+                                         resolve-uri(concat(@label,'-input.obfl'),base-uri(.)),
+                                         '^http://code\.google\.com/p/dotify/','')}" format="xml">
                 <xsl:text>&#x0a;</xsl:text>
                 <xsl:apply-templates select="x:call/x:input[@port='source']/x:document[@type='inline']/obfl:obfl|
                                              x:expect/x:document[@type='inline']/obfl:obfl">
@@ -23,7 +25,9 @@
                     <xsl:with-param name="level" select="0" tunnel="yes"/>
                 </xsl:apply-templates>
             </xsl:result-document>
-            <xsl:result-document href="{@label}-expected.pef" format="xml">
+            <xsl:result-document href="{replace(
+                                         resolve-uri(concat(@label,'-expected.pef'),base-uri(.)),
+                                         '^http://code\.google\.com/p/dotify/','')}" format="xml">
                 <xsl:text>&#x0a;</xsl:text>
                 <xsl:apply-templates select="x:expect/x:document[@type='inline']/pef:pef">
                     <xsl:with-param name="title" select="@label" tunnel="yes"/>
