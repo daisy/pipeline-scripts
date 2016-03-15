@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-modules-parent</artifactId>
-  <version>1.9.10-SNAPSHOT</version>
+  <version>1.9.11-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Braille Modules Parent POM</name>
@@ -33,7 +33,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>braille-modules-bom</artifactId>
-        <version>1.9.10-SNAPSHOT</version>
+        <version>1.9.11-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -105,7 +105,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules.braille</groupId>
         <artifactId>obfl-utils</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>1.1.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -214,7 +214,7 @@
         <plugin>
           <groupId>org.daisy.pipeline.modules.braille</groupId>
           <artifactId>build-helper</artifactId>
-          <version>1.1.0-SNAPSHOT</version>
+          <version>1.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

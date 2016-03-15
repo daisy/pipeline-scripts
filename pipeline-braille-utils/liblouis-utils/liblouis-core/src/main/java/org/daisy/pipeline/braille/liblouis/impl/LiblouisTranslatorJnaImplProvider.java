@@ -767,14 +767,14 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 
 	/**
-	 * @parameter style An inline CSS style
-	 * @returns the corresponding typeform. Possible values are:
+	 * @param style An inline CSS style
+	 * @return the corresponding typeform. Possible values are:
 	 * - 0 = PLAIN
 	 * - 1 = ITALIC (font-style: italic|oblique)
 	 * - 2 = BOLD (font-weight: bold)
 	 * - 4 = UNDERLINE (text-decoration: underline)
 	 * These values can be added for multiple emphasis.
-	 * @see http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString
+	 * @see <a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString">lou_translateString</a>
 	 */
 	private static byte typeformFromInlineCSS(Map<String,String> style) {
 		byte typeform = Typeform.PLAIN;
@@ -799,9 +799,9 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
 
 	/**
-	 * @parameter text The text to be transformed.
-	 * @parameter textTransform A text-transform value as a space separated list of keywords.
-	 * @returns the transformed text, or the original text if no transformations were performed.
+	 * @param text The text to be transformed.
+	 * @param textTransform A text-transform value as a space separated list of keywords.
+	 * @return the transformed text, or the original text if no transformations were performed.
 	 */
 	protected static String textFromTextTransform(String text, String textTransform) {
 		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
@@ -816,15 +816,15 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	}
 	
 	/**
-	 * @parameter textTransform A text-transform value as a space separated list of keywords.
-	 * @returns the corresponding typeform. Possible values are:
+	 * @param textTransform A text-transform value as a space separated list of keywords.
+	 * @return the corresponding typeform. Possible values are:
 	 * - 0 = PLAIN
 	 * - 1 = ITALIC (louis-ital)
 	 * - 2 = BOLD (louis-bold)
 	 * - 4 = UNDERLINE (louis-under)
 	 * - 8 = COMPUTER (louis-comp)
 	 * These values can be added for multiple emphasis.
-	 * @see http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString
+	 * @see <a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString">lou_translateString</a>
 	 */
 	protected static byte typeformFromTextTransform(String textTransform) {
 		byte typeform = Typeform.PLAIN;
