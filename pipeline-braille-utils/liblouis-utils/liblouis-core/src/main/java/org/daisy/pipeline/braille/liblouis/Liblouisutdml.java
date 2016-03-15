@@ -14,7 +14,7 @@ public interface Liblouisutdml {
 	 * @param otherSettings: key/value pairs (nullable)
 	 * @param input: the input file
 	 * @param output: path to the output file
-	 * @param configPath: directory that must contain liblouisutdml.ini & all files listed in configFiles and semanticFiles
+	 * @param configPath: directory that must contain liblouisutdml.ini &amp; all files listed in configFiles and semanticFiles
 	 * @param tempDir: directory where liblouisutdml can store temporary files
 	 */
 	public void translateFile(

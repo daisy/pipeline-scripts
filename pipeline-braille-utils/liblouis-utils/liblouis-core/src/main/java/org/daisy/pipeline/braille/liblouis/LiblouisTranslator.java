@@ -22,6 +22,7 @@ public interface LiblouisTranslator extends BrailleTranslator {
 		/**
 		 * @param text The text segments to be translated.
 		 * @param typeform The typeform. Array must have the same length as <code>text</code>.
+		 * @return The translated text segments. Has the same length as <code>text</code>.
 		 */
 		public String[] transform(String[] text, byte[] typeform);
 		
