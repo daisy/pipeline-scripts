@@ -31,6 +31,7 @@
     
     <p:option name="default-stylesheet" select="'http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css'"/>
     <p:option name="stylesheet" select="''"/>
+    <p:option name="apply-document-specific-stylesheets" select="'false'"/>
     <p:option name="transform" select="'(translator:liblouis)(formatter:dotify)'"/>
     
     <!-- Empty temporary directory dedicated to this conversion -->
@@ -114,10 +115,7 @@
         <p:delete match="//@style | //html:link[@rel='stylesheet' and not(string(@media)='embossed')] | //html:style[not(string(@media)='embossed')]"/>
         
         <p:choose>
-            <p:xpath-context>
-                <p:pipe step="parameters" port="result"/>
-            </p:xpath-context>
-            <p:when test="/*/*[@name='apply-document-specific-stylesheets']/@value = 'true'">
+            <p:when test="$apply-document-specific-stylesheets='true'">
                 <px:message severity="DEBUG">
                     <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
                 </px:message>

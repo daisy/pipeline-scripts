@@ -26,7 +26,7 @@
     
     <p:option name="stylesheet"/>
     
-    <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="false()">
+    <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Apply document-specific CSS</h2>
             <p px:role="desc" xml:space="preserve">If this option is enabled, any pre-existing CSS in the EPUB with `media="embossed"` will be used.
@@ -108,6 +108,7 @@ even though the provided CSS is more specific.
         </p:input>
     </p:identity>
     <p:delete match="c:param[@name=('stylesheet',
+                                    'apply-document-specific-stylesheets',
                                     'transform',
                                     'ascii-table',
                                     'include-brf',
@@ -226,7 +227,9 @@ even though the provided CSS is more specific.
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-        <p:with-option name="stylesheet" select="$stylesheet"/>
+        <p:with-option name="stylesheet" select="string-join(for $s in tokenize($stylesheet,'\s+')[not(.='')]
+                                                 return resolve-uri($s,$epub),' ')"/>
+        <p:with-option name="apply-document-specific-stylesheets" select="$apply-document-specific-stylesheets"/>
         <p:with-option name="transform" select="$transform"/>
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
