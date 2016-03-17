@@ -22,7 +22,23 @@
     <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="xs:string"/>
         <xsl:param name="name" as="xs:string"/>
+        <xsl:variable name="duplex" as="xs:boolean" select="true()"/>
+        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $duplex)"/>
+    </xsl:function>
+    
+    <xsl:function name="obfl:generate-layout-master">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="name" as="xs:string"/>
         <xsl:param name="duplex" as="xs:boolean"/>
+        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
+        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $duplex, $right-page-odd)"/>
+    </xsl:function>
+    
+    <xsl:function name="obfl:generate-layout-master">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="duplex" as="xs:boolean"/>
+        <xsl:param name="right-page-odd" as="xs:boolean"/>
         <xsl:variable name="page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet)"/>
         <xsl:variable name="right-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':right']/@style)"/>
         <xsl:variable name="left-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':left']/@style)"/>
@@ -56,13 +72,10 @@
                               else xs:integer(number($footnotes-max-height))"/>
         <xsl:variable name="footnotes-fallback-flow" as="xs:string?"
                       select="$footnotes-properties[@name='-obfl-fallback-flow'][1]/@value"/>
-        <layout-master name="{$name}" duplex="{if ($duplex) then 'true' else 'false'}" page-number-variable="page"
+        <layout-master name="{$name}" duplex="{$duplex}" page-number-variable="page"
                        page-width="{$page-width}" page-height="{$page-height}">
             <xsl:if test="$right-page-stylesheet">
-                <!--
-                    FIXME: is this influenced by initial-page-number? see https://github.com/joeha480/dotify/issues/134
-                -->
-                <template use-when="(= (% $page 2) 1)">
+                <template use-when="(= (% $page 2) {if ($right-page-odd) then 1 else 0})">
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$right-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'right'"/>
@@ -70,7 +83,7 @@
                 </template>
             </xsl:if>
             <xsl:if test="$left-page-stylesheet">
-                <template use-when="(= (% $page 2) 0)">
+                <template use-when="(= (% $page 2) {if ($right-page-odd) then 0 else 1})">
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$left-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'left'"/>

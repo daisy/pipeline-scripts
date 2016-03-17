@@ -19,9 +19,17 @@
     <xsl:variable name="volume-stylesheets" as="xs:string*"
                   select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))"/>
     
-    <xsl:variable name="page-stylesheets" as="xs:string*">
+    <xsl:variable name="page-stylesheets-right-odd" as="xs:string*">
         <xsl:variable name="page-stylesheets" as="xs:string*">
-            <xsl:sequence select="collection()/*[not(@css:flow)]/string(@css:page)"/>
+            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
+                <!--
+                    TODO: optimisation: also check whether :left or :right style present. if not, no
+                    need to differentiate.
+                -->
+                <xsl:if test="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])">
+                    <xsl:sequence select="current-group()/string(@css:page)"/>
+                </xsl:if>
+            </xsl:for-each-group>
             <xsl:for-each select="$volume-stylesheets">
                 <xsl:variable name="volume-style" as="xs:string" select="."/>
                 <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet($volume-style)"/>
@@ -39,17 +47,47 @@
         <xsl:sequence select="distinct-values($page-stylesheets)"/>
     </xsl:variable>
     
+    <xsl:variable name="page-stylesheets-right-even" as="xs:string*">
+        <xsl:variable name="page-stylesheets" as="xs:string*">
+            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
+                <xsl:if test="current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0]">
+                    <xsl:sequence select="current-group()/string(@css:page)"/>
+                </xsl:if>
+            </xsl:for-each-group>
+        </xsl:variable>
+        <xsl:sequence select="distinct-values($page-stylesheets)"/>
+    </xsl:variable>
+    
     <xsl:function name="pxi:layout-master-name" as="xs:string">
         <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:sequence select="concat('master_',index-of($page-stylesheets, $page-stylesheet))"/>
+        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
+        <xsl:sequence select="pxi:layout-master-name($page-stylesheet, $right-page-odd)"/>
+    </xsl:function>
+    
+    <xsl:function name="pxi:layout-master-name" as="xs:string">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="right-page-odd" as="xs:boolean"/>
+        <xsl:sequence select="concat('master_',
+                                     if ($right-page-odd)
+                                       then index-of($page-stylesheets-right-odd, $page-stylesheet)
+                                       else (count($page-stylesheets-right-odd)
+                                             + index-of($page-stylesheets-right-even, $page-stylesheet)))"/>
+    </xsl:function>
+    
+    <xsl:function name="pxi:layout-master" as="xs:string">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
+        <xsl:sequence select="pxi:layout-master($page-stylesheet, $right-page-odd)"/>
     </xsl:function>
     
     <xsl:function name="pxi:layout-master" as="element()">
         <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="right-page-odd" as="xs:boolean"/>
         <xsl:sequence select="obfl:generate-layout-master(
                                 $page-stylesheet,
-                                pxi:layout-master-name($page-stylesheet),
-                                $duplex='true')"/>
+                                pxi:layout-master-name($page-stylesheet, $right-page-odd),
+                                $duplex='true',
+                                $right-page-odd)"/>
     </xsl:function>
     
     <!--
@@ -86,7 +124,7 @@
         <!--
             FIXME: code duplication!
         -->
-        <xsl:for-each select="$page-stylesheets">
+        <xsl:for-each select="distinct-values(($page-stylesheets-right-odd,$page-stylesheets-right-even))">
             <xsl:variable name="page-style" as="xs:string" select="."/>
             <xsl:variable name="page-style" as="element()*" select="css:parse-stylesheet($page-style)"/>
             <xsl:variable name="page-style" as="element()*" select="if ($page-style[matches(@selector,'^:')])
@@ -117,8 +155,11 @@
     
     <xsl:template name="main">
         <obfl version="2011-1" xml:lang="und" hyphenate="false">
-            <xsl:for-each select="$page-stylesheets">
-                <xsl:sequence select="pxi:layout-master(.)"/>
+            <xsl:for-each select="$page-stylesheets-right-odd">
+                <xsl:sequence select="pxi:layout-master(., true())"/>
+            </xsl:for-each>
+            <xsl:for-each select="$page-stylesheets-right-even">
+                <xsl:sequence select="pxi:layout-master(., false())"/>
             </xsl:for-each>
             <xsl:if test="count($volume-stylesheets)&gt;1">
                 <xsl:message terminate="yes">Documents with more than one volume style are not supported.</xsl:message>
@@ -376,9 +417,11 @@
                     </collection>
                 </xsl:if>
             </xsl:for-each>
-            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-adjacent="string(@css:page)">
-                <xsl:variable name="layout-master" select="pxi:layout-master-name(current-grouping-key())"/>
-                <xsl:for-each-group select="current-group()" group-starting-with="*[@css:counter-set-page]">
+            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
+                <xsl:variable name="right-page-odd" as="xs:boolean"
+                              select="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])"/>
+                <xsl:for-each-group select="current-group()" group-adjacent="string(@css:page)">
+                    <xsl:variable name="layout-master" select="pxi:layout-master-name(current-grouping-key(), $right-page-odd)"/>
                     <xsl:for-each-group select="for $e in current-group() return if ($e/self::css:_) then $e/* else $e"
                                         group-starting-with="*[@css:page-break-before='right']">
                         <xsl:for-each-group select="current-group()" group-ending-with="*[@css:page-break-after='right']">
