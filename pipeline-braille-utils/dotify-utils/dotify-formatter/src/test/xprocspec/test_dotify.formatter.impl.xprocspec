@@ -3443,6 +3443,171 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
+  <x:scenario label="marker-reference-page-start-except-last-workaround" xfail="true">
+    <x:documentation>
+      Tests (hypothetical) marker-reference type that corresponds with 'page-start-except-last' in
+      CSS. This type is not yet directly supported in OBFL. As a workaround I do a forward
+      page-content search for the marker 'foo/prev' (rendered top left corner). At any position in
+      the OBFL the value of the preceding marker of class 'foo' matches the value of the following
+      marker of class 'foo/prev'.
+      
+      In addition, tests marker-reference with scope sequence and direction backward, which
+      corresponds with 'page-last' in CSS (bottom left corner).
+      
+      Tested with markers at the beginning of the sequence, in the middle of a page, at a soft page
+      break within a block, at a soft page break between two blocks, and at a hard page break.
+      
+      Broken: behavior of page-content changed in Dotify 2.0.0 (see
+      https://github.com/joeha480/dotify/issues/150).
+    </x:documentation>
+    <x:call>
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" page-width="10" page-height="6" duplex="true" page-number-variable="page">
+              <default-template>
+                <header>
+                  <field>
+                    <marker-reference marker="foo/prev" direction="forward" scope="page-content"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </header>
+                <footer>
+                  <field>
+                    <marker-reference marker="foo" direction="backward" scope="sequence"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </footer>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <!-- new page -->
+              <block>
+                <marker class="foo/prev" value=""/>
+                <marker class="foo" value="1"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- new page -->
+                ⠁⠁⠁⠁⠁
+                <marker class="foo/prev" value="1"/>
+                <marker class="foo" value="2"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- new page -->
+                <marker class="foo/prev" value="3"/>
+                <marker class="foo" value="3"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                <br/><!-- new page --><marker class="foo/prev" value="3"/><marker class="foo" value="4"/>⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block>
+                <marker class="foo/prev" value="4"/>
+                <marker class="foo" value="5"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block break-before="page">
+                <marker class="foo/prev" value="5"/>
+                <marker class="foo" value="6"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="10" rows="6" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <!-- 1 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
+                </page>
+                <page>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 2 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 3 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 -->
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 -->
+                </page>
+                <page>
+                  <!-- 4 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 3 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 -->
+                </page>
+                <page>
+                  <!-- 5 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 4 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 -->
+                </page>
+                <page>
+                  <!-- 6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row>⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 6 -->
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
+  -->
   <x:scenario label="marker-reference-spread-start-workaround" xfail="true">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start' in CSS. This
@@ -3636,6 +3801,205 @@
                   <row/>
                   <row/>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 6 -->
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
+  -->
+  <x:scenario label="marker-reference-spread-start-except-last-workaround" xfail="true">
+    <x:documentation>
+      Tests (hypothetical) marker-reference type that corresponds with 'spread-start-except-last' in
+      CSS. This type is not yet directly supported in OBFL. As a workaround I do a forward
+      spread-content search for the marker 'foo/prev' (rendered top left corner). At any position in
+      the OBFL the value of the preceding marker of class 'foo' matches the value of the following
+      marker of class 'foo/prev'. Unfortunately scope 'spread-content' is not available. In this
+      test I use 'spread' instead.
+      
+      In addition, tests marker-reference with scope sequence and direction backward, which
+      corresponds with 'spread-last' in CSS (bottom left corner).
+      
+      Everything tested on both left- and right-hand pages. Tested with markers at the beginning of
+      the sequence, in the middle of a page, at a soft page break within a block, at a soft page
+      break between two blocks, and at a hard page break.
+      
+      Broken: spread-content does not exist.
+    </x:documentation>
+    <x:call>
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" page-width="10" page-height="6" duplex="true" page-number-variable="page">
+              <template use-when="(= (% $page 2) 1)">
+                <header>
+                  <field>
+                    <!-- spread-content does not exist so using spread -->
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread" start-offset="-1"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </header>
+                <footer>
+                  <field>
+                    <!-- spread-content does not exist so using spread -->
+                    <marker-reference marker="foo" direction="backward" scope="sequence"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </footer>
+              </template>
+              <template use-when="(= (% $page 2) 0)">
+                <header>
+                  <field>
+                    <!-- spread-content does not exist so using spread -->
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </header>
+                <footer>
+                  <field>
+                    <!-- spread-content does not exist so using spread -->
+                    <marker-reference marker="foo" direction="backward" scope="sequence" start-offset="1"/>
+                  </field>
+                  <field/>
+                  <field/>
+                </footer>
+              </template>
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <!-- right page -->
+              <block>
+                <marker class="foo/prev" value=""/>
+                <marker class="foo" value="0"/>
+                ⠁⠁⠁⠁⠁
+                <marker class="foo/prev" value="0"/>
+                <marker class="foo" value="1"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- left page -->
+                ⠁⠁⠁⠁⠁
+                <marker class="foo/prev" value="1"/>
+                <marker class="foo" value="2"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- right page -->
+                <marker class="foo/prev" value="3"/>
+                <marker class="foo" value="3"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                <br/><!-- left page --><marker class="foo/prev" value="3"/><marker class="foo" value="4"/>⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- right page -->
+              <block>
+                <marker class="foo/prev" value="4"/>
+                <marker class="foo" value="5"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- left page -->
+              <block break-before="page">
+                <marker class="foo/prev" value="5"/>
+                <marker class="foo" value="6"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="10" rows="6" rowgap="0" duplex="true">
+              <section>
+                <!-- right -->
+                <page>
+                  <!-- 0 -->
+                  <row>⠼⠚⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 0 --> <!-- was: (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 1 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
+                </page>
+                <!-- left -->
+                <page>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 2 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 3 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 -->
+                </page>
+                <!-- right -->
+                <page>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 -->
+                </page>
+                <!-- left -->
+                <page>
+                  <!-- 4 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- was: 3 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 -->
+                </page>
+                <!-- right -->
+                <page>
+                  <!-- 5 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- was: 3 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 -->
+                </page>
+                <!-- left -->
+                <page>
+                  <!-- 6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row>⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 6 -->
                 </page>
               </section>
             </volume>

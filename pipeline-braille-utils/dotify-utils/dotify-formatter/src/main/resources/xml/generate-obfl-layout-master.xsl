@@ -382,6 +382,16 @@
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
                                   text-style="ifndef:{$var-name}{$text-transform-decl}"/>
             </xsl:when>
+            <xsl:when test="$scope=('start-except-last','page-start-except-last')">
+                <!--
+                    FIXME: scope="page-content" does not work as expected
+                -->
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content">
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
+                </marker-reference>
+            </xsl:when>
             <xsl:when test="$scope=('last','page-last')">
                 <!--
                     FIXME: replace with scope="document" and remove second marker-reference
@@ -442,6 +452,19 @@
                 </marker-reference>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
                                   text-style="ifndef:{$var-name}{$text-transform-decl}"/>
+            </xsl:when>
+            <xsl:when test="$scope='spread-start-except-last'">
+                <!--
+                    FIXME: scope="spread-content"
+                -->
+                <marker-reference marker="{@name}/prev" direction="forward" scope="spread">
+                    <xsl:if test="$page-side='right'">
+                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    </xsl:if>
+                    <xsl:if test="not($text-transform=('none','auto'))">
+                        <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
+                    </xsl:if>
+                </marker-reference>
             </xsl:when>
             <xsl:when test="$scope='spread-last'">
                 <!--
