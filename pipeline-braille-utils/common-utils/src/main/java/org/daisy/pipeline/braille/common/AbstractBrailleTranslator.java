@@ -6,6 +6,8 @@ import static com.google.common.collect.Iterators.peekingIterator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.PeekingIterator;
 
+import org.daisy.dotify.api.translator.UnsupportedMetricException;
+
 public abstract class AbstractBrailleTranslator extends AbstractTransform implements BrailleTranslator {
 	
 	public FromStyledTextToBraille fromStyledTextToBraille() throws UnsupportedOperationException {
@@ -220,6 +222,14 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 			public int countRemaining() {
 				while (input.hasNext()) fillBuffer(1000);
 				return charBuffer.length();
+			}
+			
+			public boolean supportsMetric(String metric) {
+				return false;
+			}
+			
+			public double getMetric(String metric) {
+				throw new UnsupportedMetricException("Metric not supported: " + metric);
 			}
 		}
 	}

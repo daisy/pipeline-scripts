@@ -8,10 +8,12 @@ import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
+import static org.daisy.pipeline.pax.exam.Options.xprocspec;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +28,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
@@ -53,36 +54,34 @@ public class DotifyCalabashTest {
 			logbackConfigFile(),
 			calabashConfigFile(),
 			domTraversalPackage(),
-			logbackBundles(),
 			felixDeclarativeServices(),
-			//tasks
-			mavenBundle().groupId("org.daisy.libs").artifactId("jing").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("saxon-he").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task-api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task-runner").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.common").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.task.impl").versionAsInProject(),
-			//formatter
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.formatter.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.text.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.hyphenator.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.translator.impl").versionAsInProject(),
-			mavenBundle().groupId("com.googlecode.texhyphj").artifactId("texhyphj").versionAsInProject(),
-			
-			//for the query syntax
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			brailleModule("css-core"),
-
-			//other			
-			brailleModule("common-utils"),
-			brailleModule("obfl-utils"),
-			xprocspecBundles(),
 			thisBundle(),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				// tasks
+				mavenBundle("org.daisy.dotify:dotify.api:?"),
+				mavenBundle("org.daisy.dotify:dotify.task-api:?"),
+				mavenBundle("org.daisy.dotify:dotify.task-runner:?"),
+				mavenBundle("org.daisy.dotify:dotify.common:?"),
+				mavenBundle("org.daisy.dotify:dotify.task.impl:?"),
+				// formatter
+				mavenBundle("org.daisy.dotify:dotify.formatter.impl:?"),
+				mavenBundle("org.daisy.dotify:dotify.text.impl:?"),
+				mavenBundle("org.daisy.dotify:dotify.hyphenator.impl:?"),
+				mavenBundle("org.daisy.dotify:dotify.translator.impl:?"),
+				// for the query syntax
+				brailleModule("css-core"),
+				// other
+				brailleModule("common-utils"),
+				brailleModule("obfl-utils"),
+				brailleModule("pef-utils"),
+				// logging
+				logbackClassic(),
+				mavenBundle("org.slf4j:jul-to-slf4j:?"),
+				mavenBundle("org.daisy.pipeline:logging-activator:?"),
+				// xprocspec
+				xprocspec(),
+				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"))
 		);
 	}
 }
