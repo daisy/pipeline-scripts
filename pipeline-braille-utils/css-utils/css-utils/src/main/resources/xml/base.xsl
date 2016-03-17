@@ -230,8 +230,9 @@
     <xsl:variable name="css:DECLARATION_LIST_RE">([^'"\{\}]+|'[^']*'|"[^"]*")*</xsl:variable>
     <xsl:variable name="css:DECLARATION_LIST_RE_groups" select="1"/>
     
-    <xsl:variable name="css:NESTED_NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'\s+\{',$css:DECLARATION_LIST_RE,'\}')"/>
-    <xsl:variable name="css:NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'\s+\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_NESTED_RULE_RE,')*)\}')"/>
+    <xsl:variable name="css:NESTED_NESTED_NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'(',$css:PSEUDOCLASS_RE,')?\s+\{',$css:DECLARATION_LIST_RE,'\}')"/>
+    <xsl:variable name="css:NESTED_NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'(',$css:PSEUDOCLASS_RE,')?\s+\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_NESTED_NESTED_RULE_RE,')*)\}')"/>
+    <xsl:variable name="css:NESTED_RULE_RE" select="concat('@',$css:IDENT_RE,'(',$css:PSEUDOCLASS_RE,')?\s+\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_NESTED_RULE_RE,')*)\}')"/>
     
     <xsl:variable name="css:PSEUDOCLASS_RE" select="concat(':',$css:IDENT_RE,'(\([1-9][0-9]*\))?')"/>
     <xsl:variable name="css:PSEUDOCLASS_RE_groups" select="$css:IDENT_RE_groups + 1"/>
@@ -282,7 +283,7 @@
                             <xsl:if test="regex-group($css:RULE_RE_selector)!=''">
                                 <xsl:attribute name="selector" select="concat(
                                                                          regex-group($css:RULE_RE_selector_atrule),
-                                                                         regex-group($css:RULE_RE_selector_pseudo))"/>
+                                                                         regex-group($css:RULE_RE_selector_pseudo)[1])"/>
                             </xsl:if>
                             <xsl:variable name="style" as="xs:string"
                                           select="replace(regex-group($css:RULE_RE_value), '(^\s+|\s+$)', '')"/>
@@ -292,7 +293,7 @@
                                     <xsl:element name="css:rule">
                                         <xsl:attribute name="selector" select="concat(
                                                                                  regex-group($css:RULE_RE_selector_atrule_pseudoclass),
-                                                                                 regex-group($css:RULE_RE_selector_pseudo_stack))"/>
+                                                                                 regex-group($css:RULE_RE_selector_pseudo_stack)[1])"/>
                                         <xsl:attribute name="style" select="$style"/>
                                     </xsl:element>
                                 </xsl:when>
@@ -318,7 +319,7 @@
                     <xsl:otherwise>
                         <xsl:variable name="nested-rules" as="xs:string*">
                             <xsl:if test="current-group()/@style">
-                                <xsl:sequence select="concat('{ ',(current-group())/@style[last()],' }')"/>
+                                <xsl:sequence select="concat('{ ',(current-group()/@style)[last()],' }')"/>
                             </xsl:if>
                             <xsl:for-each-group select="current-group()/*" group-by="@selector">
                                 <xsl:sequence select="concat(current-grouping-key(),' { ',current-group()[last()]/@style,' }')"/>
