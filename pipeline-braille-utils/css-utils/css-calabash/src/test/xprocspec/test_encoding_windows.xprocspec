@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-model href="http://www.daisy.org/ns/xprocspec/xprocspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
@@ -6,7 +6,7 @@
   
   <x:scenario label="test_01">
     <x:documentation>
-      Tests that Unicode characters 2800-28FF are recognized just fine if not on Windows.
+      Demonstrates bug that causes Unicode characters 2800-28FF not to be recognized on Windows.
     </x:documentation>
     <x:call step="css:inline">
       <x:input port="source">
@@ -30,10 +30,10 @@
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>
     </x:context>
-    <x:expect label="result" type="compare">
+    <x:expect label="the result is wrong" type="compare">
       <x:document type="inline">
         <body>
-          <p style="border-bottom: ⠒; display: block;"/>
+          <p style="display: block;"/>
         </body>
       </x:document>
     </x:expect>
@@ -41,7 +41,7 @@
   
   <x:scenario label="test_02">
     <x:documentation>
-      Tests that a SASS style sheet with non-ASCII characters does not cause a parse error if not on
+      Demonstrates that a SASS style sheet with non-ASCII characters causes a parse error on
       Windows.
     </x:documentation>
     <x:call step="css:inline">
@@ -69,10 +69,10 @@
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>
     </x:context>
-    <x:expect label="result" type="compare">
+    <x:expect label="the result is wrong" type="compare">
       <x:document type="inline">
         <body>
-          <p style="border-bottom: ⠒; display: block;"/>
+          <p/>
         </body>
       </x:document>
     </x:expect>
@@ -80,8 +80,8 @@
   
   <x:scenario label="test_03">
     <x:documentation>
-      Tests that a SASS style sheet with non-ASCII characters does not cause a parse error if not on
-      Windows.
+      Demonstrates that a SASS style sheet with non-ASCII characters causes a parse error on
+      Windows, even if those characters are commented out.
     </x:documentation>
     <x:call step="css:inline">
       <x:input port="source">
@@ -108,10 +108,10 @@
     <x:context label="result">
       <x:document type="port" port="result" select="//body"/>
     </x:context>
-    <x:expect label="result" type="compare">
+    <x:expect label="the result is wrong" type="compare">
       <x:document type="inline">
         <body>
-          <p style="display: block;"/>
+          <p/>
         </body>
       </x:document>
     </x:expect>
