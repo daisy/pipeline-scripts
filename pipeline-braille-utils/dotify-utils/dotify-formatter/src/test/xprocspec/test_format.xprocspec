@@ -4447,10 +4447,10 @@
   <x:scenario label="test_48">
     <x:documentation>
       Tests rendering of range of print pages covered on current page (left corner of all pages) or
-      current page spread (right corner of right-hand pages). Broken: behavior of page-content
-      changed in Dotify 2.0.0 (see https://github.com/joeha480/dotify/issues/150) and I wrongly
-      assume that scope page-content with start-offset -1 would return something when evaluated on
-      the first page of the document (see https://github.com/joeha480/dotify/issues/144).
+      current page spread (right corner of right-hand pages).
+      
+      Broken: behavior of page-content changed in Dotify 2.0.0 (see
+      https://github.com/joeha480/dotify/issues/150) and spread-content does not exist.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -4526,8 +4526,8 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/" start-offset="-1"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="spread" text-style="/def:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
                 </field>
@@ -4641,7 +4641,7 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 1     ...     1 --> <!-- was: 1-1   ...    -1 -->
+                  <row>⠒⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⠼⠁</row> <!-- -1    ...    -1 -->
                 </page>
                 <!-- left -->
                 <page>

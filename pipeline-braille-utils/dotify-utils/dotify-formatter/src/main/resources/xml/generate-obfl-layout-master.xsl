@@ -355,6 +355,9 @@
                                   text-style="ifndef:{$var-name}{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope=('start','page-start')">
+                <!--
+                    FIXME: scope="page-content" does not work as expected
+                -->
                 <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
                                   text-style="def:{$var-name}{$text-transform-decl}"/>
                 <!--
@@ -376,6 +379,9 @@
                                   text-style="ifndef:{$var-name}{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope=('last-except-start','page-last-except-start')">
+                <!--
+                    FIXME: scope="page-content" does not work as expected
+                -->
                 <marker-reference marker="{@name}" direction="backward" scope="page-content">
                     <xsl:if test="not($text-transform=('none','auto'))">
                         <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
@@ -402,7 +408,10 @@
                                   text-style="ifndef:{$var-name}{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope='spread-start'">
-                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
+                <!--
+                    FIXME: scope="spread-content"
+                -->
+                <marker-reference marker="{@name}/prev" direction="forward" scope="spread"
                                   text-style="def:{$var-name}{$text-transform-decl}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
@@ -414,8 +423,8 @@
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
                                   text-style="defifndef:{$var-name}{$text-transform-decl}">
-                    <xsl:if test="$page-side='right'">
-                        <xsl:attribute name="start-offset" select="'-1'"/>
+                    <xsl:if test="$page-side='left'">
+                        <xsl:attribute name="start-offset" select="'1'"/>
                     </xsl:if>
                 </marker-reference>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
