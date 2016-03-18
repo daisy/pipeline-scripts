@@ -2,6 +2,8 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import org.daisy.dotify.api.text.Integer2TextFactoryMakerService;
+
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
@@ -18,6 +20,7 @@ import static org.daisy.pipeline.pax.exam.Options.xprocspec;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.ops4j.pax.exam.Configuration;
@@ -46,6 +49,14 @@ public class DotifyCalabashTest {
 		                                      new File(baseDir, "target/xprocspec"),
 		                                      new XProcSpecRunner.Reporter.DefaultReporter());
 		assertTrue("XProcSpec tests should run with success", success);
+	}
+	
+	@Inject
+	private Integer2TextFactoryMakerService int2textFactory;
+	
+	@Test
+	public void testInt2textFactory() throws Exception {
+		assertEquals("tolv", int2textFactory.newInteger2Text("sv-SE").intToText(12));
 	}
 	
 	@Configuration
