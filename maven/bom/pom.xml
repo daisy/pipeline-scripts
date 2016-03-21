@@ -240,7 +240,10 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <version>1.8.0</version>
+                <!--
+                    depends on master
+                -->
+                <version>1.8.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
