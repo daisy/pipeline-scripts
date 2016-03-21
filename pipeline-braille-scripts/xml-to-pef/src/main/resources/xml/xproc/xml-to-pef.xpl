@@ -13,8 +13,21 @@
     <!-- ============ -->
     <p:option name="stylesheet" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">CSS stylesheets</h2>
-            <p px:role="desc">CSS style sheets to apply. Space separated list of absolute or relative URIs. Applied prior to any style sheets linked from or embedded in the source document.</p>
+            <h2 px:role="name">Style sheets</h2>
+            <p px:role="desc">XSLT or CSS/SASS style sheets to apply. A space separated list of URIs, absolute or relative to source.
+
+Style sheets can also be associated with the source in other ways: linked (using an 'xml-stylesheet'
+processing instruction or a 'link' element), embedded (using a 'style' element) and/or inlined
+(using 'style' attributes).
+
+Style sheets are applied to the document in the following way: XSLT style sheets are applied before
+CSS/SASS style sheets. XSLT style sheets are applied one by one, first the ones specified through
+this option, then the ones associated with the source document, in the order in which they are
+specified.
+
+All CSS/SASS style sheets are applied at once, but the order in which they are specified (first the
+ones specified through this option, then the ones associated with the source document) has an
+influence on the cascading order.</p>
         </p:documentation>
     </p:option>
     <p:option name="transform" required="false" px:data-type="transform-query" select="'(translator:liblouis)(formatter:dotify)'">
