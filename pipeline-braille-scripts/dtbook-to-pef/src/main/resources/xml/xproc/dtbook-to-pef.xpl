@@ -2,7 +2,6 @@
 <p:declare-step type="px:dtbook-to-pef" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-                xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 exclude-inline-prefixes="#all"
@@ -154,9 +153,7 @@
                                                    then concat($brf-output-dir,'/',$name,'.brf')
                                                    else ''"/>
             <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
-                <p:pipe step="main" port="source"/>
-            </p:with-option>
+                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
         </pef:store>
     </p:group>
     

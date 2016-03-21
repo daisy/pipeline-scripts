@@ -30,7 +30,7 @@
     </x:context>
     <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
             <meta>
               <dc:format>application/x-pef+xml</dc:format>
@@ -75,7 +75,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -138,7 +138,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -211,7 +211,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>
@@ -242,7 +242,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>
@@ -297,7 +297,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -344,7 +344,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -392,7 +392,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -440,7 +440,7 @@
     </x:context>
     <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
           <head>
             <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
               <dc:format>application/x-pef+xml</dc:format>
@@ -492,7 +492,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>
@@ -524,7 +524,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>
@@ -597,7 +597,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>
@@ -640,7 +640,7 @@
       </x:context>
       <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
         <x:document type="inline">
-          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1" xml:lang="en">
             <head>
               <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
                 <dc:format>application/x-pef+xml</dc:format>

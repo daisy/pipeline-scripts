@@ -113,7 +113,6 @@
             <p:with-option name="query" select="$transform-query"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
             <p:input port="parameters">
-                <!-- px:transform uses the 'duplex' parameter -->
                 <p:pipe port="result" step="parameters"/>
             </p:input>
         </px:transform>
@@ -140,5 +139,16 @@
             <p:pipe step="metadata" port="result"/>
         </p:input>
     </pef:add-metadata>
-
+    
+    <p:choose>
+        <p:when test="not($lang='und')">
+            <p:add-attribute match="/*" attribute-name="xml:lang">
+                <p:with-option name="attribute-value" select="$lang"/>
+            </p:add-attribute>
+        </p:when>
+        <p:otherwise>
+            <p:identity/>
+        </p:otherwise>
+    </p:choose>
+    
 </p:declare-step>
