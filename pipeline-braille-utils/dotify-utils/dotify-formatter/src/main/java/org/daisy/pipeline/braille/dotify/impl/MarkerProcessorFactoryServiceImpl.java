@@ -67,7 +67,10 @@ public class MarkerProcessorFactoryServiceImpl implements MarkerProcessorFactory
 		}
 		
 		public String processAttributes(TextAttribute atts, String... text) {
-			return join(processAttributesRetain(atts, text));
+			try {
+				return filter.filter(Translatable.text(join(text)).attributes(atts).build()); }
+			catch (TranslationException e) {
+				throw new RuntimeException(e); }
 		}
 		
 		public String[] processAttributesRetain(TextAttribute atts, String[] text) {

@@ -224,16 +224,13 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				if ("??".equals(text))
 					return new String[]{"??"};
 			
-				// Because (1) there is not yet a way to enable translation while formatting only for
-				// certain document fragments and at the same time handle pre-translated text correctly
-				// with respect to white space processing and line breaking, and (2) because this
-				// function is possibly called twice, namely once from MarkerProcessorFactoryServiceImpl
-				// and a second time from BrailleTranslatorFactoryServiceImpl, we perform a translation
-				// when there are non-braille characters in the input, and use the text as-is
-				// otherwise. This means that firstly, some (pre-)translated text will inevitably be
-				// translated a second time. Translators must therefore handle braille in the
-				// input. Secondly, text consisting of only braille will not be translated a second time
-				// even if that was intended to happen.
+				// Because this function is possibly called twice, namely once from
+				// MarkerProcessorFactoryServiceImpl and a second time from
+				// BrailleTranslatorFactoryServiceImpl, we perform a translation when there are
+				// non-braille characters in the input, and use the text as-is otherwise. This means that
+				// firstly, some translated text will inevitably be translated a second time. Translators
+				// must therefore handle braille in the input. Secondly, text consisting of only braille
+				// will not be translated a second time even if that was intended to happen.
 				if (BRAILLE.matcher(text).matches())
 					return new String[]{text};
 			}

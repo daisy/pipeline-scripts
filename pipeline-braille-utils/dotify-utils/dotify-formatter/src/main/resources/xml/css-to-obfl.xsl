@@ -182,16 +182,27 @@
     <!-- Start -->
     <!-- ===== -->
     
+    <xsl:variable name="initial-text-transform" as="xs:string" select="'none'"/>
+    <xsl:variable name="initial-hyphens" as="xs:string" select="'manual'"/>
+    <xsl:variable name="initial-word-spacing" as="xs:integer" select="1"/>
+    
     <xsl:template name="start">
-        <xsl:call-template name="_start">
-            <xsl:with-param name="text-transform" tunnel="yes" select="'auto'"/>
-            <xsl:with-param name="hyphens" tunnel="yes" select="'manual'"/>
-            <xsl:with-param name="word-spacing" tunnel="yes" select="1"/>
-        </xsl:call-template>
+        <obfl version="2011-1" xml:lang="und">
+            <xsl:variable name="translate" as="xs:string" select="if ($initial-text-transform='none') then 'pre-translated-text-css' else ''"/>
+            <xsl:variable name="hyphenate" as="xs:string" select="string($initial-hyphens='auto')"/>
+            <xsl:attribute name="hyphenate" select="$hyphenate"/>
+            <xsl:if test="$translate!=''">
+                <xsl:attribute name="translate" select="$translate"/>
+            </xsl:if>
+            <xsl:call-template name="_start">
+                <xsl:with-param name="text-transform" tunnel="yes" select="$initial-text-transform"/>
+                <xsl:with-param name="hyphens" tunnel="yes" select="$initial-hyphens"/>
+                <xsl:with-param name="word-spacing" tunnel="yes" select="$initial-word-spacing"/>
+            </xsl:call-template>
+        </obfl>
     </xsl:template>
     
     <xsl:template name="_start">
-        <obfl version="2011-1" xml:lang="und" hyphenate="false">
             <xsl:for-each select="$page-stylesheets-right-odd">
                 <xsl:sequence select="pxi:layout-master(., true())"/>
             </xsl:for-each>
@@ -427,7 +438,6 @@
                     </xsl:for-each-group>
                 </xsl:for-each-group>
             </xsl:for-each-group>
-        </obfl>
     </xsl:template>
     
     <!-- ======== -->
@@ -788,28 +798,67 @@
     
     <xsl:template mode="block span td toc-entry"
                   match="css:box[@type='inline']">
-        <xsl:variable name="attrs" as="attribute()*">
-            <xsl:apply-templates mode="span-attr"
-                                 select="@* except (@type|@css:string-set|@css:_obfl-marker)"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="exists($attrs)">
-                <!--
-                    FIXME: nested spans are a problem
-                -->
-                <span>
-                    <xsl:sequence select="$attrs"/>
-                    <xsl:apply-templates mode="span" select="@css:string-set|@css:_obfl-marker"/>
-                    <xsl:apply-templates mode="span"/>
-                    <xsl:apply-templates mode="css:anchor" select="@css:id"/>
-                </span>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates mode="#current" select="@css:string-set|@css:_obfl-marker"/>
-                <xsl:apply-templates mode="#current"/>
-                <xsl:apply-templates mode="css:anchor" select="@css:id"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:param name="pending-inline-attrs" as="attribute()*" tunnel="yes" select="()"/>
+        <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
+        <xsl:variable name="pending-inline-attrs" as="attribute()*"
+                      select="($pending-inline-attrs,(@css:text-transform|@css:hyphens|@css:word-spacing))"/>
+        <xsl:variable name="pending-inline-attrs" as="attribute()*"
+                      select="for $n in distinct-values($pending-inline-attrs/local-name(.))
+                              return $pending-inline-attrs[local-name()=$n][last()]"/>
+        <xsl:apply-templates mode="#current" select="@css:string-set|@css:_obfl-marker"/>
+        <xsl:apply-templates mode="assert-nil-attr"
+                             select="@* except (@type|
+                                                @css:string-set|
+                                                @css:_obfl-marker|
+                                                @css:text-transform|
+                                                @css:hyphens|
+                                                @css:word-spacing)"/>
+        <xsl:for-each-group select="node()" group-adjacent="boolean(self::css:box[@type='inline'])">
+            <xsl:choose>
+                <xsl:when test="current-grouping-key()">
+                    <xsl:apply-templates mode="#current" select="current-group()">
+                        <xsl:with-param name="pending-inline-attrs" tunnel="yes" select="$pending-inline-attrs"/>
+                    </xsl:apply-templates>
+                </xsl:when>
+                <xsl:when test="every $n in current-group() satisfies
+                                $n/self::text() and matches(string($n),'^[ \t\n\r&#x00AD;&#x200B;]*$')">
+                    <xsl:value-of select="."/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name="attrs" as="attribute()*">
+                        <xsl:apply-templates mode="span-attr" select="$pending-inline-attrs">
+                            <xsl:with-param name="prev-text-transform" tunnel="yes" select="$text-transform"/>
+                            <xsl:with-param name="prev-hyphens" tunnel="yes" select="$hyphens"/>
+                        </xsl:apply-templates>
+                    </xsl:variable>
+                    <xsl:variable name="text-transform" as="xs:string"
+                                  select="($pending-inline-attrs[local-name()='text-transform'],$text-transform)[1]"/>
+                    <xsl:variable name="hyphens" as="xs:string"
+                                  select="($pending-inline-attrs[local-name()='hyphens'],$hyphens)[1]"/>
+                    <xsl:choose>
+                        <xsl:when test="exists($attrs)">
+                            <span>
+                                <xsl:sequence select="$attrs"/>
+                                <xsl:apply-templates mode="span" select="current-group()">
+                                    <xsl:with-param name="pending-inline-attrs" tunnel="yes" select="()"/>
+                                    <xsl:with-param name="text-transform" tunnel="yes" select="$text-transform"/>
+                                    <xsl:with-param name="hyphens" tunnel="yes" select="$hyphens"/>
+                                </xsl:apply-templates>
+                            </span>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates mode="#current" select="current-group()">
+                                <xsl:with-param name="pending-inline-attrs" tunnel="yes" select="()"/>
+                                <xsl:with-param name="text-transform" tunnel="yes" select="$text-transform"/>
+                                <xsl:with-param name="hyphens" tunnel="yes" select="$hyphens"/>
+                            </xsl:apply-templates>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each-group>
+        <xsl:apply-templates mode="css:anchor" select="@css:id"/>
     </xsl:template>
     
     <!-- ===================== -->
@@ -835,40 +884,59 @@
     
     <xsl:template priority="1"
                   mode="block span td table toc-entry"
-                  match="css:box[@css:hyphens]">
+                  match="css:box[not(@type='inline')][@css:hyphens]">
+        <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
         <xsl:next-match>
             <xsl:with-param name="hyphens" tunnel="yes" select="@css:hyphens"/>
+            <xsl:with-param name="prev-hyphens" tunnel="yes" select="$hyphens"/>
         </xsl:next-match>
     </xsl:template>
     
     <xsl:template mode="block-attr span-attr td-attr table-attr toc-entry-attr"
                   match="css:box/@css:hyphens">
+        <xsl:param name="prev-hyphens" as="xs:string" tunnel="yes"/>
         <!--
             'hyphens:auto' corresponds with 'hyphenate="true"'. 'hyphens:manual' corresponds with
             'hyphenate="false"'. For 'hyphens:none' all SHY and ZWSP characters are removed from the
             text.
         -->
-        <xsl:attribute name="hyphenate" select="if (.='auto') then 'true' else 'false'"/>
+        <xsl:choose>
+            <xsl:when test=".='auto' and not($prev-hyphens='auto')">
+                <xsl:attribute name="hyphenate" select="'true'"/>
+            </xsl:when>
+            <xsl:when test="not(.='auto') and $prev-hyphens='auto'">
+                <xsl:attribute name="hyphenate" select="'false'"/>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template priority="1.1"
                   mode="block span td table toc-entry"
-                  match="css:box[@css:text-transform]">
+                  match="css:box[not(@type='inline')][@css:text-transform]">
+        <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:next-match>
             <xsl:with-param name="text-transform" tunnel="yes" select="@css:text-transform"/>
+            <xsl:with-param name="prev-text-transform" tunnel="yes" select="$text-transform"/>
         </xsl:next-match>
     </xsl:template>
     
     <xsl:template mode="block-attr span-attr td-attr table-attr toc-entry-attr"
                   match="css:box/@css:text-transform">
+        <xsl:param name="prev-text-transform" as="xs:string" tunnel="yes"/>
         <!--
-            'text-transform:auto' corresponds with 'translate=""'. 'text-transform:none' would
-            normally correspond with 'translate="pre-translated"', but because "pre-translated"
-            currently delegates to a non-configurable bypass translator, 'translate=""' is used here
-            too. Other values of text-transform are currently handled by translating prior to
-            formatting when possible and otherwise (i.e. for content generated while formatting)
-            ignored. FIXME: make use of style elements.
+            'text-transform:auto' corresponds with 'translate=""'. 'text-transform:none' corresponds
+            with 'translate="pre-translated-text-css"'. Other values of text-transform are currently
+            handled by translating prior to formatting when possible and otherwise (i.e. for content
+            generated while formatting) ignored. FIXME: make use of style elements.
         -->
+        <xsl:choose>
+            <xsl:when test=".='auto' and not($prev-text-transform='auto')">
+                <xsl:attribute name="translate" select="''"/>
+            </xsl:when>
+            <xsl:when test="not(.='auto') and $prev-text-transform='auto'">
+                <xsl:attribute name="translate" select="'pre-translated-text-css'"/>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template priority="1.2"
@@ -1188,6 +1256,7 @@
         </xsl:if>
         <xsl:if test="not($text-transform=('auto','none'))">
             <!--
+                Dotify always uses default mode for page-number
                 FIXME: make use of style element
             -->
             <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-counter(page)')"/>
@@ -1219,16 +1288,19 @@
     </xsl:template>
     
     <xsl:template priority="1"
-                  mode="block span"
+                  mode="block"
                   match="css:custom-func[@name='-obfl-evaluate'][matches(@arg1,$css:STRING_RE) and not (@arg2)]">
         <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}"/>
     </xsl:template>
     
     <xsl:template mode="block span"
-                  match="css:custom-func[@name='-obfl-evaluate']">
+                  match="css:custom-func[@name='-obfl-evaluate'][@arg2]">
         <xsl:message>-obfl-evaluate() function requires exactly one string argument</xsl:message>
     </xsl:template>
     
+    <!--
+        FIXME: don't add id attribute if block not referenced by any toc-entry or page-number
+    -->
     <xsl:template mode="block-attr toc-entry-attr"
                   match="css:box[@type='block']/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
@@ -1240,9 +1312,12 @@
     <!--
         FIXME: id attribute not supported on a span
     -->
-    <xsl:template mode="block-attr span-attr"
+    <xsl:template mode="block-attr assert-nil-attr"
                   match="css:box[@type='inline']/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
+        <!--
+            FIXME: what about css:string[@target] and css:box[@css:anchor] ?
+        -->
         <xsl:if test="collection()//css:counter[@name='page'][@target=$id]">
             <xsl:message terminate="yes">target-counter(page) referencing inline elements not supported.</xsl:message>
         </xsl:if>
@@ -1256,7 +1331,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template mode="block-attr span-attr toc-entry-attr"
+    <xsl:template mode="block-attr span-attr toc-entry-attr assert-nil-attr"
                   match="css:box/@css:anchor"/>
     
     <xsl:template mode="block span td toc-entry"
@@ -1316,8 +1391,7 @@
         <xsl:variable name="text" as="xs:string">
             <xsl:choose>
                 <!--
-                    text-transform values 'none' and 'auto' are handled during formatting. A
-                    translation is performed only when there are non-braille characters in the text.
+                    text-transform values 'none' and 'auto' are handled during formatting.
                 -->
                 <xsl:when test="$text-transform=('none','auto') or not($word-spacing=1)">
                     <xsl:sequence select="$text"/>
@@ -1353,8 +1427,9 @@
                 </xsl:when>
                 <!--
                     FIXME: style elements are currently processed in a step before line breaking (in
-                    MarkerProcessorFactoryServiceImpl) so that they can't be used for
-                    word-spacing. Performing word spacing in XSLT instead.
+                    MarkerProcessorFactoryServiceImpl) so that they can't be used for passing
+                    word-spacing to a "LineBreakingFromStyledText". Performing word spacing in XSLT
+                    instead. Alternatively this could be implemented in a "FromStyledTextToBraille".
                 -->
                 <xsl:otherwise>
                     <xsl:variable name="words" as="xs:string*">
@@ -1512,7 +1587,7 @@
                                '() function not supported in volume area')"/>
     </xsl:template>
     
-    <xsl:template mode="block span"
+    <xsl:template mode="css:eval-volume-area-content-list"
                   match="css:custom-func[@name='-obfl-evaluate']">
         <xsl:message>-obfl-evaluate() function not supported in volume area</xsl:message>
     </xsl:template>

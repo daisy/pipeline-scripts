@@ -467,6 +467,8 @@
                                                   then '0'
                                                   else if ($property='-obfl-preferred-empty-space')
                                                   then '2'
+                                                  else if ($property='text-transform')
+                                                  then 'none'
                                                   else css:initial-value($property)"/>
                         </xsl:function>
                         <xsl:function name="new:is-inherited" as="xs:boolean">
