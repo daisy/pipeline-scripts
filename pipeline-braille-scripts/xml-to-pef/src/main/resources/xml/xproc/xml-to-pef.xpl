@@ -499,22 +499,31 @@ content at the beginning of every other volume, include the following additional
     <!-- ======= -->
     <!-- Volumes -->
     <!-- ======= -->
-    <p:option name="number-of-pages" required="false" px:type="integer" select="'50'">
+    <p:option name="number-of-sheets" required="false" px:type="integer" select="'50'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Volumes: Number of pages</h2>
+            <h2 px:role="name">Volumes: Number of sheets</h2>
             <p px:role="desc">**Not implemented**</p>
         </p:documentation>
     </p:option>
-    <p:option name="maximum-number-of-pages" required="false" px:type="integer" select="'70'">
+    <p:option name="maximum-number-of-sheets" required="false" px:type="integer" select="'70'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Volumes: Maximum number of pages</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <h2 px:role="name">Volumes: Maximum number of sheets</h2>
+            <p px:role="desc">The maximum number of sheets in a volume.
+            
+Makes the variable `$maximum-number-of-sheets` available in style sheets and includes the following
+rule by default:
+
+```
+@volume {
+  max-length: $maximum-number-of-sheets;
+}
+```</p>
         </p:documentation>
     </p:option>
-    <p:option name="minimum-number-of-pages" required="false" px:type="integer" select="'30'">
+    <p:option name="minimum-number-of-sheets" required="false" px:type="integer" select="'30'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Volumes: Minimum number of pages</h2>
-            <p px:role="desc">**Not implemented**</p>
+            <h2 px:role="name">Volumes: Minimum number of sheets</h2>
+            <p px:role="desc">The minimum number of sheets in a volume. **Not implemented**</p>
         </p:documentation>
     </p:option>
     
