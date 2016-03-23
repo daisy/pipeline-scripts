@@ -91,9 +91,7 @@ even though the provided CSS is more specific.
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     
     <!-- ================================================= -->
     <!-- Create a <c:param-set/> of the options            -->
@@ -127,74 +125,16 @@ even though the provided CSS is more specific.
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     
-    <!--
-        Until v1.10 of DP2 is released, we cannot point into ZIP files using URIs.
-        So for now we unzip the entire EPUB before continuing.
-        See: https://github.com/daisy/pipeline-modules-common/pull/73
-    -->
+    <!-- =========== -->
+    <!-- LOAD EPUB 3 -->
+    <!-- =========== -->
     <px:message message="Loading EPUB"/>
-    <p:choose name="load">
-        <p:when test="ends-with(lower-case($epub),'.epub')">
-            <p:output port="fileset.out" primary="true"/>
-            <p:output port="in-memory.out" sequence="true">
-                <p:pipe port="in-memory.out" step="unzip"/>
-            </p:output>
-            
-            <px:message severity="DEBUG" message="EPUB is in a ZIP container; unzipping"/>
-            <px:unzip-fileset name="unzip">
-                <p:with-option name="href" select="$epub"/>
-                <p:with-option name="unzipped-basedir" select="concat(string(/c:result),'epub/')">
-                    <p:pipe step="temp-dir" port="result"/>
-                </p:with-option>
-            </px:unzip-fileset>
-            <px:fileset-store name="load.stored">
-                <p:input port="fileset.in">
-                    <p:pipe port="fileset.out" step="unzip"/>
-                </p:input>
-                <p:input port="in-memory.in">
-                    <p:pipe port="in-memory.out" step="unzip"/>
-                </p:input>
-            </px:fileset-store>
-            <p:identity>
-                <p:input port="source">
-                    <p:pipe port="fileset.out" step="load.stored"/>
-                </p:input>
-            </p:identity>
-            <p:viewport match="/*/d:file">
-                <p:add-attribute match="/*" attribute-name="original-href">
-                    <p:with-option name="attribute-value" select="resolve-uri(/*/@href,base-uri())"/>
-                </p:add-attribute>
-            </p:viewport>
-            <px:mediatype-detect/>
-            
-        </p:when>
-        <p:otherwise>
-            <p:output port="fileset.out" primary="true">
-                <p:pipe port="result" step="load.fileset"/>
-            </p:output>
-            <p:output port="in-memory.out" sequence="true">
-                <p:pipe port="result" step="load.in-memory"/>
-            </p:output>
-            
-            <px:message message="EPUB is not in a container"/>
-            <px:fileset-create>
-                <p:with-option name="base" select="replace($epub,'(.*/)([^/]*)','$1')"/>
-            </px:fileset-create>
-            <px:fileset-add-entry media-type="application/oebps-package+xml">
-                <p:with-option name="href" select="replace($epub,'(.*/)([^/]*)','$2')"/>
-                <p:with-option name="original-href" select="$epub"/>
-            </px:fileset-add-entry>
-            <px:mediatype-detect/>
-            <p:identity name="load.fileset"/>
-            
-            <px:fileset-load>
-                <p:input port="in-memory">
-                    <p:empty/>
-                </p:input>
-            </px:fileset-load>
-            <p:identity name="load.in-memory"/>
-        </p:otherwise>
-    </p:choose>
+    <px:epub3-to-pef.load name="load">
+        <p:with-option name="epub" select="$epub"/>
+        <p:with-option name="temp-dir" select="concat(string(/c:result),'load/')">
+            <p:pipe step="temp-dir" port="result"/>
+        </p:with-option>
+    </px:epub3-to-pef.load>
     
     <!-- Get the OPF so that we can use the metadata in options -->
     <p:identity>
@@ -261,9 +201,7 @@ even though the provided CSS is more specific.
                                                    then concat($brf-output-dir,'/',$name,'.brf')
                                                    else ''"/>
             <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                    else concat('(locale:',((/opf:package/opf:metadata/dc:language[not(@refines)])[1]/text(),'und')[1],')')">
-                <p:pipe step="opf" port="result"/>
-            </p:with-option>
+                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
         </pef:store>
     </p:group>
     

@@ -221,7 +221,6 @@
             <p:with-option name="query" select="$transform-query"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
             <p:input port="parameters">
-                <!-- px:transform uses the 'duplex' parameter -->
                 <p:pipe port="result" step="parameters"/>
             </p:input>
         </px:transform>
@@ -243,6 +242,22 @@
             <p:empty/>
         </p:input>
     </p:xslt>
+    <!-- add xml:lang -->
+    <p:group>
+        <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
+            <p:pipe port="result" step="opf"/>
+        </p:variable>
+        <p:choose>
+            <p:when test="not($lang='und')">
+                <p:add-attribute match="/*" attribute-name="xml:lang">
+                    <p:with-option name="attribute-value" select="$lang"/>
+                </p:add-attribute>
+            </p:when>
+            <p:otherwise>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
+    </p:group>
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
             <p:pipe port="result" step="opf"/>
