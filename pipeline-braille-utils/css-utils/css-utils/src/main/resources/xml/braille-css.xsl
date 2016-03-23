@@ -78,7 +78,7 @@
                  re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
                  re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
                  re:exact($css:INTEGER_RE),
-                 re:exact($css:IDENT_RE),
+                 re:exact(re:or(($css:IDENT_RE,$css:BRAILLE_STRING_RE))),
                  re:exact(re:or(('center','justify','left','right'))),
                  re:exact(re:or(('always','auto','avoid','left','right'))),
                  re:exact(re:or(('always','auto','avoid','left','right'))),

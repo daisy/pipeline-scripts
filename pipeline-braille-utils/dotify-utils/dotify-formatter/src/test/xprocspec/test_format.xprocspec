@@ -2009,15 +2009,21 @@
       <x:input port="source">
         <x:document type="inline">
           <ul style="text-transform: none; list-style-type: decimal">
-            <li style="display: list-item"> ⠤⠤⠤ </li>
-            <li style="display: list-item"> ⠤⠤⠤ </li>
+            <li style="display: list-item">⠤⠤⠤</li>
+            <li style="display: list-item">⠤⠤⠤</li>
             <li>
               <ul style="list-style-type: lower-roman; counter-reset: list-item">
-                <li style="display: list-item"> ⠤⠤⠤ </li>
-                <li style="display: list-item"> ⠤⠤⠤ </li>
+                <li style="display: list-item">⠤⠤⠤</li>
+                <li style="display: list-item">⠤⠤⠤</li>
               </ul>
             </li>
-            <li style="display: list-item"> ⠤⠤⠤ </li>
+            <li>
+              <ul style="list-style-type: '⠶'; counter-reset: list-item">
+                <li style="display: list-item">⠤⠤⠤</li>
+                <li style="display: list-item">⠤⠤⠤</li>
+              </ul>
+            </li>
+            <li style="display: list-item">⠤⠤⠤</li>
           </ul>
         </x:document>
       </x:input>
@@ -2040,6 +2046,8 @@
             <block>2 ⠤⠤⠤ </block>
             <block>i ⠤⠤⠤ </block>
             <block>ii ⠤⠤⠤ </block>
+            <block>⠶ ⠤⠤⠤ </block>
+            <block>⠶ ⠤⠤⠤ </block>
             <block>3 ⠤⠤⠤ </block>
           </sequence>
         </obfl>
@@ -2064,6 +2072,8 @@
                   <row>⠼⠃⠀⠤⠤⠤</row>
                   <row>⠊⠀⠤⠤⠤</row>
                   <row>⠊⠊⠀⠤⠤⠤</row>
+                  <row>⠶⠀⠤⠤⠤</row>
+                  <row>⠶⠀⠤⠤⠤</row>
                   <row>⠼⠉⠀⠤⠤⠤</row>
                 </page>
               </section>
