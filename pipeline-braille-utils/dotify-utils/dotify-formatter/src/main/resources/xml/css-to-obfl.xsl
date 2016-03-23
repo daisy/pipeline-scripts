@@ -1126,7 +1126,9 @@
     <xsl:template match="css:box/@css:_obfl-marker|
                          css:box/css:_/@css:_obfl-marker"
                   mode="#default table-of-contents">
-        <marker class="indicator/{.}" value="x"/>
+        <xsl:for-each select="tokenize(.,' ')">
+            <marker class="indicator/{.}" value="x"/>
+        </xsl:for-each>
     </xsl:template>
     
     <xsl:template match="css:box[@type='table']/@css:_obfl-table-col-spacing|
