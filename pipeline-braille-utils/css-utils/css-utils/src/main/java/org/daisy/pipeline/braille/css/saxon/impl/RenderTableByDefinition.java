@@ -393,6 +393,26 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				catch (NoSuchElementException e) {
 					break; }
 			
+			// handle colspan and rowspan on data cells by simply splitting them into several identical ones for now
+			List<TableCell> moreCells = new ArrayList<TableCell>();
+			for (TableCell c : cells)
+				if (!isHeader(c)) {
+					if (c.rowspan > 1) {
+						int span = c.rowspan;
+						c.rowspan = 1;
+						for (int i = 1; i < span; i++) {
+							TableCell dup = c.clone();
+							dup.row = c.row + i;
+							moreCells.add(dup); }}
+					if (c.colspan > 1) {
+						int span = c.colspan;
+						c.colspan = 1;
+						for (int i = 1; i < span; i++) {
+							TableCell dup = c.clone();
+							dup.col = c.col + i;
+							moreCells.add(dup); }}}
+			cells.addAll(moreCells);
+			
 			// rearrange row groups and order cells by row
 			sort(cells, compose(sortByRowType, sortByRow, sortByColumn));
 			rowGroup = 0;
@@ -432,10 +452,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				action.apply(writer);
 			List<TableCell> dataCells = new ArrayList<TableCell>();
 			for (TableCell c : cells)
-				if (!isHeader(c)) {
-					if (c.rowspan > 1 || c.colspan > 1)
-						throw new RuntimeException("Table data cells with rowspan or colspan not supported yet.");
-					dataCells.add(c); }
+				if (!isHeader(c))
+					dataCells.add(c);
 			new TableCellGroup(dataCells, axes.iterator()).write(writer);
 			for (Function<XMLStreamWriter,Void> action : writeActionsAfter)
 				action.apply(writer);
@@ -1167,6 +1185,24 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		public void write(XMLStreamWriter writer) {
 			for (Function<XMLStreamWriter,Void> action : writeActions)
 				action.apply(writer);
+		}
+		
+		public TableCell clone() {
+			TableCell clone = new TableCell();
+			clone.rowGroup = this.rowGroup;
+			clone.row = this.row;
+			clone.col = this.col;
+			clone.type = this.type;
+			clone.rowType = this.rowType;
+			clone.headerPolicy = this.headerPolicy;
+			clone.id = this.id;
+			clone.headers = this.headers;
+			clone.scope = this.scope;
+			clone.axis = this.axis;
+			clone.rowspan = this.rowspan;
+			clone.colspan = this.colspan;
+			clone.writeActions.addAll(this.writeActions);
+			return clone;
 		}
 		
 		@Override

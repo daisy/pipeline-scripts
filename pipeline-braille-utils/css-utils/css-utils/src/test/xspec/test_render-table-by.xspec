@@ -635,8 +635,6 @@
       heading ("Cities"); hence that heading is applied to both those cells rather than just the
       first. In row 4 the first data cell spans two rows; however, the merged data cell is actually
       treated as two separate cells and thus appears twice, which is redundant.
-      
-      FIXME: support merged data cells
   -->
   <x:scenario label="merged-headers">
     <x:call function="css:render-table-by">
@@ -662,7 +660,7 @@
           </tr>
           <tr>
             <th axis="area">Mars</th>
-            <!-- <td colspan="2">None?</td> --> <td>None?</td> <td>None?</td>
+            <td colspan="2">None?</td>
             <td>Olympus Mons</td>
           </tr>
         </table>
@@ -730,8 +728,6 @@
       
       Headings may be nested. the following table has column headers "earth" and "elsewhere", each
       of which contains two additional headers.
-      
-      FIXME: support merged data cells
   -->
   <x:scenario label="nested-row-headers">
     <x:call function="css:render-table-by">
@@ -760,7 +756,7 @@
           <tr>
             <th axis="area">Elsewhere</th>
             <th axis="sub-area">Mars</th>
-            <!-- <td colspan="2">None?</td> --> <td>None?</td> <td>None?</td>
+            <td colspan="2">None?</td>
             <td>Olympus Mons</td>
           </tr>
         </table>
@@ -838,8 +834,6 @@
       grouped by combinations of the "outermost" headings. Note that the system fails to consider
       that not all headings have to be nested if one of them is; here only the "Cities" heading has
       subheadings, but "Mountains" is treated similarly regardless.
-      
-      FIXME: support merged data cells
   -->
   <x:scenario label="nested-row-and-column-headers">
     <x:call function="css:render-table-by">
@@ -875,7 +869,7 @@
           <tr>
             <th axis="area" css:table-header-policy="always">Elsewhere</th>
             <th axis="sub-area">Mars</th>
-            <!-- <td colspan="2">None?</td> --> <td>None?</td> <td>None?</td>
+            <td colspan="2">None?</td>
             <td>Olympus Mons</td>
           </tr>
         </table>
