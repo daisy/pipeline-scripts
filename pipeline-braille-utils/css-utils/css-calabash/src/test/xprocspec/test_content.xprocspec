@@ -4,9 +4,6 @@
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="../resources/inline.xpl">
   
-  <!-- ======= -->
-  <!-- test_01 -->
-  <!-- ======= -->
   <!--
       <string>, none
   -->
@@ -50,9 +47,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_02 -->
-  <!-- ======= -->
   <!--
       attr()
   -->
@@ -85,9 +79,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_03 -->
-  <!-- ======= -->
   <!--
       target-text(), target-string(), target-counter(), leader()
   -->
@@ -129,9 +120,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_04 -->
-  <!-- ======= -->
   <!--
       newline character
   -->
@@ -159,6 +147,43 @@
       <x:document type="inline">
         <body>
           <br style="::before { content: '&#xA;'; white-space: pre-line; }"/>
+        </body>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <!--
+      counter()
+  -->
+  <x:scenario label="test_05">
+    <x:call step="css:inline">
+      <x:input port="source">
+        <x:document type="inline">
+          <document>
+            <head>
+              <style media="embossed" type="text/css">
+                h {
+                  counter-increment: heading
+                }
+                h::before {
+                  content: counter(heading) '. '
+                }
+              </style>
+            </head>
+            <body>
+              <h>foo</h>
+            </body>
+          </document>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result" select="//body"/>
+    </x:context>
+    <x:expect label="result" type="compare">
+      <x:document type="inline">
+        <body>
+          <h style="{ counter-increment: heading 1; } ::before { content: counter(heading)  '. '; }">foo</h>
         </body>
       </x:document>
     </x:expect>

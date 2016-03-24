@@ -49,7 +49,7 @@
     </xsl:template>
     
     <xsl:template match="css:text[@target]|
-                         css:string[@name][@target]|
+                         css:string[@name]|
                          css:counter|
                          css:content[@target]|
                          css:leader|
@@ -72,10 +72,6 @@
                 <xsl:message>flow() function not supported in content property of elements except for before or after pseudo-elements</xsl:message>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="css:string[@name][not(@target)]" mode="eval-content-list">
-        <xsl:message>string() function not supported in content property of (pseudo-)elements</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:content[not(@target)]" mode="eval-content-list">
