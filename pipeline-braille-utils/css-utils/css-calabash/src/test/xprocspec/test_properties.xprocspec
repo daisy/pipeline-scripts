@@ -4,9 +4,6 @@
                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                script="../resources/inline.xpl">
   
-  <!-- ======= -->
-  <!-- test_01 -->
-  <!-- ======= -->
   <!--
       border, margin, padding
   -->
@@ -42,9 +39,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_02 -->
-  <!-- ======= -->
   <!--
       left, right
   -->
@@ -77,9 +71,6 @@
     </x:expect>
   </x:scenario>
   
-  <!-- ======= -->
-  <!-- test_03 -->
-  <!-- ======= -->
   <!--
       string-set, counter-set
   -->
@@ -106,7 +97,7 @@
     </x:context>
     <x:expect label="result" type="compare">
       <x:document type="inline">
-        <body style="counter-set: page 1 page 99;">
+        <body style="counter-set: page 0 page 99;">
           <pagenum style="string-set: print-page  content() , first-print-page  content();">1</pagenum>
         </body>
       </x:document>
