@@ -70,11 +70,6 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-tables</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>pef-utils</artifactId>
       <scope>test</scope>
     </dependency>
@@ -132,6 +127,14 @@
     <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>pax-exam-helper</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--
+        because of bug in lou_indexTables we need to include liblouis-tables even though we're not using it
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-tables</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

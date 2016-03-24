@@ -71,7 +71,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="page-number-reference-other-sequence" xfail="true">
+  <x:scenario label="page-number-reference-other-sequence" pending="xfail (Exception)">
     <x:documentation>
       Tests page-number in one sequence referencing a block in another sequence.
       
@@ -129,11 +129,9 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="page-number-follows-leader" xfail="true">
+  <x:scenario label="page-number-follows-leader">
     <x:documentation>
       Tests leader followed by page-number.
-      
-      Broken: see https://github.com/braillespecs/obfl/issues/31.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -2688,7 +2686,7 @@
               <section>
                 <page>
                   <!-- 1 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 1   1 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 1   1 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -2704,7 +2702,7 @@
                   <!-- 3 -->
                 </page>
                 <page>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -2712,7 +2710,7 @@
                 </page>
                 <page>
                   <!-- 4 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 4   4 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 4   4 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -2720,13 +2718,13 @@
                 </page>
                 <page>
                   <!-- 5 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 5   5 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5   5 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                 </page>
                 <page>
                   <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 6   6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 6   6 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                 </page>
@@ -2818,13 +2816,14 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="marker-reference-spread-across-sequence" xfail="true">
+  <!--
+      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
+  -->
+  <x:scenario label="marker-reference-spread-across-sequence">
     <x:documentation>
       Tests that marker-reference with scope spread searches beyond sequence boundaries, i.e. a
       search on the first page of a new sequence includes assignments made on the last page of the
       previous sequence if that last page is a left-hand page.
-      
-      Broken: see https://github.com/joeha480/dotify/issues/143.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -2930,7 +2929,7 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2 --> <!-- was: (empty) -->
+                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2 -->
                 </page>
               </section>
             </volume>
@@ -2940,6 +2939,9 @@
     </x:expect>
   </x:scenario>
   
+  <!--
+      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
+  -->
   <x:scenario label="marker-reference-spread-across-volume">
     <x:documentation>
       Tests that marker-reference with scope spread does not search beyond volume boundaries.
@@ -2988,10 +2990,8 @@
                 <marker class="foo" value="2"/>
                 ⠁⠁⠁⠁⠁
               </block>
-            </sequence>
-            <!-- right page -->
-            <sequence master="a">
-              <block>
+              <block break-before="page">
+                ​<!-- right page -->
                 ⠁⠁⠁⠁⠁
               </block>
             </sequence>
@@ -3051,7 +3051,7 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                 </page>
               </section>
             </volume>
@@ -3064,8 +3064,7 @@
   <x:scenario label="marker-reference-start-offset-first-page">
     <x:documentation>
       Tests marker-reference with scope page and start-offset -1 on first page of document. Expected
-      is that the search does not return anything. See
-      https://github.com/joeha480/dotify/issues/144.
+      is that the search does not return anything.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -4083,10 +4082,12 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="footer-middle-field-centering">
+<x:scenario label="footer-middle-field-centering" xfail="true">
   <x:documentation>
     Tests position of middle field in footer when left field is empty and right field is
-    non-empty. The middle field is positioned slightly more towards the left.
+    non-empty.
+    
+    Broken: The middle field is positioned slightly more towards the left.
   </x:documentation>
   <x:call>
     <x:input port="source">
@@ -4146,13 +4147,11 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="current-page-various-positions" xfail="true">
+<x:scenario label="current-page-various-positions">
   <x:documentation>
     Tests current-page with different layout-masters. Sequences with different layout-masters, that
     each place current-page in a different position (header, footer or nowhere), follow each
     other. Also tests resetting page number with initial-page-number.
-    
-    Broken: page numbering bug, possibly related to https://github.com/joeha480/dotify/issues/134.
   </x:documentation>
   <x:call>
     <x:input port="source">
@@ -4293,7 +4292,7 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="current-page-various-number-formats">
+<x:scenario label="current-page-various-number-formats" pending="does not work with mode 'dotify:format auto'">
   <x:documentation>
     Tests current-page with different number-formats.
   </x:documentation>
@@ -4620,7 +4619,7 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="page-number-reference-span" xfail="true">
+<x:scenario label="page-number-reference-span" pending="xfail (Exception)">
   <x:documentation>
     Tests page-number reference to span.
     
@@ -6256,7 +6255,7 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="list-of-references" focus="true">
+<x:scenario label="list-of-references">
   <x:documentation>
     Tests list-of-references.
   </x:documentation>
