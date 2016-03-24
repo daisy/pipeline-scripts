@@ -2819,11 +2819,16 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-across-sequence">
+  <x:scenario label="marker-reference-spread-across-sequence" xfail="true">
     <x:documentation>
       Tests that marker-reference with scope spread searches beyond sequence boundaries, i.e. a
       search on the first page of a new sequence includes assignments made on the last page of the
-      previous sequence if that last page is a left-hand page.
+      previous sequence if that last page is a left-hand page. Also tests that a search on the first
+      page of a new sequence does not include assignments made on the last page of the previous
+      sequence if that last page is a right-hand page.
+      
+      The second part of the test is broken. This is possibly another result of the
+      https://github.com/joeha480/dotify/issues/134 bug.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -2834,10 +2839,12 @@
                 <header/>
                 <footer>
                   <field>
-                    <marker-reference marker="foo" direction="backward" scope="spread"/>
+                    <marker-reference marker="foo" direction="forward" scope="spread" start-offset="-1"/>
                   </field>
                   <field/>
-                  <field/>
+                  <field>
+                    <marker-reference marker="foo" direction="backward" scope="spread"/>
+                  </field>
                 </footer>
               </template>
               <default-template>
@@ -2857,13 +2864,10 @@
                 <marker class="foo" value="1"/>
                 ⠁⠁⠁⠁⠁
               </block>
+            </sequence>
+            <sequence master="a">
               <block break-before="page">
                 ​<!-- right page -->
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ​<!-- left page -->
                 ⠁⠁⠁⠁⠁
                 <marker class="foo" value="2"/>
                 ⠁⠁⠁⠁⠁
@@ -2907,19 +2911,16 @@
                   <!-- 1 -->
                   <row>⠁⠁⠁⠁⠁</row>
                 </page>
+              </section>
+              <section>
                 <!-- right -->
-                <page>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1 -->
-                </page>
-                <!-- left -->
                 <page>
                   <row>⠁⠁⠁⠁⠁</row>
                   <!-- 2 -->
                   <row>⠁⠁⠁⠁⠁</row>
+                  <row/>
+                  <row/>
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠼⠃</row> <!-- 1     2 -->
                 </page>
               </section>
               <section>
@@ -2929,7 +2930,7 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                 </page>
               </section>
             </volume>
