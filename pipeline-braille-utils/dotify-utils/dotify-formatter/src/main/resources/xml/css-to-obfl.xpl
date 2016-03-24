@@ -338,6 +338,7 @@
                     Delete empty inline boxes (possible side effect of css:split).
                 </p:documentation>
             </p:rename>
+            <p:delete match="css:_/@type"/>
         </p:for-each>
         <p:group>
             <p:documentation>
@@ -542,7 +543,7 @@
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>
     
-    <p:xslt template-name="main">
+    <p:xslt template-name="start">
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
         </p:input>
