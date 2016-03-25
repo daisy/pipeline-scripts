@@ -1,18 +1,15 @@
 package org.daisy.pipeline.braille.pef.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import org.daisy.braille.api.table.Table;
 
-import org.daisy.pipeline.braille.common.Provider;
-import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
-import static org.daisy.pipeline.braille.common.Provider.util.memoize;
+import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.table.TableCatalogService;
+
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.Feature;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
@@ -59,35 +56,29 @@ public class LocaleTableProvider extends AbstractTableProvider {
 		MutableQuery q = mutableQuery(query);
 		if (q.containsKey("locale")) {
 			String id = tablesFromLocale.get(q.removeOnly("locale").getValue().get());
-			if (id != null) {
-				q.add("id", id);
-				tables = backingProvider.get(q); }}
+			if (id != null && q.isEmpty())
+				tables = get(id); }
 		return tables;
 	}
 	
 	private final static Iterable<Table> empty = Optional.<Table>absent().asSet();
 	
+	private TableCatalogService catalog;
+	
 	@Reference(
-		name = "TableProvider",
-		unbind = "unbindTableProvider",
-		service = TableProvider.class,
-		cardinality = ReferenceCardinality.MULTIPLE,
-		policy = ReferencePolicy.DYNAMIC
+		name = "TableCatalog",
+		unbind = "-",
+		service = TableCatalogService.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
 	)
-	protected void bindTableProvider(TableProvider provider) {
-		if (provider != this)
-			otherProviders.add(provider);
+	public void setTableCatalog(TableCatalogService catalog) {
+		this.catalog = catalog;
 	}
-		
-	protected void unbindTableProvider(TableProvider provider) {
-		if (provider != this) {
-			otherProviders.remove(provider);
-			backingProvider.invalidateCache(); }
+	
+	private Iterable<Table> get(String id) {
+		return Optional.fromNullable(catalog.newTable(id)).asSet();
 	}
-		
-	private List<TableProvider> otherProviders = new ArrayList<TableProvider>();
-	private Provider.util.MemoizingProvider<Query,Table> backingProvider
-	= memoize(dispatch(otherProviders));
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocaleTableProvider.class);
 	
