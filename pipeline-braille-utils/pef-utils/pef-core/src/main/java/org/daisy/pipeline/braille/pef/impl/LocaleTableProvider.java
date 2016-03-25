@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 @Component(
 	name = "org.daisy.pipeline.braille.pef.impl.LocaleTableProvider",
 	service = {
-		TableProvider.class,
-		org.daisy.braille.api.table.TableProvider.class
+		TableProvider.class
+		// org.daisy.braille.api.table.TableProvider.class
 	}
 )
 public class LocaleTableProvider extends AbstractTableProvider {

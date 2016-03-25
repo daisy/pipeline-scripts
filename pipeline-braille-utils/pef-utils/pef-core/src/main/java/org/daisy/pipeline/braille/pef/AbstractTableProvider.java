@@ -15,7 +15,7 @@ import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import org.daisy.braille.api.factory.FactoryProperties;
 import org.daisy.braille.api.table.Table;
 
-public abstract class AbstractTableProvider implements TableProvider, org.daisy.braille.api.table.TableProvider {
+public abstract class AbstractTableProvider implements TableProvider /*, org.daisy.braille.api.table.TableProvider */ {
 	
 	protected abstract Iterable<Table> _get(Query query);
 	
