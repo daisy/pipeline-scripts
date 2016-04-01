@@ -72,12 +72,8 @@
         <p:documentation>Collection of utilities for validation and reporting. </p:documentation>
     </p:import>
     
-    <p:import href="dtbook-validator.select-schema.xpl">
-        <p:documentation>Helper step: select schema for given document type.</p:documentation>
-    </p:import>
-    
-    <p:import href="dtbook-validator.check-images.xpl">
-        <p:documentation>Helper step: check that referenced images exist on disk.</p:documentation>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl">
+        <p:documentation>Helper steps: select schema for given document type and check that referenced images exist on disk.</p:documentation>
     </p:import>
     
     <p:variable name="dtbook-version" select="*/@version">
