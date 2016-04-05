@@ -48,7 +48,10 @@
       <scope>provided</scope>
     </dependency>
     <!--
-        OSGi runtime dependencies
+        runtime dependencies
+    -->
+    <!--
+        for saxon (FIXME: use for compilation?)
     -->
     <dependency>
       <groupId>org.daisy.libs</groupId>
@@ -56,7 +59,7 @@
       <scope>runtime</scope>
     </dependency>
     <!--
-        for com.xmlcalabash & calabash-adapter
+        for com.xmlcalabash & calabash-adapter (FIXME: verify + move elsewhere)
     -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -68,7 +71,7 @@
       <artifactId>httpcore-osgi</artifactId>
       <scope>runtime</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>woodstox-osgi-adapter</artifactId>
       <scope>runtime</scope>

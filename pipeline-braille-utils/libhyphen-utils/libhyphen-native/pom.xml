@@ -13,7 +13,7 @@
   <name>DP2 Braille Modules :: libhyphen-utils :: libhyphen-native</name>
   <dependencies>
     <!--
-        OSGi runtime dependencies
+        runtime dependencies
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>

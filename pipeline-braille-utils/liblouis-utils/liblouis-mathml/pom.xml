@@ -34,7 +34,9 @@
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- OSGi runtime dependencies -->
+    <!--
+         runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-utils</artifactId>
@@ -102,7 +104,9 @@
       <artifactId>mediatype-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!-- test dependencies -->
+    <!--
+        test dependencies
+    -->
     <dependency>
       <groupId>org.daisy.maven</groupId>
       <artifactId>xproc-engine-daisy-pipeline</artifactId>

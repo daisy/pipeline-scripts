@@ -19,7 +19,7 @@
 
   <dependencies>
     <!--
-        optional OSGi runtime dependencies (but keep mandatory as long as there is only one implementation)
+        optional runtime dependencies (but keep mandatory as long as there is only one implementation)
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>

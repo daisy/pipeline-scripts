@@ -24,7 +24,7 @@
   
   <dependencies>
     <!--
-        OSGi runtime dependencies
+        runtime dependencies
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>

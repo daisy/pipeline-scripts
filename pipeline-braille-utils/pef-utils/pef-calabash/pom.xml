@@ -51,20 +51,23 @@
       <scope>provided</scope>
     </dependency>
     <!--
-        OSGi runtime dependencies
+        runtime dependencies
     -->
-    <dependency>
-      <groupId>org.daisy.libs</groupId>
-      <artifactId>saxon-he</artifactId>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.daisy.braille</groupId>
       <artifactId>braille-utils.impl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <!--
-        for com.xmlcalabash & calabash-adapter
+        for saxon (FIXME: use for compilation?)
+    -->
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        for com.xmlcalabash & calabash-adapter (FIXME: verify + move elsewhere)
     -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -76,7 +79,7 @@
       <artifactId>httpcore-osgi</artifactId>
       <scope>runtime</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>woodstox-osgi-adapter</artifactId>
       <scope>runtime</scope>
