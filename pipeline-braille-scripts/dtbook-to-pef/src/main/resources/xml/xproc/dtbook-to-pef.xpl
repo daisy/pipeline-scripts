@@ -3,7 +3,6 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 exclude-inline-prefixes="#all"
                 name="main">
 
@@ -91,7 +90,6 @@
                    because this script uses px:extends-script in the XML catalog which
                    changes the base URI of the script at build time. -->
     </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
     <!-- ================================================= -->
@@ -127,9 +125,9 @@
     </px:tempdir>
     <p:sink/>
     
-    <!-- ============= -->
-    <!-- DTBOOK TO PEF -->
-    <!-- ============= -->
+    <!-- ======= -->
+    <!-- CONVERT -->
+    <!-- ======= -->
     <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
@@ -145,49 +143,23 @@
         </p:input>
     </px:dtbook-to-pef.convert>
     
-    <!--
-        TODO: put in dtbook-to-pef.store
-    -->
-    <p:group>
-        <p:variable name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+    <!-- ===== -->
+    <!-- STORE -->
+    <!-- ===== -->
+    <px:dtbook-to-pef.store>
+        <p:input port="obfl">
+            <p:pipe step="convert" port="obfl"/>
+        </p:input>
+        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="main" port="source"/>
-        </p:variable>
-        
-        <!-- ========= -->
-        <!-- STORE PEF -->
-        <!-- ========= -->
-        <pef:store>
-            <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.pef')"/>
-            <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
-                                                       then concat($preview-output-dir,'/',$name,'.pef.html')
-                                                       else ''"/>
-            <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
-                                                   then concat($brf-output-dir,'/',$name,'.brf')
-                                                   else ''"/>
-            <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
-        </pef:store>
-        
-        <!-- ========== -->
-        <!-- STORE OBFL -->
-        <!-- ========== -->
-        <p:choose>
-            <p:when test="$include-obfl='true'">
-                <p:store>
-                    <p:input port="source">
-                        <p:pipe step="convert" port="obfl"/>
-                    </p:input>
-                    <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.obfl')"/>
-                </p:store>
-            </p:when>
-            <p:otherwise>
-                <p:sink>
-                    <p:input port="source">
-                        <p:empty/>
-                    </p:input>
-                </p:sink>
-            </p:otherwise>
-        </p:choose>
-    </p:group>
+        </p:with-option>
+        <p:with-option name="include-brf" select="$include-brf"/>
+        <p:with-option name="include-preview" select="$include-preview"/>
+        <p:with-option name="include-obfl" select="$include-obfl"/>
+        <p:with-option name="ascii-table" select="$ascii-table"/>
+        <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
+        <p:with-option name="brf-output-dir" select="$brf-output-dir"/>
+        <p:with-option name="preview-output-dir" select="$preview-output-dir"/>
+    </px:dtbook-to-pef.store>
     
 </p:declare-step>
