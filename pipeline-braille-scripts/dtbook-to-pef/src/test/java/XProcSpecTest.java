@@ -48,6 +48,7 @@ public class XProcSpecTest {
 				brailleModule("xml-to-pef"),
 				brailleModule("common-utils"),
 				brailleModule("pef-utils"),
+				brailleModule("obfl-utils"),
 				brailleModule("liblouis-utils"),
 				brailleModule("dotify-utils"),
 				brailleModule("liblouis-tables"),

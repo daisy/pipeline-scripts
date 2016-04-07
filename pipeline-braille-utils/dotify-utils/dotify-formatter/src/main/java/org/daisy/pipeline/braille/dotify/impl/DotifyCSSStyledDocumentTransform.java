@@ -55,8 +55,6 @@ public interface DotifyCSSStyledDocumentTransform {
 		
 		private final static Iterable<Transform> empty = Iterables.<Transform>empty();
 		
-		private final static List<String> supportedOutput = ImmutableList.of("braille","pef");
-		
 		/**
 		 * Recognized features:
 		 *
@@ -68,34 +66,55 @@ public interface DotifyCSSStyledDocumentTransform {
 			final MutableQuery q = mutableQuery(query);
 			try {
 				if ("css".equals(q.removeOnly("input").getValue().get())) {
-					for (Feature f : q.removeAll("output"))
-						if (!supportedOutput.contains(f.getValue().get()))
-							return empty;
 					if (q.containsKey("formatter"))
 						if (!"dotify".equals(q.removeOnly("formatter").getValue().get()))
 							return empty;
-					final Query blockTransformQuery = mutableQuery(q).add("input", "css").add("output", "css");
-					final Query textTransformQuery = mutableQuery(q).add("input", "text-css").add("output", "braille");
+					boolean braille = false;
+					boolean pef = false;
+					boolean obfl = false;
+					for (Feature f : q.removeAll("output"))
+						if ("pef".equals(f.getValue().get()))
+							pef = true;
+						else if ("obfl".equals(f.getValue().get()))
+							obfl = true;
+						else if ("braille".equals(f.getValue().get()))
+							braille = true;
+						else
+							return empty;
+					if ((pef && obfl) || !(pef || obfl))
+						return empty;
+					final MutableQuery blockTransformQuery = mutableQuery(q).add("input", "css").add("output", "css");
+					if (obfl && braille)
+						blockTransformQuery.add("output", "braille");
 					Iterable<BrailleTranslator> blockTransforms = logSelect(blockTransformQuery, brailleTranslatorProvider);
+					final String textTransformQuery = mutableQuery(q).add("input", "text-css").add("output", "braille").toString();
+					final boolean _obfl = obfl;
 					return transform(
 						blockTransforms,
 						new Function<BrailleTranslator,Transform>() {
 							public Transform _apply(BrailleTranslator blockTransform) {
 								return __apply(
-									logCreate(new TransformImpl(blockTransformQuery.toString(),
+									logCreate(new TransformImpl(_obfl,
+									                            blockTransformQuery.toString(),
 									                            blockTransform,
-									                            textTransformQuery.toString()))); }}); }}
+									                            textTransformQuery))); }}); }}
 			catch (IllegalStateException e) {}
 			return empty;
 		}
 		
 		private class TransformImpl extends AbstractTransform {
 			
+			private final String output;
 			private final BrailleTranslator blockTransform;
 			private final XProc xproc;
 			
-			private TransformImpl(String blockTransformQuery, BrailleTranslator blockTransform, String textTransformQuery) {
+			private TransformImpl(boolean obfl,
+			                      String blockTransformQuery,
+			                      BrailleTranslator blockTransform,
+			                      String textTransformQuery) {
+				this.output = obfl ? "obfl" : "pef";
 				Map<String,String> options = ImmutableMap.of(
+					"output", this.output,
 					"css-block-transform", blockTransformQuery,
 					"text-transform", textTransformQuery);
 				xproc = new XProc(href, null, options);
@@ -110,6 +129,7 @@ public interface DotifyCSSStyledDocumentTransform {
 			@Override
 			public ToStringHelper toStringHelper() {
 				return Objects.toStringHelper("o.d.p.b.dotify.impl.DotifyCSSStyledDocumentTransform$Provider$TransformImpl")
+					.add("output", output)
 					.add("blockTransform", blockTransform);
 			}
 		}

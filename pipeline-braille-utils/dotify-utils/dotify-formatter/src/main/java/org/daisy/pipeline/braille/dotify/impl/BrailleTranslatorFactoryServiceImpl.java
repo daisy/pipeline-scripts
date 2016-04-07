@@ -23,10 +23,10 @@ import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Query;
 import static org.daisy.pipeline.braille.common.Query.util.query;
+import static org.daisy.pipeline.braille.common.Query.util.QUERY;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.BRAILLE;
 import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.cssStyledTextFromTranslatable;
-import static org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl.MODE;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -103,17 +103,14 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	
 	private class BrailleTranslatorFactoryImpl implements BrailleTranslatorFactory {
 		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
-			Matcher m = MODE.matcher(mode);
+			Matcher m = QUERY.matcher(mode);
 			if (!m.matches())
 				throw new TranslatorConfigurationException();
-			String query = m.group(1);
-			if (query == null)
-				query = "";
-			if (!query.trim().equals("auto"))
-				for (org.daisy.pipeline.braille.common.BrailleTranslator t : brailleTranslatorProvider.get(query(query)))
-					try {
-						return new BrailleTranslatorFromBrailleTranslator(mode, t.lineBreakingFromStyledText()); }
-					catch (UnsupportedOperationException e) {}
+			Query query = query(mode);
+			for (org.daisy.pipeline.braille.common.BrailleTranslator t : brailleTranslatorProvider.get(query))
+				try {
+					return new BrailleTranslatorFromBrailleTranslator(mode, t.lineBreakingFromStyledText()); }
+				catch (UnsupportedOperationException e) {}
 			return new BrailleTranslatorFromFilter(mode, filterFactory.newFilter(locale, mode));
 		}
 	}

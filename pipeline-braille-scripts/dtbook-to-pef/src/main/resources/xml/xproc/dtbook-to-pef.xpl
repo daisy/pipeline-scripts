@@ -39,6 +39,12 @@
     <p:option name="ascii-table"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
+    <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
+        <p:documentation>
+            <h2 px:role="name">Include OBFL</h2>
+            <p px:role="desc">Keeps the intermediary OBFL-file for debugging.</p>
+        </p:documentation>
+    </p:option>
     <p:option name="page-width"/>
     <p:option name="page-height"/>
     <p:option name="left-margin"/>
@@ -105,6 +111,7 @@
                                     'ascii-table',
                                     'include-brf',
                                     'include-preview',
+                                    'include-obfl',
                                     'pef-output-dir',
                                     'brf-output-dir',
                                     'preview-output-dir',
@@ -123,7 +130,7 @@
     <!-- ============= -->
     <!-- DTBOOK TO PEF -->
     <!-- ============= -->
-    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
+    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
@@ -132,18 +139,23 @@
         </p:with-option>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="$transform"/>
+        <p:with-option name="include-obfl" select="$include-obfl"/>
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
     </px:dtbook-to-pef.convert>
     
-    <!-- ========= -->
-    <!-- STORE PEF -->
-    <!-- ========= -->
+    <!--
+        TODO: put in dtbook-to-pef.store
+    -->
     <p:group>
         <p:variable name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="main" port="source"/>
         </p:variable>
+        
+        <!-- ========= -->
+        <!-- STORE PEF -->
+        <!-- ========= -->
         <pef:store>
             <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.pef')"/>
             <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
@@ -155,6 +167,27 @@
             <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                     else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
         </pef:store>
+        
+        <!-- ========== -->
+        <!-- STORE OBFL -->
+        <!-- ========== -->
+        <p:choose>
+            <p:when test="$include-obfl='true'">
+                <p:store>
+                    <p:input port="source">
+                        <p:pipe step="convert" port="obfl"/>
+                    </p:input>
+                    <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.obfl')"/>
+                </p:store>
+            </p:when>
+            <p:otherwise>
+                <p:sink>
+                    <p:input port="source">
+                        <p:empty/>
+                    </p:input>
+                </p:sink>
+            </p:otherwise>
+        </p:choose>
     </p:group>
     
 </p:declare-step>

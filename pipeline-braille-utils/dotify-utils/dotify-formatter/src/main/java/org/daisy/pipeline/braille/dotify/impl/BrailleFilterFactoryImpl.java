@@ -30,7 +30,11 @@ import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Query;
+import org.daisy.pipeline.braille.common.Query.Feature;
+import org.daisy.pipeline.braille.common.Query.MutableQuery;
+import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.query;
+import static org.daisy.pipeline.braille.common.Query.util.QUERY;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
 import org.osgi.service.component.annotations.Component;
@@ -56,18 +60,23 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	}
 	
 	private BrailleTranslator.FromStyledTextToBraille getBrailleTranslator(String mode) throws NoSuchElementException {
-		Matcher m = MODE.matcher(mode);
+		Matcher m = QUERY.matcher(mode);
 		if (!m.matches())
 			throw new NoSuchElementException();
-		String query = m.group(1);
-		if (query == null)
-			query = "";
-		else if (query.trim().equals("auto"))
-			return defaultNumberTranslator.fromStyledTextToBraille();
-		for (BrailleTranslator t : brailleTranslatorProvider.get(query(query)))
+		Query query = query(mode);
+		for (BrailleTranslator t : brailleTranslatorProvider.get(query))
 			try { return t.fromStyledTextToBraille(); }
 			catch (UnsupportedOperationException e) {}
-		throw new NoSuchElementException();
+		MutableQuery q = mutableQuery(query);
+		for (Feature f : q.removeAll("input"))
+			if (!"text-css".equals(f.getValue().get()))
+				throw new NoSuchElementException();
+		for (Feature f : q.removeAll("output"))
+			if (!"braille".equals(f.getValue().get()))
+				throw new NoSuchElementException();
+		if (!q.isEmpty())
+			throw new NoSuchElementException();
+		return defaultNumberTranslator.fromStyledTextToBraille();
 	}
 	
 	@Reference(
@@ -232,8 +241,6 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	/* ============================== */
 	/* SHARED CONSTANTS AND UTILITIES */
 	/* ============================== */
-	
-	protected final static Pattern MODE = Pattern.compile("dotify:format(?: +(.*))?");
 	
 	private final static char SHY = '\u00ad';
 	private final static char ZWSP = '\u200b';

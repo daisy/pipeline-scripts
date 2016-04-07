@@ -232,7 +232,7 @@ public class DotifyFormatterTest {
 			final static NumberBrailleTranslator instance = new NumberBrailleTranslator();
 			public Iterable<NumberBrailleTranslator> get(Query query) {
 				return Optional.<NumberBrailleTranslator>fromNullable(
-					query.toString().equals("(number-translator)") ? instance : null).asSet();
+					query.toString().equals("(number-translator)(input:text-css)(output:braille)") ? instance : null).asSet();
 			}
 			public TransformProvider<NumberBrailleTranslator> withContext(Logger context) {
 				return this;

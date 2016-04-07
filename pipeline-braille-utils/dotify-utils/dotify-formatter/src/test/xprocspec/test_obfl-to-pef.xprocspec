@@ -8,12 +8,12 @@
     <p:declare-step type="pxi:test" version="1.0">
       <p:input port="source"/>
       <p:output port="result"/>
-      <p:option name="text-transform" select="'auto'"/>
+      <p:option name="text-transform" select="''"/>
       <p:import href="../../main/resources/xml/obfl-normalize-space.xpl"/>
       <p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
       <pxi:obfl-normalize-space/>
       <dotify:obfl-to-pef locale="und">
-        <p:with-option name="mode" select="concat('dotify:format ',$text-transform)"/>
+        <p:with-option name="mode" select="concat($text-transform,'(input:text-css)(output:braille)')"/>
       </dotify:obfl-to-pef>
     </p:declare-step>
   </x:script>

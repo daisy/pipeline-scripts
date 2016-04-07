@@ -304,5 +304,6 @@ public interface Query extends Iterable<Query.Feature> {
 		private static final Pattern FEATURES_RE = Pattern.compile(
 			"\\s*(?:" + FEATURE_RE.pattern() + "\\s*)*"
 		);
+		public static final Pattern QUERY = FEATURES_RE;
 	}
 }

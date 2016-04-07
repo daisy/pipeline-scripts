@@ -165,7 +165,8 @@
               org.daisy.pipeline.braille.dotify.impl.BrailleFilterFactoryImpl,
               org.daisy.pipeline.braille.dotify.impl.MarkerProcessorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl,
-              org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider
+              org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider,
+              org.daisy.pipeline.braille.dotify.impl.DotifyOBFLTransform$Provider
             </_dsannotations>
           </instructions>
         </configuration>
