@@ -44,12 +44,12 @@
         </xsl:for-each>
         <xsl:result-document href="{$outputDir}/bnd.bnd" method="text" xml:space="preserve"><c:data>
 <xsl:if test="//cat:nextCatalog">Require-Bundle: <xsl:value-of select="string-join(//cat:nextCatalog/translate(@catalog,':','.'),',')"/></xsl:if>
-<xsl:if test="//cat:uri[@px:script] or //cat:uri[@px:data-type]">
-        Service-Component: <xsl:value-of select="string-join((
-                                                   //cat:uri[@px:script]/concat('OSGI-INF/',replace(document(@uri,..)/*/@type,'.*:',''),'.xml'),
-                                                   //cat:uri[@px:data-type]/concat('OSGI-INF/',replace(document(@uri,..)/*/@id,'.*:',''),'.xml'),
-                                                   $data-types/@id/replace(.,'^\{.*/([^/]+)\}(.+)$','OSGI-INF/data-types/$1/$2.xml')
-                                                   ),',')"/></xsl:if>
+<xsl:variable name="service-components" as="xs:string*"
+              select="(//cat:uri[@px:script]/concat('OSGI-INF/',replace(document(@uri,..)/*/@type,'.*:',''),'.xml'),
+                       //cat:uri[@px:data-type]/concat('OSGI-INF/',replace(document(@uri,..)/*/@id,'.*:',''),'.xml'),
+                       $data-types/@id/replace(.,'^\{.*/([^/]+)\}(.+)$','OSGI-INF/data-types/$1/$2.xml'))"/>
+<xsl:if test="exists($service-components)">
+        Service-Component: <xsl:value-of select="string-join($service-components,',')"/></xsl:if>
 <!-- my xslt skills are long forgotten, this sucks-->
 <xsl:if test="(//cat:uri[@px:data-type] or exists($data-types)) and not(//cat:uri[@px:script])">
         Import-Package: org.daisy.pipeline.datatypes,*</xsl:if>
