@@ -367,6 +367,25 @@
 	
 	<x:scenario label="test_30">
 		<x:call function="css:computed-properties">
+			<x:param select="'text-transform'"/>
+			<x:param select="true()"/>
+			<x:param select="//foo/_">
+				<_ css:text-transform="bold">
+					<_>
+						<foo css:text-transform="italic">
+							<_/>
+						</foo>
+					</_>
+				</_>
+			</x:param>
+		</x:call>
+		<x:expect label="result">
+			<css:property name="text-transform" value="italic bold"/>
+		</x:expect>
+	</x:scenario>
+	
+	<x:scenario label="test_31">
+		<x:call function="css:computed-properties">
 			<x:param select="'hyphens'"/>
 			<x:param select="true()"/>
 			<x:param select="//p">

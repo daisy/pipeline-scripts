@@ -101,7 +101,7 @@
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:sequence select="for $p in distinct-values(($pending-properties/@name,$properties/@name))
-                              return if ((not($properties[@name=$p]) and css:is-inherited($p))
+                              return if ((not($properties[@name=$p]) and (css:is-inherited($p) or $p='text-transform'))
                                           or $properties[@name=$p][@value='inherit'])
                                      then $pending-properties[@name=$p][last()]
                                      else $properties[@name=$p][last()]"/>

@@ -666,6 +666,9 @@
                 <xsl:with-param name="context" select="."/>
             </xsl:apply-templates>
         </xsl:variable>
+        <!--
+            Explain why i choose to do inheriting after computing?
+        -->
         <xsl:variable name="declarations" as="element()*">
             <xsl:choose>
                 <xsl:when test="$concretize-inherit">

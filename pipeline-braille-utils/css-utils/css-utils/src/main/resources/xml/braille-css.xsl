@@ -259,7 +259,6 @@
                  'page',
                  'white-space',
                  'hyphens',
-                 'text-transform',
                  'font-style',
                  'font-weight',
                  'text-decoration',
@@ -309,12 +308,16 @@
     <!-- Special inheriting -->
     <!-- ================== -->
     
+    <!--
+        Find out why doesn't this work anymore when text-transform is added to inherited-properties?
+        text-transform is not inherited but it shouldn't make a difference in theory.
+    -->
     <xsl:template match="css:property[@name='text-transform']" mode="css:compute">
         <xsl:param name="concretize-inherit" as="xs:boolean"/>
         <xsl:param name="concretize-initial" as="xs:boolean"/>
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
-        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except self::css:box)][1]"/>
+        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
         <xsl:choose>
             <xsl:when test="@value='inherit'">
                 <xsl:sequence select="."/>
