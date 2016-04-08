@@ -913,7 +913,8 @@
         <xsl:attribute name="row-spacing" select="format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
-    <xsl:template mode="block-attr table-attr td-attr toc-entry-attr"
+    <xsl:template priority="0.6"
+                  mode="block-attr table-attr td-attr toc-entry-attr"
                   match="css:box[@type=('block','table-cell') and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
     
     <xsl:template priority="0.6"
