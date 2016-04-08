@@ -7321,6 +7321,10 @@
                       { text-transform: none }">
             <front>
               <h1 style="display:block; flow:first-front">
+                ⠿ ⠿ ⠿ ⠿
+              </h1>
+              <h1 style="{ display:block; flow:first-front }
+                         ::duplicate { display:block; flow:next-front }">
                 ⠿⠿⠿⠿
               </h1>
               <toc style="{ display:-obfl-toc; flow:first-front }
@@ -7453,6 +7457,9 @@
           </table-of-contents>
           <volume-template sheets-in-volume-max="3" use-when="(! (= $volume 1))">
             <pre-content>
+              <sequence master="main">
+                <block> ⠿⠿⠿⠿ </block>
+              </sequence>
               <toc-sequence toc="volume-toc" master="main" range="volume">
                 <on-toc-start>
                   <block> ⠿⠿⠿ </block>
@@ -7464,6 +7471,7 @@
             <pre-content>
               <toc-sequence toc="document-toc" master="main" range="document">
                 <on-toc-start>
+                  <block> ⠿ ⠿ ⠿ ⠿ </block>
                   <block> ⠿⠿⠿⠿ </block>
                 </on-toc-start>
                 <on-volume-start>
@@ -7516,19 +7524,19 @@
             <volume cols="15" rows="7" rowgap="0" duplex="true">
               <section>
                 <page>
+                  <row>⠿⠀⠿⠀⠿⠀⠿</row>
                   <row>⠿⠿⠿⠿</row>
                   <row>⠼⠁</row>
                   <row>⠼⠁⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
                   <row>⠀⠼⠁⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠁</row>
                   <row>⠀⠼⠃⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠉</row>
-                  <row>⠼⠃⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠙</row>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
                 </page>
                 <page>
+                  <row>⠼⠃⠀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠙</row>
                   <row>⠼⠃</row>
                   <row>⠀⠼⠁⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠑</row>
                   <row>⠀⠼⠃⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠋</row>
-                  <row/>
                   <row/>
                   <row/>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃</row>
@@ -7576,13 +7584,24 @@
             <volume cols="15" rows="7" rowgap="0" duplex="true">
               <section>
                 <page>
+                  <row>⠿⠿⠿⠿</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+              </section>
+              <section>
+                <page>
                   <row>⠿⠿⠿</row>
                   <row>⠀⠼⠁⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠑</row>
                   <row>⠀⠼⠃⠀⠄⠄⠄⠄⠄⠄⠄⠄⠀⠼⠋</row>
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉</row>
                 </page>
               </section>
               <section>
@@ -7604,6 +7623,21 @@
                   <row>⠼⠃</row>
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠋</row>
                 </page>
+              </section>
+            </volume>
+            <volume cols="15" rows="7" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠿⠿⠿</row>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>
+                </page>
+              </section>
+              <section>
                 <page>
                   <row>⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠀</row>
                   <row>⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠀</row>
