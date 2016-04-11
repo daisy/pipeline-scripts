@@ -24,7 +24,7 @@
     <p:option name="html" required="true" px:type="anyFileURI" px:sequence="false" px:media-type="application/xhtml+xml text/html">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Input HTML</h2>
-            <p px:role="desc">The HTML you want to convert to braille.</p>
+            <p px:role="desc" xml:space="preserve">The HTML you want to convert to braille.</p>
         </p:documentation>
     </p:option>
     

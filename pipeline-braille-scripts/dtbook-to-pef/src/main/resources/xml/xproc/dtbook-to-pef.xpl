@@ -8,7 +8,7 @@
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook to PEF</h1>
-        <p px:role="desc">Transforms a DTBook (DAISY 3 XML) document into a PEF.</p>
+        <p px:role="desc" xml:space="preserve">Transforms a DTBook (DAISY 3 XML) document into a PEF.</p>
         <dl px:role="author">
             <dt>Name:</dt>
             <dd px:role="name">Bert Frees</dd>
@@ -41,7 +41,7 @@
     <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
         <p:documentation>
             <h2 px:role="name">Include OBFL</h2>
-            <p px:role="desc">Keeps the intermediary OBFL-file for debugging.</p>
+            <p px:role="desc" xml:space="preserve">Keeps the intermediary OBFL-file for debugging.</p>
         </p:documentation>
     </p:option>
     <p:option name="page-width"/>

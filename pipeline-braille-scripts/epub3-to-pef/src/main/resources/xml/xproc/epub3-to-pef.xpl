@@ -13,14 +13,14 @@
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">EPUB 3 to PEF</h1>
-        <p px:role="desc">Transforms a EPUB 3 publication into a PEF.</p>
+        <p px:role="desc" xml:space="preserve">Transforms a EPUB 3 publication into a PEF.</p>
         <p>Extends <a href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/xml-to-pef.xpl">XML to PEF</a>.</p>
     </p:documentation>
 
     <p:option name="epub" required="true" px:type="anyFileURI" px:sequence="false" px:media-type="application/epub+zip application/oebps-package+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Input EPUB 3</h2>
-            <p px:role="desc">The EPUB you want to convert to braille. You may alternatively use the EPUB package document (the OPF-file) if your input is a unzipped/"exploded" version of an EPUB.</p>
+            <p px:role="desc" xml:space="preserve">The EPUB you want to convert to braille. You may alternatively use the EPUB package document (the OPF-file) if your input is a unzipped/"exploded" version of an EPUB.</p>
         </p:documentation>
     </p:option>
     
