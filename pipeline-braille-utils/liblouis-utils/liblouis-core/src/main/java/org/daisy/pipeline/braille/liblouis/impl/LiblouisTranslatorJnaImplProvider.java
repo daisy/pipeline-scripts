@@ -334,33 +334,37 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			boolean[] preserveLines = new boolean[size];
 			boolean[] preserveSpace = new boolean[size];
 			int[] letterSpacing = new int[size];
+			boolean someTransform = false;
+			boolean someNotTransform = false;
 			for (int i = 0; i < size; i++) {
 				typeform[i] = Typeform.PLAIN;
 				hyphenate[i] = false;
 				preserveLines[i] = preserveSpace[i] = false;
 				letterSpacing[i] = 0;
 				Map<String,String> style = styles.get(i);
-				String val = style.remove("text-transform");
-				if (val != null) {
-					if ("none".equals(val)) {
-						if (!style.isEmpty()) {
-							logger.warn("text-transform: none can not be used in combination with "
-							            + style.keySet().iterator().next());
-							continue; }}
-					else if ("auto".equals(val)) {}
-					else {
-						text[i] = textFromTextTransform(text[i], val);
-						typeform[i] |= typeformFromTextTransform(val); }}
-				val = style.remove("hyphens");
-				if (val != null)
-					if ("auto".equals(val))
-						hyphenate[i] = true;
-				val = style.remove("white-space");
+				String val = style.remove("white-space");
 				if (val != null)
 					if ("pre-wrap".equals(val))
 						preserveLines[i] = preserveSpace[i] = true;
 					else if ("pre-line".equals(val))
 						preserveLines[i] = true;
+				val = style.remove("text-transform");
+				if (val != null) {
+					if ("none".equals(val)) {
+						someNotTransform = true;
+						if (!style.isEmpty())
+							logger.warn("text-transform: none can not be used in combination with "
+							            + style.keySet().iterator().next());
+						continue; }
+					else if ("auto".equals(val)) {}
+					else {
+						text[i] = textFromTextTransform(text[i], val);
+						typeform[i] |= typeformFromTextTransform(val); }}
+				someTransform = true;
+				val = style.remove("hyphens");
+				if (val != null)
+					if ("auto".equals(val))
+						hyphenate[i] = true;
 				val = style.remove("letter-spacing");
 				if (val != null) {
 					try { letterSpacing[i] = Integer.parseInt(val); }
@@ -370,6 +374,9 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						logger.warn("letter-spacing: {} not supported, must be non-negative", val);
 						letterSpacing[i] = 0; }}
 				typeform[i] |= typeformFromInlineCSS(style); }
+			if (someNotTransform && !someTransform)
+				return text;
+			// FIXME: handle (someNotTransform && someTransform)
 			return transform(text, typeform, hyphenate, preserveLines, preserveSpace, letterSpacing);
 		}
 		
