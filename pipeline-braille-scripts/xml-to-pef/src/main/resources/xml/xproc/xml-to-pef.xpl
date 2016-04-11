@@ -533,19 +533,19 @@ rule by default:
     <p:option name="pef-output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">PEF</h2>
-            <p px:role="desc" xml:space="preserve">Output directory for the PEF</h2>
+            <p px:role="desc" xml:space="preserve">Output directory for the PEF</p>
         </p:documentation>
     </p:option>
     <p:option name="brf-output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">BRF</h2>
-            <p px:role="desc" xml:space="preserve">Output directory for the BRF</h2>
+            <p px:role="desc" xml:space="preserve">Output directory for the BRF</p>
         </p:documentation>
     </p:option>
     <p:option name="preview-output-dir" required="false" px:output="result" px:type="anyDirURI" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Preview</h2>
-            <p px:role="desc" xml:space="preserve">Output directory for the HTML preview</h2>
+            <p px:role="desc" xml:space="preserve">Output directory for the HTML preview</p>
         </p:documentation>
     </p:option>
     <p:option name="temp-dir" required="false" px:output="temp" px:type="anyDirURI" select="''">
