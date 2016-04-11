@@ -1335,7 +1335,7 @@
                 <br/>
             </xsl:matching-substring>
             <xsl:non-matching-substring>
-                <xsl:analyze-string select="." regex="\s+">
+                <xsl:analyze-string select="." regex="[ \t\n\r&#x2800;]+">
                     <xsl:matching-substring>
                         <xsl:value-of select="concat(replace(.,'.','&#x00A0;'),'&#x200B;')"/>
                     </xsl:matching-substring>
