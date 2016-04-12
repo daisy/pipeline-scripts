@@ -22,7 +22,12 @@
 	<p:import href="../css-to-obfl.xpl"/>
 	<p:import href="../obfl-normalize-space.xpl"/>
 	
-	<p:variable name="duplex" select="(//c:param[@name='duplex' and not(@namespace[not(.='')])]/@value,'true')[.=('true','false')][1]">
+	<p:variable name="duplex"
+	            select="(//c:param[@name='duplex' and not(@namespace[not(.='')])]/@value,'true')[.=('true','false')][1]">
+		<p:pipe step="main" port="parameters"/>
+	</p:variable>
+	<p:variable name="skip-margin-top-of-page"
+	            select="(//c:param[@name='skip-margin-top-of-page' and not(@namespace[not(.='')])]/@value,'false')[.=('true','false')][1]">
 		<p:pipe step="main" port="parameters"/>
 	</p:variable>
 	
@@ -43,6 +48,7 @@
 	<pxi:css-to-obfl>
 		<p:with-option name="text-transform" select="$text-transform"/>
 		<p:with-option name="duplex" select="$duplex"/>
+		<p:with-option name="skip-margin-top-of-page" select="$skip-margin-top-of-page"/>
 	</pxi:css-to-obfl>
 	
 	<pxi:obfl-normalize-space/>

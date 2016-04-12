@@ -18,7 +18,8 @@
     <p:output port="result" sequence="false"/>
     
     <p:option name="text-transform" required="true"/>
-    <p:option name="duplex" required="true"/>
+    <p:option name="duplex" select="'true'"/>
+    <p:option name="skip-margin-top-of-page" select="'false'"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
@@ -521,6 +522,39 @@
                          attribute-name="css:page-break-after"
                          attribute-value="avoid"/>
         <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
+        <!--
+            Delete css:margin-top from first block and move css:margin-top of other blocks to
+            css:margin-bottom of their preceding block
+        -->
+        <p:choose>
+            <p:when test="$skip-margin-top-of-page='true'">
+                <p:delete match="css:box
+                                   [@type='block']
+                                   [@css:margin-top]
+                                   [not(preceding::*)]
+                                   [not(ancestor::*[@css:border-top])]
+                                 /@css:margin-top"/>
+                <p:label-elements match="css:box
+                                           [@type='block']
+                                           [following-sibling::*[1]
+                                              [some $self in . satisfies
+                                                 $self/descendant-or-self::*
+                                                   [@css:margin-top][1]
+                                                   [not(preceding::* intersect $self/descendant::*)]
+                                                   [not((ancestor::* intersect $self/descendant-or-self::*)[@css:border-top])]]]"
+                                  attribute="css:_margin-bottom_"
+                                  label="max((0,
+                                              @css:margin-bottom/number(),
+                                              following::*[@css:margin-top][1]/@css:margin-top/number()))"/>
+                <p:delete match="@css:margin-top[(preceding::css:box[@type='block']
+                                                    except ancestor::*/preceding-sibling::*/descendant::*)
+                                                   [last()][@css:_margin-bottom_]]"/>
+                <p:rename match="@css:_margin-bottom_" new-name="css:margin-bottom"/>
+            </p:when>
+            <p:otherwise>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
     </p:for-each>
     
     <p:split-sequence test="//css:box[@css:border-top|
