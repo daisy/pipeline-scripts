@@ -59,7 +59,7 @@
 		                                                  /pom:dependencies/pom:dependency[pom:artifactId='jstyleparser']
 		                                                  /pom:version"/>
 		<xsl:variable name="jsass-version" select="/pom:project/pom:dependencyManagement
-		                                           /pom:dependencies/pom:dependency[pom:artifactId='jsass']
+		                                           /pom:dependencies/pom:dependency[pom:artifactId='io.bit3.jsass']
 		                                           /pom:version"/>
 		<xsl:variable name="libhyphen-version" select="/pom:project/pom:dependencyManagement
 		                                               /pom:dependencies/pom:dependency[pom:artifactId='hyphen']

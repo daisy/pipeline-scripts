@@ -1,3 +1,45 @@
+DAISY Pipeline 2 Braille Modules v1.9.11-SNAPSHOT
+=================================================
+
+Changes
+-------
+- New option `include-obfl` (https://github.com/daisy/pipeline-mod-braille/issues/90)
+- New option `maximum-number-of-sheets`
+- Support for XSLT in `stylesheet` option
+  (https://github.com/snaekobbi/pipeline-mod-braille/issues/63)
+- Improved support for numbering with `symbols()` function
+  (https://github.com/snaekobbi/pipeline-mod-braille/issues/15)
+- Support for colspan and rowspan on data cells of tables that are layed out as lists
+- Support for `page-start-except-last` and `spread-start-except-last` keywords in `string()`
+  function
+- Bugfixes (https://github.com/braillespecs/obfl/issues/31,
+  https://github.com/joeha480/dotify/issues/134, https://github.com/joeha480/dotify/pull/189, ...)
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), liblouis-java
+  ([1.4.0](https://github.com/liblouis/liblouis-java/releases/tag/1.4.0))
+- **dotify** (**api** [**2.5.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.api%2Fv2.5.0), common
+  [2.0.2](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv2.0.2), hyphenator.impl
+  [2.0.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv2.0.1), **translator.impl**
+  [**2.3.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv2.3.0), **formatter.impl**
+  [**2.2.1**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv2.2.1), **text.impl**
+  [**2.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv2.0.0), task-api
+  [2.1.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.1.0), task-runner
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), **task.impl**
+  [**2.3.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.3.0))
+- brailleutils (api
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+- **braille-css** ([**1.8.1-SNAPSHOT**](https://github.com/snaekobbi/braille-css/releases/tag/1.8.1-SNAPSHOT))
+- **jstyleparser** ([**1.20-p6-SNAPSHOT**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p6-SNAPSHOT))
+- jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/))
+- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+  ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
 DAISY Pipeline 2 Braille Modules v1.9.10
 ========================================
 
@@ -11,7 +53,7 @@ Changes
   `include-production-notes`, `show-braille-page-numbers`, `show-print-page-numbers` and
   `force-braille-page-break` (https://github.com/snaekobbi/pipeline-mod-braille/issues/27)
 - Improved support for laying out tables as lists
-  -  `::list-header` pseudo-element
+  - `::list-header` pseudo-element
   - Support pseudo-elements such as `::before` and pseudo-classes such as `:first-child` on
     `::table-by()` and `::list-item` pseudo-elements
   - Improved algorithm for finding headers

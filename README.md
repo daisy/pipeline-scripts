@@ -54,7 +54,7 @@ Release procedure
   git diff v1.9.3...HEAD
   ```
 
-- Generate release notes template, edit and commit. (Look for relevant Github issues on [https://github.com/search](https://github.com/search?o=desc&q=involves%3Abertfrees+repo%3Adaisy%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fissues+repo%3Asnaekobbi%2Fliblouis+repo%3Aliblouis%2Fliblouis+repo%3Asnaekobbi%2Fbraille-css+repo%3Asnaekobbi%2FjStyleParser&s=updated&type=Issues))
+- Generate release notes template, edit and commit. (Look for relevant Github issues on [https://github.com/search](https://github.com/search?o=desc&q=involves%3Abertfrees+repo%3Adaisy%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fissues+repo%3Asnaekobbi%2Fliblouis+repo%3Aliblouis%2Fliblouis+repo%3Asnaekobbi%2Fbraille-css+repo%3Asnaekobbi%2FjStyleParser+repo%3Ajoeha480%2Fdotify&s=updated&type=Issues))
 
   ```sh
   make release-notes
