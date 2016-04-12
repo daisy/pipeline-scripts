@@ -23,12 +23,14 @@
             <ul css:counter-reset="list-item">
               <li css:counter-increment="list-item">
                 <css:marker>
-                  <css:counter name="list-item"/>
+                  <css:counter name="list-item"
+                               style="symbols(cyclic '*' '†' '‡' '§')"/>
                 </css:marker>
               </li>
               <li css:counter-increment="list-item">
                 <css:marker>
-                  <css:counter name="list-item"/>
+                  <css:counter name="list-item"
+                               style="symbols(cyclic '*' '†' '‡' '§')"/>
                 </css:marker>
               </li>
             </ul>
@@ -57,12 +59,12 @@
           <ul>
             <li>
               <css:marker>
-                <css:box type="inline" css:text-transform="auto"> 1 </css:box>
+                <css:box type="inline" css:text-transform="auto"> * </css:box>
               </css:marker>
             </li>
             <li>
               <css:marker>
-                <css:box type="inline" css:text-transform="auto"> 2 </css:box>
+                <css:box type="inline" css:text-transform="auto"> † </css:box>
               </css:marker>
             </li>
           </ul>

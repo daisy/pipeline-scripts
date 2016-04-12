@@ -18,7 +18,7 @@
 	
 	<xsl:function name="re:exact" as="xs:string">
 		<xsl:param name="regex" as="xs:string"/>
-		<xsl:sequence select="concat('^', $regex, '$')"/>
+		<xsl:sequence select="concat('^(', $regex, ')$')"/>
 	</xsl:function>
 	
 	<xsl:function name="re:space-separated" as="xs:string">

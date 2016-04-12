@@ -19,6 +19,23 @@
     <xsl:variable name="css:SYMBOL_RE_string" select="$css:SYMBOL_RE_ident + $css:IDENT_RE_groups + 1"/>
     <xsl:variable name="css:SYMBOL_RE_groups" select="$css:SYMBOL_RE_string + $css:STRING_RE_groups"/>
     
+    <!--
+        symbols(<symbols-type>? <string>+)
+    -->
+    <xsl:variable name="css:SYMBOLS_FN_RE" select="concat('symbols\(\s*((',$css:IDENT_RE,')\s+)?((',$css:STRING_RE,')(\s+(',$css:STRING_RE,'))*)\s*\)')"/>
+    <xsl:variable name="css:SYMBOLS_FN_RE_type" select="2"/>
+    <xsl:variable name="css:SYMBOLS_FN_RE_symbols" select="$css:SYMBOLS_FN_RE_type + $css:IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:SYMBOLS_FN_RE_groups" select="$css:SYMBOLS_FN_RE_symbols + 1 + $css:STRING_RE_groups + 2 + $css:STRING_RE_groups"/>
+    
+    <!--
+        <counter-style-name> | symbols()
+    -->
+    <xsl:variable name="css:COUNTER_STYLE_RE" select="concat('(',$css:IDENT_RE,')|(',$css:SYMBOLS_FN_RE,')')"/>
+    <xsl:variable name="css:COUNTER_STYLE_RE_name" select="1"/>
+    <xsl:variable name="css:COUNTER_STYLE_RE_symbols_type" select="$css:COUNTER_STYLE_RE_name + $css:IDENT_RE_groups + 1 + $css:SYMBOLS_FN_RE_type"/>
+    <xsl:variable name="css:COUNTER_STYLE_RE_symbols" select="$css:COUNTER_STYLE_RE_name + $css:IDENT_RE_groups + 1 + $css:SYMBOLS_FN_RE_symbols"/>
+    <xsl:variable name="css:COUNTER_STYLE_RE_groups" select="$css:COUNTER_STYLE_RE_name + $css:IDENT_RE_groups + 1 + $css:SYMBOLS_FN_RE_groups"/>
+    
     <xsl:function name="css:parse-symbols" as="xs:string*">
         <xsl:param name="symbols" as="xs:string"/>
         <xsl:analyze-string select="$symbols" regex="{$css:SYMBOL_RE}">
@@ -118,6 +135,36 @@
         </xsl:choose>
     </xsl:function>
     
+    <xsl:function name="css:counter-style" as="element()">
+        <xsl:param name="name-or-inline" as="xs:string"/>
+        <xsl:analyze-string select="$name-or-inline" regex="^({$css:COUNTER_STYLE_RE})$">
+            <xsl:matching-substring>
+                <xsl:choose>
+                    <!--
+                        <counter-style-name>>
+                    -->
+                    <xsl:when test="regex-group(1 + $css:COUNTER_STYLE_RE_name)!=''">
+                        <xsl:sequence select="css:named-counter-style(regex-group(1 + $css:COUNTER_STYLE_RE_name))"/>
+                    </xsl:when>
+                    <!--
+                        symbols()
+                    -->
+                    <xsl:otherwise>
+                        <css:counter-style system="{if (not(regex-group(1 + $css:COUNTER_STYLE_RE_symbols_type)=''))
+                                                    then regex-group(1 + $css:COUNTER_STYLE_RE_symbols_type)
+                                                    else 'symbolic'}"
+                                           symbols="{regex-group(1 + $css:COUNTER_STYLE_RE_symbols)}"
+                                           prefix=""
+                                           suffix=" "
+                                           fallback="decimal"
+                                           negative="-"
+                                           text-transform="auto"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:matching-substring>
+        </xsl:analyze-string>
+    </xsl:function>
+    
     <xsl:template name="css:counter-representation" as="xs:string*">
         <xsl:param name="value" as="xs:integer" required="yes"/>
         <xsl:param name="style" as="element()" required="yes"/>
@@ -177,7 +224,7 @@
             <xsl:otherwise>
                 <xsl:call-template name="css:counter-representation">
                     <xsl:with-param name="value" select="$value"/>
-                    <xsl:with-param name="style" select="css:counter-style($style/@fallback)"/>
+                    <xsl:with-param name="style" select="css:named-counter-style($style/@fallback)"/>
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>

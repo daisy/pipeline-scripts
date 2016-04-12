@@ -78,7 +78,7 @@
                  re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
                  re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))),
                  re:exact($css:INTEGER_RE),
-                 re:exact(re:or(($css:IDENT_RE,$css:BRAILLE_STRING_RE))),
+                 re:exact(re:or(($css:IDENT_RE,$css:BRAILLE_STRING_RE,$css:SYMBOLS_FN_RE))),
                  re:exact(re:or(('center','justify','left','right'))),
                  re:exact(re:or(('always','auto','avoid','left','right'))),
                  re:exact(re:or(('always','auto','avoid','left','right'))),
@@ -357,7 +357,7 @@
     <!-- Counter Styles -->
     <!-- ============== -->
     
-    <xsl:function name="css:counter-style" as="element()">
+    <xsl:function name="css:named-counter-style" as="element()">
         <xsl:param name="name" as="xs:string"/>
         <xsl:variable name="style" as="element()?"
                       select="(css:custom-counter-style($name),$css:predefined-counter-styles[@name=$name])[1]"/>

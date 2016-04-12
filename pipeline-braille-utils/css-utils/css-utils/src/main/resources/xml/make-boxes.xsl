@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
@@ -33,7 +34,7 @@
                         <xsl:if test="$list-style-type!='none'">
                             <css:box type="inline" name="css:marker">
                                 <xsl:choose>
-                                    <xsl:when test="matches($list-style-type, $css:BRAILLE_STRING_RE)">
+                                    <xsl:when test="matches($list-style-type,re:exact($css:BRAILLE_STRING_RE))">
                                         <xsl:attribute name="css:text-transform" select="'none'"/>
                                         <xsl:value-of select="substring($list-style-type,2,string-length($list-style-type)-2)"/>
                                     </xsl:when>

@@ -93,10 +93,10 @@
     <!--
         counter(<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-counter
     -->
-    <xsl:variable name="css:COUNTER_FN_RE" select="concat('counter\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:IDENT_RE,')\s*)?\)')"/>
+    <xsl:variable name="css:COUNTER_FN_RE" select="concat('counter\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:COUNTER_FN_RE_ident" select="1"/>
     <xsl:variable name="css:COUNTER_FN_RE_style" select="$css:COUNTER_FN_RE_ident + $css:IDENT_RE_groups + 2"/>
-    <xsl:variable name="css:COUNTER_FN_RE_groups" select="$css:COUNTER_FN_RE_style + $css:IDENT_RE_groups"/>
+    <xsl:variable name="css:COUNTER_FN_RE_groups" select="$css:COUNTER_FN_RE_style + $css:COUNTER_STYLE_RE_groups"/>
     
     <!--
         target-text(<url>): http://snaekobbi.github.io/braille-css-spec/#dfn-target-text
@@ -120,13 +120,13 @@
     <!--
         target-counter(<url>,<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-target-counter
     -->
-    <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:IDENT_RE,')\s*)?\)')"/>
+    <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_url" select="1"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_url_string" select="$css:TARGET_COUNTER_FN_RE_url + $css:URL_RE_string"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_url_attr" select="$css:TARGET_COUNTER_FN_RE_url + $css:URL_RE_attr"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_ident" select="$css:TARGET_COUNTER_FN_RE_url + $css:URL_RE_groups + 1"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_style" select="$css:TARGET_COUNTER_FN_RE_ident + $css:IDENT_RE_groups + 2"/>
-    <xsl:variable name="css:TARGET_COUNTER_FN_RE_groups" select="$css:TARGET_COUNTER_FN_RE_style + $css:IDENT_RE_groups"/>
+    <xsl:variable name="css:TARGET_COUNTER_FN_RE_groups" select="$css:TARGET_COUNTER_FN_RE_style + $css:COUNTER_STYLE_RE_groups"/>
     
     <!--
         target-content(<url>)
