@@ -10,14 +10,17 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]/@css:_obfl-marker"/>
+    <xsl:template match="*[not(ancestor-or-self::css:box[@type='inline'])]/@css:_obfl-marker"/>
     
-    <xsl:template match="css:box">
+    <xsl:template match="css:box[@type='inline']">
         <xsl:variable name="pending" as="attribute()*"
-                      select="for $e in (preceding::*|ancestor::*)[not(self::css:box) and not(ancestor::css:box[not(@type='block')])]
-                                                                  [@css:_obfl-marker]
+                      select="for $e in (preceding::*|ancestor::*)
+                                          [not(ancestor-or-self::css:box[@type='inline'])]
+                                          [@css:_obfl-marker]
                                         except (preceding::css:box|ancestor::css:box)
-                                               [last()]/(preceding::*|ancestor::*)
+                                                 [@type='inline']
+                                                 [last()]
+                                               /(preceding::*|ancestor::*)
                               return $e/@css:_obfl-marker"/>
         
         <xsl:choose>

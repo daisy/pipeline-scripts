@@ -25,8 +25,8 @@
             renamed to css:_. For such elements, the inherited properties (specified in the
             element's style attribute) are moved to the next preserved descendant box, and 'inherit'
             values on the next preserved descendant box are concretized. css:_ elements are
-            retained. All adjacent nodes that are not boxes or css:_ elements and that are not
-            already contained in an inline box are wrapped into an anonymous one.
+            retained. All adjacent nodes that are not boxes or css:_ elements containing a box and
+            that are not already contained in an inline box are wrapped into an anonymous one.
         </p:documentation>
     </p:output>
     
