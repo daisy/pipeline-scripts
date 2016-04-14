@@ -37,16 +37,11 @@
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
-    <p:identity>
+    <px:merge-parameters name="parameters">
         <p:input port="source">
             <p:pipe step="main" port="parameters"/>
         </p:input>
-    </p:identity>
-    <p:wrap-sequence wrapper="c:param-set"/>
-    <p:unwrap match="/c:param-set/c:param-set"/>
-    <p:delete match="/c:param-set/c:param[@name = following-sibling::c:param/@name]"/>
-    <p:identity name="parameters"/>
-    <p:sink/>
+    </px:merge-parameters>
     
     <p:identity>
         <p:input port="source">

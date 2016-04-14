@@ -88,6 +88,7 @@ even though the provided CSS is more specific.
     <!-- Imports -->
     <!-- ======= -->
     <p:import href="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
@@ -100,22 +101,21 @@ even though the provided CSS is more specific.
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <p:identity>
+    <px:delete-parameters name="input-options"
+                          parameter-names="stylesheet
+                                           apply-document-specific-stylesheets
+                                           transform
+                                           ascii-table
+                                           include-brf
+                                           include-preview
+                                           pef-output-dir
+                                           brf-output-dir
+                                           preview-output-dir
+                                           temp-dir">
         <p:input port="source">
             <p:pipe port="result" step="in-scope-names"/>
         </p:input>
-    </p:identity>
-    <p:delete match="c:param[@name=('stylesheet',
-                                    'apply-document-specific-stylesheets',
-                                    'transform',
-                                    'ascii-table',
-                                    'include-brf',
-                                    'include-preview',
-                                    'pef-output-dir',
-                                    'brf-output-dir',
-                                    'preview-output-dir',
-                                    'temp-dir')]"/>
-    <p:identity name="input-options"/>
+    </px:delete-parameters>
     <p:sink/>
     
     <!-- =============== -->

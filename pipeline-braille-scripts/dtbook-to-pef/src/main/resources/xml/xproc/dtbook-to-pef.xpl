@@ -90,6 +90,7 @@
                    because this script uses px:extends-script in the XML catalog which
                    changes the base URI of the script at build time. -->
     </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
     <!-- ================================================= -->
@@ -99,22 +100,21 @@
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <p:identity>
+    <px:delete-parameters name="input-options"
+                          parameter-names="stylesheet
+                                           transform
+                                           ascii-table
+                                           include-brf
+                                           include-preview
+                                           include-obfl
+                                           pef-output-dir
+                                           brf-output-dir
+                                           preview-output-dir
+                                           temp-dir">
         <p:input port="source">
             <p:pipe port="result" step="in-scope-names"/>
         </p:input>
-    </p:identity>
-    <p:delete match="c:param[@name=('stylesheet',
-                                    'transform',
-                                    'ascii-table',
-                                    'include-brf',
-                                    'include-preview',
-                                    'include-obfl',
-                                    'pef-output-dir',
-                                    'brf-output-dir',
-                                    'preview-output-dir',
-                                    'temp-dir')]"/>
-    <p:identity name="input-options"/>
+    </px:delete-parameters>
     <p:sink/>
     
     <!-- =============== -->

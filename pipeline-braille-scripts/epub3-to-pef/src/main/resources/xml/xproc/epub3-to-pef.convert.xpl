@@ -45,16 +45,11 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
-    <p:identity>
+    <px:merge-parameters name="parameters">
         <p:input port="source">
             <p:pipe step="main" port="parameters"/>
         </p:input>
-    </p:identity>
-    <p:wrap-sequence wrapper="c:param-set"/>
-    <p:unwrap match="/c:param-set/c:param-set"/>
-    <p:delete match="/c:param-set/c:param[@name = following-sibling::c:param/@name]"/>
-    <p:identity name="parameters"/>
-    <p:sink/>
+    </px:merge-parameters>
     
     <!-- Load OPF and add content files to fileset. -->
     <px:fileset-load media-types="application/oebps-package+xml">
