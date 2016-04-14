@@ -913,21 +913,37 @@
         <xsl:attribute name="row-spacing" select="format-number(xs:integer(number(.)), '0.0')"/>
     </xsl:template>
     
+    <!--
+        handle negative text-indent
+    -->
     <xsl:template priority="0.6"
                   mode="block-attr table-attr td-attr toc-entry-attr"
-                  match="css:box[@type=('block','table-cell') and not(child::css:box[@type='block']) and @css:text-indent]/@css:margin-left"/>
+                  match="css:box[@type=('block','table-cell')
+                                 and not(child::css:box[@type='block'])
+                                 and not(@css:border-top|@css:border-bottom)
+                                 and @css:text-indent]
+                         /@css:margin-left"/>
     
     <xsl:template priority="0.6"
                   mode="block-attr table-attr td-attr toc-entry-attr"
-                  match="css:box[@type=('block','table-cell') and not(child::css:box[@type='block'])]/@css:text-indent">
-        <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(.))"/>
-        <xsl:variable name="margin-left" as="xs:integer" select="(parent::*/@css:margin-left/xs:integer(number(.)),0)[1]"/>
-        <xsl:if test="parent::*[@name or not(preceding-sibling::css:box)]">
-            <xsl:attribute name="first-line-indent" select="format-number($margin-left + $text-indent, '0')"/>
-        </xsl:if>
-        <xsl:if test="$margin-left &gt; 0">
-            <xsl:attribute name="text-indent" select="format-number($margin-left, '0')"/>
-        </xsl:if>
+                  match="css:box[@type=('block','table-cell')
+                                 and not(child::css:box[@type='block'])]
+                         /@css:text-indent">
+        <xsl:choose>
+            <xsl:when test="parent::*/(@css:border-top|@css:border-bottom)">
+                <xsl:attribute name="first-line-indent" select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="text-indent" as="xs:integer" select="xs:integer(number(.))"/>
+                <xsl:variable name="margin-left" as="xs:integer" select="(parent::*/@css:margin-left/xs:integer(number(.)),0)[1]"/>
+                <xsl:if test="parent::*[@name or not(preceding-sibling::css:box)]">
+                    <xsl:attribute name="first-line-indent" select="format-number($margin-left + $text-indent, '0')"/>
+                </xsl:if>
+                <xsl:if test="$margin-left &gt; 0">
+                    <xsl:attribute name="text-indent" select="format-number($margin-left, '0')"/>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template mode="block-attr table-attr td-attr toc-entry-attr"
