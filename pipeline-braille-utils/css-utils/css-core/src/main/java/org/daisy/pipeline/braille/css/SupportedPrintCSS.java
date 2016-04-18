@@ -28,7 +28,7 @@ public class SupportedPrintCSS implements SupportedCSS {
 	
 	private static final int TOTAL_SUPPORTED_DECLARATIONS = 4;
 	
-	private static final TermFactory tf = CSSFactory.getTermFactory();
+	private static final TermFactory tf = CSSFactory.getTermFactory(); // cz.vutbr.web.csskit.TermFactoryImpl
 	
 	private static final Term<?> DEFAULT_UA_COLOR = tf.createColor("#000000");
 	

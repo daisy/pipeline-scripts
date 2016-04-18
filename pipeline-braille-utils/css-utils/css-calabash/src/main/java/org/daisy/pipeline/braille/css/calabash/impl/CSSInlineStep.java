@@ -65,6 +65,7 @@ import cz.vutbr.web.css.TermPair;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory;
 import cz.vutbr.web.csskit.antlr.CSSParserFactory.SourceType;
 import cz.vutbr.web.csskit.DefaultNetworkProcessor;
+import cz.vutbr.web.csskit.RuleFactoryImpl;
 import cz.vutbr.web.domassign.Analyzer;
 import cz.vutbr.web.domassign.DeclarationTransformer;
 import cz.vutbr.web.domassign.StyleMap;
@@ -306,18 +307,24 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static final QName _style = new QName("style");
 	
-	private static final SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
+	// media print
 	private static final SupportedCSS printCSS = SupportedPrintCSS.getInstance();
-	private static final RuleFactory ruleFactory = new BrailleCSSRuleFactory();
-	private static DeclarationTransformer brailleDeclarationTransformer;
-	private static DeclarationTransformer printDeclarationTransformer;
-	
-	static {
-		CSSFactory.registerSupportedCSS(brailleCSS);
-		brailleDeclarationTransformer = new BrailleCSSDeclarationTransformer();
+	private static DeclarationTransformer printDeclarationTransformer; static {
+		// SupportedCSS injected via CSSFactory in DeclarationTransformer.<init>
 		CSSFactory.registerSupportedCSS(printCSS);
-		printDeclarationTransformer = new DeclarationTransformer() {};
-	}
+		printDeclarationTransformer = new DeclarationTransformer() {}; }
+	private static final RuleFactory printRuleFactory = RuleFactoryImpl.getInstance();
+	private static final CSSParserFactory printParserFactory = CSSParserFactory.getInstance();
+	
+	// media embossed
+	private static final SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
+	private static DeclarationTransformer brailleDeclarationTransformer; static {
+		// SupportedCSS injected via CSSFactory in DeclarationTransformer.<init>
+		CSSFactory.registerSupportedCSS(brailleCSS);
+		brailleDeclarationTransformer = new BrailleCSSDeclarationTransformer(); }
+	private static final RuleFactory brailleRuleFactory = new BrailleCSSRuleFactory();
+	private static final CSSParserFactory brailleParserFactory = new BrailleCSSParserFactory();
+	
 	
 	private class InlineCSSWriter extends TreeWriter {
 		
@@ -326,37 +333,43 @@ public class CSSInlineStep extends DefaultStep {
 		private final Map<String,Map<String,RulePage>> pageRules;
 		private final Map<String,Map<String,RuleVolume>> volumeRules;
 		
-		private final CSSParserFactory parserFactory = new BrailleCSSParserFactory();
-		
 		public InlineCSSWriter(Document document,
 		                       XProcRuntime xproc,
 		                       URL[] defaultSheets) throws Exception {
 			super(xproc);
 			
-			CSSFactory.registerRuleFactory(ruleFactory);
-			CSSFactory.registerCSSParserFactory(parserFactory);
-			
 			URI baseURI = new URI(document.getBaseURI());
 			
 			// media embossed
-			
-			CSSFactory.registerSupportedCSS(brailleCSS);
-			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
-			StyleSheet brailleStyle = (StyleSheet)ruleFactory.createStyleSheet().unlock();
+			StyleSheet brailleStyle = (StyleSheet)brailleRuleFactory.createStyleSheet().unlock();
 			if (defaultSheets != null)
 				for (URL sheet : defaultSheets)
-					brailleStyle = parserFactory.append(sheet, network, null, SourceType.URL, brailleStyle, sheet);
+					brailleStyle = brailleParserFactory.append(sheet, network, null, SourceType.URL, brailleStyle, sheet);
+			// CSSParserFactory injected via CSSFactory in CSSAssignTraversal.<init>
+			CSSFactory.registerCSSParserFactory(brailleParserFactory);
 			brailleStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("embossed"), network, brailleStyle);
+			// DeclarationTransformer injected via CSSFactory in SingleMapNodeData.<init>
+			// SupportedCSS injected via CSSFactory in SingleMapNodeData.<init>, Repeater.assignDefaults, Variator.assignDefaults
+			CSSFactory.registerDeclarationTransformer(brailleDeclarationTransformer);
+			CSSFactory.registerSupportedCSS(brailleCSS);
 			brailleStylemap = new Analyzer(brailleStyle).evaluateDOM(document, "embossed", false);
 			
 			// media print
-			CSSFactory.registerSupportedCSS(printCSS);
-			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
-			StyleSheet printStyle = (StyleSheet)ruleFactory.createStyleSheet().unlock();
+			StyleSheet printStyle = (StyleSheet)printRuleFactory.createStyleSheet().unlock();
 			if (defaultSheets != null)
-				for (URL sheet : defaultSheets)
-					printStyle = parserFactory.append(sheet, network, null, SourceType.URL, printStyle, sheet);
+				for (URL sheet : defaultSheets) {
+					// RuleFactory injected via CSSFactory in SimplePreparator.<init>, CSSTreeParser.<init>
+					CSSFactory.registerRuleFactory(printRuleFactory);
+					printStyle = printParserFactory.append(sheet, network, null, SourceType.URL, printStyle, sheet); }
+			// CSSParserFactory injected via CSSFactory in CSSAssignTraversal.<init>
+			// RuleFactory injected via CSSFactory in SimplePreparator.<init>, CSSTreeParser.<init>
+			CSSFactory.registerCSSParserFactory(printParserFactory);
+			CSSFactory.registerRuleFactory(printRuleFactory);
 			printStyle = CSSFactory.getUsedStyles(document, null, asURL(baseURI), new MediaSpec("print"), network, printStyle);
+			// DeclarationTransformer injected via CSSFactory in SingleMapNodeData.<init>
+			// SupportedCSS injected via CSSFactory in SingleMapNodeData.<init>, Repeater.assignDefaults, Variator.assignDefaults
+			CSSFactory.registerDeclarationTransformer(printDeclarationTransformer);
+			CSSFactory.registerSupportedCSS(printCSS);
 			printStylemap = new Analyzer(printStyle).evaluateDOM(document, "print", false);
 			
 			pageRules = new HashMap<String,Map<String,RulePage>>();
@@ -613,7 +626,7 @@ public class CSSInlineStep extends DefaultStep {
 	}
 	
 	private static RulePage makePageRule(String name, String pseudo, List<RulePage> from) {
-		RulePage pageRule = ruleFactory.createPage().setName(name).setPseudo(pseudo);
+		RulePage pageRule = brailleRuleFactory.createPage().setName(name).setPseudo(pseudo);
 		Set<String> properties = new HashSet<String>();
 		for (RulePage f : from)
 			for (Rule<?> r : f)
@@ -627,7 +640,7 @@ public class CSSInlineStep extends DefaultStep {
 					String marginArea = m.getMarginArea();
 					RuleMargin marginRule = getRuleMargin(pageRule, marginArea);
 					if (marginRule == null) {
-						marginRule = ruleFactory.createMargin(marginArea);
+						marginRule = brailleRuleFactory.createMargin(marginArea);
 						pageRule.add(marginRule);
 						marginRule.replaceAll(m); }
 					else
