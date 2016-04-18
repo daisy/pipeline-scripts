@@ -8,9 +8,11 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import static com.google.common.collect.Iterables.size;
+
+import org.daisy.braille.css.BrailleCSSProperty.TextTransform;
+import org.daisy.braille.css.SimpleInlineStyle;
 
 import org.daisy.maven.xproc.xprocspec.XProcSpecRunner;
 import org.daisy.maven.xspec.TestResults;
@@ -176,14 +178,13 @@ public class DotifyFormatterTest {
 			"\u281a","\u2801","\u2803","\u2809","\u2819","\u2811","\u280b","\u281b","\u2813","\u280a"};
 		private final static String[] DOWNSHIFTED_DIGIT_TABLE = new String[]{
 			"\u2834","\u2802","\u2806","\u2812","\u2832","\u2822","\u2816","\u2836","\u2826","\u2814"};
-		private final static Splitter.MapSplitter CSS_PARSER
-			= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 		
-		private String transform(String text, String style) {
+		private String transform(String text, SimpleInlineStyle style) {
 			if (!VALID_INPUT.matcher(text).matches())
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
-			Map<String,String> parsedStyle = CSS_PARSER.split(style);
-			if (parsedStyle.containsKey("text-transform") && "downshift".equals(parsedStyle.get("text-transform")))
+			if (style != null
+			    &&style.getProperty("text-transform") == TextTransform.list_values
+			    && style.getValue("text-transform", false).toString().equals("downshift"))
 				return translateNumbers(text, true);
 			return translateNumbers(text, false);
 		}

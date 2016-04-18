@@ -3,9 +3,7 @@ package org.daisy.pipeline.braille.liblouis.impl;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +13,22 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.toArray;
+
+import cz.vutbr.web.css.CSSProperty;
+import cz.vutbr.web.css.CSSProperty.FontStyle;
+import cz.vutbr.web.css.CSSProperty.FontWeight;
+import cz.vutbr.web.css.CSSProperty.TextDecoration;
+import cz.vutbr.web.css.Term;
+import cz.vutbr.web.css.TermIdent;
+import cz.vutbr.web.css.TermInteger;
+import cz.vutbr.web.css.TermList;
+
+import org.daisy.braille.css.BrailleCSSProperty.Hyphens;
+import org.daisy.braille.css.BrailleCSSProperty.LetterSpacing;
+import org.daisy.braille.css.BrailleCSSProperty.TextTransform;
+import org.daisy.braille.css.BrailleCSSProperty.WhiteSpace;
+import org.daisy.braille.css.BrailleCSSProperty.WordSpacing;
+import org.daisy.braille.css.SimpleInlineStyle;
 
 import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
@@ -284,11 +298,11 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			public java.lang.Iterable<String> transform(java.lang.Iterable<CSSStyledText> styledText) {
 				int size = size(styledText);
 				String[] text = new String[size];
-				List<Map<String,String>> style = new ArrayList<Map<String,String>>();
+				List<SimpleInlineStyle> style = new ArrayList<SimpleInlineStyle>();
 				int i = 0;
 				for (CSSStyledText t : styledText) {
 					text[i++] = t.getText();
-					style.add(new HashMap<String,String>(CSS_PARSER.split(t.getStyle()))); }
+					style.add(t.getStyle()); }
 				return Arrays.asList(LiblouisTranslatorImpl.this.transform(text, style));
 			}
 		};
@@ -302,20 +316,21 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			public LineIterator transform(java.lang.Iterable<CSSStyledText> styledText) {
 				int size = size(styledText);
 				String[] text = new String[size];
-				List<Map<String,String>> styles = new ArrayList<Map<String,String>>();
+				List<SimpleInlineStyle> styles = new ArrayList<SimpleInlineStyle>();
 				int wordSpacing = -1;
 				int i = 0;
 				for (CSSStyledText st : styledText) {
-					Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(st.getStyle()));
+					SimpleInlineStyle style = st.getStyle();
 					int spacing = 1;
-					String val = style.remove("word-spacing");
-					if (val != null) {
-						try { spacing = Integer.parseInt(val); }
-						catch (NumberFormatException e) {
-							logger.warn("word-spacing: {} not supported, illegal number", val); }
-						if (spacing < 0) {
-							logger.warn("word-spacing: {} not supported, must be non-negative", val);
-							spacing = 1; }}
+					if (style != null) {
+						CSSProperty val = style.getProperty("word-spacing");
+						if (val != null) {
+							if (val == WordSpacing.length) {
+								spacing = style.getValue(TermInteger.class, "word-spacing").getIntValue();
+								if (spacing < 0) {
+									logger.warn("word-spacing: {} not supported, must be non-negative", val);
+									spacing = 1; }}
+							style.removeProperty("word-spacing"); }}
 					if (wordSpacing < 0)
 						wordSpacing = spacing;
 					else if (wordSpacing != spacing)
@@ -327,7 +342,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			}
 		};
 		
-		private String[] transform(String[] text, List<Map<String,String>> styles) {
+		private String[] transform(String[] text, List<SimpleInlineStyle> styles) {
 			int size = text.length;
 			byte[] typeform = new byte[size];
 			boolean[] hyphenate = new boolean[size];
@@ -341,39 +356,46 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 				hyphenate[i] = false;
 				preserveLines[i] = preserveSpace[i] = false;
 				letterSpacing[i] = 0;
-				Map<String,String> style = styles.get(i);
-				String val = style.remove("white-space");
-				if (val != null)
-					if ("pre-wrap".equals(val))
-						preserveLines[i] = preserveSpace[i] = true;
-					else if ("pre-line".equals(val))
-						preserveLines[i] = true;
-				val = style.remove("text-transform");
-				if (val != null) {
-					if ("none".equals(val)) {
-						someNotTransform = true;
-						if (!style.isEmpty())
-							logger.warn("text-transform: none can not be used in combination with "
-							            + style.keySet().iterator().next());
-						continue; }
-					else if ("auto".equals(val)) {}
-					else {
-						text[i] = textFromTextTransform(text[i], val);
-						typeform[i] |= typeformFromTextTransform(val); }}
-				someTransform = true;
-				val = style.remove("hyphens");
-				if (val != null)
-					if ("auto".equals(val))
-						hyphenate[i] = true;
-				val = style.remove("letter-spacing");
-				if (val != null) {
-					try { letterSpacing[i] = Integer.parseInt(val); }
-					catch (NumberFormatException e) {
-						logger.warn("letter-spacing: {} not supported, illegal number", val); }
-					if (letterSpacing[i] < 0) {
-						logger.warn("letter-spacing: {} not supported, must be non-negative", val);
-						letterSpacing[i] = 0; }}
-				typeform[i] |= typeformFromInlineCSS(style); }
+				SimpleInlineStyle style = styles.get(i);
+				if (style != null) {
+					CSSProperty val = style.getProperty("white-space");
+					if (val != null) {
+						if (val == WhiteSpace.PRE_WRAP)
+							preserveLines[i] = preserveSpace[i] = true;
+						else if (val == WhiteSpace.PRE_LINE)
+							preserveLines[i] = true;
+						style.removeProperty("white-space"); }
+					val = style.getProperty("text-transform");
+					if (val != null) {
+						if (val == TextTransform.NONE) {
+							someNotTransform = true;
+							if (!style.isEmpty())
+								logger.warn("text-transform: none can not be used in combination with "
+								            + style.getPropertyNames().iterator().next());
+							continue; }
+						else if (val == TextTransform.AUTO) {}
+						else if (val == TextTransform.list_values) {
+							TermList values = style.getValue(TermList.class, "text-transform");
+							text[i] = textFromTextTransform(text[i], values);
+							typeform[i] |= typeformFromTextTransform(values); }
+						style.removeProperty("text-transform"); }
+					someTransform = true;
+					val = style.getProperty("hyphens");
+					if (val != null) {
+						if (val == Hyphens.AUTO)
+							hyphenate[i] = true;
+						style.removeProperty("hyphens"); }
+					val = style.getProperty("letter-spacing");
+					if (val != null) {
+						if (val == LetterSpacing.length) {
+							letterSpacing[i] = style.getValue(TermInteger.class, "letter-spacing").getIntValue();
+							if (letterSpacing[i] < 0) {
+								logger.warn("letter-spacing: {} not supported, must be non-negative", val);
+								letterSpacing[i] = 0; }}
+						style.removeProperty("letter-spacing"); }
+					typeform[i] |= typeformFromInlineCSS(style); }
+				else
+					someTransform = true; }
 			if (someNotTransform && !someTransform)
 				return text;
 			// FIXME: handle (someNotTransform && someTransform)
@@ -770,9 +792,6 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		}
 	}
 	
-	private final static Splitter.MapSplitter CSS_PARSER
-		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
-
 	/**
 	 * @param style An inline CSS style
 	 * @return the corresponding typeform. Possible values are:
@@ -783,35 +802,36 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	 * These values can be added for multiple emphasis.
 	 * @see <a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString">lou_translateString</a>
 	 */
-	private static byte typeformFromInlineCSS(Map<String,String> style) {
+	protected static byte typeformFromInlineCSS(SimpleInlineStyle style) {
 		byte typeform = Typeform.PLAIN;
-		for (String prop : style.keySet()) {
-			String value = style.get(prop);
-			if (prop.equals("font-style") && (value.equals("italic") || value.equals("oblique")))
-				typeform |= Typeform.ITALIC;
-			else if (prop.equals("font-weight") && value.equals("bold"))
-				typeform |= Typeform.BOLD;
-			else if (prop.equals("text-decoration") && value.equals("underline"))
-				typeform |= Typeform.UNDERLINE;
-			else
-				logger.warn("Inline CSS property {} not supported", prop); }
+		for (String prop : style.getPropertyNames()) {
+			if (prop.equals("font-style")) {
+				CSSProperty value = style.getProperty(prop);
+				if (value == FontStyle.ITALIC || value == FontStyle.OBLIQUE) {
+					typeform |= Typeform.ITALIC;
+					continue; }}
+			else if (prop.equals("font-weight")) {
+				CSSProperty value = style.getProperty(prop);
+				if (value == FontWeight.BOLD) {
+					typeform |= Typeform.BOLD;
+					continue; }}
+			else if (prop.equals("text-decoration")) {
+				CSSProperty value = style.getProperty(prop);
+				if (value == TextDecoration.UNDERLINE) {
+					typeform |= Typeform.UNDERLINE;
+					continue; }}
+			logger.warn("Inline CSS property {} not supported", style.getSourceDeclaration(prop)); }
 		return typeform;
 	}
 	
-	// for unit tests
-	protected static byte typeformFromInlineCSS(String style) {
-		return typeformFromInlineCSS(CSS_PARSER.split(style));
-	}
-	
-	private final static Splitter TEXT_TRANSFORM_PARSER = Splitter.on(' ').omitEmptyStrings().trimResults();
-
 	/**
 	 * @param text The text to be transformed.
 	 * @param textTransform A text-transform value as a space separated list of keywords.
 	 * @return the transformed text, or the original text if no transformations were performed.
 	 */
-	protected static String textFromTextTransform(String text, String textTransform) {
-		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+	protected static String textFromTextTransform(String text, TermList textTransform) {
+		for (Term<?> t : textTransform) {
+			String tt = ((TermIdent)t).getValue();
 			if (tt.equals("uppercase"))
 				text = text.toUpperCase();
 			else if (tt.equals("lowercase"))
@@ -833,9 +853,10 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	 * These values can be added for multiple emphasis.
 	 * @see <a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html#lou_translateString">lou_translateString</a>
 	 */
-	protected static byte typeformFromTextTransform(String textTransform) {
+	protected static byte typeformFromTextTransform(TermList textTransform) {
 		byte typeform = Typeform.PLAIN;
-		for (String tt : TEXT_TRANSFORM_PARSER.split(textTransform)) {
+		for (Term<?> t : textTransform) {
+			String tt = ((TermIdent)t).getValue();
 			if (tt.equals("louis-ital"))
 				typeform |= Typeform.ITALIC;
 			else if (tt.equals("louis-bold"))

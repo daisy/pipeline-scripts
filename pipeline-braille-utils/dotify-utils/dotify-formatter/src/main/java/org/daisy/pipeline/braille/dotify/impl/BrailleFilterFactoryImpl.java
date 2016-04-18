@@ -2,6 +2,7 @@ package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,10 @@ import com.google.common.base.Optional;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.singletonIterator;
+
+import cz.vutbr.web.css.TermIdent;
+
+import org.daisy.braille.css.SimpleInlineStyle;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleFilterFactory;
@@ -135,7 +140,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				String[] braille = new String[size];
 				int i = 0;
 				for (CSSStyledText t : styledText) {
-					String style = t.getStyle();
+					SimpleInlineStyle style = t.getStyle();
 					if (style != null && !style.isEmpty())
 						throw new RuntimeException("Translator does not support style '" + style + "'");
 					braille[i++] = NumberBrailleTranslator.this.transform(t.getText()); }
@@ -180,9 +185,9 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	/**
 	 * BrailleFilter wrapper for a org.daisy.pipeline.braille.common.BrailleTranslator.FromStyledTextToBraille
 	 *
-	 * Supports special variable assignments (in the form of "def:foo") and tests (in the form of
-	 * "ifdef:foo" or "ifndef:foo") in text attributes in order to support special ad hoc handling
-	 * of marker-references.
+	 * Supports special variable assignments (in the form of "-dotify-def:foo") and tests (in the form of
+	 * "-dotify-ifdef:foo" or "-dotify-ifndef:foo") in text attributes in order to support special ad hoc
+	 * handling of marker-references.
 	 */
 	public static class BrailleFilterImpl implements BrailleFilter {
 		
@@ -252,10 +257,6 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	
 	protected final static Pattern BRAILLE = Pattern.compile("[\u2800-\u28ff" + SHY + ZWSP + SPACE + NBSP + "]*");
 	
-	private final static Pattern TEXTATTR = Pattern.compile(
-		"\\s*(?<special>(?<key>def|ifdef|ifndef|defifndef)\\s*:\\s*(?<var>[^\\s]+)(?:\\s+|$))?(?<css>.*)"
-	);
-	
 	/**
 	 * Convert Translatable specification to text + CSS style. Text attributes are assumed to
 	 * contain only CSS or special variable assignments/tests. CSS inheritance is assumed to have
@@ -266,7 +267,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		boolean hyphenating = specification.isHyphenating();
 		TextAttribute attributes = specification.getAttributes();
 		if (attributes == null)
-			return handleVariables(Optional.of(new CSSStyledText(text, hyphenating ? "hyphens:auto" : "")).asSet());
+			return handleVariables(Optional.of(new CSSStyledText(text, hyphenating ? "hyphens:auto" : null)).asSet());
 		else {
 			List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
 			Iterator<TextAttribute> attrs = flattenAttributes(attributes);
@@ -275,10 +276,9 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				TextAttribute attr = attrs.next();
 				String segment = text.substring(i, i + attr.getWidth());
 				String style = attr.getDictionaryIdentifier();
-				if (style == null)
-					style = "";
 				if (hyphenating) {
-					if (style.isEmpty())
+					// FIXME: add hyphens declaration through braille-css model
+					if (style == null || style.isEmpty())
 						style = "hyphens: auto";
 					else
 						style += "; hyphens: auto"; }
@@ -293,24 +293,33 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
 		Set<String> env = null;
 		String segment = "";
-		String style = "";
+		SimpleInlineStyle style = null;
 		for (CSSStyledText st : styledText) {
 			String t = st.getText();
-			String s = st.getStyle();
-			Matcher m = TEXTATTR.matcher(s);
-			m.matches();
-			s = m.group("css");
-			if (m.group("special") != null) {
-				String key = m.group("key");
-				String var = m.group("var");
-				if (env == null)
-					env = new HashSet<String>();
-				if (key.equals("ifdef") && !env.contains(var)
-				    || (key.equals("ifndef") || key.equals("defifndef")) && env.contains(var))
-					t = "";
-				if (key.equals("def") || key.equals("defifndef"))
-					env.add(var); }
-			if (s.equals(style))
+			SimpleInlineStyle s = st.getStyle();
+			if (s != null) {
+				Collection<String> properties = s.getPropertyNames();
+				String key = null;
+				if (properties.contains("-dotify-def")) {
+					key = "-dotify-def"; }
+				else if (properties.contains("-dotify-ifdef")) {
+					key = "-dotify-ifdef"; }
+				else if (properties.contains("-dotify-ifndef")) {
+					key = "-dotify-ifndef"; }
+				else if (properties.contains("-dotify-defifndef")) {
+					key = "-dotify-defifndef"; }
+				if (key != null) {
+					String var = s.getProperty(key, false).toString();
+					s.removeProperty(key);
+					if (env == null)
+						env = new HashSet<String>();
+					if (key.equals("-dotify-ifdef") && !env.contains(var)
+					    || (key.equals("-dotify-ifndef") || key.equals("-dotify-defifndef")) && env.contains(var))
+						t = "";
+					if (key.equals("-dotify-def") || key.equals("-dotify-defifndef"))
+						env.add(var); }}
+			// FIXME: SimpleInlineStyle.equals does not work
+			if (s == null && style == null || s != null && s.equals(style))
 				segment += t;
 			else {
 				if (!segment.isEmpty())

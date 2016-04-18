@@ -67,7 +67,7 @@ public class CommonUtilsTest {
 			junitBundles(),
 			thisBundle(),
 			mavenBundlesWithDependencies(
-				brailleModule("css-core"),
+				mavenBundle("org.daisy.braille:braille-css:?"),
 				mavenBundle("org.daisy.dotify:dotify.api:?"),
 				// logging
 				logbackClassic(),

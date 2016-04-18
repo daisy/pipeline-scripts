@@ -176,9 +176,9 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-header" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="running-header" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="running-header/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="running-header" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="running-header" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-header/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -189,14 +189,14 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
@@ -334,14 +334,14 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="running-footer" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="running-footer/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
@@ -4596,32 +4596,32 @@
               <header>
                 <field>
                   <marker-reference marker="print-page-dash/prev" direction="forward" scope="page-content"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
                   <marker-reference marker="print-page-dash/prev" direction="forward" scope="spread" start-offset="-1"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
               </header>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="spread" text-style="/def:tmp_.+/" start-offset="-1"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="spread" text-style="/-dotify-def:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
                 </field>
               </footer>
@@ -4630,8 +4630,8 @@
               <header>
                 <field>
                   <marker-reference marker="print-page-dash/prev" direction="forward" scope="page-content"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -4642,9 +4642,9 @@
               </header>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
                 </field>
                 <field>
@@ -4854,9 +4854,9 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -5001,9 +5001,9 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
@@ -5629,17 +5629,17 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="foo" direction="forward" scope="page" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="foo" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
                 <field>
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="foo/prev" direction="forward" scope="page-content" text-style="/def:tmp_.+/"/>
-                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/defifndef:tmp_.+/"/>
-                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/ifndef:tmp_.+/"/>
+                  <marker-reference marker="foo/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
+                  <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
               </footer>
             </default-template>
