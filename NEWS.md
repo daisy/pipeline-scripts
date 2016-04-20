@@ -12,6 +12,7 @@ Changes
 - Support for colspan and rowspan on data cells of tables that are layed out as lists
 - Support for `page-start-except-last` and `spread-start-except-last` keywords in `string()`
   function
+- Parameter `skip-margin-top-of-page` (https://github.com/daisy/pipeline-mod-braille/issues/97)
 - Bugfixes (https://github.com/braillespecs/obfl/issues/31,
   https://github.com/joeha480/dotify/issues/134, https://github.com/joeha480/dotify/pull/189, ...)
 
