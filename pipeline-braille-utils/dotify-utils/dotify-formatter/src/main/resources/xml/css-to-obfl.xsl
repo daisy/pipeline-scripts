@@ -6,6 +6,7 @@
                 xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0" >
     
@@ -1162,8 +1163,19 @@
             -->
             <xsl:message select="'hyphens:none could not be applied to target-counter(page)'"/>
         </xsl:if>
-        <page-number ref-id="{@target}" number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
-                                                        then @style else 'default'}"/>
+        <page-number ref-id="{@target}"
+                     number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
+                                    then @style else 'default'}">
+            <xsl:if test="matches(@style,re:exact($css:SYMBOLS_FN_RE))">
+                <!--
+                    FIXME: text-style not supported on page-number element
+                -->
+                <!--
+                <xsl:attribute name="text-style" select="concat('text-transform: -dotify-counter; -dotify-counter-style: ',@style)"/>
+                -->
+                <xsl:message select="concat('&quot;',@style,'&quot; counter style not supported for target-counter(page)')"/>
+            </xsl:if>
+        </page-number>
     </xsl:template>
     
     <xsl:template mode="block span td toc-entry"

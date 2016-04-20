@@ -16,8 +16,13 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.singletonIterator;
 
+import cz.vutbr.web.css.Term;
+import cz.vutbr.web.css.TermFunction;
 import cz.vutbr.web.css.TermIdent;
+import cz.vutbr.web.css.TermList;
+import cz.vutbr.web.css.TermString;
 
+import org.daisy.braille.css.BrailleCSSProperty.TextTransform;
 import org.daisy.braille.css.SimpleInlineStyle;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
@@ -286,7 +291,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 				i += attr.getWidth(); }
 			if (i != text.length())
 				throw new RuntimeException("Coding error");
-			return handleVariables(segments); }
+			return handleCounterStyles(handleVariables(segments)); }
 	}
 	
 	private static Iterable<CSSStyledText> handleVariables(Iterable<CSSStyledText> styledText) {
@@ -329,6 +334,107 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		if (!segment.isEmpty())
 			segments.add(new CSSStyledText(segment, style));
 		return segments;
+	}
+	
+	private static Iterable<CSSStyledText> handleCounterStyles(Iterable<CSSStyledText> styledText) {
+		List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
+		String segment = "";
+		SimpleInlineStyle style = null;
+		for (CSSStyledText st : styledText) {
+			String t = st.getText();
+			SimpleInlineStyle s = st.getStyle();
+			if (s != null) {
+				if (s.getProperty("text-transform") == TextTransform.list_values) {
+					TermList list = s.getValue(TermList.class, "text-transform");
+					if (((TermIdent)list.get(0)).getValue().equals("-dotify-counter")) {
+						int counterValue = Integer.parseInt(t);
+						if (list.size() == 1)
+							s.removeProperty("text-transform");
+						else
+							list.remove(0);
+						Term<?> counterStyle = s.getValue(TermFunction.class, "-dotify-counter-style", false);
+						if (counterStyle instanceof TermFunction
+						    && ((TermFunction)counterStyle).getFunctionName().equals("symbols")) {
+							String system = null;
+							List<String> symbols = new ArrayList<String>();
+							for (Term term : (TermFunction)counterStyle) {
+								if (system == null) {
+									if (term instanceof TermIdent)
+										system = ((TermIdent)term).getValue();
+									else
+										system = "symbolic"; }
+								else
+									symbols.add(((TermString)term).getValue()); }
+							if (system.equals("alphabetic"))
+								t = counterRepresentationAlphabetic(counterValue, symbols);
+							else if (system.equals("numeric"))
+								t = counterRepresentationNumeric(counterValue, symbols);
+							else if (system.equals("cyclic"))
+								t = counterRepresentationCyclic(counterValue, symbols);
+							else if (system.equals("fixed"))
+								t = counterRepresentationFixed(counterValue, symbols);
+							else if (system.equals("symbolic"))
+								t = counterRepresentationSymbolic(counterValue, symbols); }}}
+				s.removeProperty("-dotify-counter-style"); }
+			// FIXME: SimpleInlineStyle.equals does not work
+			if (s == null && style == null || s != null && s.equals(style))
+				segment += t;
+			else {
+				if (!segment.isEmpty())
+					segments.add(new CSSStyledText(segment, style));
+				segment = t;
+				style = s; }}
+		if (!segment.isEmpty())
+			segments.add(new CSSStyledText(segment, style));
+		return segments;
+	}
+	
+	private static int mod(int a, int n) {
+		int result = a % n;
+		if (result < 0)
+			result += n;
+		return result;
+	}
+	
+	protected static String counterRepresentationAlphabetic(int counterValue, List<String> symbols) {
+		if (counterValue < 1)
+			return "";
+		if (counterValue > symbols.size())
+			return counterRepresentationAlphabetic((counterValue - 1) / symbols.size(), symbols)
+				+ symbols.get(mod(counterValue - 1, symbols.size()));
+		else
+			return symbols.get(counterValue - 1);
+	}
+	
+	protected static String counterRepresentationCyclic(int counterValue, List<String> symbols) {
+		return symbols.get(mod(counterValue - 1, symbols.size()));
+	}
+	
+	protected static String counterRepresentationFixed(int counterValue, List<String> symbols) {
+		if (counterValue < 1 || counterValue > symbols.size())
+			return "";
+		else
+			return symbols.get(counterValue - 1);
+	}
+	
+	protected static String counterRepresentationNumeric(int counterValue, List<String> symbols) {
+		if (counterValue < 0)
+			return "-" + counterRepresentationNumeric(- counterValue, symbols);
+		if (counterValue >= symbols.size())
+			return counterRepresentationNumeric(counterValue / symbols.size(), symbols)
+				+ symbols.get(mod(counterValue, symbols.size()));
+		else
+			return symbols.get(counterValue);
+	}
+	
+	protected static String counterRepresentationSymbolic(int counterValue, List<String> symbols) {
+		if (counterValue < 1)
+			return "";
+		String symbol = symbols.get(mod(counterValue - 1, symbols.size()));
+		String s = symbol;
+		for (int i = 0; i < ((counterValue - 1) / symbols.size()); i++)
+			s += symbol;
+		return s;
 	}
 	
 	private static Iterator<TextAttribute> flattenAttributes(TextAttribute attributes) {

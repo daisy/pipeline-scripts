@@ -4,6 +4,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
+                xmlns:re="regex-utils"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
@@ -329,9 +330,24 @@
         </xsl:if>
         <current-page number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                       then @style else 'default'}">
-            <xsl:if test="not($text-transform=('none','auto'))">
-                <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
-            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="matches(@style,re:exact($css:SYMBOLS_FN_RE))">
+                    <xsl:choose>
+                        <xsl:when test="not($text-transform=('none','auto'))">
+                            <xsl:attribute name="text-style"
+                                           select="concat('text-transform: -dotify-counter ',$text-transform,'; ',
+                                                          '-dotify-counter-style: ',@style)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="text-style" select="concat('text-transform: -dotify-counter; ',
+                                                                            '-dotify-counter-style: ',@style)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:when test="not($text-transform=('none','auto'))">
+                    <xsl:attribute name="text-style" select="concat('text-transform: ',$text-transform)"/>
+                </xsl:when>
+            </xsl:choose>
         </current-page>
     </xsl:template>
     
