@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>dtbook-to-pef</artifactId>
-  <version>3.4.1-SNAPSHOT</version>
+  <version>3.5.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: dtbook-to-pef</name>

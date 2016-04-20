@@ -1,5 +1,5 @@
-DAISY Pipeline 2 Braille Modules v1.9.11-SNAPSHOT
-=================================================
+DAISY Pipeline 2 Braille Modules v1.9.11
+========================================
 
 Changes
 -------
@@ -33,8 +33,8 @@ Components
   [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
   [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
   [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
-- **braille-css** ([**1.8.1-SNAPSHOT**](https://github.com/snaekobbi/braille-css/releases/tag/1.8.1-SNAPSHOT))
-- **jstyleparser** ([**1.20-p6-SNAPSHOT**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p6-SNAPSHOT))
+- **braille-css** ([**1.9.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.9.0))
+- **jstyleparser** ([**1.20-p6**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p6))
 - jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/))
 - libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
