@@ -12,13 +12,13 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>liblouis-utils-aggregator</artifactId>
-  <version>1.9.11-SNAPSHOT</version>
+  <version>1.9.12-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Modules :: liblouis-utils</name>
 
   <modules>
-    <module>liblouis-core</module>
+    <!-- <module>liblouis-core</module> -->
     <!-- <module>liblouis-saxon</module> -->
     <!-- <module>liblouis-tables</module> -->
     <!-- <module>liblouis-calabash</module> -->
