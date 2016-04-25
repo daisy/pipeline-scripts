@@ -173,8 +173,6 @@ public class LiblouisCoreTest {
 		             translator.transform(text("fo","o\u00ADbar")));
 		assertEquals(braille("⠋⠥","","⠃⠁⠗"),
 		             translator.transform(text("fo","","obar")));
-		assertEquals(braille("⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠭ ","⠋⠥","⠃⠁⠗"),
-		             translator.transform(text("x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","x ","fo","obar")));
 	}
 	
 	@Test
@@ -242,23 +240,47 @@ public class LiblouisCoreTest {
 	@Test
 	public void testSegmentationPreservedDespiteSpacesCollapsed() {
 		FromStyledTextToBraille translator = provider.withContext(messageBus)
-		                                             .get(query("(table:'foobar.cti,squash-ws.utb')")).iterator().next()
+		                                             .get(query("(table:'foobar.cti,squash-ws.utb')(output:ascii)")).iterator().next()
 		                                             .fromStyledTextToBraille();
 		
-		// up to 4 white space segments between "foo" and "bar" are handled
-		assertEquals(braille("⠋⠕⠕"," ","","","","⠃⠁⠗"),
-		             translator.transform(text("foo"," "," "," "," ","bar")));
+		// up to 8 white space segments between "foo" and "bar" are handled
+		int n = 10;
+		String[] textSegments = new String[n]; {
+			textSegments[0] = "foo";
+			for (int i = 1; i < n - 1; i++)
+				textSegments[i] = " ";
+			textSegments[n - 1] = "bar"; }
+		String[] brailleSegments = new String[n]; {
+			brailleSegments[0] = "foo";
+			brailleSegments[1] = " ";
+			for (int i = 2; i < n - 1; i++)
+				brailleSegments[i] = "";
+			brailleSegments[n - 1] = "bar"; }
+		assertEquals(braille(brailleSegments),
+		             translator.transform(text(textSegments)));
 	}
 	
 	@Test(expected = AssertionError.class) // XFAIL
 	public void testSegmentationLostBecauseOfSpacesCollapsed() {
 		FromStyledTextToBraille translator = provider.withContext(messageBus)
-		                                             .get(query("(table:'foobar.cti,squash-ws.utb')")).iterator().next()
+		                                             .get(query("(table:'foobar.cti,squash-ws.utb')(output:ascii)")).iterator().next()
 		                                             .fromStyledTextToBraille();
 		
-		// fails when "foo" and "bar" have 5 or more white space segments in between them
-		assertEquals(braille("⠋⠕⠕"," ","","","","","⠃⠁⠗"),
-		             translator.transform(text("foo"," "," "," "," "," ","bar")));
+		// fails when "foo" and "bar" have 9 or more white space segments in between them
+		int n = 11;
+		String[] textSegments = new String[n]; {
+			textSegments[0] = "foo";
+			for (int i = 1; i < n - 1; i++)
+				textSegments[i] = " ";
+			textSegments[n - 1] = "bar"; }
+		String[] brailleSegments = new String[n]; {
+			brailleSegments[0] = "foo";
+			brailleSegments[1] = " ";
+			for (int i = 2; i < n - 1; i++)
+				brailleSegments[i] = "";
+			brailleSegments[n - 1] = "bar"; }
+		assertEquals(braille(brailleSegments),
+		             translator.transform(text(textSegments)));
 	}
 	
 	@Test
