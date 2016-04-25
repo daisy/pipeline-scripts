@@ -15,12 +15,12 @@ import org.daisy.maven.xspec.XSpecRunner;
 import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
 import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
-import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;

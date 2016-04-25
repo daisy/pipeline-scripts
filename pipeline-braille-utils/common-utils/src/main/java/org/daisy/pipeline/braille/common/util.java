@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.common;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -17,12 +18,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Function;
 import static com.google.common.base.Functions.forPredicate;
 import static com.google.common.base.Functions.toStringFunction;
 import com.google.common.base.Predicate;
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.primitives.Bytes;
@@ -234,6 +237,40 @@ public abstract class util {
 				};
 			}
 		}
+		
+		public static <T extends Cloneable> Iterable<T> clone(final Iterable<T> iterable) {
+			return new Clone<T>() {
+				protected Iterator<T> _iterator() {
+					return iterable.iterator();
+				}
+			};
+		}
+		
+		protected static abstract class Clone<T extends Cloneable> implements Iterable<T> {
+			protected abstract Iterator<T> _iterator();
+			public final Iterator<T> iterator() {
+				return new AbstractIterator<T>() {
+					Iterator<T> iterator = _iterator();
+					@SuppressWarnings("unchecked")
+					protected T computeNext() {
+						T next;
+						try {
+							next = iterator.next(); }
+						catch (NoSuchElementException e) {
+							return endOfData(); }
+						try {
+							return (T)next.getClass().getMethod("clone").invoke(next); }
+						catch (IllegalAccessException
+								| IllegalArgumentException
+								| InvocationTargetException
+								| NoSuchMethodException
+								| SecurityException e) {
+							throw new RuntimeException("Could not invoke clone() method", e);
+						}
+					}
+				};
+			}
+		}
 	}
 	
 	public static abstract class OS {
@@ -367,6 +404,35 @@ public abstract class util {
 						hyphenatedText.append(c); }}
 			hyphenatedText.append(text.charAt(i));
 			return hyphenatedText.toString();
+		}
+		
+		public static Iterable<String> splitInclDelimiter(final String text, final Pattern delimiterPattern) {
+			return new Iterable<String>() {
+				public final Iterator<String> iterator() {
+					return new AbstractIterator<String>() {
+						Matcher m = delimiterPattern.matcher(text);
+						int i = 0;
+						String nextNext = null;
+						protected String computeNext() {
+							if (nextNext != null) {
+								String next = nextNext;
+								nextNext = null;
+								return next; }
+							if (m.find()) {
+								String next = text.substring(i, m.start());
+								nextNext = m.group();
+								i = m.end();
+								return next; }
+							else if (i >= 0) {
+								String next = text.substring(i);
+								i = -1;
+								return next; }
+							else
+								return endOfData();
+						}
+					};
+				}
+			};
 		}
 	}
 	

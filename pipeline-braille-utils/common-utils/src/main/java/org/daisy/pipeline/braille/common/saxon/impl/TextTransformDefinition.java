@@ -16,8 +16,8 @@ import net.sf.saxon.value.StringValue;
 
 import org.daisy.braille.css.SimpleInlineStyle;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
 import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Query;

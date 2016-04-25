@@ -53,6 +53,7 @@ import static org.daisy.pipeline.braille.common.util.Locales.parseLocale;
 import static org.daisy.pipeline.braille.common.util.Strings.extractHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.insertHyphens;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
+import static org.daisy.pipeline.braille.common.util.Strings.splitInclDelimiter;
 import static org.daisy.pipeline.braille.common.util.Tuple2;
 
 import org.daisy.pipeline.braille.liblouis.LiblouisTable;
@@ -705,18 +706,6 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					hyphens[i] = 0;
 				return hyphens; }
 			return extractHyphens(hyphenator.transform(new String[]{text})[0], SHY, ZWSP)._2;
-		}
-		
-		private static String[] splitInclDelimiter(String text, Pattern delimiterPattern) {
-			List<String> split = new ArrayList<String>();
-			Matcher m = delimiterPattern.matcher(text);
-			int i = 0;
-			while (m.find()) {
-				split.add(text.substring(i, m.start()));
-				split.add(m.group());
-				i = m.end(); }
-			split.add(text.substring(i));
-			return split.toArray(new String[split.size()]);
 		}
 		
 		/*

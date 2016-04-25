@@ -2,17 +2,17 @@ package org.daisy.pipeline.braille.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
+import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
-import org.daisy.pipeline.braille.common.BrailleTranslator.LineBreakingFromStyledText;
+import org.daisy.pipeline.braille.common.Hyphenator;
 
 public class DefaultLineBreakerTest {
 	
@@ -23,143 +23,118 @@ public class DefaultLineBreakerTest {
 		assertEquals(
 			"BUSS-\n" +
 			"STOPP",
-			fillLines(translator.transform(text("busstopp")), 5));
+			fillLines(translator.lineBreakingFromStyledText().transform(text("busstopp")), 5));
 	}
 	
-	/* This will be the new Hyphenator interface */
-	
-	private static interface Hyphenator {
+	private static class TestHyphenator extends AbstractHyphenator {
 		
-		public LineIterator hyphenate(Iterable<CSSStyledText> input);
+		private final LineBreaker lineBreaker = new AbstractHyphenator.util.DefaultLineBreaker() {
+			protected Break breakWord(String word, int limit, boolean force) {
+				if (limit >= 4 && word.equals("busstopp"))
+					return new Break("bussstopp", 4, true);
+				else if (force)
+					return new Break(word, limit, true);
+				else
+					return new Break(word, 0, false);
+			}
+		};
 		
-		public interface LineIterator {
-			public Iterable<CSSStyledText> nextLine(int limit, boolean force);
-			public void mark();
-			public void reset();
-		}
-	}
-	
-	/* A hyphenator mock for testing */
-	
-	private static class TestHyphenator implements Hyphenator {
-		
-		public LineIterator hyphenate(Iterable<CSSStyledText> styledText) {
-			
-			final Iterator<CSSStyledText> rest = styledText.iterator();
-			final List<CSSStyledText> buffer = new ArrayList<CSSStyledText>();
-			
-			return new LineIterator() {
-				
-				CSSStyledText next = null;
-				int position = 0;
-				
-				public Iterable<CSSStyledText> nextLine(int limit, boolean force) {
-					List<CSSStyledText> line = new ArrayList<CSSStyledText>();
-					int available = limit;
-					while (available > 0 && hasNext()) {
-						if (next == null) {
-							if (position < buffer.size())
-								next = buffer.get(position++);
-							else
-								next = rest.next(); }
-						String text = next.getText();
-						if (text.length() <= available) {
-							line.add(next);
-							available -= text.length();
-							next = null; }
-						else {
-							String thisLine = "";
-							String nextLine = "";
-							boolean word = false;
-							for (String segment : splitInclDelimiter(text, ON_SPACE_SPLITTER)) {
-								if (available == 0)
-									nextLine += segment;
-								else if (segment.length() <= available) {
-									thisLine += segment;
-									available -= segment.length();
-									word = !word; }
-								else if (word) {
-									String[] brokenWord = breakWord(segment, available, force);
-									thisLine += brokenWord[0];
-									nextLine += brokenWord[1];
-									available = 0; }
-								else {
-									nextLine += segment;
-									available = 0; }}
-							line.add(new CSSStyledText(thisLine, next.getStyle()));
-							next = new CSSStyledText(nextLine, next.getStyle()); }}
-					return line;
-				}
-				
-				public boolean hasNext() {
-					return next != null || position < buffer.size() || rest.hasNext();
-				}
-				
-				public void mark() {
-					buffer.subList(0, position).clear();
-					position = 0;
-				}
-				
-				public void reset() {
-					position = 0;
-				}
-			};
-		}
-		
-		private static String[] breakWord(String word, int limit, boolean force) {
-			if (limit >= 4 && word.equals("busstopp"))
-				return new String[]{"buss","stopp"};
-			else if (force)
-				return new String[]{word.substring(0, limit), word.substring(limit)};
-			else
-				return new String[]{"", word};
-		}
-				
-		private final static Pattern ON_SPACE_SPLITTER = Pattern.compile("\\s+");
-				
-		private static String[] splitInclDelimiter(String text, Pattern delimiterPattern) {
-			List<String> split = new ArrayList<String>();
-			Matcher m = delimiterPattern.matcher(text);
-			int i = 0;
-			while (m.find()) {
-				split.add(text.substring(i, m.start()));
-				split.add(m.group());
-				i = m.end(); }
-			split.add(text.substring(i));
-			return split.toArray(new String[split.size()]);
+		@Override
+		public LineBreaker asLineBreaker() {
+			return lineBreaker;
 		}
 	}
 	
-	/*
-	 * A translator mock for testing.
-	 *
-	 * TODO: Improve DefaultLineBreaker so that it can be used for
-	 * non-standard hyphenation and then use it in TestTranslator.
-	 */
-	
-	private static class TestTranslator implements LineBreakingFromStyledText {
+	private static class TestTranslator extends AbstractBrailleTranslator {
 		
-		private final Hyphenator hyphenator;
+		private final Hyphenator.LineBreaker hyphenator;
 		
 		private TestTranslator(Hyphenator hyphenator) {
-			this.hyphenator = hyphenator;
+			this.hyphenator = hyphenator.asLineBreaker();
 		}
 		
-		// Simply transform to uppercase.
-		private String translate(Iterable<CSSStyledText> text) {
-			String result = "";
-			for (CSSStyledText t : text)
-				result += t.getText().toUpperCase();
-			return result;
-		}
+		private final static Pattern WORD_SPLITTER = Pattern.compile("[\\x20\t\\n\\r\\u2800\\xA0]+");
 		
-		// Not using hyphenator at all yet, just translating all text in
-		// advance and performing line breaking in a second step. The idea is
-		// to extend DefaultLineBreaker with a callback function for
-		// translating any text (basically to plugin the translate function
-		// above).
-		public BrailleTranslator.LineIterator transform(Iterable<CSSStyledText> styledText) {
-			return new DefaultLineBreaker(translate(styledText), 1, ' ', '-');
+		private final LineBreakingFromStyledText lineBreaker = new AbstractBrailleTranslator.util.DefaultLineBreaker(' ', '-', null) {
+			protected BrailleStream translateAndHyphenate(final Iterable<CSSStyledText> styledText) {
+				return new BrailleStream() {
+					int pos = 0;
+					String text; {
+						text = "";
+						for (CSSStyledText t : styledText)
+							text += t.getText(); }
+					public boolean hasNext() {
+						return pos < text.length();
+					}
+					public String next(int limit, boolean force) {
+						String next = "";
+						int start = pos;
+						int end = text.length();
+						int available = limit;
+						if (end - start <= available) {
+							next = text.substring(start);
+							pos = end; }
+						else {
+							Matcher m = WORD_SPLITTER.matcher(text.substring(pos));
+							boolean foundSpace;
+							while ((foundSpace = m.find()) || pos < end) {
+								int wordStart = pos;
+								int wordEnd = foundSpace ? start + m.start() : end;
+								if (wordEnd > wordStart) {
+									String word = text.substring(wordStart, wordEnd);
+									if (word.length() <= available) {
+										next += word;
+										available -= word.length();
+										pos += word.length(); }
+									else if (available <= 0)
+										break;
+									else {
+										Hyphenator.LineIterator lines = hyphenator.transform(word);
+										String line = lines.nextLine(available, force);
+										String hyphen = lines.lineHasHyphen() ? "-" : "";
+										if (line.length() + hyphen.length() > available) {
+											line = lines.nextLine(available - 1, force);
+											hyphen = lines.lineHasHyphen() ? "-" : ""; }
+										if (line.length() > 0) {
+											next += line;
+											next += hyphen;
+											pos += line.length();
+											text = text.substring(0, pos) + lines.remainder(); }
+										break; }}
+								if (foundSpace) {
+									String space = text.substring(pos, start + m.end());
+									next += space;
+									available -= space.length();
+									pos = space.length(); }}}
+						return translate(next);
+					}
+					public Character peek() {
+						return text.charAt(pos);
+					}
+					public String remainder() {
+						return translate(text.substring(pos));
+					}
+					int markPos;
+					String markText; {
+						mark(); }
+					public void mark() {
+						markPos = pos;
+						markText = text;
+					}
+					public void reset() {
+						pos = markPos;
+						text = markText;
+					}
+					private String translate(String s) {
+						return s.toUpperCase();
+					}
+				};
+			}
+		};
+		
+		@Override
+		public LineBreakingFromStyledText lineBreakingFromStyledText() {
+			return lineBreaker;
 		}
 	}
 	
