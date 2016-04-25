@@ -634,6 +634,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 								b.append(SHY);
 							if ((outputAttrs[j] & 2) == 2)
 								b.append(ZWSP);
+							if ((outputAttrs[j] & 4) == 4)
+								b.append(US);
 							int n = mod(outputSegmentNumbers[j], nmax);
 							if (n > 0)
 								if (mod(n - l - 1, nmax-1) > 0) {

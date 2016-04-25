@@ -297,6 +297,16 @@ public class LiblouisCoreTest {
 	}
 	
 	@Test
+	public void testTranslateWithLetterSpacingAndHyphenation() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.cti,foobar.dic')(output:ascii)")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		assertEquals(
+			braille("f o o\u00AD b a r"),
+			translator.transform(styledText("foobar", "letter-spacing:1; hyphens:auto")));
+	}
+	
+	@Test
 	public void testTranslateWithLetterSpacingAndContractions() {
 		FromStyledTextToBraille translator = provider.withContext(messageBus)
 		                                             .get(query("(table:'foobar.ctb')(output:ascii)")).iterator().next()
@@ -307,6 +317,26 @@ public class LiblouisCoreTest {
 		assertEquals(
 			braille("fu  b  a  r"),
 			translator.transform(styledText("foobar", "letter-spacing:2")));
+	}
+	
+	@Test
+	public void testTranslateWithLetterSpacingAndContractionsFuzzy() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'foobar.ctb')(output:ascii)")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		assertEquals(braille("fu ","b a r"),
+		             translator.transform(styledText("foo", "letter-spacing:1",
+		                                             "bar", "letter-spacing:1")));
+		assertEquals(braille("fu ","b a r"),
+		             translator.transform(styledText("fo",   "letter-spacing:1",
+		                                             "obar", "letter-spacing:1")));
+		assertEquals(braille("fu\u00AD ","b a r"),
+		             translator.transform(styledText("fo",         "letter-spacing:1",
+		                                             "o\u00ADbar", "letter-spacing:1")));
+		assertEquals(braille("fu ","","b a r"),
+		             translator.transform(styledText("fo",   "letter-spacing:1",
+		                                             "",     "letter-spacing:1",
+		                                             "obar", "letter-spacing:1")));
 	}
 	
 	@Test
