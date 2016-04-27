@@ -554,13 +554,20 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 				String joinedBrailleWithoutHyphens;
 				String joinedBraille;
 				byte[] outputAttrs; {
-					TranslationResult r = translator.translate(joinedText, inputAttrs, _typeform);
+					int[] inputAttrsAsInt = new int[inputAttrs.length];
+					for (int i = 0; i < inputAttrs.length; i++)
+						inputAttrsAsInt[i] = inputAttrs[i];
+					TranslationResult r = translator.translate(joinedText, _typeform, null, inputAttrsAsInt);
 					joinedBrailleWithoutHyphens = r.getBraille();
-					outputAttrs = r.getHyphenPositions();
-					if (outputAttrs != null)
-						joinedBraille = insertHyphens(joinedBrailleWithoutHyphens, outputAttrs, SHY, ZWSP, US, RS);
-					else
+					int [] outputAttrsAsInt = r.getInterCharacterAttributes();
+					if (outputAttrsAsInt != null) {
+						outputAttrs = new byte[outputAttrsAsInt.length];
+						for (int i = 0; i < outputAttrs.length; i++)
+							outputAttrs[i] = (byte)outputAttrsAsInt[i];
+						joinedBraille = insertHyphens(joinedBrailleWithoutHyphens, outputAttrs, SHY, ZWSP, US, RS); }
+					else {
 						joinedBraille = joinedBrailleWithoutHyphens;
+						outputAttrs = null; }
 				}
 				
 				// single segment
@@ -606,19 +613,15 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					// if some segment breaks were discarded, fall back on a fuzzy split method
 					if (brailleWithWs == null) {
 						
-						// number of values in the attributes array that can be used for segment numbers
-						int nmax = 2^8;
-						// byte array for tracking segment numbers
-						byte[] inputSegmentNumbers = new byte[inputAttrs.length]; {
-							for (int i = 0; i < inputAttrs.length; i++) {
-								int n = (joinedTextMapping[i + 1] % (nmax-1)) + 1;
-								inputSegmentNumbers[i] = (byte)n; }}
+						// int array for tracking segment numbers
+						// Note that we make the assumption here that the text is not longer than Integer.MAX_VALUE!
+						int[] inputSegmentNumbers = joinedTextMapping;
 						
 						// split at all positions where the segment number is increased in the output
-						TranslationResult r = translator.translate(joinedText, inputSegmentNumbers, _typeform);
+						TranslationResult r = translator.translate(joinedText, _typeform, inputSegmentNumbers, null);
 						if (!r.getBraille().equals(joinedBrailleWithoutHyphens))
 							throw new RuntimeException("Coding error");
-						byte[] outputSegmentNumbers = r.getHyphenPositions();
+						int[] outputSegmentNumbers = r.getCharacterAttributes();
 						brailleWithWs = new String[textWithWs.length];
 						boolean wsLost = false;
 						StringBuffer b = new StringBuffer();
@@ -628,39 +631,37 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						int l = 0;
 						while (l < k)
 							brailleWithWs[l++] = "";
-						for (int j = 0; j < jmax - 1; j++) {
-							b.append(joinedBrailleWithoutHyphens.charAt(j));
-							if ((outputAttrs[j] & 1) == 1)
-								b.append(SHY);
-							if ((outputAttrs[j] & 2) == 2)
-								b.append(ZWSP);
-							if ((outputAttrs[j] & 4) == 4)
-								b.append(US);
-							int n = mod(outputSegmentNumbers[j], nmax);
-							if (n > 0)
-								if (mod(n - l - 1, nmax-1) > 0) {
-									brailleWithWs[l] = b.toString();
-									b = new StringBuffer();
-									if ((outputAttrs[j] & 8) == 8) {
-										if (pre[l]) {
-											Matcher m = Pattern.compile("\\xA0([\\xAD\\u200B]*)").matcher(brailleWithWs[l]);
-											if (m.matches())
-												brailleWithWs[l] = textWithWs[l] + m.group(1);
-											else
-												wsLost = true; }}
-									else {
-										if (pre[l])
-											wsLost = true;
-										if (l <= kmax && pre[l + 1]) {
-											pre[l + 1] = false;
+						for (int j = 0; j < jmax; j++) {
+							if (outputSegmentNumbers[j] > l) {
+								brailleWithWs[l] = b.toString();
+								b = new StringBuffer();
+								if (j > 0 && (outputAttrs[j - 1] & 8) == 8) {
+									if (pre[l]) {
+										Matcher m = Pattern.compile("\\xA0([\\xAD\\u200B]*)").matcher(brailleWithWs[l]);
+										if (m.matches())
+											brailleWithWs[l] = textWithWs[l] + m.group(1);
+										else
 											wsLost = true; }}
-									l++;
-									while (mod(n - l - 1, nmax-1) > 0) {
-										brailleWithWs[l] = "";
-										if (pre[l])
-											wsLost = true;
-										l++; }}}
-						b.append(joinedBrailleWithoutHyphens.charAt(jmax - 1));
+								else {
+									if (pre[l])
+										wsLost = true;
+									if (l <= kmax && pre[l + 1]) {
+										pre[l + 1] = false;
+										wsLost = true; }}
+								l++;
+								while (outputSegmentNumbers[j] > l) {
+									brailleWithWs[l] = "";
+									if (pre[l])
+										wsLost = true;
+									l++; }}
+							b.append(joinedBrailleWithoutHyphens.charAt(j));
+							if (j < jmax - 1) {
+								if ((outputAttrs[j] & 1) == 1)
+									b.append(SHY);
+								if ((outputAttrs[j] & 2) == 2)
+									b.append(ZWSP);
+								if ((outputAttrs[j] & 4) == 4)
+									b.append(US); }}
 						brailleWithWs[l] = b.toString();
 						if (pre[l])
 							if (brailleWithWs[l].equals("\u00A0"))
@@ -869,6 +870,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		return typeform;
 	}
 	
+	@SuppressWarnings("unused")
 	private static int mod(int a, int n) {
 		int result = a % n;
 		if (result < 0)
