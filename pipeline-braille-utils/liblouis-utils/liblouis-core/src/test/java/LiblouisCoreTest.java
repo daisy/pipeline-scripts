@@ -1,60 +1,69 @@
-package org.daisy.pipeline.braille.liblouis;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Optional;
+
 import org.daisy.braille.api.table.BrailleConverter;
 import org.daisy.braille.api.table.Table;
 import org.daisy.braille.api.table.TableCatalogService;
 
-import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
+import org.daisy.pipeline.braille.common.AbstractHyphenator.util.DefaultLineBreaker;
+import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.BrailleTranslator.FromStyledTextToBraille;
 import org.daisy.pipeline.braille.common.BrailleTranslator.LineBreakingFromStyledText;
 import org.daisy.pipeline.braille.common.BrailleTranslator.LineIterator;
+import org.daisy.pipeline.braille.common.CSSStyledText;
+import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.Provider;
+import org.daisy.pipeline.braille.common.TransformProvider;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
 import org.daisy.pipeline.braille.common.Query;
 import static org.daisy.pipeline.braille.common.Query.util.query;
 import static org.daisy.pipeline.braille.common.util.Files.asFile;
 import static org.daisy.pipeline.braille.common.util.URIs.asURI;
 
+import org.daisy.pipeline.braille.liblouis.LiblouisHyphenator;
+import org.daisy.pipeline.braille.liblouis.LiblouisTable;
+import org.daisy.pipeline.braille.liblouis.LiblouisTableResolver;
+import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
-import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import org.ops4j.pax.exam.Configuration;
+import static org.ops4j.pax.exam.CoreOptions.bundle;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.options;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,25 +90,19 @@ public class LiblouisCoreTest {
 		return options(
 			logbackConfigFile(),
 			domTraversalPackage(),
-			logbackBundles(),
 			felixDeclarativeServices(),
-			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
-			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
-			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
-			brailleModule("common-utils"),
-			brailleModule("css-core"),
-			forThisPlatform(brailleModule("liblouis-native")),
-			brailleModule("pef-core"),
 			thisBundle(),
-			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				mavenBundle("org.liblouis:liblouis-java:?"),
+				mavenBundle("org.daisy.braille:braille-utils.api:?"),
+				brailleModule("common-utils"),
+				brailleModule("pef-core"),
+				brailleModule("css-core"),
+				brailleModule("liblouis-native").forThisPlatform(),
+				// logging
+				logbackClassic()),
+			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/")
 		);
 	}
 	
@@ -180,7 +183,8 @@ public class LiblouisCoreTest {
 		assertEquals("foo\u00ADbar",
 		             hyphenatorProvider.withContext(messageBus)
 		                 .get(query("(table:'foobar.cti,foobar.dic')")).iterator().next()
-		                 .transform(new String[]{"foobar"})[0]);
+		                 .asFullHyphenator()
+		                 .transform("foobar"));
 	}
 	
 	@Test
@@ -188,7 +192,60 @@ public class LiblouisCoreTest {
 		assertEquals("foo-\u200Bbar",
 		             hyphenatorProvider.withContext(messageBus)
 		                 .get(query("(table:'foobar.cti,foobar.dic')")).iterator().next()
-		                 .transform(new String[]{"foo-bar"})[0]);
+		                 .asFullHyphenator()
+		                 .transform("foo-bar"));
+	}
+	
+	private static class MockHyphenator extends AbstractHyphenator {
+		private static final LineBreaker lineBreaker = new DefaultLineBreaker() {
+			protected Break breakWord(String word, int limit, boolean force) {
+				if (limit >= 3 && word.equals("foobar"))
+					return new Break("fubbar", 3, true);
+				else if (force)
+					return new Break(word, limit, false);
+				else
+					return new Break(word, 0, false);
+			}
+		};
+		@Override
+		public LineBreaker asLineBreaker() {
+			return lineBreaker;
+		}
+		private static final MockHyphenator instance = new MockHyphenator() {
+			@Override
+			public String getIdentifier() {
+				return "mock";
+			}
+		};
+		public static class Provider extends AbstractTransformProvider<MockHyphenator>
+		                             implements HyphenatorProvider<MockHyphenator> {
+			{
+				get(query("")); // in order to save instance in id-based cache
+			}
+			public Iterable<MockHyphenator> _get(Query query) {
+				return AbstractTransformProvider.util.Iterables.<MockHyphenator>of(instance);
+			}
+		}
+	}
+	
+	@Test
+	public void testTranslateAndHyphenateNonStandard() {
+		registerService(new MockHyphenator.Provider(), HyphenatorProvider.class);
+		LineBreakingFromStyledText translator = provider.withContext(messageBus)
+		                                                .get(query("(table:'foobar.ctb')(hyphenator:mock)(output:ascii)")).iterator().next()
+		                                                .lineBreakingFromStyledText();
+		assertEquals(
+			"fub\n" +
+			"ar",
+			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 3));
+		assertEquals(
+			"fub⠤\n" +
+			"bar",
+			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 4));
+		assertEquals(
+			"fubar",
+			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 5));
+		
 	}
 	
 	@Test
@@ -392,6 +449,7 @@ public class LiblouisCoreTest {
 
 	// Tests with trailing spaces are not 100% correct according to spec, but spaces at the end of
 	// lines do not matter, because they are invisible.
+	// FIXME: actually, spaces do matter within tables!
 	@Test
 	public void testTranslateWithWordSpacingAndLineBreaking() {
 		LineBreakingFromStyledText translator = provider.withContext(messageBus)
@@ -508,5 +566,10 @@ public class LiblouisCoreTest {
 		catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e); }
 		return services;
+	}
+	
+	private <S> void registerService(S service, Class<S> serviceClass) {
+		Hashtable<String,Object> properties = new Hashtable<String,Object>();
+		context.registerService(serviceClass.getName(), service, properties);
 	}
 }

@@ -6,8 +6,8 @@ import com.google.common.base.Splitter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
-import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.Provider;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImplProvider",
 	service = {
 		LiblouisHyphenator.Provider.class,
-		Hyphenator.Provider.class
+		HyphenatorProvider.class
 	}
 )
 public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Provider {
@@ -125,7 +125,7 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 		}
 	};
 	
-	private static class LiblouisHyphenatorImpl extends AbstractTransform implements LiblouisHyphenator {
+	private static class LiblouisHyphenatorImpl extends AbstractHyphenator implements LiblouisHyphenator {
 		
 		private final LiblouisTable table;
 		private final Translator translator;
@@ -139,12 +139,35 @@ public class LiblouisHyphenatorJnaImplProvider implements LiblouisHyphenator.Pro
 			return table;
 		}
 		
+		@Override
+		public FullHyphenator asFullHyphenator() {
+			return fullHyphenator;
+		}
+		
+		private final FullHyphenator fullHyphenator = new FullHyphenator() {
+			public String transform(String text) {
+				return LiblouisHyphenatorImpl.this.transform(text);
+			}
+			public String[] transform(String[] text) {
+				return LiblouisHyphenatorImpl.this.transform(text);
+			}
+		};
+		
 		private final static char SHY = '\u00AD';
 		private final static char ZWSP = '\u200B';
 		private final static char US = '\u001F';
 		private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 		
-		public String[] transform(String text[]) {
+		private String transform(String text) {
+			Tuple2<String,byte[]> t = extractHyphens(text, SHY, ZWSP);
+			byte[] hyphens = doHyphenate(t._1);
+			if (t._2 != null)
+				for (int i = 0; i < hyphens.length; i++)
+					hyphens[i] += t._2[i];
+			return insertHyphens(t._1, hyphens, SHY, ZWSP);
+		}
+		
+		private String[] transform(String text[]) {
 			// This byte array is used not only to track the hyphen
 			// positions but also the segment boundaries.
 			byte[] positions;
