@@ -8,13 +8,13 @@ import org.daisy.dotify.api.hyphenator.HyphenatorConfigurationException;
 import org.daisy.dotify.api.hyphenator.HyphenatorInterface;
 import org.daisy.dotify.api.hyphenator.HyphenatorFactoryService;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
-import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyphenator {
+public class DotifyHyphenatorImpl extends AbstractHyphenator implements DotifyHyphenator {
 	
 	private HyphenatorInterface hyphenator;
 	
@@ -42,6 +42,24 @@ public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyp
 	
 	public HyphenatorInterface asHyphenatorInterface() {
 		return hyphenator;
+	}
+	
+	@Override
+	public FullHyphenator asFullHyphenator() {
+		return fullHyphenator;
+	}
+	
+	private final FullHyphenator fullHyphenator = new FullHyphenator() {
+		public String transform(String text) {
+			return DotifyHyphenatorImpl.this.transform(text);
+		}
+		public String[] transform(String[] text) {
+			return DotifyHyphenatorImpl.this.transform(text);
+		}
+	};
+	
+	public String transform(String text) {
+		return hyphenator.hyphenate(text);
 	}
 	
 	public String[] transform(String[] text) {
@@ -55,7 +73,7 @@ public class DotifyHyphenatorImpl extends AbstractTransform implements DotifyHyp
 		name = "org.daisy.pipeline.braille.dotify.DotifyHyphenatorImpl.Provider",
 		service = {
 			DotifyHyphenator.Provider.class,
-			Hyphenator.Provider.class
+			HyphenatorProvider.class
 		}
 	)
 	public static class Provider extends AbstractTransformProvider<DotifyHyphenator>

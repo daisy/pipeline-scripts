@@ -33,7 +33,7 @@
                         <xsl:when test="$identifier='print-page'">
                             <xsl:element name="louis:print-page">
                                 <xsl:attribute name="break"
-                                               select="if ($properties[@name='display' and @value='page-break'])
+                                               select="if ($properties[@name='display' and @value='-louis-page-break'])
                                                        then 'true' else 'false'"/>
                                 <xsl:sequence select="$evaluated-content"/>
                             </xsl:element>

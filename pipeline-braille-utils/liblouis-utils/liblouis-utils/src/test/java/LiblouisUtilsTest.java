@@ -10,13 +10,14 @@ import static org.daisy.pipeline.pax.exam.Options.brailleModule;
 import static org.daisy.pipeline.pax.exam.Options.calabashConfigFile;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
-import static org.daisy.pipeline.pax.exam.Options.xprocspecBundles;
-import static org.daisy.pipeline.pax.exam.Options.xspecBundles;
+import static org.daisy.pipeline.pax.exam.Options.xprocspec;
+import static org.daisy.pipeline.pax.exam.Options.xspec;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
@@ -44,34 +44,30 @@ public class LiblouisUtilsTest {
 		return options(
 			logbackConfigFile(),
 			calabashConfigFile(),
-			logbackBundles(),
 			domTraversalPackage(),
 			felixDeclarativeServices(),
-			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.liblouis").artifactId("liblouis-java").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			brailleModule("common-utils"),
-			brailleModule("liblouis-core"),
-			brailleModule("liblouis-saxon"),
-			brailleModule("liblouis-calabash"),
-			brailleModule("liblouis-tables"),
-			brailleModule("libhyphen-core"),
-			brailleModule("pef-core"),
-			brailleModule("css-core"),
-			brailleModule("css-calabash"),
-			brailleModule("css-utils"),
-			forThisPlatform(brailleModule("liblouis-native")),
-			forThisPlatform(brailleModule("libhyphen-native")), // TODO: fix for windows!
-			xspecBundles(),
-			xprocspecBundles(),
 			thisBundle(),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				brailleModule("liblouis-core"),
+				brailleModule("common-utils"),
+				brailleModule("css-core"),
+				brailleModule("liblouis-saxon"),
+				brailleModule("liblouis-calabash"),
+				brailleModule("css-utils"),
+				brailleModule("libhyphen-core"),
+				brailleModule("liblouis-tables"),
+				brailleModule("liblouis-native").forThisPlatform(),
+				brailleModule("libhyphen-native").forThisPlatform(), // TODO: fix for windows!
+				// logging
+				logbackClassic(),
+				// xprocspec
+				xprocspec(),
+				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"),
+				// xspec
+				xspec(),
+				mavenBundle("org.apache.servicemix.bundles:org.apache.servicemix.bundles.xmlresolver:?"),
+				mavenBundle("org.daisy.pipeline:saxon-adapter:?"))
 		);
 	}
 	
@@ -91,14 +87,14 @@ public class LiblouisUtilsTest {
 	@Inject
 	private XProcSpecRunner xprocspecRunner;
 	
-	// @Test
-	// public void runXProcSpec() throws Exception {
-	// 	File baseDir = new File(PathUtils.getBaseDir());
-	// 	boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
-	// 	                                      new File(baseDir, "target/xprocspec-reports"),
-	// 	                                      new File(baseDir, "target/surefire-reports"),
-	// 	                                      new File(baseDir, "target/xprocspec"),
-	// 	                                      new XProcSpecRunner.Reporter.DefaultReporter());
-	// 	assertTrue("XProcSpec tests should run with success", success);
-	// }
+	//@Test
+	public void runXProcSpec() throws Exception {
+		File baseDir = new File(PathUtils.getBaseDir());
+		boolean success = xprocspecRunner.run(new File(baseDir, "src/test/xprocspec"),
+		                                      new File(baseDir, "target/xprocspec-reports"),
+		                                      new File(baseDir, "target/surefire-reports"),
+		                                      new File(baseDir, "target/xprocspec"),
+		                                      new XProcSpecRunner.Reporter.DefaultReporter());
+		assertTrue("XProcSpec tests should run with success", success);
+	}
 }

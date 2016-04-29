@@ -2,14 +2,16 @@ package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.Iterables.size;
+
+import cz.vutbr.web.css.CSSProperty;
+
+import org.daisy.braille.css.BrailleCSSProperty.Hyphens;
+import org.daisy.braille.css.SimpleInlineStyle;
 
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleFilterFactoryService;
@@ -27,7 +29,9 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.I
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logSelect;
 import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.Feature;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
@@ -54,9 +58,6 @@ public class DotifyTranslatorImpl extends AbstractBrailleTranslator implements D
 	private final BrailleFilter filter;
 	private final boolean hyphenating;
 	private final Hyphenator externalHyphenator;
-	
-	private final static Splitter.MapSplitter CSS_PARSER
-		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 	
 	protected DotifyTranslatorImpl(BrailleFilter filter, boolean hyphenating) {
 		this.filter = filter;
@@ -95,9 +96,10 @@ public class DotifyTranslatorImpl extends AbstractBrailleTranslator implements D
 		return lineBreakingFromStyledText;
 	}
 		
-	private final LineBreakingFromStyledText lineBreakingFromStyledText = new LineBreakingFromStyledText() {
-		public LineIterator transform(java.lang.Iterable<CSSStyledText> styledText) {
-			return new DefaultLineBreaker(join(fromStyledTextToBraille.transform(styledText)));
+	private final LineBreakingFromStyledText lineBreakingFromStyledText
+	= new DefaultLineBreaker() {
+		protected BrailleStream translateAndHyphenate(final java.lang.Iterable<CSSStyledText> styledText) {
+			return new FullyHyphenatedAndTranslatedString(join(fromStyledTextToBraille.transform(styledText)));
 		}
 	};
 	
@@ -106,25 +108,25 @@ public class DotifyTranslatorImpl extends AbstractBrailleTranslator implements D
 			throw new RuntimeException("'hyphens:auto' is not supported");
 		try {
 			if (hyphenate && externalHyphenator != null)
-				return filter.filter(Translatable.text(externalHyphenator.transform(new String[]{text})[0]).hyphenate(false).build());
+				return filter.filter(Translatable.text(externalHyphenator.asFullHyphenator().transform(text)).hyphenate(false).build());
 			else
 				return filter.filter(Translatable.text(text).hyphenate(hyphenate).build()); }
 		catch (TranslationException e) {
 			throw new RuntimeException(e); }
 	}
 	
-	public String transform(String text, String cssStyle) {
+	public String transform(String text, SimpleInlineStyle style) {
 		boolean hyphenate = false;
-		Map<String,String> style = new HashMap<String,String>(CSS_PARSER.split(cssStyle));
-		for (String prop : style.keySet()) {
-			if ("hyphens".equals(prop)) {
-				String val = style.get(prop);
-				if ("auto".equals(val))
+		if (style != null) {
+			CSSProperty val = style.getProperty("hyphens");
+			if (val != null) {
+				if (val == Hyphens.AUTO)
 					hyphenate = true;
-				else if (!"manual".equals(val))
-					logger.warn("{}:{} not supported", prop, val); }
-			else
-				logger.warn("CSS property {} not supported", prop); }
+				else if (val == Hyphens.MANUAL)
+					logger.warn("hyphens:{} not supported", val);
+				style.removeProperty("hyphens"); }
+			for (String prop : style.getPropertyNames())
+				logger.warn("CSS property {} not supported", style.getSourceDeclaration(prop)); }
 		return transform(text, hyphenate);
 	}
 	
@@ -262,20 +264,20 @@ public class DotifyTranslatorImpl extends AbstractBrailleTranslator implements D
 		@Reference(
 			name = "HyphenatorProvider",
 			unbind = "unbindHyphenatorProvider",
-			service = Hyphenator.Provider.class,
+			service = HyphenatorProvider.class,
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC
 		)
 		@SuppressWarnings(
 			"unchecked" // safe cast to TransformProvider<Hyphenator>
 		)
-		protected void bindHyphenatorProvider(Hyphenator.Provider<?> provider) {
+		protected void bindHyphenatorProvider(HyphenatorProvider<?> provider) {
 			hyphenatorProviders.add((TransformProvider<Hyphenator>)provider);
 			hyphenatorProvider.invalidateCache();
 			logger.debug("Adding Hyphenator provider: " + provider);
 		}
 		
-		protected void unbindHyphenatorProvider(Hyphenator.Provider<?> provider) {
+		protected void unbindHyphenatorProvider(HyphenatorProvider<?> provider) {
 			hyphenatorProviders.remove(provider);
 			hyphenatorProvider.invalidateCache();
 			logger.debug("Removing Hyphenator provider: " + provider);

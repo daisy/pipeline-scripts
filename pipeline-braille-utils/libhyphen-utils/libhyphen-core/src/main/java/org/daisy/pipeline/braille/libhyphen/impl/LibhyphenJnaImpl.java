@@ -14,7 +14,7 @@ import com.google.common.base.Splitter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
@@ -23,6 +23,7 @@ import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.I
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.of;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.logCreate;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.NativePath;
 import org.daisy.pipeline.braille.common.ResourceResolver;
 import org.daisy.pipeline.braille.common.Query;
@@ -56,7 +57,7 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.libhyphen.LibhyphenJnaImpl",
 	service = {
 		LibhyphenHyphenator.Provider.class,
-		org.daisy.pipeline.braille.common.Hyphenator.Provider.class
+		HyphenatorProvider.class
 	}
 )
 public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphenator>
@@ -182,7 +183,7 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 	private final static char US = '\u001F';
 	private final static Splitter SEGMENT_SPLITTER = Splitter.on(US);
 	
-	private class LibhyphenHyphenatorImpl extends AbstractTransform implements LibhyphenHyphenator {
+	private class LibhyphenHyphenatorImpl extends AbstractHyphenator implements LibhyphenHyphenator {
 		
 		private final URI table;
 		private final Hyphenator hyphenator;
@@ -194,6 +195,29 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 		
 		public URI asLibhyphenTable() {
 			return table;
+		}
+		
+		@Override
+		public FullHyphenator asFullHyphenator() {
+			return fullHyphenator;
+		}
+		
+		private final FullHyphenator fullHyphenator = new FullHyphenator() {
+			public String transform(String text) {
+				return LibhyphenHyphenatorImpl.this.transform(text);
+			}
+			public String[] transform(String[] text) {
+				return LibhyphenHyphenatorImpl.this.transform(text);
+			}
+		};
+		
+		private String transform(String text) {
+			Tuple2<String,byte[]> t = extractHyphens(text, SHY, ZWSP);
+			byte[] hyphens = hyphenator.hyphenate(t._1);
+			if (t._2 != null)
+				for (int i = 0; i < hyphens.length; i++)
+					hyphens[i] += t._2[i];
+			return insertHyphens(t._1, hyphens, SHY, ZWSP);
 		}
 		
 		public String[] transform(String[] text) {

@@ -101,7 +101,7 @@ public class HyphenateDefinition extends ExtensionFunctionDefinition {
 						hyphenator = hyphenators.get(query).iterator().next(); }
 					catch (NoSuchElementException e) {
 						throw new RuntimeException("Could not find a hyphenator for query: " + query); }
-					return arrayToSequence(hyphenator.transform(text));}
+					return arrayToSequence(hyphenator.asFullHyphenator().transform(text));}
 				catch (Exception e) {
 					logger.error("louis:hyphenate failed", e);
 					throw new XPathException("louis:hyphenate failed"); }

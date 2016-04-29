@@ -5,17 +5,17 @@
   
   <x:scenario label="test_01">
     <x:context>
-      <list style="display:block; list-style-type: -">
+      <list style="display:block; list-style-type: '⠤'">
         <item style="display: list-item">foo</item>
         <item style="display: list-item">bar</item>
         <item style="display: list-item">baz</item>
       </list>
     </x:context>
     <x:expect label="result">
-      <list style="display:block; list-style-type: -">
-        <item style="display: list-item"><css:marker style="display:inline">- </css:marker>foo</item>
-        <item style="display: list-item"><css:marker style="display:inline">- </css:marker>bar</item>
-        <item style="display: list-item"><css:marker style="display:inline">- </css:marker>baz</item>
+      <list style="display:block; list-style-type: '⠤'">
+        <item style="display: list-item"><css:marker style="display:inline">⠤ </css:marker>foo</item>
+        <item style="display: list-item"><css:marker style="display:inline">⠤ </css:marker>bar</item>
+        <item style="display: list-item"><css:marker style="display:inline">⠤ </css:marker>baz</item>
       </list>
     </x:expect>
   </x:scenario>

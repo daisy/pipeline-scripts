@@ -46,10 +46,12 @@ public class LibhyphenCoreTest {
 	public void testHyphenate() {
 		assertEquals("foo\u00ADbar",
 		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
-		                 .transform(new String[]{"foobar"})[0]);
+		                 .asFullHyphenator()
+		                 .transform("foobar"));
 		assertEquals("foo-\u200Bbar",
 		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
-		                 .transform(new String[]{"foo-bar"})[0]);
+	                 .asFullHyphenator()
+		                 .transform("foo-bar"));
 	}
 	
 	@Configuration

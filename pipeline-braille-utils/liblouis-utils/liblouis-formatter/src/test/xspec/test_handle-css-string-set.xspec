@@ -9,7 +9,7 @@
       <doc>
         <body>
           <pagenum num="1" style="string-set: print-page attr(num)"/>
-          <pagenum num="2" style="string-set: print-page attr(num); display: page-break"/>
+          <pagenum num="2" style="string-set: print-page attr(num); display: -louis-page-break"/>
         </body>
       </doc>
     </x:context>
@@ -19,7 +19,7 @@
           <louis:print-page break="false">1</louis:print-page>
           <pagenum num="1" style="display: inline"/>
           <louis:print-page break="true">2</louis:print-page>
-          <pagenum num="2" style="display: page-break"/>
+          <pagenum num="2" style="display: -louis-page-break"/>
         </body>
       </doc>
     </x:expect>

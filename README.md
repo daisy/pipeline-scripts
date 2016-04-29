@@ -46,9 +46,9 @@ Release procedure
   ```
   
 - Resolve snapshot dependencies and commit.
-- View changes since previous release, update module versions (in both `bom/pom.xml` and module's
-  POM) according to semantic versioning and commit (in case of a major increment all depending
-  modules must be enabled in `pom.xml`).
+- View changes since previous release, update module versions (in both `maven/bom/pom.xml` and
+  module's POM) according to semantic versioning and commit (in case of a major increment all
+  depending modules (depending through "Import-Package") must be updated as well).
 
   ```sh
   git diff v1.9.3...HEAD
@@ -70,9 +70,9 @@ Release procedure
   mvn release:perform -DlocalCheckout=true
   ```
   
-- Revert snapshot increments of modules in bom/pom.xml and parent/pom.xml, update parent version to
-  new snapshot in all module POMs, comment out all modules in all aggregator POMs and amend to the
-  last commit.
+- Revert snapshot increments of modules in `maven/bom/pom.xml` and `maven/parent/pom.xml`, update
+  parent version to new snapshot in all module POMs, comment out all modules in all aggregator POMs
+  and amend to the last commit.
 - Push and make a pull request (for turning an existing issue into a PR use the `-i <issueno>` switch).
 
   ```sh

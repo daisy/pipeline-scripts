@@ -110,7 +110,9 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 			for (org.daisy.pipeline.braille.common.BrailleTranslator t : brailleTranslatorProvider.get(query))
 				try {
 					return new BrailleTranslatorFromBrailleTranslator(mode, t.lineBreakingFromStyledText()); }
-				catch (UnsupportedOperationException e) {}
+				catch (UnsupportedOperationException e) {
+					// TODO: could also try with t.fromStyledTextToBraille()
+					}
 			return new BrailleTranslatorFromFilter(mode, filterFactory.newFilter(locale, mode));
 		}
 	}
@@ -145,7 +147,7 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		}
 		
 		public BrailleTranslatorResult translate(Translatable input) throws TranslationException {
-			return new DefaultLineBreaker(filter.filter(input));
+			return new DefaultLineBreaker.LineIterator(filter.filter(input), '\u2800', '\u2824', 1);
 		}
 		
 		public String getTranslatorMode() {
@@ -169,11 +171,11 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 			if (input.getAttributes() == null && input.isHyphenating() == false) {
 				String text = input.getText();
 				if (" ".equals(text))
-					return new DefaultLineBreaker("\u2800");
+					return new DefaultLineBreaker.LineIterator("\u2800", '\u2800', '\u2824', 1);
 				if ("??".equals(text))
-					return new DefaultLineBreaker("??");
+					return new DefaultLineBreaker.LineIterator("??", '\u2800', '\u2824', 1);
 				if (BRAILLE.matcher(text).matches())
-					return new DefaultLineBreaker(text); }
+					return new DefaultLineBreaker.LineIterator(text, '\u2800', '\u2824', 1); }
 			return translator.transform(cssStyledTextFromTranslatable(input));
 		}
 		

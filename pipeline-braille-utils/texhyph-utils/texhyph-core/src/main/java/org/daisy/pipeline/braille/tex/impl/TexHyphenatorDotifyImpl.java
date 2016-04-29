@@ -11,13 +11,13 @@ import java.util.Properties;
 
 import net.davidashen.text.Utf8TexParser.TexParserException;
 
-import org.daisy.pipeline.braille.common.AbstractTransform;
+import org.daisy.pipeline.braille.common.AbstractHyphenator;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.fromNullable;
 import static org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables.transform;
-import org.daisy.pipeline.braille.common.Hyphenator;
+import org.daisy.pipeline.braille.common.HyphenatorProvider;
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 	name = "org.daisy.pipeline.braille.tex.impl.TexHyphenatorDotifyImpl",
 	service = {
 		TexHyphenator.Provider.class,
-		Hyphenator.Provider.class
+		HyphenatorProvider.class
 	}
 )
 public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphenator>
@@ -161,7 +161,7 @@ public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphen
 	/*
 	 * Code originally taken from org.daisy.dotify.impl.hyphenator.latex.HyphenationConfig
 	 */
-	private class TexHyphenatorImpl extends AbstractTransform implements TexHyphenator {
+	private class TexHyphenatorImpl extends AbstractHyphenator implements TexHyphenator {
 		
 		private final static String LEFT_HYPHEN_MIN_KEY = "beginLimit";
 		private final static String RIGHT_HYPHEN_MIN_KEY = "endLimit";
@@ -210,6 +210,27 @@ public class TexHyphenatorDotifyImpl extends AbstractTransformProvider<TexHyphen
 		
 		public URI asTexHyphenatorTable() {
 			return table;
+		}
+		
+		@Override
+		public FullHyphenator asFullHyphenator() {
+			return fullHyphenator;
+		}
+		
+		private final FullHyphenator fullHyphenator = new FullHyphenator() {
+			public String transform(String text) {
+				return TexHyphenatorImpl.this.transform(text);
+			}
+			public String[] transform(String[] text) {
+				return TexHyphenatorImpl.this.transform(text);
+			}
+		};
+		
+		public String transform(String text) {
+			try {
+				return hyphenator.hyphenate(text, beginLimit, endLimit); }
+			catch (Exception e) {
+				throw new RuntimeException("Error during TeX hyphenation", e); }
 		}
 		
 		public String[] transform(String[] text) {

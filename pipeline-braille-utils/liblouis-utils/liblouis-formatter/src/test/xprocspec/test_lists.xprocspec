@@ -36,7 +36,7 @@
                   margin-top: 1;
                 }
                 list { display: block }
-                list[type="unordered"] { list-style-type: ⠶ }
+                list[type="unordered"] { list-style-type: '⠶' }
                 list.decimal { list-style-type: decimal }
                 list.alpha { list-style-type: lower-alpha }
                 list.roman { list-style-type: lower-roman }

@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                xmlns:re="regex-utils"
                 exclude-result-prefixes="xs css"
                 version="2.0">
     
@@ -48,9 +49,10 @@
                                 <xsl:number value="count(preceding-sibling::*) + 1" format="I"/>
                                 <xsl:text>. </xsl:text>
                             </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:sequence select="concat($list-style-type, ' ')"/>
-                            </xsl:otherwise>
+                            <xsl:when test="matches($list-style-type,re:exact($css:BRAILLE_STRING_RE))">
+                                <xsl:value-of select="substring($list-style-type,2,string-length($list-style-type)-2)"/>
+                                <xsl:text> </xsl:text>
+                            </xsl:when>
                         </xsl:choose>
                     </xsl:element>
                 </xsl:if>

@@ -34,8 +34,8 @@ import org.daisy.dotify.api.translator.TranslationException;
 
 import org.daisy.pipeline.braille.common.AbstractBrailleTranslator;
 import org.daisy.pipeline.braille.common.BrailleTranslator;
-import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
 import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
@@ -357,7 +357,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 						    && ((TermFunction)counterStyle).getFunctionName().equals("symbols")) {
 							String system = null;
 							List<String> symbols = new ArrayList<String>();
-							for (Term term : (TermFunction)counterStyle) {
+							for (Term<?> term : (TermFunction)counterStyle) {
 								if (system == null) {
 									if (term instanceof TermIdent)
 										system = ((TermIdent)term).getValue();

@@ -50,16 +50,20 @@ public class TexHyphenatorCoreTest {
 		TransformProvider<TexHyphenator> provider = getProvider(TexHyphenator.class, TexHyphenator.Provider.class);
 		assertEquals("foo\u00ADbar",
 		             provider.get(query("(table:'foobar.tex')")).iterator().next()
-		                     .transform(new String[]{"foobar"})[0]);
+	                         .asFullHyphenator()
+		                     .transform("foobar"));
 		assertEquals("foo-\u200Bbar",
 		             provider.get(query("(table:'foobar.tex')")).iterator().next()
-		                     .transform(new String[]{"foo-bar"})[0]);
+                     .asFullHyphenator()
+		                     .transform("foo-bar"));
 		assertEquals("foo\u00ADbar",
 		             provider.get(query("(table:'foobar.properties')")).iterator().next()
-		                     .transform(new String[]{"foobar"})[0]);
+                     .asFullHyphenator()
+		                     .transform("foobar"));
 		assertEquals("foo-\u200Bbar",
 		             provider.get(query("(table:'foobar.properties')")).iterator().next()
-		                     .transform(new String[]{"foo-bar"})[0]);
+                     .asFullHyphenator()
+		                     .transform("foo-bar"));
 	}
 	
 	@Configuration

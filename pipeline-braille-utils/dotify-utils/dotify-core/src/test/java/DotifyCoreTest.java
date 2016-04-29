@@ -3,7 +3,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
-import org.daisy.pipeline.braille.common.BrailleTranslator.CSSStyledText;
+import org.daisy.braille.css.SimpleInlineStyle;
+
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.dotify.DotifyHyphenator;
 import org.daisy.pipeline.braille.dotify.DotifyTranslator;
@@ -83,6 +85,7 @@ public class DotifyCoreTest {
 	public void testHyphenate() {
 		assertEquals("foo\u00ADbar",
 		             hyphenatorProvider.get(query("(locale:sv-SE)")).iterator().next()
+		                               .asFullHyphenator()
 		                               .transform(new String[]{"foobar"})[0]);
 	}
 	
@@ -109,7 +112,7 @@ public class DotifyCoreTest {
 		boolean textSet = false;
 		for (String s : textAndStyle) {
 			if (textSet)
-				styledText.add(new CSSStyledText(text, s));
+				styledText.add(new CSSStyledText(text, new SimpleInlineStyle(s)));
 			else
 				text = s;
 			textSet = !textSet; }
