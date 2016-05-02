@@ -58,6 +58,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
           <tagNameFormat>v@{project.version}</tagNameFormat>
+          <arguments>-DskipTests -Psonatype-oss-release</arguments>
         </configuration>
       </plugin>
     </plugins>
