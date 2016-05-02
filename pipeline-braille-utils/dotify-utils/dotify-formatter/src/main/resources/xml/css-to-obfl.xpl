@@ -384,9 +384,10 @@
     <p:for-each>
         <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
             <p:documentation>
-                All css:_ elements except for root elements and empty elements with a css:string-set
-                or css:_obfl-marker attribute within a css:box element should be gone now. <!--
-                depends on shift-id and shift-string-set -->
+                All css:_ elements except for root elements, top-level elements in named flows (with
+                css:anchor attribute), and empty elements with a css:string-set or css:_obfl-marker
+                attribute within a css:box element should be gone now. <!-- depends on shift-id and
+                shift-string-set -->
             </p:documentation>
         </p:unwrap>
         <css:make-anonymous-block-boxes>
