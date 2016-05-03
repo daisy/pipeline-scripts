@@ -46,18 +46,22 @@
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
-    <px:merge-parameters name="parameters">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="parameters"/>
         </p:input>
-    </px:merge-parameters>
+    </p:identity>
+    <px:message message="[progress px:dtbook-to-pef.convert 1 px:merge-parameters]"/>
+    <px:merge-parameters name="parameters"/>
     <p:sink/>
     
-    <px:dtbook-load name="load">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
-    </px:dtbook-load>
+    </p:identity>
+    <px:message message="[progress px:dtbook-to-pef.convert 5 px:dtbook-load] Loading DTBook"/>
+    <px:dtbook-load name="load"/>
     <p:sink/>
     
     <p:identity>
@@ -65,7 +69,7 @@
             <p:pipe step="load" port="in-memory.out"/>
         </p:input>
     </p:identity>
-    <px:message message="Generating table of contents"/>
+    <px:message message="[progress px:dtbook-to-pef.convert 2 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -75,7 +79,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message message="Inlining CSS"/>
+    <px:message message="[progress px:dtbook-to-pef.convert 4 px:apply-stylesheets] Inlining CSS"/>
     <p:group>
         <p:variable name="first-css-stylesheet"
                     select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
@@ -89,7 +93,7 @@
                               (tokenize($stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
             <p:inline><_/></p:inline>
         </p:variable>
-        <px:message severity="DEBUG">
+        <px:message>
             <p:with-option name="message" select="concat('stylesheets: ',$stylesheets-to-be-inlined)"/>
         </px:message>
         <px:apply-stylesheets>
@@ -100,8 +104,11 @@
         </px:apply-stylesheets>
     </p:group>
     
-    <px:message message="Transforming MathML"/>
+    <px:message message="[progress px:dtbook-to-pef.convert 4 px:dtbook-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
+        <px:message>
+            <p:with-option name="message" select="concat('[progress px:dtbook-to-pef.convert.viewport-math 1/',p:iteration-size(),' px:transform]')"/>
+        </px:message>
         <px:transform>
             <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -121,6 +128,7 @@
                 <px:message severity="DEBUG">
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
+                <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 25 px:transform]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -132,9 +140,10 @@
             <px:message message="Transforming from OBFL to PEF"/>
             <p:group>
                 <p:variable name="transform-query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
-                <px:message severity="DEBUG">
+                <px:message>
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
+                <px:message message="[progress px:dtbook-to-pef.convert 55 px:transform]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -152,9 +161,10 @@
             <px:message message="Transforming from XML with inline CSS to PEF"/>
             <p:group>
                 <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
-                <px:message severity="DEBUG">
+                <px:message>
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
+                <px:message message="[progress px:dtbook-to-pef.convert 80 px:transform]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -165,13 +175,15 @@
             </p:group>
         </p:otherwise>
     </p:choose>
-    
     <p:identity name="pef"/>
 
-    <p:xslt name="metadata">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
+    </p:identity>
+    <px:message message="[progress px:dtbook-to-pef.convert 1 dtbook-to-metadata.xsl] Extracting metadata from DTBook"/>
+    <p:xslt name="metadata">
         <p:input port="stylesheet">
             <p:document href="../xslt/dtbook-to-metadata.xsl"/>
         </p:input>
@@ -179,11 +191,14 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-
-    <pef:add-metadata>
+    
+    <p:identity>
         <p:input port="source">
             <p:pipe step="pef" port="result"/>
         </p:input>
+    </p:identity>
+    <px:message message="[progress px:dtbook-to-pef.convert 2 pef:add-metadata] Adding metadata to PEF"/>
+    <pef:add-metadata>
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>
         </p:input>
@@ -191,11 +206,13 @@
     
     <p:choose>
         <p:when test="not($lang='und')">
+            <px:message message="[progress px:dtbook-to-pef.convert 1 p:add-attribute] Adding language attribute to PEF"/>
             <p:add-attribute match="/*" attribute-name="xml:lang">
                 <p:with-option name="attribute-value" select="$lang"/>
             </p:add-attribute>
         </p:when>
         <p:otherwise>
+            <px:message message="[progress px:dtbook-to-pef.convert 1 p:identity]"/>
             <p:identity/>
         </p:otherwise>
     </p:choose>

@@ -49,22 +49,28 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
-    <px:merge-parameters name="parameters">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="parameters"/>
         </p:input>
-    </px:merge-parameters>
+    </p:identity>
+    <px:message message="[progress px:epub3-to-pef.convert 1 px:merge-parameters]"/>
+    <px:merge-parameters name="parameters"/>
     
     <!-- Load OPF and add content files to fileset. -->
-    <px:fileset-load media-types="application/oebps-package+xml">
-        <p:input port="fileset">
+    <p:identity>
+        <p:input port="source">
             <p:pipe port="fileset.in" step="main"/>
         </p:input>
+    </p:identity>
+    <px:message message="[progress px:epub3-to-pef.convert 1 px:fileset-load]"/>
+    <px:fileset-load media-types="application/oebps-package+xml">
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
     <p:identity name="opf"/>
+    <px:message message="[progress px:epub3-to-pef.convert 1 opf-manifest-to-fileset.xsl]"/>
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>
@@ -74,13 +80,10 @@
         </p:input>
     </p:xslt>
     <p:identity name="opf-fileset"/>
-    <p:sink/>
     
     <!-- Load XHTML documents in spine order. -->
+    <px:message message="[progress px:epub3-to-pef.convert 2 px:fileset-load] Load XHTML documents in spine order."/>
     <px:fileset-load media-types="application/oebps-package+xml application/xhtml+xml">
-        <p:input port="fileset">
-            <p:pipe port="result" step="opf-fileset"/>
-        </p:input>
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
@@ -91,6 +94,7 @@
         </p:add-attribute>
     </p:for-each>
     <p:wrap-sequence wrapper="wrapper"/>
+    <px:message message="[progress px:epub3-to-pef.convert 1 get-epub3-spine.xsl]"/>
     <p:xslt>
         <p:input port="parameters">
             <p:empty/>
@@ -102,20 +106,23 @@
     <p:filter select="/*/*"/>
     
     <!-- In case there exists any CSS in the EPUB already, and $apply-document-specific-stylesheets = 'true',  then inline that CSS. -->
-    <px:message message="Processing CSS that is already present in the EPUB"/>
+    <px:message message="[progress px:epub3-to-pef.convert 9 px:epub3-to-pef.convert.apply-document-specific-stylesheets] Processing CSS that is already present in the EPUB"/>
     <p:for-each>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="base-uri(/*)"/>
         </p:add-attribute>
         
-        <px:message severity="DEBUG">
+        <px:message>
             <p:with-option name="message" select="concat('Deleting CSS that is not for embossed media from ',replace(base-uri(/*),'.*/',''),'')"/>
         </px:message>
         <p:delete match="//@style | //html:link[@rel='stylesheet' and not(string(@media)='embossed')] | //html:style[not(string(@media)='embossed')]"/>
         
+        <px:message>
+            <p:with-option name="message" select="concat('[progress px:epub3-to-pef.convert.apply-document-specific-stylesheets 1/',p:iteration-size(),' px:apply-stylesheets]')"/>
+        </px:message>
         <p:choose>
             <p:when test="$apply-document-specific-stylesheets='true'">
-                <px:message severity="DEBUG">
+                <px:message>
                     <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
                 </px:message>
                 <p:group>
@@ -140,10 +147,13 @@
     <p:identity name="spine-bodies"/>
     
     <!-- Convert OPF metadata to HTML metadata. -->
-    <p:xslt>
+    <p:identity>
         <p:input port="source">
             <p:pipe port="result" step="opf"/>
         </p:input>
+    </p:identity>
+    <px:message message="[progress px:epub3-to-pef.convert 1 opf-to-html-head.xsl] Convert OPF metadata to HTML metadata."/>
+    <p:xslt>
         <p:input port="stylesheet">
             <p:document href="../xslt/opf-to-html-head.xsl"/>
         </p:input>
@@ -161,7 +171,7 @@
         </p:input>
     </p:wrap-sequence>
     
-    <px:message message="Generating table of contents"/>
+    <px:message message="[progress px:epub3-to-pef.convert 1 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -171,7 +181,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message message="Inlining global CSS"/>
+    <px:message message="[progress px:epub3-to-pef.convert 10 px:apply-stylesheets] Inlining global CSS"/>
     <p:group>
         <p:variable name="first-css-stylesheet"
                     select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
@@ -185,7 +195,7 @@
                               (tokenize($stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
             <p:inline><_/></p:inline>
         </p:variable>
-        <px:message severity="DEBUG">
+        <px:message>
             <p:with-option name="message" select="concat('stylesheets: ',$stylesheets-to-be-inlined)"/>
         </px:message>
         <px:apply-stylesheets>
@@ -201,7 +211,12 @@
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
             <p:pipe port="result" step="opf"/>
         </p:variable>
+        
+        <px:message message="[progress px:epub3-to-pef.convert 10 px:epub3-to-pef.convert.viewport-math] Transforming MathML"/>
         <p:viewport match="math:math">
+            <px:message>
+                <p:with-option name="message" select="concat('[progress px:epub3-to-pef.convert.viewport-math 1/',p:iteration-size(),' px:transform]')"/>
+            </px:message>
             <px:transform>
                 <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -218,11 +233,11 @@
             <p:output port="obfl">
                 <p:pipe step="obfl" port="result"/>
             </p:output>
-            <px:message message="Transforming from XML with inline CSS to OBFL"/>
+            <px:message message="[progress px:epub3-to-pef.convert 61 px:transform] Transforming from XML with inline CSS to PEF"/>
             <p:group name="obfl">
                 <p:output port="result"/>
                 <p:variable name="transform-query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
-                <px:message severity="DEBUG">
+                <px:message>
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
                 <px:transform>
@@ -278,7 +293,7 @@
             <p:pipe step="opf" port="result"/>
         </p:input>
     </p:identity>
-    <px:message message="Adding metadata to PEF based on EPUB 3 package document metadata"/>
+    <px:message message="[progress px:epub3-to-pef.convert 1 add-opf-metadata-to-pef.xsl] Adding metadata to PEF based on EPUB 3 package document metadata"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/pef-utils/add-opf-metadata-to-pef.xsl"/>
@@ -311,6 +326,7 @@
     <px:fileset-create>
         <p:with-option name="base" select="replace(base-uri(/*),'[^/]+$','')"/>
     </px:fileset-create>
+    <px:message message="[progress px:epub3-to-pef.convert 1 px:fileset-add-entry]"/>
     <px:fileset-add-entry media-type="application/x-pef+xml">
         <p:with-option name="href" select="base-uri(/*)">
             <p:pipe port="result" step="in-memory.out"/>

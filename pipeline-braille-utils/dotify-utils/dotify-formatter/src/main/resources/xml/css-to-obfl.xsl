@@ -184,7 +184,20 @@
     <xsl:variable name="initial-hyphens" as="xs:string" select="'manual'"/>
     <xsl:variable name="initial-word-spacing" as="xs:integer" select="1"/>
     
+    <!-- count the total number of text nodes with braille content so that we get a good estimate of the progress -->
+    <xsl:variable name="progress-total" select="count(//text()[matches(.,concat('[',
+                                                '⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟',
+                                                '⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿',
+                                                '⡀⡁⡂⡃⡄⡅⡆⡇⡈⡉⡊⡋⡌⡍⡎⡏⡐⡑⡒⡓⡔⡕⡖⡗⡘⡙⡚⡛⡜⡝⡞⡟',
+                                                '⡠⡡⡢⡣⡤⡥⡦⡧⡨⡩⡪⡫⡬⡭⡮⡯⡰⡱⡲⡳⡴⡵⡶⡷⡸⡹⡺⡻⡼⡽⡾⡿',
+                                                '⢀⢁⢂⢃⢄⢅⢆⢇⢈⢉⢊⢋⢌⢍⢎⢏⢐⢑⢒⢓⢔⢕⢖⢗⢘⢙⢚⢛⢜⢝⢞⢟',
+                                                '⢠⢡⢢⢣⢤⢥⢦⢧⢨⢩⢪⢫⢬⢭⢮⢯⢰⢱⢲⢳⢴⢵⢶⢷⢸⢹⢺⢻⢼⢽⢾⢿',
+                                                '⣀⣁⣂⣃⣄⣅⣆⣇⣈⣉⣊⣋⣌⣍⣎⣏⣐⣑⣒⣓⣔⣕⣖⣗⣘⣙⣚⣛⣜⣝⣞⣟',
+                                                '⣠⣡⣢⣣⣤⣥⣦⣧⣨⣩⣪⣫⣬⣭⣮⣯⣰⣱⣲⣳⣴⣵⣶⣷⣸⣹⣺⣻⣼⣽⣾⣿',
+                                                ']'))])"/>
+    
     <xsl:template name="start">
+        <xsl:message select="concat('[progress css-to-obfl.xsl 1/',$progress-total,']')"/>
         <obfl version="2011-1" xml:lang="und">
             <xsl:variable name="translate" as="xs:string" select="if ($initial-text-transform='none') then 'pre-translated-text-css' else ''"/>
             <xsl:variable name="hyphenate" as="xs:string" select="string($initial-hyphens='auto')"/>
@@ -1624,6 +1637,9 @@
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
         <xsl:param name="word-spacing" as="xs:integer" tunnel="yes"/>
+        
+        <xsl:message select="concat('[progress css-to-obfl.xsl 1/',$progress-total,' px:text-transform]')"/>
+        
         <xsl:variable name="text" as="xs:string" select="translate($text,'&#x2800;',' ')"/>
         <xsl:variable name="text" as="xs:string">
             <xsl:choose>

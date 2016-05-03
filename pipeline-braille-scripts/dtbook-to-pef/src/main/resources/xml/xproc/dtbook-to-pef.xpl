@@ -78,6 +78,7 @@
     <!-- ======= -->
     <!-- Imports -->
     <!-- ======= -->
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl">
         <!-- FIXME: we cannot use a relative url to import dtbook-to-pef.convert.xpl directly here
                    because this script uses px:extends-script in the XML catalog which
@@ -93,6 +94,12 @@
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="result" step="in-scope-names"/>
+        </p:input>
+    </p:identity>
+    <px:message message="[progress 1 px:delete-parameters] Collecting parameters"/>
     <px:delete-parameters name="input-options"
                           parameter-names="stylesheet
                                            transform
@@ -104,16 +111,12 @@
                                            pef-output-dir
                                            brf-output-dir
                                            preview-output-dir
-                                           temp-dir">
-        <p:input port="source">
-            <p:pipe port="result" step="in-scope-names"/>
-        </p:input>
-    </px:delete-parameters>
-    <p:sink/>
+                                           temp-dir"/>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
+    <px:message message="[progress 1 px:tempdir] Creating temporary directory"/>
     <px:tempdir name="temp-dir">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
@@ -122,10 +125,13 @@
     <!-- ======= -->
     <!-- CONVERT -->
     <!-- ======= -->
-    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
+    </p:identity>
+    <px:message message="[progress 94 px:dtbook-to-pef.convert] Converting from DTBook to PEf"/>
+    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
@@ -140,6 +146,7 @@
     <!-- ===== -->
     <!-- STORE -->
     <!-- ===== -->
+    <px:message message="[progress 4 px:dtbook-to-pef.store] Storing PEF"/>
     <px:xml-to-pef.store>
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
