@@ -12,11 +12,12 @@ import static org.daisy.pipeline.braille.common.Query.util.query;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
-import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import org.junit.Ignore;
@@ -32,7 +33,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.osgi.framework.BundleContext;
@@ -71,22 +71,17 @@ public class PefCoreTest {
 	public Option[] config() {
 		return options(
 			logbackConfigFile(),
-			logbackBundles(),
 			felixDeclarativeServices(),
 			domTraversalPackage(),
-			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.api").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-utils.impl").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
-			brailleModule("common-utils"),
-			brailleModule("css-core"),
 			thisBundle(),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				brailleModule("common-utils"),
+				brailleModule("css-core"),
+				mavenBundle("org.daisy.braille:braille-utils.api:?"),
+				mavenBundle("org.daisy.braille:braille-utils.impl:?"),
+				// logging
+				logbackClassic())
 		);
 	}
 	
