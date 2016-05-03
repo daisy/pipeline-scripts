@@ -60,14 +60,11 @@ Release procedure
   make release-notes
   ```
 
-- Perform the release with Maven. (Tests will fail during the first `release:prepare`.)
+- Perform the release with Maven.
 
   ```sh
-  mvn clean release:clean release:prepare -DpushChanges=false
-  mvn clean install
-  git checkout .
-  mvn clean release:clean release:prepare -DpushChanges=false
-  mvn release:perform -DlocalCheckout=true
+  mvn clean release:clean release:prepare
+  mvn release:perform
   ```
   
 - Revert snapshot increments of modules in `maven/bom/pom.xml` and `maven/parent/pom.xml`, update

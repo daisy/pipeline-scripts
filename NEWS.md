@@ -1,3 +1,39 @@
+DAISY Pipeline 2 Braille Modules v1.9.12
+========================================
+
+Changes
+-------
+- Improved support for `symbols()` function
+  (https://github.com/snaekobbi/pipeline-mod-braille/issues/15)
+- Support for non-standard hyphenation (https://github.com/snaekobbi/pipeline-mod-braille/issues/55)
+- Internal changes (https://github.com/daisy/pipeline-mod-braille/issues/100, ...)
+- Bugfixes
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), **liblouis-java**
+  ([**2.0.0**](https://github.com/liblouis/liblouis-java/releases/tag/2.0.0))
+- dotify (api [2.5.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.api%2Fv2.5.0), common
+  [2.0.2](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv2.0.2), hyphenator.impl
+  [2.0.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv2.0.1), translator.impl
+  [2.3.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv2.3.0), formatter.impl
+  [2.2.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv2.2.1), text.impl
+  [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv2.0.0), task-api
+  [2.1.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.1.0), task-runner
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), task.impl
+  [2.3.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.3.0))
+- brailleutils (api
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+- **braille-css** ([**1.9.1**](https://github.com/snaekobbi/braille-css/releases/tag/1.9.1))
+- **jstyleparser** ([**1.20-p7**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p7))
+- jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
+- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+  ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
 DAISY Pipeline 2 Braille Modules v1.9.11
 ========================================
 
@@ -14,7 +50,8 @@ Changes
   function
 - Parameter `skip-margin-top-of-page` (https://github.com/daisy/pipeline-mod-braille/issues/97)
 - Bugfixes (https://github.com/braillespecs/obfl/issues/31,
-  https://github.com/joeha480/dotify/issues/134, https://github.com/joeha480/dotify/pull/189, ...)
+  https://github.com/joeha480/dotify/issues/134, https://github.com/joeha480/dotify/pull/189,
+  https://github.com/joeha480/dotify/issues/194, ...)
 
 Components
 ----------
