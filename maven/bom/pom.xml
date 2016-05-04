@@ -182,7 +182,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-core</artifactId>
-                <version>2.0.2</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -225,17 +225,23 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.api</artifactId>
-                <version>2.0.0</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.impl</artifactId>
-                <version>2.0.0</version>
+                <!--
+                    depends on https://github.com/joeha480/brailleutils/pull/71
+                -->
+                <version>3.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.pef-tools</artifactId>
-                <version>1.0.0</version>
+                <!--
+                    depends on https://github.com/joeha480/brailleutils/pull/71
+                -->
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
