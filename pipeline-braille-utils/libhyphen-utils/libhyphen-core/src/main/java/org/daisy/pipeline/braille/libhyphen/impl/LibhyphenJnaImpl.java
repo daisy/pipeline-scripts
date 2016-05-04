@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 
+import ch.sbs.jhyphen.CompilationException;
 import ch.sbs.jhyphen.Hyphen;
 import ch.sbs.jhyphen.Hyphenator;
 
@@ -15,6 +16,7 @@ import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
 import org.daisy.pipeline.braille.common.AbstractHyphenator;
+import org.daisy.pipeline.braille.common.AbstractHyphenator.util.DefaultLineBreaker;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Function;
 import org.daisy.pipeline.braille.common.AbstractTransformProvider.util.Iterables;
@@ -172,7 +174,7 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 			return logCreate((LibhyphenHyphenator)new LibhyphenHyphenatorImpl(table)); }
 		catch (final Throwable e) {
 			return new WithSideEffect<LibhyphenHyphenator,Logger>() {
-				public LibhyphenHyphenator _apply() throws FileNotFoundException {
+				public LibhyphenHyphenator _apply() throws CompilationException, FileNotFoundException {
 					__apply(debug("Could not create hyphenator for table " + table));
 					throw e;
 				}
@@ -188,7 +190,7 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 		private final URI table;
 		private final Hyphenator hyphenator;
 		
-		private LibhyphenHyphenatorImpl(URI table) throws FileNotFoundException {
+		private LibhyphenHyphenatorImpl(URI table) throws CompilationException, FileNotFoundException {
 			this.table = table;
 			hyphenator = new Hyphenator(resolveTable(table));
 		}
@@ -211,16 +213,34 @@ public class LibhyphenJnaImpl extends AbstractTransformProvider<LibhyphenHyphena
 			}
 		};
 		
-		private String transform(String text) {
-			Tuple2<String,byte[]> t = extractHyphens(text, SHY, ZWSP);
-			byte[] hyphens = hyphenator.hyphenate(t._1);
-			if (t._2 != null)
-				for (int i = 0; i < hyphens.length; i++)
-					hyphens[i] += t._2[i];
-			return insertHyphens(t._1, hyphens, SHY, ZWSP);
+		@Override
+		public LineBreaker asLineBreaker() {
+			return lineBreaker;
 		}
 		
-		public String[] transform(String[] text) {
+		private final LineBreaker lineBreaker = new DefaultLineBreaker() {
+			protected Break breakWord(String word, int limit, boolean force) {
+				Hyphenator.Break br = hyphenator.hyphenate(word, limit);
+				if (force && br.getBreakPosition() == 0)
+					return new Break(word, limit, false);
+				else
+					return new Break(br.getText(), br.getBreakPosition(), br.hasHyphen());
+			}
+		};
+		
+		private String transform(String text) {
+			try {
+				Tuple2<String,byte[]> t = extractHyphens(text, SHY, ZWSP);
+				byte[] hyphens = hyphenator.hyphenate(t._1);
+				if (t._2 != null)
+					for (int i = 0; i < hyphens.length; i++)
+						hyphens[i] += t._2[i];
+				return insertHyphens(t._1, hyphens, SHY, ZWSP); }
+			catch (Exception e) {
+				throw new RuntimeException("Error during libhyphen hyphenation", e); }
+		}
+		
+		private String[] transform(String[] text) {
 			try {
 				// This byte array is used not only to track the hyphen
 				// positions but also the segment boundaries.

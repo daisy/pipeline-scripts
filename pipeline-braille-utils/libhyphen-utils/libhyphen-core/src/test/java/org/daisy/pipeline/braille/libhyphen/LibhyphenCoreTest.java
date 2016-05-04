@@ -2,15 +2,18 @@ package org.daisy.pipeline.braille.libhyphen;
 
 import javax.inject.Inject;
 
+import static org.daisy.pipeline.braille.common.Hyphenator.FullHyphenator;
+import static org.daisy.pipeline.braille.common.Hyphenator.LineBreaker;
+import static org.daisy.pipeline.braille.common.Hyphenator.LineIterator;
 import static org.daisy.pipeline.braille.common.Query.util.query;
 
 import static org.daisy.pipeline.pax.exam.Options.brailleModule;
-import static org.daisy.pipeline.pax.exam.Options.bundlesAndDependencies;
 import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.forThisPlatform;
-import static org.daisy.pipeline.pax.exam.Options.logbackBundles;
+import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
 import org.junit.Test;
@@ -27,7 +30,6 @@ import org.ops4j.pax.exam.util.PathUtils;
 
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.slf4j.Logger;
@@ -43,15 +45,59 @@ public class LibhyphenCoreTest {
 	private static final Logger messageBus = LoggerFactory.getLogger("JOB_MESSAGES");
 	
 	@Test
-	public void testHyphenate() {
-		assertEquals("foo\u00ADbar",
-		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
-		                 .asFullHyphenator()
-		                 .transform("foobar"));
-		assertEquals("foo-\u200Bbar",
-		             provider.withContext(messageBus).get(query("(table:'foobar.dic')")).iterator().next()
-	                 .asFullHyphenator()
-		                 .transform("foo-bar"));
+	public void testStandardHyphenation() {
+		FullHyphenator hyphenator= provider.withContext(messageBus)
+		                                   .get(query("(table:'standard.dic')"))
+		                                   .iterator().next()
+		                                   .asFullHyphenator();
+		assertEquals("foo\u00ADbar", hyphenator.transform("foobar"));
+		assertEquals("foo-\u200Bbar", hyphenator.transform("foo-bar"));
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testStandardHyphenationException() {
+		FullHyphenator hyphenator= provider.withContext(messageBus)
+		                                   .get(query("(table:'non-standard.dic')"))
+		                                   .iterator().next()
+		                                   .asFullHyphenator();
+		hyphenator.transform("foobar");
+	}
+	
+	@Test
+	public void testNonStandardHyphenation() {
+		LineBreaker hyphenator= provider.withContext(messageBus)
+		                                .get(query("(table:'non-standard.dic')"))
+		                                .iterator().next()
+		                                .asLineBreaker();
+		assertEquals("f\n" +
+		             "oo\n" +
+		             "ba\n" +
+		             "r",
+		             fillLines(hyphenator.transform("foobar"), 2, '-'));
+		assertEquals("fu-\n" +
+		             "bar",
+		             fillLines(hyphenator.transform("foobar"), 3, '-'));
+		assertEquals("foo-\n" +
+		             "bar",
+		             fillLines(hyphenator.transform("foo-bar"), 4, '-'));
+	}
+	
+	private static String fillLines(LineIterator lines, int width, char hyphen) {
+		String s = "";
+		while (lines.hasNext()) {
+			lines.mark();
+			String line = lines.nextLine(width, true);
+			if (lines.lineHasHyphen())
+				line += hyphen;
+			if (line.length() > width) {
+				lines.reset();
+				line = lines.nextLine(width - 1, true);
+				if (lines.lineHasHyphen())
+					line += hyphen; }
+			s += line;
+			if (lines.hasNext())
+				s += '\n'; }
+		return s;
 	}
 	
 	@Configuration
@@ -59,23 +105,17 @@ public class LibhyphenCoreTest {
 		return options(
 			logbackConfigFile(),
 			domTraversalPackage(),
-			logbackBundles(),
 			felixDeclarativeServices(),
-			mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
-			mavenBundle().groupId("net.java.dev.jna").artifactId("jna").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.bindings").artifactId("jhyphen").versionAsInProject(),
-			mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.antlr-runtime").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.libs").artifactId("jstyleparser").versionAsInProject(),
-			mavenBundle().groupId("org.unbescape").artifactId("unbescape").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.braille").artifactId("braille-css").versionAsInProject(),
-			mavenBundle().groupId("org.daisy.dotify").artifactId("dotify.api").versionAsInProject(),
-			bundlesAndDependencies("org.daisy.pipeline.calabash-adapter"),
-			brailleModule("common-utils"),
-			brailleModule("css-core"),
-			forThisPlatform(brailleModule("libhyphen-native")),
 			thisBundle(),
-			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/"),
-			junitBundles()
+			junitBundles(),
+			mavenBundlesWithDependencies(
+				mavenBundle("org.daisy.bindings:jhyphen:?"),
+				brailleModule("common-utils"),
+				brailleModule("css-core"),
+				brailleModule("libhyphen-native").forThisPlatform(),
+				// logging
+				logbackClassic()),
+			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/")
 		);
 	}
 }

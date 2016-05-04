@@ -93,6 +93,7 @@ public class DefaultLineBreakerTest {
 										String line = lines.nextLine(available, force);
 										String hyphen = lines.lineHasHyphen() ? "-" : "";
 										if (line.length() + hyphen.length() > available) {
+											lines.reset();
 											line = lines.nextLine(available - 1, force);
 											hyphen = lines.lineHasHyphen() ? "-" : ""; }
 										if (line.length() > 0) {
