@@ -213,7 +213,7 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 							if (limit != 0 && bufSize >= limit)
 								return;
 							else if (inputStream.hasNext()) {
-								String next = limit == 0 ? inputStream.remainder() : inputStream.next(limit - bufSize, force);
+								String next = limit == 0 ? inputStream.remainder() : inputStream.next(limit - bufSize, force && (bufSize == 0));
 								if (next.isEmpty()) // row full according to input feed
 									return;
 								else

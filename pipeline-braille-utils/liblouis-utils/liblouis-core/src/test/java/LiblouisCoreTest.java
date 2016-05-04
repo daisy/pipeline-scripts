@@ -199,8 +199,10 @@ public class LiblouisCoreTest {
 	private static class MockHyphenator extends AbstractHyphenator {
 		private static final LineBreaker lineBreaker = new DefaultLineBreaker() {
 			protected Break breakWord(String word, int limit, boolean force) {
-				if (limit >= 3 && word.equals("foobar"))
-					return new Break("fubbar", 3, true);
+				if (limit >= 3 && word.equals("foobarz"))
+					return new Break("fubbarz", 3, true);
+				else if (limit >= word.length())
+					return new Break(word, word.length(), false);
 				else if (force)
 					return new Break(word, limit, false);
 				else
@@ -235,17 +237,21 @@ public class LiblouisCoreTest {
 		                                                .get(query("(table:'foobar.ctb')(hyphenator:mock)(output:ascii)")).iterator().next()
 		                                                .lineBreakingFromStyledText();
 		assertEquals(
-			"fub\n" +
-			"ar",
-			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 3));
+			"fu\n" +
+			"bar\n" +
+			"z",
+			fillLines(translator.transform(styledText("foobarz", "hyphens:auto")), 3));
 		assertEquals(
 			"fub⠤\n" +
-			"bar",
-			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 4));
+			"barz",
+			fillLines(translator.transform(styledText("foobarz", "hyphens:auto")), 4));
 		assertEquals(
-			"fubar",
-			fillLines(translator.transform(styledText("foobar", "hyphens:auto")), 5));
-		
+			"fub⠤\n" +
+			"barz",
+			fillLines(translator.transform(styledText("foobarz", "hyphens:auto")), 5));
+		assertEquals(
+			"fubarz",
+			fillLines(translator.transform(styledText("foobarz", "hyphens:auto")), 6));
 	}
 	
 	@Test

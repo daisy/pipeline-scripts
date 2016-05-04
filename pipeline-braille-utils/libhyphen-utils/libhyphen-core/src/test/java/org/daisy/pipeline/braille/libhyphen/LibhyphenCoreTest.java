@@ -80,6 +80,12 @@ public class LibhyphenCoreTest {
 		assertEquals("foo-\n" +
 		             "bar",
 		             fillLines(hyphenator.transform("foo-bar"), 4, '-'));
+		assertEquals("foo-\n" +
+		             "bar",
+		             fillLines(hyphenator.transform("foo-bar"), 5, '-'));
+		assertEquals("foo-\n" +
+		             "bar",
+		             fillLines(hyphenator.transform("foo-bar"), 6, '-'));
 	}
 	
 	private static String fillLines(LineIterator lines, int width, char hyphen) {

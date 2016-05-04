@@ -623,6 +623,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 														
 														// do a binary search for the optimal break point
 														String bestSolution = null;
+														int bestSolutionLength = 0;
 														int left = 1;
 														int right = word.length() - 1;
 														int textAvailable = available;
@@ -640,23 +641,27 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 															int lineEndInBraille = positionInBraille(lineEnd);
 															String lineInBraille = joinedBraille.substring(curPosInBraille, lineEndInBraille);
 															lineInBraille = addLetterSpacing(line, lineInBraille, letterSpacing[curSegment]);
-															if (lines.lineHasHyphen())
-																lineInBraille += "\u2824";
-															if (lineInBraille.length() == available) {
+															int lineInBrailleLength = lineInBraille.length();
+															if (lines.lineHasHyphen()) {
+																lineInBraille += "\u2824\u200b";
+																lineInBrailleLength++; }
+															if (lineInBrailleLength == available) {
 																bestSolution = lineInBraille;
+																bestSolutionLength = lineInBrailleLength;
 																left = textAvailable + 1;
 																right = textAvailable - 1; }
-															else if (lineInBraille.length() < available) {
+															else if (lineInBrailleLength < available) {
 																left = textAvailable + 1;
-																if (bestSolution == null || lineInBraille.length() > bestSolution.length())
-																	bestSolution = lineInBraille; }
+																if (bestSolution == null || lineInBrailleLength > bestSolutionLength) {
+																	bestSolution = lineInBraille;
+																	bestSolutionLength = lineInBrailleLength; }}
 															else
 																right = textAvailable - 1;
 															textAvailable = (right + left) / 2;
 															if (textAvailable < left || textAvailable > right) {
 																if (bestSolution != null) {
 																	next += bestSolution;
-																	available -= bestSolution.length();
+																	available = 0;
 																	curPos = lineEnd;
 																	curPosInBraille = lineEndInBraille; }
 																break segments; }
