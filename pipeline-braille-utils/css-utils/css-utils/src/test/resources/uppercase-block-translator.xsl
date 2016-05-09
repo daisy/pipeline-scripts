@@ -9,30 +9,47 @@
 	
 	<xsl:template match="css:block" mode="#default after before">
 		<xsl:variable name="uppercase-text" as="text()*">
-			<xsl:apply-templates select=".//text()" mode="translate"/>
+			<xsl:apply-templates mode="translate"/>
 		</xsl:variable>
 		<xsl:apply-templates select="node()[1]" mode="treewalk">
 			<xsl:with-param name="new-text-nodes" select="$uppercase-text"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
+	<xsl:template match="*" mode="translate">
+		<xsl:param name="source-style" as="element()*" tunnel="yes"/>
+		<xsl:variable name="source-style" as="element()*">
+			<xsl:call-template name="css:computed-properties">
+				<xsl:with-param name="properties" select="$inline-properties"/>
+				<xsl:with-param name="context" select="$dummy-element"/>
+				<xsl:with-param name="cascaded-properties" tunnel="yes" select="css:deep-parse-stylesheet(@style)[not(@selector)]/css:property"/>
+				<xsl:with-param name="parent-properties" tunnel="yes" select="$source-style"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:apply-templates mode="#current">
+			<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<xsl:template match="text()" mode="translate">
-		<xsl:variable name="inline-style" as="element()*"
-		              select="css:computed-properties($inline-properties, true(), parent::*)"/>
+		<xsl:param name="source-style" as="element()*" tunnel="yes"/>
 		<xsl:variable name="uppercase" as="xs:string" select="upper-case(.)"/>
 		<xsl:variable name="normalised" as="xs:string"
-		              select="if ($inline-style[@name='white-space' and not(@value='normal')])
+		              select="if ($source-style[@name='white-space' and not(@value='normal')])
 		                      then $uppercase
 		                      else normalize-space($uppercase)"/>
 		<xsl:variable name="hyphenated" as="xs:string"
-		              select="if ($inline-style[@name='hyphens' and @value='auto'])
+		              select="if ($source-style[@name='hyphens' and @value='auto'])
 		                      then replace($normalised, 'FOOBAR', 'FOO=BAR')
 		                      else $normalised"/>
 		<xsl:value-of select="$hyphenated"/>
 	</xsl:template>
 	
-	<xsl:template match="css:property[@name='hyphens' and @value='auto']" mode="translate-declaration-list">
-		<xsl:sequence select="css:property('hyphens','manual')"/>
+	<xsl:template match="css:property[@name='hyphens' and @value='auto']" mode="translate-style">
+		<xsl:param name="result-style" as="element()*" tunnel="yes"/>
+		<xsl:if test="$result-style[@name='hyphens' and not(@value='manual')]">
+			<css:property name="hyphens" value="manual"/>
+		</xsl:if>
 	</xsl:template>
 	
 </xsl:stylesheet>

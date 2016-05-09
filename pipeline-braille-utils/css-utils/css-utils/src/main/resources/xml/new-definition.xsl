@@ -32,13 +32,13 @@
         -->
         <xsl:variable name="properties" as="element()*">
             <!-- properties must already have been computed! -->
-            <xsl:apply-templates select="." mode="css:specified-properties">
+            <xsl:call-template name="css:specified-properties">
                 <xsl:with-param name="properties" select="$new:properties"/>
                 <!-- concretize inherit on top-level boxes only -->
                 <xsl:with-param name="concretize-inherit" select="not(exists(ancestor::css:box))"/>
                 <xsl:with-param name="concretize-initial" select="true()"/>
                 <xsl:with-param name="validate" select="true()"/>
-            </xsl:apply-templates>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="properties" as="element()*">
             <xsl:apply-templates select="$properties" mode="property">
@@ -56,6 +56,9 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates>
+                <!--
+                    TODO: use css:inherit and override css:parent-property
+                -->
                 <xsl:with-param name="parent-properties" tunnel="yes"
                                 select="($properties[not(self::pending)]/*[not(@value='inherit')],
                                          for $p in $properties[not(self::pending)]/*[@value='inherit']/@name

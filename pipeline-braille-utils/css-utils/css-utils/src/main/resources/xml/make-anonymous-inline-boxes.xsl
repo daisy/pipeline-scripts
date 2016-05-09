@@ -94,11 +94,11 @@
     <xsl:template name="inherit-properties">
         <xsl:param name="pending-properties" as="element()*" select="()" tunnel="yes"/>
         <xsl:variable name="properties" as="element()*">
-            <xsl:apply-templates select="." mode="css:computed-properties">
+            <xsl:call-template name="css:computed-properties">
                 <xsl:with-param name="concretize-inherit" select="false()"/>
                 <xsl:with-param name="concretize-initial" select="false()"/>
                 <xsl:with-param name="validate" select="false()"/>
-            </xsl:apply-templates>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:sequence select="for $p in distinct-values(($pending-properties/@name,$properties/@name))
                               return if ((not($properties[@name=$p]) and (css:is-inherited($p) or $p='text-transform'))

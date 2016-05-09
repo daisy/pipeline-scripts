@@ -265,7 +265,8 @@
                  'color',
                  'line-height',
                  'letter-spacing',
-                 'word-spacing')"/>
+                 'word-spacing',
+                 'text-transform')"/>
     
     <xsl:variable name="css:paged-media-properties" as="xs:string*"
         select="('page-break-before',
@@ -308,16 +309,11 @@
     <!-- Special inheriting -->
     <!-- ================== -->
     
-    <!--
-        Find out why doesn't this work anymore when text-transform is added to inherited-properties?
-        text-transform is not inherited but it shouldn't make a difference in theory.
-    -->
     <xsl:template match="css:property[@name='text-transform']" mode="css:compute">
         <xsl:param name="concretize-inherit" as="xs:boolean"/>
         <xsl:param name="concretize-initial" as="xs:boolean"/>
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
-        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
         <xsl:choose>
             <xsl:when test="@value='inherit'">
                 <xsl:sequence select="."/>
@@ -325,12 +321,17 @@
             <xsl:when test="@value='none'">
                 <xsl:sequence select="."/>
             </xsl:when>
-            <xsl:when test="not(exists($parent))">
-                <xsl:sequence select="."/>
-            </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="parent-computed" as="element()"
-                              select="css:computed-properties(@name, true(), true(), $validate, $parent)"/>
+                <xsl:variable name="parent-computed" as="element()">
+                    <xsl:call-template name="css:parent-property">
+                        <xsl:with-param name="property" select="@name"/>
+                        <xsl:with-param name="compute" select="true()"/>
+                        <xsl:with-param name="concretize-inherit" select="true()"/>
+                        <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
+                        <xsl:with-param name="validate" select="$validate"/>
+                        <xsl:with-param name="context" select="$context"/>
+                    </xsl:call-template>
+                </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="@value=('initial','auto') and $parent-computed/@value='none'">
                         <xsl:sequence select="."/>
@@ -338,7 +339,7 @@
                     <xsl:when test="@value=('initial','auto')">
                         <xsl:sequence select="$parent-computed"/>
                     </xsl:when>
-                    <xsl:when test="$parent-computed/@value=('auto','none')">
+                    <xsl:when test="$parent-computed/@value=('auto','none','initial')">
                         <xsl:sequence select="."/>
                     </xsl:when>
                     <xsl:otherwise>

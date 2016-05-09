@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                stylesheet="../resources/uppercase-block-translator.xsl">
   
   <x:scenario label="test_01">
     <x:context>
       <doc>
-        <h style="display: block; string-set: running-footer content()">foobar</h>
-        <p style="{{ display: block }} ::after {{ content: 'bar' }}">foo</p>
+        <h css:display="block" style="string-set: running-footer content()">foobar</h>
+        <p css:display="block" style="::after {{ content: 'bar' }}">foo</p>
         <pagenum style="display: none; string-set: print-page content()">ii</pagenum>
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc style="text-transform: none">
-        <h style="display: block; string-set: running-footer &quot;foobar&quot;">FOOBAR</h>
-        <p style="{{ display: block }} ::after {{ content: &quot;BAR&quot; }}">FOO</p>
-        <pagenum style="display: none; string-set: print-page &quot;ii&quot;">II</pagenum>
-      </doc>
+      <_ style="text-transform: none">
+        <doc>
+          <h css:display="block" style="string-set: running-footer &quot;foobar&quot;">FOOBAR</h>
+          <p css:display="block" style="::after {{ content: &quot;BAR&quot; }}">FOO</p>
+          <pagenum style="display: none; string-set: print-page &quot;ii&quot;">II</pagenum>
+        </doc>
+      </_>
     </x:expect>
   </x:scenario>
   
@@ -26,9 +29,11 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc xml:lang="en" style="text-transform: none">
-        <br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>
-      </doc>
+      <_ style="text-transform: none">
+        <doc xml:lang="en">
+          <br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>
+        </doc>
+      </_>
     </x:expect>
   </x:scenario>
   
@@ -39,9 +44,11 @@
       </div>
     </x:context>
     <x:expect label="result">
-      <div style="hyphens: manual; text-transform: none">
-        <p>FOO=BAR</p>
-      </div>
+      <_ style="text-transform: none">
+        <div>
+          <p>FOO=BAR</p>
+        </div>
+      </_>
     </x:expect>
   </x:scenario>
   
@@ -52,9 +59,11 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc style="text-transform: none">
-        <div style="::after {{ content: &quot;FOO&quot; }} ::after::before {{ display: block; content: &quot;BAR&quot; }}"/>
-      </doc>
+      <_ style="text-transform: none">
+        <doc>
+          <div style="::after {{ content: &quot;FOO&quot; }} ::after::before {{ display: block; content: &quot;BAR&quot; }}"/>
+        </doc>
+      </_>
     </x:expect>
   </x:scenario>
   
@@ -65,9 +74,11 @@
       </doc>
     </x:context>
     <x:expect label="result">
-      <doc style="text-transform: none">
-        <div style="::table-by(foo)::list-item::after {{ content: ', ' }} ::table-by(foo)::list-item:last-child::after {{ content: none }}"/>
-      </doc>
+      <_ style="text-transform: none">
+        <doc>
+          <div style="::table-by(foo)::list-item::after {{ content: &quot;,&quot; }} ::table-by(foo)::list-item:last-child::after {{ content: none }}"/>
+        </doc>
+      </_>
     </x:expect>
   </x:scenario>
   

@@ -273,7 +273,7 @@
         <xsl:attribute name="css:{replace(@name,'^-','_')}" select="@value"/>
     </xsl:template>
     
-    <xsl:function name="css:parse-stylesheet" as="element()*">
+    <xsl:function name="css:parse-stylesheet" as="element()*"> <!-- css:rule* -->
         <xsl:param name="stylesheet" as="xs:string?"/>
         <xsl:if test="$stylesheet">
             <xsl:variable name="rules" as="element()*">
@@ -335,7 +335,7 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:parse-declaration-list" as="element()*">
+    <xsl:function name="css:parse-declaration-list" as="element()*"> <!-- css:property* -->
         <xsl:param name="declaration-list" as="xs:string?"/>
         <xsl:if test="$declaration-list">
             <xsl:for-each select="tokenize($declaration-list, ';')[not(normalize-space(.)='')]">
@@ -346,9 +346,42 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="css:parse-content-list" as="element()*">
+    <xsl:template name="css:deep-parse-stylesheet" as="element()*"> <!-- css:rule*|css:property* -->
+        <xsl:param name="stylesheet" as="xs:string?" required="yes"/>
+        <xsl:param name="recursive-call" as="xs:boolean" select="false()"/>
+        <xsl:if test="$stylesheet">
+            <xsl:variable name="stylesheet" as="element()*" select="css:parse-stylesheet($stylesheet)"/> <!-- css:rule* -->
+            <xsl:choose>
+                <xsl:when test="$recursive-call and not($stylesheet[@selector])">
+                    <xsl:for-each select="$stylesheet">
+                        <xsl:sequence select="css:parse-declaration-list(@style)"/>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="$stylesheet">
+                        <xsl:copy>
+                            <xsl:copy-of select="@selector"/>
+                            <xsl:call-template name="css:deep-parse-stylesheet">
+                                <xsl:with-param name="stylesheet" select="@style"/>
+                                <xsl:with-param name="recursive-call" select="true()"/>
+                            </xsl:call-template>
+                        </xsl:copy>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:function name="css:deep-parse-stylesheet" as="element()*"> <!-- css:rule* -->
+        <xsl:param name="stylesheet" as="xs:string?"/>
+        <xsl:call-template name="css:deep-parse-stylesheet">
+            <xsl:with-param name="stylesheet" select="$stylesheet"/>
+        </xsl:call-template>
+    </xsl:function>
+    
+    <xsl:template name="css:parse-content-list" as="element()*">
         <xsl:param name="content-list" as="xs:string?"/>
-        <xsl:param name="context" as="element()?"/>
+        <xsl:param name="context" as="element()?" select="."/>
         <xsl:if test="$content-list">
             <xsl:analyze-string select="$content-list" regex="{$css:CONTENT_RE}" flags="x">
                 <xsl:matching-substring>
@@ -470,6 +503,15 @@
                 </xsl:matching-substring>
             </xsl:analyze-string>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:function name="css:parse-content-list" as="element()*">
+        <xsl:param name="content-list" as="xs:string?"/>
+        <xsl:param name="context" as="element()?"/>
+        <xsl:call-template name="css:parse-content-list">
+            <xsl:with-param name="content-list" select="$content-list"/>
+            <xsl:with-param name="context" select="$context"/>
+        </xsl:call-template>
     </xsl:function>
     
     <xsl:function name="css:parse-string-set" as="element()*">
@@ -516,13 +558,18 @@
     <xsl:template match="css:property" mode="css:inherit">
         <!-- true means input is valid and result should be valid too -->
         <xsl:param name="validate" as="xs:boolean"/>
+        <xsl:param name="compute" as="xs:boolean" select="false()"/>
         <xsl:param name="context" as="element()"/>
         <xsl:choose>
             <xsl:when test="@value='inherit'">
-                <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
-                <xsl:sequence select="if ($parent)
-                                      then css:specified-properties(@name, true(), false(), $validate, $parent)
-                                      else css:property(@name, 'initial')"/>
+                <xsl:call-template name="css:parent-property">
+                    <xsl:with-param name="property" select="@name"/>
+                    <xsl:with-param name="compute" select="$compute"/>
+                    <xsl:with-param name="concretize-inherit" select="true()"/>
+                    <xsl:with-param name="concretize-initial" select="false()"/>
+                    <xsl:with-param name="validate" select="$validate"/>
+                    <xsl:with-param name="context" select="$context"/>
+                </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="."/>
@@ -543,29 +590,83 @@
     
     <xsl:template match="css:property" mode="css:compute">
         <!--
-            true means input does not have value 'inherit' and result should not have value 'inherit' either.
-            'inherit' in the result means that the computed value is equal to the computed value of the parent, or the initial value if there is no parent.
+            true means input does not have value 'inherit' and result should not have value
+            'inherit' either. 'inherit' in the result means that the computed value is equal to the
+            computed value of the parent, or the initial value if there is no parent.
         -->
         <xsl:param name="concretize-inherit" as="xs:boolean"/>
         <!--
-            true means input does not have value 'initial' and result should not have value 'initial' either.
-            'initial' in the result means that the computed value is equal to the initial value.
+            true means input does not have value 'initial' and result should not have value
+            'initial' either. 'initial' in the result means that the computed value is equal to the
+            initial value.
         -->
         <xsl:param name="concretize-initial" as="xs:boolean"/>
-        <!-- true means input is valid and result should be valid too -->
+        <!--
+            true means input is valid and result should be valid too
+        -->
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
         <xsl:sequence select="."/>
     </xsl:template>
     
-    <xsl:template match="*" mode="css:cascaded-properties" as="element()*">
+    <xsl:template name="css:parent-property" as="element()?">
+        <xsl:param name="property" as="xs:string" required="yes"/>
+        <xsl:param name="compute" as="xs:boolean" select="false()"/>
+        <!--
+            When compute is true, 'inherit' in the result means that the computed value is equal to
+            the computed value of the parent (or the initial value if there is no parent).
+        -->
+        <xsl:param name="concretize-inherit" as="xs:boolean" select="true()"/>
+        <xsl:param name="concretize-initial" as="xs:boolean" select="true()"/>
+        <!--
+            true means input is valid and result should be valid too
+        -->
+        <xsl:param name="validate" as="xs:boolean"/>
+        <!--
+            TODO: make into tunnel parameter? (meaning: to be passed to functions that make use of
+            css:parent-property, and if css:parent-property is overridden it may have its own set of
+            tunnel parameters)
+        -->
+        <xsl:param name="context" as="element()" select="."/>
+        <xsl:variable name="parent" as="element()?"
+                      select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
+        <xsl:choose>
+            <xsl:when test="exists($parent) and $compute">
+                <xsl:call-template name="css:computed-properties">
+                    <xsl:with-param name="properties" select="($property)"/>
+                    <xsl:with-param name="concretize-inherit" select="$concretize-inherit"/>
+                    <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
+                    <xsl:with-param name="validate" select="$validate"/>
+                    <xsl:with-param name="context" select="$parent"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="exists($parent)">
+                <xsl:call-template name="css:specified-properties">
+                    <xsl:with-param name="properties" select="($property)"/>
+                    <xsl:with-param name="concretize-inherit" select="$concretize-inherit"/>
+                    <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
+                    <xsl:with-param name="validate" select="$validate"/>
+                    <xsl:with-param name="context" select="$parent"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$concretize-initial">
+                <xsl:sequence select="css:property($property, css:initial-value($property))"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="css:property($property, 'initial')"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template name="css:cascaded-properties" as="element()*">
         <xsl:param name="properties" as="xs:string*" select="('#all')"/>
         <xsl:param name="validate" as="xs:boolean" select="false()"/>
+        <xsl:param name="context" as="element()" select="."/>
         <xsl:variable name="declarations" as="element()*">
-            <xsl:apply-templates select="@css:*[replace(local-name(),'^_','-')=$properties]" mode="css:attribute-as-property"/>
+            <xsl:apply-templates select="$context/@css:*[replace(local-name(),'^_','-')=$properties]" mode="css:attribute-as-property"/>
         </xsl:variable>
         <xsl:variable name="declarations" as="element()*"
-            select="(css:parse-declaration-list(css:parse-stylesheet(@style)
+            select="(css:parse-declaration-list(css:parse-stylesheet($context/@style)
                        /self::css:rule[not(@selector)][last()]/@style),
                      $declarations)"/>
         <xsl:variable name="declarations" as="element()*"
@@ -584,20 +685,22 @@
                               $declarations/self::css:property[@name=$property][last()]"/>
     </xsl:template>
     
-    <xsl:template match="*" mode="css:specified-properties" as="element()*">
+    <xsl:template name="css:specified-properties" as="element()*">
         <xsl:param name="properties" select="'#all'"/>
         <xsl:param name="concretize-inherit" as="xs:boolean" select="true()"/>
         <xsl:param name="concretize-initial" as="xs:boolean" select="true()"/>
         <xsl:param name="validate" as="xs:boolean" select="false()"/>
+        <xsl:param name="context" as="element()" select="."/>
         <xsl:variable name="properties" as="xs:string*"
                       select="if ($properties instance of xs:string)
                               then tokenize(normalize-space($properties), ' ')
                               else $properties"/>
         <xsl:variable name="declarations" as="element()*">
-            <xsl:apply-templates select="." mode="css:cascaded-properties">
+            <xsl:call-template name="css:cascaded-properties">
                 <xsl:with-param name="properties" select="$properties"/>
                 <xsl:with-param name="validate" select="$validate"/>
-            </xsl:apply-templates>
+                <xsl:with-param name="context" select="$context"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="properties" as="xs:string*" select="$properties[not(.='#all')]"/>
         <xsl:variable name="properties" as="xs:string*"
@@ -613,7 +716,7 @@
                 <xsl:when test="$concretize-inherit">
                     <xsl:apply-templates select="$declarations" mode="css:inherit">
                         <xsl:with-param name="validate" select="$validate"/>
-                        <xsl:with-param name="context" select="."/>
+                        <xsl:with-param name="context" select="$context"/>
                     </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
@@ -637,44 +740,45 @@
         <xsl:param name="concretize-initial" as="xs:boolean"/>
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
-        <xsl:apply-templates select="$context" mode="css:specified-properties">
+        <xsl:call-template name="css:specified-properties">
             <xsl:with-param name="properties" select="$properties"/>
             <xsl:with-param name="concretize-inherit" select="$concretize-inherit"/>
             <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
             <xsl:with-param name="validate" select="$validate"/>
-        </xsl:apply-templates>
+            <xsl:with-param name="context" select="$context"/>
+        </xsl:call-template>
     </xsl:function>
     
-    <xsl:template match="*" mode="css:computed-properties" as="element()*">
+    <xsl:template name="css:computed-properties" as="element()*">
         <xsl:param name="properties" select="'#all'"/>
         <xsl:param name="concretize-inherit" as="xs:boolean" select="true()"/>
         <xsl:param name="concretize-initial" as="xs:boolean" select="true()"/>
         <xsl:param name="validate" as="xs:boolean" select="false()"/>
+        <xsl:param name="context" as="element()" select="."/>
         <xsl:variable name="declarations" as="element()*">
-            <xsl:apply-templates select="." mode="css:specified-properties">
+            <xsl:call-template name="css:specified-properties">
                 <xsl:with-param name="properties" select="$properties"/>
                 <xsl:with-param name="concretize-inherit" select="false()"/>
                 <xsl:with-param name="concretize-initial" select="false()"/>
                 <xsl:with-param name="validate" select="$validate"/>
-            </xsl:apply-templates>
+                <xsl:with-param name="context" select="$context"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="declarations" as="element()*">
             <xsl:apply-templates select="$declarations" mode="css:compute">
                 <xsl:with-param name="concretize-inherit" select="false()"/>
                 <xsl:with-param name="concretize-initial" select="false()"/>
                 <xsl:with-param name="validate" select="$validate"/>
-                <xsl:with-param name="context" select="."/>
+                <xsl:with-param name="context" select="$context"/>
             </xsl:apply-templates>
         </xsl:variable>
-        <!--
-            Explain why i choose to do inheriting after computing?
-        -->
         <xsl:variable name="declarations" as="element()*">
             <xsl:choose>
                 <xsl:when test="$concretize-inherit">
                     <xsl:apply-templates select="$declarations" mode="css:inherit">
                         <xsl:with-param name="validate" select="$validate"/>
-                        <xsl:with-param name="context" select="."/>
+                        <xsl:with-param name="compute" select="true()"/>
+                        <xsl:with-param name="context" select="$context"/>
                     </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
@@ -698,12 +802,13 @@
         <xsl:param name="concretize-initial" as="xs:boolean"/>
         <xsl:param name="validate" as="xs:boolean"/>
         <xsl:param name="context" as="element()"/>
-        <xsl:apply-templates select="$context" mode="css:computed-properties">
+        <xsl:call-template name="css:computed-properties">
             <xsl:with-param name="properties" select="$properties"/>
             <xsl:with-param name="concretize-inherit" select="$concretize-inherit"/>
             <xsl:with-param name="concretize-initial" select="$concretize-initial"/>
             <xsl:with-param name="validate" select="$validate"/>
-        </xsl:apply-templates>
+            <xsl:with-param name="context" select="$context"/>
+        </xsl:call-template>
     </xsl:function>
     
     <xsl:function name="css:computed-properties" as="element()*">
@@ -721,16 +826,36 @@
         <xsl:param name="base" as="xs:string?" select="()"/>
         <xsl:choose>
             <xsl:when test="not(@selector) and exists($base)">
-                <xsl:sequence select="concat($base,' { ',@style,' }')"/>
+                <xsl:sequence select="concat(
+                                        $base,
+                                        ' { ',
+                                        if (@style)
+                                          then string(@style)
+                                          else css:serialize-declaration-list(*),
+                                        ' }')"/>
             </xsl:when>
             <xsl:when test="not(@selector)">
-                <xsl:sequence select="@style"/>
+                <xsl:sequence select="if (@style)
+                                      then string(@style)
+                                      else css:serialize-declaration-list(*)"/>
             </xsl:when>
             <xsl:when test="exists($base) and not(matches(@selector,'^:'))">
-                <xsl:sequence select="concat($base,' {',css:serialize-stylesheet(css:parse-stylesheet(@style),@selector),' }')"/>
+                <xsl:sequence select="concat(
+                                        $base,
+                                        ' {',
+                                        css:serialize-stylesheet(
+                                          if (@style)
+                                            then css:parse-stylesheet(@style)
+                                            else *,
+                                          @selector),
+                                        ' }')"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:sequence select="css:serialize-stylesheet(css:parse-stylesheet(@style),string-join(($base,@selector),''))"/>
+                <xsl:sequence select="css:serialize-stylesheet(
+                                        if (@style)
+                                          then css:parse-stylesheet(@style)
+                                          else *,
+                                        string-join(($base,@selector),''))"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -805,10 +930,11 @@
     </xsl:function>
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
-        <xsl:param name="rules" as="element()*"/>
+        <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
         <xsl:param name="base" as="xs:string?"/>
         <xsl:variable name="serialized-declarations" as="xs:string*">
-            <xsl:apply-templates select="$rules[not(@selector)]" mode="css:serialize"/>
+            <xsl:apply-templates mode="css:serialize"
+                                 select="$rules[(self::css:rule and not(@selector)) or self::css:property]"/>
         </xsl:variable>
         <xsl:variable name="serialized-declarations" as="xs:string?">
             <xsl:if test="exists($serialized-declarations)">
@@ -816,12 +942,12 @@
             </xsl:if>
         </xsl:variable>
         <xsl:variable name="serialized-pseudo-rules" as="xs:string*">
-            <xsl:apply-templates select="$rules[@selector[matches(.,'^:')]]" mode="css:serialize">
+            <xsl:apply-templates select="$rules[self::css:rule and @selector[matches(.,'^:')]]" mode="css:serialize">
                 <xsl:with-param name="base" select="$base"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="serialized-at-rules" as="xs:string*">
-            <xsl:apply-templates select="$rules[@selector[not(matches(.,'^:'))]]" mode="css:serialize"/>
+            <xsl:apply-templates select="$rules[self::css:rule and @selector[not(matches(.,'^:'))]]" mode="css:serialize"/>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
             <xsl:choose>
@@ -896,14 +1022,14 @@
     </xsl:template>
     
     <xsl:template match="css:content" mode="css:eval">
-        <xsl:param name="context" as="element()?" select="()" tunnel="yes"/>
+        <xsl:param name="context" as="element()?" select="()"/>
         <xsl:if test="$context">
             <xsl:sequence select="$context/child::node()"/>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="css:attr" mode="css:eval" as="xs:string?">
-        <xsl:param name="context" as="element()?" select="()" tunnel="yes"/>
+        <xsl:param name="context" as="element()?" select="()"/>
         <xsl:if test="$context">
             <xsl:variable name="name" select="string(@name)"/>
             <xsl:sequence select="string($context/@*[name()=$name])"/>

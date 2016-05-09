@@ -400,4 +400,55 @@
 		</x:expect>
 	</x:scenario>
 	
+	<x:scenario label="test_32">
+		<x:call function="css:deep-parse-stylesheet">
+			<x:param select="'::before { content: &quot;x&quot; }
+			                 ::before::after { content: &quot;x&quot; }
+			                 {display:block}
+			                 @page { size: 40 25 @top-right-corner { content: &quot;x&quot; }}
+			                 @volume { @begin { content: flow(titlepage); @page { size: 15 5; } @page:left { size: 15 5; @top-right { content: none; }}}}'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:rule selector="::before">
+				<css:rule>
+					<css:property name="content" value="&quot;x&quot;"/>
+				</css:rule>
+				<css:rule selector="::after">
+					<css:property name="content" value="&quot;x&quot;"/>
+				</css:rule>
+			</css:rule>
+			<css:rule>
+				<css:property name="display" value="block"/>
+			</css:rule>
+			<css:rule selector="@page">
+				<css:rule>
+					<css:property name="size" value="40 25"/>
+				</css:rule>
+				<css:rule selector="@top-right-corner">
+					<css:property name="content" value="&quot;x&quot;"/>
+				</css:rule>
+			</css:rule>
+			<css:rule selector="@volume">
+				<css:rule selector="@begin">
+					<css:rule>
+						<css:property name="content" value="flow(titlepage)"/>
+					</css:rule>
+					<css:rule selector="@page">
+						<css:rule>
+							<css:property name="size" value="15 5"/>
+						</css:rule>
+						<css:rule selector=":left">
+							<css:rule>
+								<css:property name="size" value="15 5"/>
+							</css:rule>
+							<css:rule selector="@top-right">
+								<css:property name="content" value="none"/>
+							</css:rule>
+						</css:rule>
+					</css:rule>
+				</css:rule>
+			</css:rule>
+		</x:expect>
+	</x:scenario>
+	
 </x:description>
