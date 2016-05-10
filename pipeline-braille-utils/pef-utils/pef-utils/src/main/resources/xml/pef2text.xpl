@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="pef:pef2text"
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pef="http://www.daisy.org/ns/2008/pef"
-    version="1.0">
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                version="1.0">
     
     <p:input port="source" sequence="false" primary="true"/>
     <p:option name="href" required="true" px:type="anyDirURI"/>
-    <p:option name="table" required="true"/>
-    <p:option name="breaks" required="false"/>
+    <p:option name="file-format" required="false"/> <!-- query format -->
+    <p:option name="table" required="false"/> <!-- query format -->
+    <p:option name="line-breaks" required="false"/>
+    <p:option name="page-breaks" required="false"/>
     <p:option name="pad" required="false"/>
     
 </p:declare-step>

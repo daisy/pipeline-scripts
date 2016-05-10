@@ -27,9 +27,9 @@
           </pef>
         </x:document>
       </x:input>
-      <x:option name="table" select="'(id:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)
-                                      (line-breaks:UNIX)
-                                      (page-breaks:&quot;---&quot;)'"/>
+      <x:option name="file-format" select="'(line-breaks:UNIX)
+                                            (page-breaks:&quot;---&quot;)
+                                            (table:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
       <x:option name="pad" select="'BOTH'"/>
       <x:option name="href" select="resolve-uri('text.brf',$temp-dir)"/>
     </x:call>
