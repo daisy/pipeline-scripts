@@ -35,12 +35,6 @@ influence on the cascading order.</p>
             <h2 px:role="name">Transformer query</h2>
         </p:documentation>
     </p:option>
-    <p:option name="ascii-table" required="false" px:type="string" select="''">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">ASCII braille table</h2>
-            <p px:role="desc" xml:space="preserve">The ASCII braille table, used for example to render BRF files.</p>
-        </p:documentation>
-    </p:option>
     <p:option name="include-preview" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include preview</h2>
@@ -49,8 +43,20 @@ influence on the cascading order.</p>
     </p:option>
     <p:option name="include-brf" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Include BRF</h2>
-            <p px:role="desc" xml:space="preserve">Whether or not to include an ASCII version of the PEF.</p>
+            <h2 px:role="name">Include plain text file (BRF)</h2>
+            <p px:role="desc" xml:space="preserve">Whether or not to include a plain text ASCII version of the PEF.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="ascii-file-format" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Plain text (BRF) file format</h2>
+            <p px:role="desc" xml:space="preserve">The file format to store the plain text version.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="ascii-table" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">ASCII braille table</h2>
+            <p px:role="desc" xml:space="preserve">The ASCII braille table, used to render the PEF preview and, if no plain text file format was specified, the plain text version.</p>
         </p:documentation>
     </p:option>
     

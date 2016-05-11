@@ -30,9 +30,10 @@
     
     <p:option name="stylesheet"/>
     <p:option name="transform"/>
-    <p:option name="ascii-table"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
+    <p:option name="ascii-file-format"/>
+    <p:option name="ascii-table"/>
     <p:option name="page-width"/>
     <p:option name="page-height"/>
     <p:option name="left-margin"/>
@@ -88,6 +89,7 @@
     <px:delete-parameters name="input-options"
                           parameter-names="stylesheet
                                            transform
+                                           ascii-file-format
                                            ascii-table
                                            include-brf
                                            include-preview
@@ -148,6 +150,7 @@
             <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
                                                    then concat($brf-output-dir,'/',$name,'.brf')
                                                    else ''"/>
+            <p:with-option name="brf-file-format" select="$ascii-file-format"/>
             <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                     else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
                 <p:pipe step="html" port="result"/>

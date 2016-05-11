@@ -43,9 +43,10 @@ even though the provided CSS is more specific.
     </p:option>
     
     <p:option name="transform"/>
-    <p:option name="ascii-table"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
+    <p:option name="ascii-file-format"/>
+    <p:option name="ascii-table"/>
     <p:option name="page-width"/>
     <p:option name="page-height"/>
     <p:option name="left-margin"/>
@@ -106,6 +107,7 @@ even though the provided CSS is more specific.
                                            apply-document-specific-stylesheets
                                            transform
                                            ascii-table
+                                           ascii-file-format
                                            include-brf
                                            include-preview
                                            pef-output-dir
@@ -200,6 +202,7 @@ even though the provided CSS is more specific.
             <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
                                                    then concat($brf-output-dir,'/',$name,'.brf')
                                                    else ''"/>
+            <p:with-option name="brf-file-format" select="$ascii-file-format"/>
             <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                     else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
         </pef:store>

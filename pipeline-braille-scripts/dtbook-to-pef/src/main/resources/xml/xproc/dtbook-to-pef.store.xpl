@@ -21,6 +21,7 @@
     <p:option name="include-preview" select="'false'"/>
     <p:option name="include-brf" select="'false'"/>
     <p:option name="include-obfl" select="'false'"/>
+    <p:option name="ascii-file-format" select="''"/>
     <p:option name="ascii-table" select="''"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
@@ -36,6 +37,7 @@
         <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
                                                then concat($brf-output-dir,'/',$name,'.brf')
                                                else ''"/>
+        <p:with-option name="brf-file-format" select="$ascii-file-format"/>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                 else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
     </pef:store>

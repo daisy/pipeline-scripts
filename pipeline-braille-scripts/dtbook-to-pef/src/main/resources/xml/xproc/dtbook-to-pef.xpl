@@ -35,7 +35,6 @@
     
     <p:option name="stylesheet"/>
     <p:option name="transform"/>
-    <p:option name="ascii-table"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
     <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
@@ -44,6 +43,8 @@
             <p px:role="desc" xml:space="preserve">Keeps the intermediary OBFL-file for debugging.</p>
         </p:documentation>
     </p:option>
+    <p:option name="ascii-file-format"/>
+    <p:option name="ascii-table"/>
     <p:option name="page-width"/>
     <p:option name="page-height"/>
     <p:option name="left-margin"/>
@@ -103,6 +104,7 @@
     <px:delete-parameters name="input-options"
                           parameter-names="stylesheet
                                            transform
+                                           ascii-file-format
                                            ascii-table
                                            include-brf
                                            include-preview
@@ -156,6 +158,7 @@
         <p:with-option name="include-brf" select="$include-brf"/>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-obfl" select="$include-obfl"/>
+        <p:with-option name="ascii-file-format" select="$ascii-file-format"/>
         <p:with-option name="ascii-table" select="$ascii-table"/>
         <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
         <p:with-option name="brf-output-dir" select="$brf-output-dir"/>
