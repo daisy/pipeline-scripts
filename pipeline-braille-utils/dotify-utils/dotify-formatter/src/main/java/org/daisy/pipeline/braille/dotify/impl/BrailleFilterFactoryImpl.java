@@ -323,7 +323,6 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 						t = "";
 					if (key.equals("-dotify-def") || key.equals("-dotify-defifndef"))
 						env.add(var); }}
-			// FIXME: SimpleInlineStyle.equals does not work
 			if (s == null && style == null || s != null && s.equals(style))
 				segment += t;
 			else {
@@ -376,7 +375,6 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 							else if (system.equals("symbolic"))
 								t = counterRepresentationSymbolic(counterValue, symbols); }}}
 				s.removeProperty("-dotify-counter-style"); }
-			// FIXME: SimpleInlineStyle.equals does not work
 			if (s == null && style == null || s != null && s.equals(style))
 				segment += t;
 			else {
