@@ -374,29 +374,29 @@
         <xsl:choose>
             <xsl:when test="$scope=('first','page-first')">
                 <marker-reference marker="{@name}" direction="forward" scope="page"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}"/>
                 <!--
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-defifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-defifndef:{$var-name};{$text-transform-decl}"/>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope=('start','page-start')">
                 <!--
                     FIXME: scope="page-content" does not work as expected
                 -->
                 <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}"/>
                 <!--
                     TODO: check that this does not match too much at the end of the page!
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-defifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-defifndef:{$var-name};{$text-transform-decl}"/>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope=('start-except-last','page-start-except-last')">
                 <!--
@@ -413,9 +413,9 @@
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}"/>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope=('last-except-start','page-last-except-start')">
                 <!--
@@ -429,7 +429,7 @@
             </xsl:when>
             <xsl:when test="$scope='spread-first'">
                 <marker-reference marker="{@name}" direction="forward" scope="spread"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}">
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
@@ -438,20 +438,20 @@
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-defifndef:{$var-name}{$text-transform-decl}">
+                                  text-style="-dotify-defifndef:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
                 </marker-reference>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope='spread-start'">
                 <!--
                     FIXME: scope="spread-content"
                 -->
                 <marker-reference marker="{@name}/prev" direction="forward" scope="spread"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}">
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>
@@ -461,13 +461,13 @@
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-defifndef:{$var-name}{$text-transform-decl}">
+                                  text-style="-dotify-defifndef:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='left'">
                         <xsl:attribute name="start-offset" select="'1'"/>
                     </xsl:if>
                 </marker-reference>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope='spread-start-except-last'">
                 <!--
@@ -487,13 +487,13 @@
                     FIXME: replace with scope="document" and remove second marker-reference
                 -->
                 <marker-reference marker="{@name}" direction="backward" scope="sequence"
-                                  text-style="-dotify-def:{$var-name}{$text-transform-decl}">
+                                  text-style="-dotify-def:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='left'">
                         <xsl:attribute name="start-offset" select="'1'"/>
                     </xsl:if>
                 </marker-reference>
                 <marker-reference marker="{@name}/entry" direction="backward" scope="sequence"
-                                  text-style="-dotify-ifndef:{$var-name}{$text-transform-decl}"/>
+                                  text-style="-dotify-ifndef:{$var-name};{$text-transform-decl}"/>
             </xsl:when>
             <xsl:when test="$scope='spread-last-except-start'">
                 <!--
