@@ -15,11 +15,15 @@
 	</xsl:template>
 	
 	<xsl:template match="/*">
+		<xsl:apply-templates select="." mode="identify-blocks"/>
+	</xsl:template>
+	
+	<xsl:template mode="identify-blocks" match="/*">
 		<_ style="text-transform: none">
-			<xsl:apply-templates mode="identify-blocks" select=".">
+			<xsl:next-match>
 				<xsl:with-param name="source-style" tunnel="yes" select="()"/>
 				<xsl:with-param name="result-style" tunnel="yes" select="css:property('text-transform','none')"/>
-			</xsl:apply-templates>
+			</xsl:next-match>
 		</_>
 	</xsl:template>
 	
@@ -114,7 +118,9 @@
 		<xsl:param name="result-style" as="element()*" tunnel="yes"/> <!-- css:property* -->
 		<xsl:variable name="main-style" as="element()?" select="$style[not(@selector)]"/>
 		<xsl:variable name="translated-main-style" as="element()?"> <!-- css:rule* -->
-			<xsl:apply-templates mode="translate-style" select="$main-style"/>
+			<xsl:apply-templates mode="translate-style" select="$main-style">
+				<xsl:with-param name="text-translated" tunnel="yes" select="true()"/>
+			</xsl:apply-templates>
 		</xsl:variable>
 		<xsl:variable name="source-style" as="element()*">
 			<xsl:call-template name="css:computed-properties">
@@ -196,9 +202,17 @@
 	
 	<xsl:template mode="translate-style" match="css:property[@name='text-transform']">
 		<xsl:param name="result-style" as="element()*" tunnel="yes"/> <!-- css:property* -->
-		<xsl:if test="not($result-style[@name='text-transform' and @value='none'])">
-			<css:property name="text-transform" value="none"/>
-		</xsl:if>
+		<xsl:param name="text-translated" as="xs:boolean" tunnel="yes" select="false()"/>
+		<xsl:choose>
+			<xsl:when test="$text-translated">
+				<xsl:if test="not($result-style[@name='text-transform' and @value='none'])">
+					<css:property name="text-transform" value="none"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:next-match/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template mode="translate-style" match="css:property[@name='string-set']">

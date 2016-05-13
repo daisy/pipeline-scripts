@@ -42,14 +42,16 @@
 		                                                                   and not(@value=css:initial-value(@name))])"/>
 	</xsl:template>
 	
-	<xsl:template mode="translate-style" match="css:property[@name='letter-spacing']"/>
-	
 	<xsl:template mode="translate-style" match="css:property[@name='word-spacing']">
 		<xsl:sequence select="."/>
 	</xsl:template>
 	
 	<xsl:template mode="translate-style"
-	              match="css:property[@name=('text-transform','font-style','font-weight','text-decoration','color')]"/>
+	              match="css:property[@name=('letter-spacing',
+	                                         'font-style',
+	                                         'font-weight',
+	                                         'text-decoration',
+	                                         'color')]"/>
 	
 	<xsl:template mode="translate-style" match="css:property[@name='hyphens' and @value='auto']">
 		<xsl:param name="result-style" as="element()*" tunnel="yes"/>
