@@ -18,14 +18,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.dotify.api.tasks.InternalTask;
-import org.daisy.dotify.api.tasks.ReadOnlyTask;
-import org.daisy.dotify.api.tasks.ReadWriteTask;
 import org.daisy.dotify.api.tasks.TaskSystem;
 import org.daisy.dotify.api.tasks.TaskSystemException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryMakerService;
 import org.daisy.dotify.common.io.FileIO;
-import org.daisy.dotify.common.io.TempFileHandler;
 import org.daisy.dotify.tasks.runner.TaskRunner;
 
 import org.daisy.pipeline.braille.common.Query.Feature;

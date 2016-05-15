@@ -9,6 +9,7 @@
         <p:option name="locale" required="true"/>
         <p:option name="mode" required="true"/>
         <p:option name="identifier" required="false" select="''"/>
+        <p:input port="parameters" kind="parameter" primary="false"/>
     </p:declare-step>
     
     <p:declare-step type="dotify:xml-to-obfl">

@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>dotify-calabash</artifactId>
-  <version>1.3.2-SNAPSHOT</version>
+  <version>1.4.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: dotify-utils :: dotify-calabash</name>
