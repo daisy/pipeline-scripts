@@ -22,7 +22,6 @@ import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
 import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -74,7 +73,7 @@ public class PefCoreTest {
 		MutableQuery q = mutableQuery();
 		q.add("format", "org_daisy.BrailleEditorsFileFormatProvider.FileType.BRF");
 		q.add("table", "org_daisy.EmbosserTableProvider.TableType.MIT");
-		FileFormat format = provider.get(q).iterator().next();
+		provider.get(q).iterator().next();
 	}
 	
 	@Test
@@ -83,7 +82,7 @@ public class PefCoreTest {
 		MutableQuery q = mutableQuery();
 		q.add("embosser", "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_200");
 		q.add("locale", "nl");
-		FileFormat format = provider.get(q).iterator().next();
+		provider.get(q).iterator().next();
 	}
 	
 	@Configuration

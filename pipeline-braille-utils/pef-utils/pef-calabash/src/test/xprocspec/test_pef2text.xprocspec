@@ -31,7 +31,8 @@
                                             (page-breaks:&quot;---&quot;)
                                             (table:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
       <x:option name="pad" select="'BOTH'"/>
-      <x:option name="href" select="resolve-uri('text.brf',$temp-dir)"/>
+      <x:option name="dir-href" select="resolve-uri($temp-dir)"/>
+      <x:option name="single-volume-name" select="text"/>
     </x:call>
     <x:context label="result file">
       <x:document type="file" method="text" base-uri="temp-dir" href="text.brf"/>

@@ -3,11 +3,14 @@ package org.daisy.pipeline.braille.pef.calabash.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,6 +34,8 @@ import net.sf.saxon.s9api.Serializer;
 import org.daisy.braille.api.embosser.EmbosserWriter;
 import org.daisy.braille.api.embosser.FileFormat;
 import org.daisy.braille.api.table.Table;
+import org.daisy.braille.consumer.validator.ValidatorFactory;
+import org.daisy.braille.pef.PEFFileSplitter;
 import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
 import org.daisy.braille.pef.UnsupportedWidthException;
@@ -58,12 +63,15 @@ import org.slf4j.LoggerFactory;
 
 public class PEF2TextStep extends DefaultStep {
 	
-	private static final QName _href = new QName("href");
+	private static final QName _dir_href = new QName("dir-href");
 	private static final QName _file_format = new QName("file-format");
 	private static final QName _table = new QName("table");
 	private static final QName _line_breaks = new QName("line-breaks");
 	private static final QName _page_breaks = new QName("page-breaks");
 	private static final QName _pad = new QName("pad");
+	private static final QName _pattern = new QName("pattern");
+	private static final QName _number_width = new QName("number-width");
+	private static final QName _single_volume_name = new QName("single-volume-name");
 	
 	private static final Query EN_US = mutableQuery().add("id", "org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US");
 	
@@ -120,13 +128,11 @@ public class PEF2TextStep extends DefaultStep {
 			try {
 				logger.debug("Storing PEF to file format: " + fileFormat);
 				
-				// Create EmbosserWriter
-				File textFile = new File(new URI(getOption(_href).getString()));
-				textFile.getParentFile().mkdirs();
-				OutputStream textStream = new FileOutputStream(textFile);
-				EmbosserWriter writer = fileFormat.newEmbosserWriter(textStream);
+				// Initialize output directory
+				File textDir = new File(new URI(getOption(_dir_href).getString()));
+				textDir.mkdirs();
 				
-				// Read PEF
+				// Read source PEF
 				ByteArrayOutputStream s = new ByteArrayOutputStream();
 				Serializer serializer = new Serializer(s);
 				serializer.serializeNode(source.read());
@@ -134,17 +140,67 @@ public class PEF2TextStep extends DefaultStep {
 				InputStream pefStream = new ByteArrayInputStream(s.toByteArray());
 				s.close();
 				
-				// Parse PEF to text
-				PEFHandler.Builder builder = new PEFHandler.Builder(writer);
-				builder.range(null).align(Alignment.LEFT).offset(0);
-				parsePefFile(pefStream, builder.build());
-				pefStream.close();
-				textStream.close();
+				// Parse pattern
+				String singleVolumeName = getOption(_single_volume_name, "");
+				String pattern = getOption(_pattern, "volume-{}");
+				int match = pattern.indexOf("{}");
+				if (match < 0 || match != pattern.lastIndexOf("{}")) {
+					// Output to single file
+					convertPEF2Text(pefStream,
+							new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
+				} else {
+					// Split PEF
+					File splitDir = new File(textDir, "split");
+					splitDir.mkdir();
+					PEFFileSplitter splitter = new PEFFileSplitter(ValidatorFactory.newInstance());
+					splitter.split(pefStream, splitDir, PEFFileSplitter.PREFIX, PEFFileSplitter.POSTFIX);
+					File[] pefFiles = splitDir.listFiles();
+					String formatPattern = pattern.substring(0, match);
+					int nWidth = Integer.parseInt(getOption(_number_width, "0"));
+					if (nWidth == 0)
+						formatPattern += "###"; // Assume max 999 volumes
+					else
+						while (nWidth > 0) { formatPattern += "0"; nWidth--; }
+					formatPattern += pattern.substring(match + 2);
+					NumberFormat format = new DecimalFormat(formatPattern);
+					for (File pefFile : pefFiles) {
+						InputStream is = new FileInputStream(pefFile);
+						if (pefFiles.length == 1 && !singleVolumeName.isEmpty()) {
+							// Output to single file
+							convertPEF2Text(is, new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
+						} else {
+							String pefName = pefFile.getName();
+							String textName = format.format(
+									Integer.parseInt(
+											pefName.replace("^" + PEFFileSplitter.PREFIX, "")
+											.replace(PEFFileSplitter.POSTFIX + "$", "")));
+							convertPEF2Text(is,
+									new File(textDir, textName + fileFormat.getFileExtension()),
+									fileFormat);
+						}
+						is.close();
+						// TODO: clean up split PEF files.
+					}
+					pefStream.close();
+				}
 				return; }
 			catch (Exception e) {
 				logger.error("Storing PEF to file format '" + fileFormat + "' failed", e); }}
 		logger.error("pef:pef2text failed");
 		throw new XProcException(step.getNode(), "pef:pef2text failed");
+	}
+	
+	private void convertPEF2Text(InputStream pefStream, File textFile, FileFormat fileFormat)
+			throws ParserConfigurationException, SAXException, IOException, UnsupportedWidthException {
+		// Create EmbosserWriter
+		OutputStream textStream = new FileOutputStream(textFile);
+		EmbosserWriter writer = fileFormat.newEmbosserWriter(textStream);
+		
+		// Parse PEF to text
+		PEFHandler.Builder builder = new PEFHandler.Builder(writer);
+		builder.range(null).align(Alignment.LEFT).offset(0);
+		parsePefFile(pefStream, builder.build());
+		textStream.close();
 	}
 	
 	private void addOption(QName option, MutableQuery query) {
