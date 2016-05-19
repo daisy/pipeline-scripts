@@ -31,6 +31,12 @@ mvn clean install
 
 The required version of Java is 8.
 
+Semantic versioning
+-------------------
+Individual modules are versioned according to [SemVer](http://semver.org/). In order to ease the
+release process, the correct version must be set whenever a change is made to a module (in both
+`maven/bom/pom.xml` and module's own POM).
+
 Release procedure
 -----------------
 - Version number should match next version of pipeline-assembly.
@@ -46,15 +52,13 @@ Release procedure
   ```
   
 - Resolve snapshot dependencies and commit.
-- View changes since previous release, update module versions (in both `maven/bom/pom.xml` and
-  module's POM) according to semantic versioning and commit (in case of a major increment all
-  depending modules (depending through "Import-Package") must be updated as well).
-
-  ```sh
-  git diff v1.9.3...HEAD
-  ```
-
-- Generate release notes template, edit and commit. (Look for relevant Github issues on [https://github.com/search](https://github.com/search?o=desc&q=involves%3Abertfrees+repo%3Adaisy%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fissues+repo%3Asnaekobbi%2Fliblouis+repo%3Aliblouis%2Fliblouis+repo%3Asnaekobbi%2Fbraille-css+repo%3Asnaekobbi%2FjStyleParser+repo%3Ajoeha480%2Fdotify&s=updated&type=Issues))
+- Semantic versioning should have been done already (see above). However because some modules might
+  have been disabled in the aggregator POMs because they haven't changed since the previous release,
+  but might have to be updated anyway because of major version increments of depending modules
+  (depending through "Import-Package"), that should be double-checked now. For each of the 4 script
+  modules `dtbook-to-pef`, `html-to-pef`, `epub2-to-pef` and `zedai-to-pef`, if the module is
+  disabled in the aggregator POMs, run `mvn clean test`.
+- Generate release notes template, edit and commit. (View changes since previous release with `git diff v1.9.3...HEAD`, and look for relevant Github issues on [https://github.com/search](https://github.com/search?o=desc&q=involves%3Abertfrees+repo%3Adaisy%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fpipeline-mod-braille+repo%3Asnaekobbi%2Fissues+repo%3Asnaekobbi%2Fliblouis+repo%3Aliblouis%2Fliblouis+repo%3Asnaekobbi%2Fbraille-css+repo%3Asnaekobbi%2FjStyleParser+repo%3Ajoeha480%2Fdotify&s=updated&type=Issues))
 
   ```sh
   make release-notes
