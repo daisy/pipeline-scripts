@@ -6523,7 +6523,7 @@
         <x:document type="inline">
           <doc style="@page { size: 10 6 }
                       @volume {
-                        max-length: 2;
+                        max-length: 3;
                         @end {
                           content: flow(endnotes, volume) }}
                       { text-transform: none }">
@@ -6567,7 +6567,7 @@
               <footer/>
             </default-template>
           </layout-master>
-          <volume-template sheets-in-volume-max="2">
+          <volume-template sheets-in-volume-max="3">
             <post-content>
               <dynamic-sequence master="main">
                 <list-of-references collection="endnotes" range="volume"/>
