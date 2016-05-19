@@ -2,22 +2,11 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:dotify="http://code.google.com/p/dotify/"
                xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
-               script="../resources/xml-to-obfl.xpl">
+               script="../resources/file-to-obfl.xpl">
   
   <x:scenario label="test_01">
-    <x:call step="dotify:xml-to-obfl">
-      <x:input port="source">
-        <x:document type="inline">
-          <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="sv">
-            <!-- This is not really a dtbook, but it will work for the existing test -->
-            <book>
-              <bodymatter>
-                <p>Testar modulen</p>
-              </bodymatter>
-            </book>
-          </dtbook>
-        </x:document>
-      </x:input>
+    <x:call step="dotify:file-to-obfl">
+      <x:option name="source" select="resolve-uri('../resources/test_file-to-obfl/test_01.xml')"/>
       <x:option name="locale" select="'sv-SE'"/>
       <x:param port="parameters" name="rows" select="'29'"/>
       <x:param port="parameters" name="cols" select="'28'"/>
@@ -38,9 +27,7 @@
       see https://github.com/snaekobbi/pipeline-mod-mtm/issues/14
     </x:documentation>
     <x:call step="dotify:xml-to-obfl">
-      <x:input port="source">
-        <x:document type="file" href="../resources/simple-note.xml"/>
-      </x:input>
+      <x:option name="source" select="resolve-uri('../resources/test_file-to-obfl/test_02.xml')"/>
       <x:option name="locale" select="'sv-SE'"/>
     </x:call>
     <x:context label="result">

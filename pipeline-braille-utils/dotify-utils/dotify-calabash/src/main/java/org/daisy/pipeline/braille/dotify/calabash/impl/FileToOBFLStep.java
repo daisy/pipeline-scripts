@@ -1,14 +1,9 @@
 package org.daisy.pipeline.braille.dotify.calabash.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,20 +13,25 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 import org.daisy.dotify.api.tasks.InternalTask;
+import org.daisy.dotify.api.tasks.TaskGroupFactoryMakerService;
+import org.daisy.dotify.api.tasks.TaskGroupSpecification;
 import org.daisy.dotify.api.tasks.TaskSystem;
 import org.daisy.dotify.api.tasks.TaskSystemException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryException;
 import org.daisy.dotify.api.tasks.TaskSystemFactoryMakerService;
-import org.daisy.dotify.common.io.FileIO;
+import org.daisy.dotify.common.xml.XMLTools;
+import org.daisy.dotify.common.xml.XMLToolsException;
 import org.daisy.dotify.tasks.runner.TaskRunner;
 
 import org.daisy.pipeline.braille.common.Query.Feature;
 import static org.daisy.pipeline.braille.common.Query.util.query;
+import static org.daisy.pipeline.braille.common.util.Files.asFile;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +47,10 @@ import com.xmlcalabash.runtime.XAtomicStep;
 
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.Serializer;
 
-public class XMLToOBFL extends DefaultStep {
+public class FileToOBFLStep extends DefaultStep {
+	private static final QName _source = new QName("source");
+	
 	private static final QName _locale = new QName("locale");
 	private static final QName _format = new QName("format");
 	private static final QName _dotifyOptions = new QName("dotify-options");
@@ -63,22 +64,24 @@ public class XMLToOBFL extends DefaultStep {
     private static final QName _splitterMax = new QName("splitterMax");
     private static final QName _identifier = new QName("identifier");
 	
-	private ReadablePipe source = null;
 	private WritablePipe result = null;
 	private final Map<String,String> parameters = new HashMap<String,String>();
 	
-	private final Iterable<TaskSystemFactoryMakerService> taskSystemFactoryService;
+	private final TaskSystemFactoryMakerService taskSystemFactoryService;
+	private final TaskGroupFactoryMakerService taskGroupFactoryService;
 	
-	public XMLToOBFL(XProcRuntime runtime,
-	                     XAtomicStep step,
-	                     Iterable<TaskSystemFactoryMakerService> taskSystemFactoryService) {
+	public FileToOBFLStep(XProcRuntime runtime,
+	                      XAtomicStep step,
+	                      TaskSystemFactoryMakerService taskSystemFactoryService,
+	                      TaskGroupFactoryMakerService taskGroupFactoryService) {
 		super(runtime, step);
 		this.taskSystemFactoryService = taskSystemFactoryService;
+		this.taskGroupFactoryService = taskGroupFactoryService;
 	}
 	
 	@Override
 	public void setInput(String port, ReadablePipe pipe) {
-		source = pipe;
+		throw new XProcException("No input document allowed on port '" + port + "'");
 	}
 	
 	@Override
@@ -102,7 +105,6 @@ public class XMLToOBFL extends DefaultStep {
 	
 	@Override
 	public void reset() {
-		source.resetReader();
 		result.resetWriter();
 	}
 	
@@ -110,16 +112,7 @@ public class XMLToOBFL extends DefaultStep {
 	public void run() throws SaxonApiException {
 		super.run();
 		try {
-			
-			// Read OBFL
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			Serializer serializer = new Serializer(outputStream);
-			serializer.serializeNode(source.read());
-			serializer.close();
-			InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-			outputStream.close();
-			
-			// Convert
+			File inputFile = asFile(getOption(_source).getString());
 			Map<String, Object> params = new HashMap<String, Object>();
 			addOption(_template, params);
 			addOption(_rows, params);
@@ -141,16 +134,16 @@ public class XMLToOBFL extends DefaultStep {
 			}
 			
 			params.putAll(parameters);
-			
+			String locale = getOption(_locale, Locale.getDefault().toString());
 			InputStream resultStream = convert(
-					newTaskSystem(getOption(_locale, Locale.getDefault().toString()), getOption(_format, "obfl")), 
-					inputStream, outputStream, params);
+					newTaskSystem(locale, getOption(_format, "obfl")),
+					inputFile, locale, params);
 			
 			// Write result
 			result.write(runtime.getProcessor().newDocumentBuilder().build(new StreamSource(resultStream)));
-			resultStream.close(); 
+			resultStream.close();
 		} catch (Exception e) {
-			logger.error("dotify:xml-to-obfl failed", e);
+			logger.error("dotify:file-to-obfl failed", e);
 			throw new XProcException(step.getNode(), e);
 		}
 	}
@@ -162,23 +155,36 @@ public class XMLToOBFL extends DefaultStep {
 		}
 	}
 		
-	private InputStream convert(TaskSystem system, InputStream is, OutputStream os, Map<String, Object> params) throws TaskSystemFactoryException, TaskSystemException, IOException {
-		// Copy source to file
-		File src = File.createTempFile("xml-to-obfl", ".tmp");
-		src.deleteOnExit();
-		FileIO.copy(is, new FileOutputStream(src));
+	private InputStream convert(TaskSystem system, File src, String locale, Map<String, Object> params) throws TaskSystemFactoryException, TaskSystemException, IOException {
 		
-		// These parameters are unfortunately required at the moment
-		params.put("inputFormat", "xml");
+		// FIXME: see https://github.com/joeha480/dotify/issues/205
+		String inputFormat; {
+			inputFormat = "";
+			String inp = src.getName();
+			int inx = inp.lastIndexOf('.');
+			if (inx > -1) {
+				inputFormat = inp.substring(inx + 1);
+				if (!taskGroupFactoryService.listSupportedSpecifications().contains(new TaskGroupSpecification(inputFormat, "obfl", locale))) {
+					logger.debug("No input factory for " + inputFormat);
+					// attempt to detect a supported type
+					try {
+						if (XMLTools.isWellformedXML(src)) {
+							inputFormat = "xml";
+							logger.info("Input is well-formed xml."); }}
+					catch (XMLToolsException e) {
+						e.printStackTrace(); }}
+				else
+					logger.info("Found an input factory for " + inputFormat); }}
+		params.put("inputFormat", inputFormat);
 		params.put("input", src.getAbsolutePath());
 		List<InternalTask> tasks = system.compile(params);
 		
 		// Create a destination file
-		File dest = File.createTempFile("xml-to-obfl", ".tmp");
+		File dest = File.createTempFile("file-to-obfl", ".tmp");
 		dest.deleteOnExit();
 		
 		// Run tasks
-		TaskRunner runner = TaskRunner.withName("dotify:xml-to-obfl").build();
+		TaskRunner runner = TaskRunner.withName("dotify:file-to-obfl").build();
 		runner.runTasks(src, dest, tasks);
 		
 		// Return stream
@@ -186,40 +192,45 @@ public class XMLToOBFL extends DefaultStep {
 	}
 
 	private TaskSystem newTaskSystem(String locale, String format) throws TaskSystemFactoryException {
-		return taskSystemFactoryService.iterator().next().newTaskSystem(locale, format);
+		return taskSystemFactoryService.newTaskSystem(locale, format);
 	}
 	
 	@Component(
-		name = "dotify:xml-to-obfl",
+		name = "dotify:file-to-obfl",
 		service = { XProcStepProvider.class },
-		property = { "type:String={http://code.google.com/p/dotify/}xml-to-obfl" }
+		property = { "type:String={http://code.google.com/p/dotify/}file-to-obfl" }
 	)
 	public static class Provider implements XProcStepProvider {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new XMLToOBFL(runtime, step, taskSystemFactoryService);
+			return new FileToOBFLStep(runtime, step, taskSystemFactoryService, taskGroupFactoryService);
 		}
-			
-		private List<TaskSystemFactoryMakerService> taskSystemFactoryService
-			= new ArrayList<TaskSystemFactoryMakerService>();
+		
+		private TaskSystemFactoryMakerService taskSystemFactoryService = null;
+		private TaskGroupFactoryMakerService taskGroupFactoryService = null;
 		
 		@Reference(
 			name = "TaskSystemFactoryMakerService",
-			unbind = "unbindTaskSystemFactoryMakerService",
 			service = TaskSystemFactoryMakerService.class,
 			cardinality = ReferenceCardinality.MANDATORY,
 			policy = ReferencePolicy.STATIC
 		)
 		protected void bindTaskSystemFactoryMakerService(TaskSystemFactoryMakerService service) {
-			taskSystemFactoryService.add(service);
+			taskSystemFactoryService = service;
 		}
-	
-		protected void unbindTaskSystemFactoryMakerServicee(TaskSystemFactoryMakerService service) {
-			taskSystemFactoryService.remove(service);
+		
+		@Reference(
+			name = "TaskGroupFactoryMakerService",
+			service = TaskGroupFactoryMakerService.class,
+			cardinality = ReferenceCardinality.MANDATORY,
+			policy = ReferencePolicy.STATIC
+		)
+		protected void bindTaskGroupFactoryMakerService(TaskGroupFactoryMakerService service) {
+			taskGroupFactoryService = service;
 		}
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(XMLToOBFL.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileToOBFLStep.class);
 	
 }

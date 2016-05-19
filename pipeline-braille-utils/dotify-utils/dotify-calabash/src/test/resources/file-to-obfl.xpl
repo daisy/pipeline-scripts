@@ -3,8 +3,8 @@
            xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:dotify="http://code.google.com/p/dotify/">
     
-    <p:declare-step type="dotify:xml-to-obfl">
-        <p:input port="source"/>
+    <p:declare-step type="dotify:file-to-obfl">
+        <p:option name="source" required="true"/>
         <p:output port="result"/>
         <p:option name="locale" required="true"/>
         <p:option name="format" required="false" select="'obfl'"/>
