@@ -34,7 +34,7 @@ import net.sf.saxon.s9api.Serializer;
 import org.daisy.braille.api.embosser.EmbosserWriter;
 import org.daisy.braille.api.embosser.FileFormat;
 import org.daisy.braille.api.table.Table;
-import org.daisy.braille.consumer.validator.ValidatorFactory;
+import org.daisy.braille.api.validator.ValidatorFactoryService;
 import org.daisy.braille.pef.PEFFileSplitter;
 import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
@@ -77,16 +77,19 @@ public class PEF2TextStep extends DefaultStep {
 	
 	private final org.daisy.pipeline.braille.common.Provider<Query,FileFormat> fileFormatProvider;
 	private final org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider;
+	private final ValidatorFactoryService validatorFactory;
 	
 	private ReadablePipe source = null;
 	
 	private PEF2TextStep(XProcRuntime runtime,
 	                     XAtomicStep step,
 	                     org.daisy.pipeline.braille.common.Provider<Query,FileFormat> fileFormatProvider,
-	                     org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider) {
+	                     org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider,
+	                     ValidatorFactoryService validatorFactory) {
 		super(runtime, step);
 		this.fileFormatProvider = fileFormatProvider;
 		this.tableProvider = tableProvider;
+		this.validatorFactory = validatorFactory;
 	}
 	
 	@Override
@@ -152,7 +155,7 @@ public class PEF2TextStep extends DefaultStep {
 					// Split PEF
 					File splitDir = new File(textDir, "split");
 					splitDir.mkdir();
-					PEFFileSplitter splitter = new PEFFileSplitter(ValidatorFactory.newInstance());
+					PEFFileSplitter splitter = new PEFFileSplitter(validatorFactory);
 					splitter.split(pefStream, splitDir, PEFFileSplitter.PREFIX, PEFFileSplitter.POSTFIX);
 					File[] pefFiles = splitDir.listFiles();
 					String formatPattern = pattern.substring(0, match);
@@ -218,7 +221,7 @@ public class PEF2TextStep extends DefaultStep {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PEF2TextStep(runtime, step, fileFormatProvider, tableProvider);
+			return new PEF2TextStep(runtime, step, fileFormatProvider, tableProvider, validatorFactory);
 		}
 		
 		@Reference(
@@ -261,6 +264,17 @@ public class PEF2TextStep extends DefaultStep {
 		private org.daisy.pipeline.braille.common.Provider.util.MemoizingProvider<Query,Table> tableProvider
 		= memoize(dispatch(tableProviders));
 		
+		@Reference(
+			name = "ValidatorFactoryService",
+			service = ValidatorFactoryService.class,
+			cardinality = ReferenceCardinality.MANDATORY,
+			policy = ReferencePolicy.STATIC
+		)
+		protected void bindValidatorFactory(ValidatorFactoryService factory) {
+			validatorFactory = factory;
+		}
+		
+		private ValidatorFactoryService validatorFactory = null;
 	}
 	
 	// copied from org.daisy.braille.facade.PEFConverterFacade because it is no longer static
