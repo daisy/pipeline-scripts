@@ -8,7 +8,7 @@
     <relativePath>../../../maven/parent/</relativePath>
   </parent>
   <artifactId>libhyphen-native</artifactId>
-  <version>1.1.7-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>DP2 Braille Modules :: libhyphen-utils :: libhyphen-native</name>
   <dependencies>
@@ -55,6 +55,18 @@
                   <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
                   <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.libs</groupId>
+                  <artifactId>hyphen</artifactId>
+                  <classifier>i586-mingw32-gpp-executable</classifier>
+                  <type>nar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.daisy.libs</groupId>
+                  <artifactId>hyphen</artifactId>
+                  <classifier>x86_64-w64-mingw32-gpp-executable</classifier>
                   <type>nar</type>
                 </artifactItem>
               </artifactItems>
@@ -108,6 +120,24 @@
                   OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-mac.xml,
                   native/macosx/x86=target/dependency/lib/i386-MacOSX-gpp/shared,
                   native/macosx/x86_64=target/dependency/lib/x86_64-MacOSX-gpp/shared
+                </Include-Resource>
+              </instructions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>windows-bundle</id>
+            <phase>package</phase>
+            <goals>
+              <goal>bundle</goal>
+            </goals>
+            <configuration>
+              <classifier>windows</classifier>
+              <instructions>
+                <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.libhyphen-native-windows</Bundle-SymbolicName>
+                <Include-Resource>
+                  OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-windows.xml,
+                  native/windows/x86=target/dependency/bin/i586-mingw32-gpp,
+                  native/windows/x86_64=target/dependency/bin/x86_64-w64-mingw32-gpp
                 </Include-Resource>
               </instructions>
             </configuration>

@@ -19,7 +19,7 @@
 
   <modules>
     <!-- <module>libhyphen-core</module> -->
-    <!-- <module>libhyphen-native</module> -->
+    <module>libhyphen-native</module>
     <!-- <module>libhyphen-saxon</module> -->
     <!-- <module>libhyphen-libreoffice-tables</module> -->
     <!-- <module>libhyphen-utils</module> -->
