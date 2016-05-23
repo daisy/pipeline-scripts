@@ -12,7 +12,7 @@
 
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-bom</artifactId>
-    <version>1.9.13-SNAPSHOT</version>
+    <version>1.9.14-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>DAISY Pipeline 2 :: Braille Modules Bill Of Materials</name>
@@ -32,7 +32,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>common-utils</artifactId>
-                <version>5.0.1-SNAPSHOT</version>
+                <version>5.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -47,12 +47,12 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-utils</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-calabash</artifactId>
-                <version>2.0.0-SNAPSHOT</version>
+                <version>2.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-formatter</artifactId>
-                <version>1.10.1-SNAPSHOT</version>
+                <version>1.10.1</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -72,7 +72,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-utils</artifactId>
-                <version>2.0.0-SNAPSHOT</version>
+                <version>2.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -92,7 +92,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>libhyphen-core</artifactId>
-                <version>4.1.0-SNAPSHOT</version>
+                <version>4.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -129,7 +129,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-core</artifactId>
-                <version>4.1.0-SNAPSHOT</version>
+                <version>4.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -172,7 +172,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-utils</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.4.2</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -240,18 +240,12 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>1.10.1-SNAPSHOT</version>
+                <version>1.10.1</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>jstyleparser</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>1.20-p8-SNAPSHOT</version>
+                <version>1.20-p8</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xerces</groupId>
@@ -272,10 +266,7 @@
             <dependency>
                 <groupId>org.daisy.bindings</groupId>
                 <artifactId>jhyphen</artifactId>
-                <!--
-                    depends on branch non-standard
-                -->
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
@@ -300,10 +291,7 @@
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.formatter.impl</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>2.3.0-SNAPSHOT</version>
+                <version>2.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
@@ -318,10 +306,7 @@
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
                 <artifactId>dotify.task.impl</artifactId>
-                <!--
-                    depends on latest master
-                -->
-                <version>2.4.0-SNAPSHOT</version>
+                <version>2.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.dotify</groupId>
