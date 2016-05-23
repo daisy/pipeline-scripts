@@ -1475,6 +1475,11 @@
                                '() function not supported in volume area')"/>
     </xsl:template>
     
+    <xsl:template mode="block span"
+                  match="css:custom-func[@name='-obfl-evaluate']">
+        <xsl:message>-obfl-evaluate() function not supported in volume area</xsl:message>
+    </xsl:template>
+    
     <xsl:template mode="css:eval-volume-area-content-list"
                   match="*">
         <xsl:message terminate="yes">Coding error</xsl:message>

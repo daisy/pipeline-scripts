@@ -7169,7 +7169,7 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="table-colspan-fill" focus="xfail (Exception)">
+<x:scenario label="table-colspan-fill" pending="xfail (Exception)">
   <x:documentation>
     Tests a table cell spanning multiple columns. The cell text is centered and the remaining space
     in the cell filled with a pattern.
@@ -7251,6 +7251,148 @@
 <x:scenario label="table-rowspan"/>
 <x:scenario label="table-fallback"/>
 -->
+
+<x:scenario label="sheets-in-volume">
+  <x:documentation>
+    Tests variable "sheets-in-volume".
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="a" duplex="false" page-width="10" page-height="5">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <volume-template sheets-in-volume-max="4">
+            <pre-content>
+              <sequence master="a">
+                <block>
+                  <evaluate expression="(round $sheets-in-volume)"/>
+                </block>
+              </sequence>
+            </pre-content>
+          </volume-template>
+          <sequence master="a">
+            <block>
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef version="2008-1" xmlns="http://www.daisy.org/ns/2008/pef">
+        <head>
+          <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume cols="10" rows="5" rowgap="0" duplex="false">
+            <section>
+              <page>
+                <row>⠼⠙</row>
+              </page>
+            </section>
+            <section>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+            </section>
+          </volume>
+          <volume cols="10" rows="5" rowgap="0" duplex="false">
+            <section>
+              <page>
+                <row>⠼⠙</row>
+              </page>
+            </section>
+            <section>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+            </section>
+          </volume>
+          <volume cols="10" rows="5" rowgap="0" duplex="false">
+            <section>
+              <page>
+                <row>⠼⠉</row>
+              </page>
+            </section>
+            <section>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+              <page>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+                <row>⠤⠤⠤⠤⠤</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
 
 </x:scenario>
 </x:description>
