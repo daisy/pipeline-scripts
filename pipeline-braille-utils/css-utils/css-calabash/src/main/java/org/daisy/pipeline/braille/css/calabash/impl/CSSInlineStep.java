@@ -89,6 +89,8 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.util.NamespaceIterator;
 
+import org.apache.commons.io.input.BOMInputStream;
+
 import org.daisy.braille.css.BrailleCSSDeclarationTransformer;
 import org.daisy.braille.css.BrailleCSSParserFactory;
 import org.daisy.braille.css.BrailleCSSProperty;
@@ -174,6 +176,9 @@ public class CSSInlineStep extends DefaultStep {
 				catch (TransformerException e) {
 					throw new IOException(e); }
 				InputStream is = super.fetch(url);
+				
+				// skip BOM
+				is = new BOMInputStream(is);
 				if (url.toString().endsWith(".scss")) {
 					Compiler sassCompiler = new Compiler();
 					Options options = new Options();
