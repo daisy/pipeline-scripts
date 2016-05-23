@@ -156,7 +156,9 @@ public class PEF2TextStep extends DefaultStep {
 					File splitDir = new File(textDir, "split");
 					splitDir.mkdir();
 					PEFFileSplitter splitter = new PEFFileSplitter(validatorFactory);
-					splitter.split(pefStream, splitDir, PEFFileSplitter.PREFIX, PEFFileSplitter.POSTFIX);
+					String prefix = PEFFileSplitter.PREFIX;
+					String postfix = PEFFileSplitter.POSTFIX;
+					splitter.split(pefStream, splitDir, prefix, postfix);
 					File[] pefFiles = splitDir.listFiles();
 					String formatPattern = pattern.substring(0, match);
 					int nWidth = Integer.parseInt(getOption(_number_width, "0"));
@@ -173,12 +175,14 @@ public class PEF2TextStep extends DefaultStep {
 							convertPEF2Text(is, new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
 						} else {
 							String pefName = pefFile.getName();
+							if (pefName.length() <= prefix.length() + postfix.length()
+							    || !pefName.substring(0, prefix.length()).equals(prefix)
+							    || !pefName.substring(pefName.length() - postfix.length()).equals(postfix))
+								throw new RuntimeException("Coding error");
 							String textName = format.format(
-									Integer.parseInt(
-											pefName.replace("^" + PEFFileSplitter.PREFIX, "")
-											.replace(PEFFileSplitter.POSTFIX + "$", "")));
+									Integer.parseInt(pefName.substring(prefix.length(), pefName.length() - postfix.length())));
 							convertPEF2Text(is,
-									new File(textDir, textName + fileFormat.getFileExtension()),
+							                new File(textDir, textName + fileFormat.getFileExtension()),
 									fileFormat);
 						}
 						is.close();

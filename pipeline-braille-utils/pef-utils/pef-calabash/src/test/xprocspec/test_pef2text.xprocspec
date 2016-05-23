@@ -31,11 +31,11 @@
                                             (page-breaks:&quot;---&quot;)
                                             (table:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
       <x:option name="pad" select="'BOTH'"/>
-      <x:option name="dir-href" select="resolve-uri($temp-dir)"/>
-      <x:option name="single-volume-name" select="text"/>
+      <x:option name="dir-href" select="resolve-uri('test_01/', $temp-dir)"/>
+      <x:option name="single-volume-name" select="'text'"/>
     </x:call>
     <x:context label="result file">
-      <x:document type="file" method="text" base-uri="temp-dir" href="text.brf"/>
+      <x:document type="file" method="text" base-uri="temp-dir" href="test_01/text.brf"/>
     </x:context>
     <x:expect label="The BRF should use the default table" type="compare" normalize-space="false">
       <x:document type="file" method="text" href="../resources/pef2text_01.brf"/>
