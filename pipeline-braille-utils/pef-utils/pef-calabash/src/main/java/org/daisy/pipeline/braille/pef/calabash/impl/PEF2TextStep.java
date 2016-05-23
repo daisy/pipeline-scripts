@@ -69,7 +69,7 @@ public class PEF2TextStep extends DefaultStep {
 	private static final QName _line_breaks = new QName("line-breaks");
 	private static final QName _page_breaks = new QName("page-breaks");
 	private static final QName _pad = new QName("pad");
-	private static final QName _pattern = new QName("pattern");
+	private static final QName _name_pattern = new QName("name-pattern");
 	private static final QName _number_width = new QName("number-width");
 	private static final QName _single_volume_name = new QName("single-volume-name");
 	
@@ -145,7 +145,9 @@ public class PEF2TextStep extends DefaultStep {
 				
 				// Parse pattern
 				String singleVolumeName = getOption(_single_volume_name, "");
-				String pattern = getOption(_pattern, "volume-{}");
+				String pattern = getOption(_name_pattern, "");
+				if (pattern.isEmpty())
+					pattern = "volume-{}";
 				int match = pattern.indexOf("{}");
 				if (match < 0 || match != pattern.lastIndexOf("{}")) {
 					// Output to single file
@@ -161,7 +163,11 @@ public class PEF2TextStep extends DefaultStep {
 					splitter.split(pefStream, splitDir, prefix, postfix);
 					File[] pefFiles = splitDir.listFiles();
 					String formatPattern = pattern.substring(0, match);
-					int nWidth = Integer.parseInt(getOption(_number_width, "0"));
+					int nWidth; {
+						try {
+							nWidth = Integer.parseInt(getOption(_number_width, "")); }
+						catch (NumberFormatException e) {
+							nWidth = 0; }}
 					if (nWidth == 0)
 						formatPattern += "###"; // Assume max 999 volumes
 					else
