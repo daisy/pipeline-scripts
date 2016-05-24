@@ -34,7 +34,7 @@
                 <p:pipe port="in-memory.out" step="unzip"/>
             </p:output>
             
-            <px:message severity="DEBUG" message="EPUB is in a ZIP container; unzipping"/>
+            <px:message message="EPUB is in a ZIP container; unzipping"/>
             <px:unzip-fileset name="unzip">
                 <p:with-option name="href" select="$epub"/>
                 <p:with-option name="unzipped-basedir" select="concat($temp-dir,'epub/')"/>
