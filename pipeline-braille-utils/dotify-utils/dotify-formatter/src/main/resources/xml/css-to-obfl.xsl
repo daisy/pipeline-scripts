@@ -405,6 +405,15 @@
             <xsl:for-each select="collection()/css:_[@css:flow=$footnote-and-volume-range-flows]">
                 <collection name="{@css:flow}">
                     <xsl:for-each select="*">
+                        <xsl:if test="@css:anchor='NULL'">
+                            <xsl:message terminate="yes">Flowed element does not have anchor in normal flow</xsl:message>
+                        </xsl:if>
+                        <!--
+                            We don't explicitly check that two items do not end up having the same
+                            ID, which would trigger a "Identifier is not unique" error in
+                            Dotify. Until this happens in practice I just assume that it can not
+                            happen.
+                        -->
                         <item id="{@css:anchor}">
                             <xsl:apply-templates mode="item" select="."/>
                         </item>
@@ -1208,8 +1217,8 @@
     <xsl:template mode="block-attr span-attr"
                   match="css:box[@type='inline']/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
-        <xsl:if test="collection()//css:counter[@target=$id]">
-            <xsl:message terminate="yes">target-counter() referencing inline elements not supported.</xsl:message>
+        <xsl:if test="collection()//css:counter[@name='page'][@target=$id]">
+            <xsl:message terminate="yes">target-counter(page) referencing inline elements not supported.</xsl:message>
         </xsl:if>
     </xsl:template>
     
