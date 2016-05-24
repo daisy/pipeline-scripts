@@ -47,18 +47,21 @@ public class ConfigurableFileFormat implements FileFormat {
 		}
 	};
 	private static final Padding DEFAULT_PADDING = Padding.NONE;
+	private static final String DEFAULT_FILE_EXTENSION = ".brf";
 	
 	private final org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider;
 	private Table table;
 	private LineBreaks lineBreaks;
 	private PageBreaks pageBreaks;
 	private Padding padding;
+	private String fileExtension;
 	
 	private ConfigurableFileFormat(org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider) {
 		this.tableProvider = tableProvider;
 		lineBreaks = DEFAULT_LINE_BREAKS;
 		pageBreaks = DEFAULT_PAGE_BREAKS;
 		padding = DEFAULT_PADDING;
+		fileExtension = DEFAULT_FILE_EXTENSION;
 	}
 	
 	public String getIdentifier() {
@@ -74,7 +77,7 @@ public class ConfigurableFileFormat implements FileFormat {
 	}
 	
 	public String getFileExtension() {
-		return ".brf";
+		return fileExtension;
 	}
 	
 	public boolean supports8dot() {
@@ -159,6 +162,11 @@ public class ConfigurableFileFormat implements FileFormat {
 					padding = Padding.valueOf(((String)value).toUpperCase());
 					return; }}
 			throw new IllegalArgumentException("Unsupported value for pad: " + value);
+		} else if ("file-extension".equals(key)) {
+			if (value != null) {
+				if (value instanceof String) {
+					fileExtension = (String)value;
+					return; }}
 		} else
 			throw new IllegalArgumentException("Unsupported feature: " + key);
 	}
@@ -172,6 +180,8 @@ public class ConfigurableFileFormat implements FileFormat {
 			return pageBreaks;
 		else if ("pad".equals(key))
 			return padding;
+		else if ("file-extension".equals(key))
+			return fileExtension;
 		else
 			throw new IllegalArgumentException("Unsupported feature: " + key);
 	}
