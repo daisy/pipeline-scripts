@@ -116,6 +116,11 @@
                                             '(= $volume 1)',
                                             obfl:not(obfl:or($stylesheets[position()&lt;$i and @selector]/obfl:volume-stylesheets-use-when(.)))))"/>
                 </xsl:when>
+                <xsl:when test="@selector=':last'">
+                    <xsl:sequence select="obfl:and((
+                                            '(= $volume $volumes)',
+                                            obfl:not(obfl:or($stylesheets[position()&lt;$i and @selector]/obfl:volume-stylesheets-use-when(.)))))"/>
+                </xsl:when>
                 <xsl:when test="matches(@selector,'^:nth\([1-9][0-9]*\)$')">
                     <xsl:sequence select="obfl:and((
                                             concat('(= $volume ',substring(@selector,6)),
