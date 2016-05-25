@@ -113,16 +113,18 @@ public class PEF2TextStep extends DefaultStep {
 		if (tableQuery != null) {
 			Table table;
 			try {
-				table = tableProvider.get(query(tableQuery.getString())).iterator().next(); }
+				logger.debug("Finding table for query: " + tableQuery);
+				table = tableProvider.get(query(tableQuery.getString())).iterator().next();
+				logger.debug("Found table: " + table); }
 			catch (NoSuchElementException e) {
 				
 				// this fallback is done because in dtbook-to-pef we use the
 				// query (locale:...) which does not always match something
 				// FIXME: https://github.com/daisy/pipeline-mod-braille/issues/75
-				logger.warn("Table " + tableQuery.toString() + " not found, falling back to en-US table.");
+				logger.warn("Table not found, falling back to en-US table.");
 				table = tableProvider.get(EN_US).iterator().next(); }
 			q.add("table", table.getIdentifier()); }
-		
+		logger.debug("Finding file format for query: " + q);
 		Iterable<FileFormat> fileFormats = fileFormatProvider.get(q);
 		if (!fileFormats.iterator().hasNext()) {
 			logger.error("pef:pef2text failed: no file format found for query: " + q);

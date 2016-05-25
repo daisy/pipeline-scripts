@@ -18,5 +18,6 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:zip-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:mediatype-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:css-utils"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:braille:pef-utils"/>
   
 </catalog>

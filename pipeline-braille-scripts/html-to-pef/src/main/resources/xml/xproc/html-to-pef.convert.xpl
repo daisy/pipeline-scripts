@@ -12,8 +12,12 @@
     <p:input port="source">
         <p:documentation>HTML</p:documentation>
     </p:input>
-    <p:output port="result">
+    <p:output port="result" primary="true">
         <p:documentation>PEF</p:documentation>
+    </p:output>
+    <p:output port="obfl" sequence="true"> <!-- sequence=false when include-obfl=true -->
+        <p:documentation>OBFL</p:documentation>
+        <p:pipe step="transform" port="obfl"/>
     </p:output>
     
     <p:input kind="parameter" port="parameters" sequence="true">
@@ -25,6 +29,7 @@
     <p:option name="default-stylesheet" select="'http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css'"/>
     <p:option name="stylesheet" select="''"/>
     <p:option name="transform" select="'(translator:liblouis)(formatter:dotify)'"/>
+    <p:option name="include-obfl" select="'false'"/>
     
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
@@ -89,13 +94,45 @@
         </px:transform>
     </p:viewport>
     
-    <px:message message="Transforming from XML with inline CSS to PEF"/>
-    <px:transform name="pef">
-        <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')">
-            <p:pipe port="result" step="parameters"/>
-        </p:with-option>
-        <p:with-option name="temp-dir" select="$temp-dir"/>
-    </px:transform>
+    <p:choose name="transform">
+        <p:when test="$include-obfl='true'">
+            <p:output port="pef" primary="true"/>
+            <p:output port="obfl">
+                <p:pipe step="obfl" port="result"/>
+            </p:output>
+            <px:transform name="obfl">
+                <p:with-option name="query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
+                <p:with-option name="temp-dir" select="$temp-dir"/>
+                <p:input port="parameters">
+                    <p:pipe port="result" step="parameters"/>
+                </p:input>
+            </px:transform>
+            <px:message message="Transforming from OBFL to PEF"/>
+            <px:transform>
+                <p:with-option name="query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
+                <p:with-option name="temp-dir" select="$temp-dir"/>
+                <p:input port="parameters">
+                    <p:pipe port="result" step="parameters"/>
+                </p:input>
+            </px:transform>
+        </p:when>
+        <p:otherwise>
+            <p:output port="pef" primary="true"/>
+            <p:output port="obfl">
+                <p:empty/>
+            </p:output>
+            <px:message message="Transforming from XML with inline CSS to PEF"/>
+            <px:transform>
+                <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
+                <p:with-option name="temp-dir" select="$temp-dir"/>
+                <p:input port="parameters">
+                    <p:pipe port="result" step="parameters"/>
+                </p:input>
+            </px:transform>
+        </p:otherwise>
+    </p:choose>
+    
+    <p:identity name="pef"/>
     
     <p:identity>
         <p:input port="source">
@@ -119,6 +156,5 @@
             <p:pipe step="metadata" port="result"/>
         </p:input>
     </pef:add-metadata>
-    
     
 </p:declare-step>

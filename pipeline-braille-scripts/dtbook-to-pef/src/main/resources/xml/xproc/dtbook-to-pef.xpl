@@ -37,12 +37,7 @@
     <p:option name="transform"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
-    <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
-        <p:documentation>
-            <h2 px:role="name">Include OBFL</h2>
-            <p px:role="desc" xml:space="preserve">Keeps the intermediary OBFL-file for debugging.</p>
-        </p:documentation>
-    </p:option>
+    <p:option name="include-obfl"/>
     <p:option name="ascii-file-format"/>
     <p:option name="ascii-table"/>
     <p:option name="page-width"/>
@@ -148,7 +143,7 @@
     <!-- ===== -->
     <!-- STORE -->
     <!-- ===== -->
-    <px:dtbook-to-pef.store>
+    <px:xml-to-pef.store>
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
         </p:input>
@@ -163,6 +158,6 @@
         <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
         <p:with-option name="brf-output-dir" select="$brf-output-dir"/>
         <p:with-option name="preview-output-dir" select="$preview-output-dir"/>
-    </px:dtbook-to-pef.store>
+    </px:xml-to-pef.store>
     
 </p:declare-step>

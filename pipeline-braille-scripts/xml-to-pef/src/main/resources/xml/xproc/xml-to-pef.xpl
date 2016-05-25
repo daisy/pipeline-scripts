@@ -47,6 +47,12 @@ influence on the cascading order.</p>
             <p px:role="desc" xml:space="preserve">Whether or not to include a plain text ASCII version of the PEF.</p>
         </p:documentation>
     </p:option>
+    <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
+      <p:documentation>
+        <h2 px:role="name">Include OBFL</h2>
+        <p px:role="desc" xml:space="preserve">Keeps the intermediary OBFL-file for debugging.</p>
+      </p:documentation>
+    </p:option>
     <p:option name="ascii-file-format" required="false" px:type="string" select="''">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Plain text (BRF) file format</h2>

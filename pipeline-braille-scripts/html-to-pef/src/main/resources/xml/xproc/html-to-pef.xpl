@@ -32,6 +32,7 @@
     <p:option name="transform"/>
     <p:option name="include-preview"/>
     <p:option name="include-brf"/>
+    <p:option name="include-obfl"/>
     <p:option name="ascii-file-format"/>
     <p:option name="ascii-table"/>
     <p:option name="page-width"/>
@@ -93,6 +94,7 @@
                                            ascii-table
                                            include-brf
                                            include-preview
+                                           include-obfl
                                            pef-output-dir
                                            brf-output-dir
                                            preview-output-dir
@@ -129,6 +131,7 @@
         </p:with-option>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="$transform"/>
+        <p:with-option name="include-obfl" select="$include-obfl"/>
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
@@ -138,24 +141,21 @@
     <!-- STORE PEF -->
     <!-- ========= -->
     <px:message message="Storing PEF"/>
-    <p:group>
-        <p:variable name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
+    <px:xml-to-pef.store>
+        <p:input port="obfl">
+            <p:pipe step="convert" port="obfl"/>
+        </p:input>
+        <p:with-option name="name" select="replace(p:base-uri(/),'^.*/([^/]*)\.[^/\.]*$','$1')">
             <p:pipe step="html" port="result"/>
-        </p:variable>
-        <pef:store>
-            <p:with-option name="href" select="concat($pef-output-dir,'/',$name,'.pef')"/>
-            <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
-                                                       then concat($preview-output-dir,'/',$name,'.pef.html')
-                                                       else ''"/>
-            <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
-                                                   then concat($brf-output-dir,'/',$name,'.brf')
-                                                   else ''"/>
-            <p:with-option name="brf-file-format" select="$ascii-file-format"/>
-            <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                    else concat('(locale:',(/*/@xml:lang,'und')[1],')')">
-                <p:pipe step="html" port="result"/>
-            </p:with-option>
-        </pef:store>
-    </p:group>
+        </p:with-option>
+        <p:with-option name="include-brf" select="$include-brf"/>
+        <p:with-option name="include-preview" select="$include-preview"/>
+        <p:with-option name="include-obfl" select="$include-obfl"/>
+        <p:with-option name="ascii-file-format" select="$ascii-file-format"/>
+        <p:with-option name="ascii-table" select="$ascii-table"/>
+        <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
+        <p:with-option name="brf-output-dir" select="$brf-output-dir"/>
+        <p:with-option name="preview-output-dir" select="$preview-output-dir"/>
+    </px:xml-to-pef.store>
     
 </p:declare-step>

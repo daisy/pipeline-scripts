@@ -46,6 +46,7 @@ public class XProcSpecTest {
 			junitBundles(),
 			mavenBundlesWithDependencies(
 				brailleModule("css-utils"),
+				brailleModule("pef-utils"),
 				pipelineModule("common-utils"),
 				pipelineModule("file-utils"),
 				pipelineModule("fileset-utils"),

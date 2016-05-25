@@ -13,4 +13,6 @@
     <p:import href="add-parameters.xpl"/>
     <p:import href="delete-parameters.xpl"/>
     
+    <p:import href="xml-to-pef.store.xpl"/>
+    
 </p:library>
