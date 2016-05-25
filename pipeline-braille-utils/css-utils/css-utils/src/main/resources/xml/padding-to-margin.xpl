@@ -13,9 +13,8 @@
     <p:input port="source">
         <p:documentation>
             The input is assumed to be a tree-of-boxes representation of a document, where boxes are
-            represented by css:box elements. The 'padding' and 'margin' properties of boxes must be
-            declared in css:padding-left, css:padding-top, css:padding-right, css:padding-bottom,
-            css:margin-left, css:margin-top, css:margin-right and css:margin-bottom attributes.
+            represented by css:box elements. The 'padding' properties of boxes must be declared in
+            css:padding-left, css:padding-top, css:padding-right and css:padding-bottom attributes.
         </p:documentation>
     </p:input>
     

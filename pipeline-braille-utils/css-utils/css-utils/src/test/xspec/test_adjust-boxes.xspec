@@ -13,9 +13,9 @@
     </x:context>
     <x:expect label="result">
       <css:box type="block">
-        <css:box type="block" css:margin-left="2">xxx</css:box>
+        <css:box type="block" css:padding-left="2">xxx</css:box>
         <css:box type="block">xxx</css:box>
-        <css:box type="block" css:margin-left="2">xxx</css:box>
+        <css:box type="block" css:padding-left="2">xxx</css:box>
       </css:box>
     </x:expect>
   </x:scenario>
@@ -41,7 +41,7 @@
     </x:context>
     <x:expect label="result">
       <css:box type="block">
-        <css:box type="block" css:margin-left="4" css:text-indent="-2">xxx</css:box>
+        <css:box type="block" css:padding-left="4" css:text-indent="-2">xxx</css:box>
       </css:box>
     </x:expect>
   </x:scenario>
@@ -69,8 +69,8 @@
                css:margin-left="1"
                css:margin-right="1">
         <css:box type="block"
-                 css:margin-left="1"
-                 css:margin-right="1"/>
+                 css:padding-left="1"
+                 css:padding-right="1"/>
       </css:box>
     </x:expect>
   </x:scenario>
@@ -92,16 +92,16 @@
     </x:context>
     <x:expect label="result">
       <css:box type="block">
-        <css:box type="block" css:margin-left="2" />
+        <css:box type="block" css:padding-left="2" />
         <css:box type="table">
           <css:box type="table-cell"/>
           <css:box type="table-cell" css:margin-left="2">
             <css:box type="block">
-              <css:box type="block" css:margin-left="2"/>
+              <css:box type="block" css:padding-left="2"/>
             </css:box>
           </css:box>
         </css:box>
-        <css:box type="block" css:margin-left="2" />
+        <css:box type="block" css:padding-left="2" />
       </css:box>
     </x:expect>
   </x:scenario>

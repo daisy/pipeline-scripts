@@ -383,16 +383,6 @@
     </p:group>
     
     <p:for-each>
-        <css:parse-properties properties="padding-left padding-right padding-top padding-bottom">
-            <p:documentation>
-                Make css:padding-left, css:padding-right, css:padding-top and css:padding-bottom
-                attributes.
-            </p:documentation>
-        </css:parse-properties>
-        <css:padding-to-margin/>
-    </p:for-each>
-    
-    <p:for-each>
         <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
             <p:documentation>
                 All css:_ elements except for root elements, top-level elements in named flows (with
@@ -413,17 +403,19 @@
     
     <p:for-each>
         <css:parse-properties properties="margin-left margin-right margin-top margin-bottom
+                                          padding-left padding-right padding-top padding-bottom
                                           border-left border-right border-top border-bottom text-indent">
             <p:documentation>
                 Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
+                css:padding-left, css:padding-right, css:padding-top and css:padding-bottom,
                 css:border-left, css:border-right, css:border-top, css:border-bottom and
                 css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
         <css:adjust-boxes>
-          <p:documentation>
-            <!-- depends on make-anonymous-block-boxes -->
-          </p:documentation>
+            <p:documentation>
+                <!-- depends on make-anonymous-block-boxes -->
+            </p:documentation>
         </css:adjust-boxes>
         <css:new-definition>
             <p:input port="definition">
@@ -434,8 +426,12 @@
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
                                                'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
                                                'margin-bottom', 'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
-                                               'border-left',   'widows',                           'letter-spacing', '-obfl-table-row-spacing',
-                                               'border-right',                                                        '-obfl-preferred-empty-space',
+                                               'padding-left',  'widows',                           'letter-spacing', '-obfl-table-row-spacing',
+                                               'padding-right',                                                       '-obfl-preferred-empty-space',
+                                               'padding-top',
+                                               'padding-bottom',
+                                               'border-left',
+                                               'border-right',
                                                'border-top',
                                                'border-bottom')"/>
                         <xsl:function name="new:is-valid" as="xs:boolean">
@@ -483,9 +479,7 @@
                             <xsl:param name="context" as="element()"/>
                             <xsl:sequence select="$property=('text-transform','hyphens','word-spacing')
                                                   or (
-                                                    if (matches($property,'^border-'))
-                                                    then $context/@type=('block','table','table-cell')
-                                                    else if (matches($property,'^margin-'))
+                                                    if (matches($property,'^(border|margin|padding)-'))
                                                     then $context/@type=('block','table','table-cell')
                                                     else if ($property='line-height')
                                                     then $context/@type=('block','table')
