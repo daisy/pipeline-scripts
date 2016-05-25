@@ -4,6 +4,7 @@
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -131,12 +132,15 @@ even though the provided CSS is more specific.
     <!-- =========== -->
     <!-- LOAD EPUB 3 -->
     <!-- =========== -->
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="temp-dir" port="result"/>
+        </p:input>
+    </p:identity>
     <px:message message="[progress 3 px:epub3-to-pef.load] Loading EPUB"/>
     <px:epub3-to-pef.load name="load">
         <p:with-option name="epub" select="$epub"/>
-        <p:with-option name="temp-dir" select="concat(string(/c:result),'load/')">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:with-option>
+        <p:with-option name="temp-dir" select="concat(string(/c:result),'load/')"/>
     </px:epub3-to-pef.load>
     
     <!-- Get the OPF so that we can use the metadata in options -->
@@ -162,6 +166,8 @@ even though the provided CSS is more specific.
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
     </p:identity>
+    <p:identity cx:depends-on="input-options"/>
+    <p:identity cx:depends-on="temp-dir"/>
     <px:message message="[progress 90 px:epub3-to-pef.convert] Converting from EPUB to PEF"/>
     <px:epub3-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css" name="convert">
         <p:input port="in-memory.in">
@@ -189,7 +195,7 @@ even though the provided CSS is more specific.
             <p:pipe step="convert" port="in-memory.out"/>
         </p:input>
     </p:identity>
-    <px:message message="[progress 5 pef:store] Storing PEF"/>
+    <px:message cx:depends-on="opf" message="[progress 5 pef:store] Storing PEF"/>
     <p:delete match="/*/@xml:base"/>
     <px:xml-to-pef.store>
         <p:input port="obfl">

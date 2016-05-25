@@ -3,6 +3,7 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 exclude-inline-prefixes="#all"
                 name="main">
 
@@ -130,6 +131,8 @@
             <p:pipe step="main" port="source"/>
         </p:input>
     </p:identity>
+    <p:identity cx:depends-on="input-options"/>
+    <p:identity cx:depends-on="temp-dir"/>
     <px:message message="[progress 94 px:dtbook-to-pef.convert] Converting from DTBook to PEF"/>
     <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:with-option name="temp-dir" select="string(/c:result)">

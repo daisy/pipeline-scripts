@@ -5,6 +5,7 @@
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 xmlns:math="http://www.w3.org/1998/Math/MathML"
                 xmlns:html="http://www.w3.org/1999/xhtml"
@@ -106,7 +107,7 @@
     <p:filter select="/*/*"/>
     
     <!-- In case there exists any CSS in the EPUB already, and $apply-document-specific-stylesheets = 'true',  then inline that CSS. -->
-    <px:message message="[progress px:epub3-to-pef.convert 9 px:epub3-to-pef.convert.apply-document-specific-stylesheets] Processing CSS that is already present in the EPUB"/>
+    <px:message cx:depends-on="parameters" message="[progress px:epub3-to-pef.convert 9 px:epub3-to-pef.convert.apply-document-specific-stylesheets] Processing CSS that is already present in the EPUB"/>
     <p:for-each>
         <p:add-attribute match="/*" attribute-name="xml:base">
             <p:with-option name="attribute-value" select="base-uri(/*)"/>
@@ -171,7 +172,7 @@
         </p:input>
     </p:wrap-sequence>
     
-    <px:message message="[progress px:epub3-to-pef.convert 1 generate-toc.xsl] Generating table of contents"/>
+    <px:message cx:depends-on="parameters" message="[progress px:epub3-to-pef.convert 1 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -181,7 +182,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message message="[progress px:epub3-to-pef.convert 10 px:apply-stylesheets] Inlining global CSS"/>
+    <px:message cx:depends-on="parameters" message="[progress px:epub3-to-pef.convert 10 px:apply-stylesheets] Inlining global CSS"/>
     <p:group>
         <p:variable name="first-css-stylesheet"
                     select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
@@ -212,6 +213,8 @@
             <p:pipe port="result" step="opf"/>
         </p:variable>
         
+        <p:identity cx:depends-on="opf"/>
+        <p:identity cx:depends-on="parameters"/>
         <px:message message="[progress px:epub3-to-pef.convert 10 px:epub3-to-pef.convert.viewport-math] Transforming MathML"/>
         <p:viewport match="math:math">
             <px:message>
@@ -326,7 +329,7 @@
     <px:fileset-create>
         <p:with-option name="base" select="replace(base-uri(/*),'[^/]+$','')"/>
     </px:fileset-create>
-    <px:message message="[progress px:epub3-to-pef.convert 1 px:fileset-add-entry]"/>
+    <px:message cx:depends-on="in-memory.out" message="[progress px:epub3-to-pef.convert 1 px:fileset-add-entry]"/>
     <px:fileset-add-entry media-type="application/x-pef+xml">
         <p:with-option name="href" select="base-uri(/*)">
             <p:pipe port="result" step="in-memory.out"/>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step type="px:dtbook-to-pef.convert" version="1.0"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
@@ -69,7 +70,7 @@
             <p:pipe step="load" port="in-memory.out"/>
         </p:input>
     </p:identity>
-    <px:message message="[progress px:dtbook-to-pef.convert 2 generate-toc.xsl] Generating table of contents"/>
+    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 2 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -79,7 +80,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message message="[progress px:dtbook-to-pef.convert 4 px:apply-stylesheets] Inlining CSS"/>
+    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 4 px:apply-stylesheets] Inlining CSS"/>
     <p:group>
         <p:variable name="first-css-stylesheet"
                     select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
@@ -115,7 +116,7 @@
         </px:transform>
     </p:viewport>
     
-    <p:choose name="transform">
+    <p:choose name="transform" cx:depends-on="parameters">
         <p:when test="$include-obfl='true'">
             <p:output port="pef" primary="true"/>
             <p:output port="obfl">
@@ -197,7 +198,7 @@
             <p:pipe step="pef" port="result"/>
         </p:input>
     </p:identity>
-    <px:message message="[progress px:dtbook-to-pef.convert 2 pef:add-metadata] Adding metadata to PEF"/>
+    <px:message cx:depends-on="metadata" message="[progress px:dtbook-to-pef.convert 2 pef:add-metadata] Adding metadata to PEF"/>
     <pef:add-metadata>
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>
