@@ -17,6 +17,7 @@
 	<p:option name="text-transform" required="true"/>
 	<p:option name="temp-dir" required="true"/>
 	
+	<p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/dotify-utils/library.xpl"/>
 	<p:import href="../css-to-obfl.xpl"/>
@@ -34,6 +35,7 @@
 	<!-- for debug info -->
 	<p:for-each><p:identity/></p:for-each>
 	
+	<px:message message="[progress px:dotify-transform 27 px:transform]"/>
 	<px:transform>
 		<p:with-option name="query" select="$css-block-transform"/>
 		<p:with-option name="temp-dir" select="$temp-dir"/>
@@ -45,14 +47,17 @@
 	<!-- for debug info -->
 	<p:for-each><p:identity/></p:for-each>
 	
+	<px:message message="[progress px:dotify-transform 70 pxi:css-to-obfl]"/>
 	<pxi:css-to-obfl>
 		<p:with-option name="text-transform" select="$text-transform"/>
 		<p:with-option name="duplex" select="$duplex"/>
 		<p:with-option name="skip-margin-top-of-page" select="$skip-margin-top-of-page"/>
 	</pxi:css-to-obfl>
 	
+	<px:message message="[progress px:dotify-transform 1 pxi:obfl-normalize-space]"/>
 	<pxi:obfl-normalize-space/>
 	
+	<px:message message="[progress px:dotify-transform 2 dotify:obfl-to-pef]"/>
 	<p:choose>
 		<p:when test="$output='pef'">
 			

@@ -185,7 +185,7 @@
     <xsl:variable name="initial-word-spacing" as="xs:integer" select="1"/>
     
     <!-- count the total number of text nodes with braille content so that we get a good estimate of the progress -->
-    <xsl:variable name="progress-total" select="count(//text()[matches(.,concat('[',
+    <xsl:variable name="progress-total" select="count(collection()//text()[matches(.,concat('[',
                                                 '⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟',
                                                 '⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿',
                                                 '⡀⡁⡂⡃⡄⡅⡆⡇⡈⡉⡊⡋⡌⡍⡎⡏⡐⡑⡒⡓⡔⡕⡖⡗⡘⡙⡚⡛⡜⡝⡞⡟',

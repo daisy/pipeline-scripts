@@ -61,7 +61,7 @@
             <p:pipe step="main" port="source"/>
         </p:input>
     </p:identity>
-    <px:message message="[progress px:dtbook-to-pef.convert 5 px:dtbook-load] Loading DTBook"/>
+    <px:message message="[progress px:dtbook-to-pef.convert 1 px:dtbook-load] Loading DTBook"/>
     <px:dtbook-load name="load"/>
     <p:sink/>
     
@@ -70,7 +70,7 @@
             <p:pipe step="load" port="in-memory.out"/>
         </p:input>
     </p:identity>
-    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 2 generate-toc.xsl] Generating table of contents"/>
+    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 1 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -80,7 +80,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 4 px:apply-stylesheets] Inlining CSS"/>
+    <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 6 px:apply-stylesheets] Inlining CSS"/>
     <p:group>
         <p:variable name="first-css-stylesheet"
                     select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
@@ -129,7 +129,12 @@
                 <px:message severity="DEBUG">
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
-                <px:message cx:depends-on="parameters" message="[progress px:dtbook-to-pef.convert 25 px:transform]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert 25 px:transform]"/>
+                <px:message cx:depends-on="parameters">
+                    <!-- if $transform contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                         send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                    <p:with-option name="message" select="concat('[progress px:dtbook-to-pef.convert 29 ',(if (contains($transform,'dotify')) then 'px:dotify-transform' else 'px:transform'),']')"/>
+                </px:message>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -165,7 +170,11 @@
                 <px:message>
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 80 px:transform]"/>
+                <px:message>
+                    <!-- if $transform-query contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                     send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                    <p:with-option name="message" select="concat('[progress px:dtbook-to-pef.convert 84 ',(if (contains($transform,'dotify')) then 'px:dotify-transform' else 'px:transform'),']')"/>
+                </px:message>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -198,7 +207,7 @@
             <p:pipe step="pef" port="result"/>
         </p:input>
     </p:identity>
-    <px:message cx:depends-on="metadata" message="[progress px:dtbook-to-pef.convert 2 pef:add-metadata] Adding metadata to PEF"/>
+    <px:message cx:depends-on="metadata" message="[progress px:dtbook-to-pef.convert 1 pef:add-metadata] Adding metadata to PEF"/>
     <pef:add-metadata>
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>

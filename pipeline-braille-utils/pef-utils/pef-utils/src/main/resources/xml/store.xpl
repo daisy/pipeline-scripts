@@ -29,7 +29,7 @@
     <!-- ============ -->
     
     <px:message>
-        <p:with-option name="message" select="concat('[progress pef:store 20 p:store] Storing PEF as ''', $href,'''')"/>
+        <p:with-option name="message" select="concat('[progress pef:store 1 p:store] Storing PEF as ''', $href,'''')"/>
     </px:message>
     <p:store indent="true" encoding="utf-8" omit-xml-declaration="false" name="store.pef">
         <p:input port="source">
@@ -50,7 +50,7 @@
                 </p:input>
             </p:identity>
             <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 40 pef:pef2text] Storing BRF as ''', $brf-dir-href, '''')"/>
+                <p:with-option name="message" select="concat('[progress pef:store 17 pef:pef2text] Storing BRF as ''', $brf-dir-href, '''')"/>
             </px:message>
             <p:choose>
                 <p:when test="not($brf-file-format='')">
@@ -89,7 +89,7 @@
             </p:choose>
         </p:when>
         <p:otherwise>
-            <px:message message="[progress pef:store 40] Not storing as BRF"/>
+            <px:message message="[progress pef:store 17] Not storing as BRF"/>
             <p:sink/>
         </p:otherwise>
     </p:choose>
@@ -109,13 +109,13 @@
                 </p:input>
             </p:identity>
             <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 24 px:pef-to-html.convert] Converting PEF to HTML preview using the BRF table ''',$table,'''')"/>
+                <p:with-option name="message" select="concat('[progress pef:store 80 px:pef-to-html.convert] Converting PEF to HTML preview using the BRF table ''',$table,'''')"/>
             </px:message>
             <px:pef-to-html.convert>
                 <p:with-option name="table" select="$table"/>
             </px:pef-to-html.convert>
             <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 8 p:store] Storing HTML preview as ''', $preview-href, '''')"/>
+                <p:with-option name="message" select="concat('[progress pef:store 1 p:store] Storing HTML preview as ''', $preview-href, '''')"/>
             </px:message>
             <p:store indent="false" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
                      doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -134,7 +134,7 @@
                     </p:inline>
                 </p:input>
             </p:identity>
-            <px:message message="[progress pef:store 8 px:copy-resource] Copying braille font file (odt2braille8.ttf) to HTML preview directory"/>
+            <px:message message="[progress pef:store 1 px:copy-resource] Copying braille font file (odt2braille8.ttf) to HTML preview directory"/>
             <px:copy-resource fail-on-error="true" cx:depends-on="mkdir">
                 <p:with-option name="href" select="resolve-uri('../odt2braille8.ttf')"/>
                 <p:with-option name="target" select="resolve-uri('odt2braille8.ttf', $preview-href)"/>
@@ -142,7 +142,7 @@
             <p:sink/>
         </p:when>
         <p:otherwise>
-            <px:message message="[progress pef:store 40] Not including HTML preview"/>
+            <px:message message="[progress pef:store 82] Not including HTML preview"/>
             <p:sink/>
         </p:otherwise>
     </p:choose>

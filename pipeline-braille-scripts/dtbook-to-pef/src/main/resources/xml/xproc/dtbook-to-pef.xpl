@@ -133,7 +133,7 @@
     </p:identity>
     <p:identity cx:depends-on="input-options"/>
     <p:identity cx:depends-on="temp-dir"/>
-    <px:message message="[progress 94 px:dtbook-to-pef.convert] Converting from DTBook to PEF"/>
+    <px:message message="[progress 92 px:dtbook-to-pef.convert] Converting from DTBook to PEF"/>
     <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
@@ -149,7 +149,7 @@
     <!-- ===== -->
     <!-- STORE -->
     <!-- ===== -->
-    <px:message message="[progress 4 px:dtbook-to-pef.store] Storing PEF"/>
+    <px:message message="[progress 6 px:dtbook-to-pef.store] Storing PEF"/>
     <px:xml-to-pef.store>
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>

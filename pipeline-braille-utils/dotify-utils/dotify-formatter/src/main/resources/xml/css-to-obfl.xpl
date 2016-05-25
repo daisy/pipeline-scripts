@@ -79,7 +79,7 @@
     </p:declare-step>
     
     <p:add-xml-base/>
-    <px:message message="[progress pxi:css-to-obfl 2 p:xslt]"/>
+    <px:message message="[progress pxi:css-to-obfl 1 p:xslt]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:inline>
@@ -99,7 +99,7 @@
         </p:input>
     </p:xslt>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:parse-properties] Make css:display, css:render-table-by and css:table-header-policy attributes."/>
+    <px:message message="[progress pxi:css-to-obfl 1 css:parse-properties] Make css:display, css:render-table-by and css:table-header-policy attributes."/>
     <css:parse-properties properties="display render-table-by table-header-policy">
         <p:documentation>
             Make css:display, css:render-table-by and css:table-header-policy attributes.
@@ -113,7 +113,7 @@
         </p:documentation>
     </css:render-table-by>
     
-    <px:message message="[progress pxi:css-to-obfl 40 pxi:recursive-parse-stylesheet-and-make-pseudo-elements] Recursively parse stylesheet and make pseudo elements"/>
+    <px:message message="[progress pxi:css-to-obfl 1 pxi:recursive-parse-stylesheet-and-make-pseudo-elements] Recursively parse stylesheet and make pseudo elements"/>
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
@@ -123,7 +123,7 @@
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
     
-    <px:message message="[progress pxi:css-to-obfl 2 for-each.parse-properties-and-eval-string-set]"/>
+    <px:message message="[progress pxi:css-to-obfl 5 for-each.parse-properties-and-eval-string-set]"/>
     <p:for-each>
         <px:message>
             <p:with-option name="message" select="concat('[progress for-each.parse-properties-and-eval-string-set 1/',p:iteration-size(),' for-each.parse-properties-and-eval-string-set.iteration]')"/>
@@ -157,7 +157,7 @@
         <p:documentation>
             Split into a sequence of flows.
         </p:documentation>
-        <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.foreach-parse-properties] Make css:flow attributes."/>
+        <px:message message="[progress pxi:css-to-obfl 1 pxi:css-to-obfl.foreach-parse-properties] Make css:flow attributes."/>
         <p:for-each>
             <px:message>
                 <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.foreach-parse-properties 1/',p:iteration-size(),' css:parse-properties]')"/>
@@ -170,7 +170,7 @@
         </p:for-each>
         <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:wrap wrapper="_" match="/*"/>
-        <px:message message="[progress pxi:css-to-obfl 2 css:flow-into] Extract named flows based on css:flow attributes."/>
+        <px:message message="[progress pxi:css-to-obfl 1 css:flow-into] Extract named flows based on css:flow attributes."/>
         <css:flow-into name="_2">
             <p:documentation>
                 Extract named flows based on css:flow attributes and place anchors (css:id
@@ -187,14 +187,14 @@
         </p:identity>
     </p:group>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:label-targets] Make css:id attributes."/>
+    <px:message message="[progress pxi:css-to-obfl 1 css:label-targets] Make css:id attributes."/>
     <css:label-targets name="label-targets">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
         </p:documentation>
     </css:label-targets>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:eval-target-content] Evaluate css:content elements."/>
+    <px:message message="[progress pxi:css-to-obfl 1 css:eval-target-content] Evaluate css:content elements."/>
     <css:eval-target-content>
         <p:documentation>
             Evaluate css:content elements. <!-- depends on parse-content and label-targets -->
@@ -279,7 +279,7 @@
         </p:group>
     </p:for-each>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:eval-counter] Evaluate css:counter elements."/>
+    <px:message message="[progress pxi:css-to-obfl 8 css:eval-counter] Evaluate css:counter elements."/>
     <css:eval-counter exclude-counters="page">
         <p:documentation>
             Evaluate css:counter elements. <!-- depends on label-targets, parse-content and
@@ -294,14 +294,14 @@
         </p:documentation>
     </css:flow-from>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:eval-target-text] Evaluate css:text elements."/>
+    <px:message message="[progress pxi:css-to-obfl 1 css:eval-target-text] Evaluate css:text elements."/>
     <css:eval-target-text>
         <p:documentation>
             Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
         </p:documentation>
     </css:eval-target-text>
     
-    <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.for-each-anonymous-inline-boxes] Wrap/unwrap with inline css:box elements."/>
+    <px:message message="[progress pxi:css-to-obfl 1 pxi:css-to-obfl.for-each-anonymous-inline-boxes] Wrap/unwrap with inline css:box elements."/>
     <p:for-each>
         <px:message>
             <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-anonymous-inline-boxes 1/',p:iteration-size(),' css:make-anonyous-inline-boxes]')"/>
@@ -410,19 +410,19 @@
                 </p:input>
             </p:identity>
         </p:group>
-        <px:message message="[progress pxi:css-to-obfl 2 css:shift-string-set] Move css:string-set attributes."/>
+        <px:message message="[progress pxi:css-to-obfl 14 css:shift-string-set] Move css:string-set attributes."/>
         <css:shift-string-set>
             <p:documentation>
                 Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </css:shift-string-set>
-        <px:message message="[progress pxi:css-to-obfl 2 pxi:shift-obfl-marker] Move css:_obfl-marker attributes."/>
+        <px:message message="[progress pxi:css-to-obfl 1 pxi:shift-obfl-marker] Move css:_obfl-marker attributes."/>
         <pxi:shift-obfl-marker>
             <p:documentation>
                 Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </pxi:shift-obfl-marker>
-        <px:message message="[progress pxi:css-to-obfl 2 css:shift-id] Move css:id attributes to css:box elements."/>
+        <px:message message="[progress pxi:css-to-obfl 1 css:shift-id] Move css:id attributes to css:box elements."/>
         <css:shift-id>
             <p:documentation>
                 Move css:id attributes to css:box elements.
@@ -430,7 +430,7 @@
         </css:shift-id>
     </p:group>
     
-    <px:message message="[progress pxi:css-to-obfl 4 pxi:css-to-obfl.for-each-black-box]"/>
+    <px:message message="[progress pxi:css-to-obfl 8 pxi:css-to-obfl.for-each-black-box]"/>
     <p:for-each>
         <px:message>
             <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-black-box 1/',(p:iteration-size() * 2),' p:unwrap] Unwrap css:_ elements.')"/>
@@ -456,7 +456,7 @@
     
     <p:split-sequence test="//css:box"/>
     
-    <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.for-each-margin-attributes]"/>
+    <px:message message="[progress pxi:css-to-obfl 3 pxi:css-to-obfl.for-each-margin-attributes]"/>
     <p:for-each>
         <px:message>
             <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-margin-attributes 1/',p:iteration-size(),' pxi:css-to-obfl.for-each-margin-attributes.item]')"/>
@@ -665,7 +665,7 @@
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>
     
-    <px:message message="[progress pxi:css-to-obfl 13 css-to-obfl.xsl]"/>
+    <px:message message="[progress pxi:css-to-obfl 26 css-to-obfl.xsl]"/>
     <p:xslt template-name="start">
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
@@ -681,7 +681,7 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <px:message message="[progress pxi:css-to-obfl 1] add &lt;marker class=&quot;foo/prev&quot;/&gt;"/>
+    <px:message message="[progress pxi:css-to-obfl 10] add &lt;marker class=&quot;foo/prev&quot;/&gt;"/>
     <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
