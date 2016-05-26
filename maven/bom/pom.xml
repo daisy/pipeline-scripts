@@ -236,18 +236,12 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.impl</artifactId>
-                <!--
-                    depends on https://github.com/joeha480/brailleutils/pull/71
-                -->
-                <version>3.0.0-SNAPSHOT</version>
+                <version>3.0.0-alpha</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.pef-tools</artifactId>
-                <!--
-                    depends on https://github.com/joeha480/brailleutils/pull/71
-                -->
-                <version>2.0.0-SNAPSHOT</version>
+                <version>2.0.0-alpha</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
