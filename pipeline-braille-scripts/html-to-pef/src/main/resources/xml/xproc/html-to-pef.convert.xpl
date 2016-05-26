@@ -42,18 +42,20 @@
     <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
     
     <!-- Ensure that there's exactly one c:param-set -->
-    <px:merge-parameters name="parameters">
+    <p:identity>
         <p:input port="source">
             <p:pipe step="main" port="parameters"/>
         </p:input>
-    </px:merge-parameters>
+    </p:identity>
+    <px:message message="[progress px:html-to-pef.convert 1 px:merge-parameters]"/>
+    <px:merge-parameters name="parameters"/>
     
     <p:identity>
         <p:input port="source">
             <p:pipe port="source" step="main"/>
         </p:input>
     </p:identity>
-    <px:message message="Generating table of contents"/>
+    <px:message cx:depends-on="parameters" message="[progress px:html-to-pef.convert 1 generate-toc.xsl] Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/generate-toc.xsl"/>
@@ -63,7 +65,7 @@
         </p:with-param>
     </p:xslt>
     
-    <px:message message="Inlining CSS"/>
+    <px:message cx:depends-on="parameters" message="[progress px:html-to-pef.convert 10 px:apply-stylesheets] Inlining CSS"/>
     <p:group>
         <p:variable name="stylesheets-to-be-inlined" select="string-join((
                                                                $default-stylesheet,
@@ -82,8 +84,11 @@
         </px:apply-stylesheets>
     </p:group>
     
-    <px:message message="Transforming MathML"/>
+    <px:message cx:depends-on="parameters" message="[progress px:html-to-pef.convert 10 px:html-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
+        <px:message>
+            <p:with-option name="message" select="concat('[progress px:html-to-pef.convert.viewport-math 1/',p:iteration-size(),' px:transform]')"/>
+        </px:message>
         <px:transform>
             <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
             <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -94,12 +99,17 @@
         </px:transform>
     </p:viewport>
     
-    <p:choose name="transform">
+    <p:choose cx:depends-on="parameters" name="transform">
         <p:when test="$include-obfl='true'">
             <p:output port="pef" primary="true"/>
             <p:output port="obfl">
                 <p:pipe step="obfl" port="result"/>
             </p:output>
+            <px:message>
+                <!-- if $transform contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                     send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                <p:with-option name="message" select="concat('[progress px:html-to-pef.convert 38 ',(if (contains($transform,'dotify')) then 'px:dotify-transform' else 'px:transform'),'] Transforming from XML with CSS to OBFL')"/>
+            </px:message>
             <px:transform name="obfl">
                 <p:with-option name="query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -107,7 +117,11 @@
                     <p:pipe port="result" step="parameters"/>
                 </p:input>
             </px:transform>
-            <px:message message="Transforming from OBFL to PEF"/>
+            <px:message>
+                <!-- if $transform contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                     send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                <p:with-option name="message" select="concat('[progress px:html-to-pef.convert 38 ',(if (contains($transform,'dotify')) then 'px:dotify-transform' else 'px:transform'),'] Transforming from OBFL to PEF')"/>
+            </px:message>
             <px:transform>
                 <p:with-option name="query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -121,7 +135,11 @@
             <p:output port="obfl">
                 <p:empty/>
             </p:output>
-            <px:message message="Transforming from XML with inline CSS to PEF"/>
+            <px:message>
+                <!-- if $transform contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                     send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                <p:with-option name="message" select="concat('[progress px:html-to-pef.convert 76 ',(if (contains($transform,'dotify')) then 'px:dotify-transform' else 'px:transform'),'] Transforming from XML with inline CSS to PEF')"/>
+            </px:message>
             <px:transform>
                 <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -139,7 +157,7 @@
             <p:pipe step="main" port="source"/>
         </p:input>
     </p:identity>
-    <px:message message="Adding metadata from HTML to PEF"/>
+    <px:message message="[progress px:html-to-pef.convert 1 html-to-opf-metadata.xsl] Extracting metadata from HTML"/>
     <p:xslt name="metadata">
         <p:input port="stylesheet">
             <p:document href="../xslt/html-to-opf-metadata.xsl"/>
@@ -148,10 +166,14 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-    <pef:add-metadata>
+    
+    <p:identity>
         <p:input port="source">
             <p:pipe step="pef" port="result"/>
         </p:input>
+    </p:identity>
+    <px:message cx:depends-on="metadata" message="[progress px:html-to-pef.convert 1 pef:add-metadata] Adding metadata to PEF"/>
+    <pef:add-metadata>
         <p:input port="metadata">
             <p:pipe step="metadata" port="result"/>
         </p:input>

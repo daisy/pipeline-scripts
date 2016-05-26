@@ -207,15 +207,12 @@
         </px:apply-stylesheets>
     </p:group>
     
-    <px:message message="Transforming MathML"/>
-    <p:group>
+    <p:group cx:depends-on="parameters">
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
             <p:pipe port="result" step="opf"/>
         </p:variable>
         
-        <p:identity cx:depends-on="opf"/>
-        <p:identity cx:depends-on="parameters"/>
-        <px:message message="[progress px:epub3-to-pef.convert 10 px:epub3-to-pef.convert.viewport-math] Transforming MathML"/>
+        <px:message cx:depends-on="opf" message="[progress px:epub3-to-pef.convert 10 px:epub3-to-pef.convert.viewport-math] Transforming MathML"/>
         <p:viewport match="math:math">
             <px:message>
                 <p:with-option name="message" select="concat('[progress px:epub3-to-pef.convert.viewport-math 1/',p:iteration-size(),' px:transform]')"/>
@@ -236,10 +233,14 @@
             <p:output port="obfl">
                 <p:pipe step="obfl" port="result"/>
             </p:output>
-            <px:message message="[progress px:epub3-to-pef.convert 61 px:transform] Transforming from XML with inline CSS to PEF"/>
             <p:group name="obfl">
                 <p:output port="result"/>
                 <p:variable name="transform-query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
+                <px:message>
+                    <!-- if $transform-query contains 'dotify'; use 'px:dotify-transform' as progress substep since there's currently no way to
+                         send messages from java to the execution log. See: https://github.com/daisy/pipeline-issues/issues/477 -->
+                    <p:with-option name="message" select="concat('[progress px:epub3-to-pef.convert 61 ',(if (contains($transform-query,'dotify')) then 'px:dotify-transform' else 'px:transform'),'] Transforming from XML with inline CSS to PEF')"/>
+                </px:message>
                 <px:message>
                     <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
                 </px:message>
