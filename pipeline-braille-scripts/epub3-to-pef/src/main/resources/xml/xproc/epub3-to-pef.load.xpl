@@ -34,7 +34,7 @@
                 <p:pipe port="in-memory.out" step="unzip"/>
             </p:output>
             
-            <px:message message="EPUB is in a ZIP container; unzipping"/>
+            <px:message message="[px:epub3-to-pef.load 100 px:unzip-fileset] EPUB is in a ZIP container; unzipping"/>
             <px:unzip-fileset name="unzip">
                 <p:with-option name="href" select="$epub"/>
                 <p:with-option name="unzipped-basedir" select="concat($temp-dir,'epub/')"/>
@@ -68,7 +68,7 @@
                 <p:pipe port="result" step="load.in-memory"/>
             </p:output>
             
-            <px:message message="EPUB is not in a container"/>
+            <px:message message="[px:epub3-to-pef.load 100 px:fileset-create] EPUB is not in a container"/>
             <px:fileset-create>
                 <p:with-option name="base" select="replace($epub,'(.*/)([^/]*)','$1')"/>
             </px:fileset-create>
