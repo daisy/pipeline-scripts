@@ -156,8 +156,8 @@
         <p:wrap wrapper="_" match="/*"/>
         <css:flow-into name="_2">
             <p:documentation>
-                Extract named flows based on css:flow attributes. Extracted elements are replaced
-                with empty css:_ elements with a css:id attribute.
+                Extract named flows based on css:flow attributes and place anchors (css:id
+                attributes) in the normal flow.
             </p:documentation>
         </css:flow-into>
         <p:filter select="/_/*" name="_3"/>
@@ -215,6 +215,17 @@
                 depends on flow-into, label-targets and make-table-grid -->
             </p:documentation>
         </css:make-boxes>
+        <!--
+            FIXME: this may create unncessesary empty blocks in result OBFL
+        -->
+        <p:rename match="css:_[not(child::node()) and @css:id]" new-name="css:box">
+            <p:documentation>
+                In order to keep the positions of anchors precise, rename anchors in the form of
+                empty css:_ elements to inline boxes, because otherwise they would be moved by
+                css:shift-id. <!-- depends on flow-into and make-boxes -->
+            </p:documentation>
+        </p:rename>
+        <p:add-attribute match="css:box[not(@type)]" attribute-name="type" attribute-value="inline"/>
         <p:group>
             <p:documentation>
                 Move css:render-table-by, css:_obfl-table-col-spacing, css:_obfl-table-row-spacing
@@ -277,8 +288,7 @@
                     Make css:counter-set-page attributes.
                 </p:documentation>
             </css:parse-counter-set>
-            <p:delete match="/*[@css:flow]//*/@css:page|
-                             /*[@css:flow]//*/@css:volume|
+            <p:delete match="/*[@css:flow]//*/@css:volume|
                              /*[@css:flow]//*/@css:counter-set-page|
                              //css:box[@type='table']//*/@css:page-break-before|
                              //css:box[@type='table']//*/@css:page-break-after|
@@ -288,9 +298,9 @@
                              //*[@css:obfl-toc]//*/@css:page-break-before|
                              //*[@css:obfl-toc]//*/@css:page-break-after">
                 <p:documentation>
-                    Don't support 'page', 'volume' and 'counter-set: page' within named flows or
-                    tables. Don't support 'page-break-before' and 'page-break-after' within tables
-                    or '-obfl-toc' elements.
+                     Don't support 'volume' and 'counter-set: page' within named flows or
+                     tables. Don't support 'page' within tables. Don't support 'page-break-before'
+                     and 'page-break-after' within tables or '-obfl-toc' elements.
                 </p:documentation>
             </p:delete>
             <css:split split-before="*[@css:page or @css:volume or @css:counter-set-page]|
@@ -325,7 +335,7 @@
                 <p:delete match="/*//*/@css:counter-set-page"/>
                 <p:delete match="/*//*/@css:volume"/>
             </p:group>
-            <p:rename match="css:box[@type='inline']
+            <p:rename match="css:box[@type='inline' and not(@css:id)]
                              [matches(string(.), '^[\s&#x2800;]*$') and
                              not(descendant::css:white-space or
                              descendant::css:string or
@@ -336,7 +346,8 @@
                              descendant::css:custom-func)]"
                       new-name="css:_">
                 <p:documentation>
-                    Delete empty inline boxes (possible side effect of css:split).
+                    Delete empty inline boxes (possible side effect of css:split), except if they
+                    have a css:id attribute (as a result of css:flow-into).
                 </p:documentation>
             </p:rename>
             <p:delete match="css:_/@type"/>

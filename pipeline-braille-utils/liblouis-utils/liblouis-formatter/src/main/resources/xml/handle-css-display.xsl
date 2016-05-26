@@ -17,7 +17,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="*[contains(string(@style), 'display')]">
+    <xsl:template match="*[@css:display or contains(string(@style), 'display')]">
         <xsl:variable name="properties"
             select="css:specified-properties('#all display', true(), true(), true(), .)"/>
         <xsl:variable name="display" as="xs:string" select="$properties[@name='display']/@value"/>
@@ -29,7 +29,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:copy>
-                    <xsl:sequence select="@*[not(name()='style')]"/>
+                    <xsl:sequence select="@* except (@style|@css:display)"/>
                     <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
                                             $properties[not(@name='display')]))"/>
                     <xsl:if test="$display=('block','list-item')">

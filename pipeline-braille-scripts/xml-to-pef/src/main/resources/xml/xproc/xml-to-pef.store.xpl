@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:dtbook-to-pef.store" version="1.0"
+<p:declare-step type="px:xml-to-pef.store" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
@@ -21,6 +21,7 @@
     <p:option name="include-preview" select="'false'"/>
     <p:option name="include-brf" select="'false'"/>
     <p:option name="include-obfl" select="'false'"/>
+    <p:option name="ascii-file-format" select="''"/>
     <p:option name="ascii-table" select="''"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
@@ -33,9 +34,11 @@
         <p:with-option name="preview-href" select="if ($include-preview='true' and $preview-output-dir!='')
                                                    then concat($preview-output-dir,'/',$name,'.pef.html')
                                                    else ''"/>
-        <p:with-option name="brf-href" select="if ($include-brf='true' and $brf-output-dir!='')
-                                               then concat($brf-output-dir,'/',$name,'.brf')
-                                               else ''"/>
+        <p:with-option name="brf-dir-href" select="if ($include-brf='true' and $brf-output-dir!='')
+                                                   then $brf-output-dir
+                                                   else ''"/>
+        <p:with-option name="brf-name-pattern" select="concat($name,'_vol-{}')"/>
+        <p:with-option name="brf-file-format" select="concat($ascii-file-format,'(locale:',(/*/@xml:lang,'und')[1],')')"/>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
                                                 else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
     </pef:store>

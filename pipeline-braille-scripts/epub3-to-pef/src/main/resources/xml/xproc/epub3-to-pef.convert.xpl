@@ -22,6 +22,9 @@
     <p:output port="in-memory.out" sequence="true">
         <p:pipe port="result" step="in-memory.out"/>
     </p:output>
+    <p:output port="obfl" sequence="true"> <!-- sequence=false when include-obfl=true -->
+        <p:pipe step="transform" port="obfl"/>
+    </p:output>
     
     <p:input kind="parameter" port="parameters" sequence="true">
         <p:inline>
@@ -33,6 +36,7 @@
     <p:option name="stylesheet" select="''"/>
     <p:option name="apply-document-specific-stylesheets" select="'false'"/>
     <p:option name="transform" select="'(translator:liblouis)(formatter:dotify)'"/>
+    <p:option name="include-obfl" select="'false'"/>
     
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
@@ -192,34 +196,80 @@
         </px:apply-stylesheets>
     </p:group>
     
+    <px:message message="Transforming MathML"/>
     <p:group>
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
             <p:pipe port="result" step="opf"/>
         </p:variable>
-        <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')">
-            <p:pipe step="parameters" port="result"/>
-        </p:variable>
-        
-        <px:message message="Transforming MathML"/>
         <p:viewport match="math:math">
             <px:transform>
                 <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
             </px:transform>
         </p:viewport>
-        
-        <px:message message="Transforming from XML with inline CSS to PEF"/>
-        <px:message severity="DEBUG">
-            <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
-        </px:message>
-        <px:transform>
-            <p:with-option name="query" select="$transform-query"/>
-            <p:with-option name="temp-dir" select="$temp-dir"/>
-            <p:input port="parameters">
-                <p:pipe port="result" step="parameters"/>
-            </p:input>
-        </px:transform>
     </p:group>
+    
+    <p:choose name="transform">
+        <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
+            <p:pipe port="result" step="opf"/>
+        </p:variable>
+        <p:when test="$include-obfl='true'">
+            <p:output port="pef" primary="true"/>
+            <p:output port="obfl">
+                <p:pipe step="obfl" port="result"/>
+            </p:output>
+            <px:message message="Transforming from XML with inline CSS to OBFL"/>
+            <p:group name="obfl">
+                <p:output port="result"/>
+                <p:variable name="transform-query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
+                <px:message severity="DEBUG">
+                    <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+                </px:message>
+                <px:transform>
+                    <p:with-option name="query" select="$transform-query"/>
+                    <p:with-option name="temp-dir" select="$temp-dir"/>
+                    <p:input port="parameters">
+                        <p:pipe port="result" step="parameters"/>
+                    </p:input>
+                </px:transform>
+            </p:group>
+            <px:message message="Transforming from OBFL to PEF"/>
+            <p:group>
+                <p:variable name="transform-query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
+                <px:message severity="DEBUG">
+                    <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+                </px:message>
+                <px:transform>
+                    <p:with-option name="query" select="$transform-query"/>
+                    <p:with-option name="temp-dir" select="$temp-dir"/>
+                    <p:input port="parameters">
+                        <p:pipe port="result" step="parameters"/>
+                    </p:input>
+                </px:transform>
+            </p:group>
+        </p:when>
+        <p:otherwise>
+            <p:output port="pef" primary="true"/>
+            <p:output port="obfl">
+                <p:empty/>
+            </p:output>
+            <px:message message="Transforming from XML with inline CSS to PEF"/>
+            <p:group>
+                <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
+                <px:message severity="DEBUG">
+                    <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+                </px:message>
+                <px:transform>
+                    <p:with-option name="query" select="$transform-query"/>
+                    <p:with-option name="temp-dir" select="$temp-dir"/>
+                    <p:input port="parameters">
+                        <p:pipe port="result" step="parameters"/>
+                    </p:input>
+                </px:transform>
+            </p:group>
+        </p:otherwise>
+    </p:choose>
+    
     <p:identity name="pef"/>
 
     <p:identity>
@@ -238,21 +288,19 @@
         </p:input>
     </p:xslt>
     <!-- add xml:lang -->
-    <p:group>
+    <p:choose>
         <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
             <p:pipe port="result" step="opf"/>
         </p:variable>
-        <p:choose>
-            <p:when test="not($lang='und')">
-                <p:add-attribute match="/*" attribute-name="xml:lang">
-                    <p:with-option name="attribute-value" select="$lang"/>
-                </p:add-attribute>
-            </p:when>
-            <p:otherwise>
-                <p:identity/>
-            </p:otherwise>
-        </p:choose>
-    </p:group>
+        <p:when test="not($lang='und')">
+            <p:add-attribute match="/*" attribute-name="xml:lang">
+                <p:with-option name="attribute-value" select="$lang"/>
+            </p:add-attribute>
+        </p:when>
+        <p:otherwise>
+            <p:identity/>
+        </p:otherwise>
+    </p:choose>
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
             <p:pipe port="result" step="opf"/>

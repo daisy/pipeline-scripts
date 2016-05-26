@@ -1,4 +1,4 @@
-package org.daisy.pipeline.braille.pef.calabash.impl;
+package org.daisy.pipeline.braille.pef.impl;
 
 import java.io.IOException;
 

@@ -3,11 +3,14 @@ package org.daisy.pipeline.braille.pef.calabash.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,18 +19,27 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.xmlcalabash.core.XProcException;
+import com.xmlcalabash.core.XProcRuntime;
+import com.xmlcalabash.core.XProcStep;
+import com.xmlcalabash.io.ReadablePipe;
+import com.xmlcalabash.library.DefaultStep;
+import com.xmlcalabash.model.RuntimeValue;
+import com.xmlcalabash.runtime.XAtomicStep;
+
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
 
 import org.daisy.braille.api.embosser.EmbosserWriter;
-import org.daisy.braille.api.embosser.LineBreaks;
-import org.daisy.braille.api.embosser.StandardLineBreaks;
-import org.daisy.braille.api.table.BrailleConverter;
+import org.daisy.braille.api.embosser.FileFormat;
 import org.daisy.braille.api.table.Table;
+import org.daisy.braille.api.validator.ValidatorFactoryService;
+import org.daisy.braille.pef.PEFFileSplitter;
 import org.daisy.braille.pef.PEFHandler;
 import org.daisy.braille.pef.PEFHandler.Alignment;
 import org.daisy.braille.pef.UnsupportedWidthException;
+
 import org.daisy.common.xproc.calabash.XProcStepProvider;
 
 import static org.daisy.pipeline.braille.common.Provider.util.dispatch;
@@ -36,47 +48,48 @@ import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.query;
+import org.daisy.pipeline.braille.pef.FileFormatProvider;
 import org.daisy.pipeline.braille.pef.TableProvider;
-import org.daisy.pipeline.braille.pef.calabash.impl.BRFWriter.Padding;
-import org.daisy.pipeline.braille.pef.calabash.impl.BRFWriter.PageBreaks;
 
 import org.xml.sax.SAXException;
-
-import com.xmlcalabash.core.XProcException;
-import com.xmlcalabash.core.XProcRuntime;
-import com.xmlcalabash.core.XProcStep;
-import com.xmlcalabash.io.ReadablePipe;
-import com.xmlcalabash.library.DefaultStep;
-import com.xmlcalabash.runtime.XAtomicStep;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PEF2TextStep extends DefaultStep {
 	
-	private static final QName _href = new QName("href");
+	private static final QName _dir_href = new QName("dir-href");
+	private static final QName _file_format = new QName("file-format");
 	private static final QName _table = new QName("table");
-	private static final QName _breaks = new QName("breaks");
-	// TODO:
-	// private static final QName _line_breaks = new QName("line-breaks");
-	// private static final QName _page_breaks = new QName("page-breaks");
+	private static final QName _line_breaks = new QName("line-breaks");
+	private static final QName _page_breaks = new QName("page-breaks");
 	private static final QName _pad = new QName("pad");
+	private static final QName _name_pattern = new QName("name-pattern");
+	private static final QName _number_width = new QName("number-width");
+	private static final QName _single_volume_name = new QName("single-volume-name");
 	
 	private static final Query EN_US = mutableQuery().add("id", "org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US");
 	
+	private final org.daisy.pipeline.braille.common.Provider<Query,FileFormat> fileFormatProvider;
 	private final org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider;
+	private final ValidatorFactoryService validatorFactory;
 	
 	private ReadablePipe source = null;
 	
 	private PEF2TextStep(XProcRuntime runtime,
 	                     XAtomicStep step,
-	                     org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider) {
+	                     org.daisy.pipeline.braille.common.Provider<Query,FileFormat> fileFormatProvider,
+	                     org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider,
+	                     ValidatorFactoryService validatorFactory) {
 		super(runtime, step);
+		this.fileFormatProvider = fileFormatProvider;
 		this.tableProvider = tableProvider;
+		this.validatorFactory = validatorFactory;
 	}
 	
 	@Override
@@ -92,77 +105,123 @@ public class PEF2TextStep extends DefaultStep {
 	@Override
 	public void run() throws SaxonApiException {
 		super.run();
-		try {
-			
-			MutableQuery q = mutableQuery(query(getOption(_table).getString()));
-			
-			final LineBreaks lineBreaks; {
-				String s = getOption(_breaks, "DEFAULT");
-				if (q.containsKey("line-breaks"))
-					s = q.removeOnly("line-breaks").getValue().get();
-				lineBreaks = new StandardLineBreaks(StandardLineBreaks.Type.valueOf(s.toUpperCase())); }
-			final PageBreaks pageBreaks; {
-				String s = "\u000c";
-				if (q.containsKey("page-breaks"))
-					s = q.removeOnly("page-breaks").getValue().get();
-				final String pb = s;
-				pageBreaks = new PageBreaks() {
-					public String getString() {
-						return pb; }}; }
-			final BrailleConverter brailleConverter; {
-				Query tableQuery = q.asImmutable();
-				Table table;
-				try {
-					table = tableProvider.get(tableQuery).iterator().next(); }
-				catch (NoSuchElementException e) {
-					logger.warn("pef:pef2text failed, table not found: " + tableQuery, e);
-					table = tableProvider.get(EN_US).iterator().next(); }
-				brailleConverter = table.newBrailleConverter(); }
-			final Padding padding = Padding.valueOf(getOption(_pad, "NONE").toUpperCase());
-			
-			// Create EmbosserWriter
-			File textFile = new File(new URI(getOption(_href).getString()));
-			textFile.getParentFile().mkdirs();
-			final OutputStream textStream = new FileOutputStream(textFile);
-			EmbosserWriter writer = new BRFWriter() {
-				public LineBreaks getLinebreakStyle() {
-					return lineBreaks;
+		MutableQuery q = mutableQuery(query(getOption(_file_format, "")));
+		addOption(_line_breaks, q);
+		addOption(_page_breaks, q);
+		addOption(_pad, q);
+		RuntimeValue tableQuery = getOption(_table);
+		if (tableQuery != null) {
+			Table table;
+			try {
+				logger.debug("Finding table for query: " + tableQuery);
+				table = tableProvider.get(query(tableQuery.getString())).iterator().next();
+				logger.debug("Found table: " + table); }
+			catch (NoSuchElementException e) {
+				
+				// this fallback is done because in dtbook-to-pef we use the
+				// query (locale:...) which does not always match something
+				// FIXME: https://github.com/daisy/pipeline-mod-braille/issues/75
+				logger.warn("Table not found, falling back to en-US table.");
+				table = tableProvider.get(EN_US).iterator().next(); }
+			q.add("table", table.getIdentifier()); }
+		logger.debug("Finding file format for query: " + q);
+		Iterable<FileFormat> fileFormats = fileFormatProvider.get(q);
+		if (!fileFormats.iterator().hasNext()) {
+			logger.error("pef:pef2text failed: no file format found for query: " + q);
+			throw new XProcException(step.getNode(), "pef:pef2text failed: no file format found for query: " + q); }
+		for (FileFormat fileFormat : fileFormats) {
+			try {
+				logger.debug("Storing PEF to file format: " + fileFormat);
+				
+				// Initialize output directory
+				File textDir = new File(new URI(getOption(_dir_href).getString()));
+				textDir.mkdirs();
+				
+				// Read source PEF
+				ByteArrayOutputStream s = new ByteArrayOutputStream();
+				Serializer serializer = new Serializer(s);
+				serializer.serializeNode(source.read());
+				serializer.close();
+				InputStream pefStream = new ByteArrayInputStream(s.toByteArray());
+				s.close();
+				
+				// Parse pattern
+				String singleVolumeName = getOption(_single_volume_name, "");
+				String pattern = getOption(_name_pattern, "");
+				if (pattern.isEmpty())
+					pattern = "volume-{}";
+				int match = pattern.indexOf("{}");
+				if (match < 0 || match != pattern.lastIndexOf("{}")) {
+					// Output to single file
+					convertPEF2Text(pefStream,
+							new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
+				} else {
+					// Split PEF
+					File splitDir = new File(textDir, "split");
+					splitDir.mkdir();
+					PEFFileSplitter splitter = new PEFFileSplitter(validatorFactory);
+					String prefix = PEFFileSplitter.PREFIX;
+					String postfix = PEFFileSplitter.POSTFIX;
+					splitter.split(pefStream, splitDir, prefix, postfix);
+					File[] pefFiles = splitDir.listFiles();
+					String formatPattern = pattern.substring(0, match);
+					int nWidth; {
+						try {
+							nWidth = Integer.parseInt(getOption(_number_width, "")); }
+						catch (NumberFormatException e) {
+							nWidth = 0; }}
+					if (nWidth == 0)
+						formatPattern += "###"; // Assume max 999 volumes
+					else
+						while (nWidth > 0) { formatPattern += "0"; nWidth--; }
+					formatPattern += pattern.substring(match + 2);
+					NumberFormat format = new DecimalFormat(formatPattern);
+					for (File pefFile : pefFiles) {
+						InputStream is = new FileInputStream(pefFile);
+						if (pefFiles.length == 1 && !singleVolumeName.isEmpty()) {
+							// Output to single file
+							convertPEF2Text(is, new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
+						} else {
+							String pefName = pefFile.getName();
+							if (pefName.length() <= prefix.length() + postfix.length()
+							    || !pefName.substring(0, prefix.length()).equals(prefix)
+							    || !pefName.substring(pefName.length() - postfix.length()).equals(postfix))
+								throw new RuntimeException("Coding error");
+							String textName = format.format(
+									Integer.parseInt(pefName.substring(prefix.length(), pefName.length() - postfix.length())));
+							convertPEF2Text(is,
+							                new File(textDir, textName + fileFormat.getFileExtension()),
+									fileFormat);
+						}
+						is.close();
+						// TODO: clean up split PEF files.
+					}
+					pefStream.close();
 				}
-				public PageBreaks getPagebreakStyle() {
-					return pageBreaks;
-				}
-				public Padding getPaddingStyle() {
-					return padding;
-				}
-				public BrailleConverter getTable() {
-					return brailleConverter;
-				}
-				protected void add(byte b) throws IOException {
-					textStream.write(b);
-				}
-				protected void addAll(byte[] b) throws IOException {
-					textStream.write(b);
-				}
-			};
-			
-			// Read PEF
-			ByteArrayOutputStream s = new ByteArrayOutputStream();
-			Serializer serializer = new Serializer(s);
-			serializer.serializeNode(source.read());
-			serializer.close();
-			InputStream pefStream = new ByteArrayInputStream(s.toByteArray());
-			s.close();
-			
-			// Parse PEF to text
-			PEFHandler.Builder builder = new PEFHandler.Builder(writer);
-			builder.range(null).align(Alignment.LEFT).offset(0);
-			parsePefFile(pefStream, builder.build());
-			pefStream.close();
-			textStream.close(); }
+				return; }
+			catch (Exception e) {
+				logger.error("Storing PEF to file format '" + fileFormat + "' failed", e); }}
+		logger.error("pef:pef2text failed");
+		throw new XProcException(step.getNode(), "pef:pef2text failed");
+	}
+	
+	private void convertPEF2Text(InputStream pefStream, File textFile, FileFormat fileFormat)
+			throws ParserConfigurationException, SAXException, IOException, UnsupportedWidthException {
+		// Create EmbosserWriter
+		OutputStream textStream = new FileOutputStream(textFile);
+		EmbosserWriter writer = fileFormat.newEmbosserWriter(textStream);
 		
-		catch (Exception e) {
-			logger.error("pef:pef2text failed", e);
-			throw new XProcException(step.getNode(), e); }
+		// Parse PEF to text
+		PEFHandler.Builder builder = new PEFHandler.Builder(writer);
+		builder.range(null).align(Alignment.LEFT).offset(0);
+		parsePefFile(pefStream, builder.build());
+		textStream.close();
+	}
+	
+	private void addOption(QName option, MutableQuery query) {
+		RuntimeValue v = getOption(option);
+		if (v != null)
+			query.add(option.getLocalName(), v.getString());
 	}
 	
 	@Component(
@@ -174,8 +233,28 @@ public class PEF2TextStep extends DefaultStep {
 		
 		@Override
 		public XProcStep newStep(XProcRuntime runtime, XAtomicStep step) {
-			return new PEF2TextStep(runtime, step, tableProvider);
+			return new PEF2TextStep(runtime, step, fileFormatProvider, tableProvider, validatorFactory);
 		}
+		
+		@Reference(
+			name = "FileFormatProvider",
+			unbind = "unbindFileFormatProvider",
+			service = FileFormatProvider.class,
+			cardinality = ReferenceCardinality.MULTIPLE,
+			policy = ReferencePolicy.DYNAMIC
+		)
+		protected void bindFileFormatProvider(FileFormatProvider provider) {
+			fileFormatProviders.add(provider);
+		}
+		
+		protected void unbindFileFormatProvider(FileFormatProvider provider) {
+			fileFormatProviders.remove(provider);
+			this.fileFormatProvider.invalidateCache();
+		}
+		
+		private List<FileFormatProvider> fileFormatProviders = new ArrayList<FileFormatProvider>();
+		private org.daisy.pipeline.braille.common.Provider.util.MemoizingProvider<Query,FileFormat> fileFormatProvider
+		= memoize(dispatch(fileFormatProviders));
 		
 		@Reference(
 			name = "TableProvider",
@@ -197,6 +276,17 @@ public class PEF2TextStep extends DefaultStep {
 		private org.daisy.pipeline.braille.common.Provider.util.MemoizingProvider<Query,Table> tableProvider
 		= memoize(dispatch(tableProviders));
 		
+		@Reference(
+			name = "ValidatorFactoryService",
+			service = ValidatorFactoryService.class,
+			cardinality = ReferenceCardinality.MANDATORY,
+			policy = ReferencePolicy.STATIC
+		)
+		protected void bindValidatorFactory(ValidatorFactoryService factory) {
+			validatorFactory = factory;
+		}
+		
+		private ValidatorFactoryService validatorFactory = null;
 	}
 	
 	// copied from org.daisy.braille.facade.PEFConverterFacade because it is no longer static

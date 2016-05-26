@@ -12,9 +12,12 @@
     
     <p:option name="href" required="true"/>
     <p:option name="preview-href" required="false" select="''"/>
-    <p:option name="brf-href" required="false" select="''"/>
-    
-    <p:option name="brf-table" required="false" select="'(id:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
+    <p:option name="brf-dir-href" required="false" select="''"/>
+    <p:option name="brf-name-pattern" required="false" select="''"/>
+    <p:option name="brf-single-volume-name" required="false" select="''"/>
+    <p:option name="brf-number-width" required="false" select="''"/>
+    <p:option name="brf-table" required="false" select="''"/>
+    <p:option name="brf-file-format" required="false" select="''"/>
     
     <p:import href="pef-to-html.convert.xpl"/>
     <p:import href="pef2text.xpl"/>
@@ -40,19 +43,50 @@
     <!-- ============ -->
 
     <p:choose>
-        <p:when test="not($brf-href='')">
+        <p:when test="not($brf-dir-href='')">
             <p:identity>
                 <p:input port="source">
                     <p:pipe step="store" port="source"/>
                 </p:input>
             </p:identity>
             <px:message severity="DEBUG">
-                <p:with-option name="message" select="concat('Storing BRF as ''', $brf-href, '''')"/>
+                <p:with-option name="message" select="concat('Storing BRF in ''', $brf-dir-href, '''')"/>
             </px:message>
-            <pef:pef2text breaks="DEFAULT" pad="BOTH">
-                <p:with-option name="href" select="$brf-href"/>
-                <p:with-option name="table" select="$brf-table"/>
-            </pef:pef2text>
+            <p:choose>
+                <p:when test="not($brf-file-format='')">
+                    <!--
+                        TODO: try with and without brf-table?
+                    -->
+                    <pef:pef2text>
+                        <p:with-option name="dir-href" select="$brf-dir-href"/>
+                        <p:with-option name="name-pattern" select="$brf-name-pattern"/>
+                        <p:with-option name="single-volume-name" select="$brf-single-volume-name"/>
+                        <p:with-option name="number-width" select="$brf-number-width"/>
+                        <p:with-option name="file-format" select="$brf-file-format"/>
+                    </pef:pef2text>
+                </p:when>
+                <p:when test="not($brf-table='')">
+                    <pef:pef2text line-breaks="DEFAULT" pad="BOTH">
+                        <p:with-option name="dir-href" select="$brf-dir-href"/>
+                        <p:with-option name="name-pattern" select="$brf-name-pattern"/>
+                        <p:with-option name="single-volume-name" select="$brf-single-volume-name"/>
+                        <p:with-option name="number-width" select="$brf-number-width"/>
+                        <p:with-option name="table" select="$brf-table"/>
+                    </pef:pef2text>
+                </p:when>
+                <p:otherwise>
+                    <pef:pef2text>
+                        <p:with-option name="dir-href" select="$brf-dir-href"/>
+                        <p:with-option name="name-pattern" select="$brf-name-pattern"/>
+                        <p:with-option name="single-volume-name" select="$brf-single-volume-name"/>
+                        <p:with-option name="number-width" select="$brf-number-width"/>
+                        <p:with-option name="file-format"
+                                       select="'(table:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)
+                                                (line-breaks:DEFAULT)
+                                                (pad:BOTH)'"/>
+                    </pef:pef2text>
+                </p:otherwise>
+            </p:choose>
         </p:when>
         <p:otherwise>
             <p:identity>
@@ -71,16 +105,19 @@
     
     <p:choose>
         <p:when test="not($preview-href='')">
+            <p:variable name="table" select="if (not($brf-table=''))
+                                             then $brf-table
+                                             else '(id:&quot;org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US&quot;)'"/>
             <p:identity>
                 <p:input port="source">
                     <p:pipe step="store" port="source"/>
                 </p:input>
             </p:identity>
             <px:message severity="DEBUG">
-                <p:with-option name="message" select="concat('Converting PEF to HTML preview using the BRF table ''',$brf-table,'''')"/>
+                <p:with-option name="message" select="concat('Converting PEF to HTML preview using the BRF table ''',$table,'''')"/>
             </px:message>
             <px:pef-to-html.convert>
-                <p:with-option name="table" select="$brf-table"/>
+                <p:with-option name="table" select="$table"/>
             </px:pef-to-html.convert>
             <px:message severity="DEBUG">
                 <p:with-option name="message" select="concat('Storing HTML preview as ''', $preview-href, '''')"/>

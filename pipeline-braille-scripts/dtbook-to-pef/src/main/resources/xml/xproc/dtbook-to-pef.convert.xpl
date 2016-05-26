@@ -115,19 +115,20 @@
                 <p:pipe step="obfl" port="result"/>
             </p:output>
             <px:message message="Transforming from XML with inline CSS to OBFL"/>
-            <!--
-                TODO: move messages to px:transform step?
-            -->
-            <px:message severity="DEBUG">
-                <p:with-option name="message" select="concat('px:transform query=','(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
-            </px:message>
-            <px:transform name="obfl">
-                <p:with-option name="query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
-                <p:with-option name="temp-dir" select="$temp-dir"/>
-                <p:input port="parameters">
-                    <p:pipe port="result" step="parameters"/>
-                </p:input>
-            </px:transform>
+            <p:group name="obfl">
+                <p:output port="result"/>
+                <p:variable name="transform-query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
+                <px:message severity="DEBUG">
+                    <p:with-option name="message" select="concat('px:transform query=',$transform-query)"/>
+                </px:message>
+                <px:transform>
+                    <p:with-option name="query" select="$transform-query"/>
+                    <p:with-option name="temp-dir" select="$temp-dir"/>
+                    <p:input port="parameters">
+                        <p:pipe port="result" step="parameters"/>
+                    </p:input>
+                </px:transform>
+            </p:group>
             <px:message message="Transforming from OBFL to PEF"/>
             <p:group>
                 <p:variable name="transform-query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
