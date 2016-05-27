@@ -420,7 +420,8 @@
         <css:new-definition>
             <p:input port="definition">
                 <p:inline>
-                    <xsl:stylesheet version="2.0" xmlns:new="css:new-definition">
+                    <xsl:stylesheet version="2.0" xmlns:new="css:new-definition"
+                                                  xmlns:re="regex-utils">
                         <xsl:variable name="new:properties" as="xs:string*"
                                       select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
                                                'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
@@ -428,7 +429,7 @@
                                                'margin-bottom', 'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
                                                'padding-left',  'widows',                           'letter-spacing', '-obfl-table-row-spacing',
                                                'padding-right',                                                       '-obfl-preferred-empty-space',
-                                               'padding-top',
+                                               'padding-top',                                                         '-obfl-use-when-collection-not-empty',
                                                'padding-bottom',
                                                'border-left',
                                                'border-right',
@@ -448,6 +449,8 @@
                                                     then matches($css:property/@value,'^auto|0|[1-9][0-9]*$')
                                                     else if ($css:property/@name='-obfl-toc-range')
                                                     then ($context/@css:_obfl-toc and $css:property/@value=('document','volume'))
+                                                    else if ($css:property/@name='-obfl-use-when-collection-not-empty')
+                                                    then matches($css:property/@value,re:exact($css:IDENT_RE))
                                                     else (
                                                       css:is-valid($css:property)
                                                       and not($css:property/@value=('inherit','initial'))
@@ -467,6 +470,8 @@
                                                   then '0'
                                                   else if ($property='-obfl-preferred-empty-space')
                                                   then '2'
+                                                  else if ($property='-obfl-use-when-collection-not-empty')
+                                                  then 'normal'
                                                   else if ($property='text-transform')
                                                   then 'none'
                                                   else css:initial-value($property)"/>
@@ -491,6 +496,8 @@
                                                                         '-obfl-table-row-spacing',
                                                                         '-obfl-preferred-empty-space'))
                                                     then $context/@type='table'
+                                                    else if ($property='-obfl-use-when-collection-not-empty')
+                                                    then exists($context/parent::css:_[@css:flow])
                                                     else $context/@type='block'
                                                   )"/>
                         </xsl:function>

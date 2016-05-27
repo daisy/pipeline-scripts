@@ -63,16 +63,6 @@
                       select="css:parse-declaration-list($default-page-stylesheet[@selector='@footnotes'][1]/@style)"/>
         <xsl:variable name="footnotes-content" as="element()*"
                       select="css:parse-content-list($footnotes-properties[@name='content'][1]/@value,())"/>
-        <xsl:variable name="footnotes-border-top" as="xs:string"
-                      select="($footnotes-properties[@name='border-top'][1]/@value,css:initial-value('border-top'))[1]"/>
-        <xsl:variable name="footnotes-max-height" as="xs:string"
-                      select="($footnotes-properties[@name='max-height'][1]/@value,css:initial-value('max-height'))[1]"/>
-        <xsl:variable name="footnotes-max-height" as="xs:integer"
-                      select="if ($footnotes-max-height='none')
-                              then $page-height idiv 2
-                              else xs:integer(number($footnotes-max-height))"/>
-        <xsl:variable name="footnotes-fallback-flow" as="xs:string?"
-                      select="$footnotes-properties[@name='-obfl-fallback-flow'][1]/@value"/>
         <layout-master name="{$name}" duplex="{$duplex}" page-number-variable="page"
                        page-width="{$page-width}" page-height="{$page-height}">
             <xsl:if test="$right-page-stylesheet">
@@ -109,10 +99,33 @@
                 <xsl:message select="concat(@scope,' argument of flow() function not allowed within footnotes area')"/>
             </xsl:if>
             <xsl:for-each select="$footnotes-content[self::css:flow[@from]][1]">
+                <xsl:variable name="footnotes-border-top" as="xs:string"
+                              select="($footnotes-properties[@name='border-top'][1]/@value,css:initial-value('border-top'))[1]"/>
+                <xsl:variable name="footnotes-max-height" as="xs:string"
+                              select="($footnotes-properties[@name='max-height'][1]/@value,css:initial-value('max-height'))[1]"/>
+                <xsl:variable name="footnotes-max-height" as="xs:integer"
+                              select="if ($footnotes-max-height='none')
+                                      then $page-height idiv 2
+                                      else xs:integer(number($footnotes-max-height))"/>
+                <xsl:variable name="footnotes-fallback-collection" as="xs:string?"
+                              select="$footnotes-properties[@name=('-obfl-fallback-collection','-obfl-fallback-flow')][1]/@value"/>
+                <xsl:if test="$footnotes-properties[@name='-obfl-fallback-flow']">
+                    <xsl:message>Correct spelling of '-obfl-fallback-flow' is '-obfl-fallback-collection'</xsl:message>
+                </xsl:if>
                 <page-area align="bottom" max-height="{$footnotes-max-height}" collection="{@from}">
-                    <xsl:if test="exists($footnotes-fallback-flow)">
+                    <xsl:if test="exists($footnotes-fallback-collection) and matches($footnotes-fallback-collection, re:exact($css:IDENT_RE))">
                         <fallback>
-                            <rename collection="{@from}" to="{$footnotes-fallback-flow}"/>
+                            <rename collection="{@from}" to="{$footnotes-fallback-collection}"/>
+                            <rename collection="meta/{@from}" to="meta/{$footnotes-fallback-collection}"/>
+                            <xsl:variable name="footnotes-fallback-extra" as="xs:string?"
+                                          select="$footnotes-properties[@name='-obfl-fallback-extra'][1]/@value"/>
+                            <xsl:if test="exists($footnotes-fallback-extra)
+                                          and matches($footnotes-fallback-extra, re:exact(re:comma-separated(concat($css:IDENT_RE,'\s+',$css:IDENT_RE))))">
+                                <xsl:for-each select="tokenize($footnotes-fallback-extra,',')">
+                                    <xsl:variable name="from-to" as="xs:string*" select="tokenize(normalize-space(.),'\s')"/>
+                                    <rename collection="{$from-to[1]}" to="{$from-to[2]}"/>
+                                </xsl:for-each>
+                            </xsl:if>
                         </fallback>
                     </xsl:if>
                     <xsl:if test="$footnotes-border-top!='none'">

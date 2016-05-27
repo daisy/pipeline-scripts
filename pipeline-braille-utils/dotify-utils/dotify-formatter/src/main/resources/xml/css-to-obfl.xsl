@@ -270,125 +270,136 @@
                                     </xsl:variable>
                                     <xsl:if test="$volume-area-content">
                                         <xsl:element name="{('pre','post')[index-of(('@begin','@end'),$volume-area)]}-content">
-                                            <xsl:variable name="default-master" as="xs:string"
-                                                          select="pxi:layout-master-name(($volume-area-page-style,$default-page-style)[1])"/>
-                                            <xsl:for-each-group select="$volume-area-content" group-adjacent="boolean(self::obfl:list-of-references)">
-                                                <xsl:choose>
-                                                    <xsl:when test="current-grouping-key()">
-                                                        <dynamic-sequence master="{$default-master}">
-                                                            <xsl:sequence select="current-group()"/>
-                                                        </dynamic-sequence>
-                                                    </xsl:when>
-                                                    <xsl:otherwise> <!-- css:_ -->
-                                                        <xsl:for-each-group select="current-group()" group-adjacent="string(@css:page)">
-                                                            <xsl:variable name="master" select="if (current-grouping-key()='')
-                                                                                                then $default-master
-                                                                                                else pxi:layout-master-name(current-grouping-key())"/>
-                                                            <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
-                                                                <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
-                                                                    <xsl:apply-templates mode="assert-nil-attr" select="current-group()/(@* except (@css:flow|@css:page))"/>
-                                                                    <xsl:variable name="first-toc" as="element()?"
-                                                                                  select="(current-group()/css:box[@type='block' and @css:_obfl-toc])[1]"/>
-                                                                    <xsl:choose>
-                                                                        <xsl:when test="exists($first-toc)">
-                                                                            <xsl:if test="$volume-area='@end'">
-                                                                                <!--
-                                                                                    toc-sequence is not supported within post-content, but we generate it anyway
-                                                                                    and show a warning.
-                                                                                -->
-                                                                                <xsl:message>display:-obfl-toc not supported inside @end area.</xsl:message>
-                                                                            </xsl:if>
-                                                                            <xsl:variable name="before-first-toc-content" as="element()*">
-                                                                                <xsl:for-each-group select="current-group()/*"
-                                                                                                    group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
-                                                                                    <xsl:if test="position()=1
-                                                                                                  and not(current-group()/self::css:box[@type='block' and @css:_obfl-toc])">
-                                                                                        <xsl:sequence select="current-group()"/>
+                                            <xsl:variable name="default-page-style" as="xs:string" select="($volume-area-page-style,$default-page-style)[1]"/>
+                                            <xsl:for-each-group select="$volume-area-content" group-adjacent="(self::css:_/@css:page/string(),$default-page-style)[1]">
+                                                <xsl:variable name="master" select="pxi:layout-master-name(current-grouping-key())"/>
+                                                <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
+                                                    <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
+                                                        <xsl:apply-templates mode="assert-nil-attr" select="current-group()/self::css:_/(@* except (@css:flow|@css:page))"/>
+                                                        <xsl:variable name="current-group" as="element()*"
+                                                                      select="for $e in current-group() return if ($e/self::css:_) then $e/* else $e"/>
+                                                        <xsl:variable name="first-toc" as="element()?"
+                                                                      select="($current-group/self::css:box[@type='block' and @css:_obfl-toc])[1]"/>
+                                                        <xsl:choose>
+                                                            <xsl:when test="not($first-toc)">
+                                                                <xsl:variable name="sequence" as="element()*">
+                                                                    <xsl:call-template name="apply-templates-within-post-or-pre-content-sequence">
+                                                                        <xsl:with-param name="select" select="$current-group"/>
+                                                                    </xsl:call-template>
+                                                                </xsl:variable>
+                                                                <xsl:element name="{if ($sequence/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
+                                                                    <xsl:attribute name="master" select="$master"/>
+                                                                    <xsl:sequence select="$sequence"/>
+                                                                </xsl:element>
+                                                            </xsl:when>
+                                                            <xsl:otherwise>
+                                                                <xsl:if test="$volume-area='@end'">
+                                                                    <!--
+                                                                        toc-sequence is not supported within post-content, but we generate it anyway
+                                                                        and show a warning.
+                                                                    -->
+                                                                    <xsl:message>display:-obfl-toc not supported inside @end area.</xsl:message>
+                                                                </xsl:if>
+                                                                <xsl:variable name="before-first-toc" as="element()*">
+                                                                    <xsl:for-each-group select="$current-group"
+                                                                                        group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
+                                                                        <xsl:if test="position()=1
+                                                                                      and not(current-group()/self::css:box[@type='block' and @css:_obfl-toc])">
+                                                                            <xsl:call-template name="apply-templates-within-post-or-pre-content-sequence">
+                                                                                <xsl:with-param name="select" select="current-group()"/>
+                                                                            </xsl:call-template>
+                                                                        </xsl:if>
+                                                                    </xsl:for-each-group>
+                                                                </xsl:variable>
+                                                                <xsl:for-each-group select="$current-group"
+                                                                                    group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
+                                                                    <xsl:variable name="toc" as="element()?"
+                                                                                  select="current-group()/self::css:box[@type='block' and @css:_obfl-toc]"/>
+                                                                    <xsl:if test="exists($toc)">
+                                                                        <xsl:variable name="toc-name" select="generate-id($toc)"/>
+                                                                        <xsl:variable name="toc-range" as="xs:string"
+                                                                                      select="($toc/@css:_obfl-toc-range,'document')[1]"/>
+                                                                        <xsl:variable name="on-toc-start" as="element()*"
+                                                                                      select="collection()/*[@css:flow=concat('-obfl-on-toc-start/',
+                                                                                                                              $toc/@css:_obfl-on-toc-start)]/*"/>
+                                                                        <xsl:variable name="on-volume-start" as="element()*"
+                                                                                      select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
+                                                                                              then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
+                                                                                                                                   $toc/@css:_obfl-on-volume-start)]/*
+                                                                                              else ()"/>
+                                                                        <xsl:variable name="on-volume-end" as="element()*"
+                                                                                      select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-end)
+                                                                                              then collection()/*[@css:flow=concat('-obfl-on-volume-end/',
+                                                                                                                                   $toc/@css:_obfl-on-volume-end)]/*
+                                                                                              else ()"/>
+                                                                        <xsl:variable name="on-toc-end" as="element()*"
+                                                                                      select="(collection()/*[@css:flow=concat('-obfl-on-toc-end/',
+                                                                                                                               $toc/@css:_obfl-on-toc-end)]/*)"/>
+                                                                        <xsl:variable name="before-toc" as="element()*" select="if (position()=2) then $before-first-toc else ()"/>
+                                                                        <xsl:variable name="after-toc" as="element()*">
+                                                                            <xsl:call-template name="apply-templates-within-post-or-pre-content-sequence">
+                                                                                <xsl:with-param name="select" select="current-group()[not(self::css:box[@type='block' and @css:_obfl-toc])]"/>
+                                                                            </xsl:call-template>
+                                                                        </xsl:variable>
+                                                                        <xsl:if test="exists($before-toc) and not($toc-range='document')
+                                                                                      or $before-toc/self::obfl:list-of-references">
+                                                                            <xsl:element name="{if ($before-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
+                                                                                <xsl:attribute name="master" select="$master"/>
+                                                                                <xsl:sequence select="$before-toc"/>
+                                                                            </xsl:element>
+                                                                        </xsl:if>
+                                                                        <toc-sequence master="{$master}" range="{$toc-range}" toc="{$toc-name}">
+                                                                            <!--
+                                                                                Inserting table-of-contents here as child of toc-sequence. Will be moved to the
+                                                                                right place (child of obfl) later.
+                                                                            -->
+                                                                            <table-of-contents name="{$toc-name}">
+                                                                                <xsl:apply-templates mode="table-of-contents" select="$toc"/>
+                                                                            </table-of-contents>
+                                                                            <xsl:if test="(exists($before-toc) and $toc-range='document' and not($before-toc/self::obfl:list-of-references))
+                                                                                          or exists($on-toc-start)
+                                                                                          or $toc/@css:page-break-before='always'">
+                                                                                <on-toc-start>
+                                                                                    <xsl:if test="$toc-range='document' and not($before-toc/self::obfl:list-of-references)">
+                                                                                        <xsl:sequence select="$before-toc"/>
                                                                                     </xsl:if>
-                                                                                </xsl:for-each-group>
-                                                                            </xsl:variable>
-                                                                            <xsl:if test="exists($before-first-toc-content)
-                                                                                          and not(($first-toc/@css:_obfl-toc-range,'document')[1]='document')">
-                                                                                <sequence master="{$master}">
-                                                                                    <xsl:apply-templates mode="sequence" select="$before-first-toc-content"/>
-                                                                                </sequence>
+                                                                                    <xsl:if test="$toc/@css:page-break-before='always'">
+                                                                                        <block break-before="page"/>
+                                                                                    </xsl:if>
+                                                                                    <xsl:apply-templates mode="sequence" select="$on-toc-start"/>
+                                                                                </on-toc-start>
                                                                             </xsl:if>
-                                                                            <xsl:for-each-group select="current-group()/*"
-                                                                                                group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
-                                                                                <xsl:variable name="toc" as="element()?"
-                                                                                              select="current-group()/self::css:box[@type='block' and @css:_obfl-toc]"/>
-                                                                                <xsl:if test="exists($toc)">
-                                                                                    <xsl:variable name="toc-name" select="generate-id($toc)"/>
-                                                                                    <xsl:variable name="toc-range" as="xs:string"
-                                                                                                  select="($toc/@css:_obfl-toc-range,'document')[1]"/>
-                                                                                    <xsl:variable name="on-toc-start-content" as="element()*"
-                                                                                                  select="collection()/*[@css:flow=concat('-obfl-on-toc-start/',
-                                                                                                                                          $toc/@css:_obfl-on-toc-start)]/*"/>
-                                                                                    <xsl:variable name="on-volume-start-content" as="element()*"
-                                                                                                  select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
-                                                                                                          then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
-                                                                                                                                               $toc/@css:_obfl-on-volume-start)]/*
-                                                                                                          else ()"/>
-                                                                                    <xsl:variable name="on-volume-end-content" as="element()*"
-                                                                                                  select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-end)
-                                                                                                          then collection()/*[@css:flow=concat('-obfl-on-volume-end/',
-                                                                                                                                               $toc/@css:_obfl-on-volume-end)]/*
-                                                                                                          else ()"/>
-                                                                                    <xsl:variable name="on-toc-end-content" as="element()*"
-                                                                                                  select="(collection()/*[@css:flow=concat('-obfl-on-toc-end/',
-                                                                                                                                           $toc/@css:_obfl-on-toc-end)]/*,
-                                                                                                           current-group()[not(self::css:box[@type='block' and @css:_obfl-toc])])"/>
-                                                                                    <toc-sequence master="{$master}" range="{$toc-range}" toc="{$toc-name}">
-                                                                                        <!--
-                                                                                            Inserting table-of-contents here as child of toc-sequence. Will be moved to the
-                                                                                            right place (child of obfl) later.
-                                                                                        -->
-                                                                                        <table-of-contents name="{$toc-name}">
-                                                                                            <xsl:apply-templates mode="table-of-contents" select="$toc"/>
-                                                                                        </table-of-contents>
-                                                                                        <xsl:if test="(position()=2 and exists($before-first-toc-content) and $toc-range='document')
-                                                                                                      or exists($on-toc-start-content)
-                                                                                                      or $toc/@css:page-break-before='always'">
-                                                                                            <on-toc-start>
-                                                                                                <xsl:if test="position()=2 and $toc-range='document'">
-                                                                                                    <xsl:apply-templates mode="sequence" select="$before-first-toc-content"/>
-                                                                                                </xsl:if>
-                                                                                                <xsl:if test="$toc/@css:page-break-before='always'">
-                                                                                                    <block break-before="page"/>
-                                                                                                </xsl:if>
-                                                                                                <xsl:apply-templates mode="sequence" select="$on-toc-start-content"/>
-                                                                                            </on-toc-start>
-                                                                                        </xsl:if>
-                                                                                        <xsl:if test="exists($on-volume-start-content)">
-                                                                                            <on-volume-start>
-                                                                                                <xsl:apply-templates mode="sequence" select="$on-volume-start-content"/>
-                                                                                            </on-volume-start>
-                                                                                        </xsl:if>
-                                                                                        <xsl:if test="exists($on-volume-end-content)">
-                                                                                            <on-volume-end>
-                                                                                                <xsl:apply-templates mode="sequence" select="$on-volume-end-content"/>
-                                                                                            </on-volume-end>
-                                                                                        </xsl:if>
-                                                                                        <xsl:if test="exists($on-toc-end-content)">
-                                                                                            <on-toc-end>
-                                                                                                <xsl:apply-templates mode="sequence" select="$on-toc-end-content"/>
-                                                                                            </on-toc-end>
-                                                                                        </xsl:if>
-                                                                                    </toc-sequence>
-                                                                                </xsl:if>
-                                                                            </xsl:for-each-group>
-                                                                        </xsl:when>
-                                                                        <xsl:otherwise>
-                                                                            <sequence master="{$master}">
-                                                                                <xsl:apply-templates mode="sequence" select="current-group()/*"/>
-                                                                            </sequence>
-                                                                        </xsl:otherwise>
-                                                                    </xsl:choose>
+                                                                            <xsl:if test="exists($on-volume-start)">
+                                                                                <on-volume-start>
+                                                                                    <xsl:apply-templates mode="sequence" select="$on-volume-start"/>
+                                                                                </on-volume-start>
+                                                                            </xsl:if>
+                                                                            <xsl:if test="exists($on-volume-end)">
+                                                                                <on-volume-end>
+                                                                                    <xsl:apply-templates mode="sequence" select="$on-volume-end"/>
+                                                                                </on-volume-end>
+                                                                            </xsl:if>
+                                                                            <xsl:if test="exists($on-toc-end) or (exists($after-toc) and not($after-toc/self::obfl:list-of-references))">
+                                                                                <on-toc-end>
+                                                                                    <xsl:apply-templates mode="sequence" select="$on-toc-end"/>
+                                                                                    <xsl:if test="not($after-toc/self::obfl:list-of-references)">
+                                                                                        <xsl:sequence select="$after-toc"/>
+                                                                                    </xsl:if>
+                                                                                </on-toc-end>
+                                                                            </xsl:if>
+                                                                        </toc-sequence>
+                                                                        <xsl:if test="$after-toc/self::obfl:list-of-references">
+                                                                            <xsl:element name="{if ($after-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
+                                                                                <xsl:attribute name="master" select="$master"/>
+                                                                                <xsl:sequence select="$after-toc"/>
+                                                                            </xsl:element>
+                                                                        </xsl:if>
+                                                                    </xsl:if>
                                                                 </xsl:for-each-group>
-                                                            </xsl:for-each-group>
-                                                        </xsl:for-each-group>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
+                                                            </xsl:otherwise>
+                                                        </xsl:choose>
+                                                    </xsl:for-each-group>
+                                                </xsl:for-each-group>
                                             </xsl:for-each-group>
                                         </xsl:element>
                                     </xsl:if>
@@ -400,7 +411,8 @@
             </xsl:if>
             <xsl:apply-templates mode="assert-nil" select="collection()/*[not(self::css:_)]"/>
             <xsl:for-each select="collection()/css:_[@css:flow=$footnote-and-volume-range-flows]">
-                <collection name="{@css:flow}">
+                <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
+                <collection name="{$flow}">
                     <xsl:for-each select="*">
                         <xsl:if test="@css:anchor='NULL'">
                             <xsl:message terminate="yes">Flowed element does not have anchor in normal flow</xsl:message>
@@ -416,6 +428,18 @@
                         </item>
                     </xsl:for-each>
                 </collection>
+                <xsl:if test="collection()/css:_[@css:flow[not(.=$footnote-and-volume-range-flows)]]/*/@css:_obfl-use-when-collection-not-empty=$flow">
+                    <collection name="meta/{$flow}">
+                        <xsl:for-each select="*[1]">
+                            <!--
+                                giving this dummy item the same ID as the first item of the real collection seems to work
+                            -->
+                            <item id="{@css:anchor}">
+                                <block/>
+                            </item>
+                        </xsl:for-each>
+                    </collection>
+                </xsl:if>
             </xsl:for-each>
             <xsl:for-each-group select="collection()/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
                 <xsl:variable name="right-page-odd" as="xs:boolean"
@@ -438,6 +462,36 @@
                     </xsl:for-each-group>
                 </xsl:for-each-group>
             </xsl:for-each-group>
+    </xsl:template>
+    
+    <xsl:template name="apply-templates-within-post-or-pre-content-sequence">
+        <xsl:param name="select" as="element()*" required="yes"/> <!-- (css:box|obfl:list-of-references)* -->
+        <xsl:for-each-group select="$select" group-adjacent="boolean(self::obfl:list-of-references)">
+            <xsl:choose>
+                <xsl:when test="current-grouping-key()">
+                    <xsl:sequence select="current-group()"/>
+                </xsl:when>
+                <xsl:otherwise> <!-- css:box -->
+                    <xsl:for-each-group select="current-group()" group-adjacent="(@css:_obfl-use-when-collection-not-empty,'normal')[1]">
+                        <xsl:variable name="flow" as="xs:string" select="current-grouping-key()"/>
+                        <xsl:choose>
+                            <xsl:when test="not($flow='normal')">
+                                <xsl:if test="$flow=$footnote-and-volume-range-flows">
+                                    <list-of-references collection="meta/{$flow}" range="document">
+                                        <on-collection-start>
+                                            <xsl:apply-templates mode="sequence" select="current-group()"/>
+                                        </on-collection-start>
+                                    </list-of-references>
+                                </xsl:if>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:apply-templates mode="sequence" select="current-group()"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each-group>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each-group>
     </xsl:template>
     
     <!-- ======== -->
@@ -1256,6 +1310,12 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <xsl:template mode="block-attr assert-nil-attr"
+                  match="@css:_obfl-use-when-collection-not-empty[.='normal']"/>
+    
+    <xsl:template mode="block-attr assert-nil-attr"
+                  match="/css:_[@css:flow[not(.=$footnote-and-volume-range-flows)]]/*/@css:_obfl-use-when-collection-not-empty"/>
     
     <!-- ==================== -->
     <!-- More inline elements -->

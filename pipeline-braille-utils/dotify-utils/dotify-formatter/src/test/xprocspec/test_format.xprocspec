@@ -7127,7 +7127,7 @@
   
   <x:scenario label="test_68">
     <x:documentation>
-      Tests -obfl-fallback-flow with footnotes small enough to fit in the @footnotes area.
+      Tests -obfl-fallback-collection with footnotes small enough to fit in the @footnotes area.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -7137,7 +7137,7 @@
                          size: 20 10;
                          @footnotes {
                            content: flow(footnotes);
-                           -obfl-fallback-flow: endnotes; }}
+                           -obfl-fallback-collection: endnotes; }}
                        @volume {
                          @end {
                            content: flow(endnotes, volume); }}">
@@ -7176,6 +7176,7 @@
             <page-area align="bottom" max-height="5" collection="footnotes">
               <fallback>
                 <rename collection="footnotes" to="endnotes"/>
+                <rename collection="meta/footnotes" to="meta/endnotes"/>
               </fallback>
             </page-area>
           </layout-master>
@@ -7243,7 +7244,7 @@
   
   <x:scenario label="test_69">
     <x:documentation>
-      Tests -obfl-fallback-flow with footnotes too big to fit in the @footnotes area.
+      Tests -obfl-fallback-collection with footnotes too big to fit in the @footnotes area.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -7253,7 +7254,7 @@
                          size: 20 10;
                          @footnotes {
                            content: flow(footnotes);
-                           -obfl-fallback-flow: endnotes; }}
+                           -obfl-fallback-collection: endnotes; }}
                        @volume {
                          @end {
                            content: flow(endnotes, volume); }}">
@@ -7293,6 +7294,7 @@
             <page-area align="bottom" max-height="5" collection="footnotes">
               <fallback>
                 <rename collection="footnotes" to="endnotes"/>
+                <rename collection="meta/footnotes" to="meta/endnotes"/>
               </fallback>
             </page-area>
           </layout-master>
@@ -9735,6 +9737,165 @@
               <section>
                 <page>
                   <row>⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_90">
+    <x:documentation>
+      Tests -obfl-use-when-collection-not-empty.
+    </x:documentation>
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <body style="{ text-transform:none }
+                       @page {
+                         size: 20 10;
+                         @footnotes {
+                           content: flow(footnotes);
+                           -obfl-fallback-collection: endnotes; }}
+                       @volume {
+                         @begin {
+                           content: flow(front) }
+                         @end {
+                           content: flow(endnotes, volume); }}">
+            <p style="display: block; flow: front; -obfl-use-when-collection-not-empty: footnotes">
+              ⠌⠌⠌
+            </p>
+            <p style="display: block; flow: front; -obfl-use-when-collection-not-empty: endnotes">
+              ⠡⠡⠡
+            </p>
+            <p style="display:block">
+              ⠤⠤⠤
+              <noteref ref="note_1" style="::alternate { flow:footnotes; display:block; content:target-content(attr(ref)) }">
+                ⠶
+              </noteref>
+              ⠤⠤⠤
+              <noteref ref="note_2" style="::alternate { flow:footnotes; display:block; content:target-content(attr(ref)) }">
+                ⠶⠶
+              </noteref>
+              ⠤⠤⠤
+            </p>
+            <note id="note_1" style="display:none">
+              ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+            </note>
+            <note id="note_2" style="display:none">
+              ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+              ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+            </note>
+          </body>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+          <layout-master name="main" duplex="true" page-number-variable="page" page-width="20" page-height="10">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+            <page-area align="bottom" max-height="5" collection="footnotes">
+              <fallback>
+                <rename collection="footnotes" to="endnotes"/>
+                <rename collection="meta/footnotes" to="meta/endnotes"/>
+              </fallback>
+            </page-area>
+          </layout-master>
+          <volume-template sheets-in-volume-max="1000">
+            <pre-content>
+              <dynamic-sequence master="main">
+                <list-of-references collection="meta/footnotes" range="document">
+                  <on-collection-start>
+                    <block> ⠌⠌⠌ </block>
+                  </on-collection-start>
+                </list-of-references>
+                <list-of-references collection="meta/endnotes" range="document">
+                  <on-collection-start>
+                    <block> ⠡⠡⠡ </block>
+                  </on-collection-start>
+                </list-of-references>
+              </dynamic-sequence>
+            </pre-content>
+            <post-content>
+              <dynamic-sequence master="main">
+                <list-of-references collection="endnotes" range="volume"/>
+              </dynamic-sequence>
+            </post-content>
+          </volume-template>
+          <collection name="footnotes">
+            <item id="a">
+              <block>
+                ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+              </block>
+            </item>
+            <item id="b">
+              <block>
+                ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+                ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤⠤
+              </block>
+            </item>
+          </collection>
+          <collection name="meta/footnotes">
+            <item id="a">
+              <block/>
+            </item>
+          </collection>
+          <sequence master="main">
+            <block translate=""/>
+            <block>
+              ⠤⠤⠤ ⠶
+              <anchor item="a"/>
+              ⠤⠤⠤ ⠶⠶
+              <anchor item="b"/>
+              ⠤⠤⠤
+            </block>
+            <block translate=""/>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="20" rows="10" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠡⠡⠡</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠀⠶⠀⠤⠤⠤⠀⠶⠶⠀⠤⠤⠤</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
+                  <row>⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤⠀⠤⠤⠤⠤⠤⠤</row>
                 </page>
               </section>
             </volume>
