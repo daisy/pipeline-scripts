@@ -9568,4 +9568,94 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_88">
+    <x:documentation>
+      Tests text-transform:auto on -obfl-evaluate().
+      
+      Broken: white space is stripped too aggressively (Dotify issue?).
+    </x:documentation>
+    <x:call step="dotify:format">
+      <x:input port="source">
+        <x:document type="inline">
+          <doc style="{ text-transform: none } @volume { @begin { content: flow(titlepage) }}">
+            <titlepage style="display: block; flow: titlepage">
+              ⠤⠤⠤⠤⠤
+              <span style="::before {
+                             text-transform: auto;
+                             content: -obfl-evaluate('(round $volume)') }"/>
+              ⠤⠤⠤⠤⠤
+            </titlepage>
+            <body style="display: block">
+              ⠤⠤⠤⠤⠤
+            </body>
+          </doc>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="obfl">
+      <x:document type="port" port="obfl"/>
+    </x:context>
+    <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+          <layout-master name="main" duplex="true" page-number-variable="page" page-width="40" page-height="25">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <volume-template sheets-in-volume-max="1000">
+            <pre-content>
+              <sequence master="main">
+                <block translate="">
+                  <span translate="pre-translated-text-css">
+                    ⠤⠤⠤⠤⠤
+                  </span>
+                  <evaluate expression="(round $volume)"/>
+                  <span translate="pre-translated-text-css">
+                    ⠤⠤⠤⠤⠤
+                  </span>
+                </block>
+              </sequence>
+            </pre-content>
+          </volume-template>
+          <sequence master="main">
+            <block translate=""/>
+            <block>
+              ⠤⠤⠤⠤⠤
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:expect>
+    <x:context label="pef">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head>
+            <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="25" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤⠼⠁⠤⠤⠤⠤⠤</row> <!-- white space problem! -->
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠤⠤⠤⠤⠤</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>
