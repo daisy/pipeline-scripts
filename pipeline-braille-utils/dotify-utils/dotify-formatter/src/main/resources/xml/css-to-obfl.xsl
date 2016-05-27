@@ -856,7 +856,9 @@
                                                 @css:text-transform|@css:hyphens)"/>
         <xsl:for-each-group select="node()" group-adjacent="boolean(
                                                               self::css:box[@type='inline'] or
-                                                              self::css:custom-func[@name='-obfl-evaluate'])">
+                                                              self::css:custom-func[@name='-obfl-evaluate'] or
+                                                              self::css:counter[@target][@name='page'] or
+                                                              self::css:leader)">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
                     <xsl:apply-templates mode="#current" select="current-group()">
@@ -1260,6 +1262,9 @@
     <!-- More inline elements -->
     <!-- ==================== -->
     
+    <!--
+        string()
+    -->
     <xsl:template mode="block span toc-entry"
                   match="css:string[@name]">
         <xsl:if test="@scope">
@@ -1286,25 +1291,36 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template mode="block span toc-entry"
+    <!--
+        target-counter(page)
+    -->
+    <xsl:template mode="block toc-entry"
                   match="css:counter[@target][@name='page']">
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
-        <xsl:if test="@css:white-space">
-            <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to target-counter(page)')"/>
-        </xsl:if>
-        <xsl:if test="not($text-transform=('auto','none'))">
+        <xsl:param name="pending-text-transform" as="xs:string?" tunnel="yes"/>
+        <xsl:param name="pending-hyphens" as="xs:string?" tunnel="yes"/>
+        <!--
+            Dotify always uses default mode for page-number (bug?), so effective value of
+            text-transform is 'auto'
+        -->
+        <xsl:variable name="pending-text-transform" as="xs:string" select="($pending-text-transform,$text-transform)[1]"/>
+        <xsl:variable name="style" as="xs:string*">
+            <xsl:if test="not($pending-text-transform=('auto','none'))">
+                <xsl:sequence select="concat('text-transform: ',$pending-text-transform)"/>
+            </xsl:if>
+            <xsl:if test="exists($pending-hyphens) and not($pending-hyphens=$hyphens)">
+                <xsl:sequence select="concat('hyphens: ',$pending-hyphens)"/>
+            </xsl:if>
+            <xsl:if test="@css:white-space">
+                <xsl:sequence select="concat('white-space:',@css:white-space)"/>
+            </xsl:if>
+        </xsl:variable>
+        <xsl:if test="exists($style)">
             <!--
-                Dotify always uses default mode for page-number
-                FIXME: make use of style element
+                FIXME: make use of text-style
             -->
-            <xsl:message select="concat('text-transform:',$text-transform,' could not be applied to target-counter(page)')"/>
-        </xsl:if>
-        <xsl:if test="$hyphens='none'">
-            <!--
-                FIXME: make use of style element
-            -->
-            <xsl:message select="'hyphens:none could not be applied to target-counter(page)'"/>
+            <xsl:message select="concat(string-join($style,'; '),' could not be applied to target-counter(page)')"/>
         </xsl:if>
         <page-number ref-id="{@target}"
                      number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
@@ -1313,15 +1329,51 @@
                 <!--
                     FIXME: text-style not supported on page-number element
                 -->
-                <!--
                 <xsl:attribute name="text-style" select="concat('text-transform: -dotify-counter; -dotify-counter-style: ',@style)"/>
-                -->
-                <xsl:message select="concat('&quot;',@style,'&quot; counter style not supported for target-counter(page)')"/>
+                <xsl:message select="concat('&quot;',@style,'&quot; counter style could not be applied to target-counter(page)')"/>
             </xsl:if>
         </page-number>
     </xsl:template>
     
-    <xsl:template mode="block span td toc-entry"
+    <!--
+        set text-transform to "auto" on block with descendant -target-counter(page) with
+        text-transform ≠ "auto" (because page-number can not be contained within span)
+    -->
+    <xsl:template priority="1"
+                  mode="css:text-transform"
+                  as="xs:string?"
+                  match="css:box[@type='block']
+                           [css:box[@type='inline']
+                              //css:counter[@target][@name='page']
+                                  /ancestor::css:box[@type='inline']
+                                  /@css:text-transform
+                                     [last()]
+                                     [not(.='none')]]">
+        <xsl:sequence select="'auto'"/>
+    </xsl:template>
+    
+    <xsl:template priority="1"
+                  mode="block"
+                  match="css:box[@type='block']
+                           [css:box[@type='inline']
+                              //css:counter[@target][@name='page']
+                                  /ancestor::css:box[@type='inline']
+                                  /@css:text-transform
+                                     [last()]
+                                     [not(.='none')]]">
+        <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:next-match>
+            <!--
+                for child css:box[@type='inline'] matcher
+            -->
+            <xsl:with-param name="pending-text-transform" tunnel="yes" select="$text-transform"/>
+        </xsl:next-match>
+    </xsl:template>
+    <!--
+        leader()
+    -->
+    
+    <xsl:template mode="block td toc-entry"
                   match="css:leader">
         <leader pattern="{@pattern}" position="100%" align="right"/>
     </xsl:template>
