@@ -252,7 +252,10 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-css</artifactId>
-                <version>1.10.1</version>
+                <!--
+                    depends on latest on master
+                -->
+                <version>1.11.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.libs</groupId>

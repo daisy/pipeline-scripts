@@ -2,12 +2,9 @@ package org.daisy.pipeline.braille.dotify.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
 import cz.vutbr.web.css.CSSProperty;
@@ -213,9 +210,6 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	private static class PreTranslatedBrailleTranslator implements BrailleTranslator {
 		
 		private PreTranslatedBrailleTranslator() {}
-		
-		private final static Splitter.MapSplitter CSS_PARSER
-		= Splitter.on(';').omitEmptyStrings().withKeyValueSeparator(Splitter.on(':').limit(2).trimResults());
 		
 		public BrailleTranslatorResult translate(Translatable input) throws TranslationException {
 			String braille = "";

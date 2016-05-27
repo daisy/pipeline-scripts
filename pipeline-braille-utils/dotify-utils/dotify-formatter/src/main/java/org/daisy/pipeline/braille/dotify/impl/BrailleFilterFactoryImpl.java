@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.dotify.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,8 +14,7 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 import static com.google.common.collect.Iterables.size;
-import static com.google.common.collect.Iterators.concat;
-import static com.google.common.collect.Iterators.singletonIterator;
+import static com.google.common.collect.Iterables.concat;
 
 import cz.vutbr.web.css.Term;
 import cz.vutbr.web.css.TermFunction;
@@ -261,35 +261,57 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 	
 	/**
 	 * Convert Translatable specification to text + CSS style. Text attributes are assumed to
-	 * contain only CSS or special variable assignments/tests. CSS inheritance is assumed to have
-	 * been performed already.
+	 * contain only CSS or special variable assignments/tests. Computation of the text-transform
+	 * property is assumed to have been performed already.
 	 */
 	protected static Iterable<CSSStyledText> cssStyledTextFromTranslatable(Translatable specification) {
-		String text = specification.getText();
-		boolean hyphenating = specification.isHyphenating();
-		TextAttribute attributes = specification.getAttributes();
-		if (attributes == null)
-			return handleVariables(Optional.of(new CSSStyledText(text, hyphenating ? "hyphens:auto" : null)).asSet());
-		else {
-			List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
-			Iterator<TextAttribute> attrs = flattenAttributes(attributes);
-			int i = 0;
-			while (attrs.hasNext()) {
-				TextAttribute attr = attrs.next();
-				String segment = text.substring(i, i + attr.getWidth());
-				String style = attr.getDictionaryIdentifier();
-				if (hyphenating) {
-					// FIXME: add hyphens declaration through braille-css model
-					if (style == null || style.isEmpty())
-						style = "hyphens: auto";
-					else
-						style += "; hyphens: auto"; }
-				segments.add(new CSSStyledText(segment, style));
-				i += attr.getWidth(); }
-			if (i != text.length())
-				throw new RuntimeException("Coding error");
-			return handleCounterStyles(handleVariables(segments)); }
+		return handleCounterStyles(
+			handleVariables(
+				cssStyledTextFromTranslatable(
+					specification.getText(),
+					specification.getAttributes(),
+					specification.isHyphenating(),
+					null)));
 	}
+	
+	private static Iterable<CSSStyledText> cssStyledTextFromTranslatable(String text,
+	                                                                     TextAttribute attributes,
+	                                                                     boolean hyphenating,
+	                                                                     SimpleInlineStyle parentStyle) {
+		if (attributes != null && attributes.getWidth() != text.length())
+			throw new RuntimeException("Coding error");
+		SimpleInlineStyle style; {
+			String s = attributes != null ? attributes.getDictionaryIdentifier() : null;
+			if (hyphenating) {
+				// FIXME: add hyphens declaration through braille-css model
+				if (s == null || s.isEmpty())
+					s = "hyphens: auto";
+				else
+					s += "; hyphens: auto"; }
+			if (s == null && parentStyle == null)
+				style = null;
+			else
+				style = new SimpleInlineStyle(s != null ? s : "", parentStyle); }
+		if (attributes != null && attributes.hasChildren())
+			return cssStyledTextFromTranslatable(text, attributes.iterator(), false, style);
+		else
+			return Collections.singleton(new CSSStyledText(text, style));
+	}
+	
+	private static Iterable<CSSStyledText> cssStyledTextFromTranslatable(String text,
+	                                                                     Iterator<TextAttribute> attributes,
+	                                                                     boolean hyphenating,
+	                                                                     SimpleInlineStyle parentStyle) {
+		if (attributes.hasNext()) {
+			TextAttribute a = attributes.next();
+			int w = a.getWidth();
+			return concat(cssStyledTextFromTranslatable(text.substring(0, w), a, hyphenating, parentStyle),
+			              cssStyledTextFromTranslatable(text.substring(w), attributes, hyphenating, parentStyle)); }
+		else
+			return empty;
+	}
+	
+	private static Iterable<CSSStyledText> empty = Optional.<CSSStyledText>absent().asSet();
 	
 	private static Iterable<CSSStyledText> handleVariables(Iterable<CSSStyledText> styledText) {
 		List<CSSStyledText> segments = new ArrayList<CSSStyledText>();
@@ -348,7 +370,7 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 							s.removeProperty("text-transform");
 						else
 							list.remove(0);
-						Term<?> counterStyle = s.getValue(TermFunction.class, "-dotify-counter-style", false);
+						Term<?> counterStyle = s.getValue(TermFunction.class, "-dotify-counter-style");
 						if (counterStyle instanceof TermFunction
 						    && ((TermFunction)counterStyle).getFunctionName().equals("symbols")) {
 							String system = null;
@@ -430,19 +452,5 @@ public class BrailleFilterFactoryImpl implements BrailleFilterFactory {
 		for (int i = 0; i < ((counterValue - 1) / symbols.size()); i++)
 			s += symbol;
 		return s;
-	}
-	
-	private static Iterator<TextAttribute> flattenAttributes(TextAttribute attributes) {
-		if (attributes.hasChildren())
-			return flattenAttributes(attributes.iterator());
-		else
-			return singletonIterator(attributes);
-	}
-	
-	private static Iterator<TextAttribute> flattenAttributes(Iterator<TextAttribute> attributes) {
-		if (attributes.hasNext())
-			return concat(flattenAttributes(attributes.next()), flattenAttributes(attributes));
-		else
-			return attributes;
 	}
 }

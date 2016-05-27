@@ -17,7 +17,7 @@
     <!-- Parameters -->
     <!-- ========== -->
     
-    <xsl:param name="braille-translator-query" as="xs:string" required="yes"/>
+    <xsl:param name="braille-translator-query" as="xs:string" required="yes"/> <!-- unused -->
     <xsl:param name="duplex" as="xs:string" required="yes"/>
     
     <!-- ====================== -->
@@ -961,17 +961,16 @@
         <xsl:param name="new-text-transform" as="xs:string?"/>
         <!--
             'text-transform:auto' corresponds with 'translate=""'. 'text-transform:none' corresponds
-            with 'translate="pre-translated-text-css"'. Other values of text-transform are currently
-            handled by translating prior to formatting when possible and otherwise (i.e. for content
-            generated while formatting) ignored. FIXME: make use of style elements.
+            with 'translate="pre-translated-text-css"'. Other values of text-transform are handled
+            through style elements and text-style attributes.
         -->
         <xsl:choose>
             <xsl:when test="not(exists($new-text-transform))"/>
-            <xsl:when test="$new-text-transform='auto' and not($text-transform='auto')">
-                <xsl:attribute name="translate" select="''"/>
-            </xsl:when>
-            <xsl:when test="not($new-text-transform='auto') and $text-transform='auto'">
+            <xsl:when test="$new-text-transform='none' and not($text-transform='none')">
                 <xsl:attribute name="translate" select="'pre-translated-text-css'"/>
+            </xsl:when>
+            <xsl:when test="not($new-text-transform='none') and $text-transform='none'">
+                <xsl:attribute name="translate" select="''"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -1306,8 +1305,16 @@
         -->
         <xsl:variable name="pending-text-transform" as="xs:string" select="($pending-text-transform,$text-transform)[1]"/>
         <xsl:variable name="style" as="xs:string*">
-            <xsl:if test="not($pending-text-transform=('auto','none'))">
-                <xsl:sequence select="concat('text-transform: ',$pending-text-transform)"/>
+            <xsl:variable name="text-transform" as="xs:string*">
+                <xsl:if test="matches(@style,re:exact($css:SYMBOLS_FN_RE))">
+                    <xsl:sequence select="'-dotify-counter'"/>
+                </xsl:if>
+                <xsl:if test="not($pending-text-transform=('auto','none'))">
+                    <xsl:sequence select="$pending-text-transform"/>
+                </xsl:if>
+            </xsl:variable>
+            <xsl:if test="exists($text-transform)">
+                <xsl:sequence select="concat('text-transform: ',string-join($text-transform,' '))"/>
             </xsl:if>
             <xsl:if test="exists($pending-hyphens) and not($pending-hyphens=$hyphens)">
                 <xsl:sequence select="concat('hyphens: ',$pending-hyphens)"/>
@@ -1315,22 +1322,19 @@
             <xsl:if test="@css:white-space">
                 <xsl:sequence select="concat('white-space:',@css:white-space)"/>
             </xsl:if>
+            <xsl:if test="matches(@style,re:exact($css:SYMBOLS_FN_RE))">
+                <xsl:sequence select="concat('-dotify-counter-style: ',@style)"/>
+            </xsl:if>
         </xsl:variable>
-        <xsl:if test="exists($style)">
-            <!--
-                FIXME: make use of text-style
-            -->
-            <xsl:message select="concat(string-join($style,'; '),' could not be applied to target-counter(page)')"/>
-        </xsl:if>
         <page-number ref-id="{@target}"
                      number-format="{if (@style=('roman', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha'))
                                     then @style else 'default'}">
-            <xsl:if test="matches(@style,re:exact($css:SYMBOLS_FN_RE))">
+            <xsl:if test="exists($style)">
                 <!--
                     FIXME: text-style not supported on page-number element
                 -->
-                <xsl:attribute name="text-style" select="concat('text-transform: -dotify-counter; -dotify-counter-style: ',@style)"/>
-                <xsl:message select="concat('&quot;',@style,'&quot; counter style could not be applied to target-counter(page)')"/>
+                <xsl:attribute name="text-style" select="string-join($style,'; ')"/>
+                <xsl:message select="concat(string-join($style,'; '),' could not be applied to target-counter(page)')"/>
             </xsl:if>
         </page-number>
     </xsl:template>
@@ -1396,13 +1400,15 @@
                 <xsl:sequence select="concat('hyphens: ',$pending-hyphens)"/>
             </xsl:if>
         </xsl:variable>
-        <xsl:if test="exists($style)">
-            <!--
-                FIXME: make use of text-style
-            -->
-            <xsl:message select="concat(string-join($style,'; '),' could not be applied to -obfl-evaluate(',@arg1,')')"/>
-        </xsl:if>
-        <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}"/>
+        <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}">
+            <xsl:if test="exists($style)">
+                <!--
+                    FIXME: text-style not supported on evaluate element
+                -->
+                <xsl:attribute name="text-style" select="string-join($style,'; ')"/>
+                <xsl:message select="concat(string-join($style,'; '),' could not be applied to -obfl-evaluate(',@arg1,')')"/>
+            </xsl:if>
+        </evaluate>
     </xsl:template>
     
     <xsl:template mode="block span"
@@ -1551,24 +1557,6 @@
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
         <xsl:param name="word-spacing" as="xs:integer" tunnel="yes"/>
-        <xsl:variable name="text" as="xs:string">
-            <xsl:choose>
-                <!--
-                    text-transform values 'none' and 'auto' are handled during formatting.
-                -->
-                <xsl:when test="$text-transform=('none','auto') or not($word-spacing=1)">
-                    <xsl:sequence select="$text"/>
-                </xsl:when>
-                <!--
-                    Other values are handled by translating prior to formatting.
-                -->
-                <xsl:otherwise>
-                    <xsl:sequence select="pf:text-transform($braille-translator-query,
-                                                            $text,
-                                                            concat('text-transform:',$text-transform))"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
         <xsl:variable name="text" as="xs:string" select="translate($text,'&#x2800;',' ')"/>
         <xsl:variable name="text" as="xs:string">
             <xsl:choose>
@@ -1609,17 +1597,19 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="not($word-spacing=1) and not($text-transform=('none','auto'))">
-                <!--
-                    text-transform has not been applied yet
-                -->
-                <style>
-                    <xsl:attribute name="name" select="concat('text-transform:',$text-transform)"/>
+            <!--
+                text-transform values 'none' and 'auto' are handled through the translate attribute.
+            -->
+            <xsl:when test="$text-transform=('none','auto')">
+                <xsl:value-of select="$text"/>
+            </xsl:when>
+            <!--
+                Other values are handled through the style element
+            -->
+            <xsl:otherwise>
+                <style name="text-transform:{$text-transform}">
                     <xsl:value-of select="$text"/>
                 </style>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="$text"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
