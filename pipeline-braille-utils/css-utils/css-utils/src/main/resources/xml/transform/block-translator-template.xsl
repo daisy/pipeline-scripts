@@ -149,6 +149,9 @@
 	<xsl:template mode="translate-style" match="css:rule">
 		<xsl:param name="mode" as="xs:string" tunnel="yes" select="'#default'"/>
 		<xsl:param name="source-style" as="element()*" tunnel="yes"/> <!-- css:property* -->
+		<!--
+		    FIXME: don't copy if empty
+		-->
 		<xsl:copy>
 			<xsl:sequence select="@selector"/>
 			<xsl:variable name="mode" as="xs:string" select="if (@selector='::before') then 'before'
@@ -346,6 +349,9 @@
 						<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>
 					</xsl:apply-templates>
 				</xsl:when>
+				<xsl:otherwise>
+					<xsl:sequence select="$block/css:block"/>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<css:string value="{string-join($translated-block/string(.),'')}"/>
