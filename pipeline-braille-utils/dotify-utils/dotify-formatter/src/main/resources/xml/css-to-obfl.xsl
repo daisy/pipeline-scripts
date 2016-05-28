@@ -293,13 +293,6 @@
                                                                 </xsl:element>
                                                             </xsl:when>
                                                             <xsl:otherwise>
-                                                                <xsl:if test="$volume-area='@end'">
-                                                                    <!--
-                                                                        toc-sequence is not supported within post-content, but we generate it anyway
-                                                                        and show a warning.
-                                                                    -->
-                                                                    <xsl:message>display:-obfl-toc not supported inside @end area.</xsl:message>
-                                                                </xsl:if>
                                                                 <xsl:variable name="before-first-toc" as="element()*">
                                                                     <xsl:for-each-group select="$current-group"
                                                                                         group-starting-with="css:box[@type='block' and @css:_obfl-toc]">
