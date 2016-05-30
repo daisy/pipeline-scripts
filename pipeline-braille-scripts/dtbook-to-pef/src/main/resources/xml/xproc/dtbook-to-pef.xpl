@@ -64,9 +64,6 @@
     <p:option name="show-print-page-numbers"/>
     <p:option name="force-braille-page-break"/>
     <p:option name="toc-depth"/>
-    <p:option name="ignore-document-title"/>
-    <p:option name="include-symbols-list"/>
-    <p:option name="choice-of-colophon"/>
     <p:option name="footnotes-placement"/>
     <p:option name="colophon-metadata-placement"/>
     <p:option name="rear-cover-placement"/>

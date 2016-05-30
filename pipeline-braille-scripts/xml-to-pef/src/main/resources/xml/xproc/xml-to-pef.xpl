@@ -463,29 +463,6 @@ content at the beginning of every other volume, include the following additional
 </p>
         </p:documentation>
     </p:option>
-    
-    <!-- ================= -->
-    <!-- Generated content -->
-    <!-- ================= -->
-    <p:option name="ignore-document-title" required="false" px:type="boolean" select="'false'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Ignore document title</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="include-symbols-list" required="false" px:type="boolean" select="'true'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Include symbols list</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="choice-of-colophon" required="false" px:type="string" select="''">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Choice of colophon</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    
     <!-- ==================== -->
     <!-- Placement of content -->
     <!-- ==================== -->
