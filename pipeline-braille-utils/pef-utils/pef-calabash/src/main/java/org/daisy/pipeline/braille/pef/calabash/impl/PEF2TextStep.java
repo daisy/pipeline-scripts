@@ -190,13 +190,14 @@ public class PEF2TextStep extends DefaultStep {
 							String textName = format.format(
 									Integer.parseInt(pefName.substring(prefix.length(), pefName.length() - postfix.length())));
 							convertPEF2Text(is,
-							                new File(textDir, textName + fileFormat.getFileExtension()),
+									new File(textDir, textName + fileFormat.getFileExtension()),
 									fileFormat);
 						}
 						is.close();
-						// TODO: clean up split PEF files.
+						if (!pefFile.delete()) pefFile.deleteOnExit();
 					}
 					pefStream.close();
+					if (!splitDir.delete()) splitDir.deleteOnExit();
 				}
 				return; }
 			catch (Exception e) {
