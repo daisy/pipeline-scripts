@@ -157,6 +157,10 @@ public class PEF2TextStep extends DefaultStep {
 							new File(textDir, singleVolumeName + fileFormat.getFileExtension()), fileFormat);
 				} else {
 					// Split PEF
+					pattern = pattern.replaceAll("'", "''")
+							.replaceAll("([0#\\.,;%\u2030\u00A4-]+)", "'$1'");
+					// Recalculate after replacement
+					match = pattern.indexOf("{}");
 					File splitDir = new File(textDir, "split");
 					splitDir.mkdir();
 					PEFFileSplitter splitter = new PEFFileSplitter(validatorFactory);
@@ -185,8 +189,10 @@ public class PEF2TextStep extends DefaultStep {
 							String pefName = pefFile.getName();
 							if (pefName.length() <= prefix.length() + postfix.length()
 							    || !pefName.substring(0, prefix.length()).equals(prefix)
-							    || !pefName.substring(pefName.length() - postfix.length()).equals(postfix))
+							    || !pefName.substring(pefName.length() - postfix.length()).equals(postfix)) {
+								is.close();
 								throw new RuntimeException("Coding error");
+							}
 							String textName = format.format(
 									Integer.parseInt(pefName.substring(prefix.length(), pefName.length() - postfix.length())));
 							convertPEF2Text(is,
