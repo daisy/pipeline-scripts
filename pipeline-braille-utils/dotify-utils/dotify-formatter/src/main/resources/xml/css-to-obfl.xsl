@@ -1455,15 +1455,16 @@
                 <xsl:sequence select="concat('hyphens: ',$pending-hyphens)"/>
             </xsl:if>
         </xsl:variable>
-        <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}">
-            <xsl:if test="exists($style)">
-                <!--
-                    FIXME: text-style not supported on evaluate element
-                -->
-                <xsl:attribute name="text-style" select="string-join($style,'; ')"/>
-                <xsl:message select="concat(string-join($style,'; '),' could not be applied to -obfl-evaluate(',@arg1,')')"/>
-            </xsl:if>
-        </evaluate>
+        <xsl:choose>
+            <xsl:when test="exists($style)">
+                <style name="{string-join($style,'; ')}">
+                    <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}"/>
+                </style>
+            </xsl:when>
+            <xsl:otherwise>
+                <evaluate expression="{substring(@arg1,2,string-length(@arg1)-2)}"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template mode="block span"
