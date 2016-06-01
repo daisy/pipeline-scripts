@@ -375,10 +375,7 @@
             <dependency>
                 <groupId>org.daisy.libs</groupId>
                 <artifactId>hyphen</artifactId>
-                <!--
-                    depends on https://github.com/snaekobbi/libhyphen-nar/commit/1767865b46fbd076a3e7ee7c4a9bed6e95ab3d26
-                -->
-                <version>2.8.8-SNAPSHOT</version>
+                <version>2.8.8</version>
                 <type>nar</type>
             </dependency>
         </dependencies>

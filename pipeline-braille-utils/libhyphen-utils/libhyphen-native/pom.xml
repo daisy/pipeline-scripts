@@ -60,7 +60,7 @@
                 <artifactItem>
                   <groupId>org.daisy.libs</groupId>
                   <artifactId>hyphen</artifactId>
-                  <classifier>i586-mingw32-gpp-executable</classifier>
+                  <classifier>i586-mingw32msvc-gpp-executable</classifier>
                   <type>nar</type>
                 </artifactItem>
                 <artifactItem>
@@ -136,7 +136,7 @@
                 <Bundle-SymbolicName>org.daisy.pipeline.modules.braille.libhyphen-native-windows</Bundle-SymbolicName>
                 <Include-Resource>
                   OSGI-INF/libhyphen-native.xml=src/main/resources/OSGI-INF/libhyphen-native-windows.xml,
-                  native/windows/x86=target/dependency/bin/i586-mingw32-gpp,
+                  native/windows/x86=target/dependency/bin/i586-mingw32msvc-gpp,
                   native/windows/x86_64=target/dependency/bin/x86_64-w64-mingw32-gpp
                 </Include-Resource>
               </instructions>
