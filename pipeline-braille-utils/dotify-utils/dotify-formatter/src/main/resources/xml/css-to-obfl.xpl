@@ -430,7 +430,7 @@
                                                'padding-left',  'widows',                           'letter-spacing', '-obfl-table-row-spacing',
                                                'padding-right',                                                       '-obfl-preferred-empty-space',
                                                'padding-top',                                                         '-obfl-use-when-collection-not-empty',
-                                               'padding-bottom',
+                                               'padding-bottom',                                                      '-obfl-underline',
                                                'border-left',
                                                'border-right',
                                                'border-top',
@@ -451,6 +451,8 @@
                                                     then ($context/@css:_obfl-toc and $css:property/@value=('document','volume'))
                                                     else if ($css:property/@name='-obfl-use-when-collection-not-empty')
                                                     then matches($css:property/@value,re:exact($css:IDENT_RE))
+                                                    else if ($css:property/@name='-obfl-underline')
+                                                    then matches($css:property/@value,re:exact(re:or(($css:BRAILLE_CHAR_RE,'none'))))
                                                     else (
                                                       css:is-valid($css:property)
                                                       and not($css:property/@value=('inherit','initial'))
@@ -472,6 +474,8 @@
                                                   then '2'
                                                   else if ($property='-obfl-use-when-collection-not-empty')
                                                   then 'normal'
+                                                  else if ($property='-obfl-underline')
+                                                  then 'none'
                                                   else if ($property='text-transform')
                                                   then 'none'
                                                   else css:initial-value($property)"/>
