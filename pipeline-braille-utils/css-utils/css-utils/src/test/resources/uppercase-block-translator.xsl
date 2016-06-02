@@ -20,7 +20,7 @@
 		<xsl:param name="source-style" as="element()*" tunnel="yes"/>
 		<xsl:variable name="source-style" as="element()*">
 			<xsl:call-template name="css:computed-properties">
-				<xsl:with-param name="properties" select="$inline-properties"/>
+				<xsl:with-param name="properties" select="$text-properties"/>
 				<xsl:with-param name="context" select="$dummy-element"/>
 				<xsl:with-param name="cascaded-properties" tunnel="yes" select="css:deep-parse-stylesheet(@style)[not(@selector)]/css:property"/>
 				<xsl:with-param name="parent-properties" tunnel="yes" select="$source-style"/>
@@ -46,10 +46,7 @@
 	</xsl:template>
 	
 	<xsl:template match="css:property[@name='hyphens' and @value='auto']" mode="translate-style">
-		<xsl:param name="result-style" as="element()*" tunnel="yes"/>
-		<xsl:if test="$result-style[@name='hyphens' and not(@value='manual')]">
-			<css:property name="hyphens" value="manual"/>
-		</xsl:if>
+		<css:property name="hyphens" value="manual"/>
 	</xsl:template>
 	
 </xsl:stylesheet>

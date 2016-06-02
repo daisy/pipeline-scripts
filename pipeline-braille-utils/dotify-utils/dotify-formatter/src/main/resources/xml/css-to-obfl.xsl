@@ -915,6 +915,19 @@
                                 $n/self::text() and matches(string($n),'^[ \t\n\r&#x2800;&#x00AD;&#x200B;]*$')">
                     <xsl:value-of select="."/>
                 </xsl:when>
+                <!--
+                    FIXME: this is a hack to avoid ending up with spans around <br/> elements, but
+                    this should be fixed either in the pre-translator or in the Dotify white space
+                    normalizer.
+                -->
+                <xsl:when test="every $n in current-group() satisfies
+                                matches(string($n),'^[\s&#x2800;]*$')
+                                and not($n/descendant-or-self::css:string|
+                                        $n/descendant-or-self::css:counter|
+                                        $n/descendant-or-self::css:leader|
+                                        $n/descendant-or-self::css:custom-func)">
+                    <xsl:apply-templates mode="#current" select="current-group()"/>
+                </xsl:when>
                 <xsl:otherwise>
                     <xsl:variable name="new-text-transform" as="xs:string" select="($pending-text-transform,$text-transform)[1]"/>
                     <xsl:variable name="new-hyphens" as="xs:string" select="($pending-hyphens,$hyphens)[1]"/>

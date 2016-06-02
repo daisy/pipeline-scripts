@@ -25,7 +25,7 @@
     <!-- <module>liblouis-native</module> -->
     <module>liblouis-formatter</module>
     <!-- <module>liblouis-mathml</module> -->
-    <!-- <module>liblouis-utils</module> -->
+    <module>liblouis-utils</module>
   </modules>
   
   <build>

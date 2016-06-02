@@ -33,7 +33,7 @@
     </x:context>
     <x:expect label="result">
       <_ style="text-transform: none">
-      <doc xml:lang="en">         ⠋⠕⠕<br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line }}"/>⠃⠜       </doc>
+      <doc xml:lang="en">         ⠋⠕⠕<br style="::before {{ content: &quot;&#xA;&quot;; white-space: pre-line; text-transform: auto }}"/>⠃⠜       </doc>
       </_>
     </x:expect>
   </x:scenario>

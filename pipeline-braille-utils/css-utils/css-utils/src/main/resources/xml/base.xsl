@@ -346,6 +346,9 @@
         </xsl:if>
     </xsl:function>
     
+    <!--
+        TODO: also parse content lists
+    -->
     <xsl:template name="css:deep-parse-stylesheet" as="element()*"> <!-- css:rule*|css:property* -->
         <xsl:param name="stylesheet" as="xs:string?" required="yes"/>
         <xsl:param name="recursive-call" as="xs:boolean" select="false()"/>
