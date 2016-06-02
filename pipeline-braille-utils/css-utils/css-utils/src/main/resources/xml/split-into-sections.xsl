@@ -22,7 +22,7 @@
 
             <xsl:choose>
                 <xsl:when test="not($split-before)">
-                    <xsl:copy-of select="."/>
+                    <xsl:apply-templates select="." mode="no-split"/>
                 </xsl:when>
                 <xsl:otherwise>
 
@@ -52,10 +52,16 @@
         </_>
     </xsl:template>
 
+    <xsl:template match="@*|node()" mode="no-split">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+
     <xsl:template match="@* | text()">
         <xsl:copy-of select="."/>
     </xsl:template>
-    <xsl:template match="@pxi:*"/>
+    <xsl:template match="@pxi:*" priority="2" mode="#all"/>
 
     <xsl:template match="node()">
         <xsl:param name="nodes" as="node()*"/>
@@ -89,7 +95,7 @@
 
                 <!-- only add xml:id to first copy of element -->
                 <xsl:if test=". intersect $nodes">
-                    <xsl:copy-of select="@xml:id"/>
+                    <xsl:apply-templates select="@xml:id"/>
                 </xsl:if>
 
                 <xsl:apply-templates select="node()">
