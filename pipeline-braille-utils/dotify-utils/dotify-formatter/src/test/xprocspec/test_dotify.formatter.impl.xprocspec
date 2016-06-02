@@ -7479,5 +7479,251 @@
   </x:expect>
 </x:scenario>
 
+<x:scenario label="block-underline">
+  <x:documentation>
+    Tests underlining of blocks with various properties and contents.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" duplex="false" page-width="15" page-height="50">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <block underline-style="solid">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid">
+              ⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   padding-left="2">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   margin-left="2">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   align="center">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   padding-right="2"
+                   align="center">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   first-line-indent="2">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   text-indent="2"
+                   first-line-indent="2">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   text-indent="2"
+                   first-line-indent="0">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   row-spacing="2">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   margin-bottom="1">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   padding-bottom="1">
+              ⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌ ⠌⠌⠌⠌⠌
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef version="2008-1" xmlns="http://www.daisy.org/ns/2008/pef">
+        <head>
+          <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume cols="15" rows="50" rowgap="0" duplex="false">
+            <section>
+              <page>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤</row>
+                <row>⠌⠌⠌⠌⠌</row>
+                <row>⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠀⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠀⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠀⠀⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row rowgap="4">⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row rowgap="4">⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row>⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row/>
+                <row>⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌⠌</row>
+                <row>⠌⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</row>
+                <row/>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="block-underline-styles">
+  <x:documentation>
+    Tests various combinations of underline-style, underline-align and underline-width.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" duplex="false" page-width="15" page-height="15">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <block underline-style="solid"
+                   underline-align="center">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   underline-align="inner">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   underline-align="outer">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   underline-align="inner"
+                   underline-width="2">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   underline-align="outer"
+                   underline-width="2">
+              ⠌⠌⠌⠌
+            </block>
+            <block underline-style="solid"
+                   underline-width="3">
+              ⠌⠌⠌⠌
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef version="2008-1" xmlns="http://www.daisy.org/ns/2008/pef">
+        <head>
+          <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume cols="15" rows="15" rowgap="0" duplex="false">
+            <section>
+              <page>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠒⠒⠒⠒</row>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠉⠉⠉⠉</row>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠤⠤⠤⠤</row>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠛⠛⠛⠛</row>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠶⠶⠶⠶</row>
+                <row>⠌⠌⠌⠌</row>
+                <row>⠿⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
+<x:scenario label="block-underline-with-child-block" pending="xfail (Exception)">
+  <x:documentation>
+    Tests underlining of a block with a child block. Currently causes an error because the behavior is undefined.
+  </x:documentation>
+  <x:call>
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="main" duplex="false" page-width="15" page-height="15">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <sequence master="main">
+            <block underline-style="solid">
+              ⠌⠌⠌⠌
+              <block>
+                ⠌⠌⠌⠌
+              </block>
+            </block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+</x:scenario>
+
 </x:scenario>
 </x:description>

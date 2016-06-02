@@ -1268,38 +1268,40 @@
     
     <xsl:template mode="block-attr table-attr td-attr toc-entry-attr"
                   match="css:box[@type=('block','table','table-cell')]/@css:border-top|
-                         css:box[@type=('block','table','table-cell')]/@css:border-bottom">
+                         css:box[@type=('block','table','table-cell')]/@css:border-bottom|
+                         css:box[@type='block']/@css:_obfl-underline">
+        <xsl:variable name="name" select="replace(local-name(),'^_obfl-','')"/>
         <xsl:choose>
             <xsl:when test=".='none'">
-                <xsl:attribute name="{local-name()}-style" select="'none'"/>
+                <xsl:attribute name="{$name}-style" select="'none'"/>
             </xsl:when>
             <xsl:when test=".=('⠉','⠛','⠒','⠿','⠶','⠤')">
-                <xsl:attribute name="{local-name()}-style" select="'solid'"/>
+                <xsl:attribute name="{$name}-style" select="'solid'"/>
                 <xsl:choose>
                     <xsl:when test=".=('⠛','⠶')">
-                        <xsl:attribute name="{local-name()}-width" select="'2'"/>
+                        <xsl:attribute name="{$name}-width" select="'2'"/>
                     </xsl:when>
                     <xsl:when test=".='⠿'">
-                        <xsl:attribute name="{local-name()}-width" select="'3'"/>
+                        <xsl:attribute name="{$name}-width" select="'3'"/>
                     </xsl:when>
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test=".=('⠉','⠛')">
-                        <xsl:attribute name="{local-name()}-align"
-                                       select="if (local-name()='border-top') then 'outer' else 'inner'"/>
+                        <xsl:attribute name="{$name}-align"
+                                       select="if ($name='border-top') then 'outer' else 'inner'"/>
                     </xsl:when>
                     <xsl:when test=".=('⠶','⠤')">
-                        <xsl:attribute name="{local-name()}-align"
-                                       select="if (local-name()='border-top') then 'inner' else 'outer'"/>
+                        <xsl:attribute name="{$name}-align"
+                                       select="if ($name='border-top') then 'inner' else 'outer'"/>
                     </xsl:when>
                     <xsl:when test=".='⠒'">
-                        <xsl:attribute name="{local-name()}-align"
+                        <xsl:attribute name="{$name}-align"
                                        select="'center'"/>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message select="concat(local-name(),':',.,' not supported yet')"/>
+                <xsl:message select="concat(replace(local-name(),'^_','-'),':',.,' not supported yet')"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
