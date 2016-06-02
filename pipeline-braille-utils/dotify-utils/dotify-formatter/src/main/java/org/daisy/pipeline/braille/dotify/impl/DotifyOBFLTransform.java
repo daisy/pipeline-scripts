@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;

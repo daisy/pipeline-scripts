@@ -7,6 +7,12 @@ import java.util.regex.Matcher;
 
 import com.google.common.collect.ImmutableList;
 
+import cz.vutbr.web.css.CSSProperty;
+import cz.vutbr.web.css.TermInteger;
+
+import org.daisy.braille.css.BrailleCSSProperty.WordSpacing;
+import org.daisy.braille.css.SimpleInlineStyle;
+
 import org.daisy.dotify.api.translator.BrailleFilter;
 import org.daisy.dotify.api.translator.BrailleTranslator;
 import org.daisy.dotify.api.translator.BrailleTranslatorFactory;
@@ -19,6 +25,7 @@ import org.daisy.dotify.api.translator.TranslatorSpecification;
 
 import org.daisy.pipeline.braille.common.AbstractBrailleTranslator.util.DefaultLineBreaker;
 import org.daisy.pipeline.braille.common.BrailleTranslatorProvider;
+import org.daisy.pipeline.braille.common.CSSStyledText;
 import org.daisy.pipeline.braille.common.Provider;
 import static org.daisy.pipeline.braille.common.Provider.util.memoize;
 import org.daisy.pipeline.braille.common.Query;
@@ -101,8 +108,17 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	
 	private BrailleTranslatorFactory factory = new BrailleTranslatorFactoryImpl();
 	
+	/*
+	 * Mode for pre-translated text with support for text-level CSS and line
+	 * breaking according to CSS. Corresponds with translator query
+	 * `(input:braille)(input:text-css)(output:braille)`
+	 */
+	private final static String PRE_TRANSLATED_MODE = "pre-translated-text-css";
+	
 	private class BrailleTranslatorFactoryImpl implements BrailleTranslatorFactory {
 		public BrailleTranslator newTranslator(String locale, String mode) throws TranslatorConfigurationException {
+			if (PRE_TRANSLATED_MODE.equals(mode))
+				return new PreTranslatedBrailleTranslator();
 			Matcher m = QUERY.matcher(mode);
 			if (!m.matches())
 				throw new TranslatorConfigurationException();
@@ -155,6 +171,9 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		}
 	}
 	
+	/**
+	 * Same as above but backed by a LineBreakingFromStyledText instead of a BrailleFilter.
+	 */
 	private static class BrailleTranslatorFromBrailleTranslator implements BrailleTranslator {
 		
 		private final String mode;
@@ -181,6 +200,50 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 		
 		public String getTranslatorMode() {
 			return mode;
+		}
+	}
+	
+	/**
+	 * Same as above but assumes that input text exists of only braille and
+	 * white space characters. Supports CSS property "word-spacing".
+	 */
+	private static class PreTranslatedBrailleTranslator implements BrailleTranslator {
+		
+		private PreTranslatedBrailleTranslator() {}
+		
+		public BrailleTranslatorResult translate(Translatable input) throws TranslationException {
+			String braille = "";
+			int wordSpacing; {
+				wordSpacing = -1;
+				for (CSSStyledText styledText : cssStyledTextFromTranslatable(input)) {
+					SimpleInlineStyle style = styledText.getStyle();
+					int spacing = 1;
+					if (style != null) {
+						CSSProperty val = style.getProperty("word-spacing");
+						if (val != null) {
+							if (val == WordSpacing.length) {
+								spacing = style.getValue(TermInteger.class, "word-spacing").getIntValue();
+								if (spacing < 0) {
+									if (logger != null)
+										logger.warn("word-spacing: {} not supported, must be non-negative", val);
+									spacing = 1; }}
+									
+							// FIXME: assuming style is mutable and text.iterator() does not create copies
+							style.removeProperty("word-spacing"); }
+						for (String prop : style.getPropertyNames())
+							logger.warn("CSS property {} not supported", style.getSourceDeclaration(prop)); }
+					if (wordSpacing < 0)
+						wordSpacing = spacing;
+					else if (wordSpacing != spacing)
+						throw new RuntimeException("word-spacing must be constant, but both "
+						                           + wordSpacing + " and " + spacing + " specified");
+					braille += styledText.getText(); }
+				if (wordSpacing < 0) wordSpacing = 1; }
+			return new DefaultLineBreaker.LineIterator(braille, '\u2800', '\u2824', wordSpacing);
+		}
+		
+		public String getTranslatorMode() {
+			return PRE_TRANSLATED_MODE;
 		}
 	}
 	

@@ -451,4 +451,97 @@
 		</x:expect>
 	</x:scenario>
 	
+	<!--
+	    do semi-colons between @-rules need to be supported?
+	-->
+	<x:scenario label="test_33" pending="not supported yet">
+		<x:call function="css:deep-parse-stylesheet">
+			<x:param select="'@page { size: 32 27; @bottom-center { content: none }; @bottom-left { content: none } }'"/>
+		</x:call>
+		<x:expect label="result">
+			<css:rule selector="@page">
+				<css:rule>
+					<css:property name="size" value="32 27"/>
+				</css:rule>
+				<css:rule selector="@bottom-center">
+					<css:property name="content" value="none"/>
+				</css:rule>
+				<css:rule selector="@bottom-left">
+					<css:property name="content" value="none"/>
+				</css:rule>
+			</css:rule>
+		</x:expect>
+	</x:scenario>
+	
+	<x:scenario label="test_34.1">
+		<x:call function="css:serialize-stylesheet">
+			<x:param>
+				<css:rule>
+					<css:property name="size" value="32 27"/>
+				</css:rule>
+				<css:rule selector="@bottom-center">
+					<css:property name="content" value="none"/>
+				</css:rule>
+			</x:param>
+		</x:call>
+		<x:expect label="result" select="'{ size: 32 27 } @bottom-center { content: none }'"/>
+	</x:scenario>
+	<x:scenario label="test_34.2">
+		<x:call function="css:serialize-stylesheet">
+			<x:param>
+				<css:rule selector="@page">
+					<css:rule selector=":left">
+						<css:rule>
+							<css:property name="size" value="32 27"/>
+						</css:rule>
+						<css:rule selector="@bottom-center">
+							<css:property name="content" value="none"/>
+						</css:rule>
+					</css:rule>
+				</css:rule>
+			</x:param>
+		</x:call>
+		<x:expect label="result" select="'@page:left { size: 32 27 @bottom-center { content: none } }'"/>
+	</x:scenario>
+	<x:scenario label="test_34.3">
+		<x:call function="css:serialize-stylesheet">
+			<x:param>
+				<css:rule selector="@page">
+					<css:rule>
+						<css:property name="size" value="32 27"/>
+					</css:rule>
+					<css:rule selector="@bottom-center">
+						<css:property name="content" value="none"/>
+					</css:rule>
+				</css:rule>
+			</x:param>
+		</x:call>
+		<x:expect label="result" select="'@page { size: 32 27 @bottom-center { content: none } }'"/>
+	</x:scenario>
+	<x:scenario label="test_34.4">
+		<x:call function="css:serialize-stylesheet">
+			<x:param>
+				<css:rule selector="@page">
+					<css:rule>
+						<css:rule>
+							<css:property name="size" value="32 27"/>
+						</css:rule>
+						<css:rule selector="@bottom-center">
+							<css:property name="content" value="none"/>
+						</css:rule>
+					</css:rule>
+					<css:rule selector=":left">
+						<css:rule>
+							<css:property name="size" value="32 27"/>
+						</css:rule>
+						<css:rule selector="@bottom-center">
+							<css:property name="content" value="none"/>
+						</css:rule>
+					</css:rule>
+				</css:rule>
+			</x:param>
+		</x:call>
+		<x:expect label="result" select="'@page { size: 32 27 @bottom-center { content: none } } @page:left { size: 32 27 @bottom-center { content: none } }'"/>
+	</x:scenario>
+	
 </x:description>

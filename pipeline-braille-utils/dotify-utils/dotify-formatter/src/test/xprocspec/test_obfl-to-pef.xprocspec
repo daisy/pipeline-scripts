@@ -482,4 +482,88 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="style" xfail="true">
+    <x:documentation>
+      Tests handling of text-transform through style elements and text-style attributes.
+      
+      Broken: text-style on evaluate does not work (Dotify bug).
+    </x:documentation>
+    <x:call step="pxi:test">
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="front" duplex="false" page-width="40" page-height="25">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <layout-master name="body" duplex="false" page-width="40" page-height="25">
+              <default-template>
+                <header>
+                  <field>
+                    <current-page number-format="default" text-style="text-transform: downshift"/>
+                  </field>
+                  <field>
+                    <string value="2" text-style="text-transform: downshift"/>
+                  </field>
+                  <field>
+                    <marker-reference marker="print-page" direction="forward" scope="page"
+                                      text-style="text-transform: downshift"/>
+                  </field>
+                </header>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <volume-template sheets-in-volume-max="1000">
+              <pre-content>
+                <sequence master="front">
+                  <block>
+                    <evaluate expression="(round $volume)"/><evaluate expression="(round $volumes)" text-style="text-transform: downshift"/>
+                  </block>
+                </sequence>
+              </pre-content>
+            </volume-template>
+            <sequence master="body">
+              <block>
+                1<style name="text-transform: downshift">2</style>
+                <marker class="print-page" value="3"/>
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+      <x:option name="text-transform" select="'(number-translator)'"/>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head>
+            <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="40" rows="25" rowgap="0" duplex="false">
+              <section>
+                <page>
+                  <row>⠼⠁⠂</row>
+                </page>
+              </section>
+              <section>
+                <page>
+                  <row>⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒</row>
+                  <row>⠼⠁⠂</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

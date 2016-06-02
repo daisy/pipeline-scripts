@@ -52,6 +52,7 @@
     </xsl:template>
     
     <xsl:template name="apply-templates">
+        <xsl:param name="pending-properties" as="element()*" select="()" tunnel="yes"/>
         <xsl:variable name="this" as="element()" select="."/>
         <xsl:for-each-group select="*|text()"
                             group-adjacent="boolean(descendant-or-self::css:box[@type=('block','table','table-cell')])">
@@ -62,10 +63,8 @@
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="$this/ancestor-or-self::css:box[@type='inline'
-                                                                and not(descendant::css:box[@type=('block','table','table-cell')])]">
-                    <xsl:sequence select="current-group()"/>
-                </xsl:when>
-                <xsl:when test="not(
+                                                                and not(descendant::css:box[@type=('block','table','table-cell')])]
+                                or not(
                                   current-group()/
                                     (descendant-or-self::text()[not(matches(.,'^[\s&#x2800;]*$'))]
                                      |descendant-or-self::css:white-space
@@ -77,10 +76,18 @@
                                      |descendant-or-self::css:custom-func
                                      )[not(ancestor::css:box[@type='inline'
                                                              and not(descendant::css:box[@type=('block','table','table-cell')])])])">
-                    <xsl:sequence select="current-group()"/>
+                    <xsl:choose>
+                        <xsl:when test="exists($pending-properties)">
+                            <xsl:apply-templates select="current-group()"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:sequence select="current-group()"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <css:box type="inline">
+                        <xsl:sequence select="css:style-attribute(css:serialize-declaration-list($pending-properties))"/>
                         <xsl:sequence select="current-group()"/>
                     </css:box>
                 </xsl:otherwise>

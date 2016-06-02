@@ -1,18 +1,14 @@
 package org.daisy.pipeline.braille.pef;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 
 import org.daisy.pipeline.braille.common.Query;
 import org.daisy.pipeline.braille.common.Query.MutableQuery;
 import static org.daisy.pipeline.braille.common.Query.util.mutableQuery;
-import org.daisy.braille.api.factory.FactoryProperties;
 import org.daisy.braille.api.table.Table;
 
 public abstract class AbstractTableProvider implements TableProvider /*, org.daisy.braille.api.table.TableProvider */ {
@@ -21,6 +17,7 @@ public abstract class AbstractTableProvider implements TableProvider /*, org.dai
 	
 	private final Map<String,Table> tablesFromId = new HashMap<String,Table>();
 	
+	/*
 	public Collection<FactoryProperties> list() {
 		return new ImmutableList.Builder<FactoryProperties>().addAll(tablesFromId.values()).build();
 	}
@@ -33,6 +30,7 @@ public abstract class AbstractTableProvider implements TableProvider /*, org.dai
 		catch (NoSuchElementException e) {
 			return null; }
 	}
+	*/
 	
 	public final Iterable<Table> get(Query query) {
 		MutableQuery q = mutableQuery(query);

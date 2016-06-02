@@ -5,7 +5,7 @@ import org.daisy.braille.css.SimpleInlineStyle;
 public class CSSStyledText implements Cloneable {
 		
 	private final String text;
-	private final SimpleInlineStyle style;
+	private SimpleInlineStyle style;
 		
 	public CSSStyledText(String text, SimpleInlineStyle style) {
 		this.text = text;
@@ -17,7 +17,7 @@ public class CSSStyledText implements Cloneable {
 		if (style == null)
 			this.style = null;
 		else
-			this.style = new SimpleInlineStyle(style);
+			this.style = parseCSS.apply(style);
 	}
 		
 	public CSSStyledText(String text) {
@@ -35,7 +35,16 @@ public class CSSStyledText implements Cloneable {
 	
 	@Override
 	public Object clone() {
-		return new CSSStyledText(text, (SimpleInlineStyle)style.clone());
+		CSSStyledText clone; {
+			try {
+				clone = (CSSStyledText)super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new InternalError("coding error");
+			}
+		}
+		if (style != null)
+			clone.style = (SimpleInlineStyle)style.clone();
+		return clone;
 	}
 	
 	@Override
@@ -45,4 +54,12 @@ public class CSSStyledText implements Cloneable {
 		else
 			return text + "{" + style + "}";
 	}
+	
+	// TODO: Does this need to be evicted? There is an infinite number of
+	// distinct styles due to things like "-dotify-def: tmp_d52242e3"
+	private static Memoizing<String,SimpleInlineStyle> parseCSS = new Memoizing.util.CloningMemoizing<String,SimpleInlineStyle>() {
+		protected SimpleInlineStyle _apply(String style) {
+			return new SimpleInlineStyle(style);
+		}
+	};
 }

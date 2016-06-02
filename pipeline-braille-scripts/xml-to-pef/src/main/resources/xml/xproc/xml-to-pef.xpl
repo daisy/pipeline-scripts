@@ -35,12 +35,6 @@ influence on the cascading order.</p>
             <h2 px:role="name">Transformer query</h2>
         </p:documentation>
     </p:option>
-    <p:option name="ascii-table" required="false" px:type="string" select="''">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">ASCII braille table</h2>
-            <p px:role="desc" xml:space="preserve">The ASCII braille table, used for example to render BRF files.</p>
-        </p:documentation>
-    </p:option>
     <p:option name="include-preview" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Include preview</h2>
@@ -49,8 +43,26 @@ influence on the cascading order.</p>
     </p:option>
     <p:option name="include-brf" required="false" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Include BRF</h2>
-            <p px:role="desc" xml:space="preserve">Whether or not to include an ASCII version of the PEF.</p>
+            <h2 px:role="name">Include plain text file (BRF)</h2>
+            <p px:role="desc" xml:space="preserve">Whether or not to include a plain text ASCII version of the PEF.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="include-obfl" required="false" px:type="boolean" select="'false'">
+      <p:documentation>
+        <h2 px:role="name">Include OBFL</h2>
+        <p px:role="desc" xml:space="preserve">Keeps the intermediary OBFL-file for debugging.</p>
+      </p:documentation>
+    </p:option>
+    <p:option name="ascii-file-format" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Plain text (BRF) file format</h2>
+            <p px:role="desc" xml:space="preserve">The file format to store the plain text version.</p>
+        </p:documentation>
+    </p:option>
+    <p:option name="ascii-table" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">ASCII braille table</h2>
+            <p px:role="desc" xml:space="preserve">The ASCII braille table, used to render the PEF preview and, if no plain text file format was specified, the plain text version.</p>
         </p:documentation>
     </p:option>
     
@@ -451,29 +463,6 @@ content at the beginning of every other volume, include the following additional
 </p>
         </p:documentation>
     </p:option>
-    
-    <!-- ================= -->
-    <!-- Generated content -->
-    <!-- ================= -->
-    <p:option name="ignore-document-title" required="false" px:type="boolean" select="'false'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Ignore document title</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="include-symbols-list" required="false" px:type="boolean" select="'true'">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Include symbols list</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    <p:option name="choice-of-colophon" required="false" px:type="string" select="''">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-            <h2 px:role="name">Generated content: Choice of colophon</h2>
-            <p px:role="desc" xml:space="preserve">**Not implemented**</p>
-        </p:documentation>
-    </p:option>
-    
     <!-- ==================== -->
     <!-- Placement of content -->
     <!-- ==================== -->

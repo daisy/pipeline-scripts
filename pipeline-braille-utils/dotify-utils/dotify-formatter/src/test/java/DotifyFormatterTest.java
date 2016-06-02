@@ -184,7 +184,7 @@ public class DotifyFormatterTest {
 				throw new RuntimeException("Invalid input: \"" + text + "\"");
 			if (style != null
 			    &&style.getProperty("text-transform") == TextTransform.list_values
-			    && style.getValue("text-transform", false).toString().equals("downshift"))
+			    && style.getValue("text-transform").toString().equals("downshift"))
 				return translateNumbers(text, true);
 			return translateNumbers(text, false);
 		}

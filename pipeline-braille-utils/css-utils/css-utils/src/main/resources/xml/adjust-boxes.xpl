@@ -17,10 +17,11 @@
             root). Inline boxes must not have non-inline descendant or sibling boxes. Table-cell
             boxes must have a parent table box and table boxes must have only table-cell child
             boxes. All other nodes must have at least one inline box ancestor. Computed values of
-            'margin-left', 'margin-right', 'border-left', 'border-top', 'border-right',
-            'border-bottom' and 'text-indent' properties must be declared in css:margin-left,
-            css:margin-right, css:border-left, css:border-top, css:border-right, css:border-bottom
-            and css:text-indent attributes. Boxes must have no padding.
+            'margin-left', 'margin-right', 'padding-left', 'padding-right', 'border-left',
+            'border-top', 'border-right', 'border-bottom' and 'text-indent' properties must be
+            declared in css:margin-left, css:margin-right, css:padding-left, css:margin-right,
+            css:border-left, css:border-top, css:border-right, css:border-bottom and css:text-indent
+            attributes.
         </p:documentation>
     </p:input>
     

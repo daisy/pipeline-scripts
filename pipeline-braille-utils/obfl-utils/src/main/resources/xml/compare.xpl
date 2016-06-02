@@ -43,7 +43,7 @@
                             <xsl:attribute name="{name(.)}" select="concat('toc',index-of($toc_names,string(.)))"/>
                         </xsl:template>
                         <xsl:template match="@id|@ref-id|obfl:anchor/@item">
-                            <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.)))"/>
+                            <xsl:attribute name="{name(.)}" select="concat('id',index-of($ids,string(.))[1])"/>
                         </xsl:template>
                     </xsl:stylesheet>
                 </p:inline>

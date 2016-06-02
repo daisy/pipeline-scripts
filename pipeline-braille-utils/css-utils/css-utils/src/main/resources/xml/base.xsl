@@ -826,18 +826,14 @@
         <xsl:param name="base" as="xs:string?" select="()"/>
         <xsl:choose>
             <xsl:when test="not(@selector) and exists($base)">
-                <xsl:sequence select="concat(
-                                        $base,
-                                        ' { ',
-                                        if (@style)
-                                          then string(@style)
-                                          else css:serialize-declaration-list(*),
-                                        ' }')"/>
+                <xsl:sequence select="if (@style)
+                                      then concat($base,' { ',string(@style),' }')
+                                      else css:serialize-stylesheet(*,$base)"/>
             </xsl:when>
             <xsl:when test="not(@selector)">
                 <xsl:sequence select="if (@style)
                                       then string(@style)
-                                      else css:serialize-declaration-list(*)"/>
+                                      else css:serialize-stylesheet(*,(),false())"/>
             </xsl:when>
             <xsl:when test="exists($base) and not(matches(@selector,'^:'))">
                 <xsl:sequence select="concat(
@@ -889,7 +885,7 @@
     </xsl:template>
     
     <xsl:template match="css:string[@name][not(@target)]" mode="css:serialize" as="xs:string">
-        <xsl:sequence select="concat('string(',@name,')')"/>
+        <xsl:sequence select="concat('string(',@name,if (@scope) then concat(', ', @scope) else '',')')"/>
     </xsl:template>
     
     <xsl:template match="css:counter" mode="css:serialize" as="xs:string">
@@ -932,6 +928,14 @@
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
         <xsl:param name="base" as="xs:string?"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules,$base,true())"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-stylesheet" as="xs:string">
+        <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
+        <xsl:param name="base" as="xs:string?"/>
+        <xsl:param name="top" as="xs:boolean"/>
+        <xsl:variable name="top" as="xs:boolean" select="$top and not(exists($base))"/>
         <xsl:variable name="serialized-declarations" as="xs:string*">
             <xsl:apply-templates mode="css:serialize"
                                  select="$rules[(self::css:rule and not(@selector)) or self::css:property]"/>
@@ -962,7 +966,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:if test="exists($serialized-declarations)">
-                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)))
+                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)) and $top)
                                               then concat('{ ',$serialized-declarations,' }')
                                               else $serialized-declarations"/>
                     </xsl:if>
