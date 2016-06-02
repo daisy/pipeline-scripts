@@ -236,7 +236,7 @@
             <dependency>
                 <groupId>org.daisy.braille</groupId>
                 <artifactId>braille-utils.impl</artifactId>
-                <version>3.0.0-alpha</version>
+                <version>3.0.0-beta</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.braille</groupId>
