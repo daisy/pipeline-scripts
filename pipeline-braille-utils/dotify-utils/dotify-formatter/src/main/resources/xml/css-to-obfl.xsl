@@ -986,7 +986,7 @@
     
     <xsl:template name="obfl:hyphenate" as="attribute()?"> <!-- @hyphenate? -->
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
-        <xsl:param name="new-hyphens" as="xs:string?" tunnel="yes"/>
+        <xsl:param name="new-hyphens" as="xs:string?"/>
         <!--
             'hyphens:auto' corresponds with 'hyphenate="true"'. 'hyphens:manual' corresponds with
             'hyphenate="false"'. For 'hyphens:none' all SHY and ZWSP characters are removed from the
