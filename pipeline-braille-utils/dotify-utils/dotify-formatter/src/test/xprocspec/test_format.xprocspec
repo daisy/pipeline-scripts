@@ -9404,7 +9404,7 @@
         <x:document type="inline">
           <doc style="{ text-transform: none }
                        @page { size: 20 10 }
-                       @volume { @begin { content: flow(front); @page { size: 10 5 }}}">
+                       @volume:first { @begin { content: flow(front); @page { size: 10 5 }}}">
             <front style="display: block; flow: front">
               ⠤⠤⠤⠤⠤
               <toc style="{ display: block } @page { size: 10 10 }">
@@ -9442,7 +9442,7 @@
               <footer/>
             </default-template>
           </layout-master>
-          <volume-template sheets-in-volume-max="1000">
+          <volume-template use-when="(= $volume 1)" sheets-in-volume-max="1000">
             <pre-content>
               <sequence master="front">
                 <block> ⠤⠤⠤⠤⠤ </block>
