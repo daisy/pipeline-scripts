@@ -14,11 +14,21 @@
     </encoder>
   </appender>
   
-  <root level="WARN">
-    <appender-ref ref="TEST_LOG"/>
-  </root>
+  <appender name="EVENTBUS" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>    | %-5level | %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <logger name="org.daisy.maven.xproc.pipeline.MessageEventListener" level="INFO" additivity="false">
+    <appender-ref ref="EVENTBUS"/>
+  </logger>
   
   <logger name="org.daisy" level="DEBUG"/>
   <logger name="com.xmlcalabash" level="DEBUG"/>
+  
+  <root level="WARN">
+    <appender-ref ref="TEST_LOG"/>
+  </root>
   
 </configuration>
