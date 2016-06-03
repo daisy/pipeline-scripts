@@ -70,10 +70,10 @@
 		<xsl:variable name="texhyphj-version" select="/pom:project/pom:dependencyManagement
 		                                             /pom:dependencies/pom:dependency[pom:artifactId='texhyphj']
 		                                             /pom:version"/>
-		<xsl:text>DAISY Pipeline 2 Braille Modules v</xsl:text>
+		<xsl:text>v</xsl:text>
 		<xsl:value-of select="$version"/>
 		<xsl:text>&#10;</xsl:text>
-		<xsl:text>========================================&#10;&#10;</xsl:text>
+		<xsl:text>=======&#10;&#10;</xsl:text>
 		<xsl:text>Changes&#10;</xsl:text>
 		<xsl:text>-------&#10;</xsl:text>
 		<xsl:text>- ...&#10;&#10;</xsl:text>
@@ -96,7 +96,7 @@
 		<xsl:text>))&#10;</xsl:text>
 		<xsl:text>- dotify (api [</xsl:text>
 		<xsl:value-of select="$dotify.api-version"/>
-		<xsl:text>](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.api%2Fv</xsl:text>
+		<xsl:text>](https://github.com/brailleapps/dotify.api/releases/tag/releases%2Fv</xsl:text>
 		<xsl:value-of select="$dotify.api-version"/>
 		<xsl:text>), common&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
@@ -142,17 +142,17 @@
 		<xsl:text>- brailleutils (api&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
 		<xsl:value-of select="$braille-utils.api-version"/>
-		<xsl:text>](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv</xsl:text>
+		<xsl:text>](https://github.com/brailleapps/braille-utils.api/releases/tag/releases%2Fv</xsl:text>
 		<xsl:value-of select="$braille-utils.api-version"/>
 		<xsl:text>), impl&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
 		<xsl:value-of select="$braille-utils.impl-version"/>
-		<xsl:text>](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv</xsl:text>
+		<xsl:text>](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv</xsl:text>
 		<xsl:value-of select="$braille-utils.impl-version"/>
 		<xsl:text>), pef-tools&#10;</xsl:text>
 		<xsl:text>  [</xsl:text>
 		<xsl:value-of select="$braille-utils.pef-tools-version"/>
-		<xsl:text>](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv</xsl:text>
+		<xsl:text>](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv</xsl:text>
 		<xsl:value-of select="$braille-utils.pef-tools-version"/>
 		<xsl:text>))&#10;</xsl:text>
 		<xsl:text>- braille-css ([</xsl:text>
@@ -172,7 +172,7 @@
 		<xsl:text>))&#10;</xsl:text>
 		<xsl:text>- libhyphen ([</xsl:text>
 		<xsl:value-of select="$libhyphen-version"/>
-		<xsl:text>](https://github.com/bertfrees/libhyphen-nar/releases/tag/</xsl:text>
+		<xsl:text>](https://github.com/snaekobbi/libhyphen-nar/releases/tag/</xsl:text>
 		<xsl:value-of select="$libhyphen-version"/>
 		<xsl:text>)), jhyphen&#10;</xsl:text>
 		<xsl:text>  ([</xsl:text>
