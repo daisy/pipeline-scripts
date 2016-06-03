@@ -15,8 +15,9 @@
   </appender>
   
   <appender name="EVENTBUS" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
+    <encoder class="org.daisy.maven.xproc.pipeline.logging.ProgressMessageEncoder">
       <pattern>    | %-5level | %msg%n</pattern>
+      <skipIfOnlyProgress>true</skipIfOnlyProgress>
     </encoder>
   </appender>
   
