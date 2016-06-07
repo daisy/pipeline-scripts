@@ -53,6 +53,7 @@ public class PefUtilsTest {
 				mavenBundle("org.daisy.libs:saxon-he:?"),
 				// logging
 				logbackClassic(),
+				mavenBundle("org.daisy.pipeline:logging-appender:?"),
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"))

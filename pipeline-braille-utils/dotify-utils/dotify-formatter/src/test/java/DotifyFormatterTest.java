@@ -88,6 +88,7 @@ public class DotifyFormatterTest {
 				logbackClassic(),
 				mavenBundle("org.slf4j:jul-to-slf4j:?"),
 				mavenBundle("org.daisy.pipeline:logging-activator:?"),
+				mavenBundle("org.daisy.pipeline:logging-appender:?"),
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"),
