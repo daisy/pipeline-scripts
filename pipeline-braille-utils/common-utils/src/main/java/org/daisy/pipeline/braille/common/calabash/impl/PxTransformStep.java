@@ -83,7 +83,7 @@ public class PxTransformStep extends Eval {
 			Query query = query(getOption(_query).getString());
 			XProc xproc = null;
 			try {
-				for (Transform t : logSelect(query, provider, context))
+				for (Transform t : logSelect(query, provider, logger))
 					try {
 						xproc = t.asXProc();
 						break; }
