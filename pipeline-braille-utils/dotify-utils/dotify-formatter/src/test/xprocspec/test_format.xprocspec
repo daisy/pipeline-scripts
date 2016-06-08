@@ -9665,13 +9665,10 @@
       <x:input port="source">
         <x:document type="inline">
           <doc style="{ text-transform: none } @volume { @begin { content: flow(titlepage) }}">
-            <titlepage style="display: block; flow: titlepage">
-              <span style="::before {
-                             text-transform: auto;
-                             content: -obfl-evaluate('(round $volume)') }
-                           ::after {
-                             text-transform: downshift;
-                             content: -obfl-evaluate('(round $volumes)')"/>
+            <titlepage style="display: block; flow: titlepage; text-transform: auto">
+              1<span style="::after {
+                              text-transform: downshift;
+                              content: -obfl-evaluate('(round $volumes)') }"/>
             </titlepage>
             <body style="display: block">
               ⠤⠤⠤⠤⠤
@@ -9697,9 +9694,8 @@
             <pre-content>
               <sequence master="main">
                 <block translate="">
-                  <evaluate expression="(round $volume)"/>
-                  <style name="text-transform: downshift">
-                    <evaluate expression="(round $volumes)"/>
+                  1<style name="text-transform: downshift">
+                  <evaluate expression="(round $volumes)"/>
                   </style>
                 </block>
               </sequence>

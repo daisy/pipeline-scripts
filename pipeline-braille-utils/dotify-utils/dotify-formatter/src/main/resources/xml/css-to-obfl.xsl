@@ -1419,7 +1419,15 @@
                                   /@css:text-transform
                                      [last()]
                                      [not(.='none')]]">
-        <xsl:sequence select="'auto'"/>
+        <xsl:param name="specified-value" as="xs:boolean" select="false()"/>
+        <xsl:choose>
+            <xsl:when test="$specified-value">
+                <xsl:next-match/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="'auto'"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template priority="1"
@@ -1432,11 +1440,16 @@
                                      [last()]
                                      [not(.='none')]]">
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:variable name="specified-text-transform" as="xs:string?">
+            <xsl:apply-templates mode="css:text-transform" select=".">
+                <xsl:with-param name="specified-value" select="true()"/>
+            </xsl:apply-templates>
+        </xsl:variable>
         <xsl:next-match>
             <!--
                 for child css:box[@type='inline'] matcher
             -->
-            <xsl:with-param name="pending-text-transform" tunnel="yes" select="$text-transform"/>
+            <xsl:with-param name="pending-text-transform" tunnel="yes" select="($specified-text-transform,$text-transform)[1]"/>
         </xsl:next-match>
     </xsl:template>
     <!--
@@ -1499,7 +1512,15 @@
                                   /@css:text-transform
                                      [last()]
                                      [not(.='none')]]">
-        <xsl:sequence select="'auto'"/>
+        <xsl:param name="specified-value" as="xs:boolean" select="false()"/>
+        <xsl:choose>
+            <xsl:when test="$specified-value">
+                <xsl:next-match/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="'auto'"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template priority="1"
@@ -1514,11 +1535,16 @@
                                      [last()]
                                      [not(.='none')]]">
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
+        <xsl:variable name="specified-text-transform" as="xs:string?">
+            <xsl:apply-templates mode="css:text-transform" select=".">
+                <xsl:with-param name="specified-value" select="true()"/>
+            </xsl:apply-templates>
+        </xsl:variable>
         <xsl:next-match>
             <!--
                 for child css:box[@type='inline'] matcher
             -->
-            <xsl:with-param name="pending-text-transform" tunnel="yes" select="$text-transform"/>
+            <xsl:with-param name="pending-text-transform" tunnel="yes" select="($specified-text-transform,$text-transform)[1]"/>
         </xsl:next-match>
     </xsl:template>
     
