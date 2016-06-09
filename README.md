@@ -100,7 +100,7 @@ Release procedure
   git push origin v${VERSION}
   ```
 
-- Add the release notes to http://github.com/daisy/pipeline-mod-braille/releases/v${VERSION}.
+- Add a link to the release notes to http://github.com/daisy/pipeline-mod-braille/releases/v${VERSION}.
 
 See also
 --------

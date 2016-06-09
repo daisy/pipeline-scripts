@@ -12,7 +12,7 @@
 
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-bom</artifactId>
-    <version>1.9.14-SNAPSHOT</version>
+    <version>1.9.15-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>DAISY Pipeline 2 :: Braille Modules Bill Of Materials</name>
@@ -32,12 +32,12 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>common-utils</artifactId>
-                <version>5.0.2-SNAPSHOT</version>
+                <version>5.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-calabash</artifactId>
-                <version>2.5.2-SNAPSHOT</version>
+                <version>2.5.2</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -47,7 +47,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>css-utils</artifactId>
-                <version>3.1.0-SNAPSHOT</version>
+                <version>3.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -62,7 +62,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dotify-formatter</artifactId>
-                <version>1.11.0-SNAPSHOT</version>
+                <version>1.11.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -77,17 +77,17 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>dtbook-to-pef</artifactId>
-                <version>4.0.0-SNAPSHOT</version>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>epub3-to-pef</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>html-to-pef</artifactId>
-                <version>2.5.0-SNAPSHOT</version>
+                <version>2.5.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -103,19 +103,19 @@
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>libhyphen-native</artifactId>
                 <classifier>linux</classifier>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>libhyphen-native</artifactId>
                 <classifier>mac</classifier>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>libhyphen-native</artifactId>
                 <classifier>windows</classifier>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -135,12 +135,12 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-core</artifactId>
-                <version>4.1.1-SNAPSHOT</version>
+                <version>4.1.1</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-formatter</artifactId>
-                <version>2.1.2-SNAPSHOT</version>
+                <version>2.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -178,27 +178,27 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>liblouis-utils</artifactId>
-                <version>1.4.3-SNAPSHOT</version>
+                <version>1.4.3</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-calabash</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-core</artifactId>
-                <version>2.1.0-SNAPSHOT</version>
+                <version>2.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-saxon</artifactId>
-                <version>2.0.4-SNAPSHOT</version>
+                <version>2.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>pef-utils</artifactId>
-                <version>2.0.0-SNAPSHOT</version>
+                <version>2.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -218,7 +218,7 @@
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>
                 <artifactId>xml-to-pef</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.daisy.pipeline.modules.braille</groupId>

@@ -1,5 +1,94 @@
-DAISY Pipeline 2 Braille Modules v1.9.12
-========================================
+v1.9.14
+=======
+
+Changes
+-------
+- More control over BRF output with `ascii-file-format` option
+  (https://github.com/daisy/pipeline-mod-braille/issues/103)
+- Support for block underlining with `-obfl-underline` property
+  (https://github.com/braillespecs/obfl/issues/50, https://github.com/joeha480/dotify/pull/208,
+  https://github.com/brailleapps/dotify.api/pull/2)
+- Support for `@volume:last`
+- Support for table of contents in end area of volume
+  (https://github.com/braillespecs/obfl/issues/55)
+- Support `page` property on elements flowed into `@begin` and `@end` areas of volumes
+  (https://github.com/daisy/pipeline-mod-braille/issues/104)
+- Fixed behavior of padding (https://github.com/daisy/pipeline-mod-braille/issues/109,
+  https://github.com/snaekobbi/pipeline-mod-braille/issues/30)
+- Support for OBFL variables `$sheets-in-volume` and `$sheets-in-document`
+  (https://github.com/joeha480/dotify/issues/198, https://github.com/joeha480/dotify/pull/199)
+- Support for collecting information about flows with `-obfl-use-when-collection-not-empty` property
+  (https://github.com/joeha480/dotify/issues/200)
+- Support for `text-transform` on `-obfl-evaluate()` function
+  (https://github.com/daisy/pipeline-mod-braille/issues/114)
+- Support for hyphenation with Hyphen on Windows
+  (https://github.com/daisy/pipeline-mod-braille/issues/107)
+- Internal changes (https://github.com/joeha480/dotify/issues/118,
+  https://github.com/joeha480/dotify/issues/188, https://github.com/joeha480/dotify/pull/207, ...)
+- Bugfixes (https://github.com/daisy/pipeline-mod-braille/issues/50, ...)
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), liblouis-java
+  ([2.0.0](https://github.com/liblouis/liblouis-java/releases/tag/2.0.0))
+- **dotify** (**api** **[2.8.0**](https://github.com/brailleapps/dotify.api/releases/tag/releases%2Fv2.8.0), common
+  [2.0.2](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv2.0.2), hyphenator.impl
+  [2.0.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv2.0.1), translator.impl
+  [2.3.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv2.3.0), **formatter.impl**
+  [**2.4.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv2.4.0), text.impl
+  [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv2.0.0), task-api
+  [2.1.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.1.0), task-runner
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), task.impl
+  [2.4.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.4.0))
+- **brailleutils** (**api**
+  [**3.0.0**](https://github.com/brailleapps/braille-utils.api/releases/tag/releases%2Fv3.0.0), **impl**
+  [**3.0.0-beta**](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv3.0.0-beta), **pef-tools**
+  [**2.0.0-alpha**](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv2.0.0-alpha))
+- **braille-css** ([**1.11.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.11.0))
+- **jstyleparser** ([**1.20-p9**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p9))
+- jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
+- **libhyphen** ([**2.8.8**](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.8.8)), jhyphen
+  ([1.0.0](https://github.com/daisy/jhyphen/releases/tag/v1.0.0))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
+v1.9.13
+=======
+
+Changes
+-------
+- Support for non-standard hyphenation with Hyphen
+  (https://github.com/snaekobbi/pipeline-mod-braille/issues/55)
+- Internal changes
+- Bugfixes
+
+Components
+----------
+- liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
+  ([2.5.0](https://github.com/liblouis/liblouisutdml/releases/tag/v2.5.0)), liblouis-java
+  ([2.0.0](https://github.com/liblouis/liblouis-java/releases/tag/2.0.0))
+- **dotify** (**api** [**2.7.0**](https://github.com/brailleapps/dotify.api/releases/tag/releases%2Fv2.7.0), common
+  [2.0.2](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.common%2Fv2.0.2), hyphenator.impl
+  [2.0.1](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.hyphenator.impl%2Fv2.0.1), translator.impl
+  [2.3.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv2.3.0), **formatter.impl**
+  [**2.3.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv2.3.0), text.impl
+  [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.text.impl%2Fv2.0.0), task-api
+  [2.1.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.1.0), task-runner
+  [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), **task.impl**
+  [**2.4.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.4.0))
+- brailleutils (api
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+- **braille-css** ([**1.10.1**](https://github.com/snaekobbi/braille-css/releases/tag/1.10.1))
+- **jstyleparser** ([**1.20-p8**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p8))
+- jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+  ([1.0.0](https://github.com/daisy/jhyphen/releases/tag/v1.0.0))
+- texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
+
+v1.9.12
+=======
 
 Changes
 -------
@@ -24,18 +113,18 @@ Components
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), task.impl
   [2.3.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.3.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.9.1**](https://github.com/snaekobbi/braille-css/releases/tag/1.9.1))
 - **jstyleparser** ([**1.20-p7**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p7))
 - jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.11
-========================================
+v1.9.11
+=======
 
 Changes
 -------
@@ -68,18 +157,18 @@ Components
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), **task.impl**
   [**2.3.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.3.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.9.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.9.0))
 - **jstyleparser** ([**1.20-p6**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p6))
 - jsass ([4.1.0-p1](https://github.com/snaekobbi/jsass/releases/tag/))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.10
-========================================
+v1.9.10
+=======
 
 Changes
 -------
@@ -134,18 +223,18 @@ Components
   [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-runner%2Fv1.0.0), **task.impl**
   [**2.1.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.1.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.8.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.8.0))
 - jstyleparser ([1.20-p5](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p5))
 - **jsass** ([**4.1.0-p1**](https://github.com/snaekobbi/jsass/releases/tag/4.1.0-p1))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.9
-=======================================
+v1.9.9
+======
 
 Changes
 -------
@@ -178,17 +267,17 @@ Components
   [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.0.0), task.impl
   [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.7.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.7.0))
 - **jstyleparser** ([**1.20-p5**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p5))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.8
-=======================================
+v1.9.8
+======
 
 Changes
 -------
@@ -224,17 +313,17 @@ Components
   [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.0.0), task.impl
   [2.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.6.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.6.0))
 - **jstyleparser** ([**1.20-p4**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p4))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.7
-=======================================
+v1.9.7
+======
 
 Changes
 -------
@@ -260,17 +349,17 @@ Components
   [**2.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv2.0.0), **task.impl**
   [**2.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv2.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - braille-css ([1.4.0](https://github.com/snaekobbi/braille-css/releases/tag/1.4.0))
 - jstyleparser ([1.20-p3](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p3))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.6
-=======================================
+v1.9.6
+======
 
 Changes
 -------
@@ -286,7 +375,6 @@ Changes
   https://github.com/daisy/pipeline-mod-braille/issues/55)
 - Fixes in white space handling
 
-
 Components
 ----------
 - liblouis ([2.6.3](https://github.com/liblouis/liblouis/releases/tag/v2.6.3)), liblouisutdml
@@ -301,17 +389,17 @@ Components
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv1.0.0), **task.impl**
   [**1.0.1**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv1.0.1))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.4.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.4.0))
 - **jstyleparser** ([**1.20-p3**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p3))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.5
-=======================================
+v1.9.5
+======
 
 Changes
 -------
@@ -334,17 +422,17 @@ Components
   [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task-api%2Fv1.0.0), **task.impl**
   [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.task.impl%2Fv1.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.3.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.3.0))
 - jstyleparser ([1.20-p2](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p2))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.4
-=======================================
+v1.9.4
+======
 
 Changes
 -------
@@ -366,17 +454,17 @@ Components
   [**1.1.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv1.1.0), formatter.impl
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv1.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - braille-css ([1.2.0](https://github.com/snaekobbi/braille-css/releases/tag/1.2.0))
 - jstyleparser ([1.20-p2](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p2))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.3
-=======================================
+v1.9.3
+======
 
 Changes
 -------
@@ -394,17 +482,17 @@ Components
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv1.0.0), formatter.impl
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv1.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.2.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.2.0))
 - jstyleparser ([1.20-p2](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p2))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.2
-=======================================
+v1.9.2
+======
 
 Changes
 -------
@@ -425,17 +513,17 @@ Components
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv1.0.0), formatter.impl
   [1.0.0](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv1.0.0))
 - brailleutils (api
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
-  [2.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
-  [1.0.0](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), impl
+  [2.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), pef-tools
+  [1.0.0](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.1.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.1.0))
 - **jstyleparser** ([**1.20-p2**](https://github.com/snaekobbi/jStyleParser/releases/tag/jStyleParser-1.20-p2))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9.1
-=======================================
+v1.9.1
+======
 
 Changes
 -------
@@ -466,17 +554,17 @@ Components
   [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.translator.impl%2Fv1.0.0), **formatter.impl**
   [**1.0.0**](https://github.com/joeha480/dotify/releases/tag/releases%2Fdotify.formatter.impl%2Fv1.0.0))
 - **brailleutils** (**api**
-  [**2.0.0**](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), **impl**
-  [**2.0.0**](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), **pef-tools**
-  [**1.0.0**](https://github.com/joeha480/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
+  [**2.0.0**](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.api%2Fv2.0.0), **impl**
+  [**2.0.0**](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.impl%2Fv2.0.0), **pef-tools**
+  [**1.0.0**](https://github.com/brailleapps/brailleutils/releases/tag/releases%2Fbraille-utils.pef-tools%2Fv1.0.0))
 - **braille-css** ([**1.0.0**](https://github.com/snaekobbi/braille-css/releases/tag/1.0.0))
 - **jstyleparser** ([**1.20-p1**](https://github.com/snaekobbi/jStyleParser/releases/tag/jstyleparser-1.20-p1))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
 
-DAISY Pipeline 2 Braille Modules v1.9
-=====================================
+v1.9
+====
 
 Components
 ----------
@@ -486,6 +574,6 @@ Components
 - brailleutils (core [1.2.0](https://github.com/daisy/osgi-libs/releases/tag/brailleutils-core-1.2.0), catalog
   [1.2.0](https://github.com/daisy/osgi-libs/releases/tag/brailleutils-catalog-1.2.0))
 - jstyleparser ([1.13](https://github.com/daisy/osgi-libs/releases/tag/jstyleparser-1.13.0-p1))
-- libhyphen ([2.6.0](https://github.com/bertfrees/libhyphen-nar/releases/tag/2.6.0)), jhyphen
+- libhyphen ([2.6.0](https://github.com/snaekobbi/libhyphen-nar/releases/tag/2.6.0)), jhyphen
   ([0.1.5](https://github.com/daisy/jhyphen/releases/tag/v0.1.5))
 - texhyphj ([1.2](https://github.com/joeha480/texhyphj/releases/tag/release-1.2))
