@@ -521,7 +521,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						int curPos = 0;
 						int curPosInBraille = 0;
 						
-						public String next(int limit, boolean force) {
+						public String next(final int limit, final boolean force) {
 							String next = "";
 							if (limit < 1)
 								return next;
@@ -615,6 +615,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 													catch (Exception ee) {
 														
 														// break if limit has been exceeded already
+														// FIXME: or simply always break if next is not empty? this moves the responsibility
+														// of white space normalisation to DefaultLineBreaker completely
 														if (available <= 0)
 															break segments;
 														
@@ -632,7 +634,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 														if (textAvailable < left)
 															break segments;
 														while (true) {
-															String line = lines.nextLine(textAvailable, force);
+															String line = lines.nextLine(textAvailable, force && next.isEmpty());
 															String replacementWord = line + lines.remainder();
 															if (updateInput(curPos, wordEnd, replacementWord)) {
 																wordEnd = curPos + replacementWord.length();
