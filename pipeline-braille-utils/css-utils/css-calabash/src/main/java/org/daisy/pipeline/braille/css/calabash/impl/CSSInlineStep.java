@@ -511,6 +511,7 @@ public class CSSInlineStep extends DefaultStep {
 		}
 	};
 	
+	// TODO: fix toString() functions of braille-css and jstyleparser
 	private static Function<Object,String> termToString = new Function<Object,String>() {
 		public String apply(Object term) {
 			if (term instanceof TermInteger) {
