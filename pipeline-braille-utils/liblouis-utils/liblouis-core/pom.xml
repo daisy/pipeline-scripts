@@ -112,10 +112,17 @@
         <configuration>
           <instructions>
             <Bundle-Activator>org.daisy.pipeline.braille.liblouis.impl.Activator</Bundle-Activator>
+            <_dsannotations>
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisHyphenatorJnaImplProvider,
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisTableJnaImplProvider,
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisTableRegistry,
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisTranslatorJnaImplProvider,
+              org.daisy.pipeline.braille.liblouis.impl.LiblouisutdmlProcessBuilderImpl,
+              org.daisy.pipeline.braille.liblouis.pef.impl.LiblouisDisplayTableProvider
+            </_dsannotations>
             <Service-Component>
               OSGI-INF/liblouisutdml-config-registry.xml
             </Service-Component>
-            <_dsannotations>*</_dsannotations>
           </instructions>
         </configuration>
         <executions>
