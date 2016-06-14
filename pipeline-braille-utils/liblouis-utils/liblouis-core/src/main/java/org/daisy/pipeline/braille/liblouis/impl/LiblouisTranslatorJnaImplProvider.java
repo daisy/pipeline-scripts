@@ -689,8 +689,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 											Hyphenator.LineIterator lines = lineBreaker.transform(word);
 											
 											// do a binary search for the optimal break point
-											String bestSolution = null;
-											int bestSolutionLength = 0;
+											Solution bestSolution = null;
 											int left = 1;
 											int right = word.length() - 1;
 											int textAvailable = available;
@@ -713,26 +712,34 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 													lineInBraille += "\u2824\u200b";
 													lineInBrailleLength++; }
 												if (lineInBrailleLength == available) {
-													bestSolution = lineInBraille;
-													bestSolutionLength = lineInBrailleLength;
+													bestSolution = new Solution(); {
+														bestSolution.line = line;
+														bestSolution.replacementWord = replacementWord;
+														bestSolution.lineInBraille = lineInBraille;
+														bestSolution.lineInBrailleLength = lineInBrailleLength; }
 													left = textAvailable + 1;
 													right = textAvailable - 1; }
 												else if (lineInBrailleLength < available) {
 													left = textAvailable + 1;
-													if (bestSolution == null || lineInBrailleLength > bestSolutionLength) {
-														bestSolution = lineInBraille;
-														bestSolutionLength = lineInBrailleLength; }}
+													if (bestSolution == null || lineInBrailleLength > bestSolution.lineInBrailleLength) {
+														bestSolution = new Solution(); {
+															bestSolution.line = line;
+															bestSolution.replacementWord = replacementWord;
+															bestSolution.lineInBraille = lineInBraille;
+															bestSolution.lineInBrailleLength = lineInBrailleLength; }}}
 												else
 													right = textAvailable - 1;
+												lines.reset();
 												textAvailable = (right + left) / 2;
 												if (textAvailable < left || textAvailable > right) {
 													if (bestSolution != null) {
-														next += bestSolution;
+														next += bestSolution.lineInBraille;
 														available = 0;
-														curPos = lineEnd;
-														curPosInBraille = lineEndInBraille; }
-													break segments; }
-												lines.reset(); }}}}}
+														if (updateInput(curPos, wordEnd, bestSolution.replacementWord))
+															updateBraille();
+														curPos += bestSolution.line.length();
+														curPosInBraille = positionInBraille(curPos); }
+													break segments; } }}}}}
 							if (foundSpace) {
 								int spaceEnd = segmentStart + m.end();
 								int spaceEndInBraille = positionInBraille(spaceEnd);
@@ -743,6 +750,13 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 									curPos = spaceEnd;
 									curPosInBraille = spaceEndInBraille; }}}}
 					return next;
+				}
+				
+				private static class Solution {
+					String line;
+					String replacementWord;
+					String lineInBraille;
+					int lineInBrailleLength;
 				}
 				
 				public boolean hasNext() {
