@@ -1258,14 +1258,16 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 										brailleWithWs[k] = textWithWs[k] + m.group(1);
 									else
 										wsLost = true; }
-							if (wsLost)
-								logger.warn("White space was lost in the output.\n"
-								            + "Input: " + Arrays.toString(textWithWs) + "\n"
-								            + "Output: " + Arrays.toString(brailleWithWs)); }
+							if (wsLost) {
+								logger.warn("White space was not preserved: " + joinedText.replaceAll("\\s+"," "));
+								logger.debug("White space was lost in the output.\n"
+								             + "Input: " + Arrays.toString(textWithWs) + "\n"
+								             + "Output: " + Arrays.toString(brailleWithWs)); }}
 						else {
-							logger.warn("Text segmentation was lost in the output. Falling back to fuzzy mode.\n"
-							            + "=> input segments: " + Arrays.toString(textWithWs) + "\n"
-							            + "=> output segments: " + Arrays.toString(Arrays.copyOf(brailleWithWs, l)));
+							logger.warn("Text segmentation was lost: " + joinedText.replaceAll("\\s+"," "));
+							logger.debug("Text segmentation was lost in the output. Falling back to fuzzy mode.\n"
+							             + "=> input segments: " + Arrays.toString(textWithWs) + "\n"
+							             + "=> output segments: " + Arrays.toString(Arrays.copyOf(brailleWithWs, l)));
 							brailleWithWs = null; }
 					}
 					
@@ -1332,10 +1334,11 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 							if (pre[l])
 								wsLost = true;
 							brailleWithWs[l++] = ""; }
-						if (wsLost)
-							logger.warn("White space was lost in the output.\n"
-							            + "Input: " + Arrays.toString(textWithWs) + "\n"
-							            + "Output: " + Arrays.toString(brailleWithWs));
+						if (wsLost) {
+							logger.warn("White space was not preserved: " + joinedText.replaceAll("\\s+"," "));
+							logger.debug("White space was lost in the output.\n"
+							             + "Input: " + Arrays.toString(textWithWs) + "\n"
+							             + "Output: " + Arrays.toString(brailleWithWs)); }
 					}
 				}
 			} catch (TranslationException e) {
