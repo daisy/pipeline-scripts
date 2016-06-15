@@ -166,7 +166,11 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <_dsannotations>*</_dsannotations>
+            <_dsannotations>
+              org.daisy.pipeline.braille.common.saxon.impl.TextTransformDefinition,
+              org.daisy.pipeline.braille.common.saxon.impl.MessageDefinition,
+              org.daisy.pipeline.braille.common.calabash.impl.PxTransformStep$StepProvider
+            </_dsannotations>
           </instructions>
         </configuration>
         <executions>
