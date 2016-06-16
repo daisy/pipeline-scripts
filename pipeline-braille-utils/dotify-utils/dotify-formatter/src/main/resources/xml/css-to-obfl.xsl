@@ -912,7 +912,9 @@
     
     <xsl:template mode="td"
                   match="css:box[@type='table']">
-        <xsl:message terminate="yes">Nested tables not supported.</xsl:message>
+        <xsl:call-template name="pf:error">
+            <xsl:with-param name="msg">Nested tables not supported.</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     
     <!-- ============ -->
@@ -1669,7 +1671,9 @@
             FIXME: what about css:string[@target] and css:box[@css:anchor] ?
         -->
         <xsl:if test="collection()//css:counter[@name='page'][@target=$id]">
-            <xsl:message terminate="yes">target-counter(page) referencing inline elements not supported.</xsl:message>
+            <xsl:call-template name="pf:error">
+                <xsl:with-param name="msg">target-counter(page) referencing inline elements not supported.</xsl:with-param>
+            </xsl:call-template>
         </xsl:if>
     </xsl:template>
     
@@ -1864,7 +1868,12 @@
     </xsl:template>
     
     <xsl:template name="coding-error">
-        <xsl:message terminate="yes">Coding error: unexpected <xsl:value-of select="pxi:get-path(.)"/> (mode was <xsl:apply-templates select="$pxi:print-mode" mode="#current"/>)</xsl:message>
+        <xsl:call-template name="pf:error">
+            <xsl:with-param name="msg">
+              Coding error: unexpected {} (mode was <xsl:apply-templates select="$pxi:print-mode" mode="#current"/>)
+            </xsl:with-param>
+            <xsl:with-param name="args" select="pxi:get-path(.)"/>
+        </xsl:call-template>
     </xsl:template>
     
     <xsl:function name="pxi:get-path" as="xs:string">
@@ -1954,7 +1963,9 @@
     
     <xsl:template mode="css:eval-volume-area-content-list"
                   match="*">
-        <xsl:message terminate="yes">Coding error</xsl:message>
+        <xsl:call-template name="pf:error">
+            <xsl:with-param name="msg">Coding error</xsl:with-param>
+        </xsl:call-template>
     </xsl:template>
     
     <!-- ======================== -->
