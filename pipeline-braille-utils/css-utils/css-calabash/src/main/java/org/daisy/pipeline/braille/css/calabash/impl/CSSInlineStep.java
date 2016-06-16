@@ -136,6 +136,10 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static final QName _default_stylesheet = new QName("default-stylesheet");
 	private static final QName _media = new QName("media");
+	private static final QName _attribute_name = new QName("attribute-name");
+	
+	private static final String DEFAULT_MEDIA = "embossed";
+	private static final QName DEFAULT_ATTRIBUTE_NAME = new QName("style");
 	
 	private CSSInlineStep(XProcRuntime runtime, XAtomicStep step, final URIResolver resolver) {
 		super(runtime, step);
@@ -280,8 +284,9 @@ public class CSSInlineStep extends DefaultStep {
 					l.add(asURL(base.resolve(asURI(t.nextToken()))));
 				defaultSheets = toArray(l, URL.class);
 			}
-			Set<String> media = ImmutableSet.copyOf(Splitter.on(' ').omitEmptyStrings().split(getOption(_media, "embossed")));
-			resultPipe.write((new InlineCSSWriter(doc, runtime, network, defaultSheets, media)).getResult()); }
+			Set<String> media = ImmutableSet.copyOf(Splitter.on(' ').omitEmptyStrings().split(getOption(_media, DEFAULT_MEDIA)));
+			QName attributeName = getOption(_attribute_name, DEFAULT_ATTRIBUTE_NAME);
+			resultPipe.write((new InlineCSSWriter(doc, runtime, network, defaultSheets, media, attributeName)).getResult()); }
 		catch (Exception e) {
 			logger.error("css:inline failed", e);
 			throw new XProcException(step.getNode(), e); }
@@ -313,8 +318,6 @@ public class CSSInlineStep extends DefaultStep {
 		}
 	}
 	
-	private static final QName _style = new QName("style");
-	
 	// media print
 	private static final SupportedCSS printCSS = SupportedPrintCSS.getInstance();
 	private static DeclarationTransformer printDeclarationTransformer; static {
@@ -336,14 +339,18 @@ public class CSSInlineStep extends DefaultStep {
 	
 	private static class InlineCSSWriter extends TreeWriter {
 		
-		private final List<CascadedStyle> styles = new ArrayList<CascadedStyle>();
+		private final List<CascadedStyle> styles;
+		private final QName attributeName;
 		
 		public InlineCSSWriter(Document document,
 		                       XProcRuntime xproc,
 		                       NetworkProcessor network,
 		                       URL[] defaultSheets,
-		                       Set<String> media) throws Exception {
+		                       Set<String> media,
+		                       QName attributeName) throws Exception {
 			super(xproc);
+			this.styles = new ArrayList<CascadedStyle>();
+			this.attributeName = attributeName;
 			
 			URI baseURI = new URI(document.getBaseURI());
 			
@@ -473,7 +480,7 @@ public class CSSInlineStep extends DefaultStep {
 							if (volumeRule != null)
 								insertVolumeStyle(style, volumeRule, cs.pageRules); }}}
 				if (normalizeSpace(style).length() > 0) {
-					addAttribute(_style, style.toString().trim()); }
+					addAttribute(attributeName, style.toString().trim()); }
 				receiver.startContent();
 				for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling())
 					traverse(child);

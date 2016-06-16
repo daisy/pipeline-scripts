@@ -45,4 +45,10 @@
 		</p:documentation>
 	</p:option>
 	
+	<p:option name="attribute-name" required="false" select="'style'">
+		<p:documentation>
+			Name of attribute to use for inlined styles. Default name is 'style'.
+		</p:documentation>
+	</p:option>
+	
 </p:declare-step>
