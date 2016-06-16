@@ -59,7 +59,7 @@
             <p:empty/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="split-into-sections.xsl"/>
+            <p:document href="split.xsl"/>
         </p:input>
     </p:xslt>
     <p:filter select="/*/*"/>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet exclude-result-prefixes="#all" version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:css="http://www.daisy.org/ns/pipeline/braille-css">
+<xsl:stylesheet exclude-result-prefixes="#all" version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css">
 
     <xsl:output indent="yes"/>
 
@@ -18,7 +21,11 @@
             css:counter-increment-* are omitted on css:box elements with a part attribute equal to
             'middle' or 'last'.-->
         <_>
-            <xsl:variable name="split-before" select="//node()[@pxi:split-before='true' or (preceding::node()[1] | preceding-sibling::node()[1])/@pxi:split-after='true']" as="node()*"/>
+            <xsl:variable name="split-before" as="node()*"
+                          select="//node()[@pxi:split-before='true']|
+                                  //node()[for $self in . return
+                                           $self/preceding-sibling::node()[1]/descendant-or-self::node()
+                                                [following::node()[1] intersect $self][@pxi:split-after='true']]"/>
 
             <xsl:choose>
                 <xsl:when test="not($split-before)">
@@ -30,7 +37,9 @@
                     <xsl:for-each select="$split-before">
                         <xsl:variable name="position" select="position()"/>
                         <xsl:variable name="nodes"
-                            select="if (position() = 1) then preceding::node() else $split-before[$position - 1]/(following::node() | descendant-or-self::node()) intersect preceding::node()"/>
+                            select="if (position() = 1)
+                                    then (preceding::node()|ancestor::node())
+                                    else $split-before[$position - 1]/(following::node() | descendant-or-self::node()) intersect (preceding::node()|ancestor::node())"/>
                         <xsl:element name="{$doc/name()}">
                             <xsl:apply-templates select="$doc/@*"/>
                             <xsl:apply-templates select="$doc/node()">
@@ -54,7 +63,7 @@
 
     <xsl:template match="@*|node()" mode="no-split">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
+            <xsl:apply-templates select="@*|node()" mode="#current"/>
         </xsl:copy>
     </xsl:template>
 
@@ -70,9 +79,9 @@
 
                 <!-- if css:box => determine first/middle/last -->
                 <xsl:choose>
-                    <xsl:when test="self::css:box and (not(node()) or not(descendant-or-self::node() intersect $nodes) or . intersect $nodes or node()[1] intersect $nodes)">
+                    <xsl:when test="self::css:box and . intersect $nodes">
                         <xsl:apply-templates select="@* except @xml:id"/>
-                        <xsl:if test="not(node()[last()] intersect $nodes)">
+                        <xsl:if test="node()[last()][not(. intersect $nodes)]">
                             <!-- only add @part if the css:box is being split -->
                             <xsl:attribute name="part" select="'first'"/>
                         </xsl:if>
