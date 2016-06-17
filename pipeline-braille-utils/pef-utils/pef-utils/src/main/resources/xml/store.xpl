@@ -5,6 +5,7 @@
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                xmlns:html="http://www.w3.org/1999/xhtml"
                 exclude-inline-prefixes="#all"
                 type="pef:store" name="store" version="1.0">
     
@@ -122,8 +123,15 @@
             <px:message severity="DEBUG">
                 <p:with-option name="message" select="concat('Storing HTML preview as ''', $preview-href, '''')"/>
             </px:message>
-            <p:store indent="false" encoding="utf-8" method="xhtml" omit-xml-declaration="false"
-                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+            <p:store indent="false"
+                     encoding="utf-8"
+                     method="xhtml"
+                     omit-xml-declaration="false"
+                     doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+                     doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+                <!--
+                    cdata-section-elements="html:script"
+                -->
                 <p:with-option name="href" select="$preview-href"/>
             </p:store>
             <!--
