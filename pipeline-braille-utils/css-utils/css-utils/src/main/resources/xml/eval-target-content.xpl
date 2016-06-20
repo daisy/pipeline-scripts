@@ -26,7 +26,7 @@
         </p:documentation>
     </p:output>
     
-    <p:wrap-sequence wrapper="_"/>
+    <p:wrap-sequence wrapper="css:_"/>
     
     <p:xslt>
         <p:input port="stylesheet">
@@ -37,6 +37,6 @@
         </p:input>
     </p:xslt>
     
-    <p:filter select="/_/*"/>
+    <p:filter select="/css:_/*"/>
     
 </p:declare-step>

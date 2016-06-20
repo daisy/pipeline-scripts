@@ -65,7 +65,7 @@
     <p:identity name="input"/>
     
     <p:split-sequence test="/*[not(@css:flow[not(.='normal')])]"/>
-    <p:wrap-sequence wrapper="_" name="context"/>
+    <p:wrap-sequence wrapper="css:_" name="context"/>
     
     <p:for-each name="result">
         <p:iteration-source>

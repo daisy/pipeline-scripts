@@ -60,7 +60,7 @@
             </p:input>
             <p:with-option name="test" select="concat('position()&lt;',p:iteration-position())"/>
         </p:split-sequence>
-        <p:wrap-sequence wrapper="_" name="preceding-sections"/>
+        <p:wrap-sequence wrapper="css:_" name="preceding-sections"/>
         <p:insert match="/*" position="first-child">
             <p:input port="source">
                 <p:pipe step="current-section" port="result"/>

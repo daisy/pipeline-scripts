@@ -27,7 +27,7 @@
         </p:documentation>
     </p:output>
     
-    <p:wrap-sequence wrapper="_"/>
+    <p:wrap-sequence wrapper="css:_"/>
     
     <p:xslt>
         <p:input port="stylesheet">
@@ -41,6 +41,6 @@
     <p:delete match="@css:_id_[not(string(.)=(//css:text|//css:string|//css:counter|//css:content)/@target/string())]"/>
     <p:rename match="@css:_id_" new-name="css:id"/>
     
-    <p:filter select="/_/*"/>
+    <p:filter select="/css:_/*"/>
     
 </p:declare-step>
