@@ -107,7 +107,7 @@
     
     <px:message message="[progress px:dtbook-to-pef.convert 4 px:dtbook-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
-        <px:message message="[progress px:dtbook-to-pef.convert.viewport-math 1/$1]">
+        <px:message message="[progress px:dtbook-to-pef.convert.viewport-math 1/$1 *]">
             <p:with-option name="param1" select="p:iteration-size()"/>
         </px:message>
         <px:transform>
@@ -129,7 +129,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 29]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert 29 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -144,7 +144,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 55]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert 55 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -165,7 +165,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 84]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert 84 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>

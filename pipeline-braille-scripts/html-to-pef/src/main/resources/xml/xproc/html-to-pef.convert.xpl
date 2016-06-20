@@ -87,7 +87,7 @@
     
     <px:message cx:depends-on="parameters" message="[progress px:html-to-pef.convert 10 px:html-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
-        <px:message message="[progress px:html-to-pef.convert.viewport-math 1/$1]">
+        <px:message message="[progress px:html-to-pef.convert.viewport-math 1/$1 *]">
             <p:with-option name="param1" select="p:iteration-size()"/>
         </px:message>
         <px:transform>
@@ -106,7 +106,7 @@
             <p:output port="obfl">
                 <p:pipe step="obfl" port="result"/>
             </p:output>
-            <px:message message="[progress px:html-to-pef.convert 38] Transforming from XML with CSS to OBFL"/>
+            <px:message message="[progress px:html-to-pef.convert 38 *] Transforming from XML with CSS to OBFL"/>
             <px:transform name="obfl">
                 <p:with-option name="query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -114,7 +114,7 @@
                     <p:pipe port="result" step="parameters"/>
                 </p:input>
             </px:transform>
-            <px:message message="[progress px:html-to-pef.convert 38] Transforming from OBFL to PEF"/>
+            <px:message message="[progress px:html-to-pef.convert 38 *] Transforming from OBFL to PEF"/>
             <px:transform>
                 <p:with-option name="query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -128,7 +128,7 @@
             <p:output port="obfl">
                 <p:empty/>
             </p:output>
-            <px:message message="[progress px:html-to-pef.convert 76] Transforming from XML with inline CSS to PEF"/>
+            <px:message message="[progress px:html-to-pef.convert 76 *] Transforming from XML with inline CSS to PEF"/>
             <px:transform>
                 <p:with-option name="query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <p:with-option name="temp-dir" select="$temp-dir"/>

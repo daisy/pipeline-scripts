@@ -214,7 +214,7 @@
         
         <px:message cx:depends-on="opf" message="[progress px:epub3-to-pef.convert 10 px:epub3-to-pef.convert.viewport-math] Transforming MathML"/>
         <p:viewport match="math:math">
-            <px:message message="[progress px:epub3-to-pef.convert.viewport-math 1/$1]">
+            <px:message message="[progress px:epub3-to-pef.convert.viewport-math 1/$1 *]">
                 <p:with-option name="param1" select="p:iteration-size()"/>
             </px:message>
             <px:transform>
@@ -240,7 +240,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:epub3-to-pef.convert 25]"/>
+                <px:message message="[progress px:epub3-to-pef.convert 25 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -255,7 +255,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:epub3-to-pef.convert 36]"/>
+                <px:message message="[progress px:epub3-to-pef.convert 36 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -276,7 +276,7 @@
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:epub3-to-pef.convert 61]"/>
+                <px:message message="[progress px:epub3-to-pef.convert 61 *]"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
