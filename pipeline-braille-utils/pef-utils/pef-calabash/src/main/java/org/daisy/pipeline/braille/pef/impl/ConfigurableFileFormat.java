@@ -2,6 +2,7 @@ package org.daisy.pipeline.braille.pef.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +59,7 @@ public class ConfigurableFileFormat implements FileFormat {
 	private LineBreaks lineBreaks;
 	private PageBreaks pageBreaks;
 	private Padding padding;
+	private Charset charset;
 	private String fileExtension;
 	
 	private ConfigurableFileFormat(org.daisy.pipeline.braille.common.Provider<Query,Table> tableProvider) {
@@ -65,6 +67,7 @@ public class ConfigurableFileFormat implements FileFormat {
 		lineBreaks = DEFAULT_LINE_BREAKS;
 		pageBreaks = DEFAULT_PAGE_BREAKS;
 		padding = DEFAULT_PADDING;
+		charset = null;
 		fileExtension = DEFAULT_FILE_EXTENSION;
 	}
 	
@@ -160,6 +163,15 @@ public class ConfigurableFileFormat implements FileFormat {
 					padding = Padding.valueOf(((String)value).toUpperCase());
 					return; }}
 			throw new IllegalArgumentException("Unsupported value for pad: " + value);
+		} else if ("charset".equals(key)) {
+			if (value != null) {
+				if (value instanceof Charset) {
+					charset = (Charset)value;
+					return; }
+				else if (value instanceof String) {
+					charset = Charset.forName((String)value);
+					return; }}
+			throw new IllegalArgumentException("Unsupported value for charset: " + value);
 		} else if ("file-extension".equals(key)) {
 			if (value != null) {
 				if (value instanceof String) {
@@ -180,6 +192,8 @@ public class ConfigurableFileFormat implements FileFormat {
 			return pageBreaks;
 		else if ("pad".equals(key))
 			return padding;
+		else if ("charset".equals(key))
+			return charset;
 		else if ("file-extension".equals(key))
 			return fileExtension;
 		else
@@ -199,6 +213,9 @@ public class ConfigurableFileFormat implements FileFormat {
 			}
 			public Padding getPaddingStyle() {
 				return padding;
+			}
+			public Charset getCharset() {
+				return charset == null ? getTable().getPreferredCharset() : charset;
 			}
 			public BrailleConverter getTable() {
 				return brailleConverter;
