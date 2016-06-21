@@ -54,7 +54,9 @@
         <!--
             TODO: move to css:new-definition?
         -->
-        <xsl:if test="not($valid) and not($css:property/@value=('inherit','initial'))">
+        <xsl:if test="not($valid)
+                      and not($css:property/@value=('inherit','initial'))
+                      and not(css:is-inherited($css:property/@name))">
             <xsl:message select="concat($css:property/@name,': ',$css:property/@value,' not supported (display: ',$context/@type,')')"/>
         </xsl:if>
         <xsl:sequence select="$valid"/>

@@ -308,7 +308,7 @@
     
     <xsl:function name="css:is-inherited" as="xs:boolean">
         <xsl:param name="property" as="xs:string"/>
-        <xsl:sequence select="boolean(index-of($css:inherited-properties, $property))"/>
+        <xsl:sequence select="$property=$css:inherited-properties"/>
     </xsl:function>
     
     <xsl:function name="css:applies-to" as="xs:boolean">
