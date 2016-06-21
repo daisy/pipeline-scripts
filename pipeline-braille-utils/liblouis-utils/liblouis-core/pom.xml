@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.15-SNAPSHOT</version>
+    <version>1.9.15</version>
     <relativePath>../../../maven/parent</relativePath>
   </parent>
 
   <artifactId>liblouis-core</artifactId>
-  <version>4.1.2-SNAPSHOT</version>
+  <version>4.1.2</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: liblouis-utils :: liblouis-core</name>
