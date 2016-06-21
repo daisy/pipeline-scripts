@@ -88,6 +88,12 @@
     -->
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
+      <artifactId>liblouis-native</artifactId>
+      <classifier>linux</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>liblouis-tables</artifactId>
       <scope>test</scope>
     </dependency>

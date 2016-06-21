@@ -18,7 +18,7 @@
   <name>DP2 Braille Modules :: libhyphen-utils</name>
 
   <modules>
-    <!-- <module>libhyphen-core</module> -->
+    <module>libhyphen-core</module>
     <!-- <module>libhyphen-native</module> -->
     <!-- <module>libhyphen-saxon</module> -->
     <!-- <module>libhyphen-libreoffice-tables</module> -->
