@@ -13,16 +13,8 @@
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <style type="text/css">
-                    <xsl:comment>
-                        <xsl:value-of select="unparsed-text('pef-preview.css', 'utf-8')"/>
-                    </xsl:comment>
-                </style>
-                <script type="text/javascript">
-                    <xsl:comment> <!-- be careful with "minus-minus" in JS -->
-                        <xsl:value-of select="unparsed-text('pef-preview.js', 'utf-8')"/>
-                    </xsl:comment>
-                </script>
+                <link rel="stylesheet" type="text/css" href="pef-preview.css"/>
+                <script type="text/javascript" href="pef-preview.js"/>
             </head>
             <body>
                 <div id="header">

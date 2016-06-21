@@ -129,9 +129,6 @@
                      omit-xml-declaration="false"
                      doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
                      doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-                <!--
-                    cdata-section-elements="html:script"
-                -->
                 <p:with-option name="href" select="$preview-href"/>
             </p:store>
             <!--
@@ -151,6 +148,14 @@
             <px:copy-resource fail-on-error="true" cx:depends-on="mkdir">
                 <p:with-option name="href" select="resolve-uri('../odt2braille8.ttf')"/>
                 <p:with-option name="target" select="resolve-uri('odt2braille8.ttf', $preview-href)"/>
+            </px:copy-resource>
+            <px:copy-resource fail-on-error="true" cx:depends-on="mkdir">
+                <p:with-option name="href" select="resolve-uri('pef-preview.css')"/>
+                <p:with-option name="target" select="resolve-uri('pef-preview.css', $preview-href)"/>
+            </px:copy-resource>
+            <px:copy-resource fail-on-error="true" cx:depends-on="mkdir">
+                <p:with-option name="href" select="resolve-uri('pef-preview.js')"/>
+                <p:with-option name="target" select="resolve-uri('pef-preview.js', $preview-href)"/>
             </px:copy-resource>
             <p:sink/>
         </p:when>
