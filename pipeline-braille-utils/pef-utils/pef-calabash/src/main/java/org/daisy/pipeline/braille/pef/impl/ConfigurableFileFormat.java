@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.pef.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -169,7 +170,13 @@ public class ConfigurableFileFormat implements FileFormat {
 					charset = (Charset)value;
 					return; }
 				else if (value instanceof String) {
-					charset = Charset.forName((String)value);
+					try {
+						charset = Charset.forName((String)value);
+					}
+					catch (UnsupportedCharsetException e) {
+						logger.warn("Unsupported charset, falling back to table's preferred charset");
+						charset = null;
+					}
 					return; }}
 			throw new IllegalArgumentException("Unsupported value for charset: " + value);
 		} else if ("file-extension".equals(key)) {
