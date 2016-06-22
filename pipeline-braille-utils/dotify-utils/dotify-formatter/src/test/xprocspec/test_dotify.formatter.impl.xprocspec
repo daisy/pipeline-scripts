@@ -7707,5 +7707,84 @@
   </x:call>
 </x:scenario>
 
+<x:scenario label="manual-volume-breaking-toc">
+  <x:documentation>
+    Tests manual volume breaking in combination with table of contents.
+  </x:documentation>
+  <x:call step="pxi:test">
+    <x:input port="source">
+      <x:document type="inline">
+        <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+          <layout-master name="master" page-width="15" page-height="15">
+            <default-template>
+              <header/>
+              <footer/>
+            </default-template>
+          </layout-master>
+          <table-of-contents name="toc">
+            <toc-entry ref-id="a">
+              <page-number ref-id="a" number-format="default"/>
+            </toc-entry>
+            <toc-entry ref-id="b">
+              <page-number ref-id="b" number-format="default"/>
+            </toc-entry>
+          </table-of-contents>
+          <volume-template sheets-in-volume-max="10">
+            <pre-content>
+              <toc-sequence master="master" range="volume" toc="toc"/>
+            </pre-content>
+          </volume-template>
+          <sequence master="master">
+            <block id="a">⠿⠿⠿⠿⠿</block>
+          </sequence>
+          <sequence master="master" break-before="volume">
+            <block id="b">⠿⠿⠿⠿⠿</block>
+          </sequence>
+        </obfl>
+      </x:document>
+    </x:input>
+  </x:call>
+  <x:context label="result">
+    <x:document type="port" port="result"/>
+  </x:context>
+  <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:document type="inline">
+      <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+        <head>
+          <meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <dc:format>application/x-pef+xml</dc:format>
+          </meta>
+        </head>
+        <body>
+          <volume cols="15" rows="15" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠼⠁</row>
+              </page>
+            </section>
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+          <volume cols="15" rows="15" rowgap="0" duplex="true">
+            <section>
+              <page>
+                <row>⠼⠃</row>
+              </page>
+            </section>
+            <section>
+              <page>
+                <row>⠿⠿⠿⠿⠿</row>
+              </page>
+            </section>
+          </volume>
+        </body>
+      </pef>
+    </x:document>
+  </x:expect>
+</x:scenario>
+
 </x:scenario>
 </x:description>
