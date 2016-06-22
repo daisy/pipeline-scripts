@@ -835,9 +835,9 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="keep-all">
+  <x:scenario label="keep-page">
     <x:documentation>
-      Tests simple keep="all".
+      Tests simple keep="page".
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -853,7 +853,7 @@
               <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
             </sequence>
@@ -913,7 +913,7 @@
               <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
-              <block keep="all" keep-with-next="1">
+              <block keep="page" keep-with-next="1">
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
               <block>
@@ -976,10 +976,10 @@
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
               <block>
-                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
-                <block keep="all">⠤⠤⠤</block>
+                <block keep="page" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="page" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="page" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="page">⠤⠤⠤</block>
               </block>
             </sequence>
           </obfl>
@@ -1040,7 +1040,7 @@
               </block>
               <block>
                 <block>⠤⠤⠤</block>
-                <block keep="all" keep-with-next="1">⠤⠤⠤</block>
+                <block keep="page" keep-with-next="1">⠤⠤⠤</block>
               </block>
               <block>⠤⠤⠤⠤⠤</block>
             </sequence>
@@ -1276,7 +1276,7 @@
   <x:scenario label="keep-content-with-border">
     <x:documentation>
       Tests that pages are not broken between a border of a block and the content of that
-      block. Tested with keep="all", orphans or widows on the block with the border. Also tested for
+      block. Tested with keep="page", orphans or widows on the block with the border. Also tested for
       two nested blocks with borders.
     </x:documentation>
     <x:call>
@@ -1307,7 +1307,7 @@
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
-              <block keep="all" border-top-style="solid">
+              <block keep="page" border-top-style="solid">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
@@ -1697,8 +1697,8 @@
   <x:scenario label="page-breaking-and-borders">
     <x:documentation>
       Tests borders in combination with page break control. Tests two blocks following each other in
-      various situations: with or without keep="all" on the first block, with or without a bottom
-      border on the first block, and with keep="all", orphans or widows on the second block.
+      various situations: with or without keep="page" on the first block, with or without a bottom
+      border on the first block, and with keep="page", orphans or widows on the second block.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -1717,20 +1717,20 @@
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
@@ -1742,19 +1742,19 @@
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all" border-bottom-style="solid">
+              <block keep="page" border-bottom-style="solid">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
@@ -1775,7 +1775,7 @@
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
@@ -1802,7 +1802,7 @@
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all" border-bottom-style="solid">
+              <block keep="page" border-bottom-style="solid">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
@@ -1828,7 +1828,7 @@
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all">
+              <block keep="page">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
@@ -1853,7 +1853,7 @@
               </block>
             </sequence>
             <sequence master="master">
-              <block keep="all" border-bottom-style="solid">
+              <block keep="page" border-bottom-style="solid">
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿
                 ⠿⠿⠿⠿⠿⠿

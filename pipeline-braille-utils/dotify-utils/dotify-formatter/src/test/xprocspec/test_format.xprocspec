@@ -912,7 +912,7 @@
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
               </block>
-              <block keep="all">
+              <block keep="page">
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
@@ -927,10 +927,10 @@
               <block>⠤⠤⠤</block>
               <block>⠤⠤⠤</block>
               <block>
-                <block keep-with-next="1" keep="all">⠤⠤⠤</block>
-                <block keep-with-next="1" keep="all">⠤⠤⠤</block>
-                <block keep-with-next="1" keep="all">⠤⠤⠤</block>
-                <block keep="all">⠤⠤⠤</block>
+                <block keep-with-next="1" keep="page">⠤⠤⠤</block>
+                <block keep-with-next="1" keep="page">⠤⠤⠤</block>
+                <block keep-with-next="1" keep="page">⠤⠤⠤</block>
+                <block keep="page">⠤⠤⠤</block>
               </block>
             </block>
           </sequence>
@@ -942,7 +942,7 @@
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
               </block>
-              <block keep-with-next="1" keep="all">
+              <block keep-with-next="1" keep="page">
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤⠤⠤⠤⠤
               </block>
@@ -959,7 +959,7 @@
               <block>⠤⠤⠤</block>
               <block>
                 <block>⠤⠤⠤</block>
-                <block keep-with-next="1" keep="all">⠤⠤⠤</block>
+                <block keep-with-next="1" keep="page">⠤⠤⠤</block>
               </block>
               <block>⠤⠤⠤</block>
             </block>

@@ -1184,11 +1184,11 @@
                   match="css:box[@type='block']/@css:page-break-after[.='avoid']">
         <xsl:attribute name="keep-with-next" select="'1'"/>
         <!--
-            keep-with-next="1" requires that keep="all". This gives it a slighly different meaning
+            keep-with-next="1" requires that keep="page". This gives it a slighly different meaning
             than "page-break-after: avoid", but it will do.
         -->
         <xsl:if test="not(parent::*/@css:page-break-inside[.='avoid'])">
-            <xsl:attribute name="keep" select="'all'"/>
+            <xsl:attribute name="keep" select="'page'"/>
         </xsl:if>
     </xsl:template>
     
@@ -1220,7 +1220,7 @@
     
     <xsl:template mode="block-attr"
                   match="css:box[@type='block']/@css:page-break-inside[.='avoid']">
-        <xsl:attribute name="keep" select="'all'"/>
+        <xsl:attribute name="keep" select="'page'"/>
     </xsl:template>
     
     <xsl:template mode="block-attr"
