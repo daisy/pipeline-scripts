@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 type="css:new-definition"
@@ -44,6 +45,8 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
     <p:add-attribute match="xsl:include" attribute-name="href" name="include">
         <p:input port="source">
             <p:inline>
@@ -66,10 +69,15 @@
         </p:input>
     </p:insert>
     
-    <p:xslt>
+    <px:message>
+        <p:with-option name="message" select="concat('[progress css:new-definition 100 ',tokenize(base-uri(/*),'/')[last()],']')">
+            <p:pipe step="stylesheet" port="result"/>
+        </p:with-option>
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
+    </px:message>
+    <p:xslt>
         <p:input port="stylesheet">
             <p:pipe step="stylesheet" port="result"/>
         </p:input>

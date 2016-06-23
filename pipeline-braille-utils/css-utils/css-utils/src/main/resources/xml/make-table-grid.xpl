@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="css:make-table-grid"
                 exclude-inline-prefixes="#all"
@@ -29,6 +30,9 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
+    <px:message message="[progress css:make-table-grid 100 make-table-grid.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="make-table-grid.xsl"/>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="css:repeat-string-set"
@@ -26,6 +27,9 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
+    <px:message message="[progress css:repeat-string-set 45] @css:string-set"/>
     <p:for-each>
         <p:xslt>
             <p:input port="stylesheet">
@@ -51,6 +55,7 @@
         </p:xslt>
     </p:for-each>
     
+    <px:message message="[progress css:repeat-string-set 10] split, wrap and insert"/>
     <p:identity name="iteration-source"/>
     <p:for-each>
         <p:identity name="current-section"/>
@@ -73,6 +78,7 @@
         </p:insert>
     </p:for-each>
     
+    <px:message message="[progress css:repeat-string-set 45] css:string-set"/>
     <p:for-each>
         <p:xslt>
             <p:input port="stylesheet">

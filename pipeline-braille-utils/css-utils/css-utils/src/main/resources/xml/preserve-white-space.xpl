@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="css:preserve-white-space"
                 exclude-inline-prefixes="#all"
@@ -29,6 +30,9 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
+    <px:message message="[progress css:preserve-white-space 100 preserve-white-space.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="preserve-white-space.xsl"/>

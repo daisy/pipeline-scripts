@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="css:flow-from"
                 exclude-inline-prefixes="#all"
@@ -30,9 +31,14 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
     <p:split-sequence test="/*[not(@css:flow)]" name="normal-flow"/>
     
     <p:for-each name="for-each">
+        <px:message>
+            <p:with-option name="message" select="concat('[progress css:flow-from 1/',p:iteration-size(),' flow-from.xsl]')"/>
+        </px:message>
         <p:xslt name="result">
             <p:input port="source">
                 <p:pipe step="for-each" port="current"/>

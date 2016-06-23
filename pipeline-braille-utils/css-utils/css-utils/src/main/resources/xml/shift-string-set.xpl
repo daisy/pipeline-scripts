@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="css:shift-string-set"
                 exclude-inline-prefixes="#all"
@@ -26,8 +27,11 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
     <p:wrap-sequence wrapper="css:_"/>
     
+    <px:message message="[progress css:shift-string-set 100 shift-string-set.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="shift-string-set.xsl"/>
