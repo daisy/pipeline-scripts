@@ -107,7 +107,8 @@
     
     <px:message message="[progress px:dtbook-to-pef.convert 4 px:dtbook-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
-        <px:message message="[progress px:dtbook-to-pef.convert.viewport-math 1/$1 *]">
+        <px:message>
+            <p:with-option name="message" select="concat('[progress px:dtbook-to-pef.convert.viewport-math 1/$1 *] MathML: ', string-join(*/name(),', '))"/>
             <p:with-option name="param1" select="p:iteration-size()"/>
         </px:message>
         <px:transform>
@@ -116,20 +117,20 @@
         </px:transform>
     </p:viewport>
     
-    <p:choose name="transform" cx:depends-on="parameters">
+    <px:message message="[progress px:dtbook-to-pef.convert 84 px:dtbook-to-pef.convert.choose-transform] Transforming from XML to PEF" cx:depends-on="parameters"/>
+    <p:choose name="transform">
         <p:when test="$include-obfl='true'">
             <p:output port="pef" primary="true"/>
             <p:output port="obfl">
                 <p:pipe step="obfl" port="result"/>
             </p:output>
-            <px:message message="Transforming from XML with inline CSS to OBFL"/>
             <p:group name="obfl">
                 <p:output port="result"/>
                 <p:variable name="transform-query" select="concat('(input:css)(output:obfl)',$transform,'(locale:',$lang,')')"/>
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 29 *]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert.choose-transform 34 *] Transforming from XML with inline CSS to OBFL"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -138,13 +139,12 @@
                     </p:input>
                 </px:transform>
             </p:group>
-            <px:message message="Transforming from OBFL to PEF"/>
             <p:group>
                 <p:variable name="transform-query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 55 *]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert.choose-transform 66 *] Transforming from OBFL to PEF"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
@@ -159,13 +159,12 @@
             <p:output port="obfl">
                 <p:empty/>
             </p:output>
-            <px:message message="Transforming from XML with inline CSS to PEF"/>
             <p:group>
                 <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>
                 <px:message severity="DEBUG" message="px:transform query=$1">
                     <p:with-option name="param1" select="$transform-query"/>
                 </px:message>
-                <px:message message="[progress px:dtbook-to-pef.convert 84 *]"/>
+                <px:message message="[progress px:dtbook-to-pef.convert.choose-transform 100 *] Transforming from XML with inline CSS to PEF"/>
                 <px:transform>
                     <p:with-option name="query" select="$transform-query"/>
                     <p:with-option name="temp-dir" select="$temp-dir"/>
