@@ -7,10 +7,13 @@
 	
 	<p:option name="query" select="''"/>
 	
+	<p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
 	
+	<px:message message="[progress px:liblouis-block-translate 50 css:parse-properties] Parsing CSS properties"/>
 	<css:parse-properties properties="display"/>
 	
+	<px:message message="[progress px:liblouis-block-translate 50 liblouis-block-translate.xsl] Translating blocks"/>
 	<p:xslt>
 		<p:input port="stylesheet">
 			<p:document href="liblouis-block-translate.xsl"/>
