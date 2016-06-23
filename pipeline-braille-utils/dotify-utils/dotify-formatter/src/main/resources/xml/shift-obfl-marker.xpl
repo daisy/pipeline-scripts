@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="pxi:shift-obfl-marker"
@@ -26,8 +27,11 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
     <p:wrap-sequence wrapper="css:_"/>
     
+    <px:message message="[progress pxi:shift-obfl-marker 100 shift-obfl-marker.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="shift-obfl-marker.xsl"/>

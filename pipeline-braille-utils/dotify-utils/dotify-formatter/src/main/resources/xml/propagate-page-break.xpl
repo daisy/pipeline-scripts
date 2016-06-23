@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="pxi:propagate-page-break"
@@ -44,6 +45,9 @@
         </p:documentation>
     </p:output>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
+    <px:message message="[progress pxi:propagate-page-break 100 propagate-page-break.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="propagate-page-break.xsl"/>
