@@ -20,6 +20,8 @@
     <p:output port="result" sequence="false" primary="true" px:media-type="application/x-pef+xml"/>
     <p:option name="level" select="'volume'"/>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
     <p:declare-step type="pxi:merge-volumes" name="merge-volumes">
         <!--
             Merge all volumes on the source port into a single volume.
@@ -35,25 +37,7 @@
             </p:iteration-source>
             <p:xslt>
                 <p:input port="stylesheet">
-                    <p:inline>
-                        <xsl:stylesheet version="2.0">
-                            <xsl:template match="/*">
-                                <xsl:copy>
-                                    <xsl:sequence select="@*|text()"/>
-                                    <xsl:apply-templates select="*"/>
-                                </xsl:copy>
-                            </xsl:template>
-                            <xsl:template match="*[local-name()='section']">
-                                <xsl:copy>
-                                    <xsl:sequence select="(@cols,parent::*/@cols)[1]"/>
-                                    <xsl:sequence select="(@duplex,parent::*/@duplex)[1]"/>
-                                    <xsl:sequence select="(@rowgap,parent::*/@rowgap)[1]"/>
-                                    <xsl:sequence select="(@rows,parent::*/@rows)[1]"/>
-                                    <xsl:sequence select="node()"/>
-                                </xsl:copy>
-                            </xsl:template>
-                        </xsl:stylesheet>
-                    </p:inline>
+                    <p:document href="merge.extract-sections.xsl"/>
                 </p:input>
                 <p:input port="parameters">
                     <p:empty/>
@@ -71,33 +55,7 @@
         </p:insert>
         <p:xslt>
             <p:input port="stylesheet">
-                <p:inline>
-                    <xsl:stylesheet version="2.0">
-                        <xsl:template match="/*">
-                            <xsl:copy>
-                                <xsl:sequence select="@*|text()"/>
-                                <xsl:apply-templates select="*"/>
-                            </xsl:copy>
-                        </xsl:template>
-                        <xsl:template match="*[local-name()='section']">
-                            <xsl:copy>
-                                <xsl:if test="string(@cols)!=string(parent::*/@cols)">
-                                    <xsl:sequence select="@cols"/>
-                                </xsl:if>
-                                <xsl:if test="string(@duplex)!=string(parent::*/@duplex)">
-                                    <xsl:sequence select="@duplex"/>
-                                </xsl:if>
-                                <xsl:if test="string(@rowgap)!=string(parent::*/@rowgap)">
-                                    <xsl:sequence select="@rowgap"/>
-                                </xsl:if>
-                                <xsl:if test="string(@rows)!=string(parent::*/@rows)">
-                                    <xsl:sequence select="@rows"/>
-                                </xsl:if>
-                                <xsl:sequence select="node()"/>
-                            </xsl:copy>
-                        </xsl:template>
-                    </xsl:stylesheet>
-                </p:inline>
+                <p:document href="merge.remove-duplicate-attributes.xsl"/>
             </p:input>
             <p:input port="parameters">
                 <p:empty/>
@@ -105,6 +63,7 @@
         </p:xslt>
     </p:declare-step>
     
+    <px:message message="[progress pef:merge 40] Initializing PEF head"/>
     <p:xslt template-name="initial">
         <p:input port="stylesheet">
             <p:inline>
@@ -145,6 +104,7 @@
     
     <p:choose>
         <p:when test="$level='volume'">
+            <px:message message="[progress pef:merge 40] Body consists of a single volume; no need to merge"/>
             <p:identity>
                 <p:input port="source" select="//pef:volume">
                     <p:pipe step="merge" port="source"/>
@@ -152,6 +112,7 @@
             </p:identity>
         </p:when>
         <p:otherwise>
+            <px:message message="[progress pef:merge 40] Body consists of multiple volumse; merging volumes"/>
             <pxi:merge-volumes>
                 <p:input port="source" select="//pef:volume">
                     <p:pipe step="merge" port="source"/>
@@ -162,12 +123,13 @@
     
     <p:wrap-sequence wrapper="body" wrapper-namespace="http://www.daisy.org/ns/2008/pef" name="body"/>
     
-    <p:wrap-sequence wrapper="pef" wrapper-namespace="http://www.daisy.org/ns/2008/pef">
+    <px:message message="[progress pef:merge 4] Wrapping PEF head and body">
         <p:input port="source">
             <p:pipe step="head" port="result"/>
             <p:pipe step="body" port="result"/>
         </p:input>
-    </p:wrap-sequence>
+    </px:message>
+    <p:wrap-sequence wrapper="pef" wrapper-namespace="http://www.daisy.org/ns/2008/pef"/>
     
     <p:add-attribute match="/pef:pef" attribute-name="version" attribute-value="2008-1"/>
     

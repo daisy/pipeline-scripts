@@ -9,9 +9,10 @@
     <p:output port="result" primary="true" px:media-type="text/html"/>
     
     <p:option name="table" required="true"/>
-
-    <!-- Pad pages with whitespace -->
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+
+    <px:message message="[progress px:pef-to-html.convert 50] Pad pages with whitespace"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="pef-padding.xsl"/>
@@ -21,8 +22,7 @@
         </p:input>
     </p:xslt>
     
-    <!-- Generate HTML preview -->
-    
+    <px:message message="[progress px:pef-to-html.convert 50] Generate HTML preview"/>
     <p:xslt>
         <p:input port="stylesheet">
             <p:document href="pef-preview.xsl"/>
