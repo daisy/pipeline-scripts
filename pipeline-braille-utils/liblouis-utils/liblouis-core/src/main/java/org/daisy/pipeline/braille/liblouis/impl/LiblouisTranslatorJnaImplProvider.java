@@ -1114,31 +1114,32 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					else someNotHyphenate = true;
 				if (someHyphenate) {
 					byte[] autoHyphens = null;
-					if (fullHyphenator == null) {
-						logger.warn("hyphens:auto not supported");
-						return null; }
-					else {
-						try {
+					try {
+						if (fullHyphenator == null) {
+							logger.warn("hyphens:auto not supported");
+							if (lineBreaker != null)
+								throw new RuntimeException(); }
+						else
 							autoHyphens = fullHyphenator.hyphenate(joinedText); }
-						catch (Exception e) {
-							if (failWhenNonStandardHyphenation)
+					catch (Exception e) {
+						if (failWhenNonStandardHyphenation)
+							throw e;
+						else
+							switch (handleNonStandardHyphenation) {
+							case NON_STANDARD_HYPH_IGNORE:
+								logger.warn("hyphens:auto can not be applied due to non-standard hyphenation points.");
+								break;
+							case NON_STANDARD_HYPH_FAIL:
+								logger.error("hyphens:auto can not be applied due to non-standard hyphenation points.");
 								throw e;
-							else
-								switch (handleNonStandardHyphenation) {
-								case NON_STANDARD_HYPH_IGNORE:
-									logger.warn("hyphens:auto can not be applied due to non-standard hyphenation points.");
-									break;
-								case NON_STANDARD_HYPH_FAIL:
+							case NON_STANDARD_HYPH_DEFER:
+								if (forceBraille) {
 									logger.error("hyphens:auto can not be applied due to non-standard hyphenation points.");
-									throw e;
-								case NON_STANDARD_HYPH_DEFER:
-									if (forceBraille) {
-										logger.error("hyphens:auto can not be applied due to non-standard hyphenation points.");
-										throw e; }
-									logger.info("Deferring hyphenation to formatting phase due to non-standard hyphenation points.");
-									
-									// TODO: split up text in words and only defer the words with non-standard hyphenation
-									return text; }}}
+									throw e; }
+								logger.info("Deferring hyphenation to formatting phase due to non-standard hyphenation points.");
+								
+								// TODO: split up text in words and only defer the words with non-standard hyphenation
+								return text; }}
 					if (autoHyphens != null) {
 						if (someNotHyphenate) {
 							int i = 0;
