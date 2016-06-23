@@ -87,7 +87,8 @@
     
     <px:message cx:depends-on="parameters" message="[progress px:html-to-pef.convert 10 px:html-to-pef.convert.viewport-math] Transforming MathML"/>
     <p:viewport match="math:math">
-        <px:message message="[progress px:html-to-pef.convert.viewport-math 1/$1 *]">
+        <px:message>
+            <p:with-option name="message" select="concat('[progress px:html-to-pef.convert.viewport-math 1/$1 *] MathML: ', string-join(*/name(),', '))"/>
             <p:with-option name="param1" select="p:iteration-size()"/>
         </px:message>
         <px:transform>
