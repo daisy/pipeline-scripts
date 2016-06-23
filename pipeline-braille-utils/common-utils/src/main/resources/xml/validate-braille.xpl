@@ -12,6 +12,9 @@
     
     <p:option name="assert-valid" select="'true'"/>
     
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    
+    <px:message message="[progress px:validate-braille 100 validate-braille.xsl] Validating braille"/>
     <p:try>
         <p:group>
             <p:xslt>
