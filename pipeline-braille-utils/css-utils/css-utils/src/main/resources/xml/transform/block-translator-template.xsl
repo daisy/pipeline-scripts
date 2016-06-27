@@ -9,8 +9,9 @@
 	
 	<!--
 	    API: implement xsl:template match="css:block"
+	    NOTE: by not matching using a namespace prefix (i.e. css:block) we avoid the SXXP0005 warning in Saxon 9.5
 	-->
-	<xsl:template mode="#default after before" match="css:block">
+	<xsl:template mode="#default after before" match="*[local-name()='block' and namespace-uri()='http://www.daisy.org/ns/pipeline/braille-css']">
 		<xsl:message terminate="yes">Coding error</xsl:message>
 	</xsl:template>
 	

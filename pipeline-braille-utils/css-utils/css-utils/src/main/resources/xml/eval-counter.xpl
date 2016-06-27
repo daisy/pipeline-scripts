@@ -57,7 +57,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="parse-counter-set.xpl"/>
     
-    <px:message message="[progress css:eval-counter 50 css:eval-counter.for-each-counter-set"/>
+    <px:message message="[progress css:eval-counter 50 css:eval-counter.for-each-counter-set]"/>
     <p:for-each>
         <px:message>
             <p:with-option name="message" select="concat('[progress css:eval-counter.for-each-counter-set 1/',p:iteration-size(),' css:parse-counter-set]')"/>

@@ -52,7 +52,7 @@
             <p:pipe step="main" port="parameters"/>
         </p:input>
     </p:identity>
-    <px:message message="[progress px:dtbook-to-pef.convert 1 px:merge-parameters]"/>
+    <px:message message="[progress px:dtbook-to-pef.convert 1 px:merge-parameters] Merging parameters"/>
     <px:merge-parameters name="parameters"/>
     <p:sink/>
     

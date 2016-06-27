@@ -30,6 +30,7 @@
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
         <p:output port="result" sequence="true"/>
+        <px:message message="css:parse-stylesheet"/>
         <css:parse-stylesheet>
             <p:documentation>
                 Make css:page, css:volume, css:after, css:before, css:footnote-call, css:duplicate,
@@ -37,6 +38,7 @@
                 css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
+        <px:message message="css:parse-properties"/>
         <css:parse-properties properties="flow">
             <p:documentation>
                 Make css:flow attributes.
@@ -52,6 +54,7 @@
                           //*/@css:_obfl-on-volume-start|
                           //*/@css:_obfl-on-volume-end|
                           //*/@css:_obfl-on-toc-end">
+                <px:message message="css:make-pseudo-elements"/>
                 <css:make-pseudo-elements>
                     <p:documentation>
                         Make css:before, css:after, css:duplicate, css:alternate and
@@ -59,6 +62,7 @@
                         css:alternate and css:footnote-call attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
+                <px:message message="pxi:make-obfl-pseudo-elements"/>
                 <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
@@ -66,6 +70,7 @@
                     </p:documentation>
                 </pxi:make-obfl-pseudo-elements>
                 <p:for-each>
+                    <px:message message="pxi:recursive-parse-stylesheet-and-make-pseudo-elements"/>
                     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
                 </p:for-each>
             </p:when>
