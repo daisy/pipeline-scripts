@@ -30,14 +30,14 @@
     </filter>
     <encoder class="org.daisy.maven.xproc.pipeline.logging.ProgressMessageEncoder">
       <pattern>    | %-5level | %msg%n</pattern>
-      <skipIfOnlyProgress>true</skipIfOnlyProgress>
+      <includeProgress>false</includeProgress>
     </encoder>
   </appender>
   
   <appender name="FROM_EVENTBUS" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="org.daisy.maven.xproc.pipeline.logging.ProgressMessageEncoder">
       <pattern>    | %-5level | %msg%n</pattern>
-      <skipIfOnlyProgress>true</skipIfOnlyProgress>
+      <includeProgress>false</includeProgress>
     </encoder>
   </appender>
   
