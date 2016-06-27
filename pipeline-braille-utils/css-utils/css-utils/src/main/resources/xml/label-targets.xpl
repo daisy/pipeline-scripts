@@ -29,7 +29,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
-    <p:wrap-sequence wrapper="css:_"/>
+    <p:wrap-sequence wrapper="_"/>
     
     <px:message message="[progress css:label-targets 100 label-targets.xsl]"/>
     <p:xslt>
@@ -44,6 +44,6 @@
     <p:delete match="@css:_id_[not(string(.)=(//css:text|//css:string|//css:counter|//css:content)/@target/string())]"/>
     <p:rename match="@css:_id_" new-name="css:id"/>
     
-    <p:filter select="/css:_/*"/>
+    <p:filter select="/_/*"/>
     
 </p:declare-step>

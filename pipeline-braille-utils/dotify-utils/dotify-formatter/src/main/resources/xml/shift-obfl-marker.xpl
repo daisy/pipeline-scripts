@@ -2,7 +2,6 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 type="pxi:shift-obfl-marker"
                 exclude-inline-prefixes="#all"
                 version="1.0">
@@ -29,7 +28,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
-    <p:wrap-sequence wrapper="css:_"/>
+    <p:wrap-sequence wrapper="_"/>
     
     <px:message message="[progress pxi:shift-obfl-marker 100 shift-obfl-marker.xsl]"/>
     <p:xslt>
@@ -41,6 +40,6 @@
         </p:input>
     </p:xslt>
     
-    <p:filter select="/css:_/*"/>
+    <p:filter select="/_/*"/>
     
 </p:declare-step>

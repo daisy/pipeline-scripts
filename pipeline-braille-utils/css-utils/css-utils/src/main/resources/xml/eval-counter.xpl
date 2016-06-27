@@ -71,7 +71,7 @@
     <p:identity name="input"/>
     
     <p:split-sequence test="/*[not(@css:flow[not(.='normal')])]"/>
-    <p:wrap-sequence wrapper="css:_" name="context"/>
+    <p:wrap-sequence wrapper="_" name="context"/>
     
     <px:message message="[progress css:eval-counter 50 css:eval-counter.for-each-xslt]">
         <p:input port="source">

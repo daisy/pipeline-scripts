@@ -143,7 +143,7 @@
         </css:eval-string-set>
     </p:for-each>
     
-    <p:wrap-sequence wrapper="obfl:_"/>
+    <p:wrap-sequence wrapper="_"/>
     <px:message message="[progress pxi:css-to-obfl 2 css:parse-content]"/>
     <css:parse-content>
         <p:documentation>
@@ -151,7 +151,7 @@
             attributes. <!-- depends on make-pseudo-element -->
         </p:documentation>
     </css:parse-content>
-    <p:filter select="/obfl:_/*"/>
+    <p:filter select="/_/*"/>
     
     <p:group>
         <p:documentation>

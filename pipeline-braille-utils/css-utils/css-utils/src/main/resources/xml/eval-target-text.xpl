@@ -29,7 +29,7 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
-    <p:wrap-sequence wrapper="css:_"/>
+    <p:wrap-sequence wrapper="_"/>
     
     <px:message message="[progress css:eval-target-text 100 eval-target-text.xsl]"/>
     <p:xslt>
@@ -41,6 +41,6 @@
         </p:input>
     </p:xslt>
     
-    <p:filter select="/css:_/*"/>
+    <p:filter select="/_/*"/>
     
 </p:declare-step>
