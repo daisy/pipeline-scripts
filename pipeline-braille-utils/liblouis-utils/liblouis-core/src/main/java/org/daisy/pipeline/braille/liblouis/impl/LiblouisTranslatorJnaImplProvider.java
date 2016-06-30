@@ -894,13 +894,13 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 						for (int i = 0; i < joinedText.length() - 1; i++)
 							interCharacterIndices[i] = i; }
 					
-					// typeform var with the same length as joinedText
-					byte[] _typeform = null;
+					// typeform var with the same length as joinedText and short[] instead of byte[]
+					short[] _typeform = null;
 					for (byte b : typeform)
 						if (b != Typeform.PLAIN) {
-							_typeform = new byte[joinedText.length()];
+							_typeform = new short[joinedText.length()];
 							for (int i = 0; i < _typeform.length; i++)
-								_typeform[i] = typeform[textWithWsMapping[joinedTextMapping[i]]];
+								_typeform[i] = (short)typeform[textWithWsMapping[joinedTextMapping[i]]];
 							break; }
 					try {
 						TranslationResult r = liblouisTranslator.translate(joinedText, _typeform, characterIndices, interCharacterIndices);
@@ -1162,13 +1162,13 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			if (someLetterSpacing)
 				inputAttrs = detectLetterBoundaries(inputAttrs, joinedText, (byte)4);
 			
-			// typeform var with the same length as joinedText
-			byte[] _typeform = null;
+			// typeform var with the same length as joinedText and short[] instead of byte[]
+			short[] _typeform = null;
 			for (byte b : typeform)
 				if (b != Typeform.PLAIN) {
-					_typeform = new byte[joinedText.length()];
+					_typeform = new short[joinedText.length()];
 					for (int i = 0; i < _typeform.length; i++)
-						_typeform[i] = typeform[textWithWsMapping[joinedTextMapping[i]]];
+						_typeform[i] = (short)typeform[textWithWsMapping[joinedTextMapping[i]]];
 					break; }
 			
 			// translate to braille with hyphens and restored white space
