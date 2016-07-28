@@ -537,7 +537,8 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
+    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]
+                                [some $class in @class satisfies preceding::obfl:marker[@class=$class]]" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
         </p:input>
