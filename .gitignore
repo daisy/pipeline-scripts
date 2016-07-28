@@ -3,6 +3,7 @@ target/
 
 # Make
 /.modules
+.unchecked
 
 # xspec
 xspec/*html
