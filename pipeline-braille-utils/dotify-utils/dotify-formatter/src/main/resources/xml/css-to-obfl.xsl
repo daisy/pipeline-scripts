@@ -1372,11 +1372,8 @@
             <xsl:message select="concat('white-space:',@css:white-space,' could not be applied to ',
                                         (if (@target) then 'target-string' else 'string'),'(',@name,')')"/>
         </xsl:if>
-        <xsl:variable name="target" as="xs:string?"
-                      select="if (@target) then @target else
-                              if (ancestor::*/@css:flow[not(.='normal')]) then ancestor::*/@css:anchor else ()"/>
-        <xsl:variable name="target" as="element()?"
-                      select="if ($target) then collection()/*[not(@css:flow)]//*[@css:id=$target][1] else ."/>
+        <xsl:variable name="target" as="xs:string?" select="if (@target) then @target else ()"/>
+        <xsl:variable name="target" as="element()?" select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
         <xsl:if test="$target">
             <xsl:apply-templates mode="css:eval-string" select="css:string(@name, $target)"/>
         </xsl:if>
