@@ -1,8 +1,11 @@
 package org.daisy.pipeline.braille.common.saxon;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.CDATA;
 import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
@@ -37,7 +40,7 @@ public abstract class StreamToStreamTransform {
 		this.configuration = configuration;
 	}
 	
-	protected abstract void _transform(XMLStreamReader reader, Writer writer) throws TransformationException;
+	protected abstract void _transform(XMLStreamReader reader, BufferedWriter writer) throws TransformationException;
 	
 	public final XdmNode transform(NodeInfo element) throws TransformationException {
 		try {
@@ -59,11 +62,17 @@ public abstract class StreamToStreamTransform {
 	}
 	
 	protected interface Writer {
+		public void writeStartDocument() throws XMLStreamException;
 		public void writeStartElement(QName name) throws XMLStreamException;
 		public void writeEndElement() throws XMLStreamException;
+		public void writeEndDocument() throws XMLStreamException;
 		public void writeAttribute(QName name, String value) throws XMLStreamException;
 		public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException;
 		public void writeCharacters(String text) throws XMLStreamException;
+		public void writeComment(String text) throws XMLStreamException;
+		public void writeCData(String text) throws XMLStreamException;
+		public void writeProcessingInstruction(String target) throws XMLStreamException;
+		public void writeProcessingInstruction(String target, String data) throws XMLStreamException;
 		public void copyEvent(int event, XMLStreamReader reader) throws XMLStreamException;
 		public void copyStartElement(XMLStreamReader reader) throws XMLStreamException;
 		public void copyAttributes(XMLStreamReader reader) throws XMLStreamException;
@@ -77,24 +86,146 @@ public abstract class StreamToStreamTransform {
 		public void writeTo(Writer writer) throws XMLStreamException;
 	}
 	
-	private static class WriterImpl extends StreamWriterToReceiver implements Writer {
+	protected interface FutureEvent extends Event {
+		public boolean isReady();
+	}
+	
+	protected interface BufferedWriter extends Writer {
+		public void writeEvent(FutureEvent event) throws XMLStreamException;
+		public void flush() throws XMLStreamException;
+	}
+	
+	private static class WriterImpl extends StreamWriterToReceiver implements BufferedWriter {
 		
 		WriterImpl(Receiver receiver) {
 			super(receiver);
 		}
 		
+		private Queue<Event> queue = new LinkedList<Event>();
+		
+		public void writeEvent(FutureEvent event) throws XMLStreamException {
+			queue.add(event);
+			flushQueue();
+		}
+		
+		private boolean flushQueue() throws XMLStreamException {
+			if (queue == null)
+				return true;
+			List<Event> todo = null;
+			while (!queue.isEmpty()) {
+				Event event = queue.peek();
+				if (event instanceof FutureEvent && !((FutureEvent)event).isReady())
+					break;
+				if (todo == null)
+					todo = new ArrayList<Event>();
+				todo.add(event);
+				queue.remove(); }
+			Queue<Event> tmp = queue;
+			queue = null;
+			if (todo != null)
+				for (Event event : todo)
+					event.writeTo(this);
+			queue = tmp;
+			return queue.isEmpty();
+		}
+		
+		@Override
+		public void flush() throws XMLStreamException {
+			if (!flushQueue())
+				throw new XMLStreamException("not ready");
+			super.flush();
+		}
+		
 		public void writeStartElement(QName name) throws XMLStreamException {
-			writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
+			if (flushQueue())
+				writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
+			else
+				queue.add(util.Events.startElement(name));
+		}
+		
+		@Override
+		public void writeEndElement() throws XMLStreamException {
+			if (flushQueue())
+				super.writeEndElement();
+			else
+				queue.add(util.Events.endElement);
+		}
+		
+		@Override
+		public void writeStartDocument() throws XMLStreamException {
+			if (flushQueue())
+				super.writeStartDocument();
+			else
+				queue.add(util.Events.startDocument);
+		}
+		
+		@Override
+		public void writeEndDocument() throws XMLStreamException {
+			if (flushQueue())
+				super.writeEndDocument();
+			else
+				queue.add(util.Events.endDocument);
 		}
 		
 		public void writeAttribute(QName name, String value) throws XMLStreamException {
-			String prefix = name.getPrefix();
-			String ns = name.getNamespaceURI();
-			String localPart = name.getLocalPart();
-			if (prefix == null || "".equals(prefix))
-				writeAttribute(ns, localPart, value);
+			if (flushQueue()) {
+				String prefix = name.getPrefix();
+				String ns = name.getNamespaceURI();
+				String localPart = name.getLocalPart();
+				if (prefix == null || "".equals(prefix))
+					writeAttribute(ns, localPart, value);
+				else
+					writeAttribute(prefix, ns, localPart, value); }
 			else
-				writeAttribute(prefix, ns, localPart, value);
+				queue.add(util.Events.attribute(name, value));
+		}
+		
+		@Override
+		public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException {
+			if (flushQueue())
+				super.writeNamespace(prefix, namespaceURI);
+			else
+				queue.add(util.Events.namespace(prefix, namespaceURI));
+		}
+		
+		@Override
+		public void writeCharacters(String text) throws XMLStreamException {
+			if (flushQueue())
+				super.writeCharacters(text);
+			else
+				queue.add(util.Events.characters(text));
+		}
+		
+		@Override
+		public void writeComment(String text) throws XMLStreamException {
+			if (flushQueue())
+				super.writeComment(text);
+			else
+				queue.add(util.Events.comment(text));
+		}
+		
+		@Override
+		public void writeCData(String text) throws XMLStreamException {
+			if (flushQueue())
+				super.writeCData(text);
+			else
+				queue.add(util.Events.cData(text));
+		}
+
+		@Override
+		public void writeProcessingInstruction(String target) throws XMLStreamException {
+			if (flushQueue())
+				writeProcessingInstruction(target);
+			else
+				queue.add(util.Events.pi(target));
+		}
+
+		@Override
+		public void writeProcessingInstruction(String target, String data) throws XMLStreamException {
+			if (flushQueue())
+				writeProcessingInstruction(target, data);
+			else
+				queue.add(util.Events.pi(target, data));
 		}
 		
 		public void copyEvent(int event, XMLStreamReader reader) throws XMLStreamException {
@@ -200,6 +331,52 @@ public abstract class StreamToStreamTransform {
 					writer.writeEndElement();
 				}
 			};
+			
+			public static Event startDocument
+			= new Event() {
+				public void writeTo(Writer writer) throws XMLStreamException {
+					writer.writeStartDocument();
+				}
+			};
+			
+			public static Event endDocument
+			= new Event() {
+				public void writeTo(Writer writer) throws XMLStreamException {
+					writer.writeEndDocument();
+				}
+			};
+			
+			public static Event comment(final String text) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeComment(text);
+					}
+				};
+			}
+			
+			public static Event pi(final String target) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeProcessingInstruction(target);
+					}
+				};
+			}
+			
+			public static Event pi(final String target, final String data) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeProcessingInstruction(target, data);
+					}
+				};
+			}
+			
+			public static Event cData(final String text) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeCData(text);
+					}
+				};
+			}
 		}
 		
 		public static class ToStringWriter implements Writer {
@@ -254,6 +431,10 @@ public abstract class StreamToStreamTransform {
 			}
 			
 			public void writeComment(String data) throws XMLStreamException {
+				throw new UnsupportedOperationException(); }
+			public void writeStartDocument() throws XMLStreamException {
+				throw new UnsupportedOperationException(); }
+			public void writeEndDocument() throws XMLStreamException {
 				throw new UnsupportedOperationException(); }
 			public void writeProcessingInstruction(String target) throws XMLStreamException {
 				throw new UnsupportedOperationException(); }

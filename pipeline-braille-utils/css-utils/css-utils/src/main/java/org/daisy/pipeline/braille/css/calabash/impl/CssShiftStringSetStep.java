@@ -113,7 +113,7 @@ public class CssShiftStringSetStep extends DefaultStep {
 			this.pendingStringSet = pendingStringSet;
 		}
 		
-		protected void _transform(XMLStreamReader reader, Writer writer) throws TransformationException {
+		protected void _transform(XMLStreamReader reader, BufferedWriter writer) throws TransformationException {
 			int depth = 0;
 			boolean insideInlineBox = false;
 			int inlineBoxDepth = 0;

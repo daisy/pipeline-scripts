@@ -167,7 +167,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		Set<CellCoordinates> coveredCoordinates;
 		QName _;
 		
-		protected void _transform(XMLStreamReader reader, Writer writer) {
+		protected void _transform(XMLStreamReader reader, BufferedWriter writer) {
 			
 			try {
 			
