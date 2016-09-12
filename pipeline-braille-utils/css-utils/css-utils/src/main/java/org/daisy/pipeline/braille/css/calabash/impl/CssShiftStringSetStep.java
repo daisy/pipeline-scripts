@@ -119,16 +119,11 @@ public class CssShiftStringSetStep extends DefaultStep {
 			int inlineBoxDepth = 0;
 			while (true)
 				try {
-					switch (reader.next()) {
-					case START_DOCUMENT:
-						writer.writeStartDocument();
-						break;
-					case END_DOCUMENT:
-						writer.writeEndDocument();
-						break;
+					int event = reader.next();
+					writer.copyEvent(event, reader);
+					switch (event) {
 					case START_ELEMENT:
 						depth++;
-						writer.copyStartElement(reader);
 						boolean isBox = CSS_BOX.equals(reader.getName());
 						boolean isInlineBox = false;
 						String stringSet = null;
@@ -159,23 +154,9 @@ public class CssShiftStringSetStep extends DefaultStep {
 							inlineBoxDepth = depth; }
 						break;
 					case END_ELEMENT:
-						writer.writeEndElement();
 						if (inlineBoxDepth == depth)
 							insideInlineBox = false;
 						depth--;
-						break;
-					case SPACE:
-					case CHARACTERS:
-						writer.copyText(reader);
-						break;
-					case PROCESSING_INSTRUCTION:
-						writer.copyPI(reader);
-						break;
-					case CDATA:
-						writer.copyCData(reader);
-						break;
-					case COMMENT:
-						writer.copyComment(reader);
 						break;
 					}}
 				catch (NoSuchElementException e) {

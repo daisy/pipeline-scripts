@@ -54,6 +54,7 @@ import org.daisy.braille.css.SelectorImpl.PseudoElementImpl;
 import static org.daisy.pipeline.braille.common.util.Strings.join;
 
 import org.daisy.pipeline.braille.common.saxon.StreamToStreamTransform;
+import org.daisy.pipeline.braille.common.saxon.StreamToStreamTransform.util.Events;
 import org.daisy.pipeline.braille.common.saxon.StreamToStreamTransform.util.ToStringWriter;
 import org.daisy.pipeline.braille.common.TransformationException;
 
@@ -160,8 +161,8 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					throw new RuntimeException();
 		}
 		
-		List<Function<Writer,Void>> writeActionsBefore;
-		List<Function<Writer,Void>> writeActionsAfter;
+		List<Event> writeActionsBefore;
+		List<Event> writeActionsAfter;
 		List<TableCell> cells;
 		Set<CellCoordinates> coveredCoordinates;
 		QName _;
@@ -170,11 +171,11 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			
 			try {
 			
-			writeActionsBefore = new ArrayList<Function<Writer,Void>>();
-			writeActionsAfter = new ArrayList<Function<Writer,Void>>();
+			writeActionsBefore = new ArrayList<Event>();
+			writeActionsAfter = new ArrayList<Event>();
 			cells = new ArrayList<TableCell>();
 			coveredCoordinates = new HashSet<CellCoordinates>();
-			List<Function<Writer,Void>> writeActions = writeActionsBefore;
+			List<Event> writeActions = writeActionsBefore;
 			int depth = 0;
 			TableCell withinCell = null;
 			TableCell.RowType rowType = TableCell.RowType.TBODY;
@@ -221,9 +222,9 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							if (isHTMLorDTBookElement(TH, name))
 								withinCell.type = TableCell.CellType.TH;
 							writeActions = withinCell.writeActions; }
-						writeActions.add(writeStartElement(name));
+						writeActions.add(Events.startElement(name));
 						for (int i = 0; i < reader.getNamespaceCount(); i++)
-							writeActions.add(writeNamespace(reader.getNamespacePrefix(i), reader.getNamespaceURI(i)));
+							writeActions.add(Events.namespace(reader.getNamespacePrefix(i), reader.getNamespaceURI(i)));
 						for (int i = 0; i < reader.getAttributeCount(); i++) {
 							QName attrName = reader.getAttributeName(i);
 							String attrValue = reader.getAttributeValue(i);
@@ -313,12 +314,12 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 									else
 										throw new RuntimeException("Unexpected style " + block); }
 								if (newStyle != null)
-									writeActions.add(writeAttribute(attrName, newStyle)); }
+									writeActions.add(Events.attribute(attrName, newStyle)); }
 							else
-								writeActions.add(writeAttribute(attrName, attrValue)); }
+								writeActions.add(Events.attribute(attrName, attrValue)); }
 						break;
 					case CHARACTERS:
-						writeActions.add(writeCharacters(reader.getText()));
+						writeActions.add(Events.characters(reader.getText()));
 						break;
 					case END_ELEMENT:
 						name = reader.getName();
@@ -333,7 +334,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 							col = 1;
 							while (isCovered(row, col)) col++;
 							break; }
-						writeActions.add(writeEndElement);
+						writeActions.add(Events.endElement);
 						if (isHTMLorDTBookElement(TD, name) || isHTMLorDTBookElement(TH, name)) {
 							withinCell = null;
 							writeActions = writeActionsAfter;
@@ -402,16 +403,16 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			return coveredCoordinates.contains(new CellCoordinates(row, col));
 		}
 		
-		private void write(Writer writer) {
-			for (Function<Writer,Void> action : writeActionsBefore)
-				action.apply(writer);
+		private void write(Writer writer) throws XMLStreamException {
+			for (Event action : writeActionsBefore)
+				action.writeTo(writer);
 			List<TableCell> dataCells = new ArrayList<TableCell>();
 			for (TableCell c : cells)
 				if (!isHeader(c))
 					dataCells.add(c);
 			new TableCellGroup(dataCells, axes.iterator()).write(writer);
-			for (Function<Writer,Void> action : writeActionsAfter)
-				action.apply(writer);
+			for (Event action : writeActionsAfter)
+				action.writeTo(writer);
 		}
 		
 		private static final List<TableCell> emptyList = new ArrayList<TableCell>();
@@ -419,7 +420,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 		private abstract class TableCellCollection {
 			public abstract List<TableCell> newlyRenderedHeaders();
 			public abstract List<TableCell> newlyPromotedHeaders();
-			public abstract void write(Writer writer);
+			public abstract void write(Writer writer) throws XMLStreamException;
 		}
 		
 		private class SingleTableCell extends TableCellCollection {
@@ -489,14 +490,17 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 				return newlyRenderedHeaders;
 			}
 			
-			public void write(Writer writer) {
+			public void write(Writer writer) throws XMLStreamException {
 				cell.write(writer);
 			}
 			
 			@Override
 			public String toString() {
 				ToStringWriter xml = new ToStringWriter();
-				write(xml);
+				try {
+					write(xml); }
+				catch (Exception e) {
+					throw new RuntimeException("coding error", e); }
 				StringBuilder s = new StringBuilder();
 				s.append("SingleTableCell[header: ").append(newlyRenderedHeaders());
 				s.append(", cell: ").append(cell);
@@ -1138,11 +1142,11 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			private int rowspan = 1;
 			private int colspan = 1;
 			
-			private List<Function<Writer,Void>> writeActions = new ArrayList<Function<Writer,Void>>();
+			private List<Event> writeActions = new ArrayList<Event>();
 			
-			public void write(Writer writer) {
-				for (Function<Writer,Void> action : writeActions)
-					action.apply(writer);
+			public void write(Writer writer) throws XMLStreamException {
+				for (Event action : writeActions)
+					action.writeTo(writer);
 			}
 			
 			public TableCell clone() {
@@ -1166,7 +1170,10 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			@Override
 			public String toString() {
 				ToStringWriter xml = new ToStringWriter();
-				write(xml);
+				try {
+					write(xml); }
+				catch (Exception e) {
+					throw new RuntimeException("coding error", e); }
 				StringBuilder s = new StringBuilder();
 				s.append("TableCell{" + row + "," + col + "}[").append(xml).append("]");
 				return s.toString();
@@ -1215,65 +1222,6 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 			catch(NumberFormatException e) {}
 			throw new RuntimeException("Expected positive integer but got "+ s);
 		}
-		
-		private static Function<Writer,Void> writeStartElement(final QName name) {
-			return new Function<Writer,Void>() {
-				public Void apply(Writer writer) {
-					try {
-						writer.writeStartElement(name);
-						return null; }
-					catch (XMLStreamException e) {
-						throw new RuntimeException(e); }
-				}
-			};
-		}
-		
-		private static Function<Writer,Void> writeNamespace(final String prefix, final String namespaceURI) {
-			return new Function<Writer,Void>() {
-				public Void apply(Writer writer) {
-					try {
-						writer.writeNamespace(prefix, namespaceURI);
-						return null; }
-					catch (XMLStreamException e) {
-						throw new RuntimeException(e); }
-				}
-			};
-		}
-		
-		private static Function<Writer,Void> writeAttribute(final QName name, final String value) {
-			return new Function<Writer,Void>() {
-				public Void apply(Writer writer) {
-					try {
-						writer.writeAttribute(name, value);
-						return null; }
-					catch (XMLStreamException e) {
-						throw new RuntimeException(e); }
-				}
-			};
-		}
-		
-		private static Function<Writer,Void> writeCharacters(final String text) {
-			return new Function<Writer,Void>() {
-				public Void apply(Writer writer) {
-					try {
-						writer.writeCharacters(text);
-						return null;  }
-					catch (XMLStreamException e) {
-						throw new RuntimeException(e); }
-				}
-			};
-		}
-		
-		private static Function<Writer,Void> writeEndElement
-		= new Function<Writer,Void>() {
-			public Void apply(Writer writer) {
-				try {
-					writer.writeEndElement();
-					return null; }
-				catch (XMLStreamException e) {
-					throw new RuntimeException(e); }
-			}
-		};
 	}
 	
 	/*

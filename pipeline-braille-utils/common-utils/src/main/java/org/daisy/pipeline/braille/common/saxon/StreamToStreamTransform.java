@@ -4,9 +4,17 @@ import java.util.Stack;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
+import static javax.xml.stream.XMLStreamConstants.CDATA;
+import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
+import static javax.xml.stream.XMLStreamConstants.COMMENT;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.PROCESSING_INSTRUCTION;
+import static javax.xml.stream.XMLStreamConstants.SPACE;
+import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.event.PipelineConfiguration;
@@ -50,15 +58,23 @@ public abstract class StreamToStreamTransform {
 		}
 	}
 	
-	protected interface Writer extends XMLStreamWriter {
+	protected interface Writer {
 		public void writeStartElement(QName name) throws XMLStreamException;
+		public void writeEndElement() throws XMLStreamException;
 		public void writeAttribute(QName name, String value) throws XMLStreamException;
+		public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException;
+		public void writeCharacters(String text) throws XMLStreamException;
+		public void copyEvent(int event, XMLStreamReader reader) throws XMLStreamException;
 		public void copyStartElement(XMLStreamReader reader) throws XMLStreamException;
 		public void copyAttributes(XMLStreamReader reader) throws XMLStreamException;
 		public void copyText(XMLStreamReader reader) throws XMLStreamException;
 		public void copyComment(XMLStreamReader reader) throws XMLStreamException;
 		public void copyCData(XMLStreamReader reader) throws XMLStreamException;
 		public void copyPI(XMLStreamReader reader) throws XMLStreamException;
+	}
+	
+	protected interface Event {
+		public void writeTo(Writer writer) throws XMLStreamException;
 	}
 	
 	private static class WriterImpl extends StreamWriterToReceiver implements Writer {
@@ -79,6 +95,36 @@ public abstract class StreamToStreamTransform {
 				writeAttribute(ns, localPart, value);
 			else
 				writeAttribute(prefix, ns, localPart, value);
+		}
+		
+		public void copyEvent(int event, XMLStreamReader reader) throws XMLStreamException {
+			switch (event) {
+			case START_DOCUMENT:
+				writeStartDocument();
+				break;
+			case END_DOCUMENT:
+				writeEndDocument();
+				break;
+			case START_ELEMENT:
+				copyStartElement(reader);
+				break;
+			case END_ELEMENT:
+				writeEndElement();
+				break;
+			case SPACE:
+			case CHARACTERS:
+				copyText(reader);
+				break;
+			case PROCESSING_INSTRUCTION:
+				copyPI(reader);
+				break;
+			case CDATA:
+				copyCData(reader);
+				break;
+			case COMMENT:
+				copyComment(reader);
+				break;
+			}
 		}
 		
 		public void copyStartElement(XMLStreamReader reader) throws XMLStreamException {
@@ -110,10 +156,51 @@ public abstract class StreamToStreamTransform {
 			else
 				writeProcessingInstruction(target, data);
 		}
-		
 	}
 	
 	public static abstract class util {
+		
+		public static abstract class Events {
+			
+			public static Event startElement(final QName name) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeStartElement(name);
+					}
+				};
+			}
+			
+			public static Event namespace(final String prefix, final String namespaceURI) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeNamespace(prefix, namespaceURI);
+					}
+				};
+			}
+			
+			public static Event attribute(final QName name, final String value) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeAttribute(name, value);
+					}
+				};
+			}
+			
+			public static Event characters(final String text) {
+				return new Event() {
+					public void writeTo(Writer writer) throws XMLStreamException {
+						writer.writeCharacters(text);
+					}
+				};
+			}
+			
+			public static Event endElement
+			= new Event() {
+				public void writeTo(Writer writer) throws XMLStreamException {
+					writer.writeEndElement();
+				}
+			};
+		}
 		
 		public static class ToStringWriter implements Writer {
 			
@@ -166,28 +253,6 @@ public abstract class StreamToStreamTransform {
 				b.append(text);
 			}
 			
-			public void writeStartElement(String localName) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeEmptyElement(String localName) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeEndDocument() throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void close() throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void flush() throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeAttribute(String localName, String value) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeDefaultNamespace(String namespaceURI) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
 			public void writeComment(String data) throws XMLStreamException {
 				throw new UnsupportedOperationException(); }
 			public void writeProcessingInstruction(String target) throws XMLStreamException {
@@ -196,32 +261,34 @@ public abstract class StreamToStreamTransform {
 				throw new UnsupportedOperationException(); }
 			public void writeCData(String data) throws XMLStreamException {
 				throw new UnsupportedOperationException(); }
-			public void writeDTD(String dtd) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeEntityRef(String name) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeStartDocument() throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeStartDocument(String version) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeStartDocument(String encoding, String version) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void writeCharacters(char[] text, int start, int len) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public String getPrefix(String uri) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void setPrefix(String prefix, String uri) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void setDefaultNamespace(String uri) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
-				throw new UnsupportedOperationException(); }
-			public NamespaceContext getNamespaceContext() {
-				throw new UnsupportedOperationException(); }
-			public Object getProperty(String name) throws IllegalArgumentException {
-				throw new UnsupportedOperationException(); }
 			
 			// FIXME: how to remove duplication?
+			
+			public void copyEvent(int event, XMLStreamReader reader) throws XMLStreamException {
+				switch (event) {
+				case START_ELEMENT:
+					copyStartElement(reader);
+					break;
+				case END_ELEMENT:
+					writeEndElement();
+					break;
+				case SPACE:
+				case CHARACTERS:
+					copyText(reader);
+					break;
+				case PROCESSING_INSTRUCTION:
+					copyPI(reader);
+					break;
+				case CDATA:
+					copyCData(reader);
+					break;
+				case COMMENT:
+					copyComment(reader);
+					break;
+				default:
+					throw new RuntimeException("unexpected input");
+				}
+			}
 			
 			public void copyStartElement(XMLStreamReader reader) throws XMLStreamException {
 				writeStartElement(reader.getName());
