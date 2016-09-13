@@ -513,7 +513,7 @@
             </block>
           </sequence>
           <sequence master="a">
-            <block break-before="page">
+            <block>
               ⠤⠤⠤
             </block>
           </sequence>
@@ -4526,8 +4526,9 @@
       Note: the start/last-except-start part of the test is currently disabled because
       "last-except-start" is not supported anymore.
       
-      Broken: behavior of page-content changed in Dotify 2.0.0 (see
-      https://github.com/joeha480/dotify/issues/150) and spread-content does not exist.
+      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
+      used as the value of a 'start' reference on the following page. However it is currently not
+      possible to do this in OBFL without breaking 'start-except-last'.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -4629,7 +4630,7 @@
             <template use-when="(= (% $page 2) 1)">
               <header>
                 <field>
-                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="page-content"/>
+                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="page"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -4645,10 +4646,10 @@
               <footer>
                 <!--
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
-                  <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
+                  <marker-reference marker="dash-print-page" direction="backward" scope="page"/>
                 </field>
                 -->
                 <field>
@@ -4673,7 +4674,7 @@
             <template use-when="(= (% $page 2) 0)">
               <header>
                 <field>
-                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="page-content"/>
+                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="page"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -4687,10 +4688,10 @@
               <footer>
                 <!--
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
-                  <marker-reference marker="dash-print-page" direction="backward" scope="page-content"/>
+                  <marker-reference marker="dash-print-page" direction="backward" scope="page"/>
                 </field>
                 -->
                 <field>
@@ -4775,7 +4776,15 @@
             <block>⠁⠁⠁</block>
             <block>⠁⠁⠁</block>
             <block>⠁⠁⠁</block>
-            <block>⠁⠁⠁</block>
+            <block>
+              ⠁⠁⠁
+              <marker class="print-page/prev" value="5"/>
+              <marker class="print-page" value="6"/>
+              <marker class="dash-print-page/prev" value="⠒5"/>
+              <marker class="dash-print-page" value="⠒6"/>
+              <marker class="print-page-dash/prev" value="5⠒"/>
+              <marker class="print-page-dash" value="6⠒"/>
+            </block>
           </sequence>
         </obfl>
       </x:document>
@@ -4783,7 +4792,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -4803,22 +4812,22 @@
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <!--<row>⠒⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⠼⠁</row>--> <!-- -1    ...    -1 -->
+                  <!--<row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁</row>--> <!-- 1     ...     1 -->
                 </page>
                 <!-- left -->
                 <page>
                   <!-- print page 2 -->
-                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 2               --> <!-- was: 1-2             -->
+                  <row>⠼⠁⠒⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1-2             --> <!-- should ideally be: 2               -->
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <!--<row>⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>--> <!-- 2               --> <!-- was: 1-2             -->
+                  <!--<row>⠼⠁⠒⠼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>--> <!-- 1-2               --> <!-- should ideally be: 2               -->
                 </page>
                 <!-- right -->
                 <page>
-                  <row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃⠒⠼⠉</row> <!-- 2-3   ...   2-3 --> <!-- was: 2-3   ...   1-3 -->
+                  <row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠒⠼⠉</row> <!-- 2-3   ...   1-3 --> <!-- should ideally be: 2-3   ...   2-3 -->
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
@@ -4826,29 +4835,29 @@
                   <!-- print page 3 -->
                   <row>⠁⠁⠁</row>
                   <!-- print page 4 -->
-                  <!--<row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠃⠒⠼⠉</row>--> <!-- 2-3   ...   2-3 --> <!-- was: 2-3   ...   1-3 -->
+                  <!--<row>⠼⠃⠒⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠒⠼⠉</row>--> <!-- 2-3   ...   1-3 --> <!-- should ideally be: 2-3   ...   2-3 -->
                 </page>
                 <!-- left -->
                 <page>
-                  <row>⠼⠙⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4-5             --> <!-- was: 3-5             -->
+                  <row>⠼⠉⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3-5             --> <!-- should ideally be: 4-5             -->
                   <row>⠁⠁⠁</row>
                   <!-- print page 5 -->
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
-                  <!--<row>⠼⠙⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>--> <!-- 4-5             --> <!-- was: 3-5             -->
+                  <!--<row>⠼⠉⠒⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row>--> <!-- 3-5             --> <!-- should ideally be: 4-5             -->
                 </page>
                 <!-- right -->
                 <page>
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row> <!-- 5     ...   4-5 --> <!-- was: 5     ...   3-5 -->
+                  <row>⠼⠑⠒⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉⠒⠼⠋</row> <!-- 5-6   ...   3-6 --> <!-- should ideally be: 5-6   ...   4-6 -->
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <row>⠁⠁⠁</row>
                   <!-- print page 6 -->
                   <row/>
-                  <!--<row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙⠒⠼⠑</row>--> <!-- 5     ...   4-5 --> <!-- was: 5     ...   3-5 -->
+                  <!--<row>⠼⠑⠒⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠉⠒⠼⠋</row>--> <!-- 5-6   ...   3-6 --> <!-- should ideally be: 5-6   ...   4-6 -->
                 </page>
               </section>
             </volume>
@@ -4901,7 +4910,7 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -5047,7 +5056,7 @@
               <header/>
               <footer>
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -5618,8 +5627,9 @@
     <x:documentation>
       Tests string(..., first) and string(..., start) with multiple sequences.
       
-      Broken: behavior of page-content changed in Dotify 2.0.0 (see
-      https://github.com/joeha480/dotify/issues/150)
+      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
+      used as the value of a 'start' reference on the following page. However it is currently not
+      possible to do this in OBFL without breaking 'start-except-last'.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -5667,7 +5677,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="foo/prev" direction="forward" scope="page-content" text-style="/-dotify-def:tmp_.+/"/>
+                  <marker-reference marker="foo/prev" direction="forward" scope="page" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="foo" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="foo/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -5707,7 +5717,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -5741,7 +5751,7 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠿⠿⠿⠀⠀⠀⠀⠿⠿⠿</row> <!-- was: ⠿⠿⠿     ⠿⠿ -->
+                  <row>⠿⠿⠿⠀⠀⠀⠀⠀⠿⠿</row> <!-- should ideally be: ⠿⠿⠿    ⠿⠿⠿ -->
                 </page>
               </section>
             </volume>
@@ -6511,7 +6521,6 @@
               ⠤⠤⠤ ⠶
               <anchor item="a"/>
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -6625,7 +6634,6 @@
               <anchor item="b"/>
               ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -6788,7 +6796,6 @@
               ⠤⠤⠤ ⠦<span translate="">2</span>⠴
               <anchor item="b"/>
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -6902,7 +6909,6 @@
                 <block> ⠿⠿⠿ </block>
               </block>
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -7000,7 +7006,6 @@
                 <block><span translate="">2</span> ⠿⠿⠿ </block>
               </block>
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -7202,7 +7207,6 @@
               <anchor item="b"/>
               ⠤⠤⠤
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -7325,7 +7329,6 @@
               <anchor item="b"/>
               ⠤⠤⠤
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -7958,8 +7961,7 @@
             </pre-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               <block>⠤⠤⠤</block>
             </block>
             <block break-before="page"/>
@@ -8063,8 +8065,7 @@
             </pre-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block break-before="page" translate="">
+            <block break-before="page" translate="" id="x">
               <block id="a">⠿⠿⠿ 1</block>
               <block>⠤⠤⠤</block>
             </block>
@@ -9119,8 +9120,7 @@
             </pre-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               <block id="ch_1" translate=""> 1 </block>
               <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
@@ -9288,8 +9288,7 @@
             </post-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               <block id="ch_1" translate=""> 1 </block>
               <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
@@ -9445,7 +9444,9 @@
           <volume-template use-when="(= $volume 1)" sheets-in-volume-max="1000">
             <pre-content>
               <sequence master="front">
-                <block> ⠤⠤⠤⠤⠤ </block>
+                <block>
+                  <block> ⠤⠤⠤⠤⠤ </block>
+                </block>
               </sequence>
               <sequence master="toc">
                 <block>
@@ -9455,8 +9456,9 @@
             </pre-content>
           </volume-template>
           <sequence master="body">
-            <block translate=""/>
-            <block> ⠤⠤⠤⠤⠤ </block>
+            <block id="x">
+              ⠤⠤⠤⠤⠤
+            </block>
           </sequence>
         </obfl>
       </x:document>
@@ -9619,8 +9621,7 @@
             </pre-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               ⠤⠤⠤⠤⠤
             </block>
           </sequence>
@@ -9702,8 +9703,7 @@
             </pre-content>
           </volume-template>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               ⠤⠤⠤⠤⠤
             </block>
           </sequence>
@@ -9844,15 +9844,13 @@
             </item>
           </collection>
           <sequence master="main">
-            <block translate=""/>
-            <block>
+            <block id="x">
               ⠤⠤⠤ ⠶
               <anchor item="a"/>
               ⠤⠤⠤ ⠶⠶
               <anchor item="b"/>
               ⠤⠤⠤
             </block>
-            <block translate=""/>
           </sequence>
         </obfl>
       </x:document>
@@ -10016,7 +10014,9 @@
           <volume-template sheets-in-volume-max="3"/>
           <sequence master="main">
             <block>
-              ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              <block>
+                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+			  </block>
             </block>
           </sequence>
           <sequence master="main" break-before="volume">

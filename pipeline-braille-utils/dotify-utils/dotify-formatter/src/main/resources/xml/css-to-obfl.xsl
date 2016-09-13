@@ -710,7 +710,6 @@
         <xsl:apply-templates mode="block-attr"
                              select="@* except (@type|
                                                 @css:text-transform|@css:hyphens|
-                                                @css:string-set|@css:_obfl-marker|
                                                 @css:line-height|@css:text-align|@css:text-indent|@page-break-inside)"/>
         <xsl:next-match/>
     </xsl:template>
@@ -726,30 +725,15 @@
                                           @css:border-top-pattern or @css:border-bottom-pattern))]">
         <xsl:apply-templates mode="block-attr"
                              select="@css:line-height|@css:text-align|@css:text-indent|@page-break-inside"/>
-        <xsl:apply-templates mode="#current"
-                             select="@css:string-set|@css:_obfl-marker"/>
         <xsl:apply-templates mode="#current"/>
-        <xsl:apply-templates mode="css:anchor" select="@css:id"/>
+        <xsl:apply-templates mode="anchor" select="@css:id"/>
     </xsl:template>
     
     <!--
-        wrap content in additional block or toc-entry element when line-height > 1 is combined with
-        top/bottom margin or border
+        wrap content in additional block or toc-entry element (depending on context) when
+        line-height > 1 is combined with top/bottom margin or border
     -->
-    <xsl:template priority="0.63"
-                  mode="block toc-entry"
-                  match="css:box[@type='block']
-                                [@css:line-height
-                                 and (@css:margin-top or @css:margin-bottom or
-                                      @css:border-top-pattern or @css:border-bottom-pattern)]">
-        <xsl:apply-templates mode="#current" select="@css:string-set|@css:_obfl-marker"/>
-        <xsl:next-match/>
-    </xsl:template>
-    
-    <!--
-        block or toc-entry element depending on context
-    -->
-    <xsl:template priority="0.62"
+    <xsl:template priority="0.61"
                   mode="block"
                   match="css:box[@type='block']
                                 [@css:line-height
@@ -787,7 +771,7 @@
         -->
         <xsl:apply-templates mode="block-attr" select="@css:orphans|@css:widows"/>
         <xsl:apply-templates mode="#current"/>
-        <xsl:apply-templates mode="css:anchor" select="@css:id"/>
+        <xsl:apply-templates mode="anchor" select="@css:id"/>
     </xsl:template>
     
     <!-- ====== -->
@@ -919,7 +903,6 @@
         <xsl:apply-templates mode="td-attr"
                              select="@* except (@type|
                                                 @css:text-transform|@css:hyphens|
-                                                @css:string-set|@css:_obfl-marker|
                                                 @css:table-header-group|
                                                 @css:table-row-group|
                                                 @css:table-footer-group|
@@ -927,8 +910,6 @@
                                                 @css:table-column|
                                                 @css:table-row-span|
                                                 @css:table-column-span)"/>
-        <xsl:apply-templates mode="td"
-                             select="@css:string-set|@css:_obfl-marker"/>
         <xsl:apply-templates mode="td"/>
     </xsl:template>
     
@@ -951,7 +932,7 @@
                       select="(@css:text-transform/string(),$pending-text-transform)[1]"/>
         <xsl:variable name="pending-hyphens" as="xs:string?"
                       select="(@css:hyphens/string(),$pending-hyphens)[1]"/>
-        <xsl:apply-templates mode="#current" select="@css:string-set|@css:_obfl-marker"/>
+        <xsl:apply-templates mode="marker" select="@css:string-set|@css:_obfl-marker"/>
         <xsl:apply-templates mode="assert-nil-attr"
                              select="@* except (@type|
                                                 @css:string-set|
@@ -1021,7 +1002,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:for-each-group>
-        <xsl:apply-templates mode="css:anchor" select="@css:id"/>
+        <xsl:apply-templates mode="anchor" select="@css:id"/>
     </xsl:template>
     
     <!-- ===================== -->
@@ -1030,9 +1011,10 @@
     
     <xsl:template mode="block span td table toc-entry"
                   match="css:box/css:_">
-        <xsl:apply-templates mode="assert-nil-attr" select="@* except (@css:string-set|@css:_obfl-marker)"/>
-        <xsl:apply-templates mode="#current" select="@css:string-set|@css:_obfl-marker"/>
+        <xsl:apply-templates mode="assert-nil-attr" select="@* except (@css:id|@css:string-set|@css:_obfl-marker)"/>
+        <xsl:apply-templates mode="marker" select="@css:string-set|@css:_obfl-marker"/>
         <xsl:apply-templates mode="#current"/>
+        <xsl:apply-templates mode="anchor" select="@css:id"/>
     </xsl:template>
     
     <xsl:template priority="2"
@@ -1414,7 +1396,7 @@
     <!-- ==================== -->
     
     <!--
-        string()
+        string() and target-string()
     -->
     <xsl:template mode="block span toc-entry"
                   match="css:string[@name]">
@@ -1426,7 +1408,10 @@
                                         (if (@target) then 'target-string' else 'string'),'(',@name,')')"/>
         </xsl:if>
         <xsl:variable name="target" as="xs:string?" select="if (@target) then @target else ()"/>
-        <xsl:variable name="target" as="element()?" select="if ($target) then collection()//*[@css:id=$target][1] else ."/>
+        <xsl:variable name="target" as="element()?" select="if ($target)
+                                                            then collection()//*[@css:id=$target][1]
+                                                                 /(descendant-or-self::css:box|following::css:box)[@type='inline'][1]
+                                                            else ."/>
         <xsl:if test="$target">
             <xsl:apply-templates mode="css:eval-string" select="css:string(@name, $target)"/>
         </xsl:if>
@@ -1654,7 +1639,8 @@
         FIXME: id attribute not supported on a span
     -->
     <xsl:template mode="block-attr assert-nil-attr"
-                  match="css:box[@type='inline']/@css:id">
+                  match="css:box[@type='inline']/@css:id|
+                         css:box[@type='inline']/css:_/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
         <!--
             FIXME: what about css:string[@target] and css:box[@css:anchor] ?
@@ -1664,8 +1650,9 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template mode="css:anchor"
-                  match="css:box/@css:id">
+    <xsl:template mode="anchor"
+                  match="css:box/@css:id|
+                         css:box[@type='inline']/css:_/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
         <xsl:if test="collection()/*[@css:flow=$footnote-and-volume-range-flows]/*/@css:anchor=$id">
             <anchor item="{$id}"/>
@@ -1679,18 +1666,16 @@
     <!-- Markers -->
     <!-- ======= -->
     
-    <xsl:template mode="block span td toc-entry"
-                  match="css:box/@css:string-set|
-                         css:box/css:_/@css:string-set">
-        <xsl:apply-templates mode="css:parse-string-set" select="css:parse-string-set(.)"/>
-    </xsl:template>
-    
-    <xsl:template mode="css:parse-string-set"
-                  match="css:string-set">
-        <xsl:variable name="value" as="xs:string*">
-            <xsl:apply-templates mode="css:eval-string-set" select="css:parse-content-list(@value, ())"/>
-        </xsl:variable>
-        <marker class="{@name}" value="{replace(string-join($value,''),'^\s+|\s+$','')}"/>
+    <xsl:template mode="marker"
+                  match="css:box[@type='inline']/@css:string-set|
+                         css:box[@type='inline']/css:_/@css:string-set">
+        <xsl:for-each select="css:parse-string-set(.)">
+            <xsl:variable name="value" as="xs:string*">
+                <xsl:apply-templates mode="css:eval-string-set" select="css:parse-content-list(@value, ())"/>
+            </xsl:variable>
+            <marker class="{@name}/prev"/>
+            <marker class="{@name}" value="{replace(string-join($value,''),'^\s+|\s+$','')}"/>
+        </xsl:for-each>
     </xsl:template>
     
     <xsl:template mode="css:eval-string-set"
@@ -1699,7 +1684,7 @@
         <xsl:sequence select="string(@value)"/>
     </xsl:template>
     
-    <xsl:template mode="block span toc-entry"
+    <xsl:template mode="marker"
                   match="css:box/@css:_obfl-marker|
                          css:box/css:_/@css:_obfl-marker">
         <xsl:for-each select="tokenize(.,' ')">

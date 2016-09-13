@@ -2710,145 +2710,6 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
-  -->
-  <x:scenario label="marker-reference-page-content-forward-backward" xfail="true">
-    <x:documentation>
-      Tests marker-reference with scope page-content. Tested with both forward and backward
-      direction. Tested with markers at the beginning of the sequence, in the middle of a page, at a
-      soft page break within a block, at a soft page break between two blocks, and at a hard page
-      break.
-      
-      Broken: behavior of page-content changed in Dotify 2.0.0 (see
-      https://github.com/joeha480/dotify/issues/150).
-    </x:documentation>
-    <x:call>
-      <x:input port="source">
-        <x:document type="inline">
-          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
-            <layout-master name="a" page-width="10" page-height="5" duplex="true" page-number-variable="page">
-              <default-template>
-                <header>
-                  <field>
-                    <marker-reference marker="foo" direction="forward" scope="page-content"/>
-                  </field>
-                  <field/>
-                  <field>
-                    <marker-reference marker="foo" direction="backward" scope="page-content"/>
-                  </field>
-                </header>
-                <footer/>
-              </default-template>
-            </layout-master>
-            <sequence master="a">
-              <!-- new page -->
-              <block>
-                <marker class="foo" value="1"/>
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ​<!-- new page -->
-                ⠁⠁⠁⠁⠁
-                <marker class="foo" value="2"/>
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ​<!-- new page -->
-                <marker class="foo" value="3"/>
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                <br/><!-- new page --><marker class="foo" value="4"/>⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-              </block>
-              <!-- new page -->
-              <block>
-                <marker class="foo" value="5"/>
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-              </block>
-              <!-- new page -->
-              <block break-before="page">
-                <marker class="foo" value="6"/>
-                ⠁⠁⠁⠁⠁
-                ⠁⠁⠁⠁⠁
-              </block>
-            </sequence>
-          </obfl>
-        </x:document>
-      </x:input>
-    </x:call>
-    <x:context label="result">
-      <x:document type="port" port="result"/>
-    </x:context>
-    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
-      <x:document type="inline">
-        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
-          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
-            <meta>
-              <dc:format>application/x-pef+xml</dc:format>
-            </meta>
-          </head>
-          <body>
-            <volume cols="10" rows="5" rowgap="0" duplex="true">
-              <section>
-                <page>
-                  <!-- 1 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 1   1 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                </page>
-                <page>
-                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠼⠉</row> <!-- 2   3 --> <!-- or should it be?: 2   2 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <!-- 2 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <!-- 3 -->
-                </page>
-                <page>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                </page>
-                <page>
-                  <!-- 4 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 4   4 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                </page>
-                <page>
-                  <!-- 5 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5   5 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                </page>
-                <page>
-                  <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 6   6 -->
-                  <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠁⠁⠁⠁⠁</row>
-                </page>
-              </section>
-            </volume>
-          </body>
-        </pef>
-      </x:document>
-    </x:expect>
-  </x:scenario>
-  
   <x:scenario label="marker-reference-across-sequence-workaround">
     <x:documentation>
       Tests marker-reference with multiple sequences. Currently marker-reference doesn't search
@@ -3253,7 +3114,7 @@
   <x:scenario label="marker-reference-page-first-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'page-first' in CSS. This
-      type is not yet directly supported in OBFL. As a workaround I do a forward page search (left
+      type is not directly supported in OBFL. As a workaround I do a forward page search (left
       corner in this test), and if that does not return a value, a backward sequence search (right
       corner). Tested with markers at the beginning of the sequence, in the middle of a page, at a
       soft page break within a block, at a soft page break between two blocks, and at a hard page
@@ -3388,23 +3249,24 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-page-start-workaround" xfail="true">
+  <x:scenario label="marker-reference-page-start-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'page-start' in CSS. This
-      type is not yet directly supported in OBFL. As a workaround I do a forward page-content search
-      for the marker 'foo/prev' (rendered top left corner), and if that does not return a value, a
-      backward sequence search for the marker 'foo' (top right corner). At any position in the OBFL
-      the value of the preceding marker of class 'foo' matches the value of the following marker of
-      class 'foo/prev'.
+      type is not directly supported in OBFL. As a workaround I do a forward page search for the
+      marker 'foo/prev' (rendered top left corner), and if that does not return a value, a backward
+      sequence search for the marker 'foo' (top right corner). At any position in the OBFL the value
+      of the preceding marker of class 'foo' matches the value of the following marker of class
+      'foo/prev'.
       
-      In addition, tests marker-reference with scope page-content and direction backward, which
-      corresponds with 'page-last-except-start' in CSS (bottom left corner).
+      In addition, tests marker-reference with scope page and direction backward, which corresponds
+      more or less with 'page-last-except-start' in CSS (bottom left corner).
       
       Tested with markers at the beginning of the sequence, in the middle of a page, at a soft page
       break within a block, at a soft page break between two blocks, and at a hard page break.
       
-      Broken: behavior of page-content changed in Dotify 2.0.0 (see
-      https://github.com/joeha480/dotify/issues/150).
+      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
+      used as the value of a 'page-start' reference on the following page. However it is currently
+      not possible to do this in OBFL without breaking 'start-except-last'.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3414,7 +3276,7 @@
               <default-template>
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="page-content"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="page"/>
                   </field>
                   <field/>
                   <field>
@@ -3423,7 +3285,7 @@
                 </header>
                 <footer>
                   <field>
-                    <marker-reference marker="foo" direction="backward" scope="page-content"/>
+                    <marker-reference marker="foo" direction="backward" scope="page"/>
                   </field>
                   <field/>
                   <field/>
@@ -3433,7 +3295,6 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo/prev" value=""/>
                 <marker class="foo" value="1"/>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3446,9 +3307,9 @@
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
-                ​<!-- new page -->
                 <marker class="foo/prev" value="3"/>
                 <marker class="foo" value="3"/>
+                ​<!-- new page -->
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3498,7 +3359,7 @@
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 1 -->
+                  <row>⠼⠁⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 1     -->
                 </page>
                 <page>
                   <row>⠼⠁⠀⠀⠀⠀⠀⠀⠼⠉</row> <!-- 1   3 -->
@@ -3520,30 +3381,30 @@
                 </page>
                 <page>
                   <!-- 4 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠙</row> <!--     4 --> <!-- was: 3   4 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠼⠙</row> <!-- 3   4 --> <!-- should ideally be:     4 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 4 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4     -->
                 </page>
                 <page>
                   <!-- 5 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠑</row> <!--     5 --> <!-- was: 4   5 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 4   5 --> <!-- should ideally be:     5 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 5 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5     -->
                 </page>
                 <page>
                   <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠋</row> <!--     6 --> <!-- was: 5   6 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠼⠋</row> <!-- 5   6 --> <!-- should ideally be:     6 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- was: 6 -->
+                  <row>⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 6     -->
                 </page>
               </section>
             </volume>
@@ -3556,13 +3417,13 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-page-start-except-last-workaround" xfail="true">
+  <x:scenario label="marker-reference-page-start-except-last-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'page-start-except-last' in
-      CSS. This type is not yet directly supported in OBFL. As a workaround I do a forward
-      page-content search for the marker 'foo/prev' (rendered top left corner). At any position in
-      the OBFL the value of the preceding marker of class 'foo' matches the value of the following
-      marker of class 'foo/prev'.
+      CSS. This type is not directly supported in OBFL. As a workaround I do a forward page search
+      for the marker 'foo/prev' (rendered top left corner). At any position in the OBFL the value of
+      the preceding marker of class 'foo' matches the value of the following marker of class
+      'foo/prev'.
       
       In addition, tests marker-reference with scope sequence and direction backward, which
       corresponds with 'page-last' in CSS (bottom left corner).
@@ -3570,8 +3431,10 @@
       Tested with markers at the beginning of the sequence, in the middle of a page, at a soft page
       break within a block, at a soft page break between two blocks, and at a hard page break.
       
-      Broken: behavior of page-content changed in Dotify 2.0.0 (see
-      https://github.com/joeha480/dotify/issues/150).
+      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
+      used as the value of a 'page-start-except-last' reference on the following page. However it is
+      currently not possible to do this in OBFL without breaking 'start-except-last' (notably the
+      "except-last" part).
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3581,7 +3444,7 @@
               <default-template>
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="page-content"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="page"/>
                   </field>
                   <field/>
                   <field/>
@@ -3598,7 +3461,6 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo/prev" value=""/>
                 <marker class="foo" value="1"/>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3611,9 +3473,9 @@
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
-                ​<!-- new page -->
                 <marker class="foo/prev" value="3"/>
                 <marker class="foo" value="3"/>
+                ​<!-- new page -->
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3685,7 +3547,7 @@
                 </page>
                 <page>
                   <!-- 4 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 3 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 --> <!-- should ideally be: (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -3694,7 +3556,7 @@
                 </page>
                 <page>
                   <!-- 5 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 4 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- should ideally be: (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3703,7 +3565,7 @@
                 </page>
                 <page>
                   <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 --> <!-- should ideally be: (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3721,25 +3583,26 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-workaround" xfail="true">
+  <x:scenario label="marker-reference-spread-start-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start' in CSS. This
-      type is not yet directly supported in OBFL. As a workaround I do a forward spread-content
-      search for the marker 'foo/prev' starting on the left page (rendered top left corner), and if
-      that does not return a value, a backward sequence search for the marker 'foo' starting on the
-      right page (top right corner). At any position in the OBFL the value of the preceding marker
-      of class 'foo' matches the value of the following marker of class 'foo/prev'. Unfortunately
-      scope 'spread-content' is not available. In this test I use 'spread' instead.
+      type is not directly supported in OBFL. As a workaround I do a forward spread search for the
+      marker 'foo/prev' starting on the left page (rendered top left corner), and if that does not
+      return a value, a backward sequence search for the marker 'foo' starting on the right page
+      (top right corner). At any position in the OBFL the value of the preceding marker of class
+      'foo' matches the value of the following marker of class 'foo/prev'.
       
-      In addition, tests marker-reference with scope spread-content and direction backward, starting
-      on the right page, which corresponds with 'spread-last-except-start' in CSS (bottom left
-      corner). Because 'spread-content' is not available I use 'spread' in this test.
+      In addition, tests marker-reference with scope spread and direction backward, starting on the
+      right page, which corresponds more or less with 'spread-last-except-start' in CSS (bottom left
+      corner).
       
       Everything tested on both left- and right-hand pages. Tested with markers at the beginning of
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
       
-      Broken: spread-content does not exist.
+      Note: ideally, markers that coincide with spread breaks (forced or not forced) should not be
+      the used as the value of a 'spread-start-except-last' reference on the following page. However
+      it is currently not possible to do this in OBFL without breaking 'spread-start-except-last'.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3749,7 +3612,6 @@
               <template use-when="(= (% $page 2) 1)">
                 <header>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo/prev" direction="forward" scope="spread" start-offset="-1"/>
                   </field>
                   <field/>
@@ -3759,7 +3621,6 @@
                 </header>
                 <footer>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo" direction="backward" scope="spread"/>
                   </field>
                   <field/>
@@ -3769,7 +3630,6 @@
               <template use-when="(= (% $page 2) 0)">
                 <header>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo/prev" direction="forward" scope="spread"/>
                   </field>
                   <field/>
@@ -3779,7 +3639,6 @@
                 </header>
                 <footer>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo" direction="backward" scope="spread" start-offset="1"/>
                   </field>
                   <field/>
@@ -3794,7 +3653,6 @@
             <sequence master="a">
               <!-- right page -->
               <block>
-                <marker class="foo/prev" value=""/>
                 <marker class="foo" value="0"/>
                 ⠁⠁⠁⠁⠁
                 <marker class="foo/prev" value="0"/>
@@ -3857,7 +3715,7 @@
                 <!-- right -->
                 <page>
                   <!-- 0 -->
-                  <row>⠼⠚⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 0    1 --> <!-- was:      1 -->
+                  <row>⠼⠚⠀⠀⠀⠀⠀⠀⠼⠁</row> <!-- 0    1 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <!-- 1 -->
                   <row>⠁⠁⠁⠁⠁</row>
@@ -3888,7 +3746,7 @@
                 <!-- left -->
                 <page>
                   <!-- 4 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 4   5 --> <!-- was: 3   5 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 3   5 --> <!-- should ideally be: 4   5 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -3898,7 +3756,7 @@
                 <!-- right -->
                 <page>
                   <!-- 5 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 4   5 --> <!-- was: 3   5 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 3   5 --> <!-- should ideally be: 4   5 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3908,12 +3766,12 @@
                 <!-- left -->
                 <page>
                   <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠋</row> <!--     6 --> <!-- was: 5   6 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠼⠋</row> <!-- 5   6 --> <!-- should ideally be:     6 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 6 -->
+                  <row>⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 6 -->
                 </page>
               </section>
             </volume>
@@ -3926,14 +3784,13 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-except-last-workaround" xfail="true">
+  <x:scenario label="marker-reference-spread-start-except-last-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start-except-last' in
-      CSS. This type is not yet directly supported in OBFL. As a workaround I do a forward
-      spread-content search for the marker 'foo/prev' (rendered top left corner). At any position in
-      the OBFL the value of the preceding marker of class 'foo' matches the value of the following
-      marker of class 'foo/prev'. Unfortunately scope 'spread-content' is not available. In this
-      test I use 'spread' instead.
+      CSS. This type is not directly supported in OBFL. As a workaround I do a forward spread search
+      for the marker 'foo/prev' (rendered top left corner). At any position in the OBFL the value of
+      the preceding marker of class 'foo' matches the value of the following marker of class
+      'foo/prev'.
       
       In addition, tests marker-reference with scope sequence and direction backward, which
       corresponds with 'spread-last' in CSS (bottom left corner).
@@ -3941,8 +3798,11 @@
       Everything tested on both left- and right-hand pages. Tested with markers at the beginning of
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
-      
-      Broken: spread-content does not exist.
+
+      Note: ideally, markers that coincide with spread breaks (forced or not forced) should not be
+      the used as the value of a 'spread-start-except-last' reference on the following page. However
+      it is currently not possible to do this in OBFL without breaking 'spread-start-except-last'
+      (notably the "except-last" part).
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3952,7 +3812,6 @@
               <template use-when="(= (% $page 2) 1)">
                 <header>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo/prev" direction="forward" scope="spread" start-offset="-1"/>
                   </field>
                   <field/>
@@ -3960,7 +3819,6 @@
                 </header>
                 <footer>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo" direction="backward" scope="sequence"/>
                   </field>
                   <field/>
@@ -3970,7 +3828,6 @@
               <template use-when="(= (% $page 2) 0)">
                 <header>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo/prev" direction="forward" scope="spread"/>
                   </field>
                   <field/>
@@ -3978,7 +3835,6 @@
                 </header>
                 <footer>
                   <field>
-                    <!-- spread-content does not exist so using spread -->
                     <marker-reference marker="foo" direction="backward" scope="sequence" start-offset="1"/>
                   </field>
                   <field/>
@@ -3993,7 +3849,6 @@
             <sequence master="a">
               <!-- right page -->
               <block>
-                <marker class="foo/prev" value=""/>
                 <marker class="foo" value="0"/>
                 ⠁⠁⠁⠁⠁
                 <marker class="foo/prev" value="0"/>
@@ -4056,7 +3911,7 @@
                 <!-- right -->
                 <page>
                   <!-- 0 -->
-                  <row>⠼⠚⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 0 --> <!-- was: (empty) -->
+                  <row>⠼⠚⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 0 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <!-- 1 -->
                   <row>⠁⠁⠁⠁⠁</row>
@@ -4087,7 +3942,7 @@
                 <!-- left -->
                 <page>
                   <!-- 4 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- was: 3 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 --> <!-- should ideally be: 4 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
@@ -4097,7 +3952,7 @@
                 <!-- right -->
                 <page>
                   <!-- 5 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- was: 3 -->
+                  <row>⠼⠉⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 3 --> <!-- should ideally be: 4 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -4107,7 +3962,7 @@
                 <!-- left -->
                 <page>
                   <!-- 6 -->
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) --> <!-- was: 5 -->
+                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 --> <!-- should ideally be: (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -7707,9 +7562,11 @@
   </x:call>
 </x:scenario>
 
-<x:scenario label="manual-volume-breaking-toc">
+<x:scenario label="manual-volume-breaking-toc" xfail="true">
   <x:documentation>
     Tests manual volume breaking in combination with table of contents.
+    
+    Broken: Failed to complete volume division.
   </x:documentation>
   <x:call step="pxi:test">
     <x:input port="source">

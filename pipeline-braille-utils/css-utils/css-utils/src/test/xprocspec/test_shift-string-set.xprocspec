@@ -9,14 +9,16 @@
       <x:input port="source">
         <x:document type="inline">
           <css:_>
-            <css:box type="block">
-              <css:_ css:string-set="foo 'x'"/>
+            <css:box type="block" css:string-set="foo 'x'">
+              <css:box type="inline"/>
+              <css:_ css:string-set="bar 'x'"/>
             </css:box>
             <css:_ css:string-set="bar 'y'"/>
-            <css:box type="block" css:string-set="bar 'z'">
-              <css:box type="block"/>
+            <css:box type="block">
+              <css:box type="block">
+                <css:box type="inline" css:string-set="bar 'z'"/>
+              </css:box>
             </css:box>
-            <css:box type="block"/>
           </css:_>
         </x:document>
       </x:input>
@@ -28,13 +30,17 @@
       <x:document type="inline">
         <css:_>
           <css:box type="block">
+            <css:box type="inline" css:string-set="foo 'x'">
+              <css:_ css:string-set="bar 'x'"/>
+            </css:box>
             <css:_/>
           </css:box>
           <css:_/>
-          <css:box type="block" css:string-set="foo 'x', bar 'y', bar 'z'">
-            <css:box type="block"/>
+          <css:box type="block">
+            <css:box type="block">
+              <css:box type="inline" css:string-set="bar 'y', bar 'z'"/>
+            </css:box>
           </css:box>
-          <css:box type="block"/>
         </css:_>
       </x:document>
     </x:expect>
@@ -51,7 +57,9 @@
                 <css:_ css:string-set="foo '2'"/>
               </css:box>
             </css:box>
-            <css:box type="block" css:string-set="foo '3'"/>
+            <css:box type="block" css:string-set="foo '3'">
+              <css:box type="inline"/>
+            </css:box>
           </css:_>
         </x:document>
       </x:input>
@@ -63,12 +71,14 @@
       <x:document type="inline">
         <css:_>
           <css:_/>
-          <css:box type="block" css:string-set="foo '1'">
-            <css:box type="inline">
+          <css:box type="block">
+            <css:box type="inline" css:string-set="foo '1'">
               <css:_ css:string-set="foo '2'"/>
             </css:box>
           </css:box>
-          <css:box type="block" css:string-set="foo '3'"/>
+          <css:box type="block">
+            <css:box type="inline" css:string-set="foo '3'"/>
+          </css:box>
         </css:_>
       </x:document>
     </x:expect>

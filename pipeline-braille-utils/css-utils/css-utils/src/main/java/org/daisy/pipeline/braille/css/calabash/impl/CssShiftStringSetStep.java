@@ -3,6 +3,7 @@ package org.daisy.pipeline.braille.css.calabash.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Stack;
 
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.CDATA;
@@ -67,6 +68,7 @@ public class CssShiftStringSetStep extends DefaultStep {
 	private static final String XMLNS_CSS = "http://www.daisy.org/ns/pipeline/braille-css";
 	private static final QName CSS_STRING_SET = new QName(XMLNS_CSS, "string-set");
 	private static final QName CSS_BOX = new QName(XMLNS_CSS, "box");
+	private static final QName CSS__ = new QName(XMLNS_CSS, "_");
 	private static final QName _TYPE = new QName("type");
 	
 	private CssShiftStringSetStep(XProcRuntime runtime, XAtomicStep step) {
@@ -93,12 +95,10 @@ public class CssShiftStringSetStep extends DefaultStep {
 	public void run() throws SaxonApiException {
 		super.run();
 		try {
-			List<TermPair<String,TermList>> pendingStringSet = new ArrayList<TermPair<String,TermList>>();
-			while (sourcePipe.moreDocuments()) {
-				XdmNode source = sourcePipe.read();
-				resultPipe.write(
-					new CssShiftStringSetTransform(runtime.getConfiguration().getProcessor().getUnderlyingConfiguration(), pendingStringSet)
-					.transform(source.getUnderlyingNode())); }}
+			XdmNode source = sourcePipe.read();
+			resultPipe.write(
+				new CssShiftStringSetTransform(runtime.getConfiguration().getProcessor().getUnderlyingConfiguration())
+				.transform(source.getUnderlyingNode())); }
 		catch (Exception e) {
 			logger.error("css:shift-string-set failed", e);
 			throw new XProcException(step.getNode(), e); }
@@ -106,63 +106,137 @@ public class CssShiftStringSetStep extends DefaultStep {
 	
 	private static class CssShiftStringSetTransform extends StreamToStreamTransform {
 		
-		private final List<TermPair<String,TermList>> pendingStringSet;
-		
-		public CssShiftStringSetTransform(Configuration configuration, List<TermPair<String,TermList>> pendingStringSet) {
+		public CssShiftStringSetTransform(Configuration configuration) {
 			super(configuration);
-			this.pendingStringSet = pendingStringSet;
 		}
 		
 		protected void _transform(XMLStreamReader reader, BufferedWriter writer) throws TransformationException {
-			int depth = 0;
 			boolean insideInlineBox = false;
-			int inlineBoxDepth = 0;
-			while (true)
-				try {
-					int event = reader.next();
-					writer.copyEvent(event, reader);
-					switch (event) {
-					case START_ELEMENT:
-						depth++;
-						boolean isBox = CSS_BOX.equals(reader.getName());
-						boolean isInlineBox = false;
-						String stringSet = null;
-						for (int i = 0; i < reader.getAttributeCount(); i++) {
-							QName name = reader.getAttributeName(i);
-							String value = reader.getAttributeValue(i);
-							if (CSS_STRING_SET.equals(name))
-								stringSet = value;
+			Stack<Boolean> blockBoxes = new Stack<Boolean>();
+			Stack<Boolean> inlineBoxes = new Stack<Boolean>();
+			List<TermPair<String,TermList>> pendingStringSet = new ArrayList<TermPair<String,TermList>>();
+			ShiftedStringSet shiftedStringSet = null;
+			try {
+				writer.writeStartDocument(); // why is this needed?
+				while (true)
+					try {
+						int event = reader.next();
+						switch (event) {
+						case START_ELEMENT: {
+							writer.copyEvent(event, reader);
+							boolean isInlineBox = false;
+							boolean isBlockBox = false;
+							if (insideInlineBox)
+								writer.copyAttributes(reader);
 							else {
-								if (isBox && _TYPE.equals(name) && "inline".equals(value))
-									isInlineBox = true;
-								writer.writeAttribute(name, value); }}
-						if (isBox || insideInlineBox) {
-							if (stringSet != null)
-								if (!pendingStringSet.isEmpty())
-									parseStringSet(stringSet, pendingStringSet);
+								boolean isBox = CSS_BOX.equals(reader.getName());
+								String stringSet = null;
+								for (int i = 0; i < reader.getAttributeCount(); i++) {
+									QName name = reader.getAttributeName(i);
+									String value = reader.getAttributeValue(i);
+									if (CSS_STRING_SET.equals(name))
+										stringSet = value;
+									else {
+										if (isBox && _TYPE.equals(name))
+											if ("inline".equalsIgnoreCase(value))
+												isInlineBox = true;
+											else if ("block".equalsIgnoreCase(value))
+												isBlockBox = true;
+										writer.writeAttribute(name, value); }}
+								if (isBlockBox || isInlineBox)
+									if (shiftedStringSet != null) {
+										shiftedStringSet.render();
+										shiftedStringSet = null; }
+								if (isInlineBox) {
+									if (stringSet != null)
+										if (!pendingStringSet.isEmpty())
+											parseStringSet(stringSet, pendingStringSet);
+										else
+											writer.writeAttribute(CSS_STRING_SET, stringSet);
+									if (!pendingStringSet.isEmpty()) {
+										stringSet = serializeStringSet(pendingStringSet);
+										pendingStringSet.clear();
+										if (stringSet != null)
+											writer.writeAttribute(CSS_STRING_SET, stringSet); }}
 								else
-									writer.writeAttribute(CSS_STRING_SET, stringSet);
-							if (!pendingStringSet.isEmpty()) {
-								stringSet = serializeStringSet(pendingStringSet);
-								pendingStringSet.clear();
-								if (stringSet != null)
-									writer.writeAttribute(CSS_STRING_SET, stringSet); }}
-						else if (stringSet != null) {
-							parseStringSet(stringSet, pendingStringSet); }
-						if (!insideInlineBox && isInlineBox) {
-							insideInlineBox = true;
-							inlineBoxDepth = depth; }
-						break;
-					case END_ELEMENT:
-						if (inlineBoxDepth == depth)
-							insideInlineBox = false;
-						depth--;
-						break;
-					}}
-				catch (NoSuchElementException e) {
-					break; }
-				catch (XMLStreamException e) {
-					throw new TransformationException(e); }
+									parseStringSet(stringSet, pendingStringSet);
+								if (isInlineBox)
+									insideInlineBox = true; }
+							blockBoxes.push(isBlockBox);
+							inlineBoxes.push(isInlineBox);
+							break; }
+						case END_ELEMENT: {
+							boolean isBlockBox = blockBoxes.pop();
+							boolean isInlineBox = inlineBoxes.pop();
+							if (isBlockBox) {
+								if (!pendingStringSet.isEmpty()) {
+									if (shiftedStringSet == null)
+										throw new RuntimeException();
+									else
+										shiftedStringSet.putAll(pendingStringSet);
+									pendingStringSet.clear(); }}
+							if (isInlineBox) {
+								if (shiftedStringSet != null)
+									throw new RuntimeException("coding error");
+								shiftedStringSet = new ShiftedStringSet();
+								writer.writeEvent(shiftedStringSet); }
+							if (isInlineBox)
+								insideInlineBox = false;
+							writer.copyEvent(event, reader);
+							break; }
+						default:
+							writer.copyEvent(event, reader); }}
+					catch (NoSuchElementException e) {
+						break; }
+				if (!pendingStringSet.isEmpty())
+					if (shiftedStringSet == null)
+						throw new RuntimeException("invalid input");
+					else
+						shiftedStringSet.putAll(pendingStringSet);
+				if (shiftedStringSet != null)
+					shiftedStringSet.render();
+				writer.flush(); }
+			catch (XMLStreamException e) {
+				throw new TransformationException(e); }
+		}
+		
+		private static class ShiftedStringSet implements FutureEvent {
+			
+			private List<TermPair<String,TermList>> stringSet;
+			private boolean ready = false;
+			
+			private ShiftedStringSet() {
+			}
+			
+			private void put(TermPair<String,TermList> stringSet) {
+				if (this.stringSet == null)
+					this.stringSet = new ArrayList<TermPair<String,TermList>>();
+				this.stringSet.add(stringSet);
+			}
+			
+			private void putAll(List<TermPair<String,TermList>> stringSet) {
+				for (TermPair<String,TermList> s : stringSet)
+					put(s);
+			}
+			
+			private void render() {
+				ready = true;
+			}
+			
+			public void writeTo(Writer writer) throws XMLStreamException {
+				if (!ready)
+					throw new XMLStreamException("not ready");
+				if (stringSet != null) {
+					String value = serializeStringSet(stringSet);
+					if (value != null)
+						writer.writeStartElement(CSS__);
+						writer.writeAttribute(CSS_STRING_SET, value);
+						writer.writeEndElement(); }
+			}
+			
+			public boolean isReady() {
+				return ready;
+			}
 		}
 	}
 	
