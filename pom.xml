@@ -32,8 +32,8 @@
     <module>dtbook-to-odt</module>
     <module>dtbook-to-zedai</module>
     <module>dtbook-validator</module>
-    <module>epub3-validator</module>
     <module>epub3-to-daisy202</module>
+    <module>epub3-validator</module>
     <module>html-to-dtbook</module>
     <module>html-to-epub3</module>
     <module>nimas-fileset-validator</module>
