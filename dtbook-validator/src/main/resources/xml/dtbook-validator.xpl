@@ -115,32 +115,33 @@
         </p:input>
     </px:message>
     <p:sink/>
-
-    <px:fileset-add-entry name="create-fileset-for-dtbook-doc">
+    
+    <px:fileset-create>
+        <p:with-option name="base" select="replace($input-dtbook,'[^/]+$','')"/>
+    </px:fileset-create>
+    <px:fileset-add-entry>
         <p:with-option name="href" select="$input-dtbook"/>
-        <p:input port="source">
-            <p:inline>
-                <d:fileset/>
-            </p:inline>
-        </p:input>
     </px:fileset-add-entry>
-
-
-    <px:message message="DTBook validator: Checking that DTBook document exists and is well-formed"/>
+    <p:identity name="create-fileset-for-dtbook-doc"/>
     <p:sink/>
-
+    
     <!--check that the package document is well-formed XML -->
-    <px:check-files-wellformed name="check-dtbook-wellformed">
+    <p:identity>
         <p:input port="source">
             <p:pipe port="result" step="create-fileset-for-dtbook-doc"/>
         </p:input>
-    </px:check-files-wellformed>
+    </p:identity>
+    <px:message message="DTBook validator: Checking that DTBook document exists and is well-formed"/>
+    <px:check-files-wellformed name="check-dtbook-wellformed"/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe port="validation-status" step="check-dtbook-wellformed"/>
+        </p:input>
+    </p:identity>
+    <px:message message="DTBook validator: Done checking that DTBook document exists and is well-formed"/>
 
     <p:choose name="if-dtbook-wellformed">
-        <p:xpath-context>
-            <p:pipe port="validation-status" step="check-dtbook-wellformed"/>
-        </p:xpath-context>
-
+        
         <!-- if the dtbook file was well-formed -->
         <p:when test="d:validation-status/@result = 'ok'">
 
