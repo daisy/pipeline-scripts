@@ -14,5 +14,5 @@
   <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>DAISY Pipeline 2 module :: EPUB3 Validator</name>
+  <name>DAISY Pipeline 2 module :: EPUB 3 Validator</name>
 </project>
