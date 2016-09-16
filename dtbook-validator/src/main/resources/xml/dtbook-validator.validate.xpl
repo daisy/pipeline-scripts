@@ -63,6 +63,7 @@
     <p:option name="mathml-version"/>
     <p:option name="check-images"/>
     <p:option name="base-uri"/>
+    <p:option name="nimas"/>
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
@@ -153,10 +154,29 @@
         </p:choose>
     </p:group>
     
-    <!-- validate with schematron -->
+    
+    <p:choose name="choose-schematron">
+        <p:when test="$nimas = 'true'">
+            <p:output port="result"/>
+            <p:identity name="use-nimas-schematron">
+                <p:input port="source">
+                    <p:document href="./schema/sch/dtbook.mathml.nimas.sch"/>
+                </p:input>
+            </p:identity>
+        </p:when>
+        <p:otherwise>
+            <p:output port="result"/>
+            <p:identity name="use-default-schematron">
+                <p:input port="source">
+                    <p:document href="./schema/sch/dtbook.mathml.sch"/>
+                </p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
+    <!-- validate with schematron --> 
     <p:validate-with-schematron assert-valid="false" name="validate-against-schematron">
         <p:input port="schema">
-            <p:document href="./schema/sch/dtbook.mathml.sch"/>
+            <p:pipe port="result" step="choose-schematron"/>
         </p:input>
         <p:input port="source">
             <p:pipe port="source" step="dtbook-validator.validate"/>
