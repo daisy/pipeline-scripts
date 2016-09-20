@@ -110,8 +110,6 @@
         <p:documentation>Utilities for representing a fileset.</p:documentation>
     </p:import>
 
-    <p:import href="dtbook-validator.select-schema.xpl"/>
-    <p:import href="dtbook-validator.check-images.xpl"/>
     <p:import href="dtbook-validator.validate.xpl"/>
     <p:import href="dtbook-validator.store.xpl"/>
     <p:variable name="dtbook-filename" select="tokenize($input-dtbook, '/')[last()]"/>
