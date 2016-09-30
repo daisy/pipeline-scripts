@@ -404,7 +404,7 @@
                     https://github.com/sbsdev/pipeline-mod-sbs/issues/42). An alternative solution
                     could be to use "start" inside @page and "first" inside @page:first.
                 -->
-                <marker-reference marker="{@name}/prev" direction="forward" scope="page"
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content"
                                   text-style="-dotify-def:{$var-name};{$text-transform-decl}"/>
                 <!--
                     TODO: check that this does not match too much at the end of the page!
@@ -420,7 +420,7 @@
                     Note that "start" behaves like "first" when no assignments have been made yet,
                     which is not exactly according to the spec.
                 -->
-                <marker-reference marker="{@name}/prev" direction="forward" scope="page">
+                <marker-reference marker="{@name}/prev" direction="forward" scope="page-content">
                     <xsl:if test="not($text-transform=('none','auto'))">
                         <xsl:attribute name="text-style" select="concat('text-transform:',$text-transform)"/>
                     </xsl:if>

@@ -1666,6 +1666,18 @@
     <!-- Markers -->
     <!-- ======= -->
     
+    <xsl:template priority="0.6"
+                  mode="marker"
+                  match="css:box[@type='block']/css:box[@type='inline'][1]/@css:string-set|
+                         css:box[@type='block']/css:box[@type='inline'][1]
+                         /css:_[not(preceding-sibling::*) and
+                                not(preceding-sibling::text()[not(matches(string(),'^[\s&#x2800;]*$'))])]
+                         /@css:string-set">
+        <block>
+            <xsl:next-match/>
+        </block>
+    </xsl:template>
+    
     <xsl:template mode="marker"
                   match="css:box[@type='inline']/@css:string-set|
                          css:box[@type='inline']/css:_/@css:string-set">

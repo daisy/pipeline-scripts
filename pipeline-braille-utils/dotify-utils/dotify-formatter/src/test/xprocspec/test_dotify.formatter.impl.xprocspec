@@ -2469,7 +2469,9 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -2493,13 +2495,17 @@
               </block>
               <!-- new page -->
               <block>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- new page -->
               <block break-before="page">
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -2605,7 +2611,9 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -2629,13 +2637,17 @@
               </block>
               <!-- new page -->
               <block>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- new page -->
               <block break-before="page">
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -2710,6 +2722,148 @@
     </x:expect>
   </x:scenario>
   
+   <!--
+      TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
+  -->
+  <x:scenario label="marker-reference-page-content-forward-backward">
+    <x:documentation>
+      Tests marker-reference with scope page-content. Tested with both forward and backward
+      direction. Tested with markers at the beginning of the sequence, in the middle of a page, at a
+      soft page break within a block, at a soft page break between two blocks, and at a hard page
+      break.
+    </x:documentation>
+    <x:call>
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="a" page-width="10" page-height="5" duplex="true" page-number-variable="page">
+              <default-template>
+                <header>
+                  <field>
+                    <marker-reference marker="foo" direction="forward" scope="page-content"/>
+                  </field>
+                  <field/>
+                  <field>
+                    <marker-reference marker="foo" direction="backward" scope="page-content"/>
+                  </field>
+                </header>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="a">
+              <!-- new page -->
+              <block>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- new page -->
+                ⠁⠁⠁⠁⠁
+                <marker class="foo" value="2"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ​<!-- new page -->
+                <marker class="foo" value="3"/>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                <br/><!-- new page --><marker class="foo" value="4"/>⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block>
+                <block>
+                  <marker class="foo" value="5"/>
+                </block>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block break-before="page">
+                <block>
+                  <marker class="foo" value="6"/>
+                </block>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="10" rows="5" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <!-- 1 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <row>⠼⠃⠀⠀⠀⠀⠀⠀⠼⠉</row> <!-- 2   3 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 2 -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <!-- 3 -->
+                </page>
+                <page>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 4 -->
+                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠼⠙</row> <!-- 4   4 --> <!-- should ideally be: (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 5 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+
   <x:scenario label="marker-reference-across-sequence-workaround">
     <x:documentation>
       Tests marker-reference with multiple sequences. Currently marker-reference doesn't search
@@ -2735,7 +2889,9 @@
             </layout-master>
             <sequence master="a">
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
               </block>
             </sequence>
@@ -3141,7 +3297,9 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3165,13 +3323,17 @@
               </block>
               <!-- new page -->
               <block>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- new page -->
               <block break-before="page">
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -3263,10 +3425,6 @@
       
       Tested with markers at the beginning of the sequence, in the middle of a page, at a soft page
       break within a block, at a soft page break between two blocks, and at a hard page break.
-      
-      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
-      used as the value of a 'page-start' reference on the following page. However it is currently
-      not possible to do this in OBFL without breaking 'start-except-last'.
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3276,7 +3434,7 @@
               <default-template>
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="page"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="page-content"/>
                   </field>
                   <field/>
                   <field>
@@ -3295,7 +3453,9 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3321,15 +3481,19 @@
               </block>
               <!-- new page -->
               <block>
-                <marker class="foo/prev" value="4"/>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo/prev" value="4"/>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- new page -->
               <block break-before="page">
-                <marker class="foo/prev" value="5"/>
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo/prev" value="5"/>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -3390,7 +3554,7 @@
                 </page>
                 <page>
                   <!-- 5 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠼⠑</row> <!-- 4   5 --> <!-- should ideally be:     5 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠑</row> <!--     5 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3399,7 +3563,7 @@
                 </page>
                 <page>
                   <!-- 6 -->
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠼⠋</row> <!-- 5   6 --> <!-- should ideally be:     6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠋</row> <!--     6 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3430,11 +3594,6 @@
       
       Tested with markers at the beginning of the sequence, in the middle of a page, at a soft page
       break within a block, at a soft page break between two blocks, and at a hard page break.
-      
-      Note: ideally, markers that coincide with page breaks (forced or not forced) should not be the
-      used as the value of a 'page-start-except-last' reference on the following page. However it is
-      currently not possible to do this in OBFL without breaking 'start-except-last' (notably the
-      "except-last" part).
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3444,7 +3603,7 @@
               <default-template>
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="page"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="page-content"/>
                   </field>
                   <field/>
                   <field/>
@@ -3461,7 +3620,9 @@
             <sequence master="a">
               <!-- new page -->
               <block>
-                <marker class="foo" value="1"/>
+                <block>
+                  <marker class="foo" value="1"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
@@ -3487,15 +3648,19 @@
               </block>
               <!-- new page -->
               <block>
-                <marker class="foo/prev" value="4"/>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo/prev" value="4"/>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- new page -->
               <block break-before="page">
-                <marker class="foo/prev" value="5"/>
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo/prev" value="5"/>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -3556,7 +3721,7 @@
                 </page>
                 <page>
                   <!-- 5 -->
-                  <row>⠼⠙⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 4 --> <!-- should ideally be: (empty) -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3565,7 +3730,7 @@
                 </page>
                 <page>
                   <!-- 6 -->
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 --> <!-- should ideally be: (empty) -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3583,7 +3748,7 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-workaround">
+  <x:scenario label="marker-reference-spread-start-workaround" xfail="true">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start' in CSS. This
       type is not directly supported in OBFL. As a workaround I do a forward spread search for the
@@ -3600,9 +3765,7 @@
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
       
-      Note: ideally, markers that coincide with spread breaks (forced or not forced) should not be
-      the used as the value of a 'spread-start-except-last' reference on the following page. However
-      it is currently not possible to do this in OBFL without breaking 'spread-start-except-last'.
+      Broken: no "spread-content".
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3653,7 +3816,9 @@
             <sequence master="a">
               <!-- right page -->
               <block>
-                <marker class="foo" value="0"/>
+                <block>
+                  <marker class="foo" value="0"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 <marker class="foo/prev" value="0"/>
                 <marker class="foo" value="1"/>
@@ -3681,15 +3846,19 @@
               </block>
               <!-- right page -->
               <block>
-                <marker class="foo/prev" value="4"/>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo/prev" value="4"/>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- left page -->
               <block break-before="page">
-                <marker class="foo/prev" value="5"/>
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo/prev" value="5"/>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -3766,7 +3935,7 @@
                 <!-- left -->
                 <page>
                   <!-- 6 -->
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠼⠋</row> <!-- 5   6 --> <!-- should ideally be:     6 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠼⠋</row> <!--     6 -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -3784,7 +3953,7 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-except-last-workaround">
+  <x:scenario label="marker-reference-spread-start-except-last-workaround" xfail="true">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start-except-last' in
       CSS. This type is not directly supported in OBFL. As a workaround I do a forward spread search
@@ -3799,10 +3968,7 @@
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
 
-      Note: ideally, markers that coincide with spread breaks (forced or not forced) should not be
-      the used as the value of a 'spread-start-except-last' reference on the following page. However
-      it is currently not possible to do this in OBFL without breaking 'spread-start-except-last'
-      (notably the "except-last" part).
+      Broken: no "spread-content".
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3849,7 +4015,9 @@
             <sequence master="a">
               <!-- right page -->
               <block>
-                <marker class="foo" value="0"/>
+                <block>
+                  <marker class="foo" value="0"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 <marker class="foo/prev" value="0"/>
                 <marker class="foo" value="1"/>
@@ -3877,15 +4045,19 @@
               </block>
               <!-- right page -->
               <block>
-                <marker class="foo/prev" value="4"/>
-                <marker class="foo" value="5"/>
+                <block>
+                  <marker class="foo/prev" value="4"/>
+                  <marker class="foo" value="5"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
               <!-- left page -->
               <block break-before="page">
-                <marker class="foo/prev" value="5"/>
-                <marker class="foo" value="6"/>
+                <block>
+                  <marker class="foo/prev" value="5"/>
+                  <marker class="foo" value="6"/>
+                </block>
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
@@ -3962,7 +4134,7 @@
                 <!-- left -->
                 <page>
                   <!-- 6 -->
-                  <row>⠼⠑⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- 5 --> <!-- should ideally be: (empty) -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row/>
@@ -7562,7 +7734,7 @@
   </x:call>
 </x:scenario>
 
-<x:scenario label="manual-volume-breaking-toc" xfail="true">
+<x:scenario label="manual-volume-breaking-toc" pending="xfail (Exception)">
   <x:documentation>
     Tests manual volume breaking in combination with table of contents.
     
