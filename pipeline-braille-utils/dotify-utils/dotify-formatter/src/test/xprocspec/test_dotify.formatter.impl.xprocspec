@@ -7679,7 +7679,7 @@
   </x:expect>
 </x:scenario>
 
-<x:scenario label="block-underline-with-child-block" pending="xfail (Exception)">
+<x:scenario label="block-underline-with-child-block" pending="undefined behavior">
   <x:documentation>
     Tests underlining of a block with a child block. Currently causes an error because the behavior is undefined.
   </x:documentation>
