@@ -463,7 +463,7 @@
                     Note that "start" behaves like "first" when no assignments have been made yet,
                     which is not exactly according to the spec.
                 -->
-                <marker-reference marker="{@name}/prev" direction="forward" scope="spread"
+                <marker-reference marker="{@name}/prev" direction="forward" scope="spread-content"
                                   text-style="-dotify-def:{$var-name};{$text-transform-decl}">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
@@ -487,7 +487,7 @@
                     Note that "start" behaves like "first" when no assignments have been made yet,
                     which is not exactly according to the spec.
                 -->
-                <marker-reference marker="{@name}/prev" direction="forward" scope="spread">
+                <marker-reference marker="{@name}/prev" direction="forward" scope="spread-content">
                     <xsl:if test="$page-side='right'">
                         <xsl:attribute name="start-offset" select="'-1'"/>
                     </xsl:if>

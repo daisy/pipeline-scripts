@@ -4539,8 +4539,6 @@
       
       Note: the start/last-except-start part of the test is currently disabled because
       "last-except-start" is not supported anymore.
-      
-      Broken: no "spread-content".
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -4650,7 +4648,7 @@
                   <string value=""/>
                 </field>
                 <field>
-                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="spread" start-offset="-1"/>
+                  <marker-reference marker="print-page-dash/prev" direction="forward" scope="spread-content" start-offset="-1"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-def:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                 </field>
@@ -4672,7 +4670,7 @@
                 </field>
                 <!--
                 <field>
-                  <marker-reference marker="print-page/prev" direction="forward" scope="spread" text-style="/-dotify-def:tmp_.+/" start-offset="-1"/>
+                  <marker-reference marker="print-page/prev" direction="forward" scope="spread-content" text-style="/-dotify-def:tmp_.+/" start-offset="-1"/>
                   <marker-reference marker="print-page" direction="backward" scope="sequence" text-style="/-dotify-defifndef:tmp_.+/"/>
                   <marker-reference marker="print-page/entry" direction="backward" scope="sequence" text-style="/-dotify-ifndef:tmp_.+/"/>
                   <marker-reference marker="dash-print-page" direction="backward" scope="spread"/>
@@ -4814,7 +4812,7 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare" xfail="true">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">

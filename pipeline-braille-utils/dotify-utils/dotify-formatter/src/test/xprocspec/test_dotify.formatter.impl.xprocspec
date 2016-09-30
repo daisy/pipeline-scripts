@@ -3748,7 +3748,7 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-workaround" xfail="true">
+  <x:scenario label="marker-reference-spread-start-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start' in CSS. This
       type is not directly supported in OBFL. As a workaround I do a forward spread search for the
@@ -3764,8 +3764,6 @@
       Everything tested on both left- and right-hand pages. Tested with markers at the beginning of
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
-      
-      Broken: no "spread-content".
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3775,7 +3773,7 @@
               <template use-when="(= (% $page 2) 1)">
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="spread" start-offset="-1"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread-content" start-offset="-1"/>
                   </field>
                   <field/>
                   <field>
@@ -3793,7 +3791,7 @@
               <template use-when="(= (% $page 2) 0)">
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="spread"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread-content"/>
                   </field>
                   <field/>
                   <field>
@@ -3953,7 +3951,7 @@
   <!--
       TODO: remove ZWSP before comments when comment-in-white-space issue is fixed
   -->
-  <x:scenario label="marker-reference-spread-start-except-last-workaround" xfail="true">
+  <x:scenario label="marker-reference-spread-start-except-last-workaround">
     <x:documentation>
       Tests (hypothetical) marker-reference type that corresponds with 'spread-start-except-last' in
       CSS. This type is not directly supported in OBFL. As a workaround I do a forward spread search
@@ -3967,8 +3965,6 @@
       Everything tested on both left- and right-hand pages. Tested with markers at the beginning of
       the sequence, in the middle of a page, at a soft page break within a block, at a soft page
       break between two blocks, and at a hard page break.
-
-      Broken: no "spread-content".
     </x:documentation>
     <x:call>
       <x:input port="source">
@@ -3978,7 +3974,7 @@
               <template use-when="(= (% $page 2) 1)">
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="spread" start-offset="-1"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread-content" start-offset="-1"/>
                   </field>
                   <field/>
                   <field/>
@@ -3994,7 +3990,7 @@
               <template use-when="(= (% $page 2) 0)">
                 <header>
                   <field>
-                    <marker-reference marker="foo/prev" direction="forward" scope="spread"/>
+                    <marker-reference marker="foo/prev" direction="forward" scope="spread-content"/>
                   </field>
                   <field/>
                   <field/>
