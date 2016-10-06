@@ -14,6 +14,7 @@
                 exclude-inline-prefixes="#all"
                 name="main">
     
+    <p:option name="epub" required="true"/>
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
     <p:output port="fileset.out" primary="true">
@@ -173,16 +174,19 @@
     
     <px:message message="Inlining global CSS"/>
     <p:group>
+        <p:variable name="abs-stylesheet"
+                    select="string-join(for $s in tokenize($stylesheet,'\s+')[not(.='')]
+                                        return resolve-uri($s,$epub),' ')"/>
         <p:variable name="first-css-stylesheet"
-                    select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
+                    select="tokenize($abs-stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
         <p:variable name="first-css-stylesheet-index"
-                    select="(index-of(tokenize($stylesheet,'\s+')[not(.='')], $first-css-stylesheet),10000)[1]"/>
+                    select="(index-of(tokenize($abs-stylesheet,'\s+')[not(.='')], $first-css-stylesheet),10000)[1]"/>
         <p:variable name="stylesheets-to-be-inlined"
                     select="string-join((
-                              (tokenize($stylesheet,'\s+')[not(.='')])[position()&lt;$first-css-stylesheet-index],
+                              (tokenize($abs-stylesheet,'\s+')[not(.='')])[position()&lt;$first-css-stylesheet-index],
                               $default-stylesheet,
                               resolve-uri('../../css/default.scss'),
-                              (tokenize($stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
+                              (tokenize($abs-stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
             <p:inline><_/></p:inline>
         </p:variable>
         <px:message severity="DEBUG">

@@ -2,7 +2,6 @@
 <p:declare-step type="px:epub3-to-pef" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-                xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
@@ -107,9 +106,7 @@ even though the provided CSS is more specific.
     <p:import href="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- ================================================= -->
     <!-- Create a <c:param-set/> of the options            -->
@@ -155,21 +152,6 @@ even though the provided CSS is more specific.
         </p:with-option>
     </px:epub3-to-pef.load>
     
-    <!-- Get the OPF so that we can use the metadata in options -->
-    <p:identity>
-        <p:input port="source">
-            <p:pipe port="fileset.out" step="load"/>
-        </p:input>
-    </p:identity>
-    <px:message message="Getting the OPF"/>
-    <px:fileset-load media-types="application/oebps-package+xml">
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.out" step="load"/>
-        </p:input>
-    </px:fileset-load>
-    <p:identity name="opf"/>
-    <p:sink/>
-    
     <!-- ============= -->
     <!-- EPUB 3 TO PEF -->
     <!-- ============= -->
@@ -180,14 +162,14 @@ even though the provided CSS is more specific.
     </p:identity>
     <px:message message="Done loading EPUB, starting conversion to PEF"/>
     <px:epub3-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css" name="convert">
+        <p:with-option name="epub" select="$epub"/>
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-        <p:with-option name="stylesheet" select="string-join(for $s in tokenize($stylesheet,'\s+')[not(.='')]
-                                                 return resolve-uri($s,$epub),' ')"/>
+        <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="apply-document-specific-stylesheets" select="$apply-document-specific-stylesheets"/>
         <p:with-option name="transform" select="$transform"/>
         <p:with-option name="include-obfl" select="$include-obfl"/>
@@ -207,14 +189,14 @@ even though the provided CSS is more specific.
     </p:identity>
     <px:message message="Storing PEF"/>
     <p:delete match="/*/@xml:base"/>
-    <px:xml-to-pef.store>
+    <px:epub3-to-pef.store>
+        <p:with-option name="epub" select="$epub"/>
+        <p:input port="opf">
+            <p:pipe step="load" port="opf"/>
+        </p:input>
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
         </p:input>
-        <p:with-option name="name" select="if (ends-with(lower-case($epub),'.epub')) then replace($epub,'^.*/([^/]*)\.[^/\.]*$','$1')
-                                           else (/opf:package/opf:metadata/dc:identifier[not(@refines)], 'unknown-identifier')[1]">
-            <p:pipe step="opf" port="result"/>
-        </p:with-option>
         <p:with-option name="include-brf" select="$include-brf"/>
         <p:with-option name="include-preview" select="$include-preview"/>
         <p:with-option name="include-obfl" select="$include-obfl"/>
@@ -223,6 +205,6 @@ even though the provided CSS is more specific.
         <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
         <p:with-option name="brf-output-dir" select="$brf-output-dir"/>
         <p:with-option name="preview-output-dir" select="$preview-output-dir"/>
-    </px:xml-to-pef.store>
+    </px:epub3-to-pef.store>
     
 </p:declare-step>
