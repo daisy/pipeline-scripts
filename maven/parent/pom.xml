@@ -6,7 +6,10 @@
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>modules-parent</artifactId>
-    <version>1.3</version>
+    <!--
+        depends on https://github.com/daisy/pipeline-build-utils/pull/29
+    -->
+    <version>1.5-SNAPSHOT</version>
     <relativePath />
   </parent>
 
