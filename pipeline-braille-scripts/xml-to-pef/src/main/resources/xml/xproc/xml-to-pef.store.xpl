@@ -3,6 +3,7 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
                 exclude-inline-prefixes="#all"
                 name="main">
     
@@ -38,9 +39,9 @@
                                                    then $brf-output-dir
                                                    else ''"/>
         <p:with-option name="brf-name-pattern" select="concat($name,'_vol-{}')"/>
-        <p:with-option name="brf-file-format" select="concat($ascii-file-format,'(locale:',(/*/@xml:lang,'und')[1],')')"/>
+        <p:with-option name="brf-file-format" select="concat($ascii-file-format,'(locale:',(//pef:meta/dc:language,'und')[1],')')"/>
         <p:with-option name="brf-table" select="if ($ascii-table!='') then $ascii-table
-                                                else concat('(locale:',(/*/@xml:lang,'und')[1],')')"/>
+                                                else concat('(locale:',(//pef:meta/dc:language,'und')[1],')')"/>
     </pef:store>
     
     <!-- ========== -->

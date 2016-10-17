@@ -291,20 +291,7 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-    <!-- add xml:lang -->
-    <p:choose>
-        <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
-            <p:pipe port="result" step="opf"/>
-        </p:variable>
-        <p:when test="not($lang='und')">
-            <p:add-attribute match="/*" attribute-name="xml:lang">
-                <p:with-option name="attribute-value" select="$lang"/>
-            </p:add-attribute>
-        </p:when>
-        <p:otherwise>
-            <p:identity/>
-        </p:otherwise>
-    </p:choose>
+    
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
             <p:pipe port="result" step="opf"/>

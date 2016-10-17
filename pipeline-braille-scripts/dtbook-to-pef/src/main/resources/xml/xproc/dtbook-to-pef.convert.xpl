@@ -189,15 +189,4 @@
         </p:input>
     </pef:add-metadata>
     
-    <p:choose>
-        <p:when test="not($lang='und')">
-            <p:add-attribute match="/*" attribute-name="xml:lang">
-                <p:with-option name="attribute-value" select="$lang"/>
-            </p:add-attribute>
-        </p:when>
-        <p:otherwise>
-            <p:identity/>
-        </p:otherwise>
-    </p:choose>
-    
 </p:declare-step>
