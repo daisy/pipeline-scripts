@@ -314,15 +314,15 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 						if (wrapInfo.get(i) == HARD_WRAP) {
 							int cut = i + 1;
 							
-							// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (should be only one)
+							// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (all except NBSP are already collapsed into one)
 							while (cut > 0 && charBuffer.charAt(cut - 1) == blankChar) cut--;
-							String rv = charBuffer.substring(0, cut);
 							
 							// preserve if at beginning of stream
 							if (cut == 0)
-								rv += blankChar;
+								cut = i + 1;
+							String rv = charBuffer.substring(0, cut);
 							
-							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (should be only one)
+							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 							cut = i + 1;
 							while (cut < bufSize && wrapInfo.get(cut) == SOFT_WRAP_AFTER_SPACE) cut++;
 							flushBuffers(cut);
@@ -330,23 +330,23 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 					
 					// no need to break if remaining text is shorter than line
 					if (bufSize < limit) {
-						int cut = bufSize;
-						
-						// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (should be only one)
-						while (cut > 0 && charBuffer.charAt(cut - 1) == blankChar) cut--;
-						String rv = charBuffer.substring(0, cut);
+						String rv = charBuffer.substring(0, bufSize);
 						charBuffer.setLength(0);
 						wrapInfo.clear();
 						
+						// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (all except NBSP are already collapsed into one)
+						int cut = bufSize;
+						while (cut > 0 && rv.charAt(cut - 1) == blankChar) cut--;
+						
 						// preserve if at beginning of stream or end of stream
-						if (cut == 0 || (cut < bufSize && !hasNext()))
-							rv += blankChar;
+						if (cut > 0 && cut < bufSize && hasNext())
+							rv = rv.substring(0, cut);
 						return rv; }
 					
 					// return nothing if limit is 0
 					if (limit == 0) {
 						
-						// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (should be only one)
+						// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 						int cut = 0;
 						while (cut < bufSize && wrapInfo.get(cut) == SOFT_WRAP_AFTER_SPACE) cut++;
 						flushBuffers(cut);
@@ -356,37 +356,37 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 					if ((wrapInfo.get(limit - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
 						int cut = limit;
 						
-						// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (should be only one)
+						// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (all except NBSP are already collapsed into one)
 						while (cut > 0 && charBuffer.charAt(cut - 1) == blankChar) cut--;
-						String rv = charBuffer.substring(0, cut);
 						
-						// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (should be only one)
+						// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 						int cut2 = limit;
 						while (cut2 < bufSize && wrapInfo.get(cut2) == SOFT_WRAP_AFTER_SPACE) cut2++;
+						String rv = charBuffer.substring(0, cut2);
 						flushBuffers(cut2);
 						
 						// preserve if at beginning of stream or end of stream
-						if (cut == 0 || (cut2 > cut && !hasNext()))
-							rv += blankChar;
+						if (cut > 0 && cut < cut2 && hasNext())
+							rv = rv.substring(0, cut);
 						return rv; }
 					
 					// try to break later if the overflowing characters are blank
 					for (int i = limit + 1; i - 1 < bufSize && charBuffer.charAt(i - 1) == blankChar; i++)
 						if ((wrapInfo.get(i - 1) & SOFT_WRAP_WITHOUT_HYPHEN) == SOFT_WRAP_WITHOUT_HYPHEN) {
+							
+							// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (all except NBSP are already collapsed into one)
 							int cut = limit;
-							
-							// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (should be only one)
 							while (cut > 0 && charBuffer.charAt(cut - 1) == blankChar) cut--;
-							String rv = charBuffer.substring(0, cut);
 							
-							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (should be only one)
+							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 							int cut2 = i;
 							while (cut2 < bufSize && wrapInfo.get(cut2) == SOFT_WRAP_AFTER_SPACE) cut2++;
+							String rv = charBuffer.substring(0, cut2);
 							flushBuffers(cut2);
 							
 							// preserve if at end of stream
-							if (cut2 > cut && !hasNext())
-								rv += blankChar;
+							if (cut < cut2 && hasNext())
+								rv = rv.substring(0, cut);
 							return rv; }
 					
 					// try to break sooner
@@ -403,15 +403,15 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 								rv += hyphenChar; }
 							else {
 								
-								// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (should be only one)
+								// strip trailing SPACE/LF/CR/TAB/BLANK/NBSP (all except NBSP are already collapsed into one)
 								while (cut > 0 && charBuffer.charAt(cut - 1) == blankChar) cut--;
-								rv = charBuffer.substring(0, cut);
 								
 								// preserve if at beginning of stream
 								if (cut == 0)
-									rv += blankChar; }
+									cut = i;
+								rv = charBuffer.substring(0, cut); }
 							
-							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (should be only one)
+							// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 							// FIXME: breaks cases where space after SHY is not from letter-spacing
 							cut = i;
 							while(cut < bufSize && charBuffer.charAt(cut) == blankChar) cut++;
