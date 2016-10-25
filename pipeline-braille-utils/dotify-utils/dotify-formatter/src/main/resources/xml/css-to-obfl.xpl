@@ -25,6 +25,7 @@
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
     <p:import href="make-obfl-pseudo-elements.xpl"/>
+    <p:import href="extract-obfl-pseudo-elements.xpl"/>
     
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
@@ -66,18 +67,13 @@
                 <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
-                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
+                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
                     </p:documentation>
                 </pxi:make-obfl-pseudo-elements>
-                <p:for-each>
-                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
-                </p:for-each>
+                <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
             </p:when>
             <p:otherwise>
-                <p:rename match="@css:_obfl-on-toc-start-ref" new-name="css:_obfl-on-toc-start"/>
-                <p:rename match="@css:_obfl-on-volume-start-ref" new-name="css:_obfl-on-volume-start"/>
-                <p:rename match="@css:_obfl-on-volume-end-ref" new-name="css:_obfl-on-volume-end"/>
-                <p:rename match="@css:_obfl-on-toc-end-ref" new-name="css:_obfl-on-toc-end"/>
+                <p:identity/>
             </p:otherwise>
         </p:choose>
     </p:declare-step>
@@ -117,11 +113,19 @@
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
-            css:alternate and css:footnote-call pseudo-elements, and css:_obfl-on-toc-start,
-            css:_obfl-on-volume-start, css:_obfl-on-volume-end and css:_obfl-on-toc-end
-            pseudo-element documents.
+            css:alternate, css:footnote-call, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+            css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    
+    <p:for-each>
+        <pxi:extract-obfl-pseudo-elements>
+            <p:documentation>
+                Extract css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end
+                and css:_obfl-on-toc-end pseudo-elements into their own documents.
+            </p:documentation>
+        </pxi:extract-obfl-pseudo-elements>
+    </p:for-each>
     
     <p:for-each>
         <css:parse-properties properties="content string-set counter-reset counter-set counter-increment -obfl-marker">

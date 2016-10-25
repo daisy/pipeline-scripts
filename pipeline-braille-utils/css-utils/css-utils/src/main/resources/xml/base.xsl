@@ -635,8 +635,7 @@
             tunnel parameters)
         -->
         <xsl:param name="context" as="element()" select="."/>
-        <xsl:variable name="parent" as="element()?"
-                      select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
+        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:_)][1]"/>
         <xsl:choose>
             <xsl:when test="exists($parent) and $compute">
                 <xsl:call-template name="css:computed-properties">
