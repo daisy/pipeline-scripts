@@ -495,9 +495,14 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 								if (val != null) {
 									if (val == TextTransform.NONE) {
 										someNotTransform = true;
-										if (!style.isEmpty())
-											logger.warn("text-transform: none can not be used in combination with "
-											            + style.getPropertyNames().iterator().next());
+										style.removeProperty("text-transform");
+										if (WORD_SPLITTER.matcher(text[i]).matches())
+											style.removeProperty("hyphens");
+										if (!style.isEmpty()) {
+											String p = style.getPropertyNames().iterator().next();
+											CSSProperty v = style.getProperty(p);
+											logger.warn("'text-transform: none' can not be used in combination with '" + p + ": " + v + "'");
+											logger.debug("(text is: '" + text[i] + "')"); }
 										continue; }
 									else if (val == TextTransform.AUTO) {}
 									else if (val == TextTransform.list_values) {
@@ -980,9 +985,14 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					if (val != null) {
 						if (val == TextTransform.NONE) {
 							someNotTransform = true;
-							if (!style.isEmpty())
-								logger.warn("text-transform: none can not be used in combination with "
-								            + style.getPropertyNames().iterator().next());
+							style.removeProperty("text-transform");
+							if (WORD_SPLITTER.matcher(text[i]).matches())
+								style.removeProperty("hyphens");
+							if (!style.isEmpty()) {
+								String p = style.getPropertyNames().iterator().next();
+								CSSProperty v = style.getProperty(p);
+								logger.warn("'text-transform: none' can not be used in combination with '" + p + ": " + v + "'");
+								logger.debug("(text is: '" + text[i] + "')"); }
 							continue; }
 						else if (val == TextTransform.AUTO) {}
 						else if (val == TextTransform.list_values) {
