@@ -161,6 +161,10 @@
 		<xsl:variable name="translated-style" as="element()*">
 			<xsl:sequence select="$translated-main-style"/>
 			<xsl:apply-templates mode="translate-style" select="$style[@selector=('::before','::after')]">
+				<!--
+				    Text style is restored because only strings and attr() values are translated,
+				    not counter() values etc. This may lead to certain text being translated twice.
+				-->
 				<xsl:with-param name="restore-text-style" tunnel="yes" select="true()"/>
 				<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
 				<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>

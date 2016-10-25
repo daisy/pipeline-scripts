@@ -1536,7 +1536,7 @@
         </xsl:variable>
         <xsl:next-match>
             <!--
-                for child css:box[@type='inline'] matcher
+                for child css:box[@type='inline'] matcher (FIXME: what about child text nodes?)
             -->
             <xsl:with-param name="pending-text-transform" tunnel="yes" select="($specified-text-transform,$text-transform)[1]"/>
         </xsl:next-match>
@@ -1631,7 +1631,7 @@
         </xsl:variable>
         <xsl:next-match>
             <!--
-                for child css:box[@type='inline'] matcher
+                for child css:box[@type='inline'] matcher (FIXME: what about child text nodes?)
             -->
             <xsl:with-param name="pending-text-transform" tunnel="yes" select="($specified-text-transform,$text-transform)[1]"/>
         </xsl:next-match>
@@ -1789,7 +1789,23 @@
                 Other values are handled through the style element
             -->
             <xsl:otherwise>
-                <style name="text-transform:{$text-transform}">
+                <xsl:variable name="style" as="xs:string*">
+                    <xsl:sequence select="concat('text-transform: ',$text-transform)"/>
+                    <xsl:if test="$hyphens='auto'">
+                        <!--
+                            The translation of a style always happens in two stages (result of
+                            Dotify implementation). We have to make sure that the first translation
+                            has all the information needed (and ideally make the second a
+                            no-op). This includes whether to hyphenate or not. In the case we need
+                            to hyphenate, a "hyphenate" attribute has been added to a ancestor block
+                            or span. However, since that attribute is processed only during the
+                            second translation stage, we have to add a 'hyphens' style as well. This
+                            leads to some duplication, but that's alright.
+                        -->
+                        <xsl:sequence select="concat('hyphens: ',$hyphens)"/>
+                    </xsl:if>
+                </xsl:variable>
+                <style name="{string-join($style,'; ')}">
                     <xsl:value-of select="$text"/>
                 </style>
             </xsl:otherwise>

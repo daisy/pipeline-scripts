@@ -3907,7 +3907,7 @@
               <span translate="">1</span> ⠿⠿⠿
             </block>
             <block>
-              <span translate=""><style name="text-transform:downshift">1</style></span> ⠿⠿⠿
+              <span translate=""><style name="text-transform: downshift">1</style></span> ⠿⠿⠿
             </block>
           </sequence>
         </obfl>
