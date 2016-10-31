@@ -2793,6 +2793,35 @@
                 ⠁⠁⠁⠁⠁
                 ⠁⠁⠁⠁⠁
               </block>
+              <!-- new page -->
+              <block break-before="page"
+                     padding-top="1">
+                <block>
+                  <marker class="foo" value="7"/>
+                </block>
+                ⠁⠁⠁⠁⠁
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block break-before="page">
+                <block>
+                  <block>
+                    <marker class="foo" value="8"/>
+                  </block>
+                  ⠁⠁⠁⠁⠁
+                </block>
+                ⠁⠁⠁⠁⠁
+              </block>
+              <!-- new page -->
+              <block break-before="page">
+                <block padding-top="1">
+                  <block>
+                    <marker class="foo" value="9"/>
+                  </block>
+                  ⠁⠁⠁⠁⠁
+                </block>
+                ⠁⠁⠁⠁⠁
+              </block>
             </sequence>
           </obfl>
         </x:document>
@@ -2853,6 +2882,26 @@
                 <page>
                   <!-- 6 -->
                   <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 7 -->
+                  <row>⠼⠛⠀⠀⠀⠀⠀⠀⠼⠛</row> <!-- 7   7 -->
+                  <row/>
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 8 -->
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</row> <!-- (empty) -->
+                  <row>⠁⠁⠁⠁⠁</row>
+                  <row>⠁⠁⠁⠁⠁</row>
+                </page>
+                <page>
+                  <!-- 9 -->
+                  <row>⠼⠊⠀⠀⠀⠀⠀⠀⠼⠊</row> <!-- 9   9 -->
+                  <row/>
                   <row>⠁⠁⠁⠁⠁</row>
                   <row>⠁⠁⠁⠁⠁</row>
                 </page>
