@@ -9960,12 +9960,14 @@
   
   <x:scenario label="test_92">
     <x:documentation>
-      Tests manual volume breaking.
+      Tests combination of manual and automatic volume breaking.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
-          <body style="{ display: block; text-transform: none } @page { size: 10 5 }">
+          <body style="{ display: block; text-transform: none }
+                       @page { size: 10 5 }
+                       @volume { max-length: 3 }">
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
             <br style="display: block; volume-break-before: always"/>
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
@@ -9973,9 +9975,11 @@
             <br style="display: block; volume-break-before: always"/>
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-            ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+            <p style="display: block; volume-break-inside: -obfl-keep(1)">
+              ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+              ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+            </p>
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
             <br style="display: block; volume-break-before: always"/>
             ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
@@ -10002,6 +10006,7 @@
               <footer/>
             </default-template>
           </layout-master>
+          <volume-template sheets-in-volume-max="3"/>
           <sequence master="main">
             <block>
               ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
@@ -10022,9 +10027,13 @@
               <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
-                ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
+              </block>
+              <block volume-keep-priority="1">
+                ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+                ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿
+              </block>
+              <block>
                 ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤ ⠤⠤⠤⠤⠤
               </block>
             </block>
@@ -10131,6 +10140,10 @@
                   <row>⠤⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠤</row>
                 </page>
+              </section>
+            </volume>
+            <volume cols="10" rows="5" rowgap="0" duplex="true">
+              <section>
                 <page>
                   <row>⠤⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠤</row>
@@ -10140,39 +10153,43 @@
                 </page>
                 <page>
                   <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
                 </page>
                 <page>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
-                  <row>⠤⠤⠤⠤⠤</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
+                  <row>⠿⠿⠿⠿⠿</row>
                 </page>
+              </section>
+            </volume>
+            <volume cols="10" rows="5" rowgap="0" duplex="true">
+              <section>
                 <page>
                   <row>⠤⠤⠤⠤⠤</row>
                   <row>⠤⠤⠤⠤⠤</row>
