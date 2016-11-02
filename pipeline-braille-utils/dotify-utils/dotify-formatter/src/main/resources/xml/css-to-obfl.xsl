@@ -1804,6 +1804,7 @@
                   match="css:white-space/text()">
         <xsl:analyze-string select="." regex="\n">
             <xsl:matching-substring>
+                <xsl:text>&#x200B;</xsl:text> <!-- to make sure there are no leading br elements in a block because those are ignored -->
                 <br/>
             </xsl:matching-substring>
             <xsl:non-matching-substring>

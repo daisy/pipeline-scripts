@@ -2561,7 +2561,7 @@
           </layout-master>
           <sequence master="a">
             <block>
-              ⠤⠤⠤<br/>⠤⠤⠤
+              ⠤⠤⠤&#x200B;<br/>⠤⠤⠤
             </block>
           </sequence>
         </obfl>
