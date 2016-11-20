@@ -552,7 +552,7 @@
 		<xsl:param name="parent-properties" as="element()*" select="()" tunnel="yes"/> <!-- css:property* -->
 		<xsl:choose>
 			<xsl:when test="exists($parent-properties[@name=$property])">
-				<xsl:sequence select="$parent-properties[@name=$property]"/>
+				<xsl:sequence select="$parent-properties[@name=$property][last()]"/>
 			</xsl:when>
 			<xsl:when test="$concretize-initial">
 				<xsl:sequence select="css:property($property, css:initial-value($property))"/>

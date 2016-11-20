@@ -688,7 +688,7 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:sequence select="for $property in distinct-values($declarations/self::css:property/@name) return
-                              $declarations/self::css:property[@name=$property][last()]"/>
+                              ($declarations/self::css:property[@name=$property])[last()]"/>
     </xsl:template>
     
     <xsl:template name="css:specified-properties" as="element()*">
