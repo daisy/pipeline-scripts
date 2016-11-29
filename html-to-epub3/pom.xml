@@ -63,6 +63,27 @@
       <artifactId>zedai-to-html</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>org.daisy.maven</groupId>
+      <artifactId>xproc-engine-daisy-pipeline</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.xprocspec</groupId>
+      <artifactId>xprocspec</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.maven</groupId>
+      <artifactId>xprocspec-runner</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>pax-exam-helper</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
