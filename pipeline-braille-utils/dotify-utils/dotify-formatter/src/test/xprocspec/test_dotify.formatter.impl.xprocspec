@@ -2,7 +2,8 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:dotify="http://code.google.com/p/dotify/"
                xmlns:p="http://www.w3.org/ns/xproc"
-               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal">
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               pending="true">
 
   <x:script>
     <p:declare-step type="pxi:test" version="1.0">
