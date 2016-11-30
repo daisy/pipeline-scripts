@@ -2008,18 +2008,35 @@
                   mode="#default sequence item table-of-contents block span table tr td toc-entry assert-nil
                         sequence-attr item-attr table-of-contents-attr block-attr span-attr
                         table-attr tr-attr td-attr toc-entry-attr assert-nil-attr"
-                  match="@*|*" >
+                  match="@*|node()">
         <xsl:call-template name="coding-error"/>
     </xsl:template>
     
     <xsl:template name="coding-error">
-        <xsl:message terminate="yes">Coding error: unexpected <xsl:value-of select="pxi:get-path(.)"/> (mode was <xsl:apply-templates select="$pxi:print-mode" mode="#current"/>)</xsl:message>
+        <xsl:message terminate="yes">
+          <xsl:text>Coding error: unexpected </xsl:text>
+          <xsl:value-of select="pxi:get-path(.)"/>
+          <xsl:if test="self::text()">
+              <xsl:text> ("</xsl:text>
+              <xsl:value-of select="replace(
+                                      if (string-length(.)&gt;10) then concat(substring(.,1,10),'...') else string(.),
+                                      '\n','\\n')"/>
+              <xsl:text>")</xsl:text>
+          </xsl:if>
+          <xsl:text> (mode was </xsl:text>
+          <xsl:apply-templates select="$pxi:print-mode" mode="#current"/>
+          <xsl:text>)</xsl:text>
+        </xsl:message>
     </xsl:template>
     
     <xsl:function name="pxi:get-path" as="xs:string">
-        <xsl:param name="x"/> <!-- element()|attribute() -->
+        <xsl:param name="x"/> <!-- element()|text()|attribute() -->
         <xsl:variable name="name" as="xs:string"
-                      select="if ($x/self::css:box[@name]) then $x/@name else name($x)"/>
+                      select="if ($x/self::css:box[@name])
+                              then $x/@name
+                              else if ($x/self::text())
+                              then 'text()'
+                              else name($x)"/>
         <xsl:sequence select="if ($x/self::attribute())
                               then concat(pxi:get-path($x/parent::*),'/@',$name)
                               else if ($x/parent::*)
@@ -2049,6 +2066,7 @@
     <xsl:template match="pxi:print-mode" mode="td-attr">td-attr</xsl:template>
     <xsl:template match="pxi:print-mode" mode="toc-entry-attr">toc-entry-attr</xsl:template>
     <xsl:template match="pxi:print-mode" mode="assert-nil-attr">assert-nil-attr</xsl:template>
+    <xsl:template match="pxi:print-mode" mode="#all" priority="-1">?</xsl:template>
     
     <!-- =========== -->
     <!-- Volume area -->
