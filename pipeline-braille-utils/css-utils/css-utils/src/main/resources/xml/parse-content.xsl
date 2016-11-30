@@ -25,6 +25,9 @@
                 <xsl:when test="self::css:footnote-call">
                     <xsl:sequence select="."/>
                 </xsl:when>
+                <xsl:when test="self::css:*[matches(local-name(),'^_.+')]">
+                    <xsl:sequence select="."/>
+                </xsl:when>
                 <xsl:when test="@css:content='none'"/>
                 <xsl:otherwise>
                     <xsl:message>'content' property only supported on ::before, ::after, ::alternate and ::footnote-call pseudo-elements</xsl:message>

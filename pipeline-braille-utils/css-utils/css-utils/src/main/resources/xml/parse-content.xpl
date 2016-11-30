@@ -17,7 +17,7 @@
             '::after' and '::footnote-call' pseudo-elements must be represented by css:before,
             css:after and css:footnote-call elements. '::alternate' pseudo-elements must be
             reprented by css:alternate elements with a css:anchor attribute that points to the
-            original element.
+            original element. Custom pseudo-elements must be represented by css:_* elements.
         </p:documentation>
     </p:input>
     

@@ -144,8 +144,8 @@
     <p:wrap-sequence wrapper="_"/>
     <css:parse-content>
         <p:documentation>
-            Make css:string, css:text, css:content and css:counter elements from css:content
-            attributes. <!-- depends on make-pseudo-element -->
+            Make css:string, css:text, css:content, css:counter and css:custom-func elements from
+            css:content attributes. <!-- depends on make-pseudo-element -->
         </p:documentation>
     </css:parse-content>
     <p:filter select="/_/*"/>
@@ -202,14 +202,22 @@
                 Make css:white-space elements from css:white-space attributes.
             </p:documentation>
         </css:preserve-white-space>
-        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:_obfl-toc" attribute-value="_">
+        <p:add-attribute match="*[@css:display=('-obfl-toc','-obfl-table-of-contents')]"
+                         attribute-name="css:_obfl-toc" attribute-value="_">
             <p:documentation>
                 Mark display:-obfl-toc elements.
             </p:documentation>
         </p:add-attribute>
-        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:display" attribute-value="block">
+        <p:add-attribute match="css:alternate[@css:display='-obfl-list-of-references']"
+                         attribute-name="css:_obfl-list-of-references" attribute-value="_">
             <p:documentation>
-                Treat display:-obfl-toc as block.
+                Mark display:-obfl-list-of-references elements.
+            </p:documentation>
+        </p:add-attribute>
+        <p:add-attribute match="*[@css:display=('-obfl-toc','-obfl-table-of-contents','-obfl-list-of-references')]"
+                         attribute-name="css:display" attribute-value="block">
+            <p:documentation>
+                Treat display:-obfl-toc and display:-obfl-list-of-references as block.
             </p:documentation>
         </p:add-attribute>
         <css:make-table-grid>
@@ -396,8 +404,8 @@
         </p:delete>
         <p:delete match="//css:box[@type='table']//*/@css:page-break-before|
                          //css:box[@type='table']//*/@css:page-break-after|
-                         //*[@css:obfl-toc]//*/@css:page-break-before|
-                         //*[@css:obfl-toc]//*/@css:page-break-after">
+                         //*[@css:_obfl-toc]//*/@css:page-break-before|
+                         //*[@css:_obfl-toc]//*/@css:page-break-after">
             <p:documentation>
                 Don't support 'page-break-before' and 'page-break-after' within tables or
                 '-obfl-toc' elements.
