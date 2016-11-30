@@ -2128,24 +2128,27 @@
             <body style="@page { size: 14 8; @bottom-right { content: counter(page) }}">
               <frontmatter>
                 <toc>
-                  <entry ref="chapter_1" style="display: block;
-                                                content: target-text(attr(ref))
-                                                         ' ⠄⠄⠄⠄⠄⠄⠄ '
-                                                         target-string(attr(ref), print-page)
-                                                         ' '
-                                                         target-counter(attr(ref), page)"/>
-                  <entry ref="chapter_2" style="display: block;
-                                                content: target-text(attr(ref))
-                                                         ' ⠄⠄⠄⠄⠄⠄ '
-                                                         target-string(attr(ref), print-page)
-                                                         ' '
-                                                         target-counter(attr(ref), page)"/>
-                  <entry ref="chapter_3" style="display: block;
-                                                content: target-text(attr(ref))
-                                                         ' ⠄⠄⠄⠄ '
-                                                         target-string(attr(ref), print-page)
-                                                         ' '
-                                                         target-counter(attr(ref), page)"/>
+                  <entry ref="chapter_1" style="::after {
+                                                  display: block;
+                                                  content: target-text(attr(ref))
+                                                           ' ⠄⠄⠄⠄⠄⠄⠄ '
+                                                           target-string(attr(ref), print-page)
+                                                           ' '
+                                                           target-counter(attr(ref), page); }"/>
+                  <entry ref="chapter_2" style="::after {
+                                                  display: block;
+                                                  content: target-text(attr(ref))
+                                                           ' ⠄⠄⠄⠄⠄⠄ '
+                                                           target-string(attr(ref), print-page)
+                                                           ' '
+                                                           target-counter(attr(ref), page); }"/>
+                  <entry ref="chapter_3" style="::after {
+                                                  display: block;
+                                                  content: target-text(attr(ref))
+                                                           ' ⠄⠄⠄⠄ '
+                                                           target-string(attr(ref), print-page)
+                                                           ' '
+                                                           target-counter(attr(ref), page); }"/>
                 </toc>
               </frontmatter>
               <bodymatter>
@@ -2307,14 +2310,16 @@
             <body style="@page { size: 15 5; @bottom-right { content: counter(page) }}">
               <frontmatter>
                 <toc>
-                  <entry ref="chapter_1" style="display: block;
-                                                content: target-text(attr(ref))
-                                                         ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
-                                                         target-counter(attr(ref), page)"/>
-                  <entry ref="chapter_2" style="display: block;
-                                                content: target-text(attr(ref))
-                                                         ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
-                                                         target-counter(attr(ref), page)"/>
+                  <entry ref="chapter_1" style="::after {
+                                                  display: block;
+                                                  content: target-text(attr(ref))
+                                                           ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
+                                                           target-counter(attr(ref), page); }"/>
+                  <entry ref="chapter_2" style="::after {
+                                                  display: block;
+                                                  content: target-text(attr(ref))
+                                                           ' ⠄⠄⠄⠄⠄⠄⠄⠄⠄ '
+                                                           target-counter(attr(ref), page); }"/>
                 </toc>
               </frontmatter>
               <bodymatter style="display:block;page-break-before:always">
@@ -2326,18 +2331,21 @@
               </bodymatter>
               <rearmatter style="display:block;page-break-before:always">
                 <index>
-                  <entry ref="x" style="display: block;
-                                        content: target-text(attr(ref))
-                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
-                                                 target-counter(attr(ref), page)"/>
-                  <entry ref="y" style="display: block;
-                                        content: target-text(attr(ref))
-                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
-                                                 target-counter(attr(ref), page)"/>
-                  <entry ref="z" style="display: block;
-                                        content: target-text(attr(ref))
-                                                 ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
-                                                 target-counter(attr(ref), page)"/>
+                  <entry ref="x" style="::after {
+                                          display: block;
+                                          content: target-text(attr(ref))
+                                                   ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
+                                                   target-counter(attr(ref), page); }"/>
+                  <entry ref="y" style="::after {
+                                          display: block;
+                                          content: target-text(attr(ref))
+                                                   ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
+                                                   target-counter(attr(ref), page); }"/>
+                  <entry ref="z" style="::after {
+                                          display: block;
+                                          content: target-text(attr(ref))
+                                                   ' ⠄⠄⠄⠄⠄⠄⠄⠄ '
+                                                   target-counter(attr(ref), page); }"/>
                 </index>
               </rearmatter>
             </body>
