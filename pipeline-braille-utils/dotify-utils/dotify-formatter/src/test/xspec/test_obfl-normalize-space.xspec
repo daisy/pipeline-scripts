@@ -298,4 +298,114 @@
     </x:expect>
   </x:scenario>
   
+  <x:scenario label="test_07">
+    <x:context>
+      <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+        <layout-master name="master_1" duplex="true" page-number-variable="page" page-width="15" page-height="5">
+          <default-template>
+            <header/>
+            <footer/>
+            <margin-region align="left" width="2">
+              <indicators>
+                <marker-indicator markers="indicator/pagenum" indicator="⠿"/>
+              </indicators>
+            </margin-region>
+          </default-template>
+        </layout-master>
+        <sequence master="master_1">
+          <block>
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+            </block>
+        </sequence>
+      </obfl>
+    </x:context>
+    <x:expect label="normalized">
+      <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+        <layout-master name="master_1" duplex="true" page-number-variable="page" page-width="15" page-height="5">
+          <default-template>
+            <header/>
+            <footer/>
+            <margin-region align="left" width="2">
+              <indicators>
+                <marker-indicator markers="indicator/pagenum" indicator="⠿"/>
+              </indicators>
+            </margin-region>
+          </default-template>
+        </layout-master>
+        <sequence master="master_1">
+          <block><marker class="indicator/pagenum" value="x"/>⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+            </block>
+        </sequence>
+      </obfl>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="test_08">
+    <x:context>
+      <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+        <layout-master name="master_1" duplex="true" page-number-variable="page" page-width="15" page-height="5">
+          <default-template>
+            <header/>
+            <footer/>
+            <margin-region align="left" width="1">
+              <indicators>
+                <marker-indicator markers="indicator/pagenum" indicator="⠿"/>
+              </indicators>
+            </margin-region>
+          </default-template>
+        </layout-master>
+        <sequence master="master_1">
+          <block>
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+            </block>
+        </sequence>
+      </obfl>
+    </x:context>
+    <x:expect label="normalized">
+      <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+        <layout-master name="master_1" duplex="true" page-number-variable="page" page-width="15" page-height="5">
+          <default-template>
+            <header/>
+            <footer/>
+            <margin-region align="left" width="1">
+              <indicators>
+                <marker-indicator markers="indicator/pagenum" indicator="⠿"/>
+              </indicators>
+            </margin-region>
+          </default-template>
+        </layout-master>
+        <sequence master="master_1">
+          <block><marker class="indicator/pagenum" value="x"/>⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              ⠤⠤⠤ ⠤⠤⠤ ⠤⠤⠤
+              <marker class="indicator/pagenum" value="x"/>
+            </block>
+        </sequence>
+      </obfl>
+    </x:expect>
+  </x:scenario>
+  
 </x:description>

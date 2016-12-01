@@ -36,8 +36,8 @@
             </xsl:choose>
         </xsl:copy>
     </xsl:template>
-
-    <xsl:template match="text()[normalize-space()!='']" mode="normalize">
+    
+    <xsl:template match="text()" mode="normalize">
         <xsl:value-of select="replace(., '^\s+', '')"/>
     </xsl:template>
     
