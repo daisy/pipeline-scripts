@@ -3,6 +3,7 @@
                 xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+                name="main"
                 type="css:split"
                 exclude-inline-prefixes="#all"
                 version="1.0">
@@ -46,22 +47,31 @@
         </p:documentation>
     </p:output>
     
-    <p:add-attribute attribute-name="pxi:split-before" attribute-value="true">
-        <p:with-option name="match" select="$split-before"/>
+    <p:identity>
+        <p:input port="source">
+            <p:document href="split.xsl"/>
+        </p:input>
+    </p:identity>
+    <p:add-attribute match="/*/*[@name='split-before']" attribute-name="match">
+        <p:with-option name="attribute-value" select="$split-before"/>
     </p:add-attribute>
-    
-    <p:add-attribute attribute-name="pxi:split-after" attribute-value="true">
-        <p:with-option name="match" select="$split-after"/>
+    <p:add-attribute match="/*/*[@name='split-after']" attribute-name="match">
+        <p:with-option name="attribute-value" select="$split-after"/>
     </p:add-attribute>
+    <p:identity name="css-split.compiled-xslt"/>
     
-    <p:xslt>
+    <p:xslt name="css-split.xslt">
         <p:input port="parameters">
             <p:empty/>
         </p:input>
+        <p:input port="source">
+            <p:pipe port="source" step="main"/>
+        </p:input>
         <p:input port="stylesheet">
-            <p:document href="split.xsl"/>
+            <p:pipe port="result" step="css-split.compiled-xslt"/>
         </p:input>
     </p:xslt>
+    
     <p:filter select="/*/*"/>
     
 </p:declare-step>
