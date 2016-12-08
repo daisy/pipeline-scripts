@@ -106,21 +106,26 @@
     
     <xsl:template name="create-part">
         <xsl:param name="nodes" as="node()*"/>
-        <xsl:variable name="nodes-with-ancestors" select="$nodes/ancestor-or-self::node()"/>
         <pxi:part>
             <xsl:apply-templates select="/*" mode="create-part">
-                <xsl:with-param name="include" select="$nodes-with-ancestors"/>
+                <xsl:with-param name="include" select="$nodes"/>
+                <xsl:with-param name="include-with-ancestors" select="$nodes/ancestor-or-self::node()"/>
             </xsl:apply-templates>
         </pxi:part>
     </xsl:template>
     
     <xsl:template match="node()" mode="create-part">
         <xsl:param name="include" required="yes" as="node()*"/>
+        <xsl:param name="include-with-ancestors" required="yes" as="node()*"/>
         <xsl:copy>
-            <xsl:copy-of select="@* except @pxi:*"/>
+            <xsl:copy-of select="@* except (@*:id | @pxi:*)"/>
+            <xsl:if test=". intersect $include">
+                <xsl:copy-of select="@*:id"/>
+            </xsl:if>
 <!--            <xsl:copy-of select="@pxi:*"/>-->
-            <xsl:apply-templates select="node()[. intersect $include]" mode="#current">
+            <xsl:apply-templates select="node()[. intersect $include-with-ancestors]" mode="#current">
                 <xsl:with-param name="include" select="$include"/>
+                <xsl:with-param name="include-with-ancestors" select="$include-with-ancestors"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>

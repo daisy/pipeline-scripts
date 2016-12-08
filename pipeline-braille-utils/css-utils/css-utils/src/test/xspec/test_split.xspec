@@ -138,5 +138,42 @@
             </_>
         </x:expect>
     </x:scenario>
-
+    
+    <x:scenario label="test_05 - don't duplicate ids">
+        <x:context>
+            <css:box type="block" css:id="a">
+                <css:box css:page="1"/>
+                <css:box css:page="2" css:id="b">
+                    <css:box css:page="3"/>
+                    <css:box css:page="4" css:id="c"/>
+                </css:box>
+                <css:box css:page="4"/>
+            </css:box>
+        </x:context>
+        <x:expect label="result">
+            <_>
+                <css:box part="first" type="block" css:id="a"> </css:box>
+                <css:box part="middle" type="block">
+                    <css:box css:page="1"/>
+                </css:box>
+                <css:box part="middle" type="block">
+                    <css:box css:page="2" css:id="b"/>
+                </css:box>
+                <css:box part="middle" type="block">
+                    <css:box css:page="2">
+                        <css:box css:page="3"/>
+                    </css:box>
+                </css:box>
+                <css:box part="middle" type="block">
+                    <css:box css:page="2">
+                        <css:box css:page="4" css:id="c"/>
+                    </css:box>
+                </css:box>
+                <css:box part="last" type="block">
+                    <css:box css:page="4"/>
+                </css:box>
+            </_>
+        </x:expect>
+    </x:scenario>
+    
 </x:description>
