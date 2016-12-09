@@ -45,4 +45,53 @@
         </x:expect>
     </x:scenario>
     
+    <x:scenario label="test_02">
+        <x:context>
+            <_>
+                <css:_>
+                    <css:_>
+                        <css:box type="block" name="frontmatter" css:page="size: 30 5" style="text-transform: none">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                        <css:box type="block" name="bodymatter" style="text-transform: none" css:page="size: 15 5">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                        <css:box type="block" name="rearmatter" css:page="size: 30 5" style="text-transform: none">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                    </css:_>
+                </css:_>
+            </_>
+        </x:context>
+        <x:expect label="result">
+            <_>
+                <css:_>
+                    <css:_>
+                        <css:box type="block" name="frontmatter" css:page="size: 30 5" style="text-transform: none">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                        <css:box type="block" name="bodymatter" style="text-transform: none" css:page="size: 15 5">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                        <css:box type="block" name="rearmatter" css:page="size: 30 5" style="text-transform: none">
+                            <css:box type="inline">
+                                ⠤⠤⠤
+                            </css:box>
+                        </css:box>
+                    </css:_>
+                </css:_>
+            </_>
+        </x:expect>
+    </x:scenario>
+    
 </x:description>
