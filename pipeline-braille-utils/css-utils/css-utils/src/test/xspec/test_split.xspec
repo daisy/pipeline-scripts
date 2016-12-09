@@ -176,4 +176,10 @@
         </x:expect>
     </x:scenario>
     
+    <x:scenario label="test_06 - avoid deep recursion" pending="we don't need to run this every time; it takes a littlebit of time to run so we skip this by default">
+        <!-- According to https://sourceforge.net/p/saxon/mailman/message/21353372/ we should try to keep recursion depth below 250. -->
+        <x:context href="../resources/css-xml/deep-css.xml"/>
+        <x:expect test="count(/*/*) &gt;= 1" label="output was produced"/>
+    </x:scenario>
+    
 </x:description>

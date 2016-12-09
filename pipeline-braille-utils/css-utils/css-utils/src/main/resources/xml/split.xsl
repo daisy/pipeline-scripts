@@ -14,6 +14,7 @@
                 <xsl:for-each select="$label-split-points/*">
                     <xsl:call-template name="split">
                         <xsl:with-param name="forward" select="()"/>
+                        <xsl:with-param name="siblings" select="()"/>
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:variable>
@@ -30,6 +31,7 @@
     
     <xsl:template name="split" as="node()*">
         <xsl:param name="forward" as="node()*"/>
+        <xsl:param name="siblings" as="node()*" required="yes"/>
         
         <!-- split nodes before current node -->
         <xsl:if test="@pxi:split-before and count($forward)">
@@ -42,13 +44,15 @@
         <!-- add current node to current part -->
         <xsl:variable name="forward" select="$forward | ."/>
         
-        <!-- recursively handle descendants -->
-        <xsl:variable name="descendants" as="node()*">
+        <!-- recursively handle first half of descendants -->
+        <xsl:variable name="descendants-1" select="node()[position() &lt; round(last() div 2)]"/>
+        <xsl:variable name="descendants-1" as="node()*">
             <xsl:choose>
-                <xsl:when test="node()">
-                    <xsl:for-each select="node()[1]">
+                <xsl:when test="$descendants-1">
+                    <xsl:for-each select="$descendants-1[1]">
                         <xsl:call-template name="split">
                             <xsl:with-param name="forward" select="$forward"/>
+                            <xsl:with-param name="siblings" select="$descendants-1[position() &gt; 1]"/>
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
@@ -57,8 +61,28 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:sequence select="$descendants[self::pxi:part]"/>
-        <xsl:variable name="forward" select="$descendants[not(self::pxi:part)]"/>
+        <xsl:sequence select="$descendants-1[self::pxi:part]"/>
+        <xsl:variable name="forward" select="$descendants-1[not(self::pxi:part)]"/>
+        
+        <!-- recursively handle second half of descendants -->
+        <xsl:variable name="descendants-2" select="node()[position() &gt;= round(last() div 2)]"/>
+        <xsl:variable name="descendants-2" as="node()*">
+            <xsl:choose>
+                <xsl:when test="$descendants-2">
+                    <xsl:for-each select="$descendants-2[1]">
+                        <xsl:call-template name="split">
+                            <xsl:with-param name="forward" select="$forward"/>
+                            <xsl:with-param name="siblings" select="$descendants-2[position() &gt; 1]"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$forward"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:sequence select="$descendants-2[self::pxi:part]"/>
+        <xsl:variable name="forward" select="$descendants-2[not(self::pxi:part)]"/>
         
         <!-- split nodes after current node -->
         <xsl:if test="@pxi:split-after and count($forward)">
@@ -68,13 +92,16 @@
         </xsl:if>
         <xsl:variable name="forward" select="if (@pxi:split-after) then () else $forward"/>
         
-        <!-- recursively handle following siblings -->
-        <xsl:variable name="siblings" as="node()*">
+        <!-- recursively handle first half of following siblings -->
+        <xsl:variable name="siblings-1" select="$siblings[position() &lt; round(last() div 2)]"/>
+        <xsl:variable name="siblings-2" select="$siblings[position() &gt;= round(last() div 2)]"/>
+        <xsl:variable name="siblings-1" as="node()*">
             <xsl:choose>
-                <xsl:when test="following-sibling::node()">
-                    <xsl:for-each select="following-sibling::node()[1]">
+                <xsl:when test="$siblings-1">
+                    <xsl:for-each select="$siblings-1[1]">
                         <xsl:call-template name="split">
                             <xsl:with-param name="forward" select="$forward"/>
+                            <xsl:with-param name="siblings" select="$siblings-1[position() &gt; 1]"/>
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
@@ -83,8 +110,28 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:sequence select="$siblings[self::pxi:part]"/>
-        <xsl:variable name="forward" select="$siblings[not(self::pxi:part)]"/>
+        <xsl:sequence select="$siblings-1[self::pxi:part]"/>
+        <xsl:variable name="forward" select="$siblings-1[not(self::pxi:part)]"/>
+        
+        <!-- recursively handle second half of following siblings -->
+        <xsl:variable name="siblings-2" select="$siblings[position() &gt;= round(last() div 2)]"/>
+        <xsl:variable name="siblings-2" as="node()*">
+            <xsl:choose>
+                <xsl:when test="$siblings-2">
+                    <xsl:for-each select="$siblings-2[1]">
+                        <xsl:call-template name="split">
+                            <xsl:with-param name="forward" select="$forward"/>
+                            <xsl:with-param name="siblings" select="$siblings-2[position() &gt; 1]"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$forward"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:sequence select="$siblings-2[self::pxi:part]"/>
+        <xsl:variable name="forward" select="$siblings-2[not(self::pxi:part)]"/>
         
         <!-- forward remaining nodes to parent or wrap as part if there's no parent (trailing nodes at end of document) -->
         <xsl:choose>
@@ -122,7 +169,6 @@
             <xsl:if test=". intersect $include">
                 <xsl:copy-of select="@*:id"/>
             </xsl:if>
-<!--            <xsl:copy-of select="@pxi:*"/>-->
             <xsl:apply-templates select="node()[. intersect $include-with-ancestors]" mode="#current">
                 <xsl:with-param name="include" select="$include"/>
                 <xsl:with-param name="include-with-ancestors" select="$include-with-ancestors"/>
