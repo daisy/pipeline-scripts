@@ -405,12 +405,15 @@
     <p:for-each>
         <css:parse-properties properties="margin-left margin-right margin-top margin-bottom
                                           padding-left padding-right padding-top padding-bottom
-                                          border-left border-right border-top border-bottom text-indent">
+                                          border-left-pattern border-right-pattern border-top-pattern
+                                          border-bottom-pattern border-left-style border-right-style
+                                          border-top-style border-bottom-style text-indent">
             <p:documentation>
                 Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
-                css:padding-left, css:padding-right, css:padding-top and css:padding-bottom,
-                css:border-left, css:border-right, css:border-top, css:border-bottom and
-                css:text-indent attributes.
+                css:padding-left, css:padding-right, css:padding-top, css:padding-bottom,
+                css:border-left-pattern, css:border-right-pattern, css:border-top-pattern,
+                css:border-bottom-pattern, css:border-left-style, css:border-right-style,
+                css:border-top-style, css:border-bottom-style and css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
         <css:adjust-boxes>
@@ -476,7 +479,7 @@
                                    [@type='block']
                                    [@css:margin-top]
                                    [not(preceding::*)]
-                                   [not(ancestor::*[@css:border-top])]
+                                   [not(ancestor::*[@css:border-top-pattern or @css:border-top-style])]
                                  /@css:margin-top"/>
                 <p:label-elements match="css:box
                                            [@type='block']
@@ -485,7 +488,8 @@
                                                  $self/descendant-or-self::*
                                                    [@css:margin-top][1]
                                                    [not(preceding::* intersect $self/descendant::*)]
-                                                   [not((ancestor::* intersect $self/descendant-or-self::*)[@css:border-top])]]]"
+                                                   [not((ancestor::* intersect $self/descendant-or-self::*)
+                                                        [@css:border-top-pattern or @css:border-top-style])]]]"
                                   attribute="css:_margin-bottom_"
                                   label="max((0,
                                               @css:margin-bottom/number(),
@@ -501,8 +505,10 @@
         </p:choose>
     </p:for-each>
     
-    <p:split-sequence test="//css:box[@css:border-top|
-                                      @css:border-bottom|
+    <p:split-sequence test="//css:box[@css:border-top-pattern|
+                                      @css:border-top-style|
+                                      @css:border-bottom-pattern|
+                                      @css:border-bottom-style|
                                       @css:margin-top|
                                       @css:margin-bottom|
                                       descendant::text()|

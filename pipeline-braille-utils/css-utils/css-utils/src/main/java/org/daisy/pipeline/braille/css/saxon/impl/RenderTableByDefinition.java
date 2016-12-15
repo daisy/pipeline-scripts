@@ -182,7 +182,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 	private static final Splitter HEADERS_SPLITTER = Splitter.on(' ').trimResults().omitEmptyStrings();
 	private static final Splitter AXIS_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
 	
-	private static final SupportedCSS brailleCSS = SupportedBrailleCSS.getInstance();
+	private static final SupportedCSS brailleCSS = new SupportedBrailleCSS();
 	private static final RuleFactory rf = new BrailleCSSRuleFactory();
 	private static final NetworkProcessor network = new DefaultNetworkProcessor();
 	private static final SelectorPart dummyElementDOM = rf.createElementDOM(null, true);
