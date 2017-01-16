@@ -350,6 +350,12 @@
             <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
         </p:with-option>
     </p:add-attribute>
+    <p:add-attribute match="/ocf:container/ocf:rootfiles/ocf:rootfile[last()]" attribute-name="rendition:layout">
+        <p:with-option name="attribute-value"
+                       select="(/opf:package/opf:metadata/opf:meta[@property='rendition:layout']/string(.),'reflowable')[1]">
+            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
+        </p:with-option>
+    </p:add-attribute>
     <p:insert position="last-child" match="/ocf:container">
         <p:input port="insertion">
             <p:inline xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
