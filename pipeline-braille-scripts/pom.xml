@@ -12,7 +12,7 @@
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>braille-scripts-aggregator</artifactId>
-  <version>1.10.0</version>
+  <version>1.10.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Scripts :: Aggregator POM</name>
@@ -43,8 +43,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>v1.10.0</tag>
-  </scm>
 </project>
