@@ -81,7 +81,7 @@
 				<xsl:with-param name="context" tunnel="yes" select="$context"/>
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:copy>
+		<xsl:element name="{name(.)}" namespace="{namespace-uri(.)}">
 			<xsl:sequence select="@* except (@style|@css:*|@xml:lang)"/>
 			<xsl:call-template name="insert-style">
 				<xsl:with-param name="style" select="$translated-style"/>
@@ -157,7 +157,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each-group>
-		</xsl:copy>
+		</xsl:element>
 	</xsl:template>
 	
 	<xsl:template mode="identify-blocks" match="text()">
@@ -433,7 +433,7 @@
 				<xsl:with-param name="context" tunnel="yes" select="$context"/>
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:copy>
+		<xsl:element name="{name(.)}" namespace="{namespace-uri(.)}">
 			<xsl:sequence select="@* except (@style|@css:*|@xml:lang)"/>
 			<xsl:call-template name="insert-style">
 				<xsl:with-param name="style" select="$translated-style"/>
@@ -474,7 +474,7 @@
 				<xsl:with-param name="source-style" tunnel="yes" select="$source-style"/>
 				<xsl:with-param name="result-style" tunnel="yes" select="$result-style"/>
 			</xsl:apply-templates>
-		</xsl:copy>
+		</xsl:element>
 		<xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
 			<xsl:with-param name="new-text-nodes" select="$new-text-nodes[position()&gt;$text-node-count]"/>
 		</xsl:apply-templates>
