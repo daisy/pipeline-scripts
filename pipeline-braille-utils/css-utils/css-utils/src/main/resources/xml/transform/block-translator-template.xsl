@@ -135,6 +135,11 @@
 							</xsl:apply-templates>
 						</xsl:for-each>
 					</xsl:when>
+					<!-- preserve indentation outside of blocks -->
+					<xsl:when test="every $n in current-group() satisfies
+					                $n/self::text() and matches(string($n),'^[ \t\n\r&#x2800;&#x00AD;&#x200B;]*$')">
+						<xsl:value-of select="."/>
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="block">
 							<xsl:element name="css:block">
