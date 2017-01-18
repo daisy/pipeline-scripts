@@ -44,6 +44,13 @@
         </p:documentation>
     </p:option>
     
+    <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Apply document-specific CSS</h2>
+            <p px:role="desc">If this option is enabled, any pre-existing CSS in the EPUB with media "embossed" (or "all") will be taken into account for the translation.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
@@ -201,19 +208,29 @@
         <px:message message="Generating $1" severity="INFO">
             <p:with-option name="param1" select="substring-after(base-uri(/*),'!/')"/>
         </px:message>
-        <css:inline>
-            <p:input port="context">
-                <p:pipe step="source.in-memory" port="result"/>
-            </p:input>
+        <p:choose>
+            <p:when test="$apply-document-specific-stylesheets='true'">
+                <px:message severity="DEBUG" message="Inlining document-specific CSS"/>
+                <css:apply-stylesheets>
+                    <p:input port="context">
+                        <p:pipe step="source.in-memory" port="result"/>
+                    </p:input>
+                </css:apply-stylesheets>
+            </p:when>
+            <p:otherwise>
+                <p:delete match="@style"/>
+            </p:otherwise>
+        </p:choose>
+        <css:delete-stylesheets/>
+        <css:inline media="embossed">
             <p:with-option name="default-stylesheet" select="$stylesheet"/>
         </css:inline>
-        <p:delete match="/html:html/html:head/html:style[@type='text/css']|
-                         /html:html/html:head/html:link[@type='text/css' and @rel='stylesheet']"/>
         <px:transform name="transform">
             <p:with-option name="query" select="concat('(input:html)(input:css)(output:html)(output:css)(output:braille)',
                                                        $braille-translator,
                                                        '(locale:',$lang,')')"/>
         </px:transform>
+        <p:delete match="@style" name="result"/>
         <p:xslt>
             <p:input port="source">
                 <p:pipe step="transform" port="result"/>
@@ -226,7 +243,6 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <p:delete match="@style" name="result"/>
         <p:group>
             <p:variable name="braille-rendition.html.base" select="base-uri(/*)">
                 <p:pipe step="braille-rendition.html" port="current"/>

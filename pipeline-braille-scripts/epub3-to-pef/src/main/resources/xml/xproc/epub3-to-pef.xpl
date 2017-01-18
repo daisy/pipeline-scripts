@@ -46,13 +46,13 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
     <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Apply document-specific CSS</h2>
-            <p px:role="desc" xml:space="preserve">If this option is enabled, any pre-existing CSS in the EPUB with `media="embossed"` will be used.
+            <p px:role="desc" xml:space="preserve">If this option is enabled, any pre-existing CSS in the EPUB with media "embossed" (or "all") will be used.
 
-The input EPUB may already contain CSS that applies to embossed media (using media="embossed").
-Such document-specific CSS takes precedence over any CSS attached when running this script.
+The input EPUB may already contain CSS that applies to embossed media.  Such document-specific CSS
+takes precedence over any CSS attached when running this script.
 
 For instance, if the EPUB already contains the rule `p { padding-left: 2; }`,
-and using this script the rule `p#docauthor { padding-left: 4; }` is provided, then the
+and using this script the rule `p#docauthor { padding-left: 4; }` is provided, then the
 `padding-left` property will get the value `2` because that's what was defined in the EPUB,
 even though the provided CSS is more specific.
             </p>
