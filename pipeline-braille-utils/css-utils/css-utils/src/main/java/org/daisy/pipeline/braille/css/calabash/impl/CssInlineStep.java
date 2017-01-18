@@ -147,7 +147,7 @@ public class CssInlineStep extends DefaultStep {
 	private static final QName _media = new QName("media");
 	private static final QName _attribute_name = new QName("attribute-name");
 	
-	private static final String DEFAULT_MEDIA = "embossed";
+	private static final String DEFAULT_MEDIUM = "embossed";
 	private static final QName DEFAULT_ATTRIBUTE_NAME = new QName("style");
 	
 	private CssInlineStep(XProcRuntime runtime, XAtomicStep step, final URIResolver resolver) {
@@ -305,10 +305,10 @@ public class CssInlineStep extends DefaultStep {
 					l.add(asURL(base.resolve(asURI(t.nextToken()))));
 				defaultSheets = toArray(l, URL.class);
 			}
-			Set<String> media = ImmutableSet.copyOf(Splitter.on(' ').omitEmptyStrings().split(getOption(_media, DEFAULT_MEDIA)));
+			String medium = getOption(_media, DEFAULT_MEDIUM);
 			QName attributeName = getOption(_attribute_name, DEFAULT_ATTRIBUTE_NAME);
 			inMemoryResolver.setContext(contextPipe);
-			resultPipe.write(new CssInlineTransform(runtime, network, defaultSheets, media, attributeName).transform(source)); }
+			resultPipe.write(new CssInlineTransform(runtime, network, defaultSheets, medium, attributeName).transform(source)); }
 		catch (Exception e) {
 			logger.error("css:inline failed", e);
 			throw new XProcException(step.getNode(), e); }
@@ -419,7 +419,7 @@ public class CssInlineStep extends DefaultStep {
 		}
 	}
 	
-	// media print
+	// medium print
 	private static final SupportedCSS printCSS = SupportedPrintCSS.getInstance();
 	private static DeclarationTransformer printDeclarationTransformer; static {
 		// SupportedCSS injected via CSSFactory in DeclarationTransformer.<init>
@@ -428,7 +428,7 @@ public class CssInlineStep extends DefaultStep {
 	private static final RuleFactory printRuleFactory = RuleFactoryImpl.getInstance();
 	private static final CSSParserFactory printParserFactory = CSSParserFactory.getInstance();
 	
-	// media embossed
+	// medium embossed
 	private static final SupportedCSS brailleCSS = new SupportedBrailleCSS(false, true);
 	private static DeclarationTransformer brailleDeclarationTransformer; static {
 		// SupportedCSS injected via CSSFactory in DeclarationTransformer.<init>
@@ -441,19 +441,19 @@ public class CssInlineStep extends DefaultStep {
 		
 		private final NetworkProcessor network;
 		private final URL[] defaultSheets;
-		private final Set<String> media;
+		private final String medium;
 		private final QName attributeName;
 		private final List<CascadedStyle> styles;
 		
 		public CssInlineTransform(XProcRuntime xproc,
 		                          NetworkProcessor network,
 		                          URL[] defaultSheets,
-		                          Set<String> media,
+		                          String medium,
 		                          QName attributeName) {
 			super(xproc);
 			this.network = network;
 			this.defaultSheets = defaultSheets;
-			this.media = media;
+			this.medium = medium;
 			this.attributeName = attributeName;
 			this.styles = new ArrayList<CascadedStyle>();
 		}
@@ -465,13 +465,12 @@ public class CssInlineStep extends DefaultStep {
 			this.writer = writer;
 			
 			try {
-			
-			// get base URI of document element instead of document because
-			// unzipped files have an empty base URI, but an xml:base
-			// attribute may have been added to their document element
-			URI baseURI = new URI(document.getDocumentElement().getBaseURI());
-			
-			for (String medium : media) {
+				
+				// get base URI of document element instead of document because
+				// unzipped files have an empty base URI, but an xml:base
+				// attribute may have been added to their document element
+				URI baseURI = new URI(document.getDocumentElement().getBaseURI());
+				
 				CascadedStyle style = new CascadedStyle();
 				styles.add(style);
 				StyleSheet stylesheet;
@@ -539,12 +538,11 @@ public class CssInlineStep extends DefaultStep {
 				} else {
 					throw new RuntimeException("medium " + medium + " not supported");
 				}
-			}
-			
-			writer.startDocument(baseURI);
-			traverse(document.getDocumentElement());
-			writer.endDocument();
-			
+				
+				writer.startDocument(baseURI);
+				traverse(document.getDocumentElement());
+				writer.endDocument();
+				
 			} catch (Exception e) {
 				throw new TransformationException(e);
 			}

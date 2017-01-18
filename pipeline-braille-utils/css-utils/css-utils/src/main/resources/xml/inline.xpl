@@ -53,8 +53,8 @@
 	
 	<p:option name="media" required="false" select="'embossed'">
 		<p:documentation>
-			Space separated list of media. All rules that are contained in a stylesheet that matches
-			one of the specified media is included. Supported values are `embossed` and `print`.
+			The target medium. All rules that are contained in a stylesheet that matches the
+			specified medium is included. Supported values are `embossed` and `print`.
 		</p:documentation>
 	</p:option>
 	
