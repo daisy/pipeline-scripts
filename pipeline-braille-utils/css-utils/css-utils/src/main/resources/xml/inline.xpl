@@ -7,8 +7,8 @@
 	
 	<p:documentation>
 		CSS cascading and inlining according to
-		http://snaekobbi.github.io/braille-css-spec/#h2_cascade and
-		http://snaekobbi.github.io/braille-css-spec/#h2_style-attribute.
+		http://braillespecs.github.io/braille-css/#h2_cascade and
+		http://braillespecs.github.io/braille-css/#h2_style-attribute.
 	</p:documentation>
 	
 	<p:input port="source" sequence="false" primary="true">

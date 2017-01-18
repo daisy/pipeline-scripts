@@ -20,13 +20,13 @@
     <xsl:variable name="css:COLOR_RE_groups" select="0"/>
     
     <!--
-        <braille-character>: http://snaekobbi.github.io/braille-css-spec/#dfn-braille-character
+        <braille-character>: http://braillespecs.github.io/braille-css/#dfn-braille-character
     -->
     <xsl:variable name="css:BRAILLE_CHAR_RE" select="'\p{IsBraillePatterns}'"/>
     <xsl:variable name="css:BRAILLE_CHAR_RE_groups" select="0"/>
     
     <!--
-        <braille-string>: http://snaekobbi.github.io/braille-css-spec/#dfn-braille-string
+        <braille-string>: http://braillespecs.github.io/braille-css/#dfn-braille-string
     -->
     <xsl:variable name="css:BRAILLE_STRING_RE">'\p{IsBraillePatterns}*?'|"\p{IsBraillePatterns}*?"</xsl:variable>
     <xsl:variable name="css:BRAILLE_STRING_RE_groups" select="0"/>
@@ -83,7 +83,7 @@
     <xsl:variable name="css:URL_RE_groups" select="$css:URL_RE_attr + $css:IDENT_RE_groups + 1"/>
     
     <!--
-        string(<ident>): http://snaekobbi.github.io/braille-css-spec/#dfn-string
+        string(<ident>): http://braillespecs.github.io/braille-css/#dfn-string
     -->
     <xsl:variable name="css:STRING_FN_RE" select="concat('string\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:IDENT_RE,')\s*)?\)')"/>
     <xsl:variable name="css:STRING_FN_RE_ident" select="1"/>
@@ -91,7 +91,7 @@
     <xsl:variable name="css:STRING_FN_RE_groups" select="$css:STRING_FN_RE_scope + $css:IDENT_RE_groups"/>
     
     <!--
-        counter(<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-counter
+        counter(<ident>,<counter-style>?): http://braillespecs.github.io/braille-css/#dfn-counter
     -->
     <xsl:variable name="css:COUNTER_FN_RE" select="concat('counter\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:COUNTER_FN_RE_ident" select="1"/>
@@ -99,7 +99,7 @@
     <xsl:variable name="css:COUNTER_FN_RE_groups" select="$css:COUNTER_FN_RE_style + $css:COUNTER_STYLE_RE_groups"/>
     
     <!--
-        target-text(<url>): http://snaekobbi.github.io/braille-css-spec/#dfn-target-text
+        target-text(<url>): http://braillespecs.github.io/braille-css/#dfn-target-text
     -->
     <xsl:variable name="css:TARGET_TEXT_FN_RE" select="concat('target-text\(\s*(',$css:URL_RE,')\s*\)')"/>
     <xsl:variable name="css:TARGET_TEXT_FN_RE_url" select="1"/>
@@ -108,7 +108,7 @@
     <xsl:variable name="css:TARGET_TEXT_FN_RE_groups" select="$css:TARGET_TEXT_FN_RE_url + $css:URL_RE_groups"/>
     
     <!--
-        target-string(<url>,<ident>): http://snaekobbi.github.io/braille-css-spec/#dfn-target-string
+        target-string(<url>,<ident>): http://braillespecs.github.io/braille-css/#dfn-target-string
     -->
     <xsl:variable name="css:TARGET_STRING_FN_RE" select="concat('target-string\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*\)')"/>
     <xsl:variable name="css:TARGET_STRING_FN_RE_url" select="1"/>
@@ -118,7 +118,7 @@
     <xsl:variable name="css:TARGET_STRING_FN_RE_groups" select="$css:TARGET_STRING_FN_RE_ident + $css:IDENT_RE_groups"/>
     
     <!--
-        target-counter(<url>,<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-target-counter
+        target-counter(<url>,<ident>,<counter-style>?): http://braillespecs.github.io/braille-css/#dfn-target-counter
     -->
     <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_url" select="1"/>
@@ -138,14 +138,14 @@
     <xsl:variable name="css:TARGET_CONTENT_FN_RE_groups" select="$css:TARGET_CONTENT_FN_RE_url + $css:URL_RE_groups"/>
     
     <!--
-        leader(<braille-string>): http://snaekobbi.github.io/braille-css-spec/#dfn-leader
+        leader(<braille-string>): http://braillespecs.github.io/braille-css/#dfn-leader
     -->
     <xsl:variable name="css:LEADER_FN_RE" select="concat('leader\(\s*(',$css:BRAILLE_STRING_RE,')\s*\)')"/>
     <xsl:variable name="css:LEADER_FN_RE_pattern" select="1"/>
     <xsl:variable name="css:LEADER_FN_RE_groups" select="$css:LEADER_FN_RE_pattern + $css:BRAILLE_STRING_RE_groups"/>
     
     <!--
-        flow(<ident>,<scope>?): http://snaekobbi.github.io/braille-css-spec/#dfn-flow-1
+        flow(<ident>,<scope>?): http://braillespecs.github.io/braille-css/#dfn-flow-1
     -->
     <xsl:variable name="css:FLOW_FN_RE" select="concat('flow\(\s*(',$css:IDENT_RE,')\s*(,\s*(document|volume)\s*)?\)')"/>
     <xsl:variable name="css:FLOW_FN_RE_ident" select="1"/>

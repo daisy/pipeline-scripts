@@ -137,9 +137,9 @@ public class BrailleTranslatorFactoryServiceImpl implements BrailleTranslatorFac
 	
 	/**
 	 * BrailleTranslator with <a
-	 * href="http://snaekobbi.github.io/braille-css-spec/#h3_white-space-processing">white
+	 * href="http://braillespecs.github.io/braille-css/#h3_white-space-processing">white
 	 * space processing</a> and <a
-	 * href="http://snaekobbi.github.io/braille-css-spec/#line-breaking">line
+	 * href="http://braillespecs.github.io/braille-css/#line-breaking">line
 	 * breaking</a> according to braille CSS.
 	 *
 	 * White space is normalised. Preserved spaces must have been converted to
