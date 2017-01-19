@@ -38,16 +38,42 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
-        <p:documentation>
-            <h2 px:role="name">Output EPUB 3</h2>
+    <p:option name="stylesheet" required="false" px:type="string" select="''">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Style sheets</h2>
+            <p px:role="desc" xml:space="preserve">CSS style sheets to apply. A space separated list of URIs, absolute or relative to source.
+
+All CSS style sheets are applied at once, but the order in which they are specified has an influence
+on the cascading order.
+
+If the "Apply document-specific CSS" option is enabled, the document-specific style sheets will be
+applied before the ones specified through this option (see below).
+</p>
         </p:documentation>
     </p:option>
     
     <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Apply document-specific CSS</h2>
-            <p px:role="desc">If this option is enabled, any pre-existing CSS in the EPUB for medium "embossed" will be taken into account for the translation, or preserved in the result EPUB.</p>
+            <p px:role="desc" xml:space="preserve">If this option is enabled, any pre-existing CSS in the EPUB for medium "embossed" will be taken into account for the translation, or preserved in the result EPUB.
+
+The HTML files inside the source EPUB may already contain CSS that applies to embossed media. Style
+sheets can be associated with an HTML file in several ways: linked (using an 'xml-stylesheet'
+processing instruction or a 'link' element), embedded (using a 'style' element) and/or inlined
+(using 'style' attributes).
+
+Document-specific CSS takes precedence over any CSS provided through the "Style sheets" option. For
+instance, if the EPUB already contains the rule `p { padding-left: 2; }`, and using this script the
+rule `p#docauthor { padding-left: 4; }` is provided, then the `padding-left` property will get the
+value `2` because that's what was defined in the EPUB, even though the provided CSS is more
+specific.
+</p>
+        </p:documentation>
+    </p:option>
+    
+    <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
+        <p:documentation>
+            <h2 px:role="name">Output EPUB 3</h2>
         </p:documentation>
     </p:option>
     
@@ -58,7 +84,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
-    <p:variable name="stylesheet" select="resolve-uri('../css/default.css')">
+    <p:variable name="default-stylesheet" select="resolve-uri('../css/default.css')">
         <p:inline>
             <irrelevant/>
         </p:inline>
@@ -226,7 +252,7 @@
         </p:choose>
         <css:delete-stylesheets/>
         <css:inline media="embossed">
-            <p:with-option name="default-stylesheet" select="$stylesheet"/>
+            <p:with-option name="default-stylesheet" select="($stylesheet,$default-stylesheet)[not(.='')][1]"/>
         </css:inline>
         <px:transform name="transform">
             <p:with-option name="query" select="concat('(input:html)(input:css)(output:html)(output:css)(output:braille)',
