@@ -57,6 +57,16 @@
 					<c:file name="EPUB/C00000-8-conclusion_braille.xhtml"/>
 					<c:file name="EPUB/C00000-9-footnotes_braille.xhtml"/>
 					<c:file name="EPUB/nav_braille.xhtml"/>
+					<c:file name="EPUB/C00000-1-cover_braille.css"/>
+					<c:file name="EPUB/C00000-2-frontmatter_braille.css"/>
+					<c:file name="EPUB/C00000-3-chapter_braille.css"/>
+					<c:file name="EPUB/C00000-4-chapter_braille.css"/>
+					<c:file name="EPUB/C00000-5-chapter_braille.css"/>
+					<c:file name="EPUB/C00000-6-rearnotes_braille.css"/>
+					<c:file name="EPUB/C00000-7-chapter_braille.css"/>
+					<c:file name="EPUB/C00000-8-conclusion_braille.css"/>
+					<c:file name="EPUB/C00000-9-footnotes_braille.css"/>
+					<c:file name="EPUB/nav_braille.css"/>
 					<c:file name="META-INF/container.xml"/>
 					<c:file name="META-INF/metadata.xml"/>
 					<c:file name="EPUB/package-braille.opf"/>

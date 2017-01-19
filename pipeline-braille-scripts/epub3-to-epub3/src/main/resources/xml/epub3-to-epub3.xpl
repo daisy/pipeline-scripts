@@ -47,7 +47,7 @@
     <p:option name="apply-document-specific-stylesheets" px:type="boolean" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Apply document-specific CSS</h2>
-            <p px:role="desc">If this option is enabled, any pre-existing CSS in the EPUB with media "embossed" (or "all") will be taken into account for the translation.</p>
+            <p px:role="desc">If this option is enabled, any pre-existing CSS in the EPUB for medium "embossed" will be taken into account for the translation, or preserved in the result EPUB.</p>
         </p:documentation>
     </p:option>
     
@@ -197,7 +197,10 @@
     </px:fileset-load>
     <p:for-each name="braille-rendition.html">
         <p:output port="result" primary="true">
-            <p:pipe step="result" port="result"/>
+            <p:pipe step="html" port="result"/>
+        </p:output>
+        <p:output port="css" sequence="true">
+            <p:pipe step="extract-css" port="css"/>
         </p:output>
         <p:output port="resource-map" sequence="true">
             <p:pipe step="resource-map" port="result"/>
@@ -230,10 +233,76 @@
                                                        $braille-translator,
                                                        '(locale:',$lang,')')"/>
         </px:transform>
-        <p:delete match="@style" name="result"/>
-        <p:xslt>
+        <p:group name="extract-css">
+            <p:output port="result" primary="true">
+                <p:pipe step="extract-css.result" port="result"/>
+            </p:output>
+            <p:output port="css" sequence="true">
+                <p:pipe step="css" port="result"/>
+            </p:output>
+            <css:extract name="extract"/>
+            <p:delete match="@style" name="without-css"/>
+            <p:choose>
+                <p:xpath-context>
+                    <p:pipe step="extract" port="stylesheet"/>
+                </p:xpath-context>
+                <p:when test="normalize-space(string(/*))=''">
+                    <p:identity/>
+                </p:when>
+                <p:otherwise>
+                    <p:add-attribute match="/html:link" attribute-name="href" name="css-link">
+                        <p:input port="source">
+                            <p:inline xmlns="http://www.w3.org/1999/xhtml">
+                                <link rel="stylesheet" type="text/css" media="embossed"/>
+                            </p:inline>
+                        </p:input>
+                        <p:with-option name="attribute-value" select="replace(base-uri(/*),'^.*/(([^/]+)\.x?html|([^/]+))$','$2$3.css')"/>
+                    </p:add-attribute>
+                    <!--
+                        assuming there is one and only one head element
+                    -->
+                    <p:insert match="html:head" position="last-child">
+                        <p:input port="source">
+                            <p:pipe step="without-css" port="result"/>
+                        </p:input>
+                        <p:input port="insertion">
+                            <p:pipe step="css-link" port="result"/>
+                        </p:input>
+                    </p:insert>
+                </p:otherwise>
+            </p:choose>
+            <p:identity name="extract-css.result"/>
+            <p:identity>
+                <p:input port="source">
+                    <p:pipe step="extract" port="stylesheet"/>
+                </p:input>
+            </p:identity>
+            <p:choose>
+                <p:when test="normalize-space(string(/*))=''">
+                    <p:identity>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                    </p:identity>
+                </p:when>
+                <p:otherwise>
+                    <p:add-attribute match="/*" attribute-name="xml:base">
+                        <!--
+                            using "base-uri(parent::*)" because link has the base-uri of this XProc file
+                        -->
+                        <p:with-option name="attribute-value"
+                                       select="//html:link[@rel='stylesheet' and @type='text/css' and @media='embossed']
+                                               /resolve-uri(@href,base-uri(parent::*))">
+                            <p:pipe step="extract-css.result" port="result"/>
+                        </p:with-option>
+                    </p:add-attribute>
+                </p:otherwise>
+            </p:choose>
+            <p:identity name="css"/>
+        </p:group>
+        <p:xslt name="html">
             <p:input port="source">
-                <p:pipe step="transform" port="result"/>
+                <p:pipe step="extract-css" port="result"/>
                 <p:pipe step="braille-rendition.fileset" port="result"/>
             </p:input>
             <p:input port="stylesheet">
@@ -267,6 +336,24 @@
         </p:group>
         <p:identity name="resource-map"/>
     </p:for-each>
+    
+    <!--
+        braille rendition css files
+    -->
+    
+    <p:for-each>
+        <p:iteration-source>
+            <p:pipe step="braille-rendition.html" port="css"/>
+        </p:iteration-source>
+        <px:fileset-add-entry>
+            <p:input port="source">
+                <p:pipe step="target.base.fileset" port="result"/>
+            </p:input>
+            <p:with-option name="href" select="base-uri(/*)"/>
+            <p:with-option name="media-type" select="/c:result/@content-type"/> <!-- text/plain -->
+        </px:fileset-add-entry>
+    </p:for-each>
+    <px:fileset-join name="braille-rendition.css.fileset"/>
     
     <!--
         rendition mapping document
@@ -329,22 +416,23 @@
     <p:identity name="braille-rendition.smil"/>
     
     <!--
-        braille rendition package document with new dc:language
+        braille rendition package document with new dc:language and css files
     -->
     
     <p:xslt>
         <p:input port="source">
             <p:pipe step="braille-rendition.package-document" port="result"/>
+            <p:pipe step="braille-rendition.css.fileset" port="result"/>
             <p:pipe step="braille-rendition.html" port="result"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="braille-rendition.package-document-with-dc-language.xsl"/>
+            <p:document href="braille-rendition.package-document-with-dc-language-and-css.xsl"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
         </p:input>
     </p:xslt>
-    <p:delete match="/*/@xml:base" name="braille-rendition.package-document-with-dc-language"/>
+    <p:delete match="/*/@xml:base" name="braille-rendition.package-document-with-dc-language-and-css"/>
     
     <!--
         container.xml
@@ -363,13 +451,13 @@
     </p:insert>
     <p:add-attribute match="/ocf:container/ocf:rootfiles/ocf:rootfile[last()]" attribute-name="rendition:language">
         <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language[1]/string(.)">
-            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
+            <p:pipe step="braille-rendition.package-document-with-dc-language-and-css" port="result"/>
         </p:with-option>
     </p:add-attribute>
     <p:add-attribute match="/ocf:container/ocf:rootfiles/ocf:rootfile[last()]" attribute-name="rendition:layout">
         <p:with-option name="attribute-value"
                        select="(/opf:package/opf:metadata/opf:meta[@property='rendition:layout']/string(.),'reflowable')[1]">
-            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
+            <p:pipe step="braille-rendition.package-document-with-dc-language-and-css" port="result"/>
         </p:with-option>
     </p:add-attribute>
     <p:insert position="last-child" match="/ocf:container">
@@ -391,6 +479,7 @@
     <px:fileset-join>
         <p:input port="source">
             <p:pipe step="braille-rendition.html.fileset" port="result"/>
+            <p:pipe step="braille-rendition.css.fileset" port="result"/>
             <p:pipe step="braille-rendition.smil.fileset" port="result"/>
             <p:pipe step="source.fileset" port="result"/>
         </p:input>
@@ -405,8 +494,9 @@
             <p:pipe step="source.in-memory" port="result"/>
             <p:pipe step="container" port="result"/>
             <p:pipe step="metadata" port="result"/>
-            <p:pipe step="braille-rendition.package-document-with-dc-language" port="result"/>
+            <p:pipe step="braille-rendition.package-document-with-dc-language-and-css" port="result"/>
             <p:pipe step="braille-rendition.html" port="result"/>
+            <p:pipe step="braille-rendition.html" port="css"/>
             <p:pipe step="braille-rendition.smil" port="result"/>
             <p:pipe step="rendition-mapping" port="result"/>
         </p:input>
