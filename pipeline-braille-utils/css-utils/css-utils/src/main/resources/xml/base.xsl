@@ -829,35 +829,51 @@
     <!-- =========== -->
     
      <xsl:template match="css:rule" mode="css:serialize" as="xs:string">
-        <xsl:param name="base" as="xs:string?" select="()"/>
+        <xsl:param name="base" as="xs:string*" select="()"/>
+        <xsl:param name="level" as="xs:integer" select="1"/>
+        <xsl:param name="indent" as="xs:string?" select="()"/>
+        <xsl:variable name="newline" as="xs:string"
+                      select="if (exists($indent)) then string-join(('&#xa;',for $i in 2 to $level return $indent),'')
+                              else ' '"/>
         <xsl:choose>
             <xsl:when test="not(@selector) and exists($base)">
                 <xsl:sequence select="if (@style)
-                                      then concat($base,' { ',string(@style),' }')
-                                      else css:serialize-stylesheet(*,$base)"/>
+                                      then string-join((
+                                             string-join($base,', '),' {',$newline,$indent,
+                                             string(@style),
+                                             $newline,'}'),'')
+                                      else css:serialize-stylesheet(*,$base,$level,$indent)"/>
             </xsl:when>
             <xsl:when test="not(@selector)">
                 <xsl:sequence select="if (@style)
                                       then string(@style)
-                                      else css:serialize-stylesheet(*,(),false())"/>
+                                      else css:serialize-stylesheet(*,(),$level,$indent)"/>
             </xsl:when>
             <xsl:when test="exists($base) and not(matches(@selector,'^:'))">
-                <xsl:sequence select="concat(
-                                        $base,
-                                        ' {',
+                <xsl:sequence select="string-join((
+                                        string-join($base,', '),' {',$newline,$indent,
                                         css:serialize-stylesheet(
                                           if (@style)
                                             then css:parse-stylesheet(@style)
                                             else *,
-                                          @selector),
-                                        ' }')"/>
+                                          @selector,
+                                          $level+1,
+                                          $indent),
+                                        $newline,'}'),'')"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="css:serialize-stylesheet(
                                         if (@style)
                                           then css:parse-stylesheet(@style)
                                           else *,
-                                        string-join(($base,@selector),''))"/>
+                                        if (exists($base))
+                                          then for $s in @selector return
+                                               for $b in $base return
+                                                 for $bb in tokenize($b,'\s*,\s*') return
+                                                   concat($bb,$s)
+                                          else @selector,
+                                        $level,
+                                        $indent)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -935,55 +951,75 @@
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
-        <xsl:param name="base" as="xs:string?"/>
-        <xsl:sequence select="css:serialize-stylesheet($rules,$base,true())"/>
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules,$base,1)"/>
     </xsl:function>
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
-        <xsl:param name="base" as="xs:string?"/>
-        <xsl:param name="top" as="xs:boolean"/>
-        <xsl:variable name="top" as="xs:boolean" select="$top and not(exists($base))"/>
-        <xsl:variable name="serialized-declarations" as="xs:string*">
-            <xsl:apply-templates mode="css:serialize"
-                                 select="$rules[(self::css:rule and not(@selector)) or self::css:property]"/>
-        </xsl:variable>
-        <xsl:variable name="serialized-declarations" as="xs:string?">
-            <xsl:if test="exists($serialized-declarations)">
-                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
-            </xsl:if>
-        </xsl:variable>
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:param name="level" as="xs:integer"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules,$base,$level,())"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-stylesheet" as="xs:string">
+        <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:param name="level" as="xs:integer"/>
+        <xsl:param name="indent" as="xs:string?"/>
+        <xsl:variable name="newline" as="xs:string"
+                      select="if (exists($indent)) then string-join(('&#xa;',for $i in 2 to $level return $indent),'') else ' '"/>
         <xsl:variable name="serialized-pseudo-rules" as="xs:string*">
             <xsl:apply-templates select="$rules[self::css:rule and @selector[matches(.,'^:')]]" mode="css:serialize">
                 <xsl:with-param name="base" select="$base"/>
+                <xsl:with-param name="level" select="$level"/>
+                <xsl:with-param name="indent" select="$indent"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="serialized-at-rules" as="xs:string*">
-            <xsl:apply-templates select="$rules[self::css:rule and @selector[not(matches(.,'^:'))]]" mode="css:serialize"/>
+            <xsl:apply-templates select="$rules[self::css:rule and @selector[not(matches(.,'^:'))]]" mode="css:serialize">
+                <xsl:with-param name="level" select="if (exists($base)) then $level+1 else $level"/>
+                <xsl:with-param name="indent" select="$indent"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:variable name="serialized-declarations" as="xs:string*">
+            <xsl:apply-templates mode="css:serialize"
+                                 select="$rules[(self::css:rule and not(@selector)) or self::css:property]">
+                <xsl:with-param name="level" select="if (exists($base)) then $level+1 else $level"/>
+                <xsl:with-param name="indent" select="$indent"/>
+            </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
             <xsl:choose>
                 <xsl:when test="exists($base)">
                     <xsl:variable name="serialized-inner-rules" as="xs:string*">
-                        <xsl:sequence select="$serialized-declarations"/>
+                        <xsl:if test="exists($serialized-declarations)">
+                            <xsl:sequence select="string-join($serialized-declarations,string-join((';',$newline,$indent),''))"/>
+                        </xsl:if>
                         <xsl:sequence select="$serialized-at-rules"/>
                     </xsl:variable>
                     <xsl:if test="exists($serialized-inner-rules)">
-                        <xsl:sequence select="concat($base,' { ',string-join($serialized-inner-rules,' '),' }')"/>
+                        <xsl:sequence select="string-join((
+                                                string-join($base,', '),' {',$newline,$indent,
+                                                string-join($serialized-inner-rules,string-join(($newline,$indent),'')),
+                                                $newline,'}'),'')"/>
                     </xsl:if>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:if test="exists($serialized-declarations)">
-                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)) and $top)
-                                              then concat('{ ',$serialized-declarations,' }')
-                                              else $serialized-declarations"/>
+                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)) and $level=1)
+                                              then string-join((
+                                                     '{',$newline,$indent,
+                                                     string-join($serialized-declarations,string-join((';',$newline,$indent),'')),
+                                                     $newline,'}'),'')
+                                              else string-join($serialized-declarations,string-join((';',$newline),''))"/>
                     </xsl:if>
                     <xsl:sequence select="$serialized-at-rules"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:sequence select="$serialized-pseudo-rules"/>
         </xsl:variable>
-        <xsl:sequence select="string-join($serialized-rules,' ')"/>
+        <xsl:sequence select="string-join($serialized-rules,$newline)"/>
     </xsl:function>
     
     <xsl:function name="css:serialize-declaration-list" as="xs:string">
