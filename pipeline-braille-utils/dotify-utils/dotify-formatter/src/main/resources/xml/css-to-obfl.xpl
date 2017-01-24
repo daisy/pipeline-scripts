@@ -25,6 +25,7 @@
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
     <p:import href="make-obfl-pseudo-elements.xpl"/>
+    <p:import href="extract-obfl-pseudo-elements.xpl"/>
     
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
@@ -36,6 +37,11 @@
                 css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
+        <p:delete match="@css:*[matches(local-name(),'^text-transform-')]">
+            <p:documentation>
+                For now, ignore @text-transform definitions.
+            </p:documentation>
+        </p:delete>
         <css:parse-properties properties="flow">
             <p:documentation>
                 Make css:flow attributes.
@@ -61,18 +67,13 @@
                 <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
-                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
+                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
                     </p:documentation>
                 </pxi:make-obfl-pseudo-elements>
-                <p:for-each>
-                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
-                </p:for-each>
+                <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
             </p:when>
             <p:otherwise>
-                <p:rename match="@css:_obfl-on-toc-start-ref" new-name="css:_obfl-on-toc-start"/>
-                <p:rename match="@css:_obfl-on-volume-start-ref" new-name="css:_obfl-on-volume-start"/>
-                <p:rename match="@css:_obfl-on-volume-end-ref" new-name="css:_obfl-on-volume-end"/>
-                <p:rename match="@css:_obfl-on-toc-end-ref" new-name="css:_obfl-on-toc-end"/>
+                <p:identity/>
             </p:otherwise>
         </p:choose>
     </p:declare-step>
@@ -112,11 +113,19 @@
     <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
-            css:alternate and css:footnote-call pseudo-elements, and css:_obfl-on-toc-start,
-            css:_obfl-on-volume-start, css:_obfl-on-volume-end and css:_obfl-on-toc-end
-            pseudo-element documents.
+            css:alternate, css:footnote-call, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+            css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    
+    <p:for-each>
+        <pxi:extract-obfl-pseudo-elements>
+            <p:documentation>
+                Extract css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end
+                and css:_obfl-on-toc-end pseudo-elements into their own documents.
+            </p:documentation>
+        </pxi:extract-obfl-pseudo-elements>
+    </p:for-each>
     
     <p:for-each>
         <css:parse-properties properties="content string-set counter-reset counter-set counter-increment -obfl-marker">
@@ -289,7 +298,6 @@
                 </p:documentation>
             </css:parse-counter-set>
             <p:delete match="/*[@css:flow]//*/@css:volume|
-                             /*[@css:flow]//*/@css:counter-set-page|
                              //css:box[@type='table']//*/@css:page-break-before|
                              //css:box[@type='table']//*/@css:page-break-after|
                              //css:box[@type='table']//*/@css:page|
@@ -298,9 +306,9 @@
                              //*[@css:obfl-toc]//*/@css:page-break-before|
                              //*[@css:obfl-toc]//*/@css:page-break-after">
                 <p:documentation>
-                     Don't support 'volume' and 'counter-set: page' within named flows or
-                     tables. Don't support 'page' within tables. Don't support 'page-break-before'
-                     and 'page-break-after' within tables or '-obfl-toc' elements.
+                     Don't support 'volume' within named flows. Don't support 'volume', 'page' and
+                     'counter-set: page' within tables. Don't support 'page-break-before' and
+                     'page-break-after' within tables or '-obfl-toc' elements.
                 </p:documentation>
             </p:delete>
             <css:split split-before="*[@css:page or @css:volume or @css:counter-set-page]|
@@ -406,12 +414,15 @@
     <p:for-each>
         <css:parse-properties properties="margin-left margin-right margin-top margin-bottom
                                           padding-left padding-right padding-top padding-bottom
-                                          border-left border-right border-top border-bottom text-indent">
+                                          border-left-pattern border-right-pattern border-top-pattern
+                                          border-bottom-pattern border-left-style border-right-style
+                                          border-top-style border-bottom-style text-indent">
             <p:documentation>
                 Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
-                css:padding-left, css:padding-right, css:padding-top and css:padding-bottom,
-                css:border-left, css:border-right, css:border-top, css:border-bottom and
-                css:text-indent attributes.
+                css:padding-left, css:padding-right, css:padding-top, css:padding-bottom,
+                css:border-left-pattern, css:border-right-pattern, css:border-top-pattern,
+                css:border-bottom-pattern, css:border-left-style, css:border-right-style,
+                css:border-top-style, css:border-bottom-style and css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
         <css:adjust-boxes>
@@ -472,12 +483,12 @@
                 Delete css:margin-top from first block and move css:margin-top of other blocks to
                 css:margin-bottom of their preceding block.
             </p:documentation>
-            <p:when test="$skip-margin-top-of-page='true'">
+            <p:when test="$skip-margin-top-of-page='true' and not(/*/@css:flow[matches(.,'-obfl-on-(toc|volume)-(start|end)/')])">
                 <p:delete match="css:box
                                    [@type='block']
                                    [@css:margin-top]
                                    [not(preceding::*)]
-                                   [not(ancestor::*[@css:border-top])]
+                                   [not(ancestor::*[@css:border-top-pattern or @css:border-top-style])]
                                  /@css:margin-top"/>
                 <p:label-elements match="css:box
                                            [@type='block']
@@ -486,7 +497,8 @@
                                                  $self/descendant-or-self::*
                                                    [@css:margin-top][1]
                                                    [not(preceding::* intersect $self/descendant::*)]
-                                                   [not((ancestor::* intersect $self/descendant-or-self::*)[@css:border-top])]]]"
+                                                   [not((ancestor::* intersect $self/descendant-or-self::*)
+                                                        [@css:border-top-pattern or @css:border-top-style])]]]"
                                   attribute="css:_margin-bottom_"
                                   label="max((0,
                                               @css:margin-bottom/number(),
@@ -502,8 +514,10 @@
         </p:choose>
     </p:for-each>
     
-    <p:split-sequence test="//css:box[@css:border-top|
-                                      @css:border-bottom|
+    <p:split-sequence test="//css:box[@css:border-top-pattern|
+                                      @css:border-top-style|
+                                      @css:border-bottom-pattern|
+                                      @css:border-bottom-style|
                                       @css:margin-top|
                                       @css:margin-bottom|
                                       descendant::text()|
@@ -537,7 +551,8 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
+    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]
+                                [some $class in @class satisfies preceding::obfl:marker[@class=$class]]" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
         </p:input>
