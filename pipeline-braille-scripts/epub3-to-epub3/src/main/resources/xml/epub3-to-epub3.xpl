@@ -71,6 +71,13 @@ specific.
         </p:documentation>
     </p:option>
     
+    <p:option name="set-default-rendition-to-braille" px:type="boolean" select="'false'">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Set default rendition to braille.</h2>
+            <p px:role="desc">Make the generated braille rendition the default rendition.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation>
             <h2 px:role="name">Output EPUB 3</h2>
@@ -464,7 +471,7 @@ specific.
         container.xml
     -->
     
-    <p:insert position="last-child" match="/ocf:container/ocf:rootfiles">
+    <p:insert match="/ocf:container/ocf:rootfiles">
         <p:input port="source">
             <p:pipe step="original-container" port="result"/>
         </p:input>
@@ -474,6 +481,7 @@ specific.
                           rendition:accessMode="tactile" rendition:label="Pre-translated to braille"/>
             </p:inline>
         </p:input>
+        <p:with-option name="position" select="if ($set-default-rendition-to-braille='true') then 'first-child' else 'last-child'"/>
     </p:insert>
     <p:add-attribute match="/ocf:container/ocf:rootfiles/ocf:rootfile[last()]" attribute-name="rendition:language">
         <p:with-option name="attribute-value" select="/opf:package/opf:metadata/dc:language[1]/string(.)">
