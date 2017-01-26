@@ -26,7 +26,9 @@ public class XProcSpecTest extends AbstractXSpecAndXProcSpecTest {
 	
 	@ProbeBuilder
 	public TestProbeBuilder probeConfiguration(TestProbeBuilder probe) {
-		probe.setHeader("Service-Component", "OSGI-INF/mock-tts.xml");
+		probe.setHeader("Bundle-Name", "test-module");
+		// FIXME: can not delete this yet because it can not be generated with maven-bundle-plugin
+		probe.setHeader("Service-Component", "OSGI-INF/module.xml,OSGI-INF/mock-tts.xml");
 		return probe;
 	}
 }
