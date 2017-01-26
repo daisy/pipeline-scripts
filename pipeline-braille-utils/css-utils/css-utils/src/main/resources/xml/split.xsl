@@ -18,12 +18,7 @@
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:variable>
-            <xsl:for-each select="for $p in $parts return $p[self::pxi:part]/*[self::css:box or count(*)]">
-                <xsl:variable name="part" select="if (position() = 1) then 'first' else if (position() = last()) then 'last' else 'middle'"/>
-                <xsl:apply-templates select="." mode="label-box-part">
-                    <xsl:with-param name="part" select="$part" tunnel="yes"/>
-                </xsl:apply-templates>
-            </xsl:for-each>
+            <xsl:sequence select="for $p in $parts return $p[self::pxi:part]/*[self::css:box or count(*)]"/>
         </_>
     </xsl:template>
     
@@ -165,57 +160,34 @@
         <xsl:param name="include" required="yes" as="node()*"/>
         <xsl:param name="include-with-ancestors" required="yes" as="node()*"/>
         <xsl:copy>
-            <xsl:copy-of select="@* except (@*:id | @pxi:*)"/>
             <xsl:if test=". intersect $include">
                 <xsl:copy-of select="@*:id"/>
             </xsl:if>
+            <xsl:choose>
+                <xsl:when test="count(self::css:box) and count(descendant-or-self::node() except $include) and not(ancestor::css:box[descendant-or-self::node() except $include])">
+                    <!-- only add @part if the css:box is being split, except if it's a descendant of another box being split -->
+                    <xsl:variable name="part" select="if (. intersect $include) then 'first' else if (descendant::node()[last()] intersect $include) then 'last' else 'middle'"/>
+                    <xsl:attribute name="part" select="$part"/>
+                    <xsl:choose>
+                        <xsl:when test="$part = 'first'">
+                            <xsl:copy-of select="@* except (@*:id | @pxi:*)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:copy-of select="@* except (@css:*[matches(local-name(),'^counter-(reset|set|increment).*$')] |
+                                                            @css:string-entry |
+                                                            @css:string-set |
+                                                            @*:id | @pxi:*)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="@* except (@*:id | @pxi:*)"/>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:apply-templates select="node()[. intersect $include-with-ancestors]" mode="#current">
                 <xsl:with-param name="include" select="$include"/>
                 <xsl:with-param name="include-with-ancestors" select="$include-with-ancestors"/>
             </xsl:apply-templates>
-        </xsl:copy>
-    </xsl:template>
-    
-    <!-- ========== Label Part ========== -->
-    
-    <xsl:template match="@* | node()" mode="label-box-part">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            
-            <xsl:choose>
-                <xsl:when test="css:box">
-                    <xsl:copy-of select="css:box[1]/preceding-sibling::node()"/>
-                    <xsl:apply-templates select="css:box[1]" mode="#current"/>
-                    <xsl:copy-of select="css:box[1]/following-sibling::node()"/>
-                    
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="node()" mode="#current"/>
-                    
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="css:box" mode="label-box-part">
-        <xsl:param name="part" required="yes" tunnel="yes"/>
-        <xsl:copy>
-            <xsl:choose>
-                <xsl:when test="$part = ('middle','last')">
-                    <xsl:copy-of select="@* except (@css:*[matches(local-name(),'^counter-(reset|set|increment).*$')] |
-                                                    @css:string-entry |
-                                                    @css:string-set)"/>
-                    
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:copy-of select="@*"/>
-                    
-                </xsl:otherwise>
-            </xsl:choose>
-            
-            <xsl:attribute name="part" select="$part"/>
-            
-            <xsl:copy-of select="node()"/>
         </xsl:copy>
     </xsl:template>
     
