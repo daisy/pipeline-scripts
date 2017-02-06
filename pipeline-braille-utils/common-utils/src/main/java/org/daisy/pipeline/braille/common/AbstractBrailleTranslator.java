@@ -343,8 +343,8 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 							rv = rv.substring(0, cut);
 						return rv; }
 					
-					// return nothing if limit is 0
-					if (limit == 0) {
+					// return nothing if limit is 0 (limit should not be less than 0, but check anyway)
+					if (limit <= 0) {
 						
 						// strip leading SPACE/LF/CR/TAB/BLANK in remaining text (are already collapsed into one)
 						int cut = 0;
