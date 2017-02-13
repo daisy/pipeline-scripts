@@ -59,8 +59,6 @@ public class LiblouisFormatterTest {
 				pipelineModule("file-utils"),
 				pipelineModule("fileset-utils"),
 				brailleModule("liblouis-tables"),
-				// for p:unzip-fileset in fileset-utils
-				pipelineModule("mediatype-utils"),
 				// logging
 				logbackClassic(),
 				// xprocspec
