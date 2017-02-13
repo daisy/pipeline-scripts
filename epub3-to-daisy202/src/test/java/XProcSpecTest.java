@@ -10,7 +10,6 @@ public class XProcSpecTest extends AbstractXSpecAndXProcSpecTest {
 			pipelineModule("file-utils"),
 			pipelineModule("html-utils"),
 			pipelineModule("zip-utils"),
-			// for p:unzip-fileset in fileset-utils
 			pipelineModule("mediatype-utils")
 		};
 	}
