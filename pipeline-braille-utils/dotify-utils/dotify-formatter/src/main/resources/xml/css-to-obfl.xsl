@@ -1456,12 +1456,15 @@
     
     <xsl:template mode="block-attr"
                   match="css:box[@type='block']/@css:volume-break-inside">
+        <xsl:variable name="this" select="."/>
         <xsl:analyze-string select="." regex="^{$_OBFL_KEEP_FN_RE}$">
             <xsl:matching-substring>
                 <xsl:attribute name="volume-keep-priority" select="regex-group($_OBFL_KEEP_FN_RE_priority)"/>
             </xsl:matching-substring>
             <xsl:non-matching-substring>
-                <xsl:next-match/>
+                <xsl:call-template name="coding-error">
+                    <xsl:with-param name="context" select="$this"/>
+                </xsl:call-template>
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
@@ -2053,13 +2056,14 @@
     </xsl:template>
     
     <xsl:template name="coding-error">
+        <xsl:param name="context" select="."/> <!-- element()|text()|attribute() -->
         <xsl:message terminate="yes">
           <xsl:text>Coding error: unexpected </xsl:text>
-          <xsl:value-of select="pxi:get-path(.)"/>
-          <xsl:if test="self::text()">
+          <xsl:value-of select="pxi:get-path($context)"/>
+          <xsl:if test="$context/self::text()">
               <xsl:text> ("</xsl:text>
               <xsl:value-of select="replace(
-                                      if (string-length(.)&gt;10) then concat(substring(.,1,10),'...') else string(.),
+                                      if (string-length($context)&gt;10) then concat(substring($context,1,10),'...') else string($context),
                                       '\n','\\n')"/>
               <xsl:text>")</xsl:text>
           </xsl:if>
