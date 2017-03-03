@@ -1,5 +1,8 @@
 import org.daisy.pipeline.junit.AbstractXSpecAndXProcSpecTest;
 
+import org.ops4j.pax.exam.ProbeBuilder;
+import org.ops4j.pax.exam.TestProbeBuilder;
+
 public class XProcSpecTest extends AbstractXSpecAndXProcSpecTest {
 	
 	@Override
@@ -17,7 +20,13 @@ public class XProcSpecTest extends AbstractXSpecAndXProcSpecTest {
 			pipelineModule("common-entities"),
 			pipelineModule("nlp-omnilang-lexer"),
 			pipelineModule("audio-encoder-lame"),
-			pipelineModule("tts-adapter-osx"),
+			pipelineModule("tts-common"),
 		};
+	}
+	
+	@ProbeBuilder
+	public TestProbeBuilder probeConfiguration(TestProbeBuilder probe) {
+		probe.setHeader("Service-Component", "OSGI-INF/mock-tts.xml");
+		return probe;
 	}
 }

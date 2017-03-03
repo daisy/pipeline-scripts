@@ -69,6 +69,11 @@
         test dependencies
     -->
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.daisy</groupId>
       <artifactId>zedval</artifactId>
       <version>2.1</version>
@@ -117,7 +122,7 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
-      <artifactId>tts-adapter-osx</artifactId>
+      <artifactId>tts-common</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
