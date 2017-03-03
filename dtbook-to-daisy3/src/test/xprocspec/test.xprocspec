@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
+               script="../../main/resources/xml/dtbook-to-daisy3.xpl">
+	
+	<x:scenario label="test_1">
+		<x:call step="px:dtbook-to-daisy3">
+			<x:input port="source">
+				<x:document type="file" href="../resources/samples/shuffled_7019_xmldtbook_1.xml"/>
+			</x:input>
+		</x:call>
+		<x:scenario label="without-audio">
+			<x:call>
+				<x:option name="audio" select="false()"/>
+				<x:option name="output-dir" select="resolve-uri('test_1/without-audio/output-dir/',$temp-dir)"/>
+			</x:call>
+			<x:context label="the output directory">
+				<x:document type="directory" base-uri="temp-dir" href="test_1/without-audio/output-dir/" recursive="true"/>
+			</x:context>
+			<x:expect label="the output directory should contain the DAISY 3" type="compare" >
+				<x:document type="inline">
+					<c:directory name="output-dir">
+						<c:file name="book.opf"/>
+						<c:file name="mo0.smil"/>
+						<c:file name="navigation.ncx"/>
+						<c:file name="resources.res"/>
+						<c:file name="shuffled_7019_xmldtbook_1.xml"/>
+					</c:directory>
+				</x:document>
+			</x:expect>
+		</x:scenario>
+		<x:scenario label="with-audio">
+			<x:call>
+				<x:option name="audio" select="true()"/>
+				<x:option name="output-dir" select="resolve-uri('test_1/with-audio/output-dir/',$temp-dir)"/>
+			</x:call>
+			<x:context label="the output directory">
+				<x:document type="directory" base-uri="temp-dir" href="test_1/with-audio/output-dir/" recursive="true"/>
+			</x:context>
+			<x:expect label="the output directory should contain the DAISY 3" type="compare" >
+				<x:document type="inline">
+					<c:directory name="output-dir">
+						<c:file name="book.opf"/>
+						<c:file name="mo0.smil"/>
+						<c:file name="navigation.ncx"/>
+						<c:file name="part0000_00_000.mp3"/>
+						<c:file name="part0000_01_000.mp3"/>
+						<c:file name="part0001_00_000.mp3"/>
+						<c:file name="part0001_01_000.mp3"/>
+						<c:file name="part0002_00_000.mp3"/>
+						<c:file name="part0002_01_000.mp3"/>
+						<c:file name="part0003_00_000.mp3"/>
+						<c:file name="part0004_00_000.mp3"/>
+						<c:file name="part0004_01_000.mp3"/>
+						<c:file name="part0005_00_000.mp3"/>
+						<c:file name="resources.res"/>
+						<c:file name="shuffled_7019_xmldtbook_1.xml"/>
+					</c:directory>
+				</x:document>
+			</x:expect>
+		</x:scenario>
+	</x:scenario>
+	
+</x:description>
