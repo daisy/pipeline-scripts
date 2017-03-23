@@ -154,4 +154,12 @@
         <xsl:value-of select="string-join(for $n in $node/(ancestor::* | .) return concat((if ($n intersect $n/../@*) then concat('@',$n/name()) else if ($n/self::*) then $n/name() else if ($n/self::text()) then 'text()' else 'node()'), '[', count($n/preceding-sibling::node()) + 1, ']'), '/')"/>
     </xsl:function>
     
+    <!--
+        Suppress warning messages "The source document is in no namespace, but the template rules
+        all expect elements in a namespace" (see https://github.com/daisy/pipeline-mod-braille/issues/38)
+    -->
+    <xsl:template match="/phony">
+        <xsl:next-match/>
+    </xsl:template>
+    
 </xsl:stylesheet>
