@@ -175,7 +175,9 @@
                     </css:box>
                 </css:box>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2"/>
+                    <css:box css:page="2">
+                        <css:box/>
+                    </css:box>
                 </css:box>
                 <css:box type="block" part="middle"/>
                 <css:box type="block" part="middle">

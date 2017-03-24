@@ -18,7 +18,7 @@
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:variable>
-            <xsl:sequence select="for $p in $parts return $p[self::pxi:part]/*[self::css:box or count(*)]"/>
+            <xsl:sequence select="$parts/*"/>
         </_>
     </xsl:template>
     

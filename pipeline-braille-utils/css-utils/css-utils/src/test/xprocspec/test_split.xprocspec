@@ -300,7 +300,9 @@
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2"/>
+          <css:box css:page="2">
+            <css:box/>
+          </css:box>
         </css:box>
       </x:document>
       <x:document type="inline">
