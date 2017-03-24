@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal" xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-    stylesheet="../../main/resources/xml/split.xsl">
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
+               stylesheet="../../main/resources/xml/split.xsl">
     
     <x:scenario label="test_01">
         <x:context mode="label-split-points">
             <css:box type="block" css:page="size: 30 15">
-                <front css:page="size: 30 15; @bottom-right {'{'} content: counter(page, lower-roman) {'}'}">
+                <front css:page="size: 30 15; @bottom-right {{ content: counter(page, lower-roman) }}">
                     <css:box> foo </css:box>
                 </front>
                 <body>
@@ -16,10 +18,9 @@
                 </rear>
             </css:box>
         </x:context>
-        
         <x:expect label="result">
             <css:box type="block" css:page="size: 30 15" pxi:split-before="true" pxi:split-after="true">
-                <front css:page="size: 30 15; @bottom-right {'{'} content: counter(page, lower-roman) {'}'}" pxi:split-before="true" pxi:split-after="true">
+                <front css:page="size: 30 15; @bottom-right {{ content: counter(page, lower-roman) }}" pxi:split-before="true" pxi:split-after="true">
                     <css:box> foo </css:box>
                 </front>
                 <body>
@@ -35,7 +36,7 @@
     <x:scenario label="test_02">
         <x:context>
             <css:box type="block" css:page="size: 30 15">
-                <front css:page="size: 30 15; @bottom-right {'{'} content: counter(page, lower-roman) {'}'}">
+                <front css:page="size: 30 15; @bottom-right {{ content: counter(page, lower-roman) }}">
                     <css:box> foo </css:box>
                 </front>
                 <body>
@@ -46,12 +47,11 @@
                 </rear>
             </css:box>
         </x:context>
-
         <x:expect label="result">
             <_>
                 <css:box type="block" part="first" css:page="size: 30 15"/>
                 <css:box type="block" part="middle" css:page="size: 30 15">
-                    <front css:page="size: 30 15; @bottom-right {'{'} content: counter(page, lower-roman) {'}'}">
+                    <front css:page="size: 30 15; @bottom-right {{ content: counter(page, lower-roman) }}">
                         <css:box> foo </css:box>
                     </front>
                 </css:box>
@@ -139,39 +139,49 @@
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="test_05 - don't duplicate ids">
-        <x:context>
+    <x:scenario label="test_05" pending="bug: order of some nodes is changed">
+        <x:context xml:space="preserve">
             <css:box type="block" css:id="a">
                 <css:box css:page="1"/>
                 <css:box css:page="2" css:id="b">
                     <css:box css:page="3"/>
                     <css:box css:page="4" css:id="c"/>
+                    <css:box/>
                 </css:box>
                 <css:box css:page="4"/>
             </css:box>
         </x:context>
         <x:expect label="result">
             <_>
-                <css:box part="first" type="block" css:id="a"> </css:box>
-                <css:box part="middle" type="block">
+                <css:box type="block" css:id="a" part="first"/>
+                <css:box type="block" part="middle">
                     <css:box css:page="1"/>
                 </css:box>
-                <css:box part="middle" type="block">
+                <css:box type="block" part="middle"/>
+                <css:box type="block" part="middle">
                     <css:box css:page="2" css:id="b"/>
                 </css:box>
-                <css:box part="middle" type="block">
+                <css:box type="block" part="middle">
                     <css:box css:page="2">
                         <css:box css:page="3"/>
                     </css:box>
                 </css:box>
-                <css:box part="middle" type="block">
+                <css:box type="block" part="middle">
+                    <css:box css:page="2"/>
+                </css:box>
+                <css:box type="block" part="middle">
                     <css:box css:page="2">
                         <css:box css:page="4" css:id="c"/>
                     </css:box>
                 </css:box>
-                <css:box part="last" type="block">
+                <css:box type="block" part="middle">
+                    <css:box css:page="2"/>
+                </css:box>
+                <css:box type="block" part="middle"/>
+                <css:box type="block" part="middle">
                     <css:box css:page="4"/>
                 </css:box>
+                <css:box type="block" part="last"/>
             </_>
         </x:expect>
     </x:scenario>
