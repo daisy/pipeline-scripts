@@ -238,12 +238,7 @@
     </x:expect>
   </x:scenario>
   
-  <!--
-      XSLT implementation has bugs:
-      - order of some nodes is changed
-      - part attributes should be put on all boxes that are split
-  -->
-  <x:scenario label="test_05" xfail="true">
+  <x:scenario label="test_05">
     <x:call step="css:split">
       <x:option name="split-before" select="'*[@css:page]'"/>
       <x:option name="split-after" select="'*[@css:page]'"/>
