@@ -195,7 +195,7 @@
   </xsl:function>
   
   <xsl:function name="f:list-name">
-    <xsl:param name="namespace-uri" required="yes"/>
+    <xsl:param name="namespace-uri"/>
     <xsl:choose>
       <xsl:when test="$namespace-uri = 'http://www.daisy.org/z3986/2005/dtbook/'">
         <xsl:value-of select="'list'"/>
@@ -222,14 +222,14 @@
   </xsl:template>
   
   <xsl:function name="f:list-item-name">
-    <xsl:param name="namespace-uri" required="yes"/>
+    <xsl:param name="namespace-uri"/>
     <xsl:value-of select="'li'"/>
   </xsl:function>
   
   <xsl:template name="list-item-attributes"/>
   
   <xsl:function name="f:link-name">
-    <xsl:param name="namespace-uri" required="yes"/>
+    <xsl:param name="namespace-uri"/>
     <xsl:value-of select="'a'"/>
   </xsl:function>
   
