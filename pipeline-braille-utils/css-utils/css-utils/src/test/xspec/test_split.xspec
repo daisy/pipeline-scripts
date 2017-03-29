@@ -139,7 +139,8 @@
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="test_05" pending="bug: order of some nodes is changed">
+    <x:scenario label="test_05" pending="bug 1: order of some nodes is changed
+                                         bug 2: part attributes should be put on all boxes that are split">
         <x:context xml:space="preserve">
             <css:box type="block" css:id="a">
                 <css:box css:page="1"/>
@@ -159,23 +160,23 @@
                 </css:box>
                 <css:box type="block" part="middle"/>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2" css:id="b"/>
+                    <css:box css:page="2" css:id="b" part="first"/>
                 </css:box>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2">
+                    <css:box css:page="2" part="middle">
                         <css:box css:page="3"/>
                     </css:box>
                 </css:box>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2"/>
+                    <css:box css:page="2" part="middle"/>
                 </css:box>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2">
+                    <css:box css:page="2" part="middle">
                         <css:box css:page="4" css:id="c"/>
                     </css:box>
                 </css:box>
                 <css:box type="block" part="middle">
-                    <css:box css:page="2">
+                    <css:box css:page="2" part="last">
                         <css:box/>
                     </css:box>
                 </css:box>

@@ -239,7 +239,9 @@
   </x:scenario>
   
   <!--
-      XSLT implementation has a bug: order of some nodes is changed
+      XSLT implementation has bugs:
+      - order of some nodes is changed
+      - part attributes should be put on all boxes that are split
   -->
   <x:scenario label="test_05" xfail="true">
     <x:call step="css:split">
@@ -276,31 +278,31 @@
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2" css:id="b"/>
+          <css:box css:page="2" css:id="b" part="first"/>
         </css:box>
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2">
+          <css:box css:page="2" part="middle">
             <css:box css:page="3"/>
           </css:box>
         </css:box>
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2"/>
+          <css:box css:page="2" part="middle"/>
         </css:box>
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2">
+          <css:box css:page="2" part="middle">
             <css:box css:page="4" css:id="c"/>
           </css:box>
         </css:box>
       </x:document>
       <x:document type="inline">
         <css:box type="block" part="middle">
-          <css:box css:page="2">
+          <css:box css:page="2" part="last">
             <css:box/>
           </css:box>
         </css:box>
