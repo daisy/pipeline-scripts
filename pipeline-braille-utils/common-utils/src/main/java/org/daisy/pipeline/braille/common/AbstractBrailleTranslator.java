@@ -365,9 +365,11 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 						String rv = charBuffer.substring(0, cut2);
 						flushBuffers(cut2);
 						
-						// preserve if at beginning of stream or end of stream
+						// preserve if at beginning of stream or end of stream and not overflowing
 						if (cut > 0 && cut < cut2 && hasNext())
 							rv = rv.substring(0, cut);
+						else if (cut2 > limit)
+							rv = rv.substring(0, limit);
 						return rv; }
 					
 					// try to break later if the overflowing characters are blank
@@ -384,9 +386,11 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 							String rv = charBuffer.substring(0, cut2);
 							flushBuffers(cut2);
 							
-							// preserve if at end of stream
+							// preserve if at end of stream and not overflowing
 							if (cut < cut2 && hasNext())
 								rv = rv.substring(0, cut);
+							else if (cut2 > limit)
+								rv = rv.substring(0, limit);
 							return rv; }
 					
 					// try to break sooner

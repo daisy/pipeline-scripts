@@ -17,7 +17,7 @@ import org.daisy.pipeline.braille.common.Hyphenator;
 public class DefaultLineBreakerTest {
 	
 	@Test
-	public void testLineBreaking() {
+	public void testNonStandardLineBreaking() {
 		TestHyphenator hyphenator = new TestHyphenator();
 		TestTranslator translator = new TestTranslator(hyphenator);
 		assertEquals(
@@ -36,6 +36,24 @@ public class DefaultLineBreakerTest {
 			"BUSS-\n" +
 			"STOPP",
 			fillLines(translator.lineBreakingFromStyledText().transform(text("busstopp")), 7));
+	}
+	
+	@Test
+	public void testFullLine() {
+		TestHyphenator hyphenator = new TestHyphenator();
+		TestTranslator translator = new TestTranslator(hyphenator);
+		assertEquals(
+			"ABCDEF",
+			fillLines(translator.lineBreakingFromStyledText().transform(text("abcdef")), 6));
+		assertEquals(
+			"ABCDE ",
+			fillLines(translator.lineBreakingFromStyledText().transform(text("abcde  ")), 6));
+		assertEquals(
+			"ABCDEF",
+			fillLines(translator.lineBreakingFromStyledText().transform(text("abcdef ")), 6));
+		assertEquals(
+			"ABCDEF",
+			fillLines(translator.lineBreakingFromStyledText().transform(text("abcdef ")), 6));
 	}
 	
 	private static class TestHyphenator extends AbstractHyphenator {
