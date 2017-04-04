@@ -9544,9 +9544,7 @@
           <doc style="text-transform:none; display:block">
             <span style="text-transform:auto">
               1 2 3
-              <span style="text-transform:none">
-                ⠿⠿⠿
-              </span>
+              <span style="text-transform:none">⠿⠿⠿</span>
               4 5 6
             </span>
           </doc>
@@ -9570,9 +9568,7 @@
             <block>
               <span translate="">
                 1 2 3
-              </span>
-              ⠿⠿⠿
-              <span translate="">
+              </span>⠿⠿⠿<span translate="">
                 4 5 6
               </span>
             </block>
@@ -9608,8 +9604,6 @@
   <x:scenario label="test_88">
     <x:documentation>
       Tests text-transform:auto on -obfl-evaluate().
-      
-      Broken: white space is stripped too aggressively (Dotify issue?).
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -9679,7 +9673,7 @@
             <volume cols="40" rows="25" rowgap="0" duplex="true">
               <section>
                 <page>
-                  <row>⠤⠤⠤⠤⠤⠼⠁⠤⠤⠤⠤⠤</row> <!-- white space problem! -->
+                  <row>⠤⠤⠤⠤⠤⠀⠼⠁⠀⠤⠤⠤⠤⠤</row>
                 </page>
               </section>
               <section>

@@ -2316,7 +2316,7 @@
   <x:scenario label="white-space-normalization-around-marker" xfail="true">
     <x:documentation>
       Tests white space normalisation near marker elements. Tests that white space at the beginning
-      of a block or following a br element is stripped, also when it is followed directly by a
+      of a block or following a br element is stripped, also when it is preceded directly by a
       marker element.
       
       Broken: see https://github.com/joeha480/dotify/issues/117. An additional normalisation step in
@@ -2383,6 +2383,61 @@
                   <row>⠤⠤⠤</row>
                   <row>⠤⠤⠤⠀⠤⠤⠤</row>
                   <row>⠤⠤⠤</row> <!-- was: ⠀⠤⠤⠤ -->
+                </page>
+              </section>
+            </volume>
+          </body>
+        </pef>
+      </x:document>
+    </x:expect>
+  </x:scenario>
+  
+  <x:scenario label="white-space-normalization-in-span">
+    <x:documentation>
+      Tests that white space at the beginning and end of a span is not stripped. Dotify would
+      normally strip it if DP2 wouldn't inhibit it by adding ZWSP characters. This is done because
+      Dotify strips white space too aggressively in some cases. The current solution is not ideal
+      either but it is better to strip too little than too much.
+    </x:documentation>
+    <x:call>
+      <x:input port="source">
+        <x:document type="inline">
+          <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false">
+            <layout-master name="body" page-width="15" page-height="10" duplex="true">
+              <default-template>
+                <header/>
+                <footer/>
+              </default-template>
+            </layout-master>
+            <sequence master="body">
+              <block>
+                <span> ⠿⠿ </span> ⠤⠤⠤
+              </block>
+              <block>
+                <span> ⠿⠿ </span><evaluate expression="(round 1)"/>
+              </block>
+            </sequence>
+          </obfl>
+        </x:document>
+      </x:input>
+    </x:call>
+    <x:context label="result">
+      <x:document type="port" port="result"/>
+    </x:context>
+    <x:expect label="result" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+      <x:document type="inline">
+        <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+          <head xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <meta>
+              <dc:format>application/x-pef+xml</dc:format>
+            </meta>
+          </head>
+          <body>
+            <volume cols="15" rows="10" rowgap="0" duplex="true">
+              <section>
+                <page>
+                  <row>⠿⠿⠀⠀⠤⠤⠤</row>
+                  <row>⠿⠿⠀⠼⠁</row>
                 </page>
               </section>
             </volume>
