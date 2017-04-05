@@ -285,6 +285,19 @@
                         <ignore />
                     </action>
                 </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.daisy.pipeline.build</groupId>
+                    <artifactId>modules-build-helper</artifactId>
+                    <versionRange>[2.0.0,)</versionRange>
+                    <goals>
+                      <goal>process-catalog</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
