@@ -172,7 +172,8 @@
               org.daisy.pipeline.braille.dotify.impl.MarkerProcessorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider,
-              org.daisy.pipeline.braille.dotify.impl.DotifyOBFLTransform$Provider
+              org.daisy.pipeline.braille.dotify.impl.DotifyOBFLTransform$Provider,
+              org.daisy.pipeline.braille.dotify.calabash.impl.ShiftObflMarkerStep$Provider
             </_dsannotations>
           </instructions>
         </configuration>
