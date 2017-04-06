@@ -213,11 +213,6 @@ public abstract class AbstractBrailleTranslator extends AbstractTransform implem
 						if (inputBuffer == null || !inputBuffer.hasNext()) {
 							inputBuffer = null;
 							if (!inputStream.hasNext()) {} // end of stream
-							else if (limit == 0) {
-								String remainder = inputStream.remainder();
-								if (remainder.isEmpty())
-									throw new RuntimeException("coding error");
-								inputBuffer = peekingIterator(charactersOf(inputStream.remainder()).iterator()); }
 							else if (bufSize < limit) {
 								String next = inputStream.next(limit - bufSize, force && (bufSize == 0));
 								if (next.isEmpty()) {} // row full according to input feed

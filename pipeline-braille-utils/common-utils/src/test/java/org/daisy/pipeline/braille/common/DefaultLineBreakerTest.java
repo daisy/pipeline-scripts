@@ -54,6 +54,16 @@ public class DefaultLineBreakerTest {
 		assertEquals(
 			"ABCDEF",
 			fillLines(translator.lineBreakingFromStyledText().transform(text("abcdef ")), 6));
+		{
+				BrailleTranslator.LineIterator lines = translator.lineBreakingFromStyledText().transform(text("abcdef"));
+				assertEquals("", lines.nextTranslatedRow(3, false));
+				assertEquals("ABCDEF", lines.nextTranslatedRow(100, false));
+		}
+		{
+				BrailleTranslator.LineIterator lines = translator.lineBreakingFromStyledText().transform(text("abcdef"));
+				assertEquals("", lines.nextTranslatedRow(0, false));
+				assertEquals("ABCDEF", lines.nextTranslatedRow(100, false));
+		}
 	}
 	
 	private static class TestHyphenator extends AbstractHyphenator {
