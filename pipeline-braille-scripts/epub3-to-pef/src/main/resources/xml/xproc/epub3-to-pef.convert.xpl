@@ -137,6 +137,11 @@
         </p:choose>
         
         <p:filter select="/*/html:body"/>
+        
+        <!-- xml:base attribute is required for resolving cross-references between different bodies -->
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri(/*)"/>
+        </p:add-attribute>
     </p:for-each>
     <p:identity name="spine-bodies"/>
     

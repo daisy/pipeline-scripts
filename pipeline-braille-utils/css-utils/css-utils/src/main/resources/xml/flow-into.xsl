@@ -21,6 +21,9 @@
                     <xsl:for-each select="$root//*[@css:flow=$flow]">
                         <xsl:copy>
                             <xsl:sequence select="@* except (@style|@css:flow|@css:id|@css:counter-increment)"/>
+                            <xsl:if test="not(@xml:base)">
+                                <xsl:attribute name="xml:base" select="base-uri(.)"/>
+                            </xsl:if>
                             <xsl:sequence select="css:style-attribute(css:serialize-declaration-list(
                                                   css:specified-properties(($css:properties,'#all'), true(), false(), false(), .)
                                                   [not(@value='initial')]))"/>
