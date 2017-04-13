@@ -2,6 +2,7 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
 			   xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
 			   xmlns:c="http://www.w3.org/ns/xproc-step"
+			   xmlns:html="http://www.w3.org/1999/xhtml"
 			   script="../../main/resources/xml/daisy202-to-epub3.xpl">
 
     <x:scenario label="Running with media overlays and compatibility mode enabled">
@@ -73,6 +74,38 @@
 				  label="the mimetype file should contain the string 'application/epub+zip'">
             <x:document>
                 <c:body>application/epub+zip</c:body>
+            </x:document>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="SMIL references in content document are removed, also inside links">
+        <x:call step="px:daisy202-to-epub3">
+            <x:option name="href" select="resolve-uri('../resources/input/minimal/ncc.html')"/>
+            <x:option name="output" select="resolve-uri('scenario3/output/',$temp-dir)"/>
+            <x:option name="temp-dir" select="resolve-uri('scenario3/temp-dir/',$temp-dir)"/>
+        </x:call>
+        <x:context label="the #b span in the content document">
+            <x:document type="file" base-uri="temp-dir" href="scenario3/temp-dir/epub/EPUB/Content/content.xhtml" method="xml"
+                        select="//html:span[@id='b']"/>
+        </x:context>
+        <x:expect label="the #b span in the content document should have spans instead of links" type="compare">
+            <x:document type="inline" xmlns="http://www.w3.org/1999/xhtml">
+                <span class="sentence" id="b">
+                  <span>Paragraph</span>
+                </span>
+            </x:document>
+        </x:expect>
+        <x:context label="the #c span in the content document">
+            <x:document type="file" base-uri="temp-dir" href="scenario3/temp-dir/epub/EPUB/Content/content.xhtml" method="xml"
+                        select="//html:span[@id='c']"/>
+        </x:context>
+        <x:expect label="the #c span in the content document should have a span instead of the smil link" type="compare">
+            <x:document type="inline" xmlns="http://www.w3.org/1999/xhtml">
+                <span class="sentence" id="c">
+                  <a href="http://www.foobar.com">
+                    <span>A link</span>
+                  </a>
+                </span>
             </x:document>
         </x:expect>
     </x:scenario>
