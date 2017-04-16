@@ -53,6 +53,12 @@
             <p px:role="desc">By default, the filename is the dc:identifier with a "epub" file extension. This option can be used to set a custom filename.</p>
         </p:documentation>
     </p:option>
+    <p:option name="epub-filename" required="false" select="''" px:type="string">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">EPUB3 Filename</h2>
+            <p px:role="desc">By default, the filename is the dc:identifier with a "epub" file extension. This option can be used to set a custom filename.</p>
+        </p:documentation>
+    </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
