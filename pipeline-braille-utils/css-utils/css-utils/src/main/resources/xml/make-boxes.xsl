@@ -90,7 +90,13 @@
     <xsl:template match="*">
         <xsl:element name="css:box">
             <xsl:attribute name="type" select="'inline'"/>
-            <xsl:attribute name="name" select="name()"/>
+            <xsl:attribute name="name" select="if (@name and (self::css:before or
+                                                              self::css:after or
+                                                              self::css:alternate or
+                                                              self::css:duplicate or
+                                                              self::css:footnote-call))
+                                               then @name
+                                               else name()"/>
             <xsl:apply-templates select="@style|@css:*|node()"/>
         </xsl:element>
     </xsl:template>
