@@ -1609,6 +1609,44 @@
         target-counter(page)
     -->
     <xsl:template mode="block toc-entry"
+                  priority="1"
+                  match="css:counter[@target][@name='page']">
+        <xsl:variable name="target" as="xs:string" select="@target"/>
+        <xsl:variable name="target" as="element()*" select="collection()//*[@css:id=$target]"/>
+        <xsl:choose>
+            <xsl:when test="count($target)=0">
+                <!-- can not happen: these references should already have been removed in css:label-targets -->
+                <xsl:message terminate="yes">coding error</xsl:message>
+            </xsl:when>
+            <xsl:when test="count($target)&gt;1">
+                <!-- can happen -->
+                <xsl:message>
+                    <xsl:text>Ignoring '</xsl:text>
+                    <xsl:apply-templates mode="css:serialize" select="."/>
+                    <xsl:text>': there are multiple elements with the ID '</xsl:text>
+                    <xsl:value-of select="(@original-target,@target)[1]"/>
+                    <xsl:text>'.</xsl:text>
+                </xsl:message>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="target" as="element()" select="$target[1]"/>
+                <xsl:choose>
+                    <xsl:when test="$target/ancestor::*/@css:flow[not(.='normal')]">
+                        <xsl:message>
+                            <xsl:text>Ignoring '</xsl:text>
+                            <xsl:apply-templates mode="css:serialize" select="."/>
+                            <xsl:text>': referencing element in named flow.</xsl:text>
+                        </xsl:message>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:next-match/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template mode="block toc-entry"
                   match="css:counter[@target][@name='page']">
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>

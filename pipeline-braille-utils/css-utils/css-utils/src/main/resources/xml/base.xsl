@@ -907,7 +907,9 @@
     </xsl:template>
     
     <xsl:template match="css:counter[@target]" mode="css:serialize" as="xs:string">
-        <xsl:sequence select="concat('target-counter(url(&quot;',@target,'&quot;), ',@name,if (@style) then concat(', ', @style) else '',')')"/>
+        <xsl:variable name="target" as="xs:string" select="(@original-target,@target)[1]"/>
+        <xsl:variable name="target" as="xs:string" select="if (contains($target,'#')) then $target else concat('#',$target)"/>
+        <xsl:sequence select="concat('target-counter(url(&quot;',$target,'&quot;), ',@name,if (@style) then concat(', ', @style) else '',')')"/>
     </xsl:template>
     
     <xsl:template match="css:leader" mode="css:serialize" as="xs:string">

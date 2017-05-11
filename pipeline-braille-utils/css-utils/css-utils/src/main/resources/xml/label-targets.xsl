@@ -61,6 +61,7 @@
                 <xsl:copy>
                     <xsl:sequence select="@* except @target"/>
                     <xsl:attribute name="target" select="($target/@css:id,generate-id($target))[1]"/>
+                    <xsl:attribute name="original-target" select="@target"/>
                     <xsl:sequence select="node()"/>
                 </xsl:copy>
             </xsl:when>

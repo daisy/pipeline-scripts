@@ -99,7 +99,7 @@
           <html xmlns="http://www.w3.org/1999/xhtml">
             <body xml:base="file:/EPUB/-1-frontmatter.xhtml">
               <a class="pageref" href="-2-chapter.xhtml#p-81">
-                <css:counter target="x" name="page"/>
+                <css:counter target="x" original-target="-2-chapter.xhtml#p-81" name="page"/>
               </a>
             </body>
             <body xml:base="file:/EPUB/-2-chapter.xhtml">
