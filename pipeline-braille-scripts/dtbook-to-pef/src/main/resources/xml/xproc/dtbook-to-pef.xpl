@@ -36,6 +36,17 @@
         </p:documentation>
     </p:input>
     
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Status</h2>
+            <p px:role="desc" xml:space="preserve">Whether or not the conversion was successful.
+
+When `include-obfl` is set to true, the conversion may fail but still output a document on the
+"obfl" port.</p>
+        </p:documentation>
+        <p:pipe step="convert" port="status"/>
+    </p:output>
+    
     <p:option name="stylesheet" px:sequence="true">
         <p:pipeinfo>
             <px:data-type>
@@ -166,7 +177,6 @@
         </p:input>
         <p:with-option name="include-brf" select="$include-brf"/>
         <p:with-option name="include-preview" select="$include-preview"/>
-        <p:with-option name="include-obfl" select="$include-obfl"/>
         <p:with-option name="ascii-file-format" select="$ascii-file-format"/>
         <p:with-option name="ascii-table" select="$ascii-table"/>
         <p:with-option name="pef-output-dir" select="$pef-output-dir"/>

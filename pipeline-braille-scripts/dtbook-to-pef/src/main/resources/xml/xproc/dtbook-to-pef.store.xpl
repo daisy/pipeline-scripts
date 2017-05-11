@@ -9,7 +9,9 @@
     <p:input port="obfl" primary="false">
         <p:empty/>
     </p:input>
-    <p:input port="pef" primary="true"/>
+    <p:input port="pef" primary="true">
+        <p:empty/>
+    </p:input>
     
     <p:option name="pef-output-dir" select="''"/>
     <p:option name="brf-output-dir" select="''"/>
@@ -17,7 +19,6 @@
     
     <p:option name="include-preview" select="'false'"/>
     <p:option name="include-brf" select="'false'"/>
-    <p:option name="include-obfl" select="'false'"/>
     <p:option name="ascii-file-format" select="''"/>
     <p:option name="ascii-table" select="''"/>
     
@@ -32,7 +33,6 @@
         </p:with-option>
         <p:with-option name="include-brf" select="$include-brf"/>
         <p:with-option name="include-preview" select="$include-preview"/>
-        <p:with-option name="include-obfl" select="$include-obfl"/>
         <p:with-option name="ascii-file-format" select="$ascii-file-format"/>
         <p:with-option name="ascii-table" select="$ascii-table"/>
         <p:with-option name="pef-output-dir" select="$pef-output-dir"/>
