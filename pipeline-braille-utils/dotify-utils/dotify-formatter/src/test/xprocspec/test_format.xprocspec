@@ -23,10 +23,21 @@
       </pxi:css-to-obfl>
       <pxi:obfl-normalize-space/>
       <p:for-each><p:identity/></p:for-each>
-      <dotify:obfl-to-pef locale="und">
-        <p:with-option name="mode" select="concat($text-transform,'(input:text-css)(output:braille)')"/>
-        <p:with-param port="parameters" name="allow-text-overflow-trimming" select="$allow-text-overflow-trimming"/>
-      </dotify:obfl-to-pef>
+      <p:try>
+        <p:group>
+          <dotify:obfl-to-pef locale="und">
+            <p:with-option name="mode" select="concat($text-transform,'(input:text-css)(output:braille)')"/>
+            <p:with-param port="parameters" name="allow-text-overflow-trimming" select="$allow-text-overflow-trimming"/>
+          </dotify:obfl-to-pef>
+        </p:group>
+        <p:catch>
+          <p:identity>
+            <p:input port="source">
+              <p:inline><pef xmlns="http://www.daisy.org/ns/2008/pef">obfl-to-pef failed</pef></p:inline>
+            </p:input>
+          </p:identity>
+        </p:catch>
+      </p:try>
     </p:declare-step>
   </x:script>
   
@@ -608,30 +619,33 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_05" pending="xfail doesn't work because of error">
+  <x:scenario label="test_05">
     <x:documentation>
-      Tests counter(page) with different counter styles. Broken: "Invalid input: 'i'" (roman numbers
-      are not translated).
+      Tests counter(page) with different counter styles.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
         <x:document type="inline">
           <doc style="text-transform:none">
             <body style="@page {
-                         size: 15 5;
-                         @bottom-right { content: counter(page) }}">
-              <frontmatter style="@page {
-                                  size: 15 5;
-                                  @bottom-right { content: '⠏' counter(page) }}">
+                           size: 15 5;
+                           margin-bottom: 1;
+                           @bottom-right { content: counter(page) }}">
+              <frontmatter style="{ display: block }
+                                  @page {
+                                    size: 15 5;
+                                    margin-bottom: 1;
+                                    @bottom-right { content: '⠏' counter(page) }}">
                 ⠤⠤⠤
               </frontmatter>
-              <bodymatter>
+              <bodymatter style="display: block">
                 ⠤⠤⠤
               </bodymatter>
-              <rearmatter style="{ counter-set: page 1 }
+              <rearmatter style="{ display: block; counter-set: page 1 }
                                  @page {
-                                 size: 15 5;
-                                 @bottom-right { content: counter(page, lower-roman) }}">
+                                   size: 15 5;
+                                   margin-bottom: 1;
+                                   @bottom-right { content: counter(page, lower-roman) }}">
                 ⠤⠤⠤
               </rearmatter>
             </body>
@@ -715,7 +729,8 @@
     <x:context label="pef">
       <x:document type="port" port="result"/>
     </x:context>
-    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare">
+    <x:expect label="pef" type="custom" href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl" step="x:pef-compare"
+              xfail="Invalid input: 'i' (roman numbers are not translated)">
       <x:document type="inline">
         <pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
           <head xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -7082,7 +7097,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_67" pending="not supported yet">
+  <x:scenario label="test_67" xfail="not supported yet">
     <x:documentation>
       Tests nested footnotes (noteref inside note).
     </x:documentation>
