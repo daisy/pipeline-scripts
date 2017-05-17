@@ -1,0 +1,6 @@
+<x:description stylesheet="dtbook_to_rtf.xsl" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:x="http://www.jenitennison.com/xslt/xspec">
+	<x:scenario label="big file">
+		<x:context href="idAdded.xml"/>
+		<x:expect label="the result should be a c:data element" select="exists(/c:data)"/>
+	</x:scenario>
+</x:description>
