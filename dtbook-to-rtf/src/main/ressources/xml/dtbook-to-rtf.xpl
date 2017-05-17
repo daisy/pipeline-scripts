@@ -29,17 +29,23 @@
 			<h2 px:role="name">DTBook file(s)</h2>
 			<p px:role="desc">One or more 2005-3 DTBook files to be transformed. In the case of multiple files, the first one will be taken.</p>
 		</p:documentation>
-		<p:document href="10312_xmldtbook_1.xml"/>
-		<!--<p:document href="dtbook.xml"/>-->
+		<!--<p:document href="10312_xmldtbook_1.xml"/>
+		<p:document href="dtbook.xml"/>-->
 	</p:input>
 	
 
 	<p:option name="include-table-of-content" required="false" select="'false'">
-		<p:documentation/>
+		<p:documentation>
+			<h2 px:role="name">Include table of content</h2>
+			<p px:role="desc">true if need to include table of content</p>
+		</p:documentation>
 	</p:option>
 
 	<p:option name="include-page-number" required="false" select="'false'">
-		<p:documentation/>
+		<p:documentation>
+			<h2 px:role="name">Include page number</h2>
+			<p px:role="desc">true if need to include page number</p>
+		</p:documentation>
 	</p:option>
 
 	<p:option name="output-dir" px:output="result" px:type="anyDirURI" required="false">
@@ -53,7 +59,6 @@
 	<p:split-sequence initial-only="true" name="first-dtbook" test="position()=1"/>
 	<p:sink/>
 	
-	<!--
 		
 	<p:xslt name="output-dir-uri">
 		<p:with-param name="href" select="concat($output-dir,'/')">
@@ -79,7 +84,6 @@
 		</p:input>
 	</p:xslt>
 	<p:sink/>
--->
 
 	<p:xslt name="add-dtbook-id">
 		<p:input port="source">
@@ -106,7 +110,7 @@
 		<p:with-param name="inclPagenum" select="$include-page-number"/>
 	</p:xslt>
 	<p:sink/>
-	
+	<!--
 	<p:store href="file:///home/llanglois/tmp/firstfile.xml">
 			<p:input port="source">
 				<p:pipe step="first-dtbook" port="matched"/>
@@ -124,12 +128,13 @@
 		<p:input port="source">
 			<p:pipe port="result" step="convert-to-rtf"/>
 		</p:input>
-	</p:store>
-<!--
+	</p:store> -->
+	
+  <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+  
 	<px:fileset-store name="store">
 		<p:input port="in-memory.in">
 			<p:pipe port="result" step="convert-to-rtf"/>
 		</p:input>
 	</px:fileset-store>
-	-->
 </p:declare-step>
