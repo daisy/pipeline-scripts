@@ -110,7 +110,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name="ANNOREF">
-					<xsl:with-param name="annoid" select="@idref"/>
+					<xsl:with-param name="href" select="@idref"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
