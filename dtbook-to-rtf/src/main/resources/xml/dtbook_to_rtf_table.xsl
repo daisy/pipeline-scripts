@@ -3,6 +3,7 @@
 	version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	>
 	<!--
 	<xsl:import href="dtbook_to_rtf_encode.xsl"/>
@@ -63,6 +64,6 @@
 		<xsl:variable name="cellwidth" select="format-number(9637 div count(../*),'0')"/>
 		<xsl:variable name="colindex" select="count(preceding-sibling::*)"/>
 		<xsl:text>\clbrdrt\brdrs\clbrdrb\brdrs\clbrdrl\brdrs\clbrdrr\brdrs</xsl:text>
-		<xsl:value-of select="concat('\cellx', ($colindex+1)*$cellwidth)"/>
+		<xsl:value-of select="concat('\cellx', (xs:integer($colindex)+1)*xs:integer($cellwidth))"/>
 	</xsl:template>
 </xsl:stylesheet>
