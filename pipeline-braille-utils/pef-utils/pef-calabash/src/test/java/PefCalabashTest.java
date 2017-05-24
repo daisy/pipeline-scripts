@@ -49,6 +49,7 @@ public class PefCalabashTest {
 				brailleModule("pef-core"),
 				mavenBundle("org.daisy.braille:braille-utils.impl:?"),
 				mavenBundle("org.daisy.braille:braille-utils.pef-tools:?"),
+				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				// logging
 				logbackClassic(),
 				// xprocspec

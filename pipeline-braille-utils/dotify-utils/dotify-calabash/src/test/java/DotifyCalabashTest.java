@@ -83,6 +83,7 @@ public class DotifyCalabashTest {
 				// for the query syntax
 				brailleModule("css-core"),
 				// other
+				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				brailleModule("common-utils"),
 				brailleModule("obfl-utils"),
 				brailleModule("pef-utils"),

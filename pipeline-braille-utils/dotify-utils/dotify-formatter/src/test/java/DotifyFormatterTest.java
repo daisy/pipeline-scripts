@@ -86,6 +86,7 @@ public class DotifyFormatterTest {
 				mavenBundle("org.daisy.dotify:dotify.api:?"),
 				mavenBundle("org.daisy.dotify:dotify.common:?"),
 				mavenBundle("org.daisy.dotify:dotify.translator.impl:?"),
+				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				// logging
 				logbackClassic(),
 				mavenBundle("org.slf4j:jul-to-slf4j:?"),

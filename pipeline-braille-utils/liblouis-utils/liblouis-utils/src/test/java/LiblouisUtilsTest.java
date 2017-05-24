@@ -63,6 +63,7 @@ public class LiblouisUtilsTest {
 				logbackClassic(),
 				// xprocspec
 				xprocspec(),
+				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"),
 				// xspec
 				xspec(),

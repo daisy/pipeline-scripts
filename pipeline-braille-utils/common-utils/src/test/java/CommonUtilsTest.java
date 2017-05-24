@@ -69,6 +69,7 @@ public class CommonUtilsTest {
 			mavenBundlesWithDependencies(
 				mavenBundle("org.daisy.braille:braille-css:?"),
 				mavenBundle("org.daisy.dotify:dotify.api:?"),
+				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				// logging
 				logbackClassic(),
 				// xprocspec
