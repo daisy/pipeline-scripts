@@ -91,6 +91,7 @@ public class DotifyCalabashTest {
 				logbackClassic(),
 				mavenBundle("org.slf4j:jul-to-slf4j:?"),
 				mavenBundle("org.daisy.pipeline:logging-activator:?"),
+				mavenBundle("org.slf4j:jcl-over-slf4j:1.7.2"), // required by httpclient (TODO: add to runtime dependencies of calabash)
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"))

@@ -72,6 +72,7 @@ public class CommonUtilsTest {
 				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
 				// logging
 				logbackClassic(),
+				mavenBundle("org.slf4j:jcl-over-slf4j:1.7.2"), // required by httpclient (TODO: add to runtime dependencies of calabash)
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.maven:xproc-engine-daisy-pipeline:?"),

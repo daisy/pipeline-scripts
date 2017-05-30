@@ -61,6 +61,7 @@ public class LiblouisUtilsTest {
 				brailleModule("libhyphen-native").forThisPlatform(), // TODO: fix for windows!
 				// logging
 				logbackClassic(),
+				mavenBundle("org.slf4j:jcl-over-slf4j:1.7.2"), // required by httpclient (TODO: add to runtime dependencies of calabash)
 				// xprocspec
 				xprocspec(),
 				mavenBundle("org.daisy.pipeline:calabash-adapter:?"),
