@@ -61,6 +61,7 @@ public class XProcSpecTest {
 				pipelineModule("common-utils"),
 				// logging
 				logbackClassic(),
+				mavenBundle("org.daisy.pipeline:logging-activator:?"),
 				mavenBundle("org.slf4j:jcl-over-slf4j:1.7.2"), // required by httpclient (TODO: add to runtime dependencies of calabash)
 				// xprocspec
 				xprocspec(),
