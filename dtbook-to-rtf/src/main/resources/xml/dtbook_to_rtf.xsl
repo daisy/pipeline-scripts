@@ -15,13 +15,14 @@
 	<xsl:import href="dtbook_to_rtf_metadata.xsl"/>
 	<xsl:param name="inclTOC">false</xsl:param>
 	<xsl:param name="inclPagenum">false</xsl:param>
+	<xsl:param name="sourceFile" />
 	<xsl:output method="text" encoding="Windows-1252"/>
 	<xsl:strip-space elements="*"/>
 	
 
-	<xsl:template match="/">
+	<xsl:template name="main" match="root">
 		<c:data xmlns:c="http://www.w3.org/ns/xproc-step">
-			<xsl:apply-templates/> 
+			<xsl:apply-templates select="doc($sourceFile)" /> 
 		</c:data>
 	</xsl:template>
 
