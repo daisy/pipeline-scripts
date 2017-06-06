@@ -45,6 +45,7 @@
 	</p:option>
 
 	<p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+	<p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
 
 	<p:split-sequence initial-only="true" name="first-dtbook" test="position()=1"/>
 	<p:sink/>
@@ -91,14 +92,14 @@
 		<p:variable name="encoded-title" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
 			<p:pipe port="matched" step="first-dtbook"/>
 		</p:variable>
-		<p:variable name="encoded-tmp-title" select="concat($encoded-title,'tmp.xml)"/>
+		<p:variable name="encoded-tmp-title" select="concat($encoded-title,'tmp.xml')"/>
 		<p:variable name="output-dir-final" select="/*/@href">
 			<p:pipe port="result" step="output-dir-uri"/>
 		</p:variable>
 		<p:variable name="tmp-file-uri" select="concat($output-dir-final,$encoded-tmp-title)"/>
 
 		<p:store name="storetmp">
-			<p:with-option name="href" select="tmp-file-uri"/>
+			<p:with-option name="href" select="$tmp-file-uri"/>
 			<p:input port="source">
 				<p:pipe port="result" step="add-dtbook-id"/>
 			</p:input>
@@ -121,5 +122,6 @@
 		<p:store method="text">
 			<p:with-option name="href" select="concat($output-dir-final,$encoded-title,'.rtf')"/>
 		</p:store>
+		<px:delete href="$tmp-file-uri"/>
 	</p:group>
 </p:declare-step>
