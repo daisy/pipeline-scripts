@@ -20,7 +20,7 @@
 	<xsl:strip-space elements="*"/>
 	
 
-	<xsl:template name="main" match="root">
+	<xsl:template match="root">
 		<c:data xmlns:c="http://www.w3.org/ns/xproc-step">
 			<xsl:apply-templates select="doc($sourceFile)" /> 
 		</c:data>
