@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step name="main" px:input-filesets="dtbook" px:output-filesets="rtf" type="px:dtbook-to-rtf" version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc">
+<p:declare-step name="main" px:input-filesets="dtbook" px:output-filesets="rtf" type="px:dtbook-to-rtf" version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step" 		xmlns:d="http://www.daisy.org/ns/pipeline/data" 
+	xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" 
+	xmlns:p="http://www.w3.org/ns/xproc" 
+	xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+	xmlns:cx="http://xmlcalabash.com/ns/extensions">
+	
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 		<h1 px:role="name">DTBook to RTF</h1>
 		<p px:role="desc">Transforms a DTBook (DAISY 3 XML) document into an RTF (Rich Text Format).</p>
@@ -36,6 +41,14 @@
 			<p px:role="desc">true if need to include page number</p>
 		</p:documentation>
 	</p:option>
+	
+	<p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <h2 px:role="name">Temporary directory</h2>
+      <p px:role="desc">Directory used for temporary files.</p>
+    </p:documentation>
+  </p:option>
+
 
 	<p:option name="output-dir" px:output="result" px:type="anyDirURI" required="false">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -96,7 +109,7 @@
 		<p:variable name="output-dir-final" select="/*/@href">
 			<p:pipe port="result" step="output-dir-uri"/>
 		</p:variable>
-		<p:variable name="tmp-file-uri" select="concat($output-dir-final,$encoded-tmp-title)"/>
+		<p:variable name="tmp-file-uri" select="concat($temp-dir,$encoded-tmp-title)"/>
 
 		<p:store name="storetmp">
 			<p:with-option name="href" select="$tmp-file-uri"/>
@@ -122,6 +135,8 @@
 		<p:store method="text">
 			<p:with-option name="href" select="concat($output-dir-final,$encoded-title,'.rtf')"/>
 		</p:store>
-		<px:delete href="$tmp-file-uri"/>
+		<px:delete cx:depends-on="convert-to-rtf">
+			<p:with-option name="href" select="$tmp-file-uri"/>
+		</px:delete>
 	</p:group>
 </p:declare-step>
