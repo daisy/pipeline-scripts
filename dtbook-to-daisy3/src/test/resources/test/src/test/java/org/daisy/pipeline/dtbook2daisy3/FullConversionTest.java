@@ -459,38 +459,50 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 				simplifyContent("<node id=\"id\" attr=\"attr\" smilref=\"xxx\">"));
 	}
 
+	private void maybeIgnoreBigTest() {
+		boolean runBigTestsToo = false;
+		org.junit.Assume.assumeTrue(runBigTestsToo);
+	}
+
 	@Test
 	public void noAudio1() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_10312_philo.xml", false, true);
 	}
 
 	@Test
 	public void withAudio1() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_10312_philo.xml", true, false);
 	}
 
 	@Test
 	public void noAudio2() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_1449_dune_herbert.xml", false, true);
 	}
 
 	@Test
 	public void withAudio2() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_1449_dune_herbert.xml", true, false);
 	}
 
 	@Test
 	public void noAudio3() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_11007_xmldtbook_1.xml", false, true);
 	}
 
 	@Test
 	public void withAudio3() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_11007_xmldtbook_1.xml", true, false);
 	}
 
 	@Test
 	public void noAudio4() throws Exception {
+		maybeIgnoreBigTest();
 		// no content check because the DTBook is changed to comply with Daisy3
 		// specs
 		runTestsOnFile("/samples/shuffled_1724.xml", false, false,
@@ -499,6 +511,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void withAudio4() throws Exception {
+		maybeIgnoreBigTest();
 		// no content check because the DTBook is changed to comply with Daisy3
 		// specs
 		runTestsOnFile("/samples/shuffled_1724.xml", true, false,
@@ -507,6 +520,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void noAudio5() throws Exception {
+		maybeIgnoreBigTest();
 		// MathML entity in doctype not recognized
 		// runTestsOnFile("/samples/shuffled_19986_xmldtbook_1.xml", false,
 		// true);
@@ -514,6 +528,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void withAudio5() throws Exception {
+		maybeIgnoreBigTest();
 		// MathML entity in doctype not recognized
 		// runTestsOnFile("/samples/shuffled_19986_xmldtbook_1.xml", true,
 		// false);
@@ -521,56 +536,67 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void noAudio6() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_21410_xmldtbook_1.xml", false, true);
 	}
 
 	@Test
 	public void withAudio6() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_21410_xmldtbook_1.xml", true, false);
 	}
 
 	@Test
 	public void noAudio7() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_4867.xml", false, true);
 	}
 
 	@Test
 	public void withAudio7() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_4867.xml", true, false);
 	}
 
 	@Test
 	public void noAudio8() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_5696_xmldtbook_1.xml", false, true);
 	}
 
 	@Test
 	public void withAudio8() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_5696_xmldtbook_1.xml", true, false);
 	}
 
 	@Test
 	public void noAudio9() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_5857_xmldtbook_1.xml", false, true);
 	}
 
 	@Test
 	public void withAudio9() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_5857_xmldtbook_1.xml", true, false);
 	}
 
 	@Test
 	public void noAudio10() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_6776.xml", false, true);
 	}
 
 	@Test
 	public void withAudio10() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_6776.xml", true, false);
 	}
 
 	@Test
 	public void noAudio11() throws Exception {
+		maybeIgnoreBigTest();
 		// no content check because the DTBook is changed to comply with Daisy3
 		// specs
 		runTestsOnFile("/samples/shuffled_7019_xmldtbook_1.xml", false, false,
@@ -579,6 +605,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void withAudio11() throws Exception {
+		maybeIgnoreBigTest();
 		// no content check because the DTBook is changed to comply with Daisy3
 		// specs
 		runTestsOnFile("/samples/shuffled_7019_xmldtbook_1.xml", true, false,
@@ -587,38 +614,45 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void noAudio12() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_7277.xml", false, true);
 	}
 
 	@Test
 	public void withAudio12() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_7277.xml", true, false);
 	}
 
 	@Test
 	public void noAudio13() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_9400_xmldtbook_1.xml", false, false,
 				new InvalidPagenumFilter());
 	}
 
 	@Test
 	public void withAudio13() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_9400_xmldtbook_1.xml", true, false,
 				new InvalidPagenumFilter());
 	}
 
 	@Test
 	public void noAudio14() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_9868_intro_droit.xml", false, true);
 	}
 
 	@Test
 	public void withAudio14() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_9868_intro_droit.xml", true, false);
 	}
 
 	@Test
 	public void noAudio16() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile(
 				"/samples/shuffled_economiedesetatsunisl_baudchon_1.xml",
 				false, true);
@@ -626,6 +660,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void withAudio16() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile(
 				"/samples/shuffled_economiedesetatsunisl_baudchon_1.xml", true,
 				false);
@@ -633,23 +668,27 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 
 	@Test
 	public void noAudio17() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_ideedusieclel_pennac_1.xml", false,
 				true);
 	}
 
 	@Test
 	public void withAudio17() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_ideedusieclel_pennac_1.xml", true,
 				false);
 	}
 
 	@Test
 	public void noAudio18() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_programme_tv.xml", false, true);
 	}
 
 	@Test
 	public void withAudio18() throws Exception {
+		maybeIgnoreBigTest();
 		runTestsOnFile("/samples/shuffled_programme_tv.xml", true, false);
 	}
 
