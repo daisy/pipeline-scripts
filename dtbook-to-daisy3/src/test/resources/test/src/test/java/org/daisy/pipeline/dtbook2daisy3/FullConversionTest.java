@@ -653,13 +653,11 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 		runTestsOnFile("/samples/shuffled_programme_tv.xml", true, false);
 	}
 
-	@Ignore
 	@Test
 	public void noAudio19() throws Exception {
 		runTestsOnFile("/samples/minimal.xml", false, false);
 	}
 
-	@Ignore
 	@Test
 	public void withAudio19() throws Exception {
 		runTestsOnFile("/samples/minimal.xml", true, false);
