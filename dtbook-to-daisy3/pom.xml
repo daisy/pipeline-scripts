@@ -16,12 +16,6 @@
 
   <name>DAISY Pipeline 2 module :: DTBook to DAISY 3</name>
   
-  <properties>
-    <jaxp-standalone.version>1.4.2</jaxp-standalone.version>
-    <zedval-osgi.version>2.1</zedval-osgi.version>
-    <modules-test-helper.version>1.0.0-SNAPSHOT</modules-test-helper.version>
-  </properties>
-  
   <dependencies>
     <!--
         runtime dependencies
@@ -110,25 +104,6 @@
           </properties>
         </configuration>
         <executions>
-          <!-- build jaxp-standalone and zedval-osgi -->
-          <execution>
-            <id>build-test-dependencies</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <projectsDirectory>${basedir}/src/test/resources/deps/src</projectsDirectory>
-              <cloneProjectsTo>${project.build.directory}/test/deps/src</cloneProjectsTo>
-              <pomIncludes>
-                <pomInclude>jaxp-standalone</pomInclude>
-                <pomInclude>zedval-osgi</pomInclude>
-              </pomIncludes>
-              <goals>
-                <goal>install</goal>
-              </goals>
-            </configuration>
-          </execution>
           <execution>
             <id>install-dtbook-to-daisy3</id>
             <!-- to make sure that by now dtbook-to-daisy3 jar has been built (see
@@ -139,8 +114,6 @@
               <goal>install</goal>
             </goals>
           </execution>
-          <!-- need to run tests in separate project because generated test dependencies can not be
-               added dynamically in Maven -->
           <execution>
             <id>execute-test</id>
             <phase>test</phase>
@@ -151,12 +124,8 @@
               <projectsDirectory>${basedir}/src/test/resources</projectsDirectory>
               <cloneProjectsTo>${project.build.directory}/test</cloneProjectsTo>
               <properties>
-                <settingsFile>${basedir}/src/test/resources/settings.xml</settingsFile>
-                <localRepositoryPath>${project.build.directory}/test/local-repo</localRepositoryPath>
-                <dtbook-to-daisy3.version>${project.version}</dtbook-to-daisy3.version>
-                <jaxp-standalone.version>${jaxp-standalone.version}</jaxp-standalone.version>
-                <zedval-osgi.version>${zedval-osgi.version}</zedval-osgi.version>
-                <modules-test-helper.version>${modules-test-helper.version}</modules-test-helper.version>
+                <org.ops4j.pax.url.mvn.localRepository>${project.build.directory}/test/local-repo</org.ops4j.pax.url.mvn.localRepository>
+                <org.daisy.org.ops4j.pax.url.mvn.settings>${basedir}/src/test/resources/settings.xml</org.daisy.org.ops4j.pax.url.mvn.settings>
               </properties>
               <pomIncludes>
                 <pomInclude>test</pomInclude>

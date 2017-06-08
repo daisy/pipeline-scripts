@@ -2,16 +2,17 @@ package org.daisy.pipeline.dtbook2daisy3;
 
 import org.daisy.pipeline.junit.AbstractTest;
 import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
+import static org.daisy.pipeline.pax.exam.Options.spiflyBundles;
 
-import static org.ops4j.pax.exam.CoreOptions.bootDelegationPackages;
 import static org.ops4j.pax.exam.CoreOptions.composite;
-import static org.ops4j.pax.exam.CoreOptions.mavenJar;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.propagateSystemProperty;
 import static org.ops4j.pax.exam.CoreOptions.streamBundle;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import static org.ops4j.pax.exam.CoreOptions.vmOption;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
+import org.ops4j.pax.exam.ProbeBuilder;
+import org.ops4j.pax.exam.TestProbeBuilder;
 import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 
 import java.io.ByteArrayInputStream;
@@ -131,60 +132,45 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 		
 		// ******************************************
 
-		// ************* add our custom jaxp to the classpath ************ .
-
-		/*
-		 * ZedVal loads classes through javax.xml.* . It doesn't work
-		 * out-of-the-box because the classes of javax.xml are supplied by the
-		 * osgi-framework's bundle. So the osgi-framework's classloader winds up
-		 * being invoked for some of the ZedVal's dependencies. If
-		 * osgi-framework's packages are boot delegated, they won't be aware of
-		 * Zedval's dependencies. Otherwise, if osgi-framework is a regular
-		 * bundle, it obviously does not import Zedval's dependencies. Either
-		 * way, osgi-framework can't find the classes of Zedval's dependencies.
-		 * This is why we override javax.xml classes with our own bundle that
-		 * includes ZedVal's dependencies. We can't put Zedval as a whole into
-		 * the classpath because daisy-utils attempts to use the classloader
-		 * returned by getClassLoader(), which can return null if the current
-		 * class is boot delegated. Thus Zedval must be loaded as a regular OSGi
-		 * bundle.
-		 */
-
-		File f = new File(System.getProperty("jaxp-standalone.path"));
-		if (!f.exists()) {
-			throw new RuntimeException("missing dependency " + f.getAbsolutePath());
-		}
-
-		Option jaxp = composite(
-				vmOption("-Xbootclasspath/p:" + f.getAbsolutePath()),
-				bootDelegationPackages("javax.xml.*"),
-				propagateSystemProperty("jaxp.debug"));
-
-		// ******************************************
-
-		// Zedval's dependencies (not already embedded in Zedval's bundle)
-		Option zedvalDeps = composite(
-				mavenBundle("org.daisy.libs:zedval-osgi:2.1"),
-				mavenBundle("commons-cli:commons-cli:1.2"),
-				wrappedBundle(mavenJar("org.w3c.css", "sac", "1.3")),
-				wrappedBundle(mavenJar("org.codehaus.woodstox", "wstx-lgpl", "3.2.9")),
-				wrappedBundle(mavenJar("stax", "stax-api", "1.0.1")),
-				wrappedBundle(mavenJar("xml-resolver","xml-resolver", "1.2")),
-				wrappedBundle(mavenJar("xml-apis", "xml-apis", "2.0.2")).exports("org.w3c.dom.views,org.w3c.dom.ranges"),
-				wrappedBundle(mavenJar("xerces", "xercesImpl", "2.9.1")));
-
-		// daisy-util's dependencies
-		Option daisyUtilDeps = composite(
-				wrappedBundle(mavenJar("net.sourceforge.jchardet","jchardet", "1.0")));
+		// ZedVal and dependencies
+		Option zedval = composite(
+				// Notes:
+				// - When using the instructions method (also exports, imports, etc.) care should
+				//   be taken not to reach the maximum file name length (which is 255 on Mac OS),
+				//   because Pax Exam encodes all this info into the file name of the JAR.
+				// - In the SPI-Consumer instructions, "%23" is used instead of "#". This is because
+				//   of a (probable) bug in Pax Exam.
+				wrappedBundle(mavenBundle("org.daisy:zedval:?"))
+					.instructions("SPI-Consumer=javax.xml.parsers.SAXParserFactory%23newInstance," +
+					                           "javax.xml.parsers.DocumentBuilderFactory%23newInstance"),
+				wrappedBundle(mavenBundle("org.daisy:daisy-util:?"))
+					.instructions("SPI-Consumer=javax.xml.parsers.SAXParserFactory%23newInstance," +
+					                           "javax.xml.transform.TransformerFactory%23newInstance"),
+				wrappedBundle(mavenBundle("xerces:xercesImpl:?"))
+					.instructions("SPI-Provider=*"),
+				mavenBundle("org.daisy.libs:saxon-he:?"),
+				mavenBundle("org.daisy.libs:jing:?"),
+				mavenBundle("commons-cli:commons-cli:?"),
+				wrappedBundle(mavenBundle("org.w3c.css:sac:?")),
+				// wrappedBundle(mavenBundle("javazoom:jlayer:?")),
+				// wrappedBundle(mavenBundle("batik:batik-css:?")),
+				// wrappedBundle(mavenBundle("batik:batik-util:?")),
+				// wrappedBundle(mavenBundle("net.sourceforge.jchardet:jchardet:?")),
+				// wrappedBundle(mavenBundle("org.idpf:epubcheck:?")),
+				// wrappedBundle(mavenBundle("com.ibm.icu:icu4j:?")),
+				// wrappedBundle(mavenBundle("org.ccil.cowan.tagsoup:tagsoup:?")),
+				// wrappedBundle(mavenBundle("org.codehaus.woodstox:wstx-lgpl:?")),
+				systemPackage("org.w3c.dom"),
+				systemPackage("org.w3c.dom.ranges"),
+				spiflyBundles()
+				);
 
 		// for testing purpose only
-		Option testDeps = wrappedBundle(mavenJar("xmlunit", "xmlunit", "1.5"));
+		Option testDeps = wrappedBundle(mavenBundle("xmlunit:xmlunit:?"));
 
 		return options(
-			jaxp,
 			dtbookTTSmock,
-			zedvalDeps,
-			daisyUtilDeps,
+			zedval,
 			testDeps,
 			resourcesOnDisk,
 			targetDirprop,
@@ -195,6 +181,12 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@ProbeBuilder
+	public TestProbeBuilder probeConfiguration(TestProbeBuilder probe) {
+		probe.setHeader("SPI-Consumer", "javax.xml.parsers.SAXParserFactory#newInstance");
+		return probe;
 	}
 
 	@Inject
