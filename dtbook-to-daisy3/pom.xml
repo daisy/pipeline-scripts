@@ -68,13 +68,41 @@
     <!--
         test dependencies
     -->
-    <!--
-        Tests are executed in a separate project, but list some of the test dependencies here too so
-        that if they are snapshots Maven will put them in the reactor before this project.
-    -->
+    <dependency>
+      <groupId>org.daisy</groupId>
+      <artifactId>zedval</artifactId>
+      <version>2.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.daisy.pipeline</groupId>
       <artifactId>xproc-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>1.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>daisy3-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>dtbook-break-detection</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>nlp-omnilang-lexer</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -82,80 +110,130 @@
       <artifactId>modules-test-helper</artifactId>
       <scope>test</scope>
     </dependency>
+    <!--
+        for zedval
+    -->
+    <dependency>
+      <groupId>org.daisy</groupId>
+      <artifactId>daisy-util</artifactId>
+      <version>20100125</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javazoom</groupId>
+      <artifactId>jlayer</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.9.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>saxon-he</artifactId>
+      <!--
+          version that is compatible with SPI (via SPI-Fly)
+      -->
+      <version>9.5.1.5-1-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.libs</groupId>
+      <artifactId>jing</artifactId>
+      <!--
+          version that is compatible with SPI (via SPI-Fly)
+      -->
+      <version>20151127.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.w3c.css</groupId>
+      <artifactId>sac</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>batik</groupId>
+      <artifactId>batik-css</artifactId>
+      <version>1.6-1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>batik</groupId>
+      <artifactId>batik-util</artifactId>
+      <version>1.6-1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.jchardet</groupId>
+      <artifactId>jchardet</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.idpf</groupId>
+      <artifactId>epubcheck</artifactId>
+      <version>3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+      <version>3.8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ccil.cowan.tagsoup</groupId>
+      <artifactId>tagsoup</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.woodstox</groupId>
+      <artifactId>wstx-lgpl</artifactId>
+      <version>3.2.9</version>
+      <scope>test</scope>
+    </dependency>
+    -->
   </dependencies>
   
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-invoker-plugin</artifactId>
-        <version>1.8</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <settingsFile>${basedir}/src/test/resources/settings.xml</settingsFile>
-          <localRepositoryPath>${project.build.directory}/test/local-repo</localRepositoryPath>
-          <properties>
-            <!-- for settings file -->
-            <!--
-                @localRepositoryURL@ would be replaced automatically by maven-invoker-plugin, but we
-                have to use ${localRepositoryURL} instead so that pax-exam-helper can read the
-                setting file too. (Alternatively i could use target/test/interpolated-settings.xml.)
-            -->
-            <localRepositoryUrl>file:${settings.localRepository}</localRepositoryUrl>
-            <testDependenciesLibUrl>${project.baseUri}/src/test/resources/deps/lib</testDependenciesLibUrl>
-          </properties>
+          <systemPropertyVariables>
+            <target.dir>${project.build.directory}</target.dir>
+          </systemPropertyVariables>
         </configuration>
-        <executions>
-          <execution>
-            <id>install-dtbook-to-daisy3</id>
-            <!-- to make sure that by now dtbook-to-daisy3 jar has been built (see
-                 "bundle-before-test" execution of maven-bundle-plugin which is bound to
-                 generate-test-resources phase) -->
-            <phase>process-test-resources</phase>
-            <goals>
-              <goal>install</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>execute-test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <projectsDirectory>${basedir}/src/test/resources</projectsDirectory>
-              <cloneProjectsTo>${project.build.directory}/test</cloneProjectsTo>
-              <properties>
-                <org.ops4j.pax.url.mvn.localRepository>${project.build.directory}/test/local-repo</org.ops4j.pax.url.mvn.localRepository>
-                <org.daisy.org.ops4j.pax.url.mvn.settings>${basedir}/src/test/resources/settings.xml</org.daisy.org.ops4j.pax.url.mvn.settings>
-              </properties>
-              <pomIncludes>
-                <pomInclude>test</pomInclude>
-              </pomIncludes>
-              <goals>
-                <goal>test</goal>
-              </goals>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-testResources</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-testCompile</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
-
+  
+  <repositories>
+    <!-- for jlayer, daisy-util and zedval -->
+    <repository>
+      <id>test-deps-lib</id>
+      <url>${project.baseUri}/lib</url>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
 </project>

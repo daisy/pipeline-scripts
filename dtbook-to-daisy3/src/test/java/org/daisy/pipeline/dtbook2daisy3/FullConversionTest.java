@@ -83,11 +83,18 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 	@Override
 	public String[] testDependencies() {
 		return new String[]{
+			pipelineModule("common-utils"),
+			pipelineModule("css-speech"),
+			pipelineModule("css-utils"),
+			pipelineModule("daisy3-utils"),
+			pipelineModule("dtbook-tts"),
+			pipelineModule("dtbook-utils"),
+			pipelineModule("fileset-utils"),
+			pipelineModule("file-utils"),
+			pipelineModule("tts-helpers"),
 			"commons-io:commons-io:?",
 			"org.daisy.pipeline:xproc-api:?",
-			pipelineModule("dtbook-to-daisy3"),
 			// for dtbook-tss mock
-			pipelineModule("daisy3-utils"),
 			pipelineModule("dtbook-break-detection"),
 			pipelineModule("nlp-omnilang-lexer")
 		};
