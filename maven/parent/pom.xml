@@ -126,14 +126,6 @@
         <artifactId>pax-exam-helper</artifactId>
         <version>2.1.2-SNAPSHOT</version>
       </dependency>
-      <!--
-          other
-      -->
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.compendium</artifactId>
-        <version>4.3.0</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
