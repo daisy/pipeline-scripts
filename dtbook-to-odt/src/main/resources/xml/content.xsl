@@ -1081,9 +1081,36 @@
 	
 	<xsl:template name="TERMINATE">
 		<xsl:message terminate="yes">
-			<xsl:text>ERROR!! </xsl:text>
+			<xsl:text>Coding error: unexpected </xsl:text>
 			<xsl:sequence select="f:node-trace(.)"/>
+			<xsl:text> (mode: </xsl:text>
+			<xsl:apply-templates select="$f:print-mode" mode="#current"/>
+			<xsl:text>)</xsl:text>
 		</xsl:message>
 	</xsl:template>
+	
+	<xsl:variable name="f:print-mode"><f:print-mode/></xsl:variable>
+	<xsl:template match="f:print-mode">#default</xsl:template>
+	<xsl:template match="f:print-mode" mode="insert-covered-table-cells">insert-covered-table-cells</xsl:template>
+	<xsl:template match="f:print-mode" mode="is-block-element">is-block-element</xsl:template>
+	<xsl:template match="f:print-mode" mode="list-style">list-style</xsl:template>
+	<xsl:template match="f:print-mode" mode="office:annotation">office:annotation</xsl:template>
+	<xsl:template match="f:print-mode" mode="office:text">office:text</xsl:template>
+	<xsl:template match="f:print-mode" mode="paragraph-style">paragraph-style</xsl:template>
+	<xsl:template match="f:print-mode" mode="table:table">table:table</xsl:template>
+	<xsl:template match="f:print-mode" mode="table:table-cell">table:table-cell</xsl:template>
+	<xsl:template match="f:print-mode" mode="table:table-header-rows">table:table-header-rows</xsl:template>
+	<xsl:template match="f:print-mode" mode="table:table-row">table:table-row</xsl:template>
+	<xsl:template match="f:print-mode" mode="template">template</xsl:template>
+	<xsl:template match="f:print-mode" mode="text-style">text-style</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:a">text:a</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:h">text:h</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:list">text:list</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:list-item">text:list-item</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:note-body">text:note-body</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:p">text:p</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:section">text:section</xsl:template>
+	<xsl:template match="f:print-mode" mode="text:span">text:span</xsl:template>
+	<xsl:template match="f:print-mode" mode="#all" priority="-1">?</xsl:template>
 	
 </xsl:stylesheet>
