@@ -7,12 +7,12 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>3</version>
-    <relativePath/>
+    <relativePath />
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
   <artifactId>texhyph-utils-aggregator</artifactId>
-  <version>1.10.1-SNAPSHOT</version>
+  <version>1.10.1</version>
   <packaging>pom</packaging>
   
   <name>DP2 Braille Modules :: texhyph-utils</name>
@@ -41,4 +41,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.10.1</tag>
+  </scm>
 </project>
