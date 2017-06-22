@@ -7,7 +7,7 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>3</version>
-    <relativePath />
+    <relativePath/>
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -30,7 +30,7 @@
     <module>pipeline-braille-utils/common-utils</module>
     <module>pipeline-braille-utils/css-utils</module>
     <module>pipeline-braille-utils/pef-utils</module>
-    <module>pipeline-braille-utils/obfl-utils</module>
+    <!--<module>pipeline-braille-utils/obfl-utils</module>-->
     <module>pipeline-braille-utils/liblouis-utils</module>
     <module>pipeline-braille-utils/dotify-utils</module>
     <module>pipeline-braille-utils/libhyphen-utils</module>

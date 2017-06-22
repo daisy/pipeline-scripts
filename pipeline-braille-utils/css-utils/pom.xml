@@ -7,7 +7,7 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>3</version>
-    <relativePath />
+    <relativePath/>
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -18,7 +18,7 @@
   <name>DP2 Braille Modules :: css-utils</name>
 
   <modules>
-    <module>css-core</module>
+    <!--<module>css-core</module>-->
     <module>css-utils</module>
   </modules>
   

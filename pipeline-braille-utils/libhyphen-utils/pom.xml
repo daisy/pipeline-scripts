@@ -7,7 +7,7 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>3</version>
-    <relativePath />
+    <relativePath/>
   </parent>
   
   <groupId>org.daisy.pipeline.modules.braille</groupId>
@@ -18,11 +18,11 @@
   <name>DP2 Braille Modules :: libhyphen-utils</name>
 
   <modules>
-    <module>libhyphen-core</module>
-    <module>libhyphen-native</module>
-    <module>libhyphen-saxon</module>
-    <module>libhyphen-libreoffice-tables</module>
-    <module>libhyphen-utils</module>
+    <!--<module>libhyphen-core</module>-->
+    <!--<module>libhyphen-native</module>-->
+    <!--<module>libhyphen-saxon</module>-->
+    <!--<module>libhyphen-libreoffice-tables</module>-->
+    <!--<module>libhyphen-utils</module>-->
   </modules>
   
   <build>
