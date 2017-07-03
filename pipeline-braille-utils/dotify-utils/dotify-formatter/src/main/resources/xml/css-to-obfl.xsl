@@ -511,7 +511,9 @@
                                     <xsl:apply-templates mode="sequence-attr"
                                                          select="current-group()[1]/(@* except (@css:page|@css:volume|@css:string-entry))"/>
                                     <xsl:apply-templates mode="sequence-attr"
-                                                         select="current-group()[1]/*/@css:volume-break-before[.='always']"/>
+                                                         select="current-group()[1]/*/@css:volume-break-before[.='always']">
+                                        <xsl:with-param name="first-sequence" tunnel="yes" select="position()=1"/>
+                                    </xsl:apply-templates>
                                     <xsl:apply-templates mode="sequence"
                                                          select="current-group()[1]/(@css:string-entry|*)"/>
                                     <xsl:apply-templates mode="assert-nil-attr"
@@ -1445,7 +1447,10 @@
     
     <xsl:template mode="sequence-attr"
                   match="css:box[@type='block'][not(parent::css:box) and not(preceding-sibling::*)]/@css:volume-break-before[.='always']">
-        <xsl:attribute name="break-before" select="'volume'"/>
+        <xsl:param name="first-sequence" as="xs:boolean" tunnel="yes" select="false()"/>
+        <xsl:if test="not($first-sequence)">
+            <xsl:attribute name="break-before" select="'volume'"/>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template mode="block-attr"
