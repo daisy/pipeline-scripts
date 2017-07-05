@@ -1459,7 +1459,7 @@
     <xsl:variable name="_OBFL_KEEP_FN_RE">-obfl-keep\(\s*([1-9])\s*\)</xsl:variable>
     <xsl:variable name="_OBFL_KEEP_FN_RE_priority" select="1"/>
     
-    <xsl:template mode="block-attr"
+    <xsl:template mode="block-attr table-attr"
                   match="css:box[@type='block']/@css:volume-break-inside">
         <xsl:variable name="this" select="."/>
         <xsl:analyze-string select="." regex="^{$_OBFL_KEEP_FN_RE}$">
