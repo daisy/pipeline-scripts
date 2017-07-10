@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -243,7 +244,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 										translators = Iterables.of(
 											logCreate((LiblouisTranslator)new LiblouisTranslatorHyphenatorImpl(
 													table.getTranslator(),
-													handleNonStandardHyphenation))
+													handleNonStandardHyphenation,
+													locale))
 										);
 										break; }
 							if (!"liblouis".equals("hyphenator")) {
@@ -264,7 +266,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 														(LiblouisTranslator)new LiblouisTranslatorImpl(
 																table.getTranslator(),
 																hyphenator,
-																handleNonStandardHyphenation))); }}));
+																handleNonStandardHyphenation,
+																locale))); }}));
 								}}
 						if ("none".equals(hyphenator) || "auto".equals(hyphenator))
 							translators = concat(
@@ -272,7 +275,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 								logCreate((LiblouisTranslator)new LiblouisTranslatorImpl(
 										table.getTranslator(),
 										null,
-										handleNonStandardHyphenation)));
+										handleNonStandardHyphenation,
+										locale)));
 						return translators;
 					}
 				}
@@ -292,6 +296,7 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		private Hyphenator hyphenator;
 		protected FullHyphenator fullHyphenator;
 		private Hyphenator.LineBreaker lineBreaker;
+		private final String mainLocale;
 		
 		// how to handle non-standard hyphenation in pre-translation mode
 
@@ -307,14 +312,15 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 		private final static int NON_STANDARD_HYPH_FAIL = 1;
 		private final static int NON_STANDARD_HYPH_DEFER = 2;
 		
-		private LiblouisTranslatorImpl(Translator translator, int handleNonStandardHyphenation) {
+		private LiblouisTranslatorImpl(Translator translator, int handleNonStandardHyphenation, String mainLocale) {
 			table = new LiblouisTable(translator.getTable());
 			this.translator = translator;
 			this.handleNonStandardHyphenation = handleNonStandardHyphenation;
+			this.mainLocale = mainLocale;
 		}
 		
-		private LiblouisTranslatorImpl(Translator translator, Hyphenator hyphenator, int handleNonStandardHyphenation) {
-			this(translator, handleNonStandardHyphenation);
+		private LiblouisTranslatorImpl(Translator translator, Hyphenator hyphenator, int handleNonStandardHyphenation, String mainLocale) {
+			this(translator, handleNonStandardHyphenation, mainLocale);
 			this.hyphenator = hyphenator;
 			if (hyphenator != null) {
 				try {
@@ -470,6 +476,10 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 					SimpleInlineStyle[] styles = new SimpleInlineStyle[size]; {
 						int i = 0;
 						for (CSSStyledText t : styledText) {
+							Map<String,String> attrs = t.getTextAttributes();
+							if (attrs != null)
+								for (String k : attrs.keySet())
+									logger.warn("Text attribute \"{}:{}\" ignored", k, attrs.get(k));
 							text[i] = t.getText();
 							styles[i] = t.getStyle();
 							i++; }}
@@ -957,6 +967,10 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 			SimpleInlineStyle[] style = new SimpleInlineStyle[size];
 			int i = 0;
 			for (CSSStyledText t : styledText) {
+				Map<String,String> attrs = t.getTextAttributes();
+				if (attrs != null)
+					for (String k : attrs.keySet())
+						logger.warn("Text attribute \"{}:{}\" ignored", k, attrs.get(k));
 				text[i] = t.getText();
 				style[i] = t.getStyle();
 				i++; }
@@ -1421,8 +1435,8 @@ public class LiblouisTranslatorJnaImplProvider extends AbstractTransformProvider
 	
 	private static class LiblouisTranslatorHyphenatorImpl extends LiblouisTranslatorImpl {
 		
-		private LiblouisTranslatorHyphenatorImpl(Translator translator, int handleNonStandardHyphenation) {
-			super(translator, handleNonStandardHyphenation);
+		private LiblouisTranslatorHyphenatorImpl(Translator translator, int handleNonStandardHyphenation, String mainLocale) {
+			super(translator, handleNonStandardHyphenation, mainLocale);
 			fullHyphenator = new LiblouisTranslatorAsFullHyphenator(translator);
 		}
 		

@@ -7,6 +7,7 @@
 	
 	<p:option name="text-transform" select="''"/>
 	<p:option name="no-wrap" select="'false'"/>
+	<p:option name="main-locale" select="''"/>
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
 	
@@ -18,6 +19,7 @@
 		</p:input>
 		<p:with-param name="text-transform" select="$text-transform"/>
 		<p:with-param name="no-wrap" select="$no-wrap"/>
+		<p:with-param name="main-locale" select="$main-locale"/>
 	</p:xslt>
 	
 </p:pipeline>

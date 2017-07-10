@@ -87,6 +87,7 @@ public interface LiblouisCSSBlockTransform {
 						return empty;
 				htmlOut = html;
 			}
+			final String locale = q.containsKey("locale") ? q.getOnly("locale").getValue().get() : null;
 			if (q.containsKey("translator"))
 				if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 					return empty;
@@ -99,7 +100,7 @@ public interface LiblouisCSSBlockTransform {
 				new Function<LiblouisTranslator,BrailleTranslator>() {
 					public BrailleTranslator _apply(LiblouisTranslator translator) {
 						return __apply(
-							logCreate(new TransformImpl(translator, htmlOut))
+							logCreate(new TransformImpl(translator, htmlOut, locale))
 						);
 					}
 				}
@@ -116,13 +117,14 @@ public interface LiblouisCSSBlockTransform {
 			private final LiblouisTranslator translator;
 			private final XProc xproc;
 			
-			private TransformImpl(String translatorQuery, LiblouisTranslator translator, boolean htmlOut) {
+			private TransformImpl(LiblouisTranslator translator, boolean htmlOut, String mainLocale) {
 				Map<String,String> options = ImmutableMap.of("text-transform", mutableQuery().add("id", translator.getIdentifier()).toString(),
 				                                             // This will omit the <_ style="text-transform:none">
 				                                             // wrapper. It is assumed that if (output:html) is set, the
 				                                             // result is known to be braille (which is the case if
 				                                             // (output:braille) is also set).
-				                                             "no-wrap", String.valueOf(htmlOut));
+				                                             "no-wrap", String.valueOf(htmlOut),
+				                                             "main-locale", mainLocale != null ? mainLocale : "");
 				xproc = new XProc(href, null, options);
 				this.translator = translator;
 			}
@@ -148,11 +150,13 @@ public interface LiblouisCSSBlockTransform {
 		)
 		protected void bindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
 			liblouisTranslatorProviders.add(provider);
+			logger.debug("Adding LiblouisTranslator provider: {}", provider);
 		}
 	
 		protected void unbindLiblouisTranslatorProvider(LiblouisTranslator.Provider provider) {
 			liblouisTranslatorProviders.remove(provider);
 			liblouisTranslatorProvider.invalidateCache();
+			logger.debug("Removing LiblouisTranslator provider: {}", provider);
 		}
 	
 		private List<TransformProvider<LiblouisTranslator>> liblouisTranslatorProviders
