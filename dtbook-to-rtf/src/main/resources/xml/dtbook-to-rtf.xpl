@@ -118,11 +118,9 @@
 			</p:input>
 		</p:store>
 
-		<p:xslt name="convert-to-rtf">
+		<p:xslt name="convert-to-rtf" template-name="start">
 			<p:input port="source">
-				<p:inline>
-					<root/>
-				</p:inline>
+				<p:empty/>
 			</p:input>
 			<p:input port="stylesheet">
 				<p:document href="dtbook_to_rtf.xsl"/>

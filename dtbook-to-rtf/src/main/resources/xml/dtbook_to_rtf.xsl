@@ -19,8 +19,7 @@
 	<xsl:output method="text" encoding="Windows-1252"/>
 	<xsl:strip-space elements="*"/>
 	
-
-	<xsl:template match="root">
+	<xsl:template name="start">
 		<c:data xmlns:c="http://www.w3.org/ns/xproc-step">
 			<xsl:apply-templates select="doc($sourceFile)" /> 
 		</c:data>
