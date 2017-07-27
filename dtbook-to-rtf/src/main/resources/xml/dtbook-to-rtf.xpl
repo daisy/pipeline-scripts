@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step name="main" px:input-filesets="dtbook" px:output-filesets="rtf" type="px:dtbook-to-rtf" version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step" 		xmlns:d="http://www.daisy.org/ns/pipeline/data" 
+<p:declare-step name="main" px:input-filesets="dtbook" px:output-filesets="rtf" type="px:dtbook-to-rtf" version="1.0" xmlns:d="http://www.daisy.org/ns/pipeline/data" 
 	xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" 
 	xmlns:p="http://www.w3.org/ns/xproc" 
 	xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
