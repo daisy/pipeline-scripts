@@ -20,11 +20,15 @@
 	<xsl:strip-space elements="*"/>
 	
 	<xsl:template name="start">
+		<xsl:apply-templates select="doc($sourceFile)"/>
+	</xsl:template>
+	
+	<xsl:template match="/*">
 		<c:data xmlns:c="http://www.w3.org/ns/xproc-step">
-			<xsl:apply-templates select="doc($sourceFile)" /> 
+			<xsl:next-match/>
 		</c:data>
 	</xsl:template>
-
+	
 	<xsl:template match="dtbook|dtb:dtbook">
 		<xsl:text>{\rtf1\ansi\ansicpg1252\deff0 </xsl:text>
 		<xsl:call-template name="FONTS"/>
