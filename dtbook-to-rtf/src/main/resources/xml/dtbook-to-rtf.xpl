@@ -50,7 +50,7 @@
   </p:option>
 
 
-	<p:option name="output-dir" px:output="result" px:type="anyDirURI" required="false">
+	<p:option name="output-dir" px:output="result" px:type="anyDirURI" required="true">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<h2 px:role="name">RTF file</h2>
 			<p px:role="desc">The resulting rtf file.</p>
