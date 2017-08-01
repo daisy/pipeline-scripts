@@ -10,6 +10,10 @@
 		<p px:role="desc">Transforms a DTBook (DAISY 3 XML) document into an RTF (Rich Text Format).</p>
 		<a href="http://daisy.github.io/pipeline/modules/dtbook-to-rtf" px:role="homepage">Online documentation</a>
 		<dl px:role="author">
+      <dt>Name:</dt>
+      <dd px:role="name">Ole Holst Andersen</dd>
+    </dl>
+		<dl px:role="author">
 			<dt>Name:</dt>
 			<dd px:role="name">Yilin Langlois</dd>
 			<dt>Organization:</dt>
