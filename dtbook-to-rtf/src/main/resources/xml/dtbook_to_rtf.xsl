@@ -19,6 +19,9 @@
 	<xsl:output method="text" encoding="Windows-1252"/>
 	<xsl:strip-space elements="*"/>
 	
+	<!-- Due to performance issue when the source file is directly passed as input
+	to the xproc step, we need to save temporary the input file and then open it
+	with doc function -->
 	<xsl:template name="start">
 		<xsl:apply-templates select="doc($sourceFile)"/>
 	</xsl:template>
