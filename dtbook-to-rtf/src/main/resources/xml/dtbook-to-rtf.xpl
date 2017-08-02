@@ -12,6 +12,16 @@
 		<dl px:role="author">
       <dt>Name:</dt>
       <dd px:role="name">Ole Holst Andersen</dd>
+      <dt>Organization:</dt>
+			<dd href="https://nota.dk" px:role="organization">Nota</dd>
+    </dl>
+    <dl px:role="author">
+      <dt>Name:</dt>
+      <dd px:role="name">Romain Deltour</dd>
+      <dt>Organization:</dt>
+      <dd px:role="organization">DAISY</dd>
+      <dt>E-mail:</dt>
+      <dd><a px:role="contact" href="mailto:rdeltour@gmail.com">rdeltout@gmail.com</a></dd>
     </dl>
 		<dl px:role="author">
 			<dt>Name:</dt>
