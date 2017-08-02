@@ -11,6 +11,10 @@
 		<a href="http://daisy.github.io/pipeline/modules/dtbook-to-rtf" px:role="homepage">Online documentation</a>
 		<dl px:role="author">
       <dt>Name:</dt>
+      <dd px:role="name">Markus Gylling</dd>
+    </dl>
+		<dl px:role="author">
+      <dt>Name:</dt>
       <dd px:role="name">Ole Holst Andersen</dd>
       <dt>Organization:</dt>
 			<dd href="https://nota.dk" px:role="organization">Nota</dd>
