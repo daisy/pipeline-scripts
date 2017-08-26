@@ -28,6 +28,7 @@
 		xmlns:f="functions"
 		exclude-result-prefixes="#all">
 	
+	<xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xsl"/>
 	<xsl:import href="http://www.daisy.org/pipeline/modules/image-utils/library.xsl"/>
 	<xsl:include href="utilities.xsl"/>
 	
@@ -514,30 +515,48 @@
 	
 	<xsl:template match="dtb:img" mode="office:text office:annotation text:section table:table-cell text:list-item">
 		<xsl:variable name="src" select="resolve-uri(@src, base-uri(collection()[2]/*))"/>
-		<xsl:variable name="image_dimensions" as="xs:integer*" select="pf:image-dimensions($src)"/>
-		<xsl:call-template name="text:p">
-			<xsl:with-param name="sequence">
-				<xsl:element name="draw:frame">
-					<xsl:attribute name="draw:name" select="concat('dtb:img#', count(preceding::dtb:img) + 1)"/>
-					<xsl:attribute name="draw:style-name" select="dtb:style-name(.)"/>
-					<xsl:attribute name="text:anchor-type" select="'as-char'"/>
-					<xsl:attribute name="draw:z-index" select="'0'"/>
-					<xsl:attribute name="svg:width" select="format-number($image_dimensions[1] div number($image_dpi), '0.0000in')"/>
-					<xsl:attribute name="svg:height" select="format-number($image_dimensions[2] div number($image_dpi), '0.0000in')"/>
-					<xsl:element name="draw:image">
-						<xsl:attribute name="xlink:href" select="$src"/>
-						<xsl:attribute name="xlink:type" select="'simple'"/>
-						<xsl:attribute name="xlink:show" select="'embed'"/>
-						<xsl:attribute name="xlink:actuate" select="'onLoad'"/>
-					</xsl:element>
-					<xsl:if test="@alt">
-						<xsl:element name="svg:title">
-							<xsl:sequence select="string(@alt)"/>
+		<xsl:choose>
+			<xsl:when test="pf:file-exists($src)"> <!-- or matches($src,'^https?://') ? -->
+				<xsl:variable name="image_dimensions" as="xs:integer*" select="pf:image-dimensions($src)"/>
+				<xsl:call-template name="text:p">
+					<xsl:with-param name="sequence">
+						<xsl:element name="draw:frame">
+							<xsl:attribute name="draw:name" select="concat('dtb:img#', count(preceding::dtb:img) + 1)"/>
+							<xsl:attribute name="draw:style-name" select="dtb:style-name(.)"/>
+							<xsl:attribute name="text:anchor-type" select="'as-char'"/>
+							<xsl:attribute name="draw:z-index" select="'0'"/>
+							<xsl:attribute name="svg:width" select="format-number($image_dimensions[1] div number($image_dpi), '0.0000in')"/>
+							<xsl:attribute name="svg:height" select="format-number($image_dimensions[2] div number($image_dpi), '0.0000in')"/>
+							<xsl:element name="draw:image">
+								<xsl:attribute name="xlink:href" select="$src"/>
+								<xsl:attribute name="xlink:type" select="'simple'"/>
+								<xsl:attribute name="xlink:show" select="'embed'"/>
+								<xsl:attribute name="xlink:actuate" select="'onLoad'"/>
+							</xsl:element>
+							<xsl:if test="@alt">
+								<xsl:element name="svg:title">
+									<xsl:sequence select="string(@alt)"/>
+								</xsl:element>
+							</xsl:if>
 						</xsl:element>
-					</xsl:if>
-				</xsl:element>
-			</xsl:with-param>
-		</xsl:call-template>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="text:p">
+					<xsl:with-param name="sequence">
+						<xsl:call-template name="office:annotation">
+							<xsl:with-param name="apply-templates">
+								<dtb:span xml:lang="en">
+									<xsl:text>Missing image: </xsl:text>
+									<dtb:strong><xsl:value-of select="@src"/></dtb:strong>
+								</dtb:span>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="dtb:imggroup/dtb:caption" mode="office:text office:annotation text:section table:table-cell text:list-item">
