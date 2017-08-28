@@ -886,7 +886,9 @@
 							<xsl:sequence select="$sequence"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select="$apply-templates" mode="text:span"/>
+							<xsl:apply-templates select="$apply-templates" mode="text:span">
+								<xsl:with-param name="cur_text_lang" select="$lang" tunnel="yes"/>
+							</xsl:apply-templates>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:element>
