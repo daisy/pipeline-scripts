@@ -41,22 +41,22 @@
 
 	<p:input port="source" primary="true" px:media-type="application/x-dtbook+xml" sequence="true">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
-			<h2 px:role="name">DTBook file(s)</h2>
-			<p px:role="desc">One or more 2005-3 DTBook files to be transformed. In the case of multiple files, the first one will be taken.</p>
+			<h2 px:role="name">DTBook file</h2>
+			<p px:role="desc">One 2005-3 DTBook files to be transformed.</p>
 		</p:documentation>
 	</p:input>
 
 	<p:option name="include-table-of-content" required="false" select="'false'">
 		<p:documentation>
 			<h2 px:role="name">Include table of content</h2>
-			<p px:role="desc">true if need to include table of content</p>
+			<p px:role="desc">A boolean indicating if a TOC should be generated.</p>
 		</p:documentation>
 	</p:option>
 
 	<p:option name="include-page-number" required="false" select="'false'">
 		<p:documentation>
 			<h2 px:role="name">Include page number</h2>
-			<p px:role="desc">true if need to include page number</p>
+			<p px:role="desc">A boolean indicating if a TOC should be generated.</p>
 		</p:documentation>
 	</p:option>
 	
