@@ -475,7 +475,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<xsl:template match="dtb:blockquote|dtb:epigraph|dtb:poem" mode="office:text office:annotation text:section">
+	<xsl:template match="dtb:blockquote|dtb:epigraph|dtb:poem" mode="office:text office:annotation text:section text:list-item">
 		<xsl:apply-templates mode="#current"/>
 	</xsl:template>
 	
