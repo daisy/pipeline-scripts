@@ -59,9 +59,6 @@ public interface LiblouisCSSBlockTransform {
 		
 		private final static Iterable<BrailleTranslator> empty = Iterables.<BrailleTranslator>empty();
 		
-		private final static List<String> supportedInput = ImmutableList.of("css");
-		private final static List<String> supportedOutput = ImmutableList.of("css");
-		
 		/**
 		 * Recognized features:
 		 *
@@ -73,26 +70,44 @@ public interface LiblouisCSSBlockTransform {
 		protected Iterable<BrailleTranslator> _get(Query query) {
 			final MutableQuery q = mutableQuery(query);
 			for (Feature f : q.removeAll("input"))
-				if (!supportedInput.contains(f.getValue().get()))
+				if ("html".equals(f.getValue().get())) {}
+				else if (!"css".equals(f.getValue().get()))
 					return empty;
-			for (Feature f : q.removeAll("output"))
-				if (!supportedOutput.contains(f.getValue().get()))
-					return empty;
+			boolean braille = false;
+			final boolean htmlOut; {
+				boolean html = false;
+				for (Feature f : q.removeAll("output"))
+					if ("css".equals(f.getValue().get())) {}
+					else if ("html".equals(f.getValue().get()))
+						html = true;
+					else if ("braille".equals(f.getValue().get()))
+						braille = true;
+					else
+						return empty;
+				htmlOut = html;
+			}
 			if (q.containsKey("translator"))
 				if (!"liblouis".equals(q.removeOnly("translator").getValue().get()))
 					return empty;
 			q.add("input", "text-css");
+			if (braille)
+				q.add("output", "braille");
 			Iterable<LiblouisTranslator> translators = logSelect(q, liblouisTranslatorProvider);
 			return transform(
 				translators,
 				new Function<LiblouisTranslator,BrailleTranslator>() {
 					public BrailleTranslator _apply(LiblouisTranslator translator) {
 						return __apply(
-							logCreate(new TransformImpl(q.toString(), translator))
+							logCreate(new TransformImpl(q.toString(), translator, htmlOut))
 						);
 					}
 				}
 			);
+		}
+			
+		@Override
+		public ToStringHelper toStringHelper() {
+			return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisCSSBlockTransform$Provider");
 		}
 		
 		private class TransformImpl extends AbstractBrailleTranslator {
@@ -100,8 +115,13 @@ public interface LiblouisCSSBlockTransform {
 			private final LiblouisTranslator translator;
 			private final XProc xproc;
 			
-			private TransformImpl(String translatorQuery, LiblouisTranslator translator) {
-				Map<String,String> options = ImmutableMap.of("query", translatorQuery);
+			private TransformImpl(String translatorQuery, LiblouisTranslator translator, boolean htmlOut) {
+				Map<String,String> options = ImmutableMap.of("query", translatorQuery,
+				                                             // This will omit the <_ style="text-transform:none">
+				                                             // wrapper. It is assumed that if (output:html) is set, the
+				                                             // result is known to be braille (which is the case if
+				                                             // (output:braille) is also set).
+				                                             "no-wrap", String.valueOf(htmlOut));
 				xproc = new XProc(href, null, options);
 				this.translator = translator;
 			}
@@ -113,7 +133,7 @@ public interface LiblouisCSSBlockTransform {
 			
 			@Override
 			public ToStringHelper toStringHelper() {
-				return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisCSSBlockTransform$TransformImpl")
+				return Objects.toStringHelper("o.d.p.b.liblouis.impl.LiblouisCSSBlockTransform$Provider$TransformImpl")
 					.add("translator", translator);
 			}
 		}

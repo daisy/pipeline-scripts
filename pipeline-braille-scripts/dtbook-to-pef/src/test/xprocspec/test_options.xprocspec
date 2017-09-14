@@ -97,7 +97,7 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="levels-in-footer">
+  <x:scenario label="levels-in-footer" pending="liblouis translation bug">
     <x:documentation>
       Tests levels-in-footer option.
     </x:documentation>

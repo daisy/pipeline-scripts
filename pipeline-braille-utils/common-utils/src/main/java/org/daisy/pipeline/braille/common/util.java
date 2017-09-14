@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -661,38 +662,11 @@ public abstract class util {
 	}
 	
 	public static abstract class Locales {
-		
 		public static Locale parseLocale(String locale) {
-			StringTokenizer parser = new StringTokenizer(locale, "-_");
-			if (parser.hasMoreTokens()) {
-				String lang = parser.nextToken();
-				if (parser.hasMoreTokens()) {
-					String country = parser.nextToken();
-					if (parser.hasMoreTokens()) {
-						String variant = parser.nextToken();
-						return new Locale(lang, country, variant); }
-					else
-						return new Locale(lang, country); }
-				else
-					return new Locale(lang); }
-			else
-				throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed");
-		}
-		
-		public static String toString(Locale locale, char separator) {
-			StringBuilder string = new StringBuilder();
-			String language = locale.getLanguage();
-			String country = locale.getCountry();
-			String variant = locale.getVariant();
-			string.append(language);
-			if (country.length() > 0 || variant.length() > 0)
-				string.append(separator);
-			if (country.length() > 0)
-				string.append(country);
-			if (variant.length() > 0) {
-				string.append(separator);
-				string.append(variant); }
-			return string.toString();
+			try {
+				return (new Locale.Builder()).setLanguageTag(locale.replace('_','-')).build(); }
+			catch (IllformedLocaleException e) {
+				throw new IllegalArgumentException("Locale '" + locale + "' could not be parsed", e); }
 		}
 	}
 	
