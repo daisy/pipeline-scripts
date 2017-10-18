@@ -29,6 +29,11 @@
     <xsl:variable name="volume-stylesheets" as="xs:string*"
                   select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))"/>
     
+    <!--
+        FIXME: instead of trying to include only the page styles that are actually used, and thereby
+        possibly including too little, include every possible page style and delete the ones that
+        are not used afterwards. this makes to code much simpler
+    -->
     <xsl:variable name="page-stylesheets-right-odd" as="xs:string*">
         <!--
             page style to use in @begin and @end areas when no page property specified
@@ -68,6 +73,13 @@
                                 </xsl:for-each>
                             </xsl:if>
                         </xsl:for-each-group>
+                        <!--
+                            it is also possible that a flow is renamed through -obfl-fallback-collection,
+                            in which case there is no flow document with the name "$flow"
+                        -->
+                        <xsl:if test="not(collection()/*[@css:flow=$flow])">
+                            <xsl:sequence select="($volume-area-page-style,$default-page-style)[1]"/>
+                        </xsl:if>
                     </xsl:for-each>
                 </xsl:for-each>
             </xsl:for-each>
