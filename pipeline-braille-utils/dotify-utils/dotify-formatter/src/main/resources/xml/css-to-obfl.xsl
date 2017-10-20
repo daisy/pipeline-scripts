@@ -1465,7 +1465,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template mode="block-attr"
+    <xsl:template mode="block-attr table-attr"
                   match="css:box[@type='block'][not(parent::css:box) and not(preceding-sibling::*)]/@css:volume-break-before[.='always']"/>
     
     <xsl:variable name="_OBFL_KEEP_FN_RE">-obfl-keep\(\s*([1-9])\s*\)</xsl:variable>
