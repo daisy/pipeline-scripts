@@ -29,10 +29,7 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress css:padding-to-margin 100 padding-to-margin.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="padding-to-margin.xsl"/>
         </p:input>

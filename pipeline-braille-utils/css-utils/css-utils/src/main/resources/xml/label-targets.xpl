@@ -27,12 +27,9 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
     <p:wrap-sequence wrapper="_"/>
     
-    <px:message message="[progress css:label-targets 100 label-targets.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="label-targets.xsl"/>
         </p:input>

@@ -31,15 +31,10 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
     <p:split-sequence test="/*[not(@css:flow)]" name="normal-flow"/>
     
-    <p:for-each name="for-each">
-        <px:message>
-            <p:with-option name="message" select="concat('[progress css:flow-from 1/',p:iteration-size(),' flow-from.xsl]')"/>
-        </px:message>
-        <p:xslt name="result">
+    <p:for-each name="for-each" px:progress="1">
+        <p:xslt name="result" px:progress="1">
             <p:input port="source">
                 <p:pipe step="for-each" port="current"/>
                 <p:pipe step="normal-flow" port="not-matched"/>

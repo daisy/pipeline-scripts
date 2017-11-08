@@ -9,10 +9,7 @@
     <p:input port="source"/>
     <p:output port="result"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress pxi:obfl-normalize-space 100 obfl-normalize-space.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="obfl-normalize-space.xsl"/>
         </p:input>

@@ -32,10 +32,7 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress css:parse-conten 100 parse-content.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="parse-content.xsl"/>
         </p:input>

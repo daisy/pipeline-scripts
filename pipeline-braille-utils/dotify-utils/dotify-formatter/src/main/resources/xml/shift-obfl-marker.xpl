@@ -26,12 +26,9 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
     <p:wrap-sequence wrapper="_"/>
     
-    <px:message message="[progress pxi:shift-obfl-marker 100 shift-obfl-marker.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="shift-obfl-marker.xsl"/>
         </p:input>

@@ -13,15 +13,11 @@
     <p:input port="metadata"/>
     <p:output port="result" px:media-type="application/x-pef+xml"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress pef:add-metadata 100] Adding metadata to PEF">
+    <p:xslt px:message="Adding metadata to PEF" px:progress="1">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
             <p:pipe step="main" port="metadata"/>
         </p:input>
-    </px:message>
-    <p:xslt>
         <p:input port="stylesheet">
             <p:document href="add-opf-metadata-to-pef.xsl"/>
         </p:input>

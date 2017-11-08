@@ -21,7 +21,6 @@
     <p:option name="duplex" select="'true'"/>
     <p:option name="skip-margin-top-of-page" select="'false'"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
@@ -30,16 +29,15 @@
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
         <p:output port="result" sequence="true"/>
-        <px:message message="css:parse-stylesheet"/>
-        <css:parse-stylesheet>
+        <css:parse-stylesheet px:message="css:parse-stylesheet">
             <p:documentation>
                 Make css:page, css:volume, css:after, css:before, css:footnote-call, css:duplicate,
                 css:alternate, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
                 css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
-        <px:message message="css:parse-properties"/>
-        <css:parse-properties properties="flow">
+        <css:parse-properties px:message="css:parse-properties"
+                              properties="flow">
             <p:documentation>
                 Make css:flow attributes.
             </p:documentation>
@@ -54,24 +52,22 @@
                           //*/@css:_obfl-on-volume-start|
                           //*/@css:_obfl-on-volume-end|
                           //*/@css:_obfl-on-toc-end">
-                <px:message message="css:make-pseudo-elements"/>
-                <css:make-pseudo-elements>
+                <css:make-pseudo-elements px:message="css:make-pseudo-elements">
                     <p:documentation>
                         Make css:before, css:after, css:duplicate, css:alternate and
                         css:footnote-call pseudo-elements from css:before, css:after, css:duplicate,
                         css:alternate and css:footnote-call attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
-                <px:message message="pxi:make-obfl-pseudo-elements"/>
-                <pxi:make-obfl-pseudo-elements>
+                <pxi:make-obfl-pseudo-elements px:message="pxi:make-obfl-pseudo-elements">
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
                         css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
                     </p:documentation>
                 </pxi:make-obfl-pseudo-elements>
                 <p:for-each>
-                    <px:message message="pxi:recursive-parse-stylesheet-and-make-pseudo-elements"/>
-                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
+                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements
+                        px:message="pxi:recursive-parse-stylesheet-and-make-pseudo-elements"/>
                 </p:for-each>
             </p:when>
             <p:otherwise>
@@ -84,8 +80,7 @@
     </p:declare-step>
     
     <p:add-xml-base/>
-    <px:message message="[progress pxi:css-to-obfl 1 p:xslt]"/>
-    <p:xslt>
+    <p:xslt px:message="" px:progress=".01">
         <p:input port="stylesheet">
             <p:inline>
                 <xsl:stylesheet version="2.0">
@@ -104,22 +99,22 @@
         </p:input>
     </p:xslt>
     
-    <px:message message="[progress pxi:css-to-obfl 1 css:parse-properties] Make css:display, css:render-table-by and css:table-header-policy attributes."/>
-    <css:parse-properties properties="display render-table-by table-header-policy">
+    <css:parse-properties px:message="Make css:display, css:render-table-by and css:table-header-policy attributes."
+                          px:progress=".01"
+                          properties="display render-table-by table-header-policy">
         <p:documentation>
             Make css:display, css:render-table-by and css:table-header-policy attributes.
         </p:documentation>
     </css:parse-properties>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:render-table-by] Layout tables as lists."/>
-    <css:render-table-by>
+    <css:render-table-by px:message="Layout tables as lists." px:progress=".02">
         <p:documentation>
             Layout tables as lists.
         </p:documentation>
     </css:render-table-by>
     
-    <px:message message="[progress pxi:css-to-obfl 1 pxi:recursive-parse-stylesheet-and-make-pseudo-elements] Recursively parse stylesheet and make pseudo elements"/>
-    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements px:message="Recursively parse stylesheet and make pseudo elements"
+                                                             px:progress=".01">
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
             css:alternate and css:footnote-call pseudo-elements, and css:_obfl-on-toc-start,
@@ -128,20 +123,15 @@
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
     
-    <px:message message="[progress pxi:css-to-obfl 5 for-each.parse-properties-and-eval-string-set]"/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress for-each.parse-properties-and-eval-string-set 1/',p:iteration-size(),' for-each.parse-properties-and-eval-string-set.iteration]')"/>
-        </px:message>
-        <px:message message="[progress for-each.parse-properties-and-eval-string-set.iteration 50 css:parse-properties]"/>
-        <css:parse-properties properties="content string-set counter-reset counter-set counter-increment -obfl-marker">
+    <p:for-each px:progress=".05">
+        <css:parse-properties px:progress=".50"
+                              properties="content string-set counter-reset counter-set counter-increment -obfl-marker">
             <p:documentation>
                 Make css:content, css:string-set, css:counter-reset, css:counter-set,
                 css:counter-increment and css:_obfl-marker attributes.
             </p:documentation>
         </css:parse-properties>
-        <px:message message="[progress for-each.parse-properties-and-eval-string-set.iteration 50 css:eval-string-set]"/>
-        <css:eval-string-set>
+        <css:eval-string-set px:progress=".50">
             <p:documentation>
                 Evaluate css:string-set attributes.
             </p:documentation>
@@ -149,8 +139,7 @@
     </p:for-each>
     
     <p:wrap-sequence wrapper="_"/>
-    <px:message message="[progress pxi:css-to-obfl 2 css:parse-content]"/>
-    <css:parse-content>
+    <css:parse-content px:progress=".02">
         <p:documentation>
             Make css:string, css:text, css:content and css:counter elements from css:content
             attributes. <!-- depends on make-pseudo-element -->
@@ -158,16 +147,13 @@
     </css:parse-content>
     <p:filter select="/_/*"/>
     
-    <p:group>
+    <p:group px:progress=".02">
         <p:documentation>
             Split into a sequence of flows.
         </p:documentation>
-        <px:message message="[progress pxi:css-to-obfl 1 pxi:css-to-obfl.foreach-parse-properties] Make css:flow attributes."/>
-        <p:for-each>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.foreach-parse-properties 1/',p:iteration-size(),' css:parse-properties]')"/>
-            </px:message>
-            <css:parse-properties properties="flow">
+        <p:for-each px:message="Make css:flow attributes." px:progress=".50">
+            <css:parse-properties px:progress="1"
+                                  properties="flow">
                 <p:documentation>
                     Make css:flow attributes.
                 </p:documentation>
@@ -175,8 +161,7 @@
         </p:for-each>
         <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:wrap wrapper="_" match="/*"/>
-        <px:message message="[progress pxi:css-to-obfl 1 css:flow-into] Extract named flows based on css:flow attributes."/>
-        <css:flow-into name="_2">
+        <css:flow-into name="_2" px:message="Extract named flows based on css:flow attributes." px:progress=".01">
             <p:documentation>
                 Extract named flows based on css:flow attributes and place anchors (css:id
                 attributes) in the normal flow.
@@ -192,34 +177,28 @@
         </p:identity>
     </p:group>
     
-    <px:message message="[progress pxi:css-to-obfl 1 css:label-targets] Make css:id attributes."/>
-    <css:label-targets name="label-targets">
+    <css:label-targets name="label-targets" px:message="Make css:id attributes." px:progress=".01">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
         </p:documentation>
     </css:label-targets>
     
-    <px:message message="[progress pxi:css-to-obfl 1 css:eval-target-content] Evaluate css:content elements."/>
-    <css:eval-target-content>
+    <css:eval-target-content px:message="Evaluate css:content elements." px:progress=".01">
         <p:documentation>
             Evaluate css:content elements. <!-- depends on parse-content and label-targets -->
         </p:documentation>
     </css:eval-target-content>
     
-    <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.for-each-parse-preserve-table-box]"/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-parse-preserve-table-box 1/',p:iteration-size(),' pxi:css-to-obfl.for-each-parse-preserve-table-box.part]')"/>
-        </px:message>
-        <px:message message="[progress pxi:css-to-obfl.for-each-parse-preserve-table-box.part 20 css:parse-properties] Make css:white-space, css:display, css:list-style-type, css:page-break-before, css:page-break-after and css:volume-break-before attributes."/>
-        <css:parse-properties properties="white-space display list-style-type page-break-before page-break-after volume-break-before">
+    <p:for-each px:message="" px:progress=".02">
+        <css:parse-properties px:message="Make css:white-space, css:display, css:list-style-type, css:page-break-before, css:page-break-after and css:volume-break-before attributes."
+                              px:progress=".20"
+                              properties="white-space display list-style-type page-break-before page-break-after volume-break-before">
             <p:documentation>
                 Make css:white-space, css:display, css:list-style-type, css:page-break-before,
                 css:page-break-after and css:volume-break-before attributes.
             </p:documentation>
         </css:parse-properties>
-        <px:message message="[progress pxi:css-to-obfl.for-each-parse-preserve-table-box.part 20 css:preserve-white-space] Make css:white-space elements from css:white-space attributes."/>
-        <css:preserve-white-space>
+        <css:preserve-white-space px:message="Make css:white-space elements from css:white-space attributes." px:progress=".20">
             <p:documentation>
                 Make css:white-space elements from css:white-space attributes.
             </p:documentation>
@@ -234,14 +213,12 @@
                 Treat display:-obfl-toc as block.
             </p:documentation>
         </p:add-attribute>
-        <px:message message="[progress pxi:css-to-obfl.for-each-parse-preserve-table-box.part 20 css:make-table-grid] Create table grid structures from HTML/DTBook tables."/>
-        <css:make-table-grid>
+        <css:make-table-grid px:message="Create table grid structures from HTML/DTBook tables." px:progress=".20">
             <p:documentation>
                 Create table grid structures from HTML/DTBook tables.
             </p:documentation>
         </css:make-table-grid>
-        <px:message message="[progress pxi:css-to-obfl.for-each-parse-preserve-table-box.part 20 css:make-boxes] Make css:box elements based on css:display and css:list-style-type attributes."/>
-        <css:make-boxes>
+        <css:make-boxes px:message="Make css:box elements based on css:display and css:list-style-type attributes." px:progress=".20">
             <p:documentation>
                 Make css:box elements based on css:display and css:list-style-type attributes. <!--
                 depends on flow-into, label-targets and make-table-grid -->
@@ -258,13 +235,13 @@
             </p:documentation>
         </p:rename>
         <p:add-attribute match="css:box[not(@type)]" attribute-name="type" attribute-value="inline"/>
-        <p:group>
+        <p:group px:progress=".20">
             <p:documentation>
                 Move css:render-table-by, css:_obfl-table-col-spacing, css:_obfl-table-row-spacing
                 and css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
             </p:documentation>
-            <px:message message="[progress pxi:css-to-obfl.for-each-parse-preserve-table-box.part 20 css:parse-properties]"/>
-            <css:parse-properties properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
+            <css:parse-properties px:progress="1"
+                                  properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
             <p:label-elements match="*[@css:render-table-by]/css:box[@type='table']"
                               attribute="css:render-table-by"
                               label="parent::*/@css:render-table-by"/>
@@ -284,51 +261,41 @@
         </p:group>
     </p:for-each>
     
-    <px:message message="[progress pxi:css-to-obfl 8 css:eval-counter] Evaluate css:counter elements."/>
-    <css:eval-counter exclude-counters="page">
+    <css:eval-counter px:message="Evaluate css:counter elements." px:progress=".08"
+                      exclude-counters="page">
         <p:documentation>
             Evaluate css:counter elements. <!-- depends on label-targets, parse-content and
             make-boxes -->
         </p:documentation>
     </css:eval-counter>
     
-    <px:message message="[progress pxi:css-to-obfl 2 css:flow-from] Evaluate css:flow elements."/>
-    <css:flow-from>
+    <css:flow-from px:message="Evaluate css:flow elements." px:progress=".02">
         <p:documentation>
             Evaluate css:flow elements. <!-- depends on parse-content and eval-counter -->
         </p:documentation>
     </css:flow-from>
     
-    <px:message message="[progress pxi:css-to-obfl 1 css:eval-target-text] Evaluate css:text elements."/>
-    <css:eval-target-text>
+    <css:eval-target-text px:message="Evaluate css:text elements." px:progress=".01">
         <p:documentation>
             Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
         </p:documentation>
     </css:eval-target-text>
     
-    <px:message message="[progress pxi:css-to-obfl 1 pxi:css-to-obfl.for-each-anonymous-inline-boxes] Wrap/unwrap with inline css:box elements."/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-anonymous-inline-boxes 1/',p:iteration-size(),' css:make-anonyous-inline-boxes]')"/>
-        </px:message>
-        <css:make-anonymous-inline-boxes>
+    <p:for-each px:message="Wrap/unwrap with inline css:box elements." px:progress=".01">
+        <css:make-anonymous-inline-boxes px:progress="1">
             <p:documentation>
                 Wrap/unwrap with inline css:box elements.
             </p:documentation>
         </css:make-anonymous-inline-boxes>
     </p:for-each>
     
-    <p:group>
+    <p:group px:progress=".20">
         <p:documentation>
             Split flows into sections.
         </p:documentation>
-        <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.split-sections] Split flows into sections."/>
-        <p:for-each>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.split-sections 1/',p:iteration-size(),' pxi:css-to-obfl.split-sections.section]')"/>
-            </px:message>
-            <px:message message="[progress pxi:css-to-obfl.split-sections.section 50 css:parse-counter-set] Make css:counter-set-page attributes."/>
-            <css:parse-counter-set counters="page">
+        <p:for-each px:message="Split flows into sections." px:progress="2/20">
+            <css:parse-counter-set px:message="Make css:counter-set-page attributes." px:progress=".50"
+                                   counters="page">
                 <p:documentation>
                     Make css:counter-set-page attributes.
                 </p:documentation>
@@ -348,8 +315,8 @@
                      and 'page-break-after' within tables or '-obfl-toc' elements.
                 </p:documentation>
             </p:delete>
-            <px:message message="[progress pxi:css-to-obfl.split-sections.section 50 css:split] Page and volume split."/>
-            <css:split split-before="*[@css:page or @css:volume or @css:counter-set-page]|
+            <css:split px:message="Page and volume split." px:progress=".50"
+                       split-before="*[@css:page or @css:volume or @css:counter-set-page]|
                                      css:box[@type='block' and @css:page-break-before='right']|
                                      css:box[@type='block' and @css:volume-break-before='always']|
                                      css:box[@type='table']"
@@ -366,11 +333,7 @@
                 </p:documentation>
             </css:split>
         </p:for-each>
-        <px:message message="[progress pxi:css-to-obfl 2 pxi:css-to-obfl.pages-and-volumes] Move css:page, css:counter-set-page and css:volume attributes to css:_ root element."/>
-        <p:for-each>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.pages-and-volumes 1/',p:iteration-size(),']')"/>
-            </px:message>
+        <p:for-each px:message="Move css:page, css:counter-set-page and css:volume attributes to css:_ root element." px:progress="2/20">
             <p:group>
                 <p:documentation>
                     Move css:page, css:counter-set-page and css:volume attributes to css:_ root
@@ -417,32 +380,26 @@
                 </p:input>
             </p:identity>
         </p:group>
-        <px:message message="[progress pxi:css-to-obfl 14 css:shift-string-set] Move css:string-set attributes."/>
-        <css:shift-string-set>
+        <css:shift-string-set px:message="Move css:string-set attributes." px:progress="1/14">
             <p:documentation>
                 Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </css:shift-string-set>
-        <px:message message="[progress pxi:css-to-obfl 1 pxi:shift-obfl-marker] Move css:_obfl-marker attributes."/>
-        <pxi:shift-obfl-marker>
+        <pxi:shift-obfl-marker px:message="Move css:_obfl-marker attributes." px:progress="1/20">
             <p:documentation>
                 Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
             </p:documentation>
         </pxi:shift-obfl-marker>
-        <px:message message="[progress pxi:css-to-obfl 1 css:shift-id] Move css:id attributes to css:box elements."/>
-        <css:shift-id>
+        <css:shift-id px:message="Move css:id attributes to css:box elements." px:progress="1/20">
             <p:documentation>
                 Move css:id attributes to css:box elements.
             </p:documentation>
         </css:shift-id>
     </p:group>
     
-    <px:message message="[progress pxi:css-to-obfl 8 pxi:css-to-obfl.for-each-black-box]"/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-black-box 1/',(p:iteration-size() * 2),' p:unwrap] Unwrap css:_ elements.')"/>
-        </px:message>
-        <p:unwrap match="css:_[not(@css:*) and parent::*]" name="unwrap-css-_">
+    <p:for-each px:progress=".08">
+        <p:unwrap name="unwrap-css-_" px:message="Unwrap css:_ elements." px:progress=".50"
+                  match="css:_[not(@css:*) and parent::*]">
             <p:documentation>
                 All css:_ elements except for root elements, top-level elements in named flows (with
                 css:anchor attribute), and empty elements with a css:string-set or css:_obfl-marker
@@ -450,10 +407,8 @@
                 shift-string-set -->
             </p:documentation>
         </p:unwrap>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-black-box 1/',(p:iteration-size() * 2),' css:make-anonymous-black-boxes] Wrap inline css:box elements in block css:box elements where necessary.')"/>
-        </px:message>
-        <css:make-anonymous-block-boxes>
+        <css:make-anonymous-block-boxes px:message="Wrap inline css:box elements in block css:box elements where necessary."
+                                        px:progress=".50">
             <p:documentation>
                 Wrap inline css:box elements in block css:box elements where necessary. <!-- depends
                 on unwrap css:_ -->
@@ -463,13 +418,10 @@
     
     <p:split-sequence test="//css:box"/>
     
-    <px:message message="[progress pxi:css-to-obfl 3 pxi:css-to-obfl.for-each-margin-attributes]"/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress pxi:css-to-obfl.for-each-margin-attributes 1/',p:iteration-size(),' pxi:css-to-obfl.for-each-margin-attributes.item]')"/>
-        </px:message>
-        <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 20 css:parse-properties] Make css:margin-*, css:border-*, css:border-bottom and css:text-indent attributes."/>
-        <css:parse-properties properties="margin-left margin-right margin-top margin-bottom
+    <p:for-each px:progress=".03">
+        <css:parse-properties px:message="Make css:margin-*, css:border-*, css:border-bottom and css:text-indent attributes."
+                              px:progress=".20"
+                              properties="margin-left margin-right margin-top margin-bottom
                                           padding-left padding-right padding-top padding-bottom
                                           border-left border-right border-top border-bottom text-indent">
             <p:documentation>
@@ -479,20 +431,18 @@
                 css:text-indent attributes.
             </p:documentation>
         </css:parse-properties>
-        <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 20 css:adjust-boxes] Adjust boxes."/>
-        <css:adjust-boxes>
+        <css:adjust-boxes px:message="Adjust boxes." px:progress=".20">
             <p:documentation>
                 <!-- depends on make-anonymous-block-boxes -->
             </p:documentation>
         </css:adjust-boxes>
-        <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 20 css:new-definition] New definition."/>
-        <css:new-definition>
+        <css:new-definition px:message="New definition." px:progress=".20">
             <p:input port="definition">
                 <p:document href="obfl-css-definition.xsl"/>
             </p:input>
         </css:new-definition>
-        <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 10 p:delete] Remove text nodes from block boxes with no line boxes."/>
-        <p:delete match="css:box[@type='block']
+        <p:delete px:message="Remove text nodes from block boxes with no line boxes." px:progress=".10"
+                  match="css:box[@type='block']
                                 [matches(string(.), '^[\s&#x2800;]*$') and
                                  not(descendant::css:white-space or
                                      descendant::css:string or
@@ -506,14 +456,13 @@
                 Remove text nodes from block boxes with no line boxes.
             </p:documentation>
         </p:delete>
-        <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 20 pxi:propagate-page-break] Resolve css:page-break-before=avoid and css:page-break-after=always."/>
-        <pxi:propagate-page-break>
+        <pxi:propagate-page-break px:message="Resolve css:page-break-before=avoid and css:page-break-after=always." px:progress=".20">
             <p:documentation>
                 Resolve css:page-break-before="avoid" and css:page-break-after="always".
                 <!-- depends on make-anonymous-block-boxes -->
             </p:documentation>
         </pxi:propagate-page-break>
-        <p:group>
+        <p:group px:message="Move css:page-break-after=avoid to last descendant block" px:progress=".02">
             <p:documentation>
                 Move css:page-break-after="avoid" to last descendant block. (TODO: move to
                 pxi:propagate-page-break?)
@@ -525,7 +474,6 @@
                                                 not($self/following::css:box intersect $ancestor//*))]"
                              attribute-name="css:page-break-after"
                              attribute-value="avoid"/>
-            <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 2 p:delete] Move css:page-break-after=avoid to last descendant block"/>
             <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
         </p:group>
         <p:group>
@@ -537,21 +485,22 @@
                              attribute-value="always"/>
             <p:delete match="/css:_/css:box//css:box/@css:volume-break-before"/>
         </p:group>
-        <p:choose>
+        <p:choose px:progress=".08">
             <p:documentation>
                 Delete css:margin-top from first block and move css:margin-top of other blocks to
                 css:margin-bottom of their preceding block.
             </p:documentation>
             <p:when test="$skip-margin-top-of-page='true'">
-                <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 1 p:delete] Delete css:margin-top from first block and move css:margin-top of other blocks to css:margin-bottom of their preceding block"/>
-                <p:delete match="css:box
+                <p:delete px:message="Delete css:margin-top from first block and move css:margin-top of other blocks to css:margin-bottom of their preceding block"
+                          px:progress="1/8"
+                          match="css:box
                                    [@type='block']
                                    [@css:margin-top]
                                    [not(preceding::*)]
                                    [not(ancestor::*[@css:border-top])]
                                  /@css:margin-top"/>
-                <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 1 p:label-elements]"/>
-                <p:label-elements match="css:box
+                <p:label-elements px:progress="1/8"
+                                  match="css:box
                                            [@type='block']
                                            [following-sibling::*[1]
                                               [some $self in . satisfies
@@ -563,14 +512,13 @@
                                   label="max((0,
                                               @css:margin-bottom/number(),
                                               following::*[@css:margin-top][1]/@css:margin-top/number()))"/>
-                <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 6 p:delete]"/>
-                <p:delete match="@css:margin-top[(preceding::css:box[@type='block']
+                <p:delete px:progress="6/8"
+                          match="@css:margin-top[(preceding::css:box[@type='block']
                                                     except ancestor::*/preceding-sibling::*/descendant::*)
                                                    [last()][@css:_margin-bottom_]]"/>
                 <p:rename match="@css:_margin-bottom_" new-name="css:margin-bottom"/>
             </p:when>
             <p:otherwise>
-                <px:message message="[progress pxi:css-to-obfl.for-each-margin-attributes.item 8]"/>
                 <p:identity/>
             </p:otherwise>
         </p:choose>
@@ -596,8 +544,8 @@
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>
     
-    <px:message message="[progress pxi:css-to-obfl 26 css-to-obfl.xsl]"/>
-    <p:xslt template-name="start">
+    <p:xslt px:progress=".26"
+            template-name="start">
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
         </p:input>
@@ -612,8 +560,8 @@
     <!--
         add <marker class="foo/prev"/>
     -->
-    <px:message message="[progress pxi:css-to-obfl 10] add &lt;marker class=&quot;foo/prev&quot;/&gt;"/>
-    <p:insert match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
+    <p:insert px:message="add &lt;marker class=&quot;foo/prev&quot;/&gt;" px:progress=".10"
+              match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
         <p:input port="insertion">
           <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
         </p:input>
@@ -625,14 +573,13 @@
     <!--
         because empty marker values would be regarded as absent in BrailleFilterImpl
     -->
-    <px:message message="[progress pxi:css-to-obfl 1]"/>
-    <p:add-attribute match="obfl:marker[@value='']" attribute-name="value" attribute-value="&#x200B;"/>
+    <p:add-attribute px:progress=".01"
+                     match="obfl:marker[@value='']" attribute-name="value" attribute-value="&#x200B;"/>
     
     <!--
         move table-of-contents elements to the right place
     -->
-    <px:message message="[progress pxi:css-to-obfl 1] move table-of-contents elements to the right place"/>
-    <p:group>
+    <p:group px:message="move table-of-contents elements to the right place" px:progress=".01">
         <p:identity name="_1"/>
         <p:insert match="/obfl:obfl/obfl:volume-template[not(preceding-sibling::obfl:volume-template)]" position="before">
             <p:input port="insertion" select="//obfl:toc-sequence/obfl:table-of-contents">

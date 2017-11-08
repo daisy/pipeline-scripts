@@ -43,10 +43,7 @@
       <dependency>
         <groupId>org.daisy.pipeline</groupId>
         <artifactId>framework-bom</artifactId>
-        <!--
-            depends on https://github.com/daisy/pipeline-framework/pull/112
-        -->
-        <version>1.10.1-SNAPSHOT</version>
+        <version>1.10.5-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -101,10 +98,7 @@
       <dependency>
         <groupId>org.daisy.maven</groupId>
         <artifactId>xproc-engine-daisy-pipeline</artifactId>
-        <!--
-            depends on branch "job-messages"
-        -->
-        <version>1.10-1-SNAPSHOT</version>
+        <version>1.10.5-SNAPSHOT</version>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>

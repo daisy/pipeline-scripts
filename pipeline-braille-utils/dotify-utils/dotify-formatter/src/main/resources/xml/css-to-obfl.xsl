@@ -200,9 +200,8 @@
                                                 ']'))])"/>
     
     <xsl:template name="start">
-        <xsl:call-template name="pf:info">
-            <xsl:with-param name="msg">[progress css-to-obfl.xsl 1/{}]</xsl:with-param>
-            <xsl:with-param name="args" select="$progress-total"/>
+        <xsl:call-template name="pf:progress">
+            <xsl:with-param name="progress" select="concat('1/',$progress-total)"/>
         </xsl:call-template>
         <obfl version="2011-1" xml:lang="und">
             <xsl:variable name="translate" as="xs:string" select="if ($initial-text-transform='none') then 'pre-translated-text-css' else ''"/>
@@ -1751,9 +1750,8 @@
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
         <xsl:param name="word-spacing" as="xs:integer" tunnel="yes"/>
         
-        <xsl:call-template name="pf:info">
-            <xsl:with-param name="msg">[progress css-to-obfl.xsl 1/{} px:text-transform]</xsl:with-param>
-            <xsl:with-param name="args" select="$progress-total"/>
+        <xsl:call-template name="pf:progress">
+            <xsl:with-param name="progress" select="concat('1/',$progress-total)"/>
         </xsl:call-template>
         
         <xsl:variable name="text" as="xs:string" select="translate($text,'&#x2800;',' ')"/>

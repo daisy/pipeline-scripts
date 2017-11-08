@@ -50,18 +50,14 @@
 		<p:input port="source"/>
 		<p:output port="result"/>
 		<p:option name="stylesheets" required="true"/>
-		<p:option name="total-number-of-stylesheets" select="count(tokenize($stylesheets,'\s+'))"/>
 		<p:input kind="parameter" port="parameters" primary="true"/>
-		<p:choose>
+		<p:choose px:progress="1">
 			<p:when test="exists(tokenize($stylesheets,'\s+')[not(.='')])">
 				<p:variable name="stylesheet" select="tokenize($stylesheets,'\s+')[not(.='')][1]"/>
-				<px:message>
-					<p:with-option name="message" select="concat('[progress px:apply-stylesheets.pxi:recursive-xslt 1/',$total-number-of-stylesheets,' ',tokenize($stylesheet,'/')[last()],'] Applying ',$stylesheet)"/>
-				</px:message>
 				<p:load name="stylesheet">
 					<p:with-option name="href" select="resolve-uri($stylesheet,base-uri(/*))"/>
 				</p:load>
-				<p:xslt>
+				<p:xslt px:message="Applying {$stylesheet}" px:progress="1/{count(tokenize($stylesheets,'\s+'))}">
 					<p:input port="source">
 						<p:pipe step="recursive-xslt" port="source"/>
 					</p:input>
@@ -69,9 +65,8 @@
 						<p:pipe step="stylesheet" port="result"/>
 					</p:input>
 				</p:xslt>
-				<pxi:recursive-xslt>
+				<pxi:recursive-xslt px:progress="{count(tokenize($stylesheets,'\s+')) - 1}/{count(tokenize($stylesheets,'\s+'))}">
 					<p:with-option name="stylesheets" select="string-join(tokenize($stylesheets,'\s+')[not(.='')][position()&gt;1],' ')"/>
-					<p:with-option name="total-number-of-stylesheets" select="$total-number-of-stylesheets"/>
 				</pxi:recursive-xslt>
 			</p:when>
 			<p:otherwise>
@@ -105,24 +100,18 @@
 		</p:otherwise>
 	</p:choose>
 	
-	<p:group>
+	<p:group px:progress="1">
 		<p:variable name="all-xslt-stylesheets" select="string-join(($xslt-stylesheets,$xslt-stylesheets-from-document),' ')"/>
 		<p:variable name="all-css-stylesheets" select="string-join(($css-stylesheets,$css-stylesheets-from-document),' ')"/>
 		
-		<px:message>
-			<p:with-option name="message" select="concat('[progress px:apply-stylesheets 50 px:apply-stylesheets.pxi:recursive-xslt] Applying ',count(tokenize($all-xslt-stylesheets,'\s+')),' XSLT stylesheets')"/>
-		</px:message>
-		<pxi:recursive-xslt>
+		<pxi:recursive-xslt px:message="Applying {count(tokenize($all-xslt-stylesheets,'\s+'))} XSLT stylesheets" px:progress=".50">
 			<p:with-option name="stylesheets" select="$all-xslt-stylesheets"/>
 			<p:input port="parameters">
 				<p:pipe step="main" port="parameters"/>
 			</p:input>
 		</pxi:recursive-xslt>
 		
-		<px:message>
-			<p:with-option name="message" select="concat('[progress px:apply-stylesheets 50 css:inline] Applying ',count(tokenize($all-css-stylesheets,'\s+')),' CSS stylesheets')"/>
-		</px:message>
-		<css:inline>
+		<css:inline px:message="Applying {count(tokenize($all-css-stylesheets,'\s+'))} CSS stylesheets" px:progress=".50">
 			<p:with-option name="default-stylesheet" select="$all-css-stylesheets"/>
 			<p:input port="sass-variables">
 				<p:pipe step="main" port="parameters"/>

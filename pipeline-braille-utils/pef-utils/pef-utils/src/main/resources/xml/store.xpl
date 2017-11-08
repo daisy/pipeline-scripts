@@ -23,16 +23,13 @@
     <p:import href="pef-to-html.convert.xpl"/>
     <p:import href="pef2text.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
     <!-- ============ -->
     <!-- STORE AS PEF -->
     <!-- ============ -->
     
-    <px:message>
-        <p:with-option name="message" select="concat('[progress pef:store 1 p:store] Storing PEF as ''', $href,'''')"/>
-    </px:message>
-    <p:store indent="true" encoding="utf-8" omit-xml-declaration="false" name="store.pef">
+    <p:store name="store.pef" px:message="Storing PEF as '{$href}'" px:progress=".01"
+             indent="true" encoding="utf-8" omit-xml-declaration="false">
         <p:input port="source">
             <p:pipe step="store" port="source"/>
         </p:input>
@@ -43,17 +40,15 @@
     <!-- STORE AS BRF -->
     <!-- ============ -->
 
-    <p:choose>
-        <p:when test="not($brf-dir-href='')">
+    <p:choose px:progress=".17">
+        <p:when test="not($brf-dir-href='')"
+                px:message="Storing BRF as '{$brf-dir-href}'">
             <p:identity>
                 <p:input port="source">
                     <p:pipe step="store" port="source"/>
                 </p:input>
             </p:identity>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 17 pef:pef2text] Storing BRF as ''', $brf-dir-href, '''')"/>
-            </px:message>
-            <p:choose>
+            <p:choose px:progress="1">
                 <p:when test="not($brf-file-format='')">
                     <!--
                         TODO: try with and without brf-table?
@@ -89,9 +84,12 @@
                 </p:otherwise>
             </p:choose>
         </p:when>
-        <p:otherwise>
-            <px:message message="[progress pef:store 17] Not storing as BRF"/>
-            <p:sink/>
+        <p:otherwise px:message="Not storing as BRF">
+            <p:sink>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:sink>
         </p:otherwise>
     </p:choose>
     
@@ -99,7 +97,7 @@
     <!-- STORE AS PEF PREVIEW -->
     <!-- ==================== -->
     
-    <p:choose>
+    <p:choose px:progress=".82">
         <p:when test="not($preview-href='')">
             <p:variable name="table" select="if (not($brf-table=''))
                                              then $brf-table
@@ -109,16 +107,11 @@
                     <p:pipe step="store" port="source"/>
                 </p:input>
             </p:identity>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 80 px:pef-to-html.convert] Converting PEF to HTML preview using the BRF table ''',$table,'''')"/>
-            </px:message>
-            <px:pef-to-html.convert>
+            <px:pef-to-html.convert px:message="Converting PEF to HTML preview using the BRF table '{$table}'" px:progress="80/82">
                 <p:with-option name="table" select="$table"/>
             </px:pef-to-html.convert>
-            <px:message>
-                <p:with-option name="message" select="concat('[progress pef:store 1 p:store] Storing HTML preview as ''', $preview-href, '''')"/>
-            </px:message>
-            <p:store indent="false"
+            <p:store px:message="Storing HTML preview as '{$preview-href}'" px:progress="1/82"
+                     indent="false"
                      encoding="utf-8"
                      method="xhtml"
                      omit-xml-declaration="false"
@@ -139,8 +132,8 @@
                     </p:inline>
                 </p:input>
             </p:identity>
-            <px:message message="[progress pef:store 1 px:copy-resource] Copying braille font file (odt2braille8.ttf) to HTML preview directory"/>
-            <px:copy-resource fail-on-error="true" cx:depends-on="mkdir">
+            <px:copy-resource px:message="Copying braille font file (odt2braille8.ttf) to HTML preview directory" px:progress="1/82"
+                              fail-on-error="true" cx:depends-on="mkdir">
                 <p:with-option name="href" select="resolve-uri('../odt2braille8.ttf')"/>
                 <p:with-option name="target" select="resolve-uri('odt2braille8.ttf', $preview-href)"/>
             </px:copy-resource>
@@ -154,9 +147,12 @@
             </px:copy-resource>
             <p:sink/>
         </p:when>
-        <p:otherwise>
-            <px:message message="[progress pef:store 82] Not including HTML preview"/>
-            <p:sink/>
+        <p:otherwise px:message="Not including HTML preview">
+            <p:sink>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:sink>
         </p:otherwise>
     </p:choose>
     

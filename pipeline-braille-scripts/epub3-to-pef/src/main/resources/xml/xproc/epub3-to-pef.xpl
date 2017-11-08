@@ -4,7 +4,6 @@
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -101,13 +100,7 @@ even though the provided CSS is more specific.
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <p:identity>
-        <p:input port="source">
-            <p:pipe port="result" step="in-scope-names"/>
-        </p:input>
-    </p:identity>
-    <px:message message="[progress 1 px:delete-parameters] Collecting parameters"/>
-    <px:delete-parameters name="input-options"
+    <px:delete-parameters name="input-options" px:message="Collecting parameters" px:progress=".01"
                           parameter-names="stylesheet
                                            apply-document-specific-stylesheets
                                            transform
@@ -119,28 +112,27 @@ even though the provided CSS is more specific.
                                            pef-output-dir
                                            brf-output-dir
                                            preview-output-dir
-                                           temp-dir"/>
+                                           temp-dir">
+        <p:input port="source">
+            <p:pipe port="result" step="in-scope-names"/>
+        </p:input>
+    </px:delete-parameters>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
-    <px:message message="[progress 1 px:tempdir] Creating temporary directory"/>
-    <px:tempdir name="temp-dir">
+    <px:tempdir name="temp-dir" px:message="Creating temporary directory" px:progress=".01">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     
     <!-- =========== -->
     <!-- LOAD EPUB 3 -->
     <!-- =========== -->
-    <p:identity>
-        <p:input port="source">
-            <p:pipe step="temp-dir" port="result"/>
-        </p:input>
-    </p:identity>
-    <px:message message="[progress 3 px:epub3-to-pef.load] Loading EPUB"/>
-    <px:epub3-to-pef.load name="load">
+    <px:epub3-to-pef.load name="load" px:message="Loading EPUB" px:progress=".03">
         <p:with-option name="epub" select="$epub"/>
-        <p:with-option name="temp-dir" select="concat(string(/c:result),'load/')"/>
+        <p:with-option name="temp-dir" select="concat(string(/c:result),'load/')">
+            <p:pipe step="temp-dir" port="result"/>
+        </p:with-option>
     </px:epub3-to-pef.load>
     
     <!-- Get the OPF so that we can use the metadata in options -->
@@ -149,8 +141,8 @@ even though the provided CSS is more specific.
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
     </p:identity>
-    <px:message message="Getting the OPF"/>
-    <px:fileset-load media-types="application/oebps-package+xml">
+    <px:fileset-load px:message="Getting the OPF"
+                     media-types="application/oebps-package+xml">
         <p:input port="in-memory">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
@@ -166,10 +158,8 @@ even though the provided CSS is more specific.
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
     </p:identity>
-    <p:identity cx:depends-on="input-options"/>
-    <p:identity cx:depends-on="temp-dir"/>
-    <px:message message="[progress 90 px:epub3-to-pef.convert] Converting from EPUB to PEF"/>
-    <px:epub3-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css" name="convert">
+    <px:epub3-to-pef.convert name="convert" px:message="Converting from EPUB to PEF" px:progress=".90"
+                             default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css">
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
         </p:input>
@@ -195,9 +185,8 @@ even though the provided CSS is more specific.
             <p:pipe step="convert" port="in-memory.out"/>
         </p:input>
     </p:identity>
-    <px:message cx:depends-on="opf" message="[progress 5 pef:store] Storing PEF"/>
     <p:delete match="/*/@xml:base"/>
-    <px:xml-to-pef.store>
+    <px:xml-to-pef.store px:message="Storing PEF" px:progress=".05">
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
         </p:input>

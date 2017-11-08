@@ -31,10 +31,7 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress css:make-anonymous-inline-boxes 100 make-anonymous-inline-boxes.xsl]"/>
-    <p:xslt>
+    <p:xslt px:progress="1">
         <p:input port="stylesheet">
             <p:document href="make-anonymous-inline-boxes.xsl"/>
         </p:input>

@@ -54,14 +54,9 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="parse-counter-set.xpl"/>
     
-    <px:message message="[progress css:eval-counter 50 css:eval-counter.for-each-counter-set]"/>
-    <p:for-each>
-        <px:message>
-            <p:with-option name="message" select="concat('[progress css:eval-counter.for-each-counter-set 1/',p:iteration-size(),' css:parse-counter-set]')"/>
-        </px:message>
+    <p:for-each px:progress=".5">
         <css:parse-counter-set>
             <p:with-option name="counters" select="$counters"/>
             <p:with-option name="exclude-counters" select="$exclude-counters"/>
@@ -73,15 +68,10 @@
     <p:split-sequence test="/*[not(@css:flow[not(.='normal')])]"/>
     <p:wrap-sequence wrapper="_" name="context"/>
     
-    <px:message message="[progress css:eval-counter 50 css:eval-counter.for-each-xslt]">
-        <p:input port="source">
+    <p:for-each name="result" px:progress=".5">
+        <p:iteration-source>
             <p:pipe step="input" port="result"/>
-        </p:input>
-    </px:message>
-    <p:for-each name="result">
-        <px:message>
-            <p:with-option name="message" select="concat('[progress css:eval-counter.for-each-xslt 1/',p:iteration-size(),' eval-counter.xsl]')"/>
-        </px:message>
+        </p:iteration-source>
         <p:xslt>
             <p:input port="source">
                 <p:pipe step="result" port="current"/>

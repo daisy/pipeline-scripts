@@ -7,6 +7,7 @@
         Import this library whenever one of the following functions is used:
         * pf:text-transform
         * pf:message
+        * pf:progress
         * brl:unicode-braille-to-escape-sequence
         * brl:unicode-braille-to-nabcc
         * brl:nabcc-to-unicode-braille
@@ -108,6 +109,11 @@
         <xsl:param name="msg" as="xs:string" required="yes"/>
         <xsl:param name="args" required="no" select="()"/>
         <xsl:sequence select="pf:trace($msg, $args)"/>
+    </xsl:template>
+    
+    <xsl:template name="pf:progress">
+        <xsl:param name="progress" as="xs:string" required="yes"/>
+        <xsl:sequence select="pf:progress($progress)"/>
     </xsl:template>
     
 </xsl:stylesheet>

@@ -3,7 +3,6 @@
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 exclude-inline-prefixes="#all"
                 name="main">
 
@@ -79,7 +78,6 @@
     <!-- ======= -->
     <!-- Imports -->
     <!-- ======= -->
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl">
         <!-- FIXME: we cannot use a relative url to import dtbook-to-pef.convert.xpl directly here
                    because this script uses px:extends-script in the XML catalog which
@@ -95,13 +93,7 @@
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <p:identity>
-        <p:input port="source">
-            <p:pipe port="result" step="in-scope-names"/>
-        </p:input>
-    </p:identity>
-    <px:message message="[progress 1 px:delete-parameters] Collecting parameters"/>
-    <px:delete-parameters name="input-options"
+    <px:delete-parameters name="input-options" px:message="Collecting parameters" px:progress=".01"
                           parameter-names="stylesheet
                                            transform
                                            ascii-file-format
@@ -112,13 +104,16 @@
                                            pef-output-dir
                                            brf-output-dir
                                            preview-output-dir
-                                           temp-dir"/>
+                                           temp-dir">
+        <p:input port="source">
+            <p:pipe port="result" step="in-scope-names"/>
+        </p:input>
+    </px:delete-parameters>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
-    <px:message message="[progress 1 px:tempdir] Creating temporary directory"/>
-    <px:tempdir name="temp-dir">
+    <px:tempdir name="temp-dir" px:message="Creating temporary directory" px:progress=".01">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     <p:sink/>
@@ -126,15 +121,11 @@
     <!-- ======= -->
     <!-- CONVERT -->
     <!-- ======= -->
-    <p:identity>
+    <px:dtbook-to-pef.convert name="convert" px:message="Converting from DTBook to PEF" px:progress=".92"
+                              default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
-    </p:identity>
-    <p:identity cx:depends-on="input-options"/>
-    <p:identity cx:depends-on="temp-dir"/>
-    <px:message message="[progress 92 px:dtbook-to-pef.convert] Converting from DTBook to PEF"/>
-    <px:dtbook-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" name="convert">
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
@@ -149,8 +140,7 @@
     <!-- ===== -->
     <!-- STORE -->
     <!-- ===== -->
-    <px:message message="[progress 6 px:dtbook-to-pef.store] Storing PEF"/>
-    <px:xml-to-pef.store>
+    <px:xml-to-pef.store px:message="Storing PEF" px:progress=".06">
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
         </p:input>

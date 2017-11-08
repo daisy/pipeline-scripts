@@ -20,8 +20,6 @@
     <p:output port="result" sequence="false" primary="true" px:media-type="application/x-pef+xml"/>
     <p:option name="level" select="'volume'"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
     <p:declare-step type="pxi:merge-volumes" name="merge-volumes">
         <!--
             Merge all volumes on the source port into a single volume.
@@ -63,8 +61,8 @@
         </p:xslt>
     </p:declare-step>
     
-    <px:message message="[progress pef:merge 40] Initializing PEF head"/>
-    <p:xslt template-name="initial">
+    <p:xslt px:message="Initializing PEF head" px:progress=".40"
+            template-name="initial">
         <p:input port="stylesheet">
             <p:inline>
                 <xsl:stylesheet version="2.0" xmlns="http://www.daisy.org/ns/2008/pef">
@@ -102,18 +100,16 @@
     
     <p:uuid match="//dc:identifier/text()[1]" name="head"/>
     
-    <p:choose>
-        <p:when test="$level='volume'">
-            <px:message message="[progress pef:merge 40] Body consists of a single volume; no need to merge"/>
+    <p:choose px:progress=".40">
+        <p:when test="$level='volume'" px:message="Body consists of a single volume; no need to merge">
             <p:identity>
                 <p:input port="source" select="//pef:volume">
                     <p:pipe step="merge" port="source"/>
                 </p:input>
             </p:identity>
         </p:when>
-        <p:otherwise>
-            <px:message message="[progress pef:merge 40] Body consists of multiple volumse; merging volumes"/>
-            <pxi:merge-volumes>
+        <p:otherwise px:message="Body consists of multiple volumse; merging volumes">
+            <pxi:merge-volumes px:progress="1">
                 <p:input port="source" select="//pef:volume">
                     <p:pipe step="merge" port="source"/>
                 </p:input>
@@ -123,13 +119,13 @@
     
     <p:wrap-sequence wrapper="body" wrapper-namespace="http://www.daisy.org/ns/2008/pef" name="body"/>
     
-    <px:message message="[progress pef:merge 4] Wrapping PEF head and body">
+    <p:wrap-sequence px:message="Wrapping PEF head and body" px:progress=".04"
+                     wrapper="pef" wrapper-namespace="http://www.daisy.org/ns/2008/pef">
         <p:input port="source">
             <p:pipe step="head" port="result"/>
             <p:pipe step="body" port="result"/>
         </p:input>
-    </px:message>
-    <p:wrap-sequence wrapper="pef" wrapper-namespace="http://www.daisy.org/ns/2008/pef"/>
+    </p:wrap-sequence>
     
     <p:add-attribute match="/pef:pef" attribute-name="version" attribute-value="2008-1"/>
     

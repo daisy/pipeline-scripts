@@ -27,10 +27,7 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress css:repeat-string-set 45] @css:string-set"/>
-    <p:for-each>
+    <p:for-each px:message="@css:string-set" px:progress=".45">
         <p:xslt>
             <p:input port="stylesheet">
                 <p:inline>
@@ -55,9 +52,8 @@
         </p:xslt>
     </p:for-each>
     
-    <px:message message="[progress css:repeat-string-set 10] split, wrap and insert"/>
     <p:identity name="iteration-source"/>
-    <p:for-each>
+    <p:for-each px:message="split, wrap and insert" px:progress=".10">
         <p:identity name="current-section"/>
         <p:split-sequence>
             <p:input port="source">
@@ -78,8 +74,7 @@
         </p:insert>
     </p:for-each>
     
-    <px:message message="[progress css:repeat-string-set 45] css:string-set"/>
-    <p:for-each>
+    <p:for-each px:message="css:string-set" px:progress=".45">
         <p:xslt>
             <p:input port="stylesheet">
                 <p:inline>

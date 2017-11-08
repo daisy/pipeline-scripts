@@ -51,10 +51,7 @@
         <p:pipe step="result" port="secondary"/>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
-    <px:message message="[progress css:flow-into 100 flow-into.xsl]"/>
-    <p:xslt name="result">
+    <p:xslt name="result" px:progress="1">
         <p:input port="stylesheet">
             <p:document href="flow-into.xsl"/>
         </p:input>

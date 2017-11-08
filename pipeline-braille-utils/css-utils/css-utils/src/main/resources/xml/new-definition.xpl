@@ -45,8 +45,6 @@
         </p:documentation>
     </p:output>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    
     <p:add-attribute match="xsl:include" attribute-name="href" name="include">
         <p:input port="source">
             <p:inline>
@@ -69,15 +67,10 @@
         </p:input>
     </p:insert>
     
-    <px:message>
-        <p:with-option name="message" select="concat('[progress css:new-definition 100 ',tokenize(base-uri(/*),'/')[last()],']')">
-            <p:pipe step="stylesheet" port="result"/>
-        </p:with-option>
+    <p:xslt px:progress="1">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
-    </px:message>
-    <p:xslt>
         <p:input port="stylesheet">
             <p:pipe step="stylesheet" port="result"/>
         </p:input>

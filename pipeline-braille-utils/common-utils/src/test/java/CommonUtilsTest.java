@@ -26,7 +26,6 @@ import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
 import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
 import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
 import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
-import static org.daisy.pipeline.pax.exam.Options.pipelineModule;
 import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
 import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
 import static org.daisy.pipeline.pax.exam.Options.thisBundle;
@@ -68,7 +67,6 @@ public class CommonUtilsTest {
 			junitBundles(),
 			thisBundle(),
 			mavenBundlesWithDependencies(
-				pipelineModule("common-utils"),
 				mavenBundle("org.daisy.braille:braille-css:?"),
 				mavenBundle("org.daisy.dotify:dotify.api:?"),
 				// logging

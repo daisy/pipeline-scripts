@@ -4,7 +4,6 @@
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                xmlns:cx="http://xmlcalabash.com/ns/extensions"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
                 exclude-inline-prefixes="#all"
                 name="main">
@@ -85,13 +84,7 @@
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <p:identity>
-        <p:input port="source">
-            <p:pipe port="result" step="in-scope-names"/>
-        </p:input>
-    </p:identity>
-    <px:message message="[progress 1 px:delete-parameters] Collecting parameters"/>
-    <px:delete-parameters name="input-options"
+    <px:delete-parameters name="input-options" px:message="Collecting parameters" px:progress=".01"
                           parameter-names="stylesheet
                                            transform
                                            ascii-file-format
@@ -102,32 +95,31 @@
                                            pef-output-dir
                                            brf-output-dir
                                            preview-output-dir
-                                           temp-dir"/>
+                                           temp-dir">
+        <p:input port="source">
+            <p:pipe port="result" step="in-scope-names"/>
+        </p:input>
+    </px:delete-parameters>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
-    <px:message message="[progress 1 px:tempdir] Creating temporary directory"/>
-    <px:tempdir name="temp-dir">
+    <px:tempdir name="temp-dir" px:message="Creating temporary directory" px:progress=".01">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     
     <!-- ========= -->
     <!-- LOAD HTML -->
     <!-- ========= -->
-    <px:message message="[progress 3 px:html-load] Loading HTML"/>
-    <px:html-load name="html">
+    <px:html-load name="html" px:message="Loading HTML" px:progress=".03">
         <p:with-option name="href" select="$html"/>
     </px:html-load>
     
     <!-- ============ -->
     <!-- HTML TO PEF -->
     <!-- ============ -->
-    <p:identity cx:depends-on="input-options"/>
-    <p:identity cx:depends-on="temp-dir"/>
-    <px:message message="[progress 90 px:html-to-pef.convert] Converting from HTML to PEF"/>
-    <px:html-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css"
-                            name="convert">
+    <px:html-to-pef.convert name="convert" px:message="Converting from HTML to PEF" px:progress=".90"
+                            default-stylesheet="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css">
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
@@ -142,8 +134,7 @@
     <!-- ========= -->
     <!-- STORE PEF -->
     <!-- ========= -->
-    <px:message cx:depends-on="html" message="[progress 5 pef:store] Storing PEF"/>
-    <px:xml-to-pef.store>
+    <px:xml-to-pef.store px:message="Storing PEF" px:progress=".05">
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
         </p:input>

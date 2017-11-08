@@ -14,12 +14,7 @@
     </encoder>
   </appender>
   
-  <!--
-      Not using org.daisy.pipeline.logging.EventBusAppender because requires OSGi context which
-      isn't always available (because of pax-exam-container-forked?). Also because in XProcSpec
-      there is no concept of jobs. Instead just appending to console directly.
-  -->
-  <appender name="TO_EVENTBUS" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="EVENTBUS" class="org.daisy.pipeline.logging.EventBusAppender">
     <filter class="org.daisy.pipeline.logging.ThresholdFilter">
       <rootLevel>INFO</rootLevel>
       <loggerLevels>
@@ -28,21 +23,16 @@
         com.xmlcalabash.runtime.XAtomicStep=WARN
       </loggerLevels>
     </filter>
-    <encoder class="org.daisy.maven.xproc.pipeline.logging.ProgressMessageEncoder">
-      <pattern>    | %-5level | %msg%n</pattern>
-      <includeProgress>false</includeProgress>
-    </encoder>
   </appender>
   
-  <appender name="FROM_EVENTBUS" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="FROM_XPROCSPEC" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="org.daisy.maven.xproc.pipeline.logging.ProgressMessageEncoder">
       <pattern>    | %-5level | %msg%n</pattern>
-      <includeProgress>false</includeProgress>
     </encoder>
   </appender>
   
   <logger name="org.daisy.maven.xproc.pipeline.MessageEventListener" level="INFO" additivity="false">
-    <appender-ref ref="FROM_EVENTBUS"/>
+    <appender-ref ref="FROM_XPROCSPEC"/>
   </logger>
   
   <logger name="org.daisy" level="DEBUG"/>
@@ -50,7 +40,7 @@
   
   <root level="WARN">
     <appender-ref ref="TEST_LOG"/>
-    <appender-ref ref="TO_EVENTBUS"/>
+    <appender-ref ref="EVENTBUS"/>
   </root>
   
 </configuration>
