@@ -13,7 +13,7 @@
     <p:input port="source">
         <p:documentation>DTBook</p:documentation>
     </p:input>
-    <p:output port="result" primary="true" sequence="true"> <!-- sequence=false when d:validation-status result="ok" -->
+    <p:output port="result" primary="true" sequence="true"> <!-- sequence=false when d:status result="ok" -->
         <p:documentation>PEF</p:documentation>
     </p:output>
     <p:output port="obfl" sequence="true"> <!-- sequence=false when include-obfl=true -->
@@ -142,7 +142,7 @@
                     <p:output port="pef" primary="true"/>
                     <p:output port="status">
                         <p:inline>
-                            <d:validation-status result="ok"/>
+                            <d:status result="ok"/>
                         </p:inline>
                     </p:output>
                     <p:variable name="transform-query" select="concat('(input:obfl)(input:text-css)(output:pef)',$transform,'(locale:',$lang,')')"/>
@@ -161,7 +161,7 @@
                     </p:output>
                     <p:output port="status">
                         <p:inline>
-                            <d:validation-status result="error"/>
+                            <d:status result="error"/>
                         </p:inline>
                     </p:output>
                     <p:sink/>
@@ -175,7 +175,7 @@
             </p:output>
             <p:output port="status">
                 <p:inline>
-                    <d:validation-status result="ok"/>
+                    <d:status result="ok"/>
                 </p:inline>
             </p:output>
             <p:variable name="transform-query" select="concat('(input:css)(output:pef)',$transform,'(locale:',$lang,')')"/>

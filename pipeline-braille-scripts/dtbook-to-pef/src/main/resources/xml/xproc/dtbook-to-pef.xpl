@@ -36,7 +36,7 @@
         </p:documentation>
     </p:input>
     
-    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+    <p:output port="status" px:media-type="application/vnd.pipeline.status+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Status</h2>
             <p px:role="desc" xml:space="preserve">Whether or not the conversion was successful.
