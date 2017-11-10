@@ -39,6 +39,12 @@
     
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     
+    <!--
+        Suppress warning message "The source document is in namespace foo, but none of the template
+        rules match elements in this namespace"
+    -->
+    <p:wrap wrapper="css:wrapper" match="/*"/>
+    
     <px:message message="[progress css:parse-properties 100 parse-properties.xsl]"/>
     <p:xslt>
         <p:input port="stylesheet">

@@ -13,6 +13,12 @@
 	<px:message message="[progress px:liblouis-block-translate 50 css:parse-properties] Parsing CSS properties"/>
 	<css:parse-properties properties="display"/>
 	
+	<!--
+	    Suppress warning message "The source document is in namespace foo, but none of the template
+	    rules match elements in this namespace"
+	-->
+	<p:wrap wrapper="css:wrapper" match="/*"/>
+	
 	<px:message message="[progress px:liblouis-block-translate 50 liblouis-block-translate.xsl] Translating blocks"/>
 	<p:xslt>
 		<p:input port="stylesheet">

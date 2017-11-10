@@ -10,9 +10,9 @@
                 exclude-result-prefixes="#all"
                 version="2.0" >
     
-    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xsl"/>
-    <!--
+    <!-- Stylesheet module x is included or imported more than once...
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
+    <xsl:include href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xsl"/>
     -->
     <xsl:include href="generate-obfl-layout-master.xsl"/>
     

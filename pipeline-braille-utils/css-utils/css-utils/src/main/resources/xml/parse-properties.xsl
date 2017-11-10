@@ -2,9 +2,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
-                xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
-                xmlns:html="http://www.w3.org/1999/xhtml"
-                xmlns:zedai="http://www.daisy.org/ns/z3998/authoring/"
                 exclude-result-prefixes="#all"
                 version="2.0">
     
@@ -87,12 +84,14 @@
     
     <!--
         Suppress warning messages "The source document is in no namespace, but the template rules
-        all expect elements in a namespace" (see https://github.com/daisy/pipeline-mod-braille/issues/38),
-        as well as warning messages "The source document is in namespace http://www.daisy.org/ns/pipeline/braille-css,
-        but all the template rules match elements in no namespace".
+        all expect elements in a namespace" (see https://github.com/daisy/pipeline-mod-braille/issues/38).
     -->
-    <xsl:template match="/phony | /css:phony | /dtbook:phony | /html:phony | /zedai:phony">
+    <xsl:template match="/phony">
         <xsl:next-match/>
+    </xsl:template>
+    
+    <xsl:template match="css:wrapper">
+        <xsl:apply-templates select="*"/>
     </xsl:template>
     
 </xsl:stylesheet>

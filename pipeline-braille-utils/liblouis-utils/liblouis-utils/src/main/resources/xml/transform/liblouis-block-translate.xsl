@@ -10,8 +10,7 @@
 	
 	<xsl:param name="query"/>
 	
-	<!-- NOTE: by not matching using a namespace prefix (i.e. css:block) we avoid the SXXP0005 warning in Saxon 9.5 -->
-	<xsl:template match="*[local-name()='block' and namespace-uri()='http://www.daisy.org/ns/pipeline/braille-css']" mode="#default before after">
+	<xsl:template match="css:block" mode="#default before after">
 		<xsl:variable name="text" as="text()*" select="//text()"/>
 		<xsl:variable name="style" as="xs:string*">
 			<xsl:apply-templates mode="style"/>
