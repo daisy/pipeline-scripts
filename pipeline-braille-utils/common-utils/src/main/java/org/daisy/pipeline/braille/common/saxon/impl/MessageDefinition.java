@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.common.base.CharMatcher;
 
+import com.xmlcalabash.core.XProcException;
+
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -97,8 +99,7 @@ public class MessageDefinition extends ExtensionFunctionDefinition {
 						break; }
 					return VOID; }
 				catch (Exception e) {
-					logger.error("pf:message failed", e);
-					throw new XPathException("pf:message failed"); }
+					throw new XPathException("pf:message failed", XProcException.javaError(e, 0)); }
 			}
 		};
 	}

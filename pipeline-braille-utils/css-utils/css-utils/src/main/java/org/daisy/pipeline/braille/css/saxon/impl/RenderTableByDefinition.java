@@ -28,6 +28,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
+import com.xmlcalabash.core.XProcException;
+
 import cz.vutbr.web.css.CombinedSelector;
 import cz.vutbr.web.css.CSSException;
 import cz.vutbr.web.css.CSSFactory;
@@ -139,9 +141,7 @@ public class RenderTableByDefinition extends ExtensionFunctionDefinition {
 					receiver.close();
 					return ((XdmNode)destination.getXdmNode().axisIterator(Axis.CHILD).next()).getUnderlyingNode(); }
 				catch (Exception e) {
-					logger.error("css:render-table-by failed", e);
-					e.printStackTrace();
-					throw new XPathException("css:render-table-by failed"); }
+					throw new XPathException("css:render-table-by failed", XProcException.javaError(e, 0)); }
 			}
 		};
 	}
