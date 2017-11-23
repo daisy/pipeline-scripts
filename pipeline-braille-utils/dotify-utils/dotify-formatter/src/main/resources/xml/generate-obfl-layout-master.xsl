@@ -21,14 +21,14 @@
     </xsl:variable>
     
     <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="element()*"/>
         <xsl:param name="name" as="xs:string"/>
         <xsl:variable name="duplex" as="xs:boolean" select="true()"/>
         <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $duplex)"/>
     </xsl:function>
     
     <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="element()*"/>
         <xsl:param name="name" as="xs:string"/>
         <xsl:param name="duplex" as="xs:boolean"/>
         <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
@@ -36,31 +36,26 @@
     </xsl:function>
     
     <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="element()*"/> <!-- css:rule* -->
         <xsl:param name="name" as="xs:string"/>
         <xsl:param name="duplex" as="xs:boolean"/>
         <xsl:param name="right-page-odd" as="xs:boolean"/>
-        <xsl:variable name="page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet)"/>
-        <xsl:variable name="right-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':right']/@style)"/>
-        <xsl:variable name="left-page-stylesheet" as="element()*" select="css:parse-stylesheet($page-stylesheet[@selector=':left']/@style)"/>
-        <xsl:variable name="default-page-stylesheet" as="element()*">
-            <xsl:choose>
-                <xsl:when test="$right-page-stylesheet or $left-page-stylesheet">
-                    <xsl:sequence select="css:parse-stylesheet($page-stylesheet[not(@selector)]/@style)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:sequence select="$page-stylesheet"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
+        <xsl:variable name="right-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':right']/*"/>
+        <xsl:variable name="left-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':left']/*"/>
+        <xsl:variable name="default-page-stylesheet" as="element()*"
+                      select="if ($right-page-stylesheet or $left-page-stylesheet)
+                              then $page-stylesheet[not(@selector)]/*
+                              else $page-stylesheet"/>
         <xsl:variable name="default-page-properties" as="element()*"
-                      select="css:parse-declaration-list($default-page-stylesheet[not(@selector)]/@style)"/>
+                      select="if ($default-page-stylesheet/self::css:property)
+                              then $default-page-stylesheet/self::css:property
+                              else $default-page-stylesheet[not(@selector)]/css:property"/>
         <xsl:variable name="size" as="xs:string"
                       select="($default-page-properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
         <xsl:variable name="page-width" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[1]))"/>
         <xsl:variable name="page-height" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[2]))"/>
         <xsl:variable name="footnotes-properties" as="element()*"
-                      select="css:parse-declaration-list($default-page-stylesheet[@selector='@footnotes'][1]/@style)"/>
+                      select="$default-page-stylesheet[@selector='@footnotes'][1]/css:property"/>
         <xsl:variable name="footnotes-content" as="element()*"
                       select="css:parse-content-list($footnotes-properties[@name='content'][1]/@value,())"/>
         <layout-master name="{$name}" duplex="{$duplex}" page-number-variable="page"
@@ -137,39 +132,41 @@
     </xsl:function>
     
     <xsl:template name="template">
-        <xsl:param name="stylesheet" as="element()*" required="yes"/>
+        <xsl:param name="stylesheet" as="element()*" required="yes"/> <!-- css:rule*|css:property* -->
         <xsl:variable name="top-left" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@top-left'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@top-left'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="top-center" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@top-center'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@top-center'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="top-right" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@top-right'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@top-right'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="bottom-left" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@bottom-left'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@bottom-left'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="bottom-center" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@bottom-center'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@bottom-center'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="bottom-right" as="element()*">
             <xsl:call-template name="fields">
-                <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@bottom-right'][1]/@style"/>
+                <xsl:with-param name="properties" select="$stylesheet[@selector='@bottom-right'][1]/css:property"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="properties" as="element()*"
-                      select="css:parse-declaration-list($stylesheet[not(@selector)]/@style)"/>
+                      select="if ($stylesheet/self::css:property)
+                              then $stylesheet/self::css:property
+                              else $stylesheet[not(@selector)]/css:property"/>
         <xsl:variable name="margin-top" as="xs:integer"
                       select="max(($properties[@name='margin-top'][css:is-valid(.)]/xs:integer(@value),0))"/>
         <xsl:variable name="margin-bottom" as="xs:integer"
@@ -205,12 +202,12 @@
             </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="margin-region">
-            <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@left'][1]/@style"/>
+            <xsl:with-param name="properties" select="$stylesheet[@selector='@left'][1]/css:property"/>
             <xsl:with-param name="side" select="'left'"/>
             <xsl:with-param name="min-width" select="$margin-left"/>
         </xsl:call-template>
         <xsl:call-template name="margin-region">
-            <xsl:with-param name="margin-stylesheet" select="$stylesheet[@selector='@right'][1]/@style"/>
+            <xsl:with-param name="properties" select="$stylesheet[@selector='@right'][1]/css:property"/>
             <xsl:with-param name="side" select="'right'"/>
             <xsl:with-param name="min-width" select="$margin-right"/>
         </xsl:call-template>
@@ -257,8 +254,7 @@
     </xsl:template>
     
     <xsl:template name="fields" as="element()*"> <!-- obfl:field* -->
-        <xsl:param name="margin-stylesheet" as="xs:string?"/>
-        <xsl:variable name="properties" as="element()*" select="css:parse-declaration-list($margin-stylesheet)"/>
+        <xsl:param name="properties" as="element()*"/> <!-- css:property* -->
         <xsl:variable name="white-space" as="xs:string" select="($properties[@name='white-space']/@value,'normal')[1]"/>
         <xsl:variable name="text-transform" as="xs:string" select="($properties[@name='text-transform']/@value,'auto')[1]"/>
         <xsl:variable name="content" as="element()*">
@@ -277,10 +273,9 @@
     </xsl:template>
     
     <xsl:template name="margin-region" as="element()?"> <!-- obfl:margin-region? -->
-        <xsl:param name="margin-stylesheet" as="xs:string?"/>
+        <xsl:param name="properties" as="element()*"/> <!-- css:property* -->
         <xsl:param name="side" as="xs:string" required="yes"/>
         <xsl:param name="min-width" as="xs:integer" required="yes"/>
-        <xsl:variable name="properties" as="element()*" select="css:parse-declaration-list($margin-stylesheet)"/>
         <xsl:variable name="indicators" as="element()*">
             <xsl:apply-templates select="css:parse-content-list($properties[@name='content'][1]/@value,())" mode="eval-content-list-left-right"/>
         </xsl:variable>

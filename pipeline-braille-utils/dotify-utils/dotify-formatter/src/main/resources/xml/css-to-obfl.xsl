@@ -26,26 +26,49 @@
     <!-- Page and volume styles -->
     <!-- ====================== -->
     
-    <xsl:variable name="volume-stylesheets" as="xs:string*"
-                  select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))"/>
-    
-    <xsl:variable name="page-stylesheets" as="xs:string*"> <!-- as="element()*"> -->
-        <xsl:variable name="page-stylesheets" as="xs:string*">
-            <xsl:sequence select="collection()/*/string(@css:page)"/>
-            <xsl:for-each select="$volume-stylesheets">
-                <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                <xsl:variable name="volume-area-styles" as="element()*"
-                              select="(if ($volume-style[matches(@selector,'^:')])
-                                       then $volume-style/@style/css:parse-stylesheet(.)
-                                       else $volume-style)
-                                       [@selector=('@begin','@end')]"/>
-                <xsl:for-each select="distinct-values($volume-area-styles/@style)">
-                    <xsl:variable name="volume-area-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                    <xsl:sequence select="$volume-area-style[@selector='@page']/@style"/>
-                </xsl:for-each>
+    <xsl:variable name="volume-stylesheets" as="element()*">
+        <xsl:variable name="volume-stylesheets" as="element()*">
+            <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))">
+                <css:rule selector="@volume">
+                    <xsl:sequence select="css:deep-parse-stylesheet(.)"/>
+                </css:rule>
             </xsl:for-each>
         </xsl:variable>
-        <xsl:sequence select="distinct-values($page-stylesheets)"/>
+        <xsl:apply-templates mode="serialize-page-styles" select="$volume-stylesheets"/>
+    </xsl:variable>
+    
+    <xsl:template mode="serialize-page-styles" match="*[.//css:rule[@selector='@page']]">
+        <xsl:copy>
+            <xsl:sequence select="@*"/>
+            <xsl:apply-templates mode="#current" select="*"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template mode="serialize-page-styles" match="css:rule[@selector='@page' and not(@style)]">
+        <xsl:copy>
+            <xsl:sequence select="@*"/>
+            <xsl:attribute name="style" select="css:serialize-stylesheet(*)"/>
+            <xsl:sequence select="*"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template mode="serialize-page-styles" match="*">
+        <xsl:sequence select="."/>
+    </xsl:template>
+    
+    <xsl:variable name="page-stylesheets" as="element()*">
+        <xsl:for-each select="distinct-values(collection()/*/string(@css:page))">
+            <css:rule selector="@page" style="{.}">
+                <xsl:sequence select="css:deep-parse-stylesheet(.)"/>
+            </css:rule>
+        </xsl:for-each>
+        <xsl:for-each select="$volume-stylesheets">
+            <xsl:sequence select="(if (*[matches(@selector,'^:')])
+                                   then */*
+                                   else *)
+                                  [@selector=('@begin','@end')]
+                                  /css:rule[@selector='@page']"/>
+        </xsl:for-each>
     </xsl:variable>
     
     <xsl:function name="pxi:layout-master-name" as="xs:string">
@@ -63,23 +86,23 @@
         -->
         <xsl:sequence select="concat('master_',
                                      if ($right-page-odd)
-                                       then index-of($page-stylesheets, $page-stylesheet)
+                                       then index-of($page-stylesheets/@style, $page-stylesheet)
                                        else (count($page-stylesheets)
-                                             + index-of($page-stylesheets, $page-stylesheet)))"/>
+                                             + index-of($page-stylesheets/@style, $page-stylesheet)))"/>
     </xsl:function>
     
     <xsl:function name="pxi:layout-master" as="xs:string">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="element()"/>
         <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
         <xsl:sequence select="pxi:layout-master($page-stylesheet, $right-page-odd)"/>
     </xsl:function>
     
     <xsl:function name="pxi:layout-master" as="element()">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="page-stylesheet" as="element()"/>
         <xsl:param name="right-page-odd" as="xs:boolean"/>
         <xsl:sequence select="obfl:generate-layout-master(
-                                $page-stylesheet,
-                                pxi:layout-master-name($page-stylesheet, $right-page-odd),
+                                $page-stylesheet/*,
+                                pxi:layout-master-name($page-stylesheet/@style, $right-page-odd),
                                 $duplex='true',
                                 $right-page-odd)"/>
     </xsl:function>
@@ -127,33 +150,22 @@
         The flows that correspond to a obfl:collection
     -->
     <xsl:variable name="collection-flows" as="xs:string*">
-        <!--
-            FIXME: code duplication! (use css:deep-parse-stylesheet)
-        -->
         <xsl:for-each select="$page-stylesheets">
-            <xsl:variable name="page-style" as="xs:string" select="."/>
-            <xsl:variable name="page-style" as="element()*" select="css:parse-stylesheet($page-style)"/>
-            <xsl:variable name="page-style" as="element()*" select="if ($page-style[matches(@selector,'^:')])
-                                                                    then css:parse-stylesheet($page-style[not(@selector)]/@style)
-                                                                    else $page-style"/>
-            <xsl:variable name="footnotes-style" as="element()*"
-                          select="css:parse-declaration-list($page-style[@selector='@footnotes'][1]/@style)"/>
-            <xsl:sequence select="css:parse-content-list($footnotes-style[@name='content'][1]/@value,())
+            <xsl:sequence select="css:parse-content-list(
+                                    (if (*[matches(@selector,'^:')]) then css:rule[not(@selector)] else .)
+                                    /css:rule[@selector='@footnotes'][1]
+                                    /css:property[@name='content'][1]/@value,())
                                   /self::css:flow[@from and (not(@scope) or @scope='page')]/@from"/>
         </xsl:for-each>
         <xsl:for-each select="$volume-stylesheets">
-            <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet(.)"/>
-            <xsl:variable name="volume-area-styles" as="element()*"
-                          select="(if ($volume-style[matches(@selector,'^:')])
-                                   then $volume-style/@style/css:parse-stylesheet(.)
-                                   else $volume-style)
-                                   [@selector=('@begin','@end')]"/>
-            <xsl:for-each select="distinct-values($volume-area-styles/@style)">
-                <xsl:variable name="volume-area-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                <xsl:variable name="volume-area-style" as="element()*"
-                              select="css:parse-declaration-list($volume-area-style[not(@selector)]/@style)"/>
+            <xsl:for-each select="(if (*[matches(@selector,'^:')])
+                                   then */*
+                                   else *)
+                                  [@selector=('@begin','@end')]">
                 <xsl:variable name="volume-area-content" as="element()*"
-                              select="css:parse-content-list($volume-area-style[@name='content'][1]/@value,())"/>
+                              select="css:parse-content-list(
+                                        (if (css:property) then . else *[not(@selector)])
+                                        /css:property[@name='content'][1]/@value,())"/>
                 <xsl:sequence select="$volume-area-content/self::css:flow[@from and @scope='volume']/@from"/>
                 <xsl:for-each select="distinct-values(
                                         $volume-area-content/self::css:flow[@from][(@scope,'document')[1]='document']/@from)">
@@ -201,30 +213,24 @@
             <xsl:if test="not(exists($volume-stylesheets))">
                 <xsl:message>Document does not have an associated volume style.</xsl:message>
             </xsl:if>
-            <xsl:variable name="volume-stylesheet" as="xs:string" select="($volume-stylesheets,'')[1]"/>
-            <xsl:if test="$volume-stylesheet!=''">
-                <xsl:variable name="volume-stylesheets" as="element()*" select="css:parse-stylesheet($volume-stylesheet)"/>
-                <xsl:variable name="volume-stylesheets" as="element()*">
-                    <xsl:choose>
-                        <xsl:when test="$volume-stylesheets[matches(@selector,'^:')]">
-                            <xsl:sequence select="$volume-stylesheets"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <css:rule style="{$volume-stylesheet}"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-                <xsl:variable name="volume-stylesheets-use-when" as="xs:string*" select="obfl:volume-stylesheets-use-when($volume-stylesheets)"/>
+            <xsl:if test="$volume-stylesheets[1]/*">
+                <xsl:variable name="volume-stylesheets" as="element()*"
+                              select="if ($volume-stylesheets[1]/*[matches(@selector,'^:')])
+                                      then $volume-stylesheets/*
+                                      else $volume-stylesheets"/>
+                <xsl:variable name="volume-stylesheets-use-when" as="xs:string*"
+                              select="if ($volume-stylesheets[@selector='@volume'])
+                                      then ('t')
+                                      else obfl:volume-stylesheets-use-when($volume-stylesheets)"/>
                 <xsl:if test="not(obfl:or($volume-stylesheets-use-when)='nil')">
                     <xsl:variable name="no-upper-limit" select="'1000'"/>
                     <xsl:for-each select="$volume-stylesheets">
                         <xsl:variable name="i" select="position()"/>
                         <xsl:variable name="use-when" as="xs:string" select="$volume-stylesheets-use-when[$i]"/>
                         <xsl:if test="not($use-when='nil')">
-                            <xsl:variable name="stylesheet" as="element()*" select="css:parse-stylesheet(@style)"/>
                             <xsl:variable name="properties" as="element()*"
-                                          select="css:parse-declaration-list($stylesheet[not(@selector)]/@style)"/>
-                            <xsl:variable name="volume-area-rules" as="element()*" select="$stylesheet[@selector=('@begin','@end')]"/>
+                                          select="if (css:property) then * else *[not(@selector)]/css:property"/>
+                            <xsl:variable name="volume-area-rules" as="element()*" select="*[@selector=('@begin','@end')]"/>
                             <!--
                                 page style to use in @begin and @end areas when no page property specified
                             -->
@@ -236,22 +242,24 @@
                                 <xsl:for-each select="('@begin','@end')">
                                     <xsl:variable name="volume-area" select="."/>
                                     <xsl:variable name="volume-area-style" as="element()*"
-                                                  select="css:parse-stylesheet($volume-area-rules[@selector=$volume-area][1]/@style)"/>
+                                                  select="$volume-area-rules[@selector=$volume-area][1]/*"/>
                                     <xsl:variable name="volume-area-page-style" as="xs:string?"
                                                   select="$volume-area-style[@selector='@page']/@style"/>
-                                    <xsl:variable name="volume-area-style" as="element()*"
-                                                  select="css:parse-declaration-list($volume-area-style[not(@selector)]/@style)"/>
+                                    <xsl:variable name="volume-area-properties" as="element()*"
+                                                  select="if ($volume-area-style/self::css:property)
+                                                          then $volume-area-style
+                                                          else $volume-area-style[not(@selector)]/css:property"/>
                                     <xsl:variable name="volume-area-content" as="element()*"> <!-- css:_|obfl:list-of-references -->
                                         <xsl:apply-templates mode="css:eval-volume-area-content-list"
-                                                             select="css:parse-content-list($volume-area-style[@name='content'][1]/@value,())">
+                                                             select="css:parse-content-list($volume-area-properties[@name='content'][1]/@value,())">
                                             <xsl:with-param name="white-space"
-                                                            select="($volume-area-style[@name='white-space']/@value,'normal')[1]"/>
+                                                            select="($volume-area-properties[@name='white-space']/@value,'normal')[1]"/>
                                             <xsl:with-param name="text-transform"
-                                                            select="($volume-area-style[@name='text-transform']/@value,'auto')[1]"/>
+                                                            select="($volume-area-properties[@name='text-transform']/@value,'auto')[1]"/>
                                             <xsl:with-param name="hyphens"
-                                                            select="($volume-area-style[@name='hyphens']/@value,'manual')[1]"/>
+                                                            select="($volume-area-properties[@name='hyphens']/@value,'manual')[1]"/>
                                             <xsl:with-param name="word-spacing"
-                                                            select="($volume-area-style[@name='word-spacing']/@value,1)[1]"/>
+                                                            select="($volume-area-properties[@name='word-spacing']/@value,1)[1]"/>
                                         </xsl:apply-templates>
                                     </xsl:variable>
                                     <xsl:if test="$volume-area-content">
