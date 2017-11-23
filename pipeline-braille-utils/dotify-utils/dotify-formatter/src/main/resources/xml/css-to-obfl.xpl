@@ -610,4 +610,11 @@
         <p:delete match="obfl:toc-sequence/obfl:table-of-contents"/>
     </p:group>
     
+    <!--
+        delete layout-masters that are not used
+    -->
+    <p:delete match="/*/obfl:layout-master[
+                       not(some $name in @name satisfies
+                           (//obfl:sequence|//obfl:toc-sequence|//obfl:dynamic-sequence)[@master=$name])]"/>
+    
 </p:declare-step>

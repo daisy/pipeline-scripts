@@ -29,26 +29,9 @@
     <xsl:variable name="volume-stylesheets" as="xs:string*"
                   select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))"/>
     
-    <!--
-        FIXME: instead of trying to include only the page styles that are actually used, and thereby
-        possibly including too little, include every possible page style and delete the ones that
-        are not used afterwards. this makes to code much simpler
-    -->
-    <xsl:variable name="page-stylesheets-right-odd" as="xs:string*">
-        <!--
-            page style to use in @begin and @end areas when no page property specified
-        -->
-        <xsl:variable name="default-page-style" as="xs:string" select="(collection()/*[not(@css:flow)])[1]/string(@css:page)"/>
+    <xsl:variable name="page-stylesheets" as="xs:string*"> <!-- as="element()*"> -->
         <xsl:variable name="page-stylesheets" as="xs:string*">
-            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
-                <!--
-                    TODO: optimisation: also check whether :left or :right style present. if not, no
-                    need to differentiate.
-                -->
-                <xsl:if test="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])">
-                    <xsl:sequence select="current-group()/string(@css:page)"/>
-                </xsl:if>
-            </xsl:for-each-group>
+            <xsl:sequence select="collection()/*/string(@css:page)"/>
             <xsl:for-each select="$volume-stylesheets">
                 <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet(.)"/>
                 <xsl:variable name="volume-area-styles" as="element()*"
@@ -58,71 +41,7 @@
                                        [@selector=('@begin','@end')]"/>
                 <xsl:for-each select="distinct-values($volume-area-styles/@style)">
                     <xsl:variable name="volume-area-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                    <xsl:variable name="volume-area-page-style" as="xs:string?"
-                                  select="$volume-area-style[@selector='@page']/@style"/>
-                    <xsl:variable name="volume-area-style" as="element()*"
-                                  select="css:parse-declaration-list($volume-area-style[not(@selector)]/@style)"/>
-                    <xsl:for-each select="distinct-values(
-                                          css:parse-content-list($volume-area-style[@name='content'][1]/@value,())
-                                          /self::css:flow[@from][(@scope,'document')[1]='document']/@from)">
-                        <xsl:variable name="flow" as="xs:string" select="."/>
-                        <xsl:for-each-group select="collection()/*[@css:flow=$flow]" group-starting-with="*[@css:counter-set-page]">
-                            <xsl:if test="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])">
-                                <xsl:for-each select="current-group()">
-                                    <xsl:sequence select="(@css:page/string(),$volume-area-page-style,$default-page-style)[1]"/>
-                                </xsl:for-each>
-                            </xsl:if>
-                        </xsl:for-each-group>
-                        <!--
-                            it is also possible that a flow is renamed through -obfl-fallback-collection,
-                            in which case there is no flow document with the name "$flow"
-                        -->
-                        <xsl:if test="not(collection()/*[@css:flow=$flow])">
-                            <xsl:sequence select="($volume-area-page-style,$default-page-style)[1]"/>
-                        </xsl:if>
-                    </xsl:for-each>
-                </xsl:for-each>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:sequence select="distinct-values($page-stylesheets)"/>
-    </xsl:variable>
-    
-    <xsl:variable name="page-stylesheets-right-even" as="xs:string*">
-        <!--
-            page style to use in @begin and @end areas when no page property specified
-        -->
-        <xsl:variable name="default-page-style" as="xs:string" select="(collection()/*[not(@css:flow)])[1]/string(@css:page)"/>
-        <xsl:variable name="page-stylesheets" as="xs:string*">
-            <xsl:for-each-group select="collection()/*[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
-                <xsl:if test="current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0]">
-                    <xsl:sequence select="current-group()/string(@css:page)"/>
-                </xsl:if>
-            </xsl:for-each-group>
-            <xsl:for-each select="$volume-stylesheets">
-                <xsl:variable name="volume-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                <xsl:variable name="volume-area-styles" as="element()*"
-                              select="(if ($volume-style[matches(@selector,'^:')])
-                                       then $volume-style/@style/css:parse-stylesheet(.)
-                                       else $volume-style)
-                                       [@selector=('@begin','@end')]"/>
-                <xsl:for-each select="distinct-values($volume-area-styles/@style)">
-                    <xsl:variable name="volume-area-style" as="element()*" select="css:parse-stylesheet(.)"/>
-                    <xsl:variable name="volume-area-page-style" as="xs:string?"
-                                  select="$volume-area-style[@selector='@page']/@style"/>
-                    <xsl:variable name="volume-area-style" as="element()*"
-                                  select="css:parse-declaration-list($volume-area-style[not(@selector)]/@style)"/>
-                    <xsl:for-each select="distinct-values(
-                                          css:parse-content-list($volume-area-style[@name='content'][1]/@value,())
-                                          /self::css:flow[@from][(@scope,'document')[1]='document']/@from)">
-                        <xsl:variable name="flow" as="xs:string" select="."/>
-                        <xsl:for-each-group select="collection()/*[@css:flow=$flow]" group-starting-with="*[@css:counter-set-page]">
-                            <xsl:if test="current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0]">
-                                <xsl:for-each select="current-group()">
-                                    <xsl:sequence select="(@css:page/string(),$volume-area-page-style,$default-page-style)[1]"/>
-                                </xsl:for-each>
-                            </xsl:if>
-                        </xsl:for-each-group>
-                    </xsl:for-each>
+                    <xsl:sequence select="$volume-area-style[@selector='@page']/@style"/>
                 </xsl:for-each>
             </xsl:for-each>
         </xsl:variable>
@@ -138,11 +57,15 @@
     <xsl:function name="pxi:layout-master-name" as="xs:string">
         <xsl:param name="page-stylesheet" as="xs:string"/>
         <xsl:param name="right-page-odd" as="xs:boolean"/>
+        <!--
+            TODO: optimisation: also check whether :left or :right style present. if not, no
+            need to differentiate.
+        -->
         <xsl:sequence select="concat('master_',
                                      if ($right-page-odd)
-                                       then index-of($page-stylesheets-right-odd, $page-stylesheet)
-                                       else (count($page-stylesheets-right-odd)
-                                             + index-of($page-stylesheets-right-even, $page-stylesheet)))"/>
+                                       then index-of($page-stylesheets, $page-stylesheet)
+                                       else (count($page-stylesheets)
+                                             + index-of($page-stylesheets, $page-stylesheet)))"/>
     </xsl:function>
     
     <xsl:function name="pxi:layout-master" as="xs:string">
@@ -207,7 +130,7 @@
         <!--
             FIXME: code duplication! (use css:deep-parse-stylesheet)
         -->
-        <xsl:for-each select="distinct-values(($page-stylesheets-right-odd,$page-stylesheets-right-even))">
+        <xsl:for-each select="$page-stylesheets">
             <xsl:variable name="page-style" as="xs:string" select="."/>
             <xsl:variable name="page-style" as="element()*" select="css:parse-stylesheet($page-style)"/>
             <xsl:variable name="page-style" as="element()*" select="if ($page-style[matches(@selector,'^:')])
@@ -268,10 +191,8 @@
     </xsl:template>
     
     <xsl:template name="_start">
-            <xsl:for-each select="$page-stylesheets-right-odd">
+            <xsl:for-each select="$page-stylesheets">
                 <xsl:sequence select="pxi:layout-master(., true())"/>
-            </xsl:for-each>
-            <xsl:for-each select="$page-stylesheets-right-even">
                 <xsl:sequence select="pxi:layout-master(., false())"/>
             </xsl:for-each>
             <xsl:if test="count($volume-stylesheets)&gt;1">
