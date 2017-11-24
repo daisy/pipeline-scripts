@@ -13,9 +13,11 @@
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
     
     <xsl:param name="braille-translator-query" as="xs:string" required="yes"/> <!-- unused -->
+    <xsl:param name="page-counters" as="xs:string" required="yes"/>
     
     <xsl:variable name="sections" select="collection()[position() &lt; last()]"/>
     <xsl:variable name="page-and-volume-styles" select="collection()[position()=last()]/*/*"/>
+    <xsl:variable name="page-counter-names" as="xs:string*" select="tokenize($page-counters,' ')"/>
     
     <!-- ====================== -->
     <!-- Page and volume styles -->
@@ -214,17 +216,66 @@
                                                             select="($volume-area-properties[@name='word-spacing']/@value,1)[1]"/>
                                         </xsl:apply-templates>
                                     </xsl:variable>
+                                    <xsl:variable name="space" as="xs:string" select="('pre','post')[index-of(('@begin','@end'),$volume-area)]"/>
+                                    <xsl:variable name="default-page-counter-name" as="xs:string" select="concat($space,'-page')"/>
+                                    <xsl:if test="$volume-area-properties[@name=('counter-increment','counter-reset')]">
+                                        <xsl:message terminate="yes">
+                                            <xsl:apply-templates mode="css:serialize"
+                                                                 select="$volume-area-properties[@name=('counter-increment','counter-reset')][1]"/>
+                                            <xsl:text>: counter-reset and counter-increment not supported in </xsl:text>
+                                            <xsl:value-of select="$volume-area"/>
+                                        </xsl:message>
+                                    </xsl:if>
+                                    <xsl:variable name="volume-area-counter-set" as="element()*"
+                                                  select="css:parse-counter-set(
+                                                            ($volume-area-properties[@name='counter-set']/@value,$default-page-counter-name)[1]
+                                                            ,0)"/>
                                     <xsl:if test="$volume-area-content">
-                                        <xsl:element name="{('pre','post')[index-of(('@begin','@end'),$volume-area)]}-content">
+                                        <xsl:element name="{$space}-content">
                                             <xsl:variable name="default-page-style" as="xs:string" select="($volume-area-page-style,$default-page-style)[1]"/>
-                                            <xsl:for-each-group select="$volume-area-content" group-starting-with="css:_[@css:counter-set-page]">
+                                            <xsl:for-each-group select="$volume-area-content" group-starting-with="css:_[@css:counter-set]">
                                                 <xsl:for-each-group select="current-group()" group-adjacent="(self::css:_/@css:page/string(),$default-page-style)[1]">
                                                     <xsl:variable name="page-style" select="current-grouping-key()"/>
+                                                    <xsl:variable name="page-style" as="element()" select="$page-stylesheets[@style=$page-style][1]"/>
+                                                    <xsl:variable name="page-properties" as="element()*"
+                                                                  select="(if ($page-style/css:property)
+                                                                           then $page-style/css:property
+                                                                           else $page-style/*[not(@selector)]/css:property)"/>
+                                                    <xsl:variable name="counter-increment" as="element()"
+                                                                  select="css:parse-counter-set(
+                                                                            ($page-properties[@name='counter-increment']/@value,$default-page-counter-name)[1],
+                                                                            1)[last()]"/>
+                                                    <xsl:variable name="page-number-counter" as="attribute()?">
+                                                        <xsl:if test="not($counter-increment/@name=$default-page-counter-name)">
+                                                            <xsl:attribute name="page-number-counter" select="$counter-increment/@name"/>
+                                                        </xsl:if>
+                                                    </xsl:variable>
                                                     <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
                                                         <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
-                                                            <xsl:variable name="counter-set-page" as="attribute()?" select="current-group()[1]/@css:counter-set-page"/>
+                                                            <xsl:variable name="counter-set" as="element()*"
+                                                                          select="current-group()[1]/@css:counter-set/css:parse-counter-set(.,0)"/>
+                                                            <xsl:if test="$counter-set[not(@name=$counter-increment/@name)]">
+                                                                <xsl:message terminate="yes">
+                                                                    <xsl:apply-templates mode="css:serialize" select="$counter-set[not(@name=$counter-increment/@name)][1]"/>
+                                                                    <xsl:text>: only the active page counter (</xsl:text>
+                                                                    <xsl:value-of select="$counter-increment/@name"/>
+                                                                    <xsl:text>) may be manipulated</xsl:text>
+                                                                </xsl:message>
+                                                            </xsl:if>
+                                                            <xsl:variable name="counter-set" as="element()?" select="$counter-set[last()]"/>
+                                                            <xsl:variable name="initial-page-number" as="attribute()?">
+                                                                <xsl:if test="$counter-set">
+                                                                    <xsl:if test="(xs:integer($counter-set/@value) mod 2)=0">
+                                                                        <xsl:message terminate="yes">
+                                                                            <xsl:apply-templates mode="css:serialize" select="$counter-set"/>
+                                                                            <xsl:text>: page counter may not be set to an even value</xsl:text>
+                                                                        </xsl:message>
+                                                                    </xsl:if>
+                                                                    <xsl:attribute name="initial-page-number" select="$counter-set/@value"/>
+                                                                </xsl:if>
+                                                            </xsl:variable>
                                                             <xsl:apply-templates mode="assert-nil-attr"
-                                                                                 select="current-group()/self::css:_/(@* except (@css:flow|@css:page|@css:counter-set-page))"/>
+                                                                                 select="current-group()/self::css:_/(@* except (@css:flow|@css:page|@css:counter-set))"/>
                                                             <xsl:variable name="current-group" as="element()*"
                                                                           select="for $e in current-group() return if ($e/self::css:_) then $e/* else $e"/>
                                                             <xsl:variable name="first-toc" as="element()?"
@@ -237,8 +288,8 @@
                                                                         </xsl:call-template>
                                                                     </xsl:variable>
                                                                     <xsl:element name="{if ($sequence/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                        <xsl:attribute name="css:page" select="$page-style"/>
-                                                                        <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
+                                                                        <xsl:attribute name="css:page" select="$page-style/@style"/>
+                                                                        <xsl:sequence select="$page-number-counter|$initial-page-number"/>
                                                                         <xsl:sequence select="$sequence"/>
                                                                     </xsl:element>
                                                                 </xsl:when>
@@ -287,16 +338,17 @@
                                                                             <xsl:if test="exists($before-toc) and not($toc-range='document')
                                                                                           or $before-toc/self::obfl:list-of-references">
                                                                                 <xsl:element name="{if ($before-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                                    <xsl:attribute name="css:page" select="$page-style"/>
-                                                                                    <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
+                                                                                    <xsl:attribute name="css:page" select="$page-style/@style"/>
+                                                                                    <xsl:sequence select="$page-number-counter|$initial-page-number"/>
                                                                                     <xsl:sequence select="$before-toc"/>
                                                                                 </xsl:element>
                                                                             </xsl:if>
-                                                                            <toc-sequence css:page="{$page-style}" range="{$toc-range}" toc="{$toc-name}">
+                                                                            <toc-sequence css:page="{$page-style/@style}" range="{$toc-range}" toc="{$toc-name}">
                                                                                 <xsl:if test="position()=1
                                                                                               or (exists($before-toc) and $toc-range='document' and not($before-toc/self::obfl:list-of-references))">
-                                                                                    <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
+                                                                                    <xsl:sequence select="$initial-page-number"/>
                                                                                 </xsl:if>
+                                                                                <xsl:sequence select="$page-number-counter"/>
                                                                                 <!--
                                                                                     Inserting table-of-contents here as child of toc-sequence. Will be moved to the
                                                                                     right place (child of obfl) later.
@@ -338,7 +390,7 @@
                                                                             </toc-sequence>
                                                                             <xsl:if test="$after-toc/self::obfl:list-of-references">
                                                                                 <xsl:element name="{if ($after-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                                    <xsl:attribute name="css:page" select="$page-style"/>
+                                                                                    <xsl:attribute name="css:page" select="$page-style/@style"/>
                                                                                     <xsl:sequence select="$after-toc"/>
                                                                                 </xsl:element>
                                                                             </xsl:if>
@@ -390,15 +442,78 @@
                     </collection>
                 </xsl:if>
             </xsl:for-each>
-            <xsl:for-each-group select="$sections/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
+            <!--
+                FIXME: duplication
+            -->
+            <xsl:variable name="default-page-style-uses-explicit-counter-page" as="xs:boolean"
+                          select="some $p in $page-stylesheets[@style=($sections/*[not(@css:flow)])[1]/string(@css:page)][1]
+                                  satisfies
+                                    (if ($p/css:property)
+                                     then $p/css:property
+                                     else $p/*[not(@selector)]/css:property)
+                                    [@name='counter-increment']
+                                    [css:parse-counter-set(@value,1)[@name='page']]"/>
+            <xsl:variable name="some-volume-areas-use-counter-page" as="xs:boolean"
+                          select="some $a in (for $v in $volume-stylesheets
+                                              return (if ($v/*[matches(@selector,'^:')])
+                                                      then $v/*
+                                                      else $v)
+                                                     /*[@selector=('@begin','@end')])
+                                  satisfies
+                                    if (not($a/*[@selector='@page']))
+                                    then $default-page-style-uses-explicit-counter-page
+                                    else some $p in $a/*[@selector='@page']
+                                         satisfies
+                                           (if ($p/css:property)
+                                            then $p/css:property
+                                            else $p/*[not(@selector)]/css:property)
+                                           [@name='counter-increment']
+                                           [css:parse-counter-set(@value,1)[@name='page']]"/>
+            <xsl:for-each-group select="$sections/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set]">
                 <xsl:for-each-group select="current-group()" group-adjacent="string(@css:page)">
                     <xsl:variable name="page-style" select="current-grouping-key()"/>
+                    <xsl:variable name="page-style" as="element()" select="$page-stylesheets[@style=$page-style][1]"/>
+                    <xsl:variable name="page-properties" as="element()*"
+                                  select="(if ($page-style/css:property)
+                                           then $page-style/css:property
+                                           else $page-style/*[not(@selector)]/css:property)"/>
+                    <xsl:variable name="counter-increment" as="element()"
+                                  select="css:parse-counter-set(
+                                            ($page-properties[@name='counter-increment']/@value,'page')[1],
+                                            1)[last()]"/>
+                    <xsl:variable name="page-number-counter" as="attribute()?">
+                        <xsl:if test="not($counter-increment/@name='page')
+                                      or $some-volume-areas-use-counter-page">
+                            <xsl:attribute name="page-number-counter" select="$counter-increment/@name"/>
+                        </xsl:if>
+                    </xsl:variable>
                     <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
                         <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
                             <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:volume-break-before='always']">
-                                <sequence css:page="{$page-style}">
+                                <sequence css:page="{$page-style/@style}">
+                                    <xsl:variable name="counter-set" as="element()*"
+                                                  select="current-group()[1]/@css:counter-set/css:parse-counter-set(.,0)"/>
+                                    <xsl:if test="$counter-set[not(@name=$counter-increment/@name)]">
+                                        <xsl:message terminate="yes">
+                                            <xsl:apply-templates mode="css:serialize" select="$counter-set[not(@name=$counter-increment/@name)][1]"/>
+                                            <xsl:text>: only the active page counter (</xsl:text>
+                                            <xsl:value-of select="$counter-increment/@name"/>
+                                            <xsl:text>) may be manipulated</xsl:text>
+                                        </xsl:message>
+                                    </xsl:if>
+                                    <xsl:variable name="counter-set" as="element()?" select="$counter-set[last()]"/>
+                                    <xsl:if test="$counter-set">
+                                        <xsl:if test="(xs:integer($counter-set/@value) mod 2)=0">
+                                            <xsl:message terminate="yes">
+                                                <xsl:apply-templates mode="css:serialize" select="$counter-set"/>
+                                                <xsl:text>: page counter may not be set to an even value</xsl:text>
+                                            </xsl:message>
+                                        </xsl:if>
+                                        <xsl:attribute name="initial-page-number" select="$counter-set/@value"/>
+                                    </xsl:if>
+                                    <xsl:sequence select="$page-number-counter"/>
                                     <xsl:apply-templates mode="sequence-attr"
-                                                         select="current-group()[1]/(@* except (@css:page|@css:volume|@css:string-entry))"/>
+                                                         select="current-group()[1]/(@* except (@css:page|@css:volume|@css:string-entry|@css:counter-set))"/>
                                     <xsl:apply-templates mode="sequence-attr"
                                                          select="current-group()[1]/*/@css:volume-break-before[.='always']">
                                         <xsl:with-param name="first-sequence" tunnel="yes" select="position()=1"/>
@@ -537,11 +652,6 @@
     <!-- ======== -->
     <!-- Sequence -->
     <!-- ======== -->
-    
-    <xsl:template mode="sequence-attr"
-                  match="/css:_/@css:counter-set-page">
-        <xsl:attribute name="initial-page-number" select="."/>
-    </xsl:template>
     
     <xsl:template mode="sequence"
                   match="/css:_/@css:string-entry">
@@ -998,7 +1108,7 @@
         <xsl:for-each-group select="node()" group-adjacent="boolean(
                                                               self::css:box[@type='inline'] or
                                                               self::css:custom-func[@name='-obfl-evaluate'] or
-                                                              self::css:counter[@target][@name='page'] or
+                                                              self::css:counter[@target][@name=$page-counter-names] or
                                                               self::css:leader)">
             <xsl:choose>
                 <xsl:when test="current-grouping-key()">
@@ -1504,7 +1614,7 @@
     -->
     <xsl:template mode="block toc-entry"
                   priority="1"
-                  match="css:counter[@target][@name='page']">
+                  match="css:counter[@target][@name=$page-counter-names]">
         <xsl:variable name="target" as="xs:string" select="@target"/>
         <xsl:variable name="target" as="element()*" select="$sections//*[@css:id=$target]"/>
         <xsl:choose>
@@ -1524,6 +1634,10 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="target" as="element()" select="$target[1]"/>
+                <!--
+                    FIXME: compute target-page-counter-name (how?) and when this doesn't match @name
+                    raise a warning if @name is "page" or raise an error otherwise
+                -->
                 <xsl:choose>
                     <xsl:when test="$target/ancestor::*/@css:flow[not(.='normal')]">
                         <xsl:message>
@@ -1541,7 +1655,7 @@
     </xsl:template>
     
     <xsl:template mode="block toc-entry"
-                  match="css:counter[@target][@name='page']">
+                  match="css:counter[@target][@name=$page-counter-names]">
         <xsl:param name="text-transform" as="xs:string" tunnel="yes"/>
         <xsl:param name="hyphens" as="xs:string" tunnel="yes"/>
         <xsl:param name="pending-text-transform" as="xs:string?" tunnel="yes"/>
@@ -1603,7 +1717,7 @@
                   as="xs:string?"
                   match="css:box[@type='block']
                            [css:box[@type='inline']
-                              //css:counter[@target][@name='page']
+                              //css:counter[@target][@name=$page-counter-names]
                                   /ancestor::css:box[@type='inline']
                                   /@css:text-transform
                                      [last()]
@@ -1623,7 +1737,7 @@
                   mode="block"
                   match="css:box[@type='block']
                            [css:box[@type='inline']
-                              //css:counter[@target][@name='page']
+                              //css:counter[@target][@name=$page-counter-names]
                                   /ancestor::css:box[@type='inline']
                                   /@css:text-transform
                                      [last()]
@@ -1768,7 +1882,7 @@
         <!--
             FIXME: what about css:string[@target] and css:box[@css:anchor] ?
         -->
-        <xsl:if test="$sections//css:counter[@name='page'][@target=$id]">
+        <xsl:if test="$sections//css:counter[@name=$page-counter-names][@target=$id]">
             <xsl:message terminate="yes">target-counter(page) referencing inline elements not supported.</xsl:message>
         </xsl:if>
     </xsl:template>

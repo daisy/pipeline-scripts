@@ -26,10 +26,33 @@
             <xsl:apply-templates select="@*"/>
             <xsl:variable name="sequences" as="element()*" select="//obfl:sequence|//obfl:toc-sequence|//obfl:dynamic-sequence"/>
             <xsl:for-each select="distinct-values($sequences/@css:page)">
+                <xsl:variable name="layout-master-name" select="pxi:layout-master-name(.)"/>
                 <xsl:variable name="page-stylesheet" as="element()" select="$page-stylesheets[@style=current()][1]"/>
+                <xsl:variable name="default-page-counter-names"
+                              select="distinct-values(
+                                        for $s in $sequences[@css:page=current()] return
+                                          if ($s/parent::obfl:pre-content) then 'pre-page'
+                                          else if ($s/parent::obfl:post-content) then 'post-page'
+                                          else 'page')"/>
                 <xsl:sequence select="obfl:generate-layout-master(
                                         $page-stylesheet/*,
-                                        pxi:layout-master-name(.))"/>
+                                        $layout-master-name,
+                                        $default-page-counter-names[1])"/>
+                <!--
+                    The result of calling obfl:generate-layout-master is the same regardless of the
+                    default-page-counter-name passed. Therefore only the first result is
+                    relevant. However, all calls need to be made anyway because the function checks
+                    that there are no mismatches between the active page counter and counter() calls
+                    in page margins.
+                -->
+                <xsl:for-each select="$default-page-counter-names[position()&gt;1]">
+                    <xsl:variable name="_">
+                        <xsl:sequence select="obfl:generate-layout-master(
+                                                $page-stylesheet/*,
+                                                $layout-master-name,
+                                                .)"/>
+                    </xsl:variable>
+                </xsl:for-each>
             </xsl:for-each>
             <xsl:apply-templates/>
         </xsl:copy>
@@ -66,6 +89,7 @@
     <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="element()*"/> <!-- css:rule* -->
         <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="default-page-counter-name" as="xs:string"/> <!-- "page"|"pre-page"|"post-page" -->
         <xsl:variable name="duplex" as="xs:boolean" select="$duplex='true'"/>
         <xsl:variable name="right-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':right']/*"/>
         <xsl:variable name="left-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':left']/*"/>
@@ -81,6 +105,31 @@
                       select="($default-page-properties[@name='size'][css:is-valid(.)]/@value, css:initial-value('size'))[1]"/>
         <xsl:variable name="page-width" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[1]))"/>
         <xsl:variable name="page-height" as="xs:integer" select="xs:integer(number(tokenize($size, '\s+')[2]))"/>
+        <xsl:if test="$default-page-properties[@name='counter-set']">
+            <xsl:message>
+                <xsl:apply-templates mode="css:serialize" select="$default-page-properties[@name='counter-set'][1]"/>
+                <xsl:text> not supported inside @page</xsl:text>
+            </xsl:message>
+        </xsl:if>
+        <xsl:variable name="counter-increment" as="element()*"
+                      select="css:parse-counter-set(
+                                ($default-page-properties[@name='counter-increment']/@value,$default-page-counter-name)[1],
+                                1)"/>
+        <xsl:if test="count($counter-increment)&gt;1">
+            <xsl:message terminate="yes">
+                <xsl:value-of select="$default-page-properties[@name='counter-increment'][1]"/>
+                <xsl:text>: a page can only have one page counter</xsl:text>
+            </xsl:message>
+        </xsl:if>
+        <xsl:variable name="counter-increment" as="element()" select="$counter-increment[last()]"/>
+        <xsl:if test="not($counter-increment/@value='1')">
+            <xsl:message terminate="yes">
+                <xsl:value-of select="$default-page-properties[@name='counter-increment'][1]"/>
+                <xsl:text>: a page counter can not be incremented by </xsl:text>
+                <xsl:value-of select="$counter-increment/@value"/>
+            </xsl:message>
+        </xsl:if>
+        <xsl:variable name="page-counter-name" as="xs:string" select="$counter-increment/@name"/>
         <xsl:variable name="footnotes-properties" as="element()*"
                       select="$default-page-stylesheet[@selector='@footnotes'][1]/css:property"/>
         <xsl:variable name="footnotes-content" as="element()*"
@@ -92,6 +141,7 @@
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$right-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'right'"/>
+                        <xsl:with-param name="page-counter-name" tunnel="yes" select="$page-counter-name"/>
                     </xsl:call-template>
                 </template>
             </xsl:if>
@@ -100,12 +150,14 @@
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$left-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'left'"/>
+                        <xsl:with-param name="page-counter-name" tunnel="yes" select="$page-counter-name"/>
                     </xsl:call-template>
                 </template>
             </xsl:if>
             <default-template>
                 <xsl:call-template name="template">
                     <xsl:with-param name="stylesheet" select="$default-page-stylesheet"/>
+                    <xsl:with-param name="page-counter-name" tunnel="yes" select="$page-counter-name"/>
                 </xsl:call-template>
             </default-template>
             <xsl:if test="$footnotes-content[not(self::css:flow[@from])]">
@@ -357,9 +409,32 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="css:counter[not(@target)][@name='page']" mode="eval-content-list-top-bottom">
+    <xsl:template match="css:counter[not(@target)]" priority="1" mode="eval-content-list-top-bottom">
         <xsl:param name="white-space" as="xs:string" select="'normal'"/>
         <xsl:param name="text-transform" as="xs:string" select="'auto'"/>
+        <xsl:param name="page-counter-name" as="xs:string" tunnel="yes"/>
+        <xsl:if test="not(@name=$page-counter-name)">
+            <xsl:choose>
+                <xsl:when test="@name='page'">
+                    <xsl:message>
+                        <xsl:text>Should not use counter(page) in a page margin when the active page counter is </xsl:text>
+                        <xsl:value-of select="$page-counter-name"/>
+                        <xsl:text>. Assuming counter(</xsl:text>
+                        <xsl:value-of select="$page-counter-name"/>
+                        <xsl:text>) was meant.</xsl:text>
+                    </xsl:message>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:message terminate="yes">
+                        <xsl:text>Can not use counter(</xsl:text>
+                        <xsl:value-of select="@name"/>
+                        <xsl:text>) in a page margin when the active page counter is </xsl:text>
+                        <xsl:value-of select="$page-counter-name"/>
+                        <xsl:text>.</xsl:text>
+                    </xsl:message>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
         <xsl:if test="$white-space!='normal'">
             <xsl:message select="concat('white-space:',$white-space,' could not be applied to target-counter(',@name,')')"/>
         </xsl:if>
@@ -585,10 +660,6 @@
     
     <xsl:template match="css:counter[not(@target)]" mode="eval-content-list-left-right">
         <xsl:message>counter() function not supported in left and right page margin</xsl:message>
-    </xsl:template>
-    
-    <xsl:template match="css:counter[not(@target)][not(@name='page')]" mode="eval-content-list-top-bottom">
-        <xsl:message>counter() function not supported in page margin for other counters than 'page'</xsl:message>
     </xsl:template>
     
     <xsl:template match="css:leader" mode="eval-content-list-top-bottom eval-content-list-left-right">

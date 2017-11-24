@@ -10,6 +10,7 @@
     <x:call function="obfl:generate-layout-master">
       <x:param/>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="40" page-height="25" duplex="true" page-number-variable="page">
@@ -35,6 +36,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="true" page-number-variable="page">
@@ -90,6 +92,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="true" page-number-variable="page">
@@ -149,6 +152,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -179,6 +183,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -223,6 +228,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -256,6 +262,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -301,6 +308,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -346,6 +354,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="5" duplex="true" page-number-variable="page">
@@ -401,6 +410,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="28" page-height="28" duplex="true" page-number-variable="page">
@@ -442,6 +452,7 @@
         </css:rule>
       </x:param>
       <x:param select="'x'"/>
+      <x:param select="'page'"/>
     </x:call>
     <x:expect label="layout-master">
       <layout-master xmlns="http://www.daisy.org/ns/2011/obfl" name="x" page-width="15" page-height="15" duplex="true" page-number-variable="page">
