@@ -17,24 +17,8 @@
     
     <xsl:function name="pxi:layout-master-name" as="xs:string">
         <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:param name="right-page-odd" as="xs:boolean"/>
-        <!--
-            TODO: optimisation: also check whether :left or :right style present. if not, no
-            need to differentiate.
-        -->
         <xsl:sequence select="concat('master_',
-                                     if ($right-page-odd)
-                                       then index-of($page-stylesheets/@style, $page-stylesheet)
-                                       else (count($page-stylesheets)
-                                             + index-of($page-stylesheets/@style, $page-stylesheet)))"/>
-    </xsl:function>
-    
-    <xsl:function name="pxi:right-page-odd" as="xs:boolean">
-        <xsl:param name="sequence" as="element()"/> <!-- obfl:sequence|obfl:toc-sequence|obfl:dynamic-sequence -->
-        <xsl:sequence select="not((($sequence|$sequence/preceding-sibling::*)
-                                   [@initial-page-number])
-                                  [last()]
-                                  [(xs:integer(@initial-page-number) mod 2)=0])"/>
+                                     index-of($page-stylesheets/@style, $page-stylesheet)[1])"/>
     </xsl:function>
     
     <xsl:template match="/*">
@@ -43,19 +27,9 @@
             <xsl:variable name="sequences" as="element()*" select="//obfl:sequence|//obfl:toc-sequence|//obfl:dynamic-sequence"/>
             <xsl:for-each select="distinct-values($sequences/@css:page)">
                 <xsl:variable name="page-stylesheet" as="element()" select="$page-stylesheets[@style=current()][1]"/>
-                <xsl:variable name="sequences" as="element()*" select="$sequences[@css:page=current()]"/>
-                <xsl:if test="$sequences[pxi:right-page-odd(.)]">
-                    <xsl:sequence select="obfl:generate-layout-master(
-                                            $page-stylesheet/*,
-                                            pxi:layout-master-name(., true()),
-                                            true())"/>
-                </xsl:if>
-                <xsl:if test="$sequences[not(pxi:right-page-odd(.))]">
-                    <xsl:sequence select="obfl:generate-layout-master(
-                                            $page-stylesheet/*,
-                                            pxi:layout-master-name(., false()),
-                                            false())"/>
-                </xsl:if>
+                <xsl:sequence select="obfl:generate-layout-master(
+                                        $page-stylesheet/*,
+                                        pxi:layout-master-name(.))"/>
             </xsl:for-each>
             <xsl:apply-templates/>
         </xsl:copy>
@@ -64,7 +38,7 @@
     <xsl:template match="obfl:sequence/@css:page|
                          obfl:toc-sequence/@css:page|
                          obfl:dynamic-sequence/@css:page">
-        <xsl:attribute name="master" select="pxi:layout-master-name(., pxi:right-page-odd(parent::*))"/>
+        <xsl:attribute name="master" select="pxi:layout-master-name(.)"/>
     </xsl:template>
     
     <xsl:template match="/*/css:rule[@selector='@page']"/>
@@ -90,16 +64,8 @@
     </xsl:variable>
     
     <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="element()*"/>
-        <xsl:param name="name" as="xs:string"/>
-        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
-        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $right-page-odd)"/>
-    </xsl:function>
-    
-    <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="element()*"/> <!-- css:rule* -->
         <xsl:param name="name" as="xs:string"/>
-        <xsl:param name="right-page-odd" as="xs:boolean"/>
         <xsl:variable name="duplex" as="xs:boolean" select="$duplex='true'"/>
         <xsl:variable name="right-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':right']/*"/>
         <xsl:variable name="left-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':left']/*"/>
@@ -122,7 +88,7 @@
         <layout-master name="{$name}" duplex="{$duplex}" page-number-variable="page"
                        page-width="{$page-width}" page-height="{$page-height}">
             <xsl:if test="$right-page-stylesheet">
-                <template use-when="(= (% $page 2) {if ($right-page-odd) then 1 else 0})">
+                <template use-when="(= (% $page 2) 1)">
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$right-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'right'"/>
@@ -130,7 +96,7 @@
                 </template>
             </xsl:if>
             <xsl:if test="$left-page-stylesheet">
-                <template use-when="(= (% $page 2) {if ($right-page-odd) then 0 else 1})">
+                <template use-when="(= (% $page 2) 0)">
                     <xsl:call-template name="template">
                         <xsl:with-param name="stylesheet" select="$left-page-stylesheet"/>
                         <xsl:with-param name="page-side" tunnel="yes" select="'left'"/>

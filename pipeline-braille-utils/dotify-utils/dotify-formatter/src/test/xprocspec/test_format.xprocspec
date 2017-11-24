@@ -445,7 +445,7 @@
               </section>
               <section style="display: block;
                               page-break-before: always;
-                              counter-set: page 10">
+                              counter-set: page 11">
                 ⠤⠤⠤
               </section>
               <section style="display: block;
@@ -488,26 +488,10 @@
           <layout-master name="b" page-width="15" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header/>
-              <footer>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
-                  <current-page number-format="default"/>
-                </field>
-              </footer>
-            </default-template>
-          </layout-master>
-          <layout-master name="c" page-width="15" page-height="5" duplex="true" page-number-variable="page">
-            <default-template>
-              <header/>
               <footer/>
             </default-template>
           </layout-master>
-          <layout-master name="d" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+          <layout-master name="c" page-width="15" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header>
                 <field>
@@ -528,7 +512,7 @@
               ⠤⠤⠤
             </block>
           </sequence>
-          <sequence master="c">
+          <sequence master="b">
             <block>
               ⠤⠤⠤
             </block>
@@ -538,7 +522,7 @@
               ⠤⠤⠤
             </block>
           </sequence>
-          <sequence master="b" initial-page-number="10">
+          <sequence master="a" initial-page-number="11">
             <block>
               ⠤⠤⠤
             </block>
@@ -546,7 +530,7 @@
               ⠤⠤⠤
             </block>
           </sequence>
-          <sequence master="d">
+          <sequence master="c">
             <block>
               ⠤⠤⠤
             </block>
@@ -596,19 +580,19 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠚</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠁</row>
                 </page>
                 <page>
                   <row>⠤⠤⠤</row>
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠁</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠃</row>
                 </page>
               </section>
               <section>
                 <page>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠃</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠉</row>
                   <row>⠤⠤⠤</row>
                 </page>
               </section>
@@ -8368,9 +8352,11 @@
     </x:expect>
   </x:scenario>
   
-  <x:scenario label="test_76">
+  <x:scenario label="test_76" pending="true">
     <x:documentation>
       Tests combination of @page:left and @page:right with counter-set of 'page' to an even number.
+      
+      Broken: workaround for issue https://github.com/brailleapps/dotify/issues/134 was disabled.
     </x:documentation>
     <x:call step="dotify:format">
       <x:input port="source">
@@ -10777,7 +10763,7 @@
                           content: flow(titlepage) }}
                       { text-transform: none }">
             <front>
-              <titlepage style="display: block; flow: titlepage; counter-set: page 10">
+              <titlepage style="display: block; flow: titlepage; counter-set: page 11">
                 ⠿⠿⠿
               </titlepage>
             </front>
@@ -10828,7 +10814,7 @@
           </layout-master>
           <volume-template sheets-in-volume-max="1000">
             <pre-content>
-              <sequence master="b" initial-page-number="10">
+              <sequence master="b" initial-page-number="11">
                 <block> ⠿⠿⠿ </block>
               </sequence>
             </pre-content>
@@ -10859,7 +10845,7 @@
                   <row/>
                   <row/>
                   <row/>
-                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠚</row>
+                  <row>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠼⠁⠁</row>
                 </page>
               </section>
               <section>
