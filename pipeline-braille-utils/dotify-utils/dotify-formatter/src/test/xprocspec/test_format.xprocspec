@@ -70,13 +70,13 @@
     <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
-          <layout-master name="a" page-width="30" page-height="5" duplex="true" page-number-variable="page">
+          <layout-master name="b" page-width="15" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header/>
               <footer/>
             </default-template>
           </layout-master>
-          <layout-master name="b" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+          <layout-master name="a" page-width="30" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header/>
               <footer/>
@@ -659,6 +659,22 @@
     <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
+          <layout-master name="body" page-width="15" page-height="5" duplex="true" page-number-variable="page">
+            <default-template>
+              <header/>
+              <footer>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <string value=""/>
+                </field>
+                <field>
+                  <current-page number-format="default"/>
+                </field>
+              </footer>
+            </default-template>
+          </layout-master>
           <layout-master name="front" page-width="15" page-height="5" duplex="true" page-number-variable="page">
             <default-template>
               <header/>
@@ -671,22 +687,6 @@
                 </field>
                 <field>
                   <string value="⠏"/>
-                  <current-page number-format="default"/>
-                </field>
-              </footer>
-            </default-template>
-          </layout-master>
-          <layout-master name="body" page-width="15" page-height="5" duplex="true" page-number-variable="page">
-            <default-template>
-              <header/>
-              <footer>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
-                  <string value=""/>
-                </field>
-                <field>
                   <current-page number-format="default"/>
                 </field>
               </footer>
@@ -9482,13 +9482,13 @@
     <x:expect label="obfl" type="custom" href="http://www.daisy.org/pipeline/modules/braille/obfl-utils/library.xpl" step="x:obfl-compare">
       <x:document type="inline">
         <obfl xmlns="http://www.daisy.org/ns/2011/obfl" version="2011-1" xml:lang="und" hyphenate="false" translate="pre-translated-text-css">
-          <layout-master name="toc" duplex="true" page-number-variable="page" page-width="10" page-height="10">
+          <layout-master name="body" duplex="true" page-number-variable="page" page-width="20" page-height="10">
             <default-template>
               <header/>
               <footer/>
             </default-template>
           </layout-master>
-          <layout-master name="body" duplex="true" page-number-variable="page" page-width="20" page-height="10">
+          <layout-master name="toc" duplex="true" page-number-variable="page" page-width="10" page-height="10">
             <default-template>
               <header/>
               <footer/>

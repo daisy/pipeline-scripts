@@ -15,12 +15,11 @@
     -->
     <xsl:include href="generate-obfl-layout-master.xsl"/>
     
-    <!-- ========== -->
-    <!-- Parameters -->
-    <!-- ========== -->
-    
     <xsl:param name="braille-translator-query" as="xs:string" required="yes"/> <!-- unused -->
     <xsl:param name="duplex" as="xs:string" required="yes"/>
+    
+    <xsl:variable name="sections" select="collection()[position() &lt; last()]"/>
+    <xsl:variable name="page-and-volume-styles" select="collection()[position()=last()]/*/*"/>
     
     <!-- ====================== -->
     <!-- Page and volume styles -->
@@ -28,11 +27,10 @@
     
     <xsl:variable name="volume-stylesheets" as="element()*">
         <xsl:variable name="volume-stylesheets" as="element()*">
-            <xsl:for-each select="distinct-values(collection()/*[not(@css:flow)]/string(@css:volume))">
-                <css:rule selector="@volume">
-                    <xsl:sequence select="css:deep-parse-stylesheet(.)"/>
-                </css:rule>
-            </xsl:for-each>
+            <xsl:sequence select="$page-and-volume-styles[@selector='@volume']"/>
+            <xsl:if test="not($page-and-volume-styles[@selector='@volume'])">
+                <css:rule selector="@volume"/>
+            </xsl:if>
         </xsl:variable>
         <xsl:apply-templates mode="serialize-page-styles" select="$volume-stylesheets"/>
     </xsl:variable>
@@ -57,11 +55,8 @@
     </xsl:template>
     
     <xsl:variable name="page-stylesheets" as="element()*">
-        <xsl:for-each select="distinct-values(collection()/*/string(@css:page))">
-            <css:rule selector="@page" style="{.}">
-                <xsl:sequence select="css:deep-parse-stylesheet(.)"/>
-            </css:rule>
-        </xsl:for-each>
+        <css:rule selector="@page" style=""/>
+        <xsl:sequence select="$page-and-volume-styles[@selector='@page']"/>
         <xsl:for-each select="$volume-stylesheets">
             <xsl:sequence select="(if (*[matches(@selector,'^:')])
                                    then */*
@@ -170,7 +165,7 @@
                 <xsl:for-each select="distinct-values(
                                         $volume-area-content/self::css:flow[@from][(@scope,'document')[1]='document']/@from)">
                     <xsl:variable name="flow" as="xs:string" select="."/>
-                    <xsl:sequence select="collection()/*[@css:flow=$flow]
+                    <xsl:sequence select="$sections/*[@css:flow=$flow]
                                           /css:box[@type='block' and @css:_obfl-list-of-references]
                                           //css:custom-func[@name='-obfl-collection' and @arg1 and not(@arg2)]/@arg1"/>
                 </xsl:for-each>
@@ -234,7 +229,7 @@
                             <!--
                                 page style to use in @begin and @end areas when no page property specified
                             -->
-                            <xsl:variable name="default-page-style" as="xs:string" select="(collection()/*[not(@css:flow)])[1]/string(@css:page)"/>
+                            <xsl:variable name="default-page-style" as="xs:string" select="($sections/*[not(@css:flow)])[1]/string(@css:page)"/>
                             <volume-template sheets-in-volume-max="{($properties[@name='max-length' and css:is-valid(.)]/string(@value),$no-upper-limit)[1]}">
                                 <xsl:if test="not($use-when='t')">
                                     <xsl:attribute name="use-when" select="$use-when"/>
@@ -313,21 +308,21 @@
                                                                             <xsl:variable name="toc-range" as="xs:string"
                                                                                           select="($toc/@css:_obfl-toc-range,'document')[1]"/>
                                                                             <xsl:variable name="on-toc-start" as="element()*"
-                                                                                          select="collection()/*[@css:flow=concat('-obfl-on-toc-start/',
-                                                                                                                                  $toc/@css:_obfl-on-toc-start)]/*"/>
+                                                                                          select="$sections/*[@css:flow=concat('-obfl-on-toc-start/',
+                                                                                                                               $toc/@css:_obfl-on-toc-start)]/*"/>
                                                                             <xsl:variable name="on-volume-start" as="element()*"
                                                                                           select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-start)
-                                                                                                  then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
-                                                                                                                                       $toc/@css:_obfl-on-volume-start)]/*
+                                                                                                  then $sections/*[@css:flow=concat('-obfl-on-volume-start/',
+                                                                                                                                    $toc/@css:_obfl-on-volume-start)]/*
                                                                                                   else ()"/>
                                                                             <xsl:variable name="on-volume-end" as="element()*"
                                                                                           select="if ($toc-range='document' and $toc/@css:_obfl-on-volume-end)
-                                                                                                  then collection()/*[@css:flow=concat('-obfl-on-volume-end/',
-                                                                                                                                       $toc/@css:_obfl-on-volume-end)]/*
+                                                                                                  then $sections/*[@css:flow=concat('-obfl-on-volume-end/',
+                                                                                                                                    $toc/@css:_obfl-on-volume-end)]/*
                                                                                                   else ()"/>
                                                                             <xsl:variable name="on-toc-end" as="element()*"
-                                                                                          select="(collection()/*[@css:flow=concat('-obfl-on-toc-end/',
-                                                                                                                                   $toc/@css:_obfl-on-toc-end)]/*)"/>
+                                                                                          select="($sections/*[@css:flow=concat('-obfl-on-toc-end/',
+                                                                                                                                $toc/@css:_obfl-on-toc-end)]/*)"/>
                                                                             <xsl:variable name="before-toc" as="element()*" select="if (position()=2) then $before-first-toc else ()"/>
                                                                             <xsl:variable name="after-toc" as="element()*">
                                                                                 <xsl:call-template name="apply-templates-within-post-or-pre-content-sequence">
@@ -408,8 +403,8 @@
                     </xsl:for-each>
                 </xsl:if>
             </xsl:if>
-            <xsl:apply-templates mode="assert-nil" select="collection()/*[not(self::css:_)]"/>
-            <xsl:for-each select="collection()/css:_[@css:flow=$collection-flows]">
+            <xsl:apply-templates mode="assert-nil" select="$sections/*[not(self::css:_)]"/>
+            <xsl:for-each select="$sections/css:_[@css:flow=$collection-flows]">
                 <xsl:variable name="flow" as="xs:string" select="@css:flow"/>
                 <collection name="{$flow}">
                     <xsl:for-each select="*">
@@ -427,7 +422,7 @@
                         </item>
                     </xsl:for-each>
                 </collection>
-                <xsl:if test="collection()/css:_[@css:flow[not(.=$collection-flows)]]/*/@css:_obfl-use-when-collection-not-empty=$flow">
+                <xsl:if test="$sections/css:_[@css:flow[not(.=$collection-flows)]]/*/@css:_obfl-use-when-collection-not-empty=$flow">
                     <collection name="meta/{$flow}">
                         <xsl:for-each select="*[1]">
                             <!--
@@ -440,7 +435,7 @@
                     </collection>
                 </xsl:if>
             </xsl:for-each>
-            <xsl:for-each-group select="collection()/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
+            <xsl:for-each-group select="$sections/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
                 <xsl:variable name="right-page-odd" as="xs:boolean"
                               select="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])"/>
                 <xsl:for-each-group select="current-group()" group-adjacent="string(@css:page)">
@@ -493,13 +488,13 @@
                                 <xsl:variable name="self" as="element()" select="."/>
                                 <xsl:variable name="on-volume-start" as="element()*"
                                               select="if (@css:_obfl-on-volume-start)
-                                                      then collection()/*[@css:flow=concat('-obfl-on-volume-start/',
-                                                                                           $self/@css:_obfl-on-volume-start)]/*
+                                                      then $sections/*[@css:flow=concat('-obfl-on-volume-start/',
+                                                                                        $self/@css:_obfl-on-volume-start)]/*
                                                       else ()"/>
                                 <xsl:variable name="on-volume-end" as="element()*"
                                               select="if (@css:_obfl-on-volume-end)
-                                                      then collection()/*[@css:flow=concat('-obfl-on-volume-end/',
-                                                                                           $self/@css:_obfl-on-volume-end)]/*
+                                                      then $sections/*[@css:flow=concat('-obfl-on-volume-end/',
+                                                                                        $self/@css:_obfl-on-volume-end)]/*
                                                       else ()"/>
                                 <list-of-references collection="{$collection/@arg1}" range="document">
                                     <xsl:if test="exists($on-volume-start)">
@@ -673,9 +668,9 @@
                                |preceding::css:string/@target
                                |preceding::css:counter/@target)"/>
         <xsl:choose>
-            <xsl:when test="exists($descendant-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+            <xsl:when test="exists($descendant-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]])">
                 <xsl:variable name="ref-id" as="xs:string"
-                              select="$descendant-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
+                              select="$descendant-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
                 <toc-entry ref-id="{$ref-id}">
                     <xsl:next-match>
                         <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
@@ -689,18 +684,18 @@
                     contents
                 -->
             </xsl:when>
-            <xsl:when test="exists($following-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+            <xsl:when test="exists($following-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]])">
                 <xsl:variable name="ref-id" as="xs:string"
-                              select="$following-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
+                              select="$following-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]][1]"/>
                 <toc-entry ref-id="{$ref-id}">
                     <xsl:next-match>
                         <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
                     </xsl:next-match>
                 </toc-entry>
             </xsl:when>
-            <xsl:when test="exists($preceding-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]])">
+            <xsl:when test="exists($preceding-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]])">
                 <xsl:variable name="ref-id" as="xs:string"
-                              select="$preceding-refs[some $id in string(.) satisfies collection()/*[not(@css:flow)]//*[@css:id=$id]][last()]"/>
+                              select="$preceding-refs[some $id in string(.) satisfies $sections/*[not(@css:flow)]//*[@css:id=$id]][last()]"/>
                 <toc-entry ref-id="{$ref-id}">
                     <xsl:next-match>
                         <xsl:with-param name="toc-entry-ref-id" select="$ref-id" tunnel="yes"/>
@@ -1536,7 +1531,7 @@
         </xsl:if>
         <xsl:variable name="target" as="xs:string?" select="if (@target) then @target else ()"/>
         <xsl:variable name="target" as="element()?" select="if ($target)
-                                                            then collection()//*[@css:id=$target][1]
+                                                            then $sections//*[@css:id=$target][1]
                                                                  /(descendant-or-self::css:box|following::css:box)[@type='inline'][1]
                                                             else ."/>
         <xsl:if test="$target">
@@ -1558,7 +1553,7 @@
                   priority="1"
                   match="css:counter[@target][@name='page']">
         <xsl:variable name="target" as="xs:string" select="@target"/>
-        <xsl:variable name="target" as="element()*" select="collection()//*[@css:id=$target]"/>
+        <xsl:variable name="target" as="element()*" select="$sections//*[@css:id=$target]"/>
         <xsl:choose>
             <xsl:when test="count($target)=0">
                 <!-- can not happen: these references should already have been removed in css:label-targets -->
@@ -1820,7 +1815,7 @@
         <!--
             FIXME: what about css:string[@target] and css:box[@css:anchor] ?
         -->
-        <xsl:if test="collection()//css:counter[@name='page'][@target=$id]">
+        <xsl:if test="$sections//css:counter[@name='page'][@target=$id]">
             <xsl:message terminate="yes">target-counter(page) referencing inline elements not supported.</xsl:message>
         </xsl:if>
     </xsl:template>
@@ -1829,7 +1824,7 @@
                   match="css:box/@css:id|
                          css:box[@type='inline']/css:_/@css:id">
         <xsl:variable name="id" as="xs:string" select="."/>
-        <xsl:if test="collection()/*[@css:flow=$collection-flows]/*/@css:anchor=$id">
+        <xsl:if test="$sections/*[@css:flow=$collection-flows]/*/@css:anchor=$id">
             <anchor item="{$id}"/>
         </xsl:if>
     </xsl:template>
@@ -2115,7 +2110,7 @@
     <xsl:template mode="css:eval-volume-area-content-list"
                   match="css:flow[@from and (not(@scope) or @scope='document')]">
         <xsl:variable name="flow" as="xs:string" select="@from"/>
-        <xsl:sequence select="collection()/*[@css:flow=$flow]"/>
+        <xsl:sequence select="$sections/*[@css:flow=$flow]"/>
     </xsl:template>
     
     <xsl:template mode="css:eval-volume-area-content-list"

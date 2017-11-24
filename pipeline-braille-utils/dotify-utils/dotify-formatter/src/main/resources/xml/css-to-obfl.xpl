@@ -26,6 +26,7 @@
     <p:import href="shift-obfl-marker.xpl"/>
     <p:import href="make-obfl-pseudo-elements.xpl"/>
     <p:import href="extract-obfl-pseudo-elements.xpl"/>
+    <p:import href="deep-parse-page-and-volume-stylesheets.xpl"/>
     
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
@@ -110,13 +111,21 @@
         </p:documentation>
     </css:render-table-by>
     
-    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements name="parse-stylesheet">
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
             css:alternate, css:footnote-call, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
             css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    
+    <pxi:deep-parse-page-and-volume-stylesheets name="page-and-volume-styles"/>
+    <p:sink/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="parse-stylesheet" port="result"/>
+        </p:input>
+    </p:identity>
     
     <p:for-each>
         <pxi:extract-obfl-pseudo-elements>
@@ -571,7 +580,13 @@
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>
     
+    <p:identity name="sections"/>
+    
     <p:xslt template-name="start">
+        <p:input port="source">
+            <p:pipe step="sections" port="result"/>
+            <p:pipe step="page-and-volume-styles" port="result"/>
+        </p:input>
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
         </p:input>
