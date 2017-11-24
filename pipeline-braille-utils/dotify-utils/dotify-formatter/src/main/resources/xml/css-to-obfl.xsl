@@ -10,13 +10,9 @@
                 exclude-result-prefixes="#all"
                 version="2.0" >
     
-    <!--
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
-    -->
-    <xsl:include href="generate-obfl-layout-master.xsl"/>
     
     <xsl:param name="braille-translator-query" as="xs:string" required="yes"/> <!-- unused -->
-    <xsl:param name="duplex" as="xs:string" required="yes"/>
     
     <xsl:variable name="sections" select="collection()[position() &lt; last()]"/>
     <xsl:variable name="page-and-volume-styles" select="collection()[position()=last()]/*/*"/>
@@ -65,42 +61,6 @@
                                   /css:rule[@selector='@page']"/>
         </xsl:for-each>
     </xsl:variable>
-    
-    <xsl:function name="pxi:layout-master-name" as="xs:string">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
-        <xsl:sequence select="pxi:layout-master-name($page-stylesheet, $right-page-odd)"/>
-    </xsl:function>
-    
-    <xsl:function name="pxi:layout-master-name" as="xs:string">
-        <xsl:param name="page-stylesheet" as="xs:string"/>
-        <xsl:param name="right-page-odd" as="xs:boolean"/>
-        <!--
-            TODO: optimisation: also check whether :left or :right style present. if not, no
-            need to differentiate.
-        -->
-        <xsl:sequence select="concat('master_',
-                                     if ($right-page-odd)
-                                       then index-of($page-stylesheets/@style, $page-stylesheet)
-                                       else (count($page-stylesheets)
-                                             + index-of($page-stylesheets/@style, $page-stylesheet)))"/>
-    </xsl:function>
-    
-    <xsl:function name="pxi:layout-master" as="xs:string">
-        <xsl:param name="page-stylesheet" as="element()"/>
-        <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
-        <xsl:sequence select="pxi:layout-master($page-stylesheet, $right-page-odd)"/>
-    </xsl:function>
-    
-    <xsl:function name="pxi:layout-master" as="element()">
-        <xsl:param name="page-stylesheet" as="element()"/>
-        <xsl:param name="right-page-odd" as="xs:boolean"/>
-        <xsl:sequence select="obfl:generate-layout-master(
-                                $page-stylesheet/*,
-                                pxi:layout-master-name($page-stylesheet/@style, $right-page-odd),
-                                $duplex='true',
-                                $right-page-odd)"/>
-    </xsl:function>
     
     <!--
         Based on a sequence of @volume rules, return a sequence of "use-when" expressions for which
@@ -198,10 +158,7 @@
     </xsl:template>
     
     <xsl:template name="_start">
-            <xsl:for-each select="$page-stylesheets">
-                <xsl:sequence select="pxi:layout-master(., true())"/>
-                <xsl:sequence select="pxi:layout-master(., false())"/>
-            </xsl:for-each>
+            <xsl:sequence select="$page-stylesheets"/>
             <xsl:if test="count($volume-stylesheets)&gt;1">
                 <xsl:message terminate="yes">Documents with more than one volume style are not supported.</xsl:message>
             </xsl:if>
@@ -261,10 +218,8 @@
                                         <xsl:element name="{('pre','post')[index-of(('@begin','@end'),$volume-area)]}-content">
                                             <xsl:variable name="default-page-style" as="xs:string" select="($volume-area-page-style,$default-page-style)[1]"/>
                                             <xsl:for-each-group select="$volume-area-content" group-starting-with="css:_[@css:counter-set-page]">
-                                                <xsl:variable name="right-page-odd" as="xs:boolean"
-                                                              select="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])"/>
                                                 <xsl:for-each-group select="current-group()" group-adjacent="(self::css:_/@css:page/string(),$default-page-style)[1]">
-                                                    <xsl:variable name="master" select="pxi:layout-master-name(current-grouping-key(), $right-page-odd)"/>
+                                                    <xsl:variable name="page-style" select="current-grouping-key()"/>
                                                     <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
                                                         <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
                                                             <xsl:variable name="counter-set-page" as="attribute()?" select="current-group()[1]/@css:counter-set-page"/>
@@ -282,7 +237,7 @@
                                                                         </xsl:call-template>
                                                                     </xsl:variable>
                                                                     <xsl:element name="{if ($sequence/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                        <xsl:attribute name="master" select="$master"/>
+                                                                        <xsl:attribute name="css:page" select="$page-style"/>
                                                                         <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
                                                                         <xsl:sequence select="$sequence"/>
                                                                     </xsl:element>
@@ -332,12 +287,12 @@
                                                                             <xsl:if test="exists($before-toc) and not($toc-range='document')
                                                                                           or $before-toc/self::obfl:list-of-references">
                                                                                 <xsl:element name="{if ($before-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                                    <xsl:attribute name="master" select="$master"/>
+                                                                                    <xsl:attribute name="css:page" select="$page-style"/>
                                                                                     <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
                                                                                     <xsl:sequence select="$before-toc"/>
                                                                                 </xsl:element>
                                                                             </xsl:if>
-                                                                            <toc-sequence master="{$master}" range="{$toc-range}" toc="{$toc-name}">
+                                                                            <toc-sequence css:page="{$page-style}" range="{$toc-range}" toc="{$toc-name}">
                                                                                 <xsl:if test="position()=1
                                                                                               or (exists($before-toc) and $toc-range='document' and not($before-toc/self::obfl:list-of-references))">
                                                                                     <xsl:apply-templates mode="sequence-attr" select="$counter-set-page"/>
@@ -383,7 +338,7 @@
                                                                             </toc-sequence>
                                                                             <xsl:if test="$after-toc/self::obfl:list-of-references">
                                                                                 <xsl:element name="{if ($after-toc/self::obfl:list-of-references) then 'dynamic-sequence' else 'sequence'}">
-                                                                                    <xsl:attribute name="master" select="$master"/>
+                                                                                    <xsl:attribute name="css:page" select="$page-style"/>
                                                                                     <xsl:sequence select="$after-toc"/>
                                                                                 </xsl:element>
                                                                             </xsl:if>
@@ -436,14 +391,12 @@
                 </xsl:if>
             </xsl:for-each>
             <xsl:for-each-group select="$sections/css:_[not(@css:flow)]" group-starting-with="*[@css:counter-set-page]">
-                <xsl:variable name="right-page-odd" as="xs:boolean"
-                              select="not(current-group()[1]/@css:counter-set-page[(xs:integer(.) mod 2)=0])"/>
                 <xsl:for-each-group select="current-group()" group-adjacent="string(@css:page)">
-                    <xsl:variable name="layout-master" select="pxi:layout-master-name(current-grouping-key(), $right-page-odd)"/>
+                    <xsl:variable name="page-style" select="current-grouping-key()"/>
                     <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:page-break-before='right']">
                         <xsl:for-each-group select="current-group()" group-ending-with="css:_[*/@css:page-break-after='right']">
                             <xsl:for-each-group select="current-group()" group-starting-with="css:_[*/@css:volume-break-before='always']">
-                                <sequence master="{$layout-master}">
+                                <sequence css:page="{$page-style}">
                                     <xsl:apply-templates mode="sequence-attr"
                                                          select="current-group()[1]/(@* except (@css:page|@css:volume|@css:string-entry))"/>
                                     <xsl:apply-templates mode="sequence-attr"

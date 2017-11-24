@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns="http://www.daisy.org/ns/2011/obfl"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 xmlns:obfl="http://www.daisy.org/ns/2011/obfl"
                 xmlns:re="regex-utils"
@@ -9,6 +10,74 @@
                 version="2.0">
     
     <xsl:include href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xsl"/>
+    
+    <xsl:param name="duplex" as="xs:string" required="yes"/>
+    
+    <xsl:variable name="page-stylesheets" as="element()*" select="/*/css:rule[@selector='@page']"/>
+    
+    <xsl:function name="pxi:layout-master-name" as="xs:string">
+        <xsl:param name="page-stylesheet" as="xs:string"/>
+        <xsl:param name="right-page-odd" as="xs:boolean"/>
+        <!--
+            TODO: optimisation: also check whether :left or :right style present. if not, no
+            need to differentiate.
+        -->
+        <xsl:sequence select="concat('master_',
+                                     if ($right-page-odd)
+                                       then index-of($page-stylesheets/@style, $page-stylesheet)
+                                       else (count($page-stylesheets)
+                                             + index-of($page-stylesheets/@style, $page-stylesheet)))"/>
+    </xsl:function>
+    
+    <xsl:function name="pxi:right-page-odd" as="xs:boolean">
+        <xsl:param name="sequence" as="element()"/> <!-- obfl:sequence|obfl:toc-sequence|obfl:dynamic-sequence -->
+        <xsl:sequence select="not((($sequence|$sequence/preceding-sibling::*)
+                                   [@initial-page-number])
+                                  [last()]
+                                  [(xs:integer(@initial-page-number) mod 2)=0])"/>
+    </xsl:function>
+    
+    <xsl:template match="/*">
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:variable name="sequences" as="element()*" select="//obfl:sequence|//obfl:toc-sequence|//obfl:dynamic-sequence"/>
+            <xsl:for-each select="distinct-values($sequences/@css:page)">
+                <xsl:variable name="page-stylesheet" as="element()" select="$page-stylesheets[@style=current()][1]"/>
+                <xsl:variable name="sequences" as="element()*" select="$sequences[@css:page=current()]"/>
+                <xsl:if test="$sequences[pxi:right-page-odd(.)]">
+                    <xsl:sequence select="obfl:generate-layout-master(
+                                            $page-stylesheet/*,
+                                            pxi:layout-master-name(., true()),
+                                            true())"/>
+                </xsl:if>
+                <xsl:if test="$sequences[not(pxi:right-page-odd(.))]">
+                    <xsl:sequence select="obfl:generate-layout-master(
+                                            $page-stylesheet/*,
+                                            pxi:layout-master-name(., false()),
+                                            false())"/>
+                </xsl:if>
+            </xsl:for-each>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="obfl:sequence/@css:page|
+                         obfl:toc-sequence/@css:page|
+                         obfl:dynamic-sequence/@css:page">
+        <xsl:attribute name="master" select="pxi:layout-master-name(., pxi:right-page-odd(parent::*))"/>
+    </xsl:template>
+    
+    <xsl:template match="/*/css:rule[@selector='@page']"/>
+    
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <!-- ==================================== -->
+    <!-- CSS page style to OBFL layout-master -->
+    <!-- ==================================== -->
     
     <xsl:variable name="empty-string" as="element()">
         <string value=""/>
@@ -23,23 +92,15 @@
     <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="element()*"/>
         <xsl:param name="name" as="xs:string"/>
-        <xsl:variable name="duplex" as="xs:boolean" select="true()"/>
-        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $duplex)"/>
-    </xsl:function>
-    
-    <xsl:function name="obfl:generate-layout-master">
-        <xsl:param name="page-stylesheet" as="element()*"/>
-        <xsl:param name="name" as="xs:string"/>
-        <xsl:param name="duplex" as="xs:boolean"/>
         <xsl:variable name="right-page-odd" as="xs:boolean" select="true()"/>
-        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $duplex, $right-page-odd)"/>
+        <xsl:sequence select="obfl:generate-layout-master($page-stylesheet, $name, $right-page-odd)"/>
     </xsl:function>
     
     <xsl:function name="obfl:generate-layout-master">
         <xsl:param name="page-stylesheet" as="element()*"/> <!-- css:rule* -->
         <xsl:param name="name" as="xs:string"/>
-        <xsl:param name="duplex" as="xs:boolean"/>
         <xsl:param name="right-page-odd" as="xs:boolean"/>
+        <xsl:variable name="duplex" as="xs:boolean" select="$duplex='true'"/>
         <xsl:variable name="right-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':right']/*"/>
         <xsl:variable name="left-page-stylesheet" as="element()*" select="$page-stylesheet[@selector=':left']/*"/>
         <xsl:variable name="default-page-stylesheet" as="element()*"

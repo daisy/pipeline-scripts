@@ -593,6 +593,18 @@
         <p:with-param name="braille-translator-query" select="if ($text-transform='auto') then '' else $text-transform">
             <p:empty/>
         </p:with-param>
+    </p:xslt>
+    
+    <!-- for debug info -->
+    <p:for-each><p:identity/></p:for-each>
+    
+    <!--
+        generate layout-masters
+    -->
+    <p:xslt>
+        <p:input port="stylesheet">
+            <p:document href="generate-obfl-layout-master.xsl"/>
+        </p:input>
         <p:with-param name="duplex" select="$duplex">
             <p:empty/>
         </p:with-param>
@@ -624,12 +636,5 @@
         </p:insert>
         <p:delete match="obfl:toc-sequence/obfl:table-of-contents"/>
     </p:group>
-    
-    <!--
-        delete layout-masters that are not used
-    -->
-    <p:delete match="/*/obfl:layout-master[
-                       not(some $name in @name satisfies
-                           (//obfl:sequence|//obfl:toc-sequence|//obfl:dynamic-sequence)[@master=$name])]"/>
     
 </p:declare-step>
