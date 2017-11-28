@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>scripts-aggregator</artifactId>
-  <version>1.10.2</version>
+  <version>1.10.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Aggregator POM for the Default Scripts</name>
@@ -23,22 +23,22 @@
     <module>bom</module>
     <module>parent</module>
     <module>daisy202-to-epub3</module>
-    <!--<module>daisy202-validator</module>-->
-    <!--<module>daisy3-to-daisy202</module>-->
-    <!--<module>daisy3-to-epub3</module>-->
-    <!--<module>dtbook-to-daisy3</module>-->
-    <!--<module>dtbook-to-epub3</module>-->
-    <!--<module>dtbook-to-html</module>-->
-    <!--<module>dtbook-to-odt</module>-->
-    <!--<module>dtbook-to-zedai</module>-->
-    <!--<module>dtbook-validator</module>-->
+    <module>daisy202-validator</module>
+    <module>daisy3-to-daisy202</module>
+    <module>daisy3-to-epub3</module>
+    <module>dtbook-to-daisy3</module>
+    <module>dtbook-to-epub3</module>
+    <module>dtbook-to-html</module>
+    <module>dtbook-to-odt</module>
+    <module>dtbook-to-zedai</module>
+    <module>dtbook-validator</module>
     <module>epub3-to-daisy202</module>
-    <!--<module>epub3-validator</module>-->
-    <!--<module>html-to-dtbook</module>-->
-    <!--<module>html-to-epub3</module>-->
-    <!--<module>nimas-fileset-validator</module>-->
-    <!--<module>zedai-to-epub3</module>-->
-    <!--<module>zedai-to-html</module>-->
+    <module>epub3-validator</module>
+    <module>html-to-dtbook</module>
+    <module>html-to-epub3</module>
+    <module>nimas-fileset-validator</module>
+    <module>zedai-to-epub3</module>
+    <module>zedai-to-html</module>
   </modules>
   
   <!-- don't publish aggregator -->
@@ -67,8 +67,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>v1.10.2</tag>
-  </scm>
 </project>
