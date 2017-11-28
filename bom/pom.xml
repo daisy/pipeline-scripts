@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules</groupId>
   <artifactId>scripts-bom</artifactId>
-  <version>1.10.2-SNAPSHOT</version>
+  <version>1.10.2</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Script Modules BoM</name>
@@ -23,7 +23,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>daisy202-to-epub3</artifactId>
-        <version>1.2.2-SNAPSHOT</version>
+        <version>1.2.2</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -73,7 +73,7 @@
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
         <artifactId>epub3-to-daisy202</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>1.1.2</version>
       </dependency>
       <dependency>
         <groupId>org.daisy.pipeline.modules</groupId>
@@ -125,4 +125,8 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <scm>
+    <tag>v1.10.2</tag>
+  </scm>
 </project>
