@@ -121,7 +121,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
     <!-- pass all the variables all the time.              -->
     <!-- ================================================= -->
     <p:in-scope-names name="in-scope-names"/>
-    <px:delete-parameters name="input-options" px:message="Collecting parameters" px:progress=".01"
+    <px:delete-parameters name="input-options" px:progress=".01"
                           parameter-names="stylesheet
                                            transform
                                            ascii-file-format
@@ -141,7 +141,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
     <!-- =============== -->
-    <px:tempdir name="temp-dir" px:message="Creating temporary directory" px:progress=".01">
+    <px:tempdir name="temp-dir" px:progress=".01">
         <p:with-option name="href" select="if ($temp-dir!='') then $temp-dir else $pef-output-dir"/>
     </px:tempdir>
     <p:sink/>
@@ -149,7 +149,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
     <!-- ======= -->
     <!-- CONVERT -->
     <!-- ======= -->
-    <px:dtbook-to-pef.convert name="convert" px:message="Converting from DTBook to PEF" px:progress=".92"
+    <px:dtbook-to-pef.convert name="convert" px:message="Transforming from DTBook to PEF" px:progress=".92"
                               default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
@@ -168,7 +168,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
     <!-- ===== -->
     <!-- STORE -->
     <!-- ===== -->
-    <px:dtbook-to-pef.store px:message="Storing PEF" px:progress=".06">
+    <px:dtbook-to-pef.store px:message="Storing" px:progress=".06">
         <p:input port="dtbook">
             <p:pipe step="main" port="source"/>
         </p:input>

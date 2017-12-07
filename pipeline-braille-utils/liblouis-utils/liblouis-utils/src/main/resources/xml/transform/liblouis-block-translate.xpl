@@ -11,7 +11,7 @@
 	
 	<p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
 	
-	<css:parse-properties px:message="Parsing CSS properties" px:progress="1/2"
+	<css:parse-properties px:progress=".05"
 	                      properties="display"/>
 	
 	<!--
@@ -20,7 +20,7 @@
 	-->
 	<p:wrap wrapper="css:wrapper" match="/*"/>
 	
-	<p:xslt px:message="Translating blocks" px:progress="1/2">
+	<p:xslt px:message="Translating with Liblouis" px:progress=".95">
 		<p:input port="stylesheet">
 			<p:document href="liblouis-block-translate.xsl"/>
 		</p:input>

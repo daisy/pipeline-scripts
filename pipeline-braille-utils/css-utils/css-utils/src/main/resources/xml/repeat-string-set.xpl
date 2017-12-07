@@ -27,7 +27,7 @@
         </p:documentation>
     </p:output>
     
-    <p:for-each px:message="@css:string-set" px:progress=".45">
+    <p:for-each px:progress=".45">
         <p:xslt>
             <p:input port="stylesheet">
                 <p:inline>
@@ -53,7 +53,7 @@
     </p:for-each>
     
     <p:identity name="iteration-source"/>
-    <p:for-each px:message="split, wrap and insert" px:progress=".10">
+    <p:for-each px:progress=".10">
         <p:identity name="current-section"/>
         <p:split-sequence>
             <p:input port="source">
@@ -74,7 +74,7 @@
         </p:insert>
     </p:for-each>
     
-    <p:for-each px:message="css:string-set" px:progress=".45">
+    <p:for-each px:progress=".45">
         <p:xslt>
             <p:input port="stylesheet">
                 <p:inline>

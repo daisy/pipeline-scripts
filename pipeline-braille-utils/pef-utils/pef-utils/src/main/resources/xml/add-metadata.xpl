@@ -13,7 +13,7 @@
     <p:input port="metadata"/>
     <p:output port="result" px:media-type="application/x-pef+xml"/>
     
-    <p:xslt px:message="Adding metadata to PEF" px:progress="1">
+    <p:xslt px:progress="1">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
             <p:pipe step="main" port="metadata"/>

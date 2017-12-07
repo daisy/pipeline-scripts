@@ -112,13 +112,16 @@
 				<p:pipe step="main" port="source"/>
 			</p:input>
 		</p:identity>
-		<pxi:recursive-xslt px:message="Applying {count(tokenize($all-xslt-stylesheets,'\s+'))} XSLT stylesheets" px:progress=".50">
+		<pxi:recursive-xslt px:progress=".50">
 			<p:with-option name="stylesheets" select="$all-xslt-stylesheets"/>
 			<p:input port="parameters">
 				<p:pipe step="main" port="parameters"/>
 			</p:input>
 		</pxi:recursive-xslt>
-		<css:inline px:message="Applying {count(tokenize($all-css-stylesheets,'\s+'))} CSS stylesheets" px:progress=".50">
+		<css:inline px:message="Applying CSS{if (exists(tokenize($all-css-stylesheets,'\s+')[not(.='')]))
+		                                     then concat(':',string-join(('',tokenize($all-css-stylesheets,'\s+')[not(.='')]),'&#x0A;- '))
+		                                     else ''}"
+		            px:progress=".50">
 			<p:with-option name="default-stylesheet" select="$all-css-stylesheets"/>
 			<p:input port="sass-variables">
 				<p:pipe step="main" port="parameters"/>
