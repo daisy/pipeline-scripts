@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.16-SNAPSHOT</version>
+    <version>1.10.2-SNAPSHOT</version>
     <relativePath>../../../maven/parent/</relativePath>
   </parent>
   
   <artifactId>dotify-formatter</artifactId>
-  <version>1.11.2-SNAPSHOT</version>
+  <version>1.12.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   
   <name>DP2 Braille Modules :: dotify-utils :: dotify-formatter</name>
@@ -36,6 +36,15 @@
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>common-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>calabash-adapter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
@@ -85,36 +94,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xproc-engine-daisy-pipeline</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.xprocspec</groupId>
-      <artifactId>xprocspec</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xprocspec-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.maven</groupId>
-      <artifactId>xspec-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>saxon-adapter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
       <scope>test</scope>
@@ -130,14 +109,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.2</version>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>framework-volatile</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>pax-exam-helper</artifactId>
+      <groupId>org.daisy.pipeline.build</groupId>
+      <artifactId>modules-test-helper</artifactId>
       <scope>test</scope>
     </dependency>
     <!--
@@ -177,7 +155,8 @@
               org.daisy.pipeline.braille.dotify.impl.MarkerProcessorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.BrailleTranslatorFactoryServiceImpl,
               org.daisy.pipeline.braille.dotify.impl.DotifyCSSStyledDocumentTransform$Provider,
-              org.daisy.pipeline.braille.dotify.impl.DotifyOBFLTransform$Provider
+              org.daisy.pipeline.braille.dotify.impl.DotifyOBFLTransform$Provider,
+              org.daisy.pipeline.braille.dotify.calabash.impl.ShiftObflMarkerStep$Provider
             </_dsannotations>
           </instructions>
         </configuration>

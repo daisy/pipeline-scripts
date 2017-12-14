@@ -13,22 +13,23 @@
     <p:input port="source">
         <p:documentation>
             Style sheets of elements in the input must be declared in style attributes, which must
-            conform to http://snaekobbi.github.io/braille-css-spec/#style-attribute.
+            conform to http://braillespecs.github.io/braille-css/#style-attribute.
         </p:documentation>
     </p:input>
     
     <p:output port="result">
         <p:documentation>
             Elements in the output will get a css:* attribute for each pseudo-element rule or
-            at-rule in the element's style attribute. Rules with the same name but different
+            at-rule in the element's style attribute. Rules with the same keyword but different
             pseudo-classes are combined into a single attribute. For example, the rule `@page {
-            size: 40 25 }' becomes the attribute css:page="size: 40 25", the rule `@volume {
-            max-length: 100 } @volume:first { max-length: 50 }` becomes the attribute css:volume="{
-            max-length: 100 } :first { max-length: 50 }" and the rule `::before { content: '⠶' }'
-            becomes the attribute css:before="content: '⠶'". Any attributes in the input with the
-            same name will be overwritten. Only properties defined on the element itself will be
-            retained in the style attribute, as a simple declaration list. The style attribute is
-            dropped when empty.
+            size: 40 25 }' becomes the attribute css:page="size: 40 25", the rules `@volume {
+            max-length: 100 } @volume:first { max-length: 50 }` become the attribute css:volume="{
+            max-length: 100 } :first { max-length: 50 }", the rule `::before { content: '⠶' }'
+            becomes the attribute css:before="content: '⠶'", and the rule `@text-transform foo
+            {...}` becomes the attribute css:text-transform-foo="...". Any attributes in the input
+            with the same name will be overwritten. Only properties defined on the element itself
+            will be retained in the style attribute, as a simple declaration list. The style
+            attribute is dropped when empty.
         </p:documentation>
     </p:output>
     

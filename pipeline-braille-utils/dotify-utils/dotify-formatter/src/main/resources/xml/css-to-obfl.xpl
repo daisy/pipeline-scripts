@@ -25,19 +25,24 @@
     <p:import href="propagate-page-break.xpl"/>
     <p:import href="shift-obfl-marker.xpl"/>
     <p:import href="make-obfl-pseudo-elements.xpl"/>
+    <p:import href="extract-obfl-pseudo-elements.xpl"/>
     
     <p:declare-step type="pxi:recursive-parse-stylesheet-and-make-pseudo-elements">
         <p:input port="source"/>
         <p:output port="result" sequence="true"/>
-        <css:parse-stylesheet px:message="css:parse-stylesheet">
+        <css:parse-stylesheet>
             <p:documentation>
                 Make css:page, css:volume, css:after, css:before, css:footnote-call, css:duplicate,
                 css:alternate, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
                 css:_obfl-on-volume-end and css:_obfl-on-toc-end attributes.
             </p:documentation>
         </css:parse-stylesheet>
-        <css:parse-properties px:message="css:parse-properties"
-                              properties="flow">
+        <p:delete match="@css:*[matches(local-name(),'^text-transform-')]">
+            <p:documentation>
+                For now, ignore @text-transform definitions.
+            </p:documentation>
+        </p:delete>
+        <css:parse-properties properties="flow">
             <p:documentation>
                 Make css:flow attributes.
             </p:documentation>
@@ -52,35 +57,29 @@
                           //*/@css:_obfl-on-volume-start|
                           //*/@css:_obfl-on-volume-end|
                           //*/@css:_obfl-on-toc-end">
-                <css:make-pseudo-elements px:message="css:make-pseudo-elements">
+                <css:make-pseudo-elements>
                     <p:documentation>
                         Make css:before, css:after, css:duplicate, css:alternate and
                         css:footnote-call pseudo-elements from css:before, css:after, css:duplicate,
                         css:alternate and css:footnote-call attributes.
                     </p:documentation>
                 </css:make-pseudo-elements>
-                <pxi:make-obfl-pseudo-elements px:message="pxi:make-obfl-pseudo-elements">
+                <pxi:make-obfl-pseudo-elements>
                     <p:documentation>
                         Make css:_obfl-on-toc-start, css:_obfl-on-volume-start,
-                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-element documents.
+                        css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
                     </p:documentation>
                 </pxi:make-obfl-pseudo-elements>
-                <p:for-each>
-                    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements
-                        px:message="pxi:recursive-parse-stylesheet-and-make-pseudo-elements"/>
-                </p:for-each>
+                <pxi:recursive-parse-stylesheet-and-make-pseudo-elements/>
             </p:when>
             <p:otherwise>
-                <p:rename match="@css:_obfl-on-toc-start-ref" new-name="css:_obfl-on-toc-start"/>
-                <p:rename match="@css:_obfl-on-volume-start-ref" new-name="css:_obfl-on-volume-start"/>
-                <p:rename match="@css:_obfl-on-volume-end-ref" new-name="css:_obfl-on-volume-end"/>
-                <p:rename match="@css:_obfl-on-toc-end-ref" new-name="css:_obfl-on-toc-end"/>
+                <p:identity/>
             </p:otherwise>
         </p:choose>
     </p:declare-step>
     
     <p:add-xml-base/>
-    <p:xslt px:message="" px:progress=".01">
+    <p:xslt px:progress=".01">
         <p:input port="stylesheet">
             <p:inline>
                 <xsl:stylesheet version="2.0">
@@ -99,29 +98,35 @@
         </p:input>
     </p:xslt>
     
-    <css:parse-properties px:message="Make css:display, css:render-table-by and css:table-header-policy attributes."
-                          px:progress=".01"
+    <css:parse-properties px:progress=".01"
                           properties="display render-table-by table-header-policy">
         <p:documentation>
             Make css:display, css:render-table-by and css:table-header-policy attributes.
         </p:documentation>
     </css:parse-properties>
     
-    <css:render-table-by px:message="Layout tables as lists." px:progress=".02">
+    <css:render-table-by px:progress=".02">
         <p:documentation>
             Layout tables as lists.
         </p:documentation>
     </css:render-table-by>
     
-    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements px:message="Recursively parse stylesheet and make pseudo elements"
-                                                             px:progress=".01">
+    <pxi:recursive-parse-stylesheet-and-make-pseudo-elements px:progress=".01">
         <p:documentation>
             Make css:page and css:volume attributes, css:after, css:before, css:duplicate,
-            css:alternate and css:footnote-call pseudo-elements, and css:_obfl-on-toc-start,
-            css:_obfl-on-volume-start, css:_obfl-on-volume-end and css:_obfl-on-toc-end
-            pseudo-element documents.
+            css:alternate, css:footnote-call, css:_obfl-on-toc-start, css:_obfl-on-volume-start,
+            css:_obfl-on-volume-end and css:_obfl-on-toc-end pseudo-elements.
         </p:documentation>
     </pxi:recursive-parse-stylesheet-and-make-pseudo-elements>
+    
+    <p:for-each px:progress=".01">
+        <pxi:extract-obfl-pseudo-elements px:progress="1">
+            <p:documentation>
+                Extract css:_obfl-on-toc-start, css:_obfl-on-volume-start, css:_obfl-on-volume-end
+                and css:_obfl-on-toc-end pseudo-elements into their own documents.
+            </p:documentation>
+        </pxi:extract-obfl-pseudo-elements>
+    </p:for-each>
     
     <p:for-each px:progress=".05">
         <css:parse-properties px:progress=".50"
@@ -141,8 +146,8 @@
     <p:wrap-sequence wrapper="_"/>
     <css:parse-content px:progress=".02">
         <p:documentation>
-            Make css:string, css:text, css:content and css:counter elements from css:content
-            attributes. <!-- depends on make-pseudo-element -->
+            Make css:string, css:text, css:content, css:counter and css:custom-func elements from
+            css:content attributes. <!-- depends on make-pseudo-element -->
         </p:documentation>
     </css:parse-content>
     <p:filter select="/_/*"/>
@@ -151,7 +156,7 @@
         <p:documentation>
             Split into a sequence of flows.
         </p:documentation>
-        <p:for-each px:message="Make css:flow attributes." px:progress=".50">
+        <p:for-each px:progress=".50">
             <css:parse-properties px:progress="1"
                                   properties="flow">
                 <p:documentation>
@@ -161,7 +166,7 @@
         </p:for-each>
         <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
         <p:wrap wrapper="_" match="/*"/>
-        <css:flow-into name="_2" px:message="Extract named flows based on css:flow attributes." px:progress=".01">
+        <css:flow-into name="_2" px:progress=".50">
             <p:documentation>
                 Extract named flows based on css:flow attributes and place anchors (css:id
                 attributes) in the normal flow.
@@ -177,70 +182,66 @@
         </p:identity>
     </p:group>
     
-    <css:label-targets name="label-targets" px:message="Make css:id attributes." px:progress=".01">
+    <css:label-targets name="label-targets" px:progress=".01">
         <p:documentation>
             Make css:id attributes. <!-- depends on parse-content -->
         </p:documentation>
     </css:label-targets>
     
-    <css:eval-target-content px:message="Evaluate css:content elements." px:progress=".01">
+    <css:eval-target-content px:progress=".01">
         <p:documentation>
             Evaluate css:content elements. <!-- depends on parse-content and label-targets -->
         </p:documentation>
     </css:eval-target-content>
     
-    <p:for-each px:message="" px:progress=".02">
-        <css:parse-properties px:message="Make css:white-space, css:display, css:list-style-type, css:page-break-before, css:page-break-after and css:volume-break-before attributes."
-                              px:progress=".20"
-                              properties="white-space display list-style-type page-break-before page-break-after volume-break-before">
+    <p:for-each px:progress=".02">
+        <css:parse-properties px:progress=".20"
+                              properties="white-space display list-style-type">
             <p:documentation>
-                Make css:white-space, css:display, css:list-style-type, css:page-break-before,
-                css:page-break-after and css:volume-break-before attributes.
+                Make css:white-space, css:display and css:list-style-type attributes.
             </p:documentation>
         </css:parse-properties>
-        <css:preserve-white-space px:message="Make css:white-space elements from css:white-space attributes." px:progress=".20">
+        <css:preserve-white-space px:progress=".20">
             <p:documentation>
                 Make css:white-space elements from css:white-space attributes.
             </p:documentation>
         </css:preserve-white-space>
-        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:_obfl-toc" attribute-value="_">
+        <p:add-attribute match="*[@css:display=('-obfl-toc','-obfl-table-of-contents')]"
+                         attribute-name="css:_obfl-toc" attribute-value="_">
             <p:documentation>
                 Mark display:-obfl-toc elements.
             </p:documentation>
         </p:add-attribute>
-        <p:add-attribute match="*[@css:display='-obfl-toc']" attribute-name="css:display" attribute-value="block">
+        <p:add-attribute match="css:alternate[@css:display='-obfl-list-of-references']"
+                         attribute-name="css:_obfl-list-of-references" attribute-value="_">
             <p:documentation>
-                Treat display:-obfl-toc as block.
+                Mark display:-obfl-list-of-references elements.
             </p:documentation>
         </p:add-attribute>
-        <css:make-table-grid px:message="Create table grid structures from HTML/DTBook tables." px:progress=".20">
+        <p:add-attribute match="*[@css:display=('-obfl-toc','-obfl-table-of-contents','-obfl-list-of-references')]"
+                         attribute-name="css:display" attribute-value="block">
+            <p:documentation>
+                Treat display:-obfl-toc and display:-obfl-list-of-references as block.
+            </p:documentation>
+        </p:add-attribute>
+        <css:make-table-grid px:progress=".20">
             <p:documentation>
                 Create table grid structures from HTML/DTBook tables.
             </p:documentation>
         </css:make-table-grid>
-        <css:make-boxes px:message="Make css:box elements based on css:display and css:list-style-type attributes." px:progress=".20">
+        <css:make-boxes px:progress=".20">
             <p:documentation>
                 Make css:box elements based on css:display and css:list-style-type attributes. <!--
                 depends on flow-into, label-targets and make-table-grid -->
             </p:documentation>
         </css:make-boxes>
-        <!--
-            FIXME: this may create unncessesary empty blocks in result OBFL
-        -->
-        <p:rename match="css:_[not(child::node()) and @css:id]" new-name="css:box">
-            <p:documentation>
-                In order to keep the positions of anchors precise, rename anchors in the form of
-                empty css:_ elements to inline boxes, because otherwise they would be moved by
-                css:shift-id. <!-- depends on flow-into and make-boxes -->
-            </p:documentation>
-        </p:rename>
         <p:add-attribute match="css:box[not(@type)]" attribute-name="type" attribute-value="inline"/>
         <p:group px:progress=".20">
             <p:documentation>
                 Move css:render-table-by, css:_obfl-table-col-spacing, css:_obfl-table-row-spacing
                 and css:_obfl-preferred-empty-space attributes to 'table' css:box elements.
             </p:documentation>
-            <css:parse-properties px:progress="1"
+            <css:parse-properties px:progress=".50"
                                   properties="-obfl-table-col-spacing -obfl-table-row-spacing -obfl-preferred-empty-space"/>
             <p:label-elements match="*[@css:render-table-by]/css:box[@type='table']"
                               attribute="css:render-table-by"
@@ -261,7 +262,7 @@
         </p:group>
     </p:for-each>
     
-    <css:eval-counter px:message="Evaluate css:counter elements." px:progress=".08"
+    <css:eval-counter px:progress=".08"
                       exclude-counters="page">
         <p:documentation>
             Evaluate css:counter elements. <!-- depends on label-targets, parse-content and
@@ -269,77 +270,206 @@
         </p:documentation>
     </css:eval-counter>
     
-    <css:flow-from px:message="Evaluate css:flow elements." px:progress=".02">
+    <css:flow-from px:progress=".02">
         <p:documentation>
             Evaluate css:flow elements. <!-- depends on parse-content and eval-counter -->
         </p:documentation>
     </css:flow-from>
     
-    <css:eval-target-text px:message="Evaluate css:text elements." px:progress=".01">
+    <css:eval-target-text px:progress=".01">
         <p:documentation>
             Evaluate css:text elements. <!-- depends on label-targets and parse-content -->
         </p:documentation>
     </css:eval-target-text>
     
-    <p:for-each px:message="Wrap/unwrap with inline css:box elements." px:progress=".01">
-        <css:make-anonymous-inline-boxes px:progress="1">
+    <p:for-each px:progress=".02">
+        <css:make-anonymous-inline-boxes px:progress=".40">
             <p:documentation>
                 Wrap/unwrap with inline css:box elements.
             </p:documentation>
         </css:make-anonymous-inline-boxes>
+        <css:parse-counter-set px:progress=".20"
+                               counters="page">
+            <p:documentation>
+                Make css:counter-set-page attributes.
+            </p:documentation>
+        </css:parse-counter-set>
+        <p:delete match="/*[@css:flow]//*/@css:volume|
+                         //css:box[@type='table']//*/@css:page|
+                         //css:box[@type='table']//*/@css:volume|
+                         //css:box[@type='table']//*/@css:counter-set-page">
+            <p:documentation>
+                Don't support 'volume' within named flows. Don't support 'volume', 'page' and
+                'counter-set: page' within tables.
+            </p:documentation>
+        </p:delete>
+        <p:group px:progress=".05">
+            <p:documentation>
+                Move css:counter-set-page attribute to css:box elements.
+            </p:documentation>
+            <p:insert match="css:_[@css:counter-set-page]" position="first-child">
+                <p:input port="insertion">
+                    <p:inline><css:box type="inline"/></p:inline>
+                </p:input>
+            </p:insert>
+            <p:label-elements match="css:_[@css:counter-set-page]/css:box[1]"
+                              attribute="css:counter-set-page"
+                              label="parent::css:_/@css:counter-set-page"/>
+            <p:delete match="css:_/@css:counter-set-page"/>
+        </p:group>
+        <p:group px:progress=".05">
+            <p:documentation>
+                Move css:page attributes to css:box elements.
+            </p:documentation>
+            <p:label-elements match="css:box[not(@css:page)][(ancestor::css:_[@css:page]|ancestor::*[not(self::css:_)])[last()]/self::css:_]"
+                              attribute="css:page"
+                              label="(ancestor::*[@css:page])[last()]/@css:page"/>
+            <p:delete match="css:_/@css:page"/>
+        </p:group>
+        <p:group px:progress=".05">
+            <p:documentation>
+                Move css:volume attributes to css:box elements.
+            </p:documentation>
+            <p:label-elements match="css:box[not(@css:volume)][(ancestor::css:_[@css:volume]|ancestor::*[not(self::css:_)])[last()]/self::css:_]"
+                              attribute="css:volume"
+                              label="(ancestor::*[@css:volume])[last()]/@css:volume"/>
+            <p:delete match="css:_/@css:volume"/>
+        </p:group>
+        <css:shift-string-set px:progress=".15">
+            <p:documentation>
+                Move css:string-set attributes to inline css:box elements. <!-- depends on
+                make-anonymous-inline-boxes -->
+            </p:documentation>
+        </css:shift-string-set>
+        <pxi:shift-obfl-marker px:progress=".10">
+            <p:documentation>
+                Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
+            </p:documentation>
+        </pxi:shift-obfl-marker>
+    </p:for-each>
+    
+    <css:shift-id px:progress=".01">
+        <p:documentation>
+            Move css:id attributes to css:box elements.
+        </p:documentation>
+    </css:shift-id>
+    
+    <p:for-each px:progress=".08">
+        <p:unwrap name="unwrap-css-_"
+                  match="css:_[not(@css:*) and parent::*]">
+            <p:documentation>
+                All css:_ elements except for root elements, top-level elements in named flows (with
+                css:anchor attribute), and empty elements with a css:id, css:string-set or
+                css:_obfl-marker attribute within a css:box element should be gone now. <!-- depends
+                on shift-id and shift-string-set -->
+            </p:documentation>
+        </p:unwrap>
+        <css:make-anonymous-block-boxes px:progress=".40">
+            <p:documentation>
+                Wrap inline css:box elements in block css:box elements where necessary. <!-- depends
+                on unwrap css:_ -->
+            </p:documentation>
+        </css:make-anonymous-block-boxes>
+        <css:parse-properties px:progress=".10"
+                              properties="margin-left margin-right margin-top margin-bottom
+                                          padding-left padding-right padding-top padding-bottom
+                                          border-left-pattern border-right-pattern border-top-pattern
+                                          border-bottom-pattern border-left-style border-right-style
+                                          border-top-style border-bottom-style text-indent">
+            <p:documentation>
+                Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
+                css:padding-left, css:padding-right, css:padding-top, css:padding-bottom,
+                css:border-left-pattern, css:border-right-pattern, css:border-top-pattern,
+                css:border-bottom-pattern, css:border-left-style, css:border-right-style,
+                css:border-top-style, css:border-bottom-style and css:text-indent attributes.
+            </p:documentation>
+        </css:parse-properties>
+        <css:adjust-boxes px:progress=".20">
+            <p:documentation>
+                <!-- depends on make-anonymous-block-boxes -->
+            </p:documentation>
+        </css:adjust-boxes>
+        <css:new-definition px:progress=".20">
+            <p:documentation>
+                Convert CSS properties to corresponding OBFL attributes.
+            </p:documentation>
+            <p:input port="definition">
+                <p:document href="obfl-css-definition.xsl"/>
+            </p:input>
+        </css:new-definition>
+        <p:xslt px:progress=".10">
+            <p:input port="parameters">
+                <p:empty/>
+            </p:input>
+            <p:input port="stylesheet">
+                <p:document href="css-to-obfl.block-boxes-with-no-line-boxes.xsl"/>
+            </p:input>
+            <p:documentation>
+                Remove text nodes from block boxes with no line boxes.
+            </p:documentation>
+        </p:xslt>
+        <p:delete match="//css:box[@type='table']//*/@css:page-break-before|
+                         //css:box[@type='table']//*/@css:page-break-after|
+                         //*[@css:_obfl-toc]//*/@css:page-break-before|
+                         //*[@css:_obfl-toc]//*/@css:page-break-after">
+            <p:documentation>
+                Don't support 'page-break-before' and 'page-break-after' within tables or
+                '-obfl-toc' elements.
+            </p:documentation>
+        </p:delete>
     </p:for-each>
     
     <p:group px:progress=".20">
         <p:documentation>
             Split flows into sections.
         </p:documentation>
-        <p:for-each px:message="Split flows into sections." px:progress="2/20">
-            <css:parse-counter-set px:message="Make css:counter-set-page attributes." px:progress=".50"
-                                   counters="page">
+        <p:for-each px:progress=".50">
+            <pxi:propagate-page-break px:progress=".40">
                 <p:documentation>
-                    Make css:counter-set-page attributes.
+                    Propagate css:page-break-before, css:page-break-after, css:volume-break-before
+                    and css:volume-break-after attributes, so that splitting can be performed
+                    without creating empty boxes, and also insert forced page breaks to satisfy the
+                    'page' and 'volume' properties. <!-- depends on make-anonymous-block-boxes -->
                 </p:documentation>
-            </css:parse-counter-set>
-            <p:delete match="/*[@css:flow]//*/@css:volume|
-                             /*[@css:flow]//*/@css:counter-set-page|
-                             //css:box[@type='table']//*/@css:page-break-before|
-                             //css:box[@type='table']//*/@css:page-break-after|
-                             //css:box[@type='table']//*/@css:page|
-                             //css:box[@type='table']//*/@css:volume|
-                             //css:box[@type='table']//*/@css:counter-set-page|
-                             //*[@css:obfl-toc]//*/@css:page-break-before|
-                             //*[@css:obfl-toc]//*/@css:page-break-after">
+            </pxi:propagate-page-break>
+            <p:group px:progress=".10">
                 <p:documentation>
-                     Don't support 'volume' and 'counter-set: page' within named flows or
-                     tables. Don't support 'page' within tables. Don't support 'page-break-before'
-                     and 'page-break-after' within tables or '-obfl-toc' elements.
+                    Convert css:page-break-after="right" to a css:page-break-before on the following
+                    sibling, and css:volume-break-after="always" to a css:volume-break-before on the
+                    following sibling.
                 </p:documentation>
-            </p:delete>
-            <css:split px:message="Page and volume split." px:progress=".50"
-                       split-before="*[@css:page or @css:volume or @css:counter-set-page]|
-                                     css:box[@type='block' and @css:page-break-before='right']|
-                                     css:box[@type='block' and @css:volume-break-before='always']|
-                                     css:box[@type='table']"
-                       split-after="*[@css:page or @css:volume]|
-                                    css:box[@type='block' and @css:page-break-after='right']|
-                                    css:box[@type='table']">
+                <p:add-attribute match="css:box[@type='block'][preceding-sibling::*[1]/@css:page-break-after='right']"
+                                 attribute-name="css:page-break-before"
+                                 attribute-value="right"/>
+                <p:add-attribute match="css:box[@type='block'][preceding-sibling::*[1]/@css:volume-break-after='always']"
+                                 attribute-name="css:volume-break-before"
+                                 attribute-value="always"/>
+                <p:delete match="css:box[@type='block'][following-sibling::*]/@css:page-break-after[.='right']"/>
+                <p:delete match="css:box[@type='block'][following-sibling::*]/@css:volume-break-after[.='always']"/>
+            </p:group>
+            <css:split px:progress=".50"
+                       split-before="css:box[preceding::css:box]
+                                            [@css:counter-set-page or
+                                             @css:page-break-before='right' or
+                                             @css:volume-break-before='always' or
+                                             @type='table']"
+                       split-after="css:box[following::css:box]
+                                           [@type='table']">
                 <p:documentation>
-                    Split before and after css:page attributes, before css:counter-set-page
-                    attributes, before and after css:volume attributes, before and after tables,
-                    before css:page-break-before attributes with value 'right', after
-                    css:page-break-after attributes with value 'right', and before
+                    Split before and after tables, before css:counter-set-page attributes, before
+                    css:page-break-before attributes with value 'right', and before
                     css:volume-break-before attributes with value 'always'. <!-- depends on
-                    make-boxes -->
+                    make-boxes and propagate-page-break -->
                 </p:documentation>
             </css:split>
         </p:for-each>
-        <p:for-each px:message="Move css:page, css:counter-set-page and css:volume attributes to css:_ root element." px:progress="2/20">
-            <p:group>
+        <p:for-each px:progress=".20">
+            <p:group px:progress=".10">
                 <p:documentation>
                     Move css:page, css:counter-set-page and css:volume attributes to css:_ root
                     element.
                 </p:documentation>
-                <p:wrap wrapper="css:_" match="/*[not(@css:flow)]"/>
+                <p:wrap wrapper="css:_" match="/*[not(self::css:_)]"/>
                 <p:label-elements match="/*[descendant::*/@css:page]" attribute="css:page"
                                   label="(descendant::*/@css:page)[last()]"/>
                 <p:label-elements match="/*[descendant::*/@css:counter-set-page]" attribute="css:counter-set-page"
@@ -350,29 +480,58 @@
                 <p:delete match="/*//*/@css:counter-set-page"/>
                 <p:delete match="/*//*/@css:volume"/>
             </p:group>
-            <p:rename match="css:box[@type='inline' and not(@css:id)]
-                             [matches(string(.), '^[\s&#x2800;]*$') and
-                             not(descendant::css:white-space or
-                             descendant::css:string or
-                             descendant::css:counter or
-                             descendant::css:text or
-                             descendant::css:content or
-                             descendant::css:leader or
-                             descendant::css:custom-func)]"
-                      new-name="css:_">
+            <p:delete match="css:box[@part[not(.='first')]]/@css:page-break-before"/>
+            <p:delete match="css:box[@part[not(.='last')]]/@css:page-break-after"/>
+            <p:group px:progress=".90">
                 <p:documentation>
-                    Delete empty inline boxes (possible side effect of css:split), except if they
-                    have a css:id attribute (as a result of css:flow-into).
+                    Move around and change page breaking related properties so that they can be mapped
+                    one-to-one on OBFL properties.
                 </p:documentation>
-            </p:rename>
-            <p:delete match="css:_/@type"/>
+                <pxi:propagate-page-break px:progress=".80">
+                    <p:documentation>
+                        Propagate css:page-break-before, css:page-break-after,
+                        css:page-break-inside, css:volume-break-before and css:volume-break-after
+                        attributes. (Needs to be done a second time because the box tree has been
+                        broken up by css:split. css:page-break-before='right' will now be propagated
+                        all the wait to the root box.)
+                    </p:documentation>
+                </pxi:propagate-page-break>
+                <p:group px:progress=".10">
+                    <p:documentation>
+                        Convert css:page-break-before="avoid" to a css:page-break-after on the
+                        preceding sibling and css:page-break-after="always|right|left" to a
+                        css:page-break-before on the following sibling.
+                    </p:documentation>
+                    <p:add-attribute match="css:box[@type='block'][following-sibling::*[1]/@css:page-break-before='avoid']"
+                                     attribute-name="css:page-break-after"
+                                     attribute-value="avoid"/>
+                    <p:label-elements match="css:box[@type='block'][preceding-sibling::*[1]/@css:page-break-after=('always','left','right')]"
+                                      attribute="css:page-break-before"
+                                      label="preceding-sibling::*[1]/@css:page-break-after"/>
+                    <p:delete match="@css:page-break-before[.='avoid']"/>
+                    <p:delete match="css:box[@type='block'][following-sibling::*]/@css:page-break-after[.=('always','left','right')]"/>
+                </p:group>
+                <p:group px:progress=".10">
+                    <p:documentation>
+                        Move css:page-break-after="avoid" to last descendant block.
+                    </p:documentation>
+                    <p:add-attribute match="css:box[@type='block'
+                                                    and not(child::css:box[@type='block'])
+                                                    and (some $self in . satisfies
+                                                      some $ancestor in $self/ancestor::*[@css:page-break-after='avoid'] satisfies
+                                                        not($self/following::css:box intersect $ancestor//*))]"
+                                     attribute-name="css:page-break-after"
+                                     attribute-value="avoid"/>
+                    <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
+                </p:group>
+            </p:group>
         </p:for-each>
-        <p:group>
+        <p:group px:progress=".30">
             <p:documentation>
                 Repeat css:string-set attributes at the beginning of sections as css:string-entry.
             </p:documentation>
             <p:split-sequence test="/*[not(@css:flow)]" name="_1"/>
-            <css:repeat-string-set name="_2"/>
+            <css:repeat-string-set name="_2" px:progress="1"/>
             <p:identity>
                 <p:input port="source">
                     <p:pipe step="_2" port="result"/>
@@ -380,126 +539,23 @@
                 </p:input>
             </p:identity>
         </p:group>
-        <css:shift-string-set px:message="Move css:string-set attributes." px:progress="1/14">
-            <p:documentation>
-                Move css:string-set attributes. <!-- depends on make-anonymous-inline-boxes -->
-            </p:documentation>
-        </css:shift-string-set>
-        <pxi:shift-obfl-marker px:message="Move css:_obfl-marker attributes." px:progress="1/20">
-            <p:documentation>
-                Move css:_obfl-marker attributes. <!-- depends on make-anonymous-inline-boxes -->
-            </p:documentation>
-        </pxi:shift-obfl-marker>
-        <css:shift-id px:message="Move css:id attributes to css:box elements." px:progress="1/20">
-            <p:documentation>
-                Move css:id attributes to css:box elements.
-            </p:documentation>
-        </css:shift-id>
     </p:group>
     
     <p:for-each px:progress=".08">
-        <p:unwrap name="unwrap-css-_" px:message="Unwrap css:_ elements." px:progress=".50"
-                  match="css:_[not(@css:*) and parent::*]">
-            <p:documentation>
-                All css:_ elements except for root elements, top-level elements in named flows (with
-                css:anchor attribute), and empty elements with a css:string-set or css:_obfl-marker
-                attribute within a css:box element should be gone now. <!-- depends on shift-id and
-                shift-string-set -->
-            </p:documentation>
-        </p:unwrap>
-        <css:make-anonymous-block-boxes px:message="Wrap inline css:box elements in block css:box elements where necessary."
-                                        px:progress=".50">
-            <p:documentation>
-                Wrap inline css:box elements in block css:box elements where necessary. <!-- depends
-                on unwrap css:_ -->
-            </p:documentation>
-        </css:make-anonymous-block-boxes>
-    </p:for-each>
-    
-    <p:split-sequence test="//css:box"/>
-    
-    <p:for-each px:progress=".03">
-        <css:parse-properties px:message="Make css:margin-*, css:border-*, css:border-bottom and css:text-indent attributes."
-                              px:progress=".20"
-                              properties="margin-left margin-right margin-top margin-bottom
-                                          padding-left padding-right padding-top padding-bottom
-                                          border-left border-right border-top border-bottom text-indent">
-            <p:documentation>
-                Make css:margin-left, css:margin-right, css:margin-top, css:margin-bottom,
-                css:padding-left, css:padding-right, css:padding-top and css:padding-bottom,
-                css:border-left, css:border-right, css:border-top, css:border-bottom and
-                css:text-indent attributes.
-            </p:documentation>
-        </css:parse-properties>
-        <css:adjust-boxes px:message="Adjust boxes." px:progress=".20">
-            <p:documentation>
-                <!-- depends on make-anonymous-block-boxes -->
-            </p:documentation>
-        </css:adjust-boxes>
-        <css:new-definition px:message="New definition." px:progress=".20">
-            <p:input port="definition">
-                <p:document href="obfl-css-definition.xsl"/>
-            </p:input>
-        </css:new-definition>
-        <p:delete px:message="Remove text nodes from block boxes with no line boxes." px:progress=".10"
-                  match="css:box[@type='block']
-                                [matches(string(.), '^[\s&#x2800;]*$') and
-                                 not(descendant::css:white-space or
-                                     descendant::css:string or
-                                     descendant::css:counter or
-                                     descendant::css:text or
-                                     descendant::css:content or
-                                     descendant::css:leader or
-                                     descendant::css:custom-func)]
-                                //text()">
-            <p:documentation>
-                Remove text nodes from block boxes with no line boxes.
-            </p:documentation>
-        </p:delete>
-        <pxi:propagate-page-break px:message="Resolve css:page-break-before=avoid and css:page-break-after=always." px:progress=".20">
-            <p:documentation>
-                Resolve css:page-break-before="avoid" and css:page-break-after="always".
-                <!-- depends on make-anonymous-block-boxes -->
-            </p:documentation>
-        </pxi:propagate-page-break>
-        <p:group px:message="Move css:page-break-after=avoid to last descendant block" px:progress=".02">
-            <p:documentation>
-                Move css:page-break-after="avoid" to last descendant block. (TODO: move to
-                pxi:propagate-page-break?)
-            </p:documentation>
-            <p:add-attribute match="css:box[@type='block'
-                                            and not(child::css:box[@type='block'])
-                                            and (some $self in . satisfies
-                                              some $ancestor in $self/ancestor::*[@css:page-break-after='avoid'] satisfies
-                                                not($self/following::css:box intersect $ancestor//*))]"
-                             attribute-name="css:page-break-after"
-                             attribute-value="avoid"/>
-            <p:delete match="css:box[@type='block' and child::css:box[@type='block']]/@css:page-break-after[.='avoid']"/>
-        </p:group>
-        <p:group>
-            <p:documentation>
-                Move volume-break-before="always" to the outermost ancestor-or-self block box.
-            </p:documentation>
-            <p:add-attribute match="/css:_/css:box[@type='block'][descendant::css:box[@type='block'][@css:volume-break-before='always']]"
-                             attribute-name="css:volume-break-before"
-                             attribute-value="always"/>
-            <p:delete match="/css:_/css:box//css:box/@css:volume-break-before"/>
-        </p:group>
-        <p:choose px:progress=".08">
+        <p:choose px:progress="1">
             <p:documentation>
                 Delete css:margin-top from first block and move css:margin-top of other blocks to
                 css:margin-bottom of their preceding block.
             </p:documentation>
-            <p:when test="$skip-margin-top-of-page='true'">
-                <p:delete px:message="Delete css:margin-top from first block and move css:margin-top of other blocks to css:margin-bottom of their preceding block"
-                          px:progress="1/8"
+            <p:when test="$skip-margin-top-of-page='true' and not(/*/@css:flow[matches(.,'-obfl-on-(toc|volume)-(start|end)/')])">
+                <p:delete px:progress=".20"
                           match="css:box
                                    [@type='block']
                                    [@css:margin-top]
                                    [not(preceding::*)]
-                                   [not(ancestor::*[@css:border-top])]
+                                   [not(ancestor::*[@css:border-top-pattern or @css:border-top-style])]
                                  /@css:margin-top"/>
-                <p:label-elements px:progress="1/8"
+                <p:label-elements px:progress=".20"
                                   match="css:box
                                            [@type='block']
                                            [following-sibling::*[1]
@@ -507,12 +563,13 @@
                                                  $self/descendant-or-self::*
                                                    [@css:margin-top][1]
                                                    [not(preceding::* intersect $self/descendant::*)]
-                                                   [not((ancestor::* intersect $self/descendant-or-self::*)[@css:border-top])]]]"
+                                                   [not((ancestor::* intersect $self/descendant-or-self::*)
+                                                        [@css:border-top-pattern or @css:border-top-style])]]]"
                                   attribute="css:_margin-bottom_"
                                   label="max((0,
                                               @css:margin-bottom/number(),
                                               following::*[@css:margin-top][1]/@css:margin-top/number()))"/>
-                <p:delete px:progress="6/8"
+                <p:delete px:progress=".60"
                           match="@css:margin-top[(preceding::css:box[@type='block']
                                                     except ancestor::*/preceding-sibling::*/descendant::*)
                                                    [last()][@css:_margin-bottom_]]"/>
@@ -524,27 +581,10 @@
         </p:choose>
     </p:for-each>
     
-    <p:split-sequence test="//css:box[@css:border-top|
-                                      @css:border-bottom|
-                                      @css:margin-top|
-                                      @css:margin-bottom|
-                                      descendant::text()|
-                                      descendant::css:white-space|
-                                      descendant::css:string|
-                                      descendant::css:counter|
-                                      descendant::css:text|
-                                      descendant::css:content|
-                                      descendant::css:leader|
-                                      descendant::css:custom-func]">
-        <p:documentation>
-            Remove empty sections.
-        </p:documentation>
-    </p:split-sequence>
-    
     <!-- for debug info -->
     <p:for-each><p:identity/></p:for-each>
     
-    <p:xslt px:progress=".26"
+    <p:xslt px:progress=".28"
             template-name="start">
         <p:input port="stylesheet">
             <p:document href="css-to-obfl.xsl"/>
@@ -558,17 +598,14 @@
     </p:xslt>
     
     <!--
-        add <marker class="foo/prev"/>
+        fill in <marker class="foo/prev"/> values
     -->
-    <p:insert px:message="add &lt;marker class=&quot;foo/prev&quot;/&gt;" px:progress=".10"
-              match="obfl:marker[not(matches(@class,'^indicator/|/entry$'))]" position="before">
-        <p:input port="insertion">
-          <p:inline><marker xmlns="http://www.daisy.org/ns/2011/obfl"/></p:inline>
-        </p:input>
-    </p:insert>
-    <p:label-elements match="obfl:marker[not(@class)]" attribute="class" label="concat(following-sibling::obfl:marker[1]/@class,'/prev')"/>
-    <p:label-elements match="obfl:marker[not(@value)]" attribute="value"
+    <p:label-elements px:progress=".01"
+                      match="obfl:marker[not(@value)]
+                                        [some $class in @class satisfies preceding::obfl:marker[concat(@class,'/prev')=$class]]"
+                      attribute="value"
                       label="string-join(for $class in @class return (preceding::obfl:marker[concat(@class,'/prev')=$class])[last()]/@value,'')"/>
+    <p:delete match="obfl:marker[not(@value)]"/>
     
     <!--
         because empty marker values would be regarded as absent in BrailleFilterImpl
@@ -579,7 +616,7 @@
     <!--
         move table-of-contents elements to the right place
     -->
-    <p:group px:message="move table-of-contents elements to the right place" px:progress=".01">
+    <p:group px:progress=".01">
         <p:identity name="_1"/>
         <p:insert match="/obfl:obfl/obfl:volume-template[not(preceding-sibling::obfl:volume-template)]" position="before">
             <p:input port="insertion" select="//obfl:toc-sequence/obfl:table-of-contents">

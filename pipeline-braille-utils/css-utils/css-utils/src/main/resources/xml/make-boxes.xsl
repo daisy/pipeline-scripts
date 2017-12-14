@@ -24,7 +24,13 @@
             <xsl:otherwise>
                 <xsl:element name="css:box">
                     <xsl:attribute name="type" select="if (@css:display=('block','list-item')) then 'block' else 'inline'"/>
-                    <xsl:attribute name="name" select="name()"/>
+                    <xsl:attribute name="name" select="if (@name and (self::css:before or
+                                                                      self::css:after or
+                                                                      self::css:alternate or
+                                                                      self::css:duplicate or
+                                                                      self::css:footnote-call))
+                                                       then @name
+                                                       else name()"/>
                     <xsl:apply-templates select="@style|@css:*"/>
                     <xsl:if test="@css:display='list-item'">
                         <!--
@@ -86,7 +92,13 @@
     <xsl:template match="*">
         <xsl:element name="css:box">
             <xsl:attribute name="type" select="'inline'"/>
-            <xsl:attribute name="name" select="name()"/>
+            <xsl:attribute name="name" select="if (@name and (self::css:before or
+                                                              self::css:after or
+                                                              self::css:alternate or
+                                                              self::css:duplicate or
+                                                              self::css:footnote-call))
+                                               then @name
+                                               else name()"/>
             <xsl:apply-templates select="@style|@css:*|node()"/>
         </xsl:element>
     </xsl:template>
@@ -117,6 +129,9 @@
                          @css:table-caption|
                          @css:table-cell"/>
     
+    <!--
+        FIXME: display-table: warning when style != default, error when unexpected elements
+    -->
     <xsl:template match="@*|
                          text()|
                          css:white-space|
@@ -149,10 +164,12 @@
     </xsl:template>
     
     <xsl:template match="@css:display" mode="display-table">
-        <xsl:call-template name="pf:warn">
-            <xsl:with-param name="msg">"display" property on "{}" element not supported.</xsl:with-param>
-            <xsl:with-param name="args" select="name(parent::*)"/>
-        </xsl:call-template>
+        <xsl:if test="not(.='inline')">
+            <xsl:call-template name="pf:warn">
+                <xsl:with-param name="msg">"display" property on "{}" element ignored.</xsl:with-param>
+                <xsl:with-param name="args" select="name(parent::*)"/>
+            </xsl:call-template>
+        </xsl:if>
     </xsl:template>
     
     <!--

@@ -6,18 +6,18 @@
                 xmlns:re="regex-utils">
   
     <xsl:variable name="new:properties" as="xs:string*"
-                  select="('margin-left',   'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
-                           'margin-right',  'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
-                           'margin-top',    'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
-                           'margin-bottom', 'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
-                           'padding-left',  'widows',                           'letter-spacing', '-obfl-table-row-spacing',
-                           'padding-right', 'volume-break-before',                                '-obfl-preferred-empty-space',
-                           'padding-top',   'volume-break-inside',                                '-obfl-use-when-collection-not-empty',
-                           'padding-bottom',                                                      '-obfl-underline',
-                           'border-left',                                                         '-obfl-keep-with-previous-sheets',
-                           'border-right',                                                        '-obfl-keep-with-next-sheets',
-                           'border-top',
-                           'border-bottom')"/>
+                  select="('margin-left',           'page-break-before', 'text-indent', 'text-transform', '-obfl-vertical-align',
+                           'margin-right',          'page-break-after',  'text-align',  'hyphens',        '-obfl-vertical-position',
+                           'margin-top',            'page-break-inside', 'line-height', 'white-space',    '-obfl-toc-range',
+                           'margin-bottom',         'orphans',                          'word-spacing',   '-obfl-table-col-spacing',
+                           'padding-left',          'widows',                           'letter-spacing', '-obfl-table-row-spacing',
+                           'padding-right',         'volume-break-before',                                '-obfl-preferred-empty-space',
+                           'padding-top',           'volume-break-inside',                                '-obfl-use-when-collection-not-empty',
+                           'padding-bottom',                                                              '-obfl-underline',
+                           'border-left-pattern',   'border-left-style',                                  '-obfl-keep-with-previous-sheets',
+                           'border-right-pattern',  'border-right-style',                                 '-obfl-keep-with-next-sheets',
+                           'border-top-pattern',    'border-top-style',
+                           'border-bottom-pattern', 'border-bottom-style')"/>
     
     <xsl:variable name="_OBFL_KEEP_FN_RE">-obfl-keep\(\s*[1-9]\s*\)</xsl:variable>
     
@@ -43,9 +43,8 @@
                                 else if ($css:property/@name=('-obfl-keep-with-previous-sheets',
                                                               '-obfl-keep-with-next-sheets'))
                                 then matches($css:property/@value,'^[0-9]$')
-                                else if ($css:property/@name='volume-break-inside'
-                                         and matches($css:property/@value,$css:VENDOR_PRF_FN_RE))
-                                then matches($css:property/@value,re:exact($_OBFL_KEEP_FN_RE))
+                                else if ($css:property/@name='volume-break-inside')
+                                then matches($css:property/@value,re:exact(re:or(('auto',$_OBFL_KEEP_FN_RE))))
                                 else (
                                   css:is-valid($css:property)
                                   and not($css:property/@value=('inherit','initial'))

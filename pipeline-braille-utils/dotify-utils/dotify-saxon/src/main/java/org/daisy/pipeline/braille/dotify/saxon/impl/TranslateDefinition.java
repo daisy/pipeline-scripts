@@ -8,6 +8,7 @@ import com.xmlcalabash.core.XProcException;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
@@ -115,8 +116,9 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 	
 	private static List<String> sequenceToList(Sequence seq) throws XPathException {
 		List<String> list = new ArrayList<String>();
-		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
-			list.add(i.current().getStringValue());
+		SequenceIterator iterator = seq.iterate();
+		for (Item item = iterator.next(); item != null; item = iterator.next())
+			list.add(item.getStringValue());
 		return list;
 	}
 	
@@ -124,7 +126,7 @@ public class TranslateDefinition extends ExtensionFunctionDefinition {
 		List<StringValue> list = new ArrayList<StringValue>();
 		for (String s : iterable)
 			list.add(new StringValue(s));
-		return new SequenceExtent<StringValue>(list);
+		return new SequenceExtent(list);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(TranslateDefinition.class);

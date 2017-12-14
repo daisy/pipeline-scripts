@@ -20,13 +20,13 @@
     <xsl:variable name="css:COLOR_RE_groups" select="0"/>
     
     <!--
-        <braille-character>: http://snaekobbi.github.io/braille-css-spec/#dfn-braille-character
+        <braille-character>: http://braillespecs.github.io/braille-css/#dfn-braille-character
     -->
     <xsl:variable name="css:BRAILLE_CHAR_RE" select="'\p{IsBraillePatterns}'"/>
     <xsl:variable name="css:BRAILLE_CHAR_RE_groups" select="0"/>
     
     <!--
-        <braille-string>: http://snaekobbi.github.io/braille-css-spec/#dfn-braille-string
+        <braille-string>: http://braillespecs.github.io/braille-css/#dfn-braille-string
     -->
     <xsl:variable name="css:BRAILLE_STRING_RE">'\p{IsBraillePatterns}*?'|"\p{IsBraillePatterns}*?"</xsl:variable>
     <xsl:variable name="css:BRAILLE_STRING_RE_groups" select="0"/>
@@ -34,13 +34,13 @@
     <!--
         <ident>
     -->
-    <xsl:variable name="css:IDENT_RE" select="'(\p{L}|_)(\p{L}|_|-)*'"/>
+    <xsl:variable name="css:IDENT_RE" select="'(\p{L}|_)(\p{L}|[0-9]|_|-)*'"/>
     <xsl:variable name="css:IDENT_RE_groups" select="2"/>
     
     <xsl:variable name="css:IDENT_LIST_RE" select="re:space-separated($css:IDENT_RE)"/>
     <xsl:variable name="css:IDENT_LIST_RE_groups" select="re:space-separated-groups($css:IDENT_RE_groups)"/>
     
-    <xsl:variable name="css:VENDOR_PRF_IDENT_RE" select="'-(\p{L}|_)+-(\p{L}|_)(\p{L}|_|-)*'"/>
+    <xsl:variable name="css:VENDOR_PRF_IDENT_RE" select="'-(\p{L}|_)+-(\p{L}|[0-9]|_)(\p{L}|[0-9]|_|-)*'"/>
     <xsl:variable name="css:VENDOR_PRF_IDENT_RE_groups" select="3"/>
     
     <!--
@@ -83,7 +83,7 @@
     <xsl:variable name="css:URL_RE_groups" select="$css:URL_RE_attr + $css:IDENT_RE_groups + 1"/>
     
     <!--
-        string(<ident>): http://snaekobbi.github.io/braille-css-spec/#dfn-string
+        string(<ident>): http://braillespecs.github.io/braille-css/#dfn-string
     -->
     <xsl:variable name="css:STRING_FN_RE" select="concat('string\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:IDENT_RE,')\s*)?\)')"/>
     <xsl:variable name="css:STRING_FN_RE_ident" select="1"/>
@@ -91,7 +91,7 @@
     <xsl:variable name="css:STRING_FN_RE_groups" select="$css:STRING_FN_RE_scope + $css:IDENT_RE_groups"/>
     
     <!--
-        counter(<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-counter
+        counter(<ident>,<counter-style>?): http://braillespecs.github.io/braille-css/#dfn-counter
     -->
     <xsl:variable name="css:COUNTER_FN_RE" select="concat('counter\(\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:COUNTER_FN_RE_ident" select="1"/>
@@ -99,7 +99,7 @@
     <xsl:variable name="css:COUNTER_FN_RE_groups" select="$css:COUNTER_FN_RE_style + $css:COUNTER_STYLE_RE_groups"/>
     
     <!--
-        target-text(<url>): http://snaekobbi.github.io/braille-css-spec/#dfn-target-text
+        target-text(<url>): http://braillespecs.github.io/braille-css/#dfn-target-text
     -->
     <xsl:variable name="css:TARGET_TEXT_FN_RE" select="concat('target-text\(\s*(',$css:URL_RE,')\s*\)')"/>
     <xsl:variable name="css:TARGET_TEXT_FN_RE_url" select="1"/>
@@ -108,7 +108,7 @@
     <xsl:variable name="css:TARGET_TEXT_FN_RE_groups" select="$css:TARGET_TEXT_FN_RE_url + $css:URL_RE_groups"/>
     
     <!--
-        target-string(<url>,<ident>): http://snaekobbi.github.io/braille-css-spec/#dfn-target-string
+        target-string(<url>,<ident>): http://braillespecs.github.io/braille-css/#dfn-target-string
     -->
     <xsl:variable name="css:TARGET_STRING_FN_RE" select="concat('target-string\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*\)')"/>
     <xsl:variable name="css:TARGET_STRING_FN_RE_url" select="1"/>
@@ -118,7 +118,7 @@
     <xsl:variable name="css:TARGET_STRING_FN_RE_groups" select="$css:TARGET_STRING_FN_RE_ident + $css:IDENT_RE_groups"/>
     
     <!--
-        target-counter(<url>,<ident>,<counter-style>?): http://snaekobbi.github.io/braille-css-spec/#dfn-target-counter
+        target-counter(<url>,<ident>,<counter-style>?): http://braillespecs.github.io/braille-css/#dfn-target-counter
     -->
     <xsl:variable name="css:TARGET_COUNTER_FN_RE" select="concat('target-counter\(\s*(',$css:URL_RE,')\s*,\s*(',$css:IDENT_RE,')\s*(,\s*(',$css:COUNTER_STYLE_RE,')\s*)?\)')"/>
     <xsl:variable name="css:TARGET_COUNTER_FN_RE_url" select="1"/>
@@ -138,14 +138,14 @@
     <xsl:variable name="css:TARGET_CONTENT_FN_RE_groups" select="$css:TARGET_CONTENT_FN_RE_url + $css:URL_RE_groups"/>
     
     <!--
-        leader(<braille-string>): http://snaekobbi.github.io/braille-css-spec/#dfn-leader
+        leader(<braille-string>): http://braillespecs.github.io/braille-css/#dfn-leader
     -->
     <xsl:variable name="css:LEADER_FN_RE" select="concat('leader\(\s*(',$css:BRAILLE_STRING_RE,')\s*\)')"/>
     <xsl:variable name="css:LEADER_FN_RE_pattern" select="1"/>
     <xsl:variable name="css:LEADER_FN_RE_groups" select="$css:LEADER_FN_RE_pattern + $css:BRAILLE_STRING_RE_groups"/>
     
     <!--
-        flow(<ident>,<scope>?): http://snaekobbi.github.io/braille-css-spec/#dfn-flow-1
+        flow(<ident>,<scope>?): http://braillespecs.github.io/braille-css/#dfn-flow-1
     -->
     <xsl:variable name="css:FLOW_FN_RE" select="concat('flow\(\s*(',$css:IDENT_RE,')\s*(,\s*(document|volume)\s*)?\)')"/>
     <xsl:variable name="css:FLOW_FN_RE_ident" select="1"/>
@@ -240,10 +240,11 @@
     <xsl:variable name="css:PSEUDOELEMENT_RE" select="concat('::(',$css:IDENT_RE,'|',$css:VENDOR_PRF_IDENT_RE,')(\(',$css:IDENT_RE,'\))?')"/>
     <xsl:variable name="css:PSEUDOELEMENT_RE_groups" select="1 + $css:IDENT_RE_groups + $css:VENDOR_PRF_IDENT_RE_groups + 1 + $css:IDENT_RE_groups"/>
     
-    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')(',$css:PSEUDOCLASS_RE,')?|(',$css:PSEUDOELEMENT_RE,'|',$css:PSEUDOCLASS_RE,')((',$css:PSEUDOELEMENT_RE,'|',$css:PSEUDOCLASS_RE,')*))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
+    <xsl:variable name="css:RULE_RE" select="concat('(((@',$css:IDENT_RE,')','(\s+(',$css:IDENT_RE,'))?','(',$css:PSEUDOCLASS_RE,')?|(',$css:PSEUDOELEMENT_RE,'|',$css:PSEUDOCLASS_RE,')((',$css:PSEUDOELEMENT_RE,'|',$css:PSEUDOCLASS_RE,')*))\s*)?\{((',$css:DECLARATION_LIST_RE,'|',$css:NESTED_RULE_RE,')*)\}')"/>
     <xsl:variable name="css:RULE_RE_selector" select="2"/>
     <xsl:variable name="css:RULE_RE_selector_atrule" select="$css:RULE_RE_selector + 1"/>
-    <xsl:variable name="css:RULE_RE_selector_atrule_pseudoclass" select="$css:RULE_RE_selector_atrule + $css:IDENT_RE_groups + 1"/>
+    <xsl:variable name="css:RULE_RE_selector_atrule_name" select="$css:RULE_RE_selector_atrule + $css:IDENT_RE_groups + 2"/>
+    <xsl:variable name="css:RULE_RE_selector_atrule_pseudoclass" select="$css:RULE_RE_selector_atrule_name + $css:IDENT_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_selector_pseudo" select="$css:RULE_RE_selector_atrule_pseudoclass + $css:PSEUDOCLASS_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_selector_pseudo_stack" select="$css:RULE_RE_selector_pseudo + $css:PSEUDOELEMENT_RE_groups + $css:PSEUDOCLASS_RE_groups + 1"/>
     <xsl:variable name="css:RULE_RE_value" select="$css:RULE_RE_selector_pseudo_stack + 1 + $css:PSEUDOELEMENT_RE_groups + $css:PSEUDOCLASS_RE_groups + 1"/>
@@ -282,7 +283,10 @@
                         <xsl:element name="css:rule">
                             <xsl:if test="regex-group($css:RULE_RE_selector)!=''">
                                 <xsl:attribute name="selector" select="concat(
-                                                                         regex-group($css:RULE_RE_selector_atrule),
+                                                                         normalize-space(
+                                                                           concat(regex-group($css:RULE_RE_selector_atrule),
+                                                                                  ' ',
+                                                                                  regex-group($css:RULE_RE_selector_atrule_name))),
                                                                          regex-group($css:RULE_RE_selector_pseudo)[1])"/>
                             </xsl:if>
                             <xsl:variable name="style" as="xs:string"
@@ -631,8 +635,7 @@
             tunnel parameters)
         -->
         <xsl:param name="context" as="element()" select="."/>
-        <xsl:variable name="parent" as="element()?"
-                      select="$context/ancestor::*[not(self::css:* except (self::css:box|self::css:block))][1]"/>
+        <xsl:variable name="parent" as="element()?" select="$context/ancestor::*[not(self::css:_)][1]"/>
         <xsl:choose>
             <xsl:when test="exists($parent) and $compute">
                 <xsl:call-template name="css:computed-properties">
@@ -685,7 +688,7 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:sequence select="for $property in distinct-values($declarations/self::css:property/@name) return
-                              $declarations/self::css:property[@name=$property][last()]"/>
+                              ($declarations/self::css:property[@name=$property])[last()]"/>
     </xsl:template>
     
     <xsl:template name="css:specified-properties" as="element()*">
@@ -826,35 +829,51 @@
     <!-- =========== -->
     
      <xsl:template match="css:rule" mode="css:serialize" as="xs:string">
-        <xsl:param name="base" as="xs:string?" select="()"/>
+        <xsl:param name="base" as="xs:string*" select="()"/>
+        <xsl:param name="level" as="xs:integer" select="1"/>
+        <xsl:param name="indent" as="xs:string?" select="()"/>
+        <xsl:variable name="newline" as="xs:string"
+                      select="if (exists($indent)) then string-join(('&#xa;',for $i in 2 to $level return $indent),'')
+                              else ' '"/>
         <xsl:choose>
             <xsl:when test="not(@selector) and exists($base)">
                 <xsl:sequence select="if (@style)
-                                      then concat($base,' { ',string(@style),' }')
-                                      else css:serialize-stylesheet(*,$base)"/>
+                                      then string-join((
+                                             string-join($base,', '),' {',$newline,$indent,
+                                             string(@style),
+                                             $newline,'}'),'')
+                                      else css:serialize-stylesheet(*,$base,$level,$indent)"/>
             </xsl:when>
             <xsl:when test="not(@selector)">
                 <xsl:sequence select="if (@style)
                                       then string(@style)
-                                      else css:serialize-stylesheet(*,(),false())"/>
+                                      else css:serialize-stylesheet(*,(),$level,$indent)"/>
             </xsl:when>
             <xsl:when test="exists($base) and not(matches(@selector,'^:'))">
-                <xsl:sequence select="concat(
-                                        $base,
-                                        ' {',
+                <xsl:sequence select="string-join((
+                                        string-join($base,', '),' {',$newline,$indent,
                                         css:serialize-stylesheet(
                                           if (@style)
                                             then css:parse-stylesheet(@style)
                                             else *,
-                                          @selector),
-                                        ' }')"/>
+                                          @selector,
+                                          $level+1,
+                                          $indent),
+                                        $newline,'}'),'')"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="css:serialize-stylesheet(
                                         if (@style)
                                           then css:parse-stylesheet(@style)
                                           else *,
-                                        string-join(($base,@selector),''))"/>
+                                        if (exists($base))
+                                          then for $s in @selector return
+                                               for $b in $base return
+                                                 for $bb in tokenize($b,'\s*,\s*') return
+                                                   concat($bb,$s)
+                                          else @selector,
+                                        $level,
+                                        $indent)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -904,7 +923,9 @@
     </xsl:template>
     
     <xsl:template match="css:counter[@target]" mode="css:serialize" as="xs:string">
-        <xsl:sequence select="concat('target-counter(url(&quot;',@target,'&quot;), ',@name,if (@style) then concat(', ', @style) else '',')')"/>
+        <xsl:variable name="target" as="xs:string" select="(@original-target,@target)[1]"/>
+        <xsl:variable name="target" as="xs:string" select="if (contains($target,'#')) then $target else concat('#',$target)"/>
+        <xsl:sequence select="concat('target-counter(url(&quot;',$target,'&quot;), ',@name,if (@style) then concat(', ', @style) else '',')')"/>
     </xsl:template>
     
     <xsl:template match="css:leader" mode="css:serialize" as="xs:string">
@@ -930,55 +951,75 @@
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
-        <xsl:param name="base" as="xs:string?"/>
-        <xsl:sequence select="css:serialize-stylesheet($rules,$base,true())"/>
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules,$base,1)"/>
     </xsl:function>
     
     <xsl:function name="css:serialize-stylesheet" as="xs:string">
         <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
-        <xsl:param name="base" as="xs:string?"/>
-        <xsl:param name="top" as="xs:boolean"/>
-        <xsl:variable name="top" as="xs:boolean" select="$top and not(exists($base))"/>
-        <xsl:variable name="serialized-declarations" as="xs:string*">
-            <xsl:apply-templates mode="css:serialize"
-                                 select="$rules[(self::css:rule and not(@selector)) or self::css:property]"/>
-        </xsl:variable>
-        <xsl:variable name="serialized-declarations" as="xs:string?">
-            <xsl:if test="exists($serialized-declarations)">
-                <xsl:sequence select="string-join($serialized-declarations,'; ')"/>
-            </xsl:if>
-        </xsl:variable>
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:param name="level" as="xs:integer"/>
+        <xsl:sequence select="css:serialize-stylesheet($rules,$base,$level,())"/>
+    </xsl:function>
+    
+    <xsl:function name="css:serialize-stylesheet" as="xs:string">
+        <xsl:param name="rules" as="element()*"/> <!-- css:rule*|css:property* -->
+        <xsl:param name="base" as="xs:string*"/>
+        <xsl:param name="level" as="xs:integer"/>
+        <xsl:param name="indent" as="xs:string?"/>
+        <xsl:variable name="newline" as="xs:string"
+                      select="if (exists($indent)) then string-join(('&#xa;',for $i in 2 to $level return $indent),'') else ' '"/>
         <xsl:variable name="serialized-pseudo-rules" as="xs:string*">
             <xsl:apply-templates select="$rules[self::css:rule and @selector[matches(.,'^:')]]" mode="css:serialize">
                 <xsl:with-param name="base" select="$base"/>
+                <xsl:with-param name="level" select="$level"/>
+                <xsl:with-param name="indent" select="$indent"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="serialized-at-rules" as="xs:string*">
-            <xsl:apply-templates select="$rules[self::css:rule and @selector[not(matches(.,'^:'))]]" mode="css:serialize"/>
+            <xsl:apply-templates select="$rules[self::css:rule and @selector[not(matches(.,'^:'))]]" mode="css:serialize">
+                <xsl:with-param name="level" select="if (exists($base)) then $level+1 else $level"/>
+                <xsl:with-param name="indent" select="$indent"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:variable name="serialized-declarations" as="xs:string*">
+            <xsl:apply-templates mode="css:serialize"
+                                 select="$rules[(self::css:rule and not(@selector)) or self::css:property]">
+                <xsl:with-param name="level" select="if (exists($base)) then $level+1 else $level"/>
+                <xsl:with-param name="indent" select="$indent"/>
+            </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="serialized-rules" as="xs:string*">
             <xsl:choose>
                 <xsl:when test="exists($base)">
                     <xsl:variable name="serialized-inner-rules" as="xs:string*">
-                        <xsl:sequence select="$serialized-declarations"/>
+                        <xsl:if test="exists($serialized-declarations)">
+                            <xsl:sequence select="string-join($serialized-declarations,string-join((';',$newline,$indent),''))"/>
+                        </xsl:if>
                         <xsl:sequence select="$serialized-at-rules"/>
                     </xsl:variable>
                     <xsl:if test="exists($serialized-inner-rules)">
-                        <xsl:sequence select="concat($base,' { ',string-join($serialized-inner-rules,' '),' }')"/>
+                        <xsl:sequence select="string-join((
+                                                string-join($base,', '),' {',$newline,$indent,
+                                                string-join($serialized-inner-rules,string-join(($newline,$indent),'')),
+                                                $newline,'}'),'')"/>
                     </xsl:if>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:if test="exists($serialized-declarations)">
-                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)) and $top)
-                                              then concat('{ ',$serialized-declarations,' }')
-                                              else $serialized-declarations"/>
+                        <xsl:sequence select="if (exists(($serialized-at-rules,$serialized-pseudo-rules)) and $level=1)
+                                              then string-join((
+                                                     '{',$newline,$indent,
+                                                     string-join($serialized-declarations,string-join((';',$newline,$indent),'')),
+                                                     $newline,'}'),'')
+                                              else string-join($serialized-declarations,string-join((';',$newline),''))"/>
                     </xsl:if>
                     <xsl:sequence select="$serialized-at-rules"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:sequence select="$serialized-pseudo-rules"/>
         </xsl:variable>
-        <xsl:sequence select="string-join($serialized-rules,' ')"/>
+        <xsl:sequence select="string-join($serialized-rules,$newline)"/>
     </xsl:function>
     
     <xsl:function name="css:serialize-declaration-list" as="xs:string">
@@ -1054,14 +1095,56 @@
                       select="$context/(self::*|preceding::*|ancestor::*)
                               [contains(@css:string-set,$name) or contains(@css:string-entry,$name)]
                               [last()]"/>
-        <xsl:if test="$last-set">
-            <xsl:variable name="value" as="xs:string?"
-                          select="(css:parse-string-set($last-set/@css:string-entry),
-                                   css:parse-string-set($last-set/@css:string-set))
-                                  [@name=$name][last()]/@value"/>
-            <xsl:sequence select="if ($value) then css:parse-content-list($value, $context)
-                                  else css:string($name, $last-set/(preceding::*|ancestor::*)[last()])"/>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="$context/ancestor::*/@css:flow[not(.='normal')]">
+                <xsl:choose>
+                    <xsl:when test="$last-set
+                                    intersect $context/ancestor::*[@css:anchor][1]/descendant-or-self::*">
+                        <xsl:variable name="value" as="xs:string?"
+                                      select="(css:parse-string-set($last-set/@css:string-entry),
+                                               css:parse-string-set($last-set/@css:string-set))
+                                              [@name=$name][last()]/@value"/>
+                        <xsl:choose>
+                            <xsl:when test="$value">
+                                <xsl:sequence select="css:parse-content-list($value, $context)"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:variable name="context" as="element()?"
+                                              select="$last-set/(preceding::*|ancestor::*)[last()]
+                                                      intersect $context/ancestor::*[@css:anchor][1]/descendant-or-self::*"/>
+                                <xsl:if test="$context">
+                                    <xsl:sequence select="css:string($name, $context)"/>
+                                </xsl:if>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="anchor" as="xs:string" select="$context/ancestor::*/@css:anchor"/>
+                        <xsl:variable name="context" as="element()?" select="collection()//*[@css:id=$anchor][1]"/>
+                        <xsl:if test="$context">
+                            <xsl:sequence select="css:string($name, $context)"/>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="$last-set">
+                <xsl:variable name="value" as="xs:string?"
+                              select="(css:parse-string-set($last-set/@css:string-entry),
+                                       css:parse-string-set($last-set/@css:string-set))
+                                      [@name=$name][last()]/@value"/>
+                <xsl:choose>
+                    <xsl:when test="$value">
+                        <xsl:sequence select="css:parse-content-list($value, $context)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="context" as="element()?" select="$last-set/(preceding::*|ancestor::*)[last()]"/>
+                        <xsl:if test="$context">
+                            <xsl:sequence select="css:string($name, $context)"/>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+        </xsl:choose>
     </xsl:function>
     
 </xsl:stylesheet>

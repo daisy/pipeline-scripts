@@ -1,13 +1,16 @@
 package org.daisy.pipeline.braille.common.saxon.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.xmlcalabash.core.XProcException;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
@@ -81,12 +84,13 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	@Override
 	public int getMaximumNumberOfArguments() {
-		return 3;
+		return 4;
 	}
 	
 	public SequenceType[] getArgumentTypes() {
 		return new SequenceType[] {
 			SequenceType.SINGLE_STRING,
+			SequenceType.ATOMIC_SEQUENCE,
 			SequenceType.ATOMIC_SEQUENCE,
 			SequenceType.ATOMIC_SEQUENCE
 		};
@@ -107,8 +111,17 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 						List<String> style = sequenceToList(arguments[2]);
 						if (style.size() != text.size())
 							throw new RuntimeException("Lengths of text and style sequences must match");
-						for (int i = 0; i < text.size(); i++)
-							styledText.add(new CSSStyledText(text.get(i), style.get(i))); }
+						if (arguments.length > 3) {
+							List<String> lang = sequenceToList(arguments[3]);
+							if (lang.size() != text.size())
+								throw new RuntimeException("Lengths of text and lang sequences must match");
+							for (int i = 0; i < text.size(); i++) {
+								Map<String,String> attrs = new HashMap<String,String>();
+								attrs.put("lang", lang.get(i));
+								styledText.add(new CSSStyledText(text.get(i), style.get(i), attrs)); }}
+						else
+							for (int i = 0; i < text.size(); i++)
+								styledText.add(new CSSStyledText(text.get(i), style.get(i))); }
 					else
 						for (int i = 0; i < text.size(); i++)
 							styledText.add(new CSSStyledText(text.get(i)));
@@ -125,8 +138,9 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 	
 	private static List<String> sequenceToList(Sequence seq) throws XPathException {
 		List<String> list = new ArrayList<String>();
-		for (SequenceIterator<?> i = seq.iterate(); i.next() != null;)
-			list.add(i.current().getStringValue());
+		SequenceIterator iterator = seq.iterate();
+		for (Item item = iterator.next(); item != null; item = iterator.next())
+			list.add(item.getStringValue());
 		return list;
 	}
 	
@@ -134,7 +148,7 @@ public class TextTransformDefinition extends ExtensionFunctionDefinition {
 		List<StringValue> list = new ArrayList<StringValue>();
 		for (String s : iterable)
 			list.add(new StringValue(s));
-		return new SequenceExtent<StringValue>(list);
+		return new SequenceExtent(list);
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(TextTransformDefinition.class);

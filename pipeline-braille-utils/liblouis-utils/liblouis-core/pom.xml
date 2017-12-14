@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.16-SNAPSHOT</version>
+    <version>1.10.2-SNAPSHOT</version>
     <relativePath>../../../maven/parent</relativePath>
   </parent>
 
   <artifactId>liblouis-core</artifactId>
-  <version>4.1.3-SNAPSHOT</version>
+  <version>4.1.4-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>DP2 Braille Modules :: liblouis-utils :: liblouis-core</name>
@@ -74,14 +74,23 @@
         test dependencies
     -->
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.2</version>
+      <groupId>org.daisy.pipeline.build</groupId>
+      <artifactId>modules-test-helper</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.ops4j.pax.exam</groupId>
+          <artifactId>pax-exam-container-native</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+    <!--
+        FIXME: why doesn't native work?
+    -->
     <dependency>
-      <groupId>org.daisy.pipeline</groupId>
-      <artifactId>pax-exam-helper</artifactId>
+      <groupId>org.ops4j.pax.exam</groupId>
+      <artifactId>pax-exam-container-forked</artifactId>
+      <version>3.3.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

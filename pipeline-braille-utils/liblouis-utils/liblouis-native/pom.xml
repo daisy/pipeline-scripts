@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.daisy.pipeline.modules.braille</groupId>
     <artifactId>braille-modules-parent</artifactId>
-    <version>1.9.16-SNAPSHOT</version>
+    <version>1.10.2-SNAPSHOT</version>
     <relativePath>../../../maven/parent/</relativePath>
   </parent>
 
@@ -27,6 +27,29 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.liblouis</groupId>
+        <artifactId>louis</artifactId>
+        <version>3.0.0-alpha1</version>
+        <type>nar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.liblouis</groupId>
+        <artifactId>louisutdml</artifactId>
+        <version>2.5.0</version>
+        <type>nar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.daisy.libs</groupId>
+        <artifactId>xml2</artifactId>
+        <version>2.7.3</version>
+        <type>nar</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <plugins>
@@ -153,15 +176,15 @@
               <tasks>
                 <copy todir="target/generated-resources/native">
                   <fileset dir="target/dependency">
-                    <include name="**/*.so" />
-                    <include name="**/*.dylib" />
-                    <include name="**/*.dll" />
-                    <include name="**/file2brl" />
-                    <include name="**/file2brl.exe" />
+                    <include name="**/*.so"/>
+                    <include name="**/*.dylib"/>
+                    <include name="**/*.dll"/>
+                    <include name="**/file2brl"/>
+                    <include name="**/file2brl.exe"/>
                   </fileset>
                   <mapper>
-                    <globmapper handledirsep="yes" from="bin/*" to="*" />
-                    <regexpmapper handledirsep="yes" from="lib/(.*)/shared/(.*)$" to="\1/\2" />
+                    <globmapper handledirsep="yes" from="bin/*" to="*"/>
+                    <regexpmapper handledirsep="yes" from="lib/(.*)/shared/(.*)$" to="\1/\2"/>
                   </mapper>
                 </copy>
               </tasks>

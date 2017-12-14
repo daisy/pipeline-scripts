@@ -11,9 +11,11 @@
                 xmlns:opf="http://www.idpf.org/2007/opf"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dcterms="http://purl.org/dc/terms/"
+                xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
                 exclude-inline-prefixes="#all"
                 name="main">
     
+    <p:option name="epub" required="true"/>
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
     <p:output port="fileset.out" primary="true">
@@ -45,6 +47,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
@@ -105,34 +108,28 @@
             <p:with-option name="attribute-value" select="base-uri(/*)"/>
         </p:add-attribute>
         
-        <px:message>
-            <p:with-option name="message" select="concat('Deleting CSS that is not for embossed media from ',replace(base-uri(/*),'.*/',''),'')"/>
-        </px:message>
-        <p:delete match="//@style | //html:link[@rel='stylesheet' and not(string(@media)='embossed')] | //html:style[not(string(@media)='embossed')]"/>
-        
-        <p:choose px:progress="1">
+        <p:choose px:progress="1/2">
             <p:when test="$apply-document-specific-stylesheets='true'">
                 <px:message>
                     <p:with-option name="message" select="concat('Inlining document-specific CSS for ',replace(base-uri(/*),'.*/',''),'')"/>
                 </px:message>
-                <p:group px:progress="1">
-                    <!-- <link> not supported in css:inline so we provide the URIs to them explicitly -->
-                    <p:variable name="linked-stylesheets" select="string-join(//html:link[@rel='stylesheet' and @media='embossed']/resolve-uri(@href,base-uri(/*)), ' ')"/>
-                    <p:delete match="//html:link[@rel='stylesheet' and @media='embossed']"/>
-                    <px:apply-stylesheets px:progress="1">
-                        <p:with-option name="stylesheets" select="$linked-stylesheets"/>
-                        <p:input port="parameters">
-                            <p:pipe port="result" step="parameters"/>
-                        </p:input>
-                    </px:apply-stylesheets>
-                </p:group>
+                <px:apply-stylesheets px:progress="1">
+                    <p:input port="parameters">
+                        <p:pipe step="parameters" port="result"/>
+                    </p:input>
+                </px:apply-stylesheets>
             </p:when>
             <p:otherwise>
-                <p:delete match="//html:link[@rel='stylesheet' and @media='embossed']"/>
+                <p:delete match="@style"/>
             </p:otherwise>
         </p:choose>
-        
+        <css:delete-stylesheets px:progress="1/2"/>
         <p:filter select="/*/html:body"/>
+        
+        <!-- xml:base attribute is required for resolving cross-references between different bodies -->
+        <p:add-attribute match="/*" attribute-name="xml:base">
+            <p:with-option name="attribute-value" select="base-uri(/*)"/>
+        </p:add-attribute>
     </p:for-each>
     <p:identity name="spine-bodies"/>
     
@@ -168,16 +165,19 @@
     </p:xslt>
     
     <p:group px:message="Inlining global CSS" px:progress=".10">
+        <p:variable name="abs-stylesheet"
+                    select="string-join(for $s in tokenize($stylesheet,'\s+')[not(.='')]
+                                        return resolve-uri($s,$epub),' ')"/>
         <p:variable name="first-css-stylesheet"
-                    select="tokenize($stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
+                    select="tokenize($abs-stylesheet,'\s+')[matches(.,'\.s?css$')][1]"/>
         <p:variable name="first-css-stylesheet-index"
-                    select="(index-of(tokenize($stylesheet,'\s+')[not(.='')], $first-css-stylesheet),10000)[1]"/>
+                    select="(index-of(tokenize($abs-stylesheet,'\s+')[not(.='')], $first-css-stylesheet),10000)[1]"/>
         <p:variable name="stylesheets-to-be-inlined"
                     select="string-join((
-                              (tokenize($stylesheet,'\s+')[not(.='')])[position()&lt;$first-css-stylesheet-index],
+                              (tokenize($abs-stylesheet,'\s+')[not(.='')])[position()&lt;$first-css-stylesheet-index],
                               $default-stylesheet,
                               resolve-uri('../../css/default.scss'),
-                              (tokenize($stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
+                              (tokenize($abs-stylesheet,'\s+')[not(.='')])[position()&gt;=$first-css-stylesheet-index]),' ')">
             <p:inline><_/></p:inline>
         </p:variable>
         <p:identity px:message="stylesheets: {$stylesheets-to-be-inlined}"/>
@@ -268,20 +268,7 @@
             <p:empty/>
         </p:input>
     </p:xslt>
-    <!-- add xml:lang -->
-    <p:choose>
-        <p:variable name="lang" select="(/*/opf:metadata/dc:language[not(@refines)])[1]/text()">
-            <p:pipe port="result" step="opf"/>
-        </p:variable>
-        <p:when test="not($lang='und')">
-            <p:add-attribute match="/*" attribute-name="xml:lang">
-                <p:with-option name="attribute-value" select="$lang"/>
-            </p:add-attribute>
-        </p:when>
-        <p:otherwise>
-            <p:identity/>
-        </p:otherwise>
-    </p:choose>
+    
     <p:add-attribute match="/*" attribute-name="xml:base">
         <p:with-option name="attribute-value" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
             <p:pipe port="result" step="opf"/>

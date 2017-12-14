@@ -26,17 +26,8 @@
         </p:documentation>
     </p:output>
     
-    <p:wrap-sequence wrapper="_"/>
-    
-    <p:xslt px:progress="1">
-        <p:input port="stylesheet">
-            <p:document href="shift-obfl-marker.xsl"/>
-        </p:input>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-    </p:xslt>
-    
-    <p:filter select="/_/*"/>
+    <!--
+        implented in Java
+    -->
     
 </p:declare-step>

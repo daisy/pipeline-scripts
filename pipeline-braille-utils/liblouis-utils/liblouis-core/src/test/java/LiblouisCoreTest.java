@@ -36,29 +36,17 @@ import org.daisy.pipeline.braille.liblouis.LiblouisTranslator;
 import org.daisy.pipeline.braille.liblouis.LiblouisTranslator.Typeform;
 import org.daisy.pipeline.braille.pef.TableProvider;
 
-import static org.daisy.pipeline.pax.exam.Options.brailleModule;
-import static org.daisy.pipeline.pax.exam.Options.domTraversalPackage;
-import static org.daisy.pipeline.pax.exam.Options.felixDeclarativeServices;
-import static org.daisy.pipeline.pax.exam.Options.logbackClassic;
-import static org.daisy.pipeline.pax.exam.Options.logbackConfigFile;
-import static org.daisy.pipeline.pax.exam.Options.mavenBundle;
-import static org.daisy.pipeline.pax.exam.Options.mavenBundlesWithDependencies;
-import static org.daisy.pipeline.pax.exam.Options.thisBundle;
+import org.daisy.pipeline.junit.AbstractTest;
+
+import static org.daisy.pipeline.pax.exam.Options.thisPlatform;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import org.ops4j.pax.exam.junit.PaxExam;
-import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
-import org.ops4j.pax.exam.util.PathUtils;
+import org.ops4j.pax.exam.ProbeBuilder;
+import org.ops4j.pax.exam.TestProbeBuilder;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -67,9 +55,7 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
-public class LiblouisCoreTest {
+public class LiblouisCoreTest extends AbstractTest {
 	
 	@Inject
 	LiblouisTranslator.Provider provider;
@@ -85,25 +71,23 @@ public class LiblouisCoreTest {
 	
 	private static final Logger messageBus = LoggerFactory.getLogger("JOB_MESSAGES");
 	
-	@Configuration
-	public Option[] config() {
-		return options(
-			logbackConfigFile(),
-			domTraversalPackage(),
-			felixDeclarativeServices(),
-			thisBundle(),
-			junitBundles(),
-			mavenBundlesWithDependencies(
-				mavenBundle("org.liblouis:liblouis-java:?"),
-				mavenBundle("org.daisy.braille:braille-utils.api:?"),
-				brailleModule("common-utils"),
-				brailleModule("pef-core"),
-				brailleModule("css-core"),
-				brailleModule("liblouis-native").forThisPlatform(),
-				// logging
-				logbackClassic()),
-			bundle("reference:file:" + PathUtils.getBaseDir() + "/target/test-classes/table_paths/")
-		);
+	@Override
+	protected String[] testDependencies() {
+		return new String[] {
+			"org.liblouis:liblouis-java:?",
+			"org.daisy.braille:braille-utils.api:?",
+			brailleModule("common-utils"),
+			brailleModule("pef-core"),
+			brailleModule("css-core"),
+			"org.daisy.pipeline.modules.braille:liblouis-native:jar:" + thisPlatform() + ":?"
+		};
+	}
+	
+	@ProbeBuilder
+	public TestProbeBuilder probeConfiguration(TestProbeBuilder probe) {
+		probe.setHeader("Import-Package", "org.daisy.pipeline.braille.liblouis");
+		probe.setHeader("Service-Component", "OSGI-INF/table_paths.xml");
+		return probe;
 	}
 	
 	@Test
@@ -128,7 +112,7 @@ public class LiblouisCoreTest {
 	
 	@Test
 	public void testGetTranslatorFromQuery3() {
-		provider.withContext(messageBus).get(query("(locale:foo_BAR)")).iterator().next();
+		provider.withContext(messageBus).get(query("(locale:foo_BA)")).iterator().next();
 	}
 	
 	@Test(expected=NoSuchElementException.class)
@@ -453,9 +437,6 @@ public class LiblouisCoreTest {
 			translator.transform(styledText("foobar quux 123456", "letter-spacing:2; word-spacing:5")).getTranslatedRemainder());
 	}
 
-	// Tests with trailing spaces are not 100% correct according to spec, but spaces at the end of
-	// lines do not matter, because they are invisible.
-	// FIXME: actually, spaces do matter within tables!
 	@Test
 	public void testTranslateWithWordSpacingAndLineBreaking() {
 		LineBreakingFromStyledText translator = provider.withContext(messageBus)
@@ -463,13 +444,13 @@ public class LiblouisCoreTest {
 		                                                .lineBreakingFromStyledText();
 		assertEquals(
 			//                   |<- 20
-			"foobar⠀⠀foobar⠀⠀\n" +
+			"foobar⠀⠀foobar\n" +
 			"foobar",
 			fillLines(translator.transform(styledText("foobar foobar foobar", "word-spacing:2")), 20));
 		assertEquals(
 			//                   |<- 20
-			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀\n" +
-			"f⠀o⠀o⠀b⠀a⠀r⠀⠀⠀\n" +
+			"f⠀o⠀o⠀b⠀a⠀r\n" +
+			"f⠀o⠀o⠀b⠀a⠀r\n" +
 			"f⠀o⠀o⠀b⠀a⠀r",
 			fillLines(translator.transform(styledText("foobar foobar foobar", "letter-spacing:1; word-spacing:3")), 20));
 		assertEquals(
@@ -524,6 +505,18 @@ public class LiblouisCoreTest {
 		String id = table.getIdentifier();
 		assertEquals(table, tableProvider.get(query("(id:'" + id + "')")).iterator().next());
 		// assertEquals(table, tableCatalog.newTable(id));
+	}
+	
+	@Test(expected=ComparisonFailure.class)
+	public void testTranslatorStatefulBug() {
+		FromStyledTextToBraille translator = provider.withContext(messageBus)
+		                                             .get(query("(table:'stateful.utb')")).iterator().next()
+		                                             .fromStyledTextToBraille();
+		String p = translator.transform(text("p")).iterator().next();
+		//assertEquals("⠰⠏", p);
+		translator.transform(text("xx"));
+		// this is expected to fail:
+		assertEquals(p, translator.transform(text("p")).iterator().next());
 	}
 	
 	private Iterable<CSSStyledText> styledText(String... textAndStyle) {
