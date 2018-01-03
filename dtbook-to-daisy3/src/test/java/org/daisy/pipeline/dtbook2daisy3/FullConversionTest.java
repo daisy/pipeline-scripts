@@ -329,7 +329,7 @@ public class FullConversionTest extends AbstractTest implements DifferenceListen
 						numErrors.incrementAndGet();
 					}
 				}
-				System.err.println("zeval error: " + m.getText());
+				System.err.println("zedval error: " + m.getText());
 			}
 
 			public void close() throws ZedReporterException {
