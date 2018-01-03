@@ -9,8 +9,7 @@ before_install:
 install: mvn install -DskipTests=true -Dinvoker.skip=true -Dmaven.javadoc.skip=true -B -V
 
 # main task, run the verify goal
-# FIXME: disable tests on Travis for now because of error
-script: true #mvn verify
+script: mvn verify
 
 # if the build succeeds, deploy the artifact (tests are skipped)
 after_success: 
