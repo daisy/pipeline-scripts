@@ -8,8 +8,6 @@
 ### CSS
 
 - [`http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/reset.css`](resources/css/reset.css)
-- [`http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/bana.css`](resources/css/bana.css)
-- [`http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/ueb.css`](resources/css/ueb.css)
 - [`http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css`](resources/css/default.css)
 
 ## OSGi services

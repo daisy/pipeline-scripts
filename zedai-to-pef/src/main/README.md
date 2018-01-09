@@ -9,8 +9,6 @@
 
 - [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css`](resources/css/default.css)
 - [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/reset.css`](resources/css/reset.css)
-- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/bana.css`](resources/css/bana.css)
-- [`http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/ueb.css`](resources/css/ueb.css)
 
 ## OSGi services
 

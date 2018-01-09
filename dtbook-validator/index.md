@@ -52,7 +52,7 @@ They are as follows:
 
 ### `dtbook-validation-report.xml`
 
-Raw validation output from DTBook validation. See [ValidationReportXML](http://daisy.github.io/pipeline/wiki/ValidationReportXML) for details on the file format.
+Raw validation output from DTBook validation. See [ValidationReportXML](http://daisy.github.io/pipeline/ValidationReportXML) for details on the file format.
 
 ### `dtbook-validation-report.xhtml`
 

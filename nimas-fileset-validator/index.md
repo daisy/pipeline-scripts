@@ -40,7 +40,7 @@ Each generated file in this example is as follows:
 
 ### `my-dtbook.xml-report.xml`
 
-Raw validation output from DTBook validation. See [ValidationReportXML](http://daisy.github.io/pipeline/wiki/ValidationReportXML) for details on the file format. This file is named for the relative path of the DTBook file, with slashes replaced by underscores, and `-report.xml` appended to the end. For example, if your package document refers to a DTBook file at `chapter_one/dtbook.xml`, the validation report for this DTBook file will be called `chapter_one_dtbook.xml-report.xml`.
+Raw validation output from DTBook validation. See [ValidationReportXML](http://daisy.github.io/pipeline/ValidationReportXML) for details on the file format. This file is named for the relative path of the DTBook file, with slashes replaced by underscores, and `-report.xml` appended to the end. For example, if your package document refers to a DTBook file at `chapter_one/dtbook.xml`, the validation report for this DTBook file will be called `chapter_one_dtbook.xml-report.xml`.
 
 There will be one report like this for each DTBook file in the publication.
 
