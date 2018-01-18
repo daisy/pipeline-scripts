@@ -1,4 +1,4 @@
-<link rev="dp2:doc" href="resources/xml/nimas-fileset-validator.xpl"/>
+<link rev="dp2:doc" href="src/main/resources/xml/nimas-fileset-validator.xpl"/>
 <link rel="rdf:type" href="http://www.daisy.org/ns/pipeline/userdoc"/>
 <meta property="dc:title" content="NIMAS Fileset Validator"/>
 
@@ -64,5 +64,5 @@ The DTBook document type is listed as the DTBook version, e.g. 2005-3, and will 
 
 # See also
 
-* [Developer notes](dev-notes.md)
+* [Developer notes](doc/dev-notes.md)
 
