@@ -128,12 +128,14 @@
             <x:option name="output-dir" select="resolve-uri('issue-94/output-dir/',$temp-dir)"/>
             <x:option name="temp-dir" select="resolve-uri('issue-94/temp-dir/',$temp-dir)"/>
         </x:call>
-        <x:context label="the output directory">
+        <x:context label="the content file">
             <x:document type="file" base-uri="temp-dir" href="issue-94/output-dir/test.epub!/EPUB/test-2.xhtml" select="//html:h1[1]"/>
         </x:context>
-        <x:expect label="the white space in between the 'em' elements should be preserved" type="compare" normalize-space="false" xfail="true">
+        <x:expect label="the white space in between the 'em' elements should be preserved" type="compare" normalize-space="false">
             <x:document type="inline">
-                <h1 xmlns="http://www.w3.org/1999/xhtml" id="chapter_1"><em>CHAPTER 1</em> <em>THE LAST JUDGEMENT (MICHAEL ANGELO)</em></h1>
+                <h1 xmlns="http://www.w3.org/1999/xhtml" id="chapter_1">
+                                        <em>CHAPTER 1</em> <em>THE LAST JUDGEMENT (MICHAEL ANGELO)</em>
+                                    </h1>
             </x:document>
         </x:expect>
     </x:scenario>
