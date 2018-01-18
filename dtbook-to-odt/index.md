@@ -14,6 +14,10 @@ designed to work with both.
 
 {{>synopsis}}
 
+## Examples
+
+Some examples can be found [here](src/test/xprocspec/test_content.xprocspec).
+
 ## Templating
 
 The conversion works by converting DTBook elements to ODT elements
