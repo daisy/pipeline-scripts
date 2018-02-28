@@ -3,7 +3,10 @@
 ## <a href="resources/META-INF/catalog.xml" class="source">catalog.xml</a>
 
 - <a href="resources/xml/xproc/library.xpl" class="apidoc">`http://www.daisy.org/pipeline/modules/braille/html-to-pef/library.xpl`</a>
-  - `px:html-to-pef.convert`
+
+### Scripts
+
+- <a href="resources/xml/xproc/html-to-pef.xpl" class="apidoc">`http://www.daisy.org/pipeline/modules/braille/html-to-pef/html-to-pef.xpl`</a>
 
 ### CSS
 
@@ -12,9 +15,9 @@
 
 ## OSGi services
 
-### Scripts (`org.daisy.pipeline.script.XProcScriptService`)
+### Scripts ([org.daisy.pipeline.script.XProcScriptService](http://daisy.github.io/pipeline/api/org/daisy/pipeline/script/XProcScriptService.html))
 
-- [`http://www.daisy.org/pipeline/modules/braille/html-to-pef/html-to-pef.xpl`](resources/xml/xproc/html-to-pef.xpl)
+- <a href="resources/xml/xproc/html-to-pef.xpl" class="userdoc">`html-to-pef`</a>
 
 
 <link rev="dp2:doc" href="./"/>
