@@ -31,6 +31,10 @@ These styles can be edited afterwards in the ODT document, but more
 importantly they can be saved in a template (`*.ott` file) which can
 be provided to the script the next time (via the "Template" option).
 
+The template that is used by default is <a
+href="src/main/resources/templates/default.ott"
+class="userdoc">`default.ott`</a>.
+
 What follows is a mapping from DTBook elements to ODT styles. There
 are different types of styles: paragraph styles, character styles,
 frame styles, list styles and section styles. (Page styles also exist

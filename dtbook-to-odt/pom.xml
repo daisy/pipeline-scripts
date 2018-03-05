@@ -149,7 +149,7 @@
                 src/main/resources/META-INF/catalog.xml,
                 src/main/resources/**/*.xpl,
                 src/main/resources/**/*.xsl,
-                src/main/resources/**/*.css,
+                src/main/resources/templates/,
                 src/test/xprocspec/test_content.xprocspec
               </includes>
             </configuration>
