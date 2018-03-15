@@ -111,7 +111,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
                    because this script uses px:extends-script in the XML catalog which
                    changes the base URI of the script at build time. -->
     </p:import>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     
     <!-- ================================================= -->
