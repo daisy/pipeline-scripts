@@ -111,6 +111,68 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-sources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src</directory>
+                  <includes>
+                    <include>test/xprocspec/test_content.xprocspec.css</include>
+                    <include>test/xprocspec/orion3.jpg</include>
+                    <include>test/xprocspec/orion62.jpg</include>
+                  </includes>
+                </resource>
+              </resources>
+              <outputDirectory>${project.build.directory}/doc/src/</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.daisy.pipeline.build</groupId>
+        <artifactId>modules-build-helper</artifactId>
+        <executions>
+          <execution>
+            <id>htmlize-sources</id>
+            <configuration>
+              <sourceDirectory>${project.basedir}</sourceDirectory>
+              <includes>
+                src/main/resources/META-INF/catalog.xml,
+                src/main/resources/**/*.xpl,
+                src/main/resources/**/*.xsl,
+                src/main/resources/templates/,
+                src/test/xprocspec/test_content.xprocspec
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package-doc-jar</id>
+            <configuration>
+              <includes>
+                <include>**/*.md</include>
+                <include>**/*.html</include>
+                <include>src/test/xprocspec/test_content.xprocspec.css</include>
+                <include>src/test/xprocspec/orion3.jpg</include>
+                <include>src/test/xprocspec/orion62.jpg</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
