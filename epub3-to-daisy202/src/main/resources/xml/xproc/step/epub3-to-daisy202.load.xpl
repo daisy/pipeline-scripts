@@ -83,6 +83,7 @@
                 <p:with-option name="epub" select="$epub">
                     <p:pipe step="load" port="result.fileset"/>
                 </p:with-option>
+                <p:with-option name="temp-dir" select="concat($temp-dir,'validate/')"/>
             </px:epub3-validator>
             <p:identity>
                 <p:input port="source">
