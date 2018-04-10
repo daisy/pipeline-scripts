@@ -30,6 +30,7 @@
     <p:option name="output-dir" required="true"/>
     <p:option name="audio" required="false" select="'false'"/>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-pub-utils/library.xpl"/>
@@ -181,24 +182,12 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <p:xslt name="zedai-to-html.html-chunks">
-            <!--TODO fix links while chunking (see links-to-chunks) -->
-            <p:input port="stylesheet">
-                <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-chunker.xsl"/>
-            </p:input>
-            <p:input port="parameters">
-                <p:empty/>
-            </p:input>
-        </p:xslt>
-        <p:sink/>
+        <px:html-chunker name="zedai-to-html.html-chunks"/>
         <p:for-each name="zedai-to-html.iterate">
             <p:output port="fileset" primary="true"/>
             <p:output port="html-files" sequence="true">
                 <p:pipe port="result" step="zedai-to-html.iterate.html"/>
             </p:output>
-            <p:iteration-source>
-                <p:pipe port="secondary" step="zedai-to-html.html-chunks"/>
-            </p:iteration-source>
             <p:variable name="result-uri" select="base-uri(/*)"/>
             <p:identity name="zedai-to-html.iterate.html"/>
             <px:fileset-create>

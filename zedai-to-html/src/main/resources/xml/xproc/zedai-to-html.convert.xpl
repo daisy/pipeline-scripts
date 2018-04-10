@@ -22,6 +22,7 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
 
     <!--=========================================================================-->
     <!-- GET ZEDAI FROM FILESET                                                  -->
@@ -138,18 +139,8 @@
         </p:add-attribute>
         <p:choose>
             <p:when test="$chunk='true'">
-                <p:output port="result" sequence="true">
-                    <p:pipe port="secondary" step="html-chunks"/>
-                </p:output>
-                <p:xslt name="html-chunks">
-                    <p:input port="stylesheet">
-                        <p:document href="http://www.daisy.org/pipeline/modules/html-utils/html-chunker.xsl"/>
-                    </p:input>
-                    <p:input port="parameters">
-                        <p:empty/>
-                    </p:input>
-                </p:xslt>
-                <p:sink/>
+                <p:output port="result" sequence="true"/>
+                <px:html-chunker/>
             </p:when>
             <p:otherwise>
                 <p:output port="result" sequence="true"/>
