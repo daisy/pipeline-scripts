@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:d="http://www.daisy.org/ns/pipeline/data"
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"
     px:input-filesets="epub3"
     px:output-filesets="daisy202"
     type="px:epub3-to-daisy202" name="main" version="1.0" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:pxp="http://exproc.org/proposed/steps" xpath-version="2.0">
@@ -85,6 +85,22 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
         <p:with-option name="epub" select="$epub-href"/>
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:epub3-to-daisy202.load>
+    
+    <!--
+        FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
+    -->
+    <px:fileset-load media-types="application/oebps-package+xml">
+        <p:input port="fileset">
+            <p:pipe step="load" port="fileset.out"/>
+        </p:input>
+        <p:input port="in-memory">
+            <p:pipe step="load" port="in-memory.out"/>
+        </p:input>
+    </px:fileset-load>
+    <px:assert test-count-min="1" test-count-max="1" error-code="PED01" message="The EPUB must contain exactly one OPF document"/>
+    <px:assert error-code="PED02" message="There must be at least one dc:identifier meta element in the OPF document">
+        <p:with-option name="test" select="exists(/opf:package/opf:metadata/dc:identifier)"/>
+    </px:assert>
 
     <p:choose name="validate">
         <p:when test="$validation='off'">
@@ -122,7 +138,7 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
                 <p:pipe step="status-and-report" port="status"/>
             </p:output>
             <px:epub3-validator name="epub3-validator">
-                <p:with-option name="epub" select="/d:fileset/d:file[@media-type='application/oebps-package+xml'][1]
+                <p:with-option name="epub" select="/d:fileset/d:file[@media-type='application/oebps-package+xml']
                                                    /resolve-uri((@original-href,@href)[1], base-uri(.))">
                     <p:pipe step="load" port="fileset.out"/>
                 </p:with-option>
@@ -212,11 +228,12 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
             </p:input>
         </px:fileset-load>
         <!--
-            FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
+            these assertions should normally never fail
         -->
         <px:assert test-count-min="1" test-count-max="1" error-code="PED01" message="There must be exactly one ncc.html in the resulting DAISY 2.02 fileset"/>
         <p:filter select="/*/*/*[@name='dc:identifier']"/>
-        <px:assert test-count-min="1" test-count-max="1" error-code="PED02" message="There must be exactly one dc:identifier meta element in the resulting ncc.html"/>
+        <px:assert test-count-min="1" error-code="PED02" message="There must be at least one dc:identifier meta element in the resulting ncc.html"/>
+        <p:split-sequence test="position()=1"/>
     </p:group>
     <p:sink/>
 
