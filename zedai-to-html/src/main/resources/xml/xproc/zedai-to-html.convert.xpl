@@ -19,6 +19,7 @@
 
     <p:option name="output-dir" required="true"/>
     <p:option name="chunk" select="'false'"/>
+    <p:option name="chunk-size" required="false" select="'-1'"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
@@ -140,7 +141,9 @@
         <p:choose>
             <p:when test="$chunk='true'">
                 <p:output port="result" sequence="true"/>
-                <px:html-chunker/>
+                <px:html-chunker>
+                    <p:with-option name="max-chunk-size" select="$chunk-size"/>
+                </px:html-chunker>
             </p:when>
             <p:otherwise>
                 <p:output port="result" sequence="true"/>

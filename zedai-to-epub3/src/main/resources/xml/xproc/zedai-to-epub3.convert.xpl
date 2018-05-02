@@ -28,6 +28,7 @@
     </p:output>
   
     <p:option name="output-dir" required="true"/>
+    <p:option name="chunk-size" required="false" select="'-1'"/>
     <p:option name="audio" required="false" select="'false'"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
@@ -182,7 +183,9 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <px:html-chunker name="zedai-to-html.html-chunks"/>
+        <px:html-chunker name="zedai-to-html.html-chunks">
+            <p:with-option name="max-chunk-size" select="$chunk-size"/>
+        </px:html-chunker>
         <p:for-each name="zedai-to-html.iterate">
             <p:output port="fileset" primary="true"/>
             <p:output port="html-files" sequence="true">

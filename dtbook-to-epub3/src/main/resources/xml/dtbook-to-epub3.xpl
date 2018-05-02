@@ -68,6 +68,16 @@ When text-to-speech is enabled, the conversion may output a (incomplete) EPUB 3 
       </p:documentation>
     </p:option>
 
+    <p:option name="chunk-size" required="false" px:type="integer" select="'-1'">
+      <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <h2 px:role="name">Chunk size</h2>
+        <p px:role="desc" xml:space="preserve">The maximum size of HTML files in kB. Specify "-1" for no maximum.
+
+Top-level sections in the DTBook become separate HTML files in the resulting EPUB, and are further
+split up if they exceed the given maximum size.</p>
+      </p:documentation>
+    </p:option>
+
     <p:option name="audio" required="false" px:type="boolean" select="'false'">
       <p:documentation xmlns="http://www.w3.org/1999/xhtml">
 	<h2 px:role="name">Enable Text-To-Speech</h2>
@@ -202,6 +212,7 @@ When text-to-speech is enabled, the conversion may output a (incomplete) EPUB 3 
             </p:input>
             <p:with-option name="output-dir" select="$temp-dir"/>
             <p:with-option name="audio" select="$audio"/>
+            <p:with-option name="chunk-size" select="$chunk-size"/>
         </px:zedai-to-epub3-convert>
 
         <px:epub3-store name="store">
