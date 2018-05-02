@@ -21,6 +21,25 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
         </p:documentation>
     </p:option>
 
+    <p:option name="validation" required="false" px:type="string" select="'off'">
+        <p:pipeinfo>
+            <px:data-type>
+                <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+                    <value>off</value>
+                    <a:documentation xml:lang="en">No validation</a:documentation>
+                    <value>report</value>
+                    <a:documentation xml:lang="en">Report validation issues</a:documentation>
+                    <value>abort</value>
+                    <a:documentation xml:lang="en">Abort on validation issues</a:documentation>
+                </choice>
+            </px:data-type>
+        </p:pipeinfo>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h2 px:role="name">Validation</h2>
+            <p px:role="desc">Whether to abort on validation issues.</p>
+        </p:documentation>
+    </p:option>
+    
     <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Temporary directory</h2>
@@ -33,10 +52,28 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
         </p:documentation>
     </p:option>
 
+    <p:output port="validation-report" sequence="true" px:media-type="application/vnd.pipeline.report+xml">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">Input validation report</h1>
+        </p:documentation>
+        <p:pipe step="validate" port="report"/>
+    </p:output>
+
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <h1 px:role="name">Input validation status</h1>
+            <p px:role="desc" xml:space="preserve">An XML document describing, briefly, whether the input validation was successful.
+
+[More details on the file format](http://daisy.github.io/pipeline/ValidationStatusXML).</p>
+        </p:documentation>
+        <p:pipe step="validate" port="status"/>
+    </p:output>
+    
     <p:import href="step/epub3-to-daisy202.load.xpl"/>
     <p:import href="step/epub3-to-daisy202.convert.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-validator/library.xpl"/>
 
     <p:variable name="epub-href" select="resolve-uri($epub,base-uri(/*))">
         <p:inline>
@@ -49,12 +86,100 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:epub3-to-daisy202.load>
 
+    <p:choose name="validate">
+        <p:when test="$validation='off'">
+            <p:output port="fileset.out">
+                <p:pipe step="load" port="fileset.out"/>
+            </p:output>
+            <p:output port="in-memory.out" sequence="true">
+                <p:pipe step="load" port="in-memory.out"/>
+            </p:output>
+            <p:output port="report" sequence="true">
+                <p:empty/>
+            </p:output>
+            <p:output port="status">
+                <p:inline>
+                    <d:validation-status result="ok"/>
+                </p:inline>
+            </p:output>
+            <p:sink>
+                <p:input port="source">
+                    <p:empty/>
+                </p:input>
+            </p:sink>
+        </p:when>
+        <p:otherwise>
+            <p:output port="fileset.out">
+                <p:pipe step="load" port="fileset.out"/>
+            </p:output>
+            <p:output port="in-memory.out" sequence="true">
+                <p:pipe step="load" port="in-memory.out"/>
+            </p:output>
+            <p:output port="report" sequence="true">
+                <p:pipe step="status-and-report" port="report"/>
+            </p:output>
+            <p:output port="status">
+                <p:pipe step="status-and-report" port="status"/>
+            </p:output>
+            <px:epub3-validator name="epub3-validator">
+                <p:with-option name="epub" select="/d:fileset/d:file[@media-type='application/oebps-package+xml'][1]
+                                                   /resolve-uri((@original-href,@href)[1], base-uri(.))">
+                    <p:pipe step="load" port="fileset.out"/>
+                </p:with-option>
+            </px:epub3-validator>
+            <p:identity>
+                <p:input port="source">
+                    <p:pipe step="epub3-validator" port="validation-status"/>
+                </p:input>
+            </p:identity>
+            <p:choose name="status-and-report">
+                <p:when test="/d:validation-status[@result='ok']">
+                    <p:output port="status" primary="true"/>
+                    <p:output port="report" sequence="true">
+                        <p:empty/>
+                    </p:output>
+                    <p:identity/>
+                </p:when>
+                <p:when test="$validation='report'">
+                    <p:output port="status" primary="true">
+                        <!--
+                            Return OK here even though validation failed. This is because
+                            "VALIDATION_FAIL" is going to be generalized to "FAIL"
+                            (https://github.com/daisy/pipeline-framework/issues/121).
+                        -->
+                        <p:inline>
+                            <d:validation-status result="ok"/>
+                        </p:inline>
+                    </p:output>
+                    <p:output port="report">
+                        <p:pipe step="epub3-validator" port="html-report"/>
+                    </p:output>
+                    <p:sink>
+                        <p:input port="source">
+                            <p:empty/>
+                        </p:input>
+                    </p:sink>
+                </p:when>
+                <p:otherwise>
+                    <p:output port="status" primary="true"/>
+                    <p:output port="report" sequence="true">
+                        <p:empty/>
+                    </p:output>
+                    <!--
+                        FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
+                    -->
+                    <px:error code="PED03" message="EPUB 3 input is invalid. Aborting."/>
+                </p:otherwise>
+            </p:choose>
+        </p:otherwise>
+    </p:choose>
+
     <px:epub3-to-daisy202-convert name="convert.daisy202">
         <p:input port="fileset.in">
-            <p:pipe port="fileset.out" step="load"/>
+            <p:pipe port="fileset.out" step="validate"/>
         </p:input>
         <p:input port="in-memory.in">
-            <p:pipe port="in-memory.out" step="load"/>
+            <p:pipe port="in-memory.out" step="validate"/>
         </p:input>
     </px:epub3-to-daisy202-convert>
 
@@ -86,6 +211,9 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
                 <p:pipe port="in-memory.out" step="convert.daisy202"/>
             </p:input>
         </px:fileset-load>
+        <!--
+            FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
+        -->
         <px:assert test-count-min="1" test-count-max="1" error-code="PED01" message="There must be exactly one ncc.html in the resulting DAISY 2.02 fileset"/>
         <p:filter select="/*/*/*[@name='dc:identifier']"/>
         <px:assert test-count-min="1" test-count-max="1" error-code="PED02" message="There must be exactly one dc:identifier meta element in the resulting ncc.html"/>
