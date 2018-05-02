@@ -352,24 +352,35 @@
     <p:delete match="//d:file[@media-type=('application/oebps-package+xml','application/x-dtbncx+xml') or starts-with(@href,'..') or starts-with(@href,'META-INF/') or @href='mimetype']"/>
     <p:viewport match="//d:file[@media-type='application/xhtml+xml']">
         <p:variable name="base-uri" select="resolve-uri(/*/@href,base-uri(/*))"/>
-        <p:add-attribute match="/*" attribute-name="doctype-public" attribute-value="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
-        <p:add-attribute match="/*" attribute-name="doctype-system" attribute-value="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
         <p:choose>
             <p:when test="(//opf:item[tokenize(@properties,'\s+')='nav']/resolve-uri(@href,base-uri()))[1] = $base-uri">
                 <p:xpath-context>
                     <p:pipe port="result" step="opf.in"/>
                 </p:xpath-context>
-                <p:add-attribute attribute-name="href" match="/*">
-                    <p:with-option name="attribute-value" select="replace(/*/@href,'^(.*?)[^/]+$','$1ncc.html')"/>
-                </p:add-attribute>
+                <p:output port="result" sequence="true">
+                    <p:empty/>
+                </p:output>
+                <p:sink>
+                    <p:documentation>Delete original navigation document. It will be replaced with the generated NCC.</p:documentation>
+                </p:sink>
             </p:when>
             <p:otherwise>
+                <p:output port="result"/>
                 <p:add-attribute attribute-name="href" match="/*">
                     <p:with-option name="attribute-value" select="replace(/*/@href,'^(.*)\.([^/\.]*)$','$1.html')"/>
                 </p:add-attribute>
             </p:otherwise>
         </p:choose>
     </p:viewport>
+    <px:fileset-add-entry href="ncc.html" media-type="application/xhtml+xml">
+        <p:documentation>Add generated NCC</p:documentation>
+    </px:fileset-add-entry>
+    <p:add-attribute match="//d:file[@media-type='application/xhtml+xml']"
+                     attribute-name="doctype-public"
+                     attribute-value="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
+    <p:add-attribute match="//d:file[@media-type='application/xhtml+xml']"
+                     attribute-name="doctype-system"
+                     attribute-value="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <p:viewport match="//d:file[@media-type='application/smil+xml']">
         <p:add-attribute match="/*" attribute-name="doctype-public" attribute-value="-//W3C//DTD SMIL 1.0//EN"/>
         <p:add-attribute match="/*" attribute-name="doctype-system" attribute-value="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
