@@ -12,9 +12,12 @@
         </a>
     </p:documentation>
 
-    <p:option name="epub" required="true" px:type="anyFileURI" px:media-type="application/epub+zip">
+    <p:option name="epub" required="true" px:type="anyFileURI" px:media-type="application/epub+zip application/oebps-package+xml">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">EPUB 3 Publication</h2>
+            <p px:role="desc" xml:space="preserve">The EPUB 3 you want to convert to DAISY 2.02.
+
+You may alternatively use the EPUB package document (the OPF-file) if your input is a unzipped/"exploded" version of an EPUB.</p>
         </p:documentation>
     </p:option>
 
@@ -30,11 +33,10 @@
         </p:documentation>
     </p:option>
 
+    <p:import href="step/epub3-to-daisy202.load.xpl"/>
     <p:import href="step/epub3-to-daisy202.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
 
     <p:variable name="epub-href" select="resolve-uri($epub,base-uri(/*))">
         <p:inline>
@@ -42,28 +44,17 @@
         </p:inline>
     </p:variable>
 
-    <px:fileset-unzip store-to-disk="true" name="unzip">
-        <p:with-option name="href" select="$epub-href"/>
-        <p:with-option name="unzipped-basedir" select="concat($temp-dir,'epub/')"/>
-    </px:fileset-unzip>
-    <p:sink/>
-    <px:mediatype-detect name="mediatype">
-        <p:input port="source">
-            <p:pipe step="unzip" port="fileset"/>
-        </p:input>
-    </px:mediatype-detect>
-    <px:fileset-load name="load">
-        <p:input port="in-memory">
-            <p:empty/>
-        </p:input>
-    </px:fileset-load>
+    <px:epub3-to-daisy202.load name="load">
+        <p:with-option name="epub" select="$epub-href"/>
+        <p:with-option name="temp-dir" select="$temp-dir"/>
+    </px:epub3-to-daisy202.load>
 
     <px:epub3-to-daisy202-convert name="convert.daisy202">
         <p:input port="fileset.in">
-            <p:pipe port="result" step="mediatype"/>
+            <p:pipe port="fileset.out" step="load"/>
         </p:input>
         <p:input port="in-memory.in">
-            <p:pipe port="result" step="load"/>
+            <p:pipe port="in-memory.out" step="load"/>
         </p:input>
     </px:epub3-to-daisy202-convert>
 
