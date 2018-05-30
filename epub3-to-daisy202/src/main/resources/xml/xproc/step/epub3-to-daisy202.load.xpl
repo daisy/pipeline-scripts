@@ -171,12 +171,9 @@
                 <p:otherwise>
                     <p:output port="status" primary="true"/>
                     <p:output port="report" sequence="true">
-                        <p:empty/>
+                        <p:pipe step="epub3-validator" port="html-report"/>
                     </p:output>
-                    <!--
-                        FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
-                    -->
-                    <px:error code="PED03" message="EPUB 3 input is invalid. Aborting."/>
+                    <px:message message="The EPUB 3 input is invalid. Aborting."/>
                 </p:otherwise>
             </p:choose>
         </p:otherwise>
