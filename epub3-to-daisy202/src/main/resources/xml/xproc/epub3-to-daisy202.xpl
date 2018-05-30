@@ -66,12 +66,13 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
 
 [More details on the file format](http://daisy.github.io/pipeline/ValidationStatusXML).</p>
         </p:documentation>
-        <p:pipe step="load" port="status"/>
+        <p:pipe step="status" port="result"/>
     </p:output>
     
     <p:import href="step/epub3-to-daisy202.load.xpl"/>
     <p:import href="step/epub3-to-daisy202.convert.xpl"/>
     <p:import href="step/epub3-to-daisy202.store.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
     <p:variable name="epub-href" select="resolve-uri($epub,base-uri(/*))">
         <p:inline>
@@ -85,23 +86,80 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
         <p:with-option name="validation" select="$validation"/>
     </px:epub3-to-daisy202.load>
 
-    <px:epub3-to-daisy202-convert name="convert">
-        <p:input port="fileset.in">
-            <p:pipe port="fileset.out" step="load"/>
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="load" port="status"/>
         </p:input>
-        <p:input port="in-memory.in">
-            <p:pipe port="in-memory.out" step="load"/>
-        </p:input>
-    </px:epub3-to-daisy202-convert>
-
-    <px:epub3-to-daisy202.store name="store">
-        <p:input port="fileset.in">
-            <p:pipe step="convert" port="fileset.out"/>
-        </p:input>
-        <p:input port="in-memory.in">
-            <p:pipe step="convert" port="in-memory.out"/>
-        </p:input>
-        <p:with-option name="output-dir" select="$output-dir"/>
-    </px:epub3-to-daisy202.store>
+    </p:identity>
+    <p:choose name="status">
+        <p:when test="/d:validation-status[@result='error']">
+            <p:output port="result"/>
+            <p:identity/>
+        </p:when>
+        <p:otherwise>
+            <p:output port="result">
+                <p:pipe step="try-convert" port="status"/>
+            </p:output>
+            <p:try name="try-convert">
+                <p:group>
+                    <p:output port="status">
+                        <p:pipe step="load" port="status"/>
+                    </p:output>
+                    
+                    <px:epub3-to-daisy202-convert name="convert">
+                        <p:input port="fileset.in">
+                            <p:pipe port="fileset.out" step="load"/>
+                        </p:input>
+                        <p:input port="in-memory.in">
+                            <p:pipe port="in-memory.out" step="load"/>
+                        </p:input>
+                    </px:epub3-to-daisy202-convert>
+        
+                    <px:epub3-to-daisy202.store name="store">
+                        <p:input port="fileset.in">
+                            <p:pipe step="convert" port="fileset.out"/>
+                        </p:input>
+                        <p:input port="in-memory.in">
+                            <p:pipe step="convert" port="in-memory.out"/>
+                        </p:input>
+                        <p:with-option name="output-dir" select="$output-dir"/>
+                    </px:epub3-to-daisy202.store>
+                    
+                </p:group>
+                <p:catch name="catch">
+                    <p:output port="status">
+                        <p:inline>
+                            <d:validation-status result="error"/>
+                        </p:inline>
+                    </p:output>
+                    <p:identity>
+                        <p:input port="source">
+                            <p:pipe step="catch" port="error"/>
+                        </p:input>
+                    </p:identity>
+                    <p:choose>
+                        <!--
+                            catching only errors of a certain type (PED01 PED02) will be easier with XProc 3.0
+                        -->
+                        <p:when test="/c:errors/c:error/@code=('PED01','PED02')">
+                            <px:message message="The EPUB 3 input can not be processed: $1">
+                                <p:with-option name="param1" select="/c:errors/c:error/@code=('PED01','PED02')[1]/message"/>
+                            </px:message>
+                            <px:message message="Aborting..."/>
+                        </p:when>
+                        <p:otherwise>
+                            <p:wrap wrapper="px:cause" match="/*" name="cause"/>
+                            <p:error code="runtime">
+                                <p:input port="source">
+                                    <p:pipe step="cause" port="result"/>
+                                </p:input>
+                            </p:error>
+                        </p:otherwise>
+                    </p:choose>
+                    <p:sink/>
+                </p:catch>
+            </p:try>
+        </p:otherwise>
+    </p:choose>
     
 </p:declare-step>

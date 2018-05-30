@@ -28,9 +28,6 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
-    <!--
-        FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
-    -->
     <px:assert test-count-min="1" test-count-max="1" error-code="PED01" message="The EPUB must contain exactly one OPF document"/>
     <px:assert error-code="PED02" message="There must be at least one dc:identifier meta element in the OPF document">
         <p:with-option name="test" select="exists(/opf:package/opf:metadata/dc:identifier)"/>
