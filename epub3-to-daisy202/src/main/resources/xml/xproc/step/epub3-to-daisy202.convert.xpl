@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:d="http://www.daisy.org/ns/pipeline/data"
     type="px:epub3-to-daisy202-convert" name="main" version="1.0" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-    xmlns:opf="http://www.idpf.org/2007/opf">
+    xmlns:opf="http://www.idpf.org/2007/opf"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
 
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
@@ -27,7 +28,13 @@
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
     </px:fileset-load>
-    <px:assert message="There must be exactly one package document" test-count-min="1" test-count-max="1"/>
+    <!--
+        FIXME: Scripts should not throw errors. They should set the status output to "FAIL".
+    -->
+    <px:assert test-count-min="1" test-count-max="1" error-code="PED01" message="The EPUB must contain exactly one OPF document"/>
+    <px:assert error-code="PED02" message="There must be at least one dc:identifier meta element in the OPF document">
+        <p:with-option name="test" select="exists(/opf:package/opf:metadata/dc:identifier)"/>
+    </px:assert>
     <p:identity name="opf.in"/>
     <p:sink/>
 
