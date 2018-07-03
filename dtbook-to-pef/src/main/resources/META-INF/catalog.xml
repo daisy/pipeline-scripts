@@ -8,6 +8,8 @@
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/library.xpl" uri="../xml/xproc/library.xpl"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/reset.css" uri="../css/reset.css"/>
   <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css" uri="../css/default.css"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/xsl/volume-breaking.xsl" uri="../xml/xslt/volume-breaking.xsl"/>
+  <uri name="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/volume-breaking.scss" uri="../css/volume-breaking.scss"/>
   
   <!-- dependencies -->
   <nextCatalog catalog="org:daisy:pipeline:modules:braille:xml-to-pef"/>
