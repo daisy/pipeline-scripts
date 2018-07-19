@@ -58,30 +58,12 @@
         </p:input>
     </px:merge-parameters>
     
-    <!-- Load OPF and add content files to fileset. -->
-    <px:fileset-load px:progress=".01"
-                     media-types="application/oebps-package+xml">
+    <!-- Load XHTML documents in spine order. -->
+    <px:fileset-load px:message="Load XHTML documents in spine order" px:progress=".04"
+                     media-types="application/oebps-package+xml application/xhtml+xml">
         <p:input port="fileset">
             <p:pipe port="fileset.in" step="main"/>
         </p:input>
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.in" step="main"/>
-        </p:input>
-    </px:fileset-load>
-    <p:identity name="opf"/>
-    <p:xslt px:progress=".01">
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/opf-manifest-to-fileset.xsl"/>
-        </p:input>
-    </p:xslt>
-    <p:identity name="opf-fileset"/>
-    
-    <!-- Load XHTML documents in spine order. -->
-    <px:fileset-load px:message="Load XHTML documents in spine order" px:progress=".02"
-                     media-types="application/oebps-package+xml application/xhtml+xml">
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
         </p:input>
@@ -134,10 +116,16 @@
     <p:identity name="spine-bodies"/>
     
     <!-- Convert OPF metadata to HTML metadata. -->
-    <p:xslt px:message="Convert OPF metadata to HTML metadata" px:progress=".01">
-        <p:input port="source">
-            <p:pipe port="result" step="opf"/>
+    <px:fileset-load media-types="application/oebps-package+xml">
+        <p:input port="fileset">
+            <p:pipe port="fileset.in" step="main"/>
         </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.in" step="main"/>
+        </p:input>
+    </px:fileset-load>
+    <p:identity name="opf"/>
+    <p:xslt px:message="Convert OPF metadata to HTML metadata" px:progress=".01">
         <p:input port="stylesheet">
             <p:document href="../xslt/opf-to-html-head.xsl"/>
         </p:input>
