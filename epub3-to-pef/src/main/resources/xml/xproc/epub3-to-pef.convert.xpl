@@ -58,31 +58,10 @@
         </p:input>
     </px:merge-parameters>
     
-    <!-- Load OPF and add content files to fileset. -->
-    <px:fileset-load media-types="application/oebps-package+xml">
-        <p:input port="fileset">
-            <p:pipe port="fileset.in" step="main"/>
-        </p:input>
-        <p:input port="in-memory">
-            <p:pipe port="in-memory.in" step="main"/>
-        </p:input>
-    </px:fileset-load>
-    <p:identity name="opf"/>
-    <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/opf-manifest-to-fileset.xsl"/>
-        </p:input>
-    </p:xslt>
-    <p:identity name="opf-fileset"/>
-    <p:sink/>
-    
     <!-- Load XHTML documents in spine order. -->
     <px:fileset-load media-types="application/oebps-package+xml application/xhtml+xml">
         <p:input port="fileset">
-            <p:pipe port="result" step="opf-fileset"/>
+            <p:pipe port="fileset.in" step="main"/>
         </p:input>
         <p:input port="in-memory">
             <p:pipe port="in-memory.in" step="main"/>
@@ -137,10 +116,16 @@
     <p:identity name="spine-bodies"/>
     
     <!-- Convert OPF metadata to HTML metadata. -->
-    <p:xslt>
-        <p:input port="source">
-            <p:pipe port="result" step="opf"/>
+    <px:fileset-load media-types="application/oebps-package+xml">
+        <p:input port="fileset">
+            <p:pipe port="fileset.in" step="main"/>
         </p:input>
+        <p:input port="in-memory">
+            <p:pipe port="in-memory.in" step="main"/>
+        </p:input>
+    </px:fileset-load>
+    <p:identity name="opf"/>
+    <p:xslt>
         <p:input port="stylesheet">
             <p:document href="../xslt/opf-to-html-head.xsl"/>
         </p:input>
