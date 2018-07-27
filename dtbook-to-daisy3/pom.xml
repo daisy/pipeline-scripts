@@ -34,6 +34,11 @@
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline</groupId>
+      <artifactId>ds-to-spi-runtime</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!--
         runtime dependencies
     -->
@@ -57,11 +62,16 @@
       <artifactId>daisy3-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+        removed dependency in order to be able to mock it in the tests
+    -->
+    <!--
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>dtbook-tts</artifactId>
       <scope>runtime</scope>
     </dependency>
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>dtbook-utils</artifactId>
@@ -239,6 +249,22 @@
   </properties>
   
   <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <includes>
+          <include>dtbook-tts-mock/library.xpl</include>
+        </includes>
+        <filtering>true</filtering>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>dtbook-tts-mock/library.xpl</exclude>
+        </excludes>
+        <filtering>false</filtering>
+      </testResource>
+    </testResources>
     <plugins>
       <plugin>
         <groupId>org.daisy.pipeline.build</groupId>
@@ -250,6 +276,25 @@
             <goals>
               <goal>process-test-catalog</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.daisy.pipeline.build</groupId>
+        <artifactId>ds-to-spi-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-spi-test-classes</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>generate-spi-test-classes</goal>
+            </goals>
+            <configuration>
+              <includes>
+                org.daisy.pipeline.modules.impl.Module_test_module,
+                MockTTS
+              </includes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
