@@ -11,5 +11,6 @@
   <nextCatalog catalog="org:daisy:pipeline:modules:html-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:mediatype-utils"/>
   <nextCatalog catalog="org:daisy:pipeline:modules:epub3-validator"/>
+  <nextCatalog catalog="org:daisy:pipeline:modules:epub3-ocf-utils"/>
 
 </catalog>

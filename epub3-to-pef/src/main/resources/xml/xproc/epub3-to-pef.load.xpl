@@ -23,6 +23,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     
     <!--
         Until v1.10 of DP2 is released, we cannot point into ZIP files using URIs.
@@ -66,14 +67,7 @@
     <p:identity name="opf"/>
     
     <!-- Add content files to fileset. -->
-    <p:xslt>
-        <p:input port="parameters">
-            <p:empty/>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/opf-manifest-to-fileset.xsl"/>
-        </p:input>
-    </p:xslt>
+    <px:opf-manifest-to-fileset/>
     <p:identity name="content-fileset"/>
     
     <px:fileset-join>
