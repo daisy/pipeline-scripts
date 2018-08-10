@@ -49,6 +49,7 @@
 					<c:file name="EPUB/css/fonts/opendyslexic/OpenDyslexic-Regular.otf"/>
 					<c:file name="EPUB/css/fonts/opendyslexic/OpenDyslexicMono-Regular.otf"/>
 					<c:file name="EPUB/images/valentin.jpg"/>
+					<c:file name="META-INF/container.xml"/>
 					<c:file name="EPUB/C00000-1-cover_braille.xhtml"/>
 					<c:file name="EPUB/C00000-2-frontmatter_braille.xhtml"/>
 					<c:file name="EPUB/C00000-3-chapter_braille.xhtml"/>
@@ -69,7 +70,6 @@
 					<c:file name="EPUB/C00000-8-conclusion_braille.css"/>
 					<c:file name="EPUB/C00000-9-footnotes_braille.css"/>
 					<c:file name="EPUB/nav_braille.css"/>
-					<c:file name="META-INF/container.xml"/>
 					<c:file name="META-INF/metadata.xml"/>
 					<c:file name="EPUB/package-braille.opf"/>
 					<c:file name="EPUB/renditionMapping.html"/>
