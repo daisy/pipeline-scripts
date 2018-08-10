@@ -4,6 +4,9 @@
                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                xmlns:c="http://www.w3.org/ns/xproc-step"
                xmlns:rendition="http://www.idpf.org/2013/rendition"
+               xmlns:html="http://www.w3.org/1999/xhtml"
+               xmlns:opf="http://www.idpf.org/2007/opf"
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
                script="../../main/resources/xml/epub3-to-epub3.xpl">
 	
 	<x:scenario label="valentin">
@@ -94,11 +97,19 @@
 			</x:document>
 		</x:expect>
 		
+		<x:context label="The package document of the braille rendition">
+			<x:document type="file" base-uri="temp-dir" href="valentin/valentin.epub!/EPUB/package-braille.opf"/>
+		</x:context>
+		<x:expect label="dc:language should be 'en-Brai'" type="xpath" test="/opf:package/opf:metadata/dc:language/string()"
+		          equals="'en-Brai'"/>
+		
 		<x:context label="The braille version of the XHTML cover document">
 			<x:document type="file" base-uri="temp-dir" href="valentin/valentin.epub!/EPUB/C00000-1-cover_braille.xhtml"/>
 		</x:context>
 		<x:expect label="The name of the root element should be html" type="xpath" test="/*/local-name()" equals="'html'"/>
 		<x:expect label="The namespace of the root element should be http://www.w3.org/1999/xhtml" type="xpath" test="/*/namespace-uri()" equals="'http://www.w3.org/1999/xhtml'"/>
+		<x:expect label="The translated title" type="xpath" test="/html:html/html:head/html:title/string(.)"
+		          equals="'⠠⠧⠁⠇⠢⠞⠔ ⠠⠓⠁⠘⠒⠥⠽ ⠤ ⠮ ⠐⠋ ⠷ ⠮ ⠫⠥⠉⠁⠰⠝ ⠿ ⠮ ⠃⠇'"/>
 	</x:scenario>
 	
 </x:description>
