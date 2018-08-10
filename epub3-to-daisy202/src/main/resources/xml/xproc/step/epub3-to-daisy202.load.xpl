@@ -32,6 +32,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-validator/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     
     <p:choose name="load">
         <p:when test="ends-with(lower-case($epub),'.epub')">
@@ -78,14 +79,7 @@
                 </p:input>
             </px:fileset-load>
             <p:identity name="opf"/>
-            <p:xslt>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-                <p:input port="stylesheet">
-                    <p:document href="../../xslt/opf-manifest-to-fileset.xsl"/>
-                </p:input>
-            </p:xslt>
+            <px:opf-manifest-to-fileset/>
             <!--
                 FIXME: px:fileset-move should take care of this, but doesn't seem to work
             -->
