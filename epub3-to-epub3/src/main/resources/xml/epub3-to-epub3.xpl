@@ -6,7 +6,7 @@
                 name="main">
     
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-        <h1 px:role="name">EPUB 3 Enhancer</h1>
+        <h1 px:role="name">Braille in EPUB 3</h1>
         <p px:role="desc">Transforms an EPUB 3 publication into an EPUB 3 publication with a braille rendition.</p>
         <dl px:role="author">
             <dt>Name:</dt>
@@ -16,9 +16,10 @@
         </dl>
     </p:documentation>
     
-    <p:option name="source" required="true" px:type="anyFileURI" px:media-type="application/epub+zip">
+    <p:option name="source" required="true" px:type="anyFileURI" px:media-type="application/epub+zip text/plain">
         <p:documentation>
             <h2 px:role="name">Input EPUB 3</h2>
+            <p px:role="desc" xml:space="preserve">The EPUB you want to convert. You may alternatively use the "mimetype" document if your input is a unzipped/"exploded" version of an EPUB.</p>
         </p:documentation>
     </p:option>
     
@@ -79,7 +80,8 @@ specific.
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <px:fileset-create name="target.base.fileset">
-        <p:with-option name="base" select="concat($output-dir,'/',replace($source,'^.*/(([^/]+)\.epub|([^/]+))$','$2$3.epub'),'!/')"/>
+        <p:with-option name="base"
+                       select="concat($output-dir,'/',replace(replace($source,'(\.epub|/mimetype)$',''),'^.*/([^/]+)$','$1'),'.epub!/')"/>
     </px:fileset-create>
     
     <px:epub3-to-epub3.load name="load">
