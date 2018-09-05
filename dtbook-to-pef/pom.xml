@@ -107,11 +107,6 @@
     </dependency>
     <dependency>
       <groupId>org.daisy.pipeline.modules.braille</groupId>
-      <artifactId>liblouis-formatter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.daisy.pipeline.modules.braille</groupId>
       <artifactId>obfl-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
