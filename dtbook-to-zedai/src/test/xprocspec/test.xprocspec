@@ -22,13 +22,13 @@
             <x:document type="inline">
 				<body xmlns="http://www.daisy.org/ns/z3998/authoring/">
 					<frontmatter>
-						<section xml:id="d2843e14">
+						<section xml:id="d2844e14">
 							<h role="title">Minimal DTBook</h>
 							<p role="author">Bert</p>
 						</section>
 					</frontmatter>
 					<bodymatter>
-						<section xml:id="d2843e25">
+						<section xml:id="d2844e25">
 							<pagebreak value="1" xml:id="page_1"/>
 							<h>Chapter</h>
 							<p>Paragraph</p>
