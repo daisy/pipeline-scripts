@@ -141,9 +141,6 @@
         </x:expect>
     </x:scenario>
     
-    <!--
-        FIXME: generated id attributes make test brittle
-    -->
     <x:scenario label="dtbook 1.1.0">
         <x:call step="px:dtbook-to-epub3">
             <x:input port="source">
@@ -156,16 +153,17 @@
         <x:context label="the result HTML file">
             <x:document type="file" base-uri="temp-dir" href="dtbook110/output-dir/dtbook110.epub!/EPUB/dtbook110-1.xhtml"/>
         </x:context>
-        <x:expect label="the result HTML file" type="compare">
+        <x:expect label="the result HTML file"
+                  type="custom" href="http://www.daisy.org/xprocspec/custom-assertion-steps.xpl" step="x:compare-except-ids">
             <x:document type="inline">
                 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
                     <head>
                         <meta charset="UTF-8"/>
                         <title>Title</title>
                     </head>
-                    <body id="d34113e7-0" epub:type="frontmatter">
-                        <section id="d34113e8-0">
-                            <h1 id="d34113e9-0" epub:type="title">Title</h1>
+                    <body id="a" epub:type="frontmatter">
+                        <section id="b">
+                            <h1 id="c" epub:type="title">Title</h1>
                         </section>
                     </body>
                 </html>
