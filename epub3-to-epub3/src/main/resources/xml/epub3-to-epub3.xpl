@@ -32,7 +32,7 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="braille-translator" required="false" px:data-type="transform-query" select="'(translator:liblouis)'">
+    <p:option name="braille-translator" required="false" px:type="transform-query" select="'(translator:liblouis)'">
         <p:documentation>
             <h2 px:role="name">Braille translator query</h2>
         </p:documentation>
