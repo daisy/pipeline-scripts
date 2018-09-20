@@ -171,4 +171,48 @@
         </x:expect>
     </x:scenario>
     
+    <x:scenario label="dir-attribute">
+        <x:call step="px:dtbook-to-epub3">
+            <x:input port="source">
+                <x:document type="inline">
+                    <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-3" xml:lang="en" dir="rtl">
+                        <head>
+                            <meta name="dtb:uid" content="CECIREADER-TEST-CD46505C-6FD0-11E4-B2F6-BBE73AE121C6"/>
+                            <meta name="dc:Title" content="Minimal DTBook"/>
+                            <meta name="dc:Creator" content="Bert"/>
+                        </head>
+                        <book>
+                            <frontmatter>
+                                <doctitle>Minimal DTBook</doctitle>
+                                <docauthor>Bert</docauthor>
+                            </frontmatter>
+                            <bodymatter>
+                                <level1>
+                                    <h1>Chapter</h1>
+                                    <p>Paragraph</p>
+                                </level1>
+                            </bodymatter>
+                        </book>
+                    </dtbook>
+                </x:document>
+            </x:input>
+            <x:option name="output-dir" select="resolve-uri('dir-attribute/output-dir/',$temp-dir)"/>
+            <x:option name="temp-dir" select="resolve-uri('dir-attribute/temp-dir/',$temp-dir)"/>
+        </x:call>
+        <x:context label="the output directory">
+            <x:document type="directory" base-uri="temp-dir" href="dir-attribute/output-dir/" recursive="true"/>
+        </x:context>
+        <x:expect label="the script should succeed" type="compare">
+            <x:document type="inline">
+                <c:directory name="output-dir">
+                    <c:file name="test.epub"/>
+                </c:directory>
+            </x:document>
+        </x:expect>
+        <x:context label="the html document">
+            <x:document type="file" base-uri="temp-dir" href="dir-attribute/temp-dir/epub/EPUB/test-1.xhtml"/>
+        </x:context>
+        <x:expect label="the result html document should have a 'dir' attribute" type="xpath" test="/*/@dir" equals="'rtl'"/>
+    </x:scenario>
+    
 </x:description>
