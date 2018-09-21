@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules</groupId>
   <artifactId>scripts-bom</artifactId>
-  <version>1.11.1</version>
+  <version>1.11.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Script Modules BoM</name>
@@ -150,8 +150,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <scm>
-    <tag>v1.11.1</tag>
-  </scm>
 </project>
