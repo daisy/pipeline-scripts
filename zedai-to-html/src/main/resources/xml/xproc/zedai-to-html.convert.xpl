@@ -21,6 +21,7 @@
     <p:option name="chunk" select="'false'"/>
     <p:option name="chunk-size" required="false" select="'-1'"/>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
@@ -135,9 +136,9 @@
                 <p:empty/>
             </p:input>
         </p:xslt>
-        <p:add-attribute attribute-name="xml:base" match="/*">
-            <p:with-option name="attribute-value" select="$result-basename"/>
-        </p:add-attribute>
+        <px:set-base-uri>
+            <p:with-option name="base-uri" select="$result-basename"/>
+        </px:set-base-uri>
         <p:choose>
             <p:when test="$chunk='true'">
                 <p:output port="result" sequence="true"/>
@@ -150,17 +151,13 @@
                 <p:identity/>
             </p:otherwise>
         </p:choose>
-        <!--TODO no need to iterate since we do not chunk the result-->
         <p:for-each name="zedai-to-html.iterate">
             <p:output port="fileset" primary="true"/>
             <p:output port="html-files" sequence="true">
                 <p:pipe port="result" step="zedai-to-html.iterate.html"/>
             </p:output>
             <p:variable name="result-uri" select="base-uri(/*)"/>
-            <!--hack to set the base URI-->
-<!--            <p:add-xml-base/>-->
-            <p:delete match="/*/@xml:base" name="zedai-to-html.iterate.html"/>
-            <!--end of hack-->
+            <p:identity name="zedai-to-html.iterate.html"/>
             <px:fileset-create>
                 <p:with-option name="base" select="$output-dir"/>
             </px:fileset-create>
