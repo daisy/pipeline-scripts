@@ -25,10 +25,14 @@
 			<x:context label="the fileset.out port">
 				<x:document type="port" port="fileset.out"/>
 			</x:context>
-			<x:expect label="there should be one result file" type="xpath" test="count(//d:file)" equals="1"/>
-			<x:expect label="the base uri of the result file" type="xpath"
-			          test="//d:file/resolve-uri(@href,base-uri(.))"
-			          equals="resolve-uri('alice/output-dir/alice.xhtml',$temp-dir)"/>
+			<x:expect label="the fileset.out port"
+			          type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
+				<x:document type="inline" base-uri="temp-dir">
+					<d:fileset>
+						<d:file href="alice/output-dir/alice.xhtml" media-type="application/xhtml+xml"/>
+					</d:fileset>
+				</x:document>
+			</x:expect>
 			<x:context label="the in-memory.out port">
 				<x:document type="port" port="in-memory.out"/>
 			</x:context>
@@ -44,10 +48,14 @@
 			<x:context label="the fileset.out port">
 				<x:document type="port" port="fileset.out"/>
 			</x:context>
-			<x:expect label="there should be one result file" type="xpath" test="count(//d:file)" equals="1"/>
-			<x:expect label="the base uri of the result file" type="xpath"
-			          test="//d:file/resolve-uri(@href,base-uri(.))"
-			          equals="resolve-uri('alice/output-dir/alice.xhtml',$temp-dir)"/>
+			<x:expect label="the fileset.out port"
+			          type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
+				<x:document type="inline" base-uri="temp-dir">
+					<d:fileset>
+						<d:file href="alice/output-dir/alice.xhtml" media-type="application/xhtml+xml"/>
+					</d:fileset>
+				</x:document>
+			</x:expect>
 			<x:context label="the in-memory.out port">
 				<x:document type="port" port="in-memory.out"/>
 			</x:context>
