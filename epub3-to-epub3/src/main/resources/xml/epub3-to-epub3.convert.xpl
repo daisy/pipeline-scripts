@@ -2,6 +2,7 @@
 <p:declare-step type="px:epub3-to-epub3.convert" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 xmlns:css="http://www.daisy.org/ns/pipeline/braille-css"
@@ -24,7 +25,7 @@
         <p:pipe step="out.in-memory" port="result"/>
     </p:output>
     
-    <p:option name="epub-base" required="true"/>
+    <p:option name="result-base" required="true"/>
     <p:option name="braille-translator" required="true" />
     <p:option name="stylesheet" required="true"/>
     <p:option name="apply-document-specific-stylesheets" required="true"/>
@@ -36,24 +37,103 @@
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/braille/css-utils/library.xpl"/>
     
+    <p:declare-step type="pxi:fileset-from-in-memory" name="fileset-from-in-memory">
+        <p:input port="source" sequence="true"/>
+        <p:output port="result"/>
+        <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+        <px:fileset-create name="base" base="/"/>
+        <p:for-each>
+            <p:iteration-source>
+                <p:pipe step="fileset-from-in-memory" port="source"/>
+            </p:iteration-source>
+            <px:fileset-add-entry>
+                <p:with-option name="href" select="resolve-uri(base-uri(/*))"/>
+                <p:input port="source">
+                    <p:pipe port="result" step="base"/>
+                </p:input>
+            </px:fileset-add-entry>
+        </p:for-each>
+        <px:fileset-join/>
+    </p:declare-step>
+    
     <p:variable name="default-stylesheet" select="resolve-uri('../css/default.css')">
         <p:inline>
             <irrelevant/>
         </p:inline>
     </p:variable>
     
+    <pxi:fileset-from-in-memory name="epub.in.in-memory.fileset">
+        <p:input port="source">
+            <p:pipe step="main" port="epub.in.in-memory"/>
+        </p:input>
+    </pxi:fileset-from-in-memory>
+    <p:sink/>
+    
+    <p:identity>
+        <p:input port="source">
+            <p:pipe step="main" port="epub.in.fileset"/>
+        </p:input>
+    </p:identity>
+    
+    <!--
+        px:fileset-move should add original-href attributes for files that exist on disk. However
+        this doesn't seem to work (and this is not only because they are files inside a ZIP). As a
+        workaround we add the attributes ourselves. We assume that all the files that do not exist
+        in memory exist on disk.
+    -->
+    <p:viewport match="d:file[not(@original-href)]">
+        <p:variable name="href" select="/*/resolve-uri(@href,base-uri(.))"/>
+        <p:choose>
+            <p:xpath-context>
+                <p:pipe step="epub.in.in-memory.fileset" port="result"/>
+            </p:xpath-context>
+            <p:when test="//d:file[resolve-uri(@href,base-uri(.))=$href]">
+                <p:identity/>
+            </p:when>
+            <p:otherwise>
+                <p:add-attribute match="/*" attribute-name="original-href">
+                    <p:with-option name="attribute-value" select="$href">
+                        <p:empty/>
+                    </p:with-option>
+                </p:add-attribute>
+            </p:otherwise>
+        </p:choose>
+    </p:viewport>
+    
+    <!--
+        Make sure that the base uri of the fileset is the directory containing the mimetype
+        file. This will normally also eliminate any relative hrefs starting with "..", which is
+        needed because px:fileset-move doesn't handle these correctly.
+    -->
+    <p:choose>
+        <p:when test="//d:file[matches(@href,'^(.+/)?mimetype$')]">
+            <px:fileset-rebase>
+                <p:with-option name="new-base"
+                               select="//d:file[matches(@href,'^(.+/)?mimetype$')][1]
+                                       /replace(resolve-uri(@href,base-uri(.)),'mimetype$','')"/>
+            </px:fileset-rebase>
+        </p:when>
+        <p:otherwise>
+            <px:error code="XXXXX" message="Fileset must contain a 'mimetype' file"/>
+        </p:otherwise>
+    </p:choose>
+    
+    <px:fileset-move name="move">
+        <p:with-option name="new-base" select="$result-base"/>
+        <p:input port="in-memory.in">
+            <p:pipe step="main" port="epub.in.in-memory"/>
+        </p:input>
+    </px:fileset-move>
+    
     <!--
         container.xml
     -->
     
     <px:fileset-load name="original-container">
-        <p:input port="fileset">
-            <p:pipe step="main" port="epub.in.fileset"/>
-        </p:input>
         <p:input port="in-memory">
-            <p:pipe step="main" port="epub.in.in-memory"/>
+            <p:pipe step="move" port="in-memory.out"/>
         </p:input>
-        <p:with-option name="href" select="resolve-uri('META-INF/container.xml',$epub-base)"/>
+        <p:with-option name="href" select="resolve-uri('META-INF/container.xml',$result-base)"/>
     </px:fileset-load>
     
     <!--
@@ -62,10 +142,10 @@
     
     <px:fileset-load media-types="application/oebps-package+xml">
         <p:input port="fileset">
-            <p:pipe step="main" port="epub.in.fileset"/>
+            <p:pipe step="move" port="fileset.out"/>
         </p:input>
         <p:input port="in-memory">
-            <p:pipe step="main" port="epub.in.in-memory"/>
+            <p:pipe step="move" port="in-memory.out"/>
         </p:input>
     </px:fileset-load>
     <p:split-sequence test="position()=1"/>
@@ -78,7 +158,7 @@
     <p:xslt name="braille-rendition.fileset">
         <p:input port="source">
             <p:pipe step="default-rendition.package-document" port="result"/>
-            <p:pipe step="main" port="epub.in.fileset"/>
+            <p:pipe step="move" port="fileset.out"/>
         </p:input>
         <p:input port="stylesheet">
             <p:document href="braille-rendition.fileset.xsl"/>
@@ -101,9 +181,9 @@
             <p:document href="braille-rendition.package-document.xsl"/>
         </p:input>
         <p:with-param name="braille-rendition.package-document.base"
-                      select="resolve-uri('EPUB/package-braille.opf',$epub-base)"/>
+                      select="resolve-uri('EPUB/package-braille.opf',$result-base)"/>
         <p:with-option name="output-base-uri"
-                       select="resolve-uri('EPUB/package-braille.opf',$epub-base)"/>
+                       select="resolve-uri('EPUB/package-braille.opf',$result-base)"/>
     </p:xslt>
     
     <!--
@@ -133,7 +213,7 @@
         </p:input>
     </p:insert>
     <px:set-base-uri>
-        <p:with-option name="base-uri" select="resolve-uri('META-INF/metadata.xml',$epub-base)"/>
+        <p:with-option name="base-uri" select="resolve-uri('META-INF/metadata.xml',$result-base)"/>
     </px:set-base-uri>
     <p:identity name="metadata"/>
     
@@ -147,7 +227,7 @@
     </px:fileset-filter>
     <px:fileset-load>
         <p:input port="in-memory">
-            <p:pipe step="main" port="epub.in.in-memory"/>
+            <p:pipe step="move" port="in-memory.out"/>
         </p:input>
     </px:fileset-load>
     <p:for-each name="braille-rendition.html">
@@ -171,7 +251,7 @@
                 <px:message severity="DEBUG" message="Inlining document-specific CSS"/>
                 <css:apply-stylesheets>
                     <p:input port="context">
-                        <p:pipe step="main" port="epub.in.in-memory"/>
+                        <p:pipe step="move" port="in-memory.out"/>
                     </p:input>
                 </css:apply-stylesheets>
             </p:when>
@@ -286,7 +366,7 @@
                 </p:input>
                 <p:with-param name="default-rendition.html.base" select="$default-rendition.html.base"/>
                 <p:with-param name="braille-rendition.html.base" select="$braille-rendition.html.base"/>
-                <p:with-param name="rendition-mapping.base" select="resolve-uri('EPUB/renditionMapping.html',$epub-base)"/>
+                <p:with-param name="rendition-mapping.base" select="resolve-uri('EPUB/renditionMapping.html',$result-base)"/>
             </p:xslt>
         </p:group>
         <p:identity name="resource-map"/>
@@ -332,7 +412,7 @@
         </p:input>
     </p:insert>
     <px:set-base-uri>
-        <p:with-option name="base-uri" select="resolve-uri('EPUB/renditionMapping.html',$epub-base)"/>
+        <p:with-option name="base-uri" select="resolve-uri('EPUB/renditionMapping.html',$result-base)"/>
     </px:set-base-uri>
     <p:identity name="rendition-mapping"/>
     
@@ -347,7 +427,7 @@
     </px:fileset-filter>
     <px:fileset-load>
         <p:input port="in-memory">
-            <p:pipe step="main" port="epub.in.in-memory"/>
+            <p:pipe step="move" port="in-memory.out"/>
         </p:input>
     </px:fileset-load>
     <p:for-each>
@@ -422,7 +502,7 @@
         </p:input>
     </p:insert>
     <px:set-base-uri>
-        <p:with-option name="base-uri" select="resolve-uri('META-INF/container.xml',$epub-base)"/>
+        <p:with-option name="base-uri" select="resolve-uri('META-INF/container.xml',$result-base)"/>
     </px:set-base-uri>
     <p:identity name="container"/>
     
@@ -432,7 +512,7 @@
     
     <px:fileset-join>
         <p:input port="source">
-            <p:pipe step="main" port="epub.in.fileset"/>
+            <p:pipe step="move" port="fileset.out"/>
             <p:pipe step="braille-rendition.html.fileset" port="result"/>
             <p:pipe step="braille-rendition.css.fileset" port="result"/>
             <p:pipe step="braille-rendition.smil.fileset" port="result"/>
@@ -440,6 +520,15 @@
     </px:fileset-join>
     <p:delete match="d:file[@default-href]/@original-href"/>
     <p:delete match="d:file/@default-href"/>
+    <!--
+        delete @original-href from files that exist in memory
+    -->
+    <p:delete>
+        <p:with-option name="match"
+                       select="concat('d:file[resolve-uri(@href,base-uri(.))=&quot;',
+                                      resolve-uri('META-INF/container.xml',$result-base),
+                                      '&quot;]/@original-href')"/>
+    </p:delete>
     <px:fileset-add-entry href="META-INF/container.xml"/>
     <px:fileset-add-entry href="META-INF/metadata.xml"/>
     <px:fileset-add-entry href="EPUB/package-braille.opf"/>
@@ -450,9 +539,9 @@
     
     <px:select-by-base name="remove-container-from-memory">
         <p:input port="source">
-            <p:pipe step="main" port="epub.in.in-memory"/>
+            <p:pipe step="move" port="in-memory.out"/>
         </p:input>
-        <p:with-option name="base" select="resolve-uri('META-INF/container.xml',$epub-base)"/>
+        <p:with-option name="base" select="resolve-uri('META-INF/container.xml',$result-base)"/>
     </px:select-by-base>
     <p:sink/>
     <p:identity name="out.in-memory">

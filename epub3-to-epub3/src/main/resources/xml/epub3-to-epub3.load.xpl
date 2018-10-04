@@ -8,17 +8,15 @@
                 name="main">
 	
 	<!--
-	    Create fileset from ZIP contents but with new target location
+	    Create fileset from zipped or unzipped EPUB
 	-->
-	
-	<p:input port="target-base">
-		<!-- fileset -->
-	</p:input>
 	
 	<p:output port="fileset" primary="true"/>
 	<p:output port="in-memory" sequence="true">
+		<!--
+		    other files are loaded lazily
+		-->
 		<p:pipe step="package-documents" port="result"/>
-		<!-- other files are loaded lazily -->
 	</p:output>
 	
 	<p:option name="epub" required="true" px:media-type="application/epub+zip"/>
@@ -28,9 +26,12 @@
 	<p:import href="http://www.daisy.org/pipeline/modules/zip-utils/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
 	
-	<p:variable name="source-base" select="if (ends-with(lower-case($epub),'.epub'))
+	<px:fileset-create name="epub-base">
+		<p:with-option name="base" select="if (ends-with(lower-case($epub),'.epub'))
 	                                       then concat($epub,'!/')
 	                                       else resolve-uri('./',$epub)"/>
+	</px:fileset-create>
+	<p:sink/>
 	
 	<p:choose name="container">
 		<p:when test="ends-with(lower-case($epub),'.epub')">
@@ -74,10 +75,9 @@
 	<p:for-each>
 		<p:iteration-source select="//d:file"/>
 		<p:variable name="href" select="/*/@href"/>
-		<p:variable name="original-href" select="resolve-uri($href,$source-base)"/>
 		<p:identity>
 			<p:input port="source">
-				<p:pipe step="main" port="target-base"/>
+				<p:pipe step="epub-base" port="result"/>
 			</p:input>
 		</p:identity>
 		<p:choose>
@@ -87,19 +87,16 @@
 			<p:when test="$href='META-INF/container.xml'">
 				<px:fileset-add-entry media-type="application/xml">
 					<p:with-option name="href" select="$href"/>
-					<p:with-option name="original-href" select="$original-href"/>
 				</px:fileset-add-entry>
 			</p:when>
 			<p:when test="//ocf:rootfile[@full-path=$href]">
 				<px:fileset-add-entry media-type="application/oebps-package+xml">
 					<p:with-option name="href" select="$href"/>
-					<p:with-option name="original-href" select="$original-href"/>
 				</px:fileset-add-entry>
 			</p:when>
 			<p:otherwise>
 				<px:fileset-add-entry>
 					<p:with-option name="href" select="$href"/>
-					<p:with-option name="original-href" select="$original-href"/>
 				</px:fileset-add-entry>
 			</p:otherwise>
 		</p:choose>
@@ -125,7 +122,7 @@
 				<p:empty/>
 			</p:input>
 			<p:with-option name="href" select="resolve-uri($full-path,base-uri(/*))">
-				<p:pipe step="main" port="target-base"/>
+				<p:pipe step="epub-base" port="result"/>
 			</p:with-option>
 		</px:fileset-load>
 		<px:opf-manifest-to-fileset/>
