@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:zedai-to-epub3-convert"
-    name="zedai-to-epub3.convert" exclude-inline-prefixes="#all" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                type="px:zedai-to-epub3" name="main"
+                exclude-inline-prefixes="#all">
 
     <p:documentation> Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication. </p:documentation>
 
@@ -63,7 +66,7 @@
                     <p:variable name="zedai-base" select="/*/resolve-uri(@href,base-uri(.))"/>
                     <p:split-sequence name="zedai-input.for-each.split">
                         <p:input port="source">
-                            <p:pipe port="in-memory.in" step="zedai-to-epub3.convert"/>
+                            <p:pipe port="in-memory.in" step="main"/>
                         </p:input>
                         <p:with-option name="test" select="concat('base-uri(/*) = &quot;',$zedai-base,'&quot;')"/>
                     </p:split-sequence>
@@ -159,7 +162,7 @@
             <p:pipe port="html-files" step="zedai-to-html.iterate"/>
         </p:output>
         <p:variable name="zedai-basename" select="replace(replace(//*[@media-type='application/z3998-auth+xml']/@href,'^.+/([^/]+)$','$1'),'^(.+)\.[^\.]+$','$1')">
-            <p:pipe port="fileset.in" step="zedai-to-epub3.convert"/>
+            <p:pipe port="fileset.in" step="main"/>
         </p:variable>
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
         <p:xslt name="zedai-to-html.html-single">
@@ -280,7 +283,7 @@
 	<p:pipe port="result" step="fileset-for-tts"/>
       </p:input>
       <p:input port="config">
-	<p:pipe port="tts-config" step="zedai-to-epub3.convert"/>
+	<p:pipe port="tts-config" step="main"/>
       </p:input>
       <p:with-option name="audio" select="$audio"/>
       <p:with-option name="output-dir" select="$output-dir"/>
@@ -365,7 +368,7 @@
 
         <p:identity>
             <p:input port="source">
-                <p:pipe port="fileset.in" step="zedai-to-epub3.convert"/>
+                <p:pipe port="fileset.in" step="main"/>
             </p:input>
         </p:identity>
         <p:group name="resources">

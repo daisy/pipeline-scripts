@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:dtbook-to-pef" version="1.0"
+<p:declare-step type="px:dtbook-to-pef.script" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
@@ -149,8 +149,8 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
     <!-- ======= -->
     <!-- CONVERT -->
     <!-- ======= -->
-    <px:dtbook-to-pef.convert name="convert" px:message="Transforming from DTBook to PEF" px:progress=".92"
-                              default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
+    <px:dtbook-to-pef name="convert" px:message="Transforming from DTBook to PEF" px:progress=".92"
+                      default-stylesheet="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
@@ -163,7 +163,7 @@ When `include-obfl` is set to true, the conversion may fail but still output a d
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
-    </px:dtbook-to-pef.convert>
+    </px:dtbook-to-pef>
     
     <!-- ===== -->
     <!-- STORE -->

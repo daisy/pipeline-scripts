@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:zedai-to-pef" version="1.0"
+<p:declare-step type="px:zedai-to-pef.script" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -143,7 +143,7 @@ If left blank, the locale information in the input document will be used to sele
     <!-- ZEDAI TO PEF -->
     <!-- ============ -->
     
-    <px:zedai-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css">
+    <px:zedai-to-pef default-stylesheet="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css">
         <p:input port="source">
             <p:pipe step="main" port="source"/>
         </p:input>
@@ -152,7 +152,7 @@ If left blank, the locale information in the input document will be used to sele
         <p:with-option name="temp-dir" select="string(/c:result)">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
-    </px:zedai-to-pef.convert>
+    </px:zedai-to-pef>
     
     <!-- ========= -->
     <!-- STORE PEF -->

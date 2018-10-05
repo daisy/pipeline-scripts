@@ -5,7 +5,7 @@
                script="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/dtbook-to-pef.xpl">
   
   <x:scenario label="test hauy_valid.xml with default.css">
-    <x:call step="px:dtbook-to-pef">
+    <x:call step="px:dtbook-to-pef.script">
       <x:input port="source">
         <x:document type="file" href="../resources/hauy_valid.xml"/>
       </x:input>
@@ -22,7 +22,7 @@
   </x:scenario>
   
   <x:scenario label="test default.css + reset.css + style.css">
-    <x:call step="px:dtbook-to-pef">
+    <x:call step="px:dtbook-to-pef.script">
       <x:input port="source">
         <x:document type="inline">
           <dtbook version="2005-2" xml:lang="en-US" xmlns="http://www.daisy.org/z3986/2005/dtbook/">

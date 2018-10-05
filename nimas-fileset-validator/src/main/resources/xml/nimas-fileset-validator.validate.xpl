@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="nimas-fileset-validator.validate"
-    type="pxi:nimas-fileset-validator.validate" xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:l="http://xproc.org/library" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml"
-    xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:m="http://www.w3.org/1998/Math/MathML"
-    exclude-inline-prefixes="#all">
+<p:declare-step version="1.0" name="main"
+                type="px:nimas-fileset-validator"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
+                exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">NIMAS Fileset Validator: Validate</h1>
@@ -94,7 +91,7 @@
         </p:output>
 
         <p:iteration-source select="//pkg:item[@media-type = 'application/x-dtbook+xml']">
-            <p:pipe port="source" step="nimas-fileset-validator.validate"/>
+            <p:pipe port="source" step="main"/>
         </p:iteration-source>
 
         <p:variable name="dtbook-href" select="resolve-uri(*/@href, $base-uri)"/>
@@ -108,12 +105,12 @@
         <p:group name="validate-dtbook-group">
             <p:output port="result"/>
 
-            <px:dtbook-validator name="validate-dtbook">
+            <px:dtbook-validator.script name="validate-dtbook">
                 <p:with-option name="input-dtbook" select="$dtbook-href"/>
                 <p:with-option name="check-images" select="$check-images"/>
                 <p:with-option name="mathml-version" select="$mathml-version"/>
                 <p:with-option name="nimas" select="'true'"/>
-            </px:dtbook-validator>
+            </px:dtbook-validator.script>
 
             <!-- add the report path -->
             <p:insert position="last-child" match="//d:document-info">
@@ -155,7 +152,7 @@
                 
                 <pxi:nimas-fileset-validator.validate-package-doc name="run-package-doc-validation">
                     <p:input port="source">
-                        <p:pipe port="source" step="nimas-fileset-validator.validate"/>
+                        <p:pipe port="source" step="main"/>
                     </p:input>
                     <p:with-option name="math" select="'true'"/>
                 </pxi:nimas-fileset-validator.validate-package-doc>
@@ -168,7 +165,7 @@
                 
                 <pxi:nimas-fileset-validator.validate-package-doc name="run-package-doc-validation">
                     <p:input port="source">
-                        <p:pipe port="source" step="nimas-fileset-validator.validate"/>
+                        <p:pipe port="source" step="main"/>
                     </p:input>
                     <p:with-option name="math" select="'false'"/>
                 </pxi:nimas-fileset-validator.validate-package-doc>

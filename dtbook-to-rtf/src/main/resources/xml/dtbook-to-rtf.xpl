@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step name="main" px:input-filesets="dtbook" px:output-filesets="rtf" type="px:dtbook-to-rtf" version="1.0" xmlns:d="http://www.daisy.org/ns/pipeline/data" 
-	xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/" 
-	xmlns:p="http://www.w3.org/ns/xproc" 
-	xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-	xmlns:cx="http://xmlcalabash.com/ns/extensions"
-	xmlns:c="http://www.w3.org/ns/xproc-step">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                type="px:dtbook-to-rtf.script"
+                px:input-filesets="dtbook"
+                px:output-filesets="rtf">
 	
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 		<h1 px:role="name">DTBook to RTF</h1>
@@ -76,8 +76,8 @@
 		</p:documentation>
 	</p:option>
 
-	<p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+	<p:import href="convert.xpl"/>
 
 	<px:normalize-uri name="output-dir-uri">
 		<p:with-option name="href" select="concat($output-dir,'/')"/>
@@ -86,53 +86,27 @@
 	<p:split-sequence initial-only="true" name="first-dtbook" test="position()=1"/>
 	<p:sink/>
 
-	<p:xslt name="add-dtbook-id">
-		<p:input port="source">
-			<p:pipe port="matched" step="first-dtbook"/>
-		</p:input>
-		<p:input port="stylesheet">
-			<p:document href="add_ids_to_dtbook.xsl"/>
-		</p:input>
-		<p:input port="parameters">
-			<p:empty/>
-		</p:input>
-	</p:xslt>
-	<p:sink/>
-
 	<p:group>
 		<p:variable name="encoded-title" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
 			<p:pipe port="matched" step="first-dtbook"/>
 		</p:variable>
-		<p:variable name="encoded-tmp-title" select="concat($encoded-title,'tmp.xml')"/>
 		<p:variable name="output-dir-final" select="/c:result/string()">
 			<p:pipe step="output-dir-uri" port="normalized"/>
 		</p:variable>
-		<p:variable name="tmp-file-uri" select="concat($temp-dir,$encoded-tmp-title)"/>
 
-		<p:store name="storetmp">
-			<p:with-option name="href" select="$tmp-file-uri"/>
+		<px:dtbook-to-rtf>
 			<p:input port="source">
-				<p:pipe port="result" step="add-dtbook-id"/>
+				<p:pipe port="matched" step="first-dtbook"/>
 			</p:input>
-		</p:store>
-
-		<p:xslt name="convert-to-rtf" template-name="start">
-			<p:input port="source">
-				<p:empty/>
-			</p:input>
-			<p:input port="stylesheet">
-				<p:document href="dtbook_to_rtf.xsl"/>
-			</p:input>
-			<p:with-param name="inclTOC" select="$include-table-of-content"/>
-			<p:with-param name="inclPagenum" select="$include-page-number"/>
-			<p:with-param name="sourceFile" select="$tmp-file-uri"/>
-		</p:xslt>
+			<p:with-option name="include-table-of-content" select="$include-table-of-content"/>
+			<p:with-option name="include-page-number" select="$include-page-number"/>
+			<p:with-option name="temp-dir" select="$temp-dir"/>
+		</px:dtbook-to-rtf>
 
 		<p:store method="text">
 			<p:with-option name="href" select="concat($output-dir-final,$encoded-title,'.rtf')"/>
 		</p:store>
-		<px:delete cx:depends-on="convert-to-rtf">
-			<p:with-option name="href" select="$tmp-file-uri"/>
-		</px:delete>
+
 	</p:group>
+
 </p:declare-step>

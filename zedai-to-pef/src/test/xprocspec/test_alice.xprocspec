@@ -5,7 +5,7 @@
                script="../../main/resources/xml/zedai-to-pef.xpl">
   
   <x:scenario label="test alice.xml with default.css + alice.css" pending="errors for unknown reason">
-    <x:call step="px:zedai-to-pef">
+    <x:call step="px:zedai-to-pef.script">
       <x:input port="source">
         <x:document type="file" href="../resources/alice.xml"/>
       </x:input>
@@ -21,7 +21,7 @@
   </x:scenario>
   
   <x:scenario label="test reset.css">
-    <x:call step="px:zedai-to-pef">
+    <x:call step="px:zedai-to-pef.script">
       <x:input port="source">
         <x:document type="inline">
           <document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="en-US">

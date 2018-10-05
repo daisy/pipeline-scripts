@@ -5,7 +5,7 @@
                script="http://www.daisy.org/pipeline/modules/braille/dtbook-to-pef/dtbook-to-pef.xpl">
   
   <x:scenario label="_">
-  <x:call step="px:dtbook-to-pef">
+  <x:call step="px:dtbook-to-pef.script">
     <x:option name="transform" select="'(grade:2)'"/>
   </x:call>
     

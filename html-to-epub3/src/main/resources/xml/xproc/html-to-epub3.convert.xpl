@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:html-to-epub3-convert" name="main"
-    exclude-inline-prefixes="#all" version="1.0">
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                type="px:html-to-epub3" name="main"
+                exclude-inline-prefixes="#all" version="1.0">
 
     <p:documentation>Transforms XHTML into an EPUB 3 publication.</p:documentation>
 

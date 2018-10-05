@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="main" type="px:dtbook-to-daisy3-convert"
-		xmlns:p="http://www.w3.org/ns/xproc"
-		xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-		xmlns:dc="http://purl.org/dc/elements/1.1/"
-		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
-		xmlns:d="http://www.daisy.org/ns/pipeline/data"
-		xmlns:m="http://www.w3.org/1998/Math/MathML"
-		xmlns:cx="http://xmlcalabash.com/ns/extensions"
-		exclude-inline-prefixes="#all">
+<p:declare-step version="1.0"
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:m="http://www.w3.org/1998/Math/MathML"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
+                name="main" type="px:dtbook-to-daisy3"
+                exclude-inline-prefixes="#all">
 
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
     <h1 px:role="name">DTBook to DAISY 3</h1>

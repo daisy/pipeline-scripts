@@ -5,7 +5,7 @@
                script="../../main/resources/xml/dtbook-to-rtf.xpl">
   
   <x:scenario label="minimal">
-    <x:call step="px:dtbook-to-rtf">
+    <x:call step="px:dtbook-to-rtf.script">
       <x:input port="source">
         <x:document type="inline">
           <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/">

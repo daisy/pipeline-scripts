@@ -8,7 +8,7 @@
 			   script="../../main/resources/xml/daisy202-to-epub3.xpl">
 
     <x:scenario label="Running with media overlays and compatibility mode enabled">
-        <x:call step="px:daisy202-to-epub3">
+        <x:call step="px:daisy202-to-epub3.script">
             <x:option name="href" select="resolve-uri('../resources/input/book1/ncc.html')"/>
             <x:option name="output" select="resolve-uri('scenario1/output/',$temp-dir)"/>
             <x:option name="temp-dir" select="resolve-uri('scenario1/temp-dir/',$temp-dir)"/>
@@ -45,7 +45,7 @@
 
 
     <x:scenario label="Running with media overlays and compatibility mode disabled">
-        <x:call step="px:daisy202-to-epub3">
+        <x:call step="px:daisy202-to-epub3.script">
             <x:option name="href" select="resolve-uri('../resources/input/book1/ncc.html')"/>
             <x:option name="output" select="resolve-uri('scenario2/output/',$temp-dir)"/>
             <x:option name="temp-dir" select="resolve-uri('scenario2/temp-dir/',$temp-dir)"/>
@@ -83,7 +83,7 @@
     <x:scenario label="* SMIL references in content document are removed, also inside links (issue #74)
                        * there should be no 'attribute-value' attributes in SMIL (issue #75)
                        * epub:textref attributes in SMIL should refer to .xhtml files (issue #76)">
-        <x:call step="px:daisy202-to-epub3">
+        <x:call step="px:daisy202-to-epub3.script">
             <x:option name="href" select="resolve-uri('../resources/input/minimal/ncc.html')"/>
             <x:option name="output" select="resolve-uri('scenario3/output/',$temp-dir)"/>
             <x:option name="temp-dir" select="resolve-uri('scenario3/temp-dir/',$temp-dir)"/>

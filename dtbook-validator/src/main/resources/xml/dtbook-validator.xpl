@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-validator" type="px:dtbook-validator"
-    px:input-filesets="dtbook"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:l="http://xproc.org/library" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:m="http://www.w3.org/1998/Math/MathML" exclude-inline-prefixes="#all">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:l="http://xproc.org/library"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xhtml="http://www.w3.org/1999/xhtml"
+                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:m="http://www.w3.org/1998/Math/MathML"
+                type="px:dtbook-validator.script"
+                px:input-filesets="dtbook"
+                exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook Validator</h1>
@@ -182,7 +187,7 @@
                 <p:with-option name="href" select="$input-dtbook"/>
             </p:load>
 
-            <pxi:dtbook-validator.validate name="validate-dtbook">
+            <px:dtbook-validator name="validate-dtbook">
                 <p:input port="source">
                     <p:pipe port="result" step="load-dtbook-doc"/>
                 </p:input>
@@ -191,7 +196,7 @@
                 <p:with-option name="check-images" select="$check-images"/>
                 <p:with-option name="base-uri" select="$input-dtbook"/>
                 <p:with-option name="nimas" select="$nimas"/>
-            </pxi:dtbook-validator.validate>
+            </px:dtbook-validator>
 
             <pxi:dtbook-validator.store name="store-dtbook-validation-results">
                 <p:input port="xml-report">

@@ -9,7 +9,7 @@
                script="../../main/resources/xml/dtbook-to-epub3.xpl">
 
     <x:scenario label="minimal">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/minimal.xml"/>
 			</x:input>
@@ -58,7 +58,7 @@
     </x:scenario>
     
     <x:scenario label="assert-valid">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
             <x:input port="source">
                 <x:document type="inline">
                     <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en">
@@ -122,7 +122,7 @@
     </x:scenario>
     
     <x:scenario label="preserve significant white space (issue #94)">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
             <x:input port="source">
                 <x:document type="inline">
                     <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en">
@@ -168,7 +168,7 @@
     </x:scenario>
     
     <x:scenario label="dtbook 1.1.0">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
             <x:input port="source">
                 <x:document type="file" href="../resources/dtbook110.xml"/>
             </x:input>
@@ -206,7 +206,7 @@
     </x:scenario>
     
     <x:scenario label="dir-attribute">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
             <x:input port="source">
                 <x:document type="inline">
                     <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-3" xml:lang="en" dir="rtl">
@@ -258,7 +258,7 @@
     </x:scenario>
     
     <x:scenario label="tts">
-        <x:call step="px:dtbook-to-epub3">
+        <x:call step="px:dtbook-to-epub3.script">
             <x:input port="source">
                 <x:document type="file" href="../resources/minimal.xml"/>
             </x:input>

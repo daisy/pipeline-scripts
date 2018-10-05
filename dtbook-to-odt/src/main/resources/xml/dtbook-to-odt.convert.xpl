@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step
-    xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:odt="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-    xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-    xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    exclude-inline-prefixes="#all"
-    type="px:dtbook-to-odt.convert" name="main" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:odt="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+                xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+                exclude-inline-prefixes="#all"
+                type="px:dtbook-to-odt" name="main">
     
     <!-- WARNING! This converter doesn't produce valid OpenDocument Text as such.
        It relies on LibreOffice to do some fixing. Opening the ODT file in MS Word

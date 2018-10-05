@@ -5,7 +5,7 @@
                script="../../main/resources/xml/dtbook-validator.xpl">
 
     <x:scenario label="dtbook_valid_2005-2">
-        <x:call step="px:dtbook-validator">
+        <x:call step="px:dtbook-validator.script">
             <x:option name="input-dtbook" select="resolve-uri('../resources/dtbook_valid_2005-2.xml')"/>
         </x:call>
         <x:context label="the validation status">
@@ -19,7 +19,7 @@
     </x:scenario>
     
     <x:scenario label="dtbook_valid_2005-3.xml">
-        <x:call step="px:dtbook-validator">
+        <x:call step="px:dtbook-validator.script">
             <x:option name="input-dtbook" select="resolve-uri('../resources/dtbook_valid_2005-3.xml')"/>
         </x:call>
         <x:context label="the validation status">
@@ -33,7 +33,7 @@
     </x:scenario>
     
     <x:scenario label="nativemathml.xml">
-        <x:call step="px:dtbook-validator">
+        <x:call step="px:dtbook-validator.script">
             <x:option name="input-dtbook" select="resolve-uri('../resources/nativemathml.xml')"/>
         </x:call>
         <x:context label="the validation status">
@@ -47,7 +47,7 @@
     </x:scenario>
     
     <x:scenario label="MathML_Sample2">
-        <x:call step="px:dtbook-validator">
+        <x:call step="px:dtbook-validator.script">
             <x:option name="input-dtbook" select="resolve-uri('../resources/MathML_Sample2.xml')"/>
         </x:call>
         <x:context label="the validation status">

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    px:input-filesets="zedai"
-    px:output-filesets="html"
-    type="px:zedai-to-html" name="main" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                px:input-filesets="zedai"
+                px:output-filesets="html"
+                type="px:zedai-to-html.script" name="main">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">ZedAI to HTML</h1>
@@ -50,12 +52,12 @@
             </p:input>
         </px:zedai-load>
 
-        <px:zedai-to-html-convert name="convert">
+        <px:zedai-to-html name="convert">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="load"/>
             </p:input>
             <p:with-option name="output-dir" select="$output-dir-uri"/>
-        </px:zedai-to-html-convert>
+        </px:zedai-to-html>
 
         <px:fileset-store name="store">
             <p:input port="in-memory.in">

@@ -5,7 +5,7 @@
                script="http://www.daisy.org/pipeline/modules/braille/html-to-pef/html-to-pef.xpl">
   
   <x:scenario label="ascii-file-format has priority over dc:language / xml:lang">
-    <x:call step="px:html-to-pef">
+    <x:call step="px:html-to-pef.script">
       <x:option name="html" select="resolve-uri('../resources/test_ascii-table_1.xhtml')"/>
       <x:option name="transform" select="'(grade:2)'"/>
       <x:option name="include-brf" select="'true'"/>
@@ -26,7 +26,7 @@
   </x:scenario>
 
   <x:scenario label="Table can be found by locale">
-    <x:call step="px:html-to-pef">
+    <x:call step="px:html-to-pef.script">
       <x:option name="html" select="resolve-uri('../resources/test_ascii-table_2.xhtml')"/>
       <x:option name="include-brf" select="'true'"/>
       <x:option name="ascii-file-format" select="'(line-breaks:DOS)

@@ -5,7 +5,7 @@
                script="../../main/resources/xml/xproc/daisy3-to-epub3.xpl">
 
     <x:scenario label="minimal">
-        <x:call step="px:daisy3-to-epub3">
+        <x:call step="px:daisy3-to-epub3.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/input/book.opf"/>
 			</x:input>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-to-daisy3" type="px:dtbook-to-daisy3"
-    px:input-filesets="dtbook"
-    px:output-filesets="daisy3 mp3"
-		xmlns:p="http://www.w3.org/ns/xproc"
-		xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
-		xmlns:d="http://www.daisy.org/ns/pipeline/data"
-		xmlns:cx="http://xmlcalabash.com/ns/extensions"
-		xmlns:c="http://www.w3.org/ns/xproc-step"
-		exclude-inline-prefixes="#all">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                type="px:dtbook-to-daisy3.script" name="main"
+                px:input-filesets="dtbook"
+                px:output-filesets="daisy3 mp3"
+                exclude-inline-prefixes="#all">
 
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
     <h1 px:role="name">DTBook to DAISY 3</h1>
@@ -94,7 +94,7 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
 
   <px:dtbook-load name="load">
     <p:input port="source">
-      <p:pipe port="source" step="dtbook-to-daisy3"/>
+      <p:pipe step="main" port="source"/>
     </p:input>
   </px:dtbook-load>
 
@@ -199,7 +199,7 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
     </p:otherwise>
   </p:choose>
 
-  <px:dtbook-to-daisy3-convert name="convert">
+  <px:dtbook-to-daisy3 name="convert">
     <p:input port="in-memory.in">
       <p:pipe port="result" step="css-inlining"/>
     </p:input>
@@ -215,7 +215,7 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
     </p:with-option>
     <p:with-option name="audio" select="$audio"/>
     <p:with-option name="audio-only" select="$with-text = 'false'"/>
-  </px:dtbook-to-daisy3-convert>
+  </px:dtbook-to-daisy3>
 
   <px:fileset-store name="store">
     <p:input port="fileset.in">

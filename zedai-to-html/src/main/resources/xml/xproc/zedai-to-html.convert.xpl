@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" type="px:zedai-to-html-convert"
-    name="main" exclude-inline-prefixes="#all" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                type="px:zedai-to-html"
+                name="main"
+                exclude-inline-prefixes="#all">
 
     <p:documentation>
         Transforms a ZedAI (DAISY 4 XML) document into an EPUB 3 publication.

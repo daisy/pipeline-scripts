@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-validator.validate" type="pxi:dtbook-validator.validate"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp" xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:l="http://xproc.org/library" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-    xmlns:m="http://www.w3.org/1998/Math/MathML" exclude-inline-prefixes="#all">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:l="http://xproc.org/library"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xhtml="http://www.w3.org/1999/xhtml"
+                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:m="http://www.w3.org/1998/Math/MathML"
+                type="px:dtbook-validator" name="main"
+                exclude-inline-prefixes="#all">
     
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">DTBook Validator</h1>
@@ -77,14 +81,14 @@
     </p:import>
     
     <p:variable name="dtbook-version" select="*/@version">
-        <p:pipe port="source" step="dtbook-validator.validate"/>
+        <p:pipe port="source" step="main"/>
     </p:variable>
     <p:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <p:variable name="mathml" select="if (count(//m:math) > 0) then 'mathml' else ''"/>
     <p:variable name="document-type" select="if (count(//m:math) > 0) 
         then concat('DTBook ', $dtbook-version, ' with MathML ', $mathml-version) 
         else concat('DTBook ', $dtbook-version)">
-        <p:pipe port="source" step="dtbook-validator.validate"/>
+        <p:pipe port="source" step="main"/>
     </p:variable>
     
     <!-- ***************************************************** -->
@@ -112,7 +116,7 @@
                 <p:pipe port="result" step="select-rng-schema"/>
             </p:input>
             <p:input port="source">
-                <p:pipe port="source" step="dtbook-validator.validate"/>
+                <p:pipe port="source" step="main"/>
             </p:input>
         </l:relax-ng-report>
         
@@ -175,7 +179,7 @@
             <p:pipe port="result" step="choose-schematron"/>
         </p:input>
         <p:input port="source">
-            <p:pipe port="source" step="dtbook-validator.validate"/>
+            <p:pipe port="source" step="main"/>
         </p:input>
         <p:input port="parameters">
             <p:empty/>
@@ -189,7 +193,7 @@
             <p:output port="result"/>
             <px:dtbook-validator.check-images>
                 <p:input port="source">
-                    <p:pipe port="source" step="dtbook-validator.validate"/>
+                    <p:pipe port="source" step="main"/>
                 </p:input>
             </px:dtbook-validator.check-images>
         </p:when>

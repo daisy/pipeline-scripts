@@ -4,8 +4,8 @@
 			   xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
                script="../../main/resources/xml/dtbook-to-zedai.xpl">
 
-    <x:scenario label="minimal">
-        <x:call step="px:dtbook-to-zedai">
+	<x:scenario label="minimal">
+        <x:call step="px:dtbook-to-zedai.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/minimal.xml"/>
 			</x:input>
@@ -39,8 +39,8 @@
         </x:expect>
     </x:scenario>
 	
-	<x:scenario label="preserve significant white space (issue #94)">
-		<x:call step="px:dtbook-to-zedai">
+    <x:scenario label="preserve significant white space (issue #94)">
+		<x:call step="px:dtbook-to-zedai.script">
 			<x:input port="source">
 				<x:document type="inline">
 					<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en">

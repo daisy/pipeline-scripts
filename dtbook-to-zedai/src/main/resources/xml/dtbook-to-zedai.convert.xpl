@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step version="1.0" name="dtbook-to-zedai.convert" type="px:dtbook-to-zedai-convert"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cxo="http://xmlcalabash.com/ns/extensions/osutils"
-    xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    exclude-inline-prefixes="#all">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+                xmlns:z="http://www.daisy.org/ns/z3998/authoring/"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                type="px:dtbook-to-zedai" name="main"
+                exclude-inline-prefixes="#all">
 
     <p:documentation>
         Transforms DTBook XML into ZedAI XML.
@@ -191,7 +191,7 @@
                     <p:variable name="dtbook-base" select="resolve-uri(/*/@href,$fileset-base)"/>
                     <p:split-sequence name="dtbook-input.for-each.split">
                         <p:input port="source">
-                            <p:pipe port="in-memory.in" step="dtbook-to-zedai.convert"/>
+                            <p:pipe port="in-memory.in" step="main"/>
                         </p:input>
                         <p:with-option name="test"
                             select="concat('base-uri(/*) = &quot;',$dtbook-base,'&quot;')"/>
@@ -536,7 +536,7 @@
         <p:output port="result"/>
         <p:variable name="dtbook-base"
             select="replace(//d:file[@media-type = 'application/x-dtbook+xml'][1]/resolve-uri(@href,base-uri(.)),'^(.*/)[^/]*$','$1')">
-            <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
+            <p:pipe port="fileset.in" step="main"/>
         </p:variable>
 
         <p:documentation>Add the ZedAI document to the fileset.</p:documentation>
@@ -563,7 +563,7 @@
                     <p:variable name="dtbook-source-uri" select="resolve-uri($src, $dtbook-base)"/>
                     <p:variable name="source-uri"
                         select="(//d:file[resolve-uri(@href,base-uri(.)) = $dtbook-source-uri]/@original-href, $dtbook-source-uri)[1]">
-                        <p:pipe port="fileset.in" step="dtbook-to-zedai.convert"/>
+                        <p:pipe port="fileset.in" step="main"/>
                     </p:variable>
                     <p:variable name="result-uri" select="resolve-uri($src, $output-dir)"/>
 

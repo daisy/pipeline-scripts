@@ -6,7 +6,7 @@
                script="../../main/resources/xml/xproc/daisy202-validator.xpl">
 
     <x:scenario label="simple validation">
-        <x:call step="px:daisy202-validator">
+        <x:call step="px:daisy202-validator.script">
             <!--
                 reusing test data from daisy202-to-epub3
             -->

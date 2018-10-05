@@ -1,6 +1,15 @@
-<p:declare-step version="1.0" name="main" type="px:daisy202-validator.validate" xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:px="http://www.daisy.org/ns/pipeline/xproc" xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal/daisy202-validator"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:html="http://www.w3.org/1999/xhtml" exclude-inline-prefixes="#all" xmlns:l="http://xproc.org/library">
+<?xml version="1.0" encoding="UTF-8"?>
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                xmlns:cx="http://xmlcalabash.com/ns/extensions"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal/daisy202-validator"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:html="http://www.w3.org/1999/xhtml"
+                xmlns:l="http://xproc.org/library"
+                exclude-inline-prefixes="#all"
+                type="px:daisy202-validator"
+                name="main">
 
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>

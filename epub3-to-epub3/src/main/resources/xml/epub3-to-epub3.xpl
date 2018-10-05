@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:epub3-to-epub3" version="1.0"
+<p:declare-step type="px:epub3-to-epub3.script" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 exclude-inline-prefixes="#all"
@@ -83,7 +83,7 @@ specific.
         <p:with-option name="epub" select="$source"/>
     </px:epub3-to-epub3.load>
     
-    <px:epub3-to-epub3.convert name="convert">
+    <px:epub3-to-epub3 name="convert">
         <p:input port="epub.in.fileset">
             <p:pipe step="load" port="fileset"/>
         </p:input>
@@ -96,7 +96,7 @@ specific.
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="apply-document-specific-stylesheets" select="$apply-document-specific-stylesheets"/>
         <p:with-option name="set-default-rendition-to-braille" select="$set-default-rendition-to-braille"/>
-    </px:epub3-to-epub3.convert>
+    </px:epub3-to-epub3>
     
     <px:fileset-store>
         <p:input port="fileset.in">

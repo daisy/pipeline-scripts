@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:d="http://www.daisy.org/ns/pipeline/data" xmlns:c="http://www.w3.org/ns/xproc-step"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml"
-    xmlns:pkg="http://openebook.org/namespaces/oeb-package/1.0/"
-    xmlns:l="http://xproc.org/library"
-    xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
-    xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-    xmlns:p="http://www.w3.org/ns/xproc" xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
-    version="1.0" name="nimas-fileset-validator" type="px:nimas-fileset-validator"
-    px:input-filesets="nimas dtbook daisy3"
-    exclude-inline-prefixes="#all">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
+                xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+                xmlns:d="http://www.daisy.org/ns/pipeline/data"
+                xmlns:tmp="http://www.daisy.org/ns/pipeline/tmp"
+                type="px:nimas-fileset-validator.script"
+                px:input-filesets="nimas dtbook daisy3"
+                exclude-inline-prefixes="#all">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">NIMAS Fileset Validator</h1>
@@ -170,14 +166,14 @@
                 <p:with-option name="href" select="$input-opf"/>
             </p:load>
 
-            <pxi:nimas-fileset-validator.validate name="validate-nimas-fileset">
+            <px:nimas-fileset-validator name="validate-nimas-fileset">
                 <p:input port="source">
                     <p:pipe port="result" step="load-package-doc"/>
                 </p:input>
                 <p:with-option name="mathml-version" select="$mathml-version"/>
                 <p:with-option name="check-images" select="$check-images"/>
                 <p:with-option name="base-uri" select="$input-opf"/>
-            </pxi:nimas-fileset-validator.validate>
+            </px:nimas-fileset-validator>
 
             <pxi:nimas-fileset-validator.store name="store-nimas-validation-results">
                 <p:input port="html-report">

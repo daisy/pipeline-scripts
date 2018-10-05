@@ -8,7 +8,7 @@
     <x:documentation>
       Tests include-obfl option.
     </x:documentation>
-    <x:call step="px:dtbook-to-pef">
+    <x:call step="px:dtbook-to-pef.script">
       <x:input port="source">
         <x:document type="inline">
           <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en" version="2005-3">

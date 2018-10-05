@@ -42,7 +42,7 @@
         </p:identity>
 
         <px:message message="Converting to ZedAI..."/>
-        <px:dtbook-to-zedai-convert name="to-zedai">
+        <px:dtbook-to-zedai name="to-zedai">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.in" step="main"/>
             </p:input>
@@ -50,16 +50,16 @@
             <p:with-option name="opt-zedai-filename" select="concat($encoded-title,'.xml')"/>
             <p:with-option name="opt-lang" select="$language"/>
             <p:with-option name="opt-assert-valid" select="$assert-valid"/>
-        </px:dtbook-to-zedai-convert>
+        </px:dtbook-to-zedai>
 
         <px:message message="Converting to XHTML5..."/>
-        <px:zedai-to-html-convert name="to-html" chunk="true">
+        <px:zedai-to-html name="to-html" chunk="true">
             <p:input port="in-memory.in">
                 <p:pipe port="in-memory.out" step="to-zedai"/>
             </p:input>
             <p:with-option name="output-dir" select="$output-dir"/>
             <p:with-option name="chunk-size" select="$chunk-size"/>
-        </px:zedai-to-html-convert>
+        </px:zedai-to-html>
 
     </p:group>
 </p:declare-step>

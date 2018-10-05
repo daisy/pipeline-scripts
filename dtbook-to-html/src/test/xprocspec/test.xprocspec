@@ -5,7 +5,7 @@
                script="../../main/resources/xml/dtbook-to-html.xpl">
 
     <x:scenario label="minimal">
-        <x:call step="px:dtbook-to-html">
+        <x:call step="px:dtbook-to-html.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/minimal.xml"/>
 			</x:input>

@@ -11,7 +11,7 @@
                script="http://www.daisy.org/pipeline/modules/dtbook-to-odt/dtbook-to-odt.xpl">
   
   <x:scenario label="minimal">
-    <x:call step="px:dtbook-to-odt">
+    <x:call step="px:dtbook-to-odt.script">
       <x:input port="source">
         <x:document type="inline">
           <dtbook xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
@@ -31,9 +31,9 @@
       <x:document type="directory" base-uri="temp-dir" href="minimal/" recursive="true"/>
     </x:context>
     <x:expect label="the output directory should contain the ODT file" type="xpath"
-              test="/c:directory/c:file[@name='test_dtbook-to-odt.odt']"/>
+              test="/c:directory/c:file[@name='test_dtbook-to-odt.script.odt']"/>
     <x:context label="the content file">
-      <x:document type="file" base-uri="temp-dir" href="minimal/test_dtbook-to-odt.odt!/content.xml"
+      <x:document type="file" base-uri="temp-dir" href="minimal/test_dtbook-to-odt.script.odt!/content.xml"
                   select="/office:document-content/office:body/office:text"/>
     </x:context>
     <x:expect label="the content file" type="compare">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:epub3-to-pef" version="1.0"
+<p:declare-step type="px:epub3-to-pef.script" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
@@ -158,8 +158,8 @@ even though the provided CSS is more specific.
             <p:pipe port="fileset.out" step="load"/>
         </p:input>
     </p:identity>
-    <px:epub3-to-pef.convert name="convert" px:message="Converting from EPUB to PEF" px:progress=".90"
-                             default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css">
+    <px:epub3-to-pef name="convert" px:message="Converting from EPUB to PEF" px:progress=".90"
+                     default-stylesheet="http://www.daisy.org/pipeline/modules/braille/epub3-to-pef/css/default.css">
         <p:with-option name="epub" select="$epub"/>
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
@@ -174,7 +174,7 @@ even though the provided CSS is more specific.
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
-    </px:epub3-to-pef.convert>
+    </px:epub3-to-pef>
     <p:sink/>
     
     <!-- ========= -->

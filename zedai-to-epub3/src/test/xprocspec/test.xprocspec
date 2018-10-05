@@ -7,7 +7,7 @@
                script="../../main/resources/xml/xproc/zedai-to-epub3.xpl">
 
 	<x:scenario label="alice">
-		<x:call step="px:zedai-to-epub3">
+		<x:call step="px:zedai-to-epub3.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/resources/alice.xml"/>
 			</x:input>
@@ -70,7 +70,7 @@
 	</x:scenario>
 	
 	<x:scenario label="preserve significant white space (issue #94)">
-		<x:call step="px:zedai-to-epub3">
+		<x:call step="px:zedai-to-epub3.script">
 			<x:input port="source">
 				<x:document type="inline">
 					<document xmlns="http://www.daisy.org/ns/z3998/authoring/" xml:lang="en">

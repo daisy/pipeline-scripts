@@ -6,7 +6,7 @@
                script="../../main/resources/xml/dtbook-to-daisy3.xpl">
 	
 	<x:scenario label="test_1">
-		<x:call step="px:dtbook-to-daisy3">
+		<x:call step="px:dtbook-to-daisy3.script">
 			<x:input port="source">
 				<x:document type="file" href="../resources/samples/shuffled_7019_xmldtbook_1.xml"/>
 			</x:input>
