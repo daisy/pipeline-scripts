@@ -191,7 +191,6 @@
                 <p:input port="source">
                     <p:pipe port="result" step="load-dtbook-doc"/>
                 </p:input>
-                <p:with-option name="output-dir" select="$output-dir"/>
                 <p:with-option name="mathml-version" select="$mathml-version"/>
                 <p:with-option name="check-images" select="$check-images"/>
                 <p:with-option name="base-uri" select="$input-dtbook"/>

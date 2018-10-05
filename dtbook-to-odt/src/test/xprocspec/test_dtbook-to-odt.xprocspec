@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+               xmlns:d="http://www.daisy.org/ns/pipeline/data"
+               script="../../main/resources/xml/dtbook-to-odt.convert.xpl">
+    
+    <x:scenario label="minimal">
+        <x:call step="px:dtbook-to-odt">
+            <x:input port="fileset.in">
+                <x:document type="inline">
+                    <d:fileset>
+                        <d:file href="file:/tmp/minimal.xml" media-type="application/x-dtbook+xml" />
+                    </d:fileset>
+                </x:document>
+            </x:input>
+            <x:input port="in-memory.in">
+                <x:document type="inline" xml:base="file:/tmp/minimal.xml">
+                    <dtbook xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/">
+                        <book>
+                            <bodymatter>
+                                <level1>
+                                    <p>Bla bla bla bla</p>
+                                </level1>
+                            </bodymatter>
+                        </book>
+                    </dtbook>
+                </x:document>
+            </x:input>
+            <x:input port="content.xsl">
+                <x:document type="file" href="../../main/resources/xml/content.xsl"/>
+            </x:input>
+            <x:input port="meta"/>
+            <x:option name="asciimath" select="'ASCIIMATH'"/>
+            <x:option name="images" select="'EMBED'"/>
+            <x:option name="template" select="resolve-uri('../../../target/classes/templates/default.ott')"/>
+            <x:option name="temp-dir" select="$temp-dir"/>
+        </x:call>
+        <x:context label="the fileset.out port">
+            <x:document type="port" port="fileset.out"/>
+        </x:context>
+        <x:expect label="the fileset.out port"
+                  type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
+            <x:document type="inline" base-uri="temp-dir">
+                <d:fileset>
+                    <d:file href="minimal.odt/" media-type="application/vnd.oasis.opendocument.text"/>
+                    <d:file href="minimal.odt/meta.xml" original-href="default.ott!/meta.xml" media-type="text/xml"/>
+                    <d:file href="minimal.odt/settings.xml" original-href="default.ott!/settings.xml" media-type="text/xml"/>
+                    <d:file href="minimal.odt/content.xml" original-href="default.ott!/content.xml" media-type="text/xml"/>
+                    <d:file href="minimal.odt/Thumbnails/thumbnail.png" original-href="default.ott!/Thumbnails/thumbnail.png" media-type="image/png"/>
+                    <d:file href="minimal.odt/manifest.rdf" original-href="default.ott!/manifest.rdf" media-type="application/rdf+xml"/>
+                    <d:file href="minimal.odt/Configurations2/accelerator/current.xml" original-href="default.ott!/Configurations2/accelerator/current.xml"/>
+                    <d:file href="minimal.odt/styles.xml" original-href="default.ott!/styles.xml" media-type="text/xml"/>
+                </d:fileset>
+            </x:document>
+        </x:expect>
+    </x:scenario>
+    
+</x:description>

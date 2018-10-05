@@ -267,6 +267,7 @@
             <p:pipe port="result" step="opf"/>
         </p:with-option>
     </p:add-attribute>
+    <p:delete match="/*/@xml:base"/>
     <p:identity name="in-memory.out"/>
     
     <px:fileset-create>
