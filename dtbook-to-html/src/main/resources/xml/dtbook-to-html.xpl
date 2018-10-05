@@ -57,45 +57,19 @@ the given maximum size.</p>
         </p:documentation>
     </p:option>
 
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/zedai-to-html/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
 
+    <px:normalize-uri name="output-dir-uri">
+        <p:with-option name="href" select="concat($output-dir,'/')"/>
+    </px:normalize-uri>
     
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
     <p:sink/>
-    
-
-    <p:xslt name="output-dir-uri">
-        <p:with-param name="href" select="concat($output-dir,'/')">
-            <p:empty/>
-        </p:with-param>
-        <p:input port="source">
-            <p:inline>
-                <d:file/>
-            </p:inline>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                    xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
-                    <xsl:import
-                        href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
-                    <xsl:param name="href" required="yes"/>
-                    <xsl:template match="/*">
-                        <xsl:copy>
-                            <xsl:attribute name="href" select="pf:normalize-uri($href)"/>
-                        </xsl:copy>
-                    </xsl:template>
-                </xsl:stylesheet>
-            </p:inline>
-        </p:input>
-    </p:xslt>
-    <p:sink/>
-
     
     <p:group>
     <!--<p:variable name="encoded-title" select="encode-for-uri(replace(//dtbook:meta[@name='dc:Title']/@content,'[/\\?%*:|&quot;&lt;&gt;]',''))"/>-->
@@ -104,8 +78,8 @@ the given maximum size.</p>
             select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
             <p:pipe port="matched" step="first-dtbook"/>
         </p:variable>
-        <p:variable name="output-dir-uri" select="/*/@href">
-            <p:pipe port="result" step="output-dir-uri"/>
+        <p:variable name="output-dir-uri" select="/c:result/string()">
+            <p:pipe step="output-dir-uri" port="normalized"/>
         </p:variable>
         <p:variable name="html-file-uri" select="concat($output-dir,$encoded-title,'.epub')"/>
 

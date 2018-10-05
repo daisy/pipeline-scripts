@@ -7,6 +7,7 @@
 		xmlns:dtbook="http://www.daisy.org/z3986/2005/dtbook/"
 		xmlns:d="http://www.daisy.org/ns/pipeline/data"
 		xmlns:cx="http://xmlcalabash.com/ns/extensions"
+		xmlns:c="http://www.w3.org/ns/xproc-step"
 		exclude-inline-prefixes="#all">
 
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -78,34 +79,17 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
 
   <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
+  <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl"/>
   <p:import href="dtbook-to-daisy3.convert.xpl"/>
 
+  <px:normalize-uri name="output-dir-uri">
+    <p:with-option name="href" select="concat($output-dir,'/')"/>
+  </px:normalize-uri>
+  
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
-  <p:sink/>
-  <p:xslt name="output-dir-uri">
-    <p:with-param name="href" select="concat($output-dir,'/')"/>
-    <p:input port="source">
-      <p:inline>
-	<d:file/>
-      </p:inline>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:inline>
-	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
-	  <xsl:import href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
-	  <xsl:param name="href" required="yes"/>
-	  <xsl:template match="/*">
-	    <xsl:copy>
-	      <xsl:attribute name="href" select="pf:normalize-uri($href)"/>
-	    </xsl:copy>
-	  </xsl:template>
-	</xsl:stylesheet>
-      </p:inline>
-    </p:input>
-  </p:xslt>
   <p:sink/>
 
   <px:dtbook-load name="load">
@@ -226,8 +210,8 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
       <p:pipe port="result" step="loaded-tts-config"/>
     </p:input>
     <p:with-option name="publisher" select="$publisher"/>
-    <p:with-option name="output-fileset-base" select="/*/@href">
-      <p:pipe port="result" step="output-dir-uri"/>
+    <p:with-option name="output-fileset-base" select="/c:result/string()">
+      <p:pipe step="output-dir-uri" port="normalized"/>
     </p:with-option>
     <p:with-option name="audio" select="$audio"/>
     <p:with-option name="audio-only" select="$with-text = 'false'"/>

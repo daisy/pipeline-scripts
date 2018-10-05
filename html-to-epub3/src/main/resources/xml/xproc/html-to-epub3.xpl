@@ -37,44 +37,21 @@
         </p:documentation>
     </p:option>
 
-    <p:import
-        href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="html-to-epub3.convert.xpl"/>
 
-    <p:xslt name="output-dir-uri">
-        <p:with-param name="href" select="concat($output-dir,'/')">
-            <p:empty/>
-        </p:with-param>
-        <p:input port="source">
-            <p:inline>
-                <d:file/>
-            </p:inline>
-        </p:input>
-        <p:input port="stylesheet">
-            <p:inline>
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                    xmlns:pf="http://www.daisy.org/ns/pipeline/functions" version="2.0">
-                    <xsl:import
-                        href="http://www.daisy.org/pipeline/modules/file-utils/uri-functions.xsl"/>
-                    <xsl:param name="href" required="yes"/>
-                    <xsl:template match="/*">
-                        <xsl:copy>
-                            <xsl:attribute name="href" select="pf:normalize-uri($href)"/>
-                        </xsl:copy>
-                    </xsl:template>
-                </xsl:stylesheet>
-            </p:inline>
-        </p:input>
-    </p:xslt>
+    <px:normalize-uri name="output-dir-uri">
+        <p:with-option name="href" select="concat($output-dir,'/')"/>
+    </px:normalize-uri>
     <p:sink/>
 
-
     <p:group>
-        <p:variable name="output-dir-uri" select="/*/@href">
-            <p:pipe port="result" step="output-dir-uri"/>
+        <p:variable name="output-dir-uri"  select="/c:result/string()">
+            <p:pipe step="output-dir-uri" port="normalized"/>
         </p:variable>
         <p:variable name="epub-file-uri"
             select="concat($output-dir-uri,if (ends-with($html,'/')) then 'result' else replace($html,'^.*/([^/]*)\.[^/\.]*$','$1'),'.epub')"/>
